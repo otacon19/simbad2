@@ -49,7 +49,7 @@ public class ExpertsView extends ViewPart {
 		
 		_viewer.setContentProvider(_provider);
 		
-		_viewer.setInput(Expert.createExpertsExample());
+		//_viewer.setInput(Expert.createExpertsExample());
 		getSite().setSelectionProvider(_viewer);
 			
 		

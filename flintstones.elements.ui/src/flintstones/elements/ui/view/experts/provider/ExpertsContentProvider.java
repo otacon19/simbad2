@@ -6,8 +6,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-import flintstones.elements.ui.view.experts.Expert;
-
 /**
  * ExpertsContentProvider.java
  * 
@@ -19,11 +17,11 @@ import flintstones.elements.ui.view.experts.Expert;
  */
 public class ExpertsContentProvider implements ITreeContentProvider {
 	
-	private List<Expert> _experts;
+	//private List<Expert> _experts;
 	private TreeViewer _viewer;
 	
 	public ExpertsContentProvider(){
-		this._experts = null;
+		//this._experts = null;
 	}
 	
 	public ExpertsContentProvider(TreeViewer viewer){
