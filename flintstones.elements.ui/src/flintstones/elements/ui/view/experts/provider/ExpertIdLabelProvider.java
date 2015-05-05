@@ -2,6 +2,10 @@ package flintstones.elements.ui.view.experts.provider;
 
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+
+import flintstones.element.expert.Expert;
+import flintstones.elements.ui.Images;
+
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -15,14 +19,24 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ExpertIdLabelProvider extends ColumnLabelProvider {
 	
+	/**
+	 * Método que extrae la cadena que mostrará el objeto en la visualización
+	 */
 	@Override
 	public String getText(Object obj){
-		return "experto";	
+		return ((Expert) obj).getId();
 	}
 	
+	/**
+	 * Método que obtiene la imagen que va a mostrar el objeto en la visualización
+	 */
 	@Override
 	public Image getImage(Object obj){
-		return null;
+		if(((Expert) obj).hasMembers()) {
+			return Images.GroupOfExperts;
+		} else {
+			return Images.Expert;
+		}
 	}
 
 }

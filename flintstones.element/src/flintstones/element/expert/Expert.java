@@ -53,7 +53,7 @@ public class Expert extends ProblemElement {
 	}
 	
 	/**
-	 * Método que añade un experto a la lista de miembros
+	 * Método que añade un experto a la lista de miembros (hijos)
 	 */
 	public void addMember(Expert member) {
 		//TODO validar member
@@ -67,7 +67,7 @@ public class Expert extends ProblemElement {
 	}
 	
 	/**
-	 * Método que elimina un experto de la lista de miembros
+	 * Método que elimina un experto de la lista de miembros (hijos)
 	 */
 	public void removeMember(Expert member) {
 		
