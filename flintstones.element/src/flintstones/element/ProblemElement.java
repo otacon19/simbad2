@@ -9,7 +9,7 @@ package flintstones.element;
  * @version 1.0
  *
  */
-public final class ProblemElement implements Cloneable, Comparable<ProblemElement> {
+public abstract class ProblemElement implements Cloneable, Comparable<ProblemElement> {
 	
 	protected String _id;
 	
@@ -32,15 +32,17 @@ public final class ProblemElement implements Cloneable, Comparable<ProblemElemen
 	 * Método get del atributo id de la clase ProblemElement
 	 * @return devuelve el id del elemento del problema
 	 */
-	public String get_id() {
+	public String getId() {
 		return _id;
 	}
+	
+	//TODO Función getCanonicalID
 	
 	/**
 	 * Método set del atributo id de la clase ProblemElement
 	 * @param id: id del elemento del problema
 	 */
-	public void set_id(String id) {
+	public void setId(String id) {
 		this._id = id;
 	}
 
@@ -63,7 +65,7 @@ public final class ProblemElement implements Cloneable, Comparable<ProblemElemen
 			//No ocurre nunca
 		}
 		
-		result.set_id(_id);
+		result.setId(_id);
 		
 		return result;
 		
