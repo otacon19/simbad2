@@ -1,10 +1,10 @@
-package flintstones.elements.ui.view.experts.provider;
+package flintstones.element.ui.view.experts.provider;
 
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 import flintstones.element.expert.Expert;
-import flintstones.elements.ui.Images;
+import flintstones.element.ui.Images;
 
 import org.eclipse.swt.graphics.Image;
 

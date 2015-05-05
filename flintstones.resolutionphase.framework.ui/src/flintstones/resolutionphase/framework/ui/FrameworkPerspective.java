@@ -3,7 +3,7 @@ package flintstones.resolutionphase.framework.ui;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
-import flintstones.elements.ui.view.experts.ExpertsView;
+import flintstones.element.ui.view.experts.ExpertsView;
 
 public class FrameworkPerspective implements IPerspectiveFactory {
 	

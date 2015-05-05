@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.elements.category"
+            name="%element.category.name">
+      </category>
+      <view
+            allowMultiple="false"
+            category="flintstones.elements.category"
+            class="flintstones.element.ui.view.experts.ExpertsView"
+            icon="icons/group-of-experts.png"
+            id="flintstones.elements.ui.view.experts"
+            name="Expertos"
+            restorable="false">
+      </view>
+   </extension>
+
+</plugin>

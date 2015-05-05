@@ -1,4 +1,4 @@
-package flintstones.elements.ui.view.experts.provider;
+package flintstones.element.ui.view.experts.provider;
 
 import java.util.List;
 

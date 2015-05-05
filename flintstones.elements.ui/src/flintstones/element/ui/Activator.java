@@ -1,4 +1,4 @@
-package flintstones.elements.ui;
+package flintstones.element.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

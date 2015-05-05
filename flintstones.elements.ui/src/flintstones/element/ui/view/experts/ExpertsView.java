@@ -1,4 +1,4 @@
-package flintstones.elements.ui.view.experts;
+package flintstones.element.ui.view.experts;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -16,9 +16,18 @@ import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
-import flintstones.elements.ui.view.experts.provider.ExpertIdLabelProvider;
-import flintstones.elements.ui.view.experts.provider.ExpertsContentProvider;
+import flintstones.element.ui.view.experts.provider.ExpertIdLabelProvider;
+import flintstones.element.ui.view.experts.provider.ExpertsContentProvider;
 
+/**
+ * ExpertsView.java
+ * 
+ * Clase que define la vista de expertos
+ * 
+ * @author Labella Romero, Álvaro
+ * @version 1.0
+ *
+ */
 public class ExpertsView extends ViewPart {
 	
 	public static final String ID = "flintstones.element.ui.view.experts";
@@ -30,6 +39,9 @@ public class ExpertsView extends ViewPart {
 	
 	private ExpertsContentProvider _provider;
 	
+	/**
+	 * Constructor de la clase ExpertsView
+	 */
 	public ExpertsView() {
 		
 	}

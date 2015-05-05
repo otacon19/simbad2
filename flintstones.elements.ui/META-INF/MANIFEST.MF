@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ui
-Bundle-SymbolicName: flintstones.elements.ui
+Bundle-SymbolicName: flintstones.elements.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: flintstones.elements.ui.Activator
+Bundle-Activator: flintstones.element.ui.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Export-Package: flintstones.elements.ui.view.experts
+Export-Package: flintstones.element.ui.view.experts
 Import-Package: flintstones.element,
  flintstones.element.expert
