@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="flintstones.resolutionphase.framework.ui.FrameworkPerspective"
+            id="flintstones.resolutionphase.framework.perspective"
+            name="Framework">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="flintstones.resolutionphase.framework.perspective">
+      </perspectiveExtension>
+   </extension>
+
+</plugin>

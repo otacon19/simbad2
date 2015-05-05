@@ -93,6 +93,7 @@ public class ExpertsContentProvider implements ITreeContentProvider {
 	/**
 	 * Método get de los elementos de entrada (lista de expertos)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object[] getElements(Object inputElement) {
 		return ((List<Expert>) inputElement).toArray();

@@ -12,13 +12,16 @@
       </application>
    </extension>
    <extension
-         point="org.eclipse.ui.perspectives">
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension
-            targetID="*">
-      </perspectiveExtension>
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="flintstones.rcp.application"
+            name="flintstones">
+         <property
+               name="appName"
+               value="flintstones">
+         </property>
+      </product>
    </extension>
 
 </plugin>

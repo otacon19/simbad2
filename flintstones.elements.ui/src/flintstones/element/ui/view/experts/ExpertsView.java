@@ -16,6 +16,7 @@ import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
+import flintstones.element.expert.Expert;
 import flintstones.element.ui.view.experts.provider.ExpertIdLabelProvider;
 import flintstones.element.ui.view.experts.provider.ExpertsContentProvider;
 
@@ -106,14 +107,15 @@ public class ExpertsView extends ViewPart {
 		//TODO
 		
 		_provider = new ExpertsContentProvider(_viewer);
-		
 		_viewer.setContentProvider(_provider);
 		
 		addColumns();
 		hookContextMenu();
 		hookFocusListener();
 		
-		_viewer.setInput(_provider.getInput());
+		Expert e = new Expert();
+		
+		_viewer.setInput(/*_provider.getInput()*/e.exampleExperts());
 		getSite().setSelectionProvider(_viewer);
 			
 		

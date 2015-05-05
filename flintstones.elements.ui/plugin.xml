@@ -5,14 +5,14 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.elements.category"
-            name="%element.category.name">
+            name="Category">
       </category>
       <view
             allowMultiple="false"
             category="flintstones.elements.category"
             class="flintstones.element.ui.view.experts.ExpertsView"
             icon="icons/group-of-experts.png"
-            id="flintstones.elements.ui.view.experts"
+            id="flintstones.element.ui.view.experts"
             name="Expertos"
             restorable="false">
       </view>
