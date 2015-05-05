@@ -46,27 +46,49 @@ public class ExpertsView extends ViewPart {
 		
 	}
 	
+	/**
+	 * Método get del parámetro _viewer
+	 * @return árbol
+	 */
 	public TreeViewer getViewer() {
 		return _viewer;
 	}
 
-	public void setsViewer(TreeViewer _viewer) {
+	/**
+	 * Método set del parámetro _viewer
+	 * @param _viewer árbol a asignar
+	 */
+	public void setViewer(TreeViewer _viewer) {
 		this._viewer = _viewer;
 	}
-
-	public ExpertsContentProvider get_provider() {
+	
+	/**
+	 * Método get del atributo _provider
+	 * @return proveedor de contenido de la vista
+	 */
+	public ExpertsContentProvider getProvider() {
 		return _provider;
 	}
-
+	
+	/**
+	 * Método set del atributo _provider
+	 * @param _provider proveedor de contenido a asignar
+	 */
 	public void setProvider(ExpertsContentProvider _provider) {
 		this._provider = _provider;
 	}
-
+	
+	/**
+	 * Método get del atributo ID
+	 * @return ID de la vista
+	 */
 	public static String getId() {
 		return ID;
 	}
 
-
+	/**
+	 * Método que crea los controles que forman la vista
+	 */
 	@Override
 	public void createPartControl(Composite parent) {
 		
@@ -132,7 +154,10 @@ public class ExpertsView extends ViewPart {
 			}
 		});
 	}
-
+	
+	/**
+	 * Método que asigna el foco en el control de la vista adecuado
+	 */
 	@Override
 	public void setFocus() {
 		_viewer.getControl().setFocus();

@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Rcp
+Bundle-Name: Flintstones
 Bundle-SymbolicName: flintstones.rcp;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1
 Bundle-Activator: flintstones.rcp.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
