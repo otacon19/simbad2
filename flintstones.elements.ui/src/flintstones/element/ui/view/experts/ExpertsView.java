@@ -32,7 +32,7 @@ import flintstones.element.ui.view.experts.provider.ExpertsContentProvider;
 public class ExpertsView extends ViewPart {
 	
 	public static final String ID = "flintstones.element.ui.view.experts";
-	public static final String CONTEXT_ID = "flintstones.element.ui.view.experts.experts_view";
+	//public static final String CONTEXT_ID = "flintstones.element.ui.view.experts.experts_view";
 	
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 	
@@ -112,10 +112,8 @@ public class ExpertsView extends ViewPart {
 		addColumns();
 		hookContextMenu();
 		hookFocusListener();
-		
-		Expert e = new Expert();
-		
-		_viewer.setInput(/*_provider.getInput()*/e.exampleExperts());
+
+		_viewer.setInput(_provider.getInput());
 		getSite().setSelectionProvider(_viewer);
 			
 		
@@ -141,17 +139,17 @@ public class ExpertsView extends ViewPart {
 	private void hookFocusListener() {
 		_viewer.getControl().addFocusListener(new FocusListener() {
 			
-			private IContextActivation activation = null;
+			//private IContextActivation activation = null;
 			
 			@Override
 			public void focusLost(FocusEvent e) {
-				_contextService.deactivateContext(activation);
+				//_contextService.deactivateContext(activation);
 				
 			}
 			
 			@Override
 			public void focusGained(FocusEvent e) {
-				activation = _contextService.activateContext(CONTEXT_ID);
+				//activation = _contextService.activateContext(CONTEXT_ID);
 				
 			}
 		});

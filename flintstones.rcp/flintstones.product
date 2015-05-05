@@ -14,7 +14,7 @@
    <plugins>
       <plugin id="com.ibm.icu"/>
       <plugin id="flintstones.element"/>
-      <plugin id="flintstones.elements.ui"/>
+      <plugin id="flintstones.element.ui"/>
       <plugin id="flintstones.rcp"/>
       <plugin id="flintstones.resolutionphase.framework.ui"/>
       <plugin id="org.eclipse.core.commands"/>

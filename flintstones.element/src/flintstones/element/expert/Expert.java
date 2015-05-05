@@ -36,17 +36,6 @@ public class Expert extends ProblemElement {
 	
 	//TODO getCanonicalID
 	
-	public List<Expert> exampleExperts() {
-		Expert experto1 = new Expert();
-		Expert experto2 = new Expert();
-		
-		List<Expert> expertos = new LinkedList<Expert>();
-		expertos.add(experto1);
-		expertos.add(experto2);
-		
-		return expertos;
-	}
-	
 	/**
 	 * Método set del atributo _parent
 	 * @param parent

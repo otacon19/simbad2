@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Prueba
+Bundle-Name: framework
 Bundle-SymbolicName: flintstones.resolutionphase.framework.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: flintstones.resolutionphase.framework.ui.Activator

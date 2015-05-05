@@ -1,5 +1,6 @@
 package flintstones.element.ui.view.experts.provider;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -30,7 +31,8 @@ public class ExpertsContentProvider implements ITreeContentProvider {
 	 * Constructor de la clase ExpertsContentProvider
 	 */
 	public ExpertsContentProvider(){
-		_experts = null;
+		
+		 _experts = null;
 	}
 	
 	/**
