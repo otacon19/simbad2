@@ -110,6 +110,11 @@ public class ElementSet implements Cloneable {
 			result._experts.add((Expert) expert.clone());
 		}
 		
+		result._expertsListener = new LinkedList<IExpertsChangeListener>();
+		for(IExpertsChangeListener listener: _expertsListener) {
+			result._expertsListener.add(listener);
+		}
+		
 		return result;
 		
 	}

@@ -132,12 +132,30 @@ public class Expert extends ProblemElement {
 			return false;
 		}
 		
-		//TODO
+		//TODO builder
 		
 		return false;
 	}
 	
-	//TODO getExpertByCanonicalID
+	public static Expert getExpertByFormatId(List<Expert> elements, String formatId) {
+		//TODO validator
+		
+		if(formatId.contains(":")) {
+			String parentId = formatId.split(":")[0];
+			for(Expert expert: elements) {
+				if(expert.getId().equals(parentId)) {
+					return getExpertByFormatId(expert.getMembers(), formatId.substring(parentId.length() + 1));
+				}
+			}
+		} else {
+			for(Expert expert: elements) {
+				if(expert.getId().equals(formatId)) {
+					return expert;
+				}
+			}
+		}
+		return null;
+	}
 	
 	//TODO hashcode
 	

@@ -13,6 +13,7 @@ public class ExpertsChangeEvent {
 	}
 	
 	public ExpertsChangeEvent(EExpertsChange change, Object oldValue, Object newValue) {
+		this();
 		_change = change;
 		_oldValue = oldValue;
 		_newValue = newValue;

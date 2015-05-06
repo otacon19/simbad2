@@ -25,7 +25,7 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 	 * @param id: id del elemento del problema
 	 */
 	public ProblemElement(String id){
-		this._id = id;
+		_id = id;
 	}
 	
 	/**
@@ -56,9 +56,9 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 	}
 
 	@Override
-	public int compareTo(ProblemElement arg0) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int compareTo(ProblemElement other) {
+		// TODO validator
+		return this.getFormatId().compareTo(other.getFormatId());
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 			//No ocurre nunca
 		}
 		
-		result.setId(_id);
+		result.setId(new String(_id));
 		
 		return result;
 		
