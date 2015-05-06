@@ -24,7 +24,6 @@ public class AddExpertInputDialog extends InputDialog {
 
 		_validator = validator;
 		_parent = parent;
-		//TODO preferences
 		_isMember = true;
 	}
 	
