@@ -1,4 +1,4 @@
-package flintstones.element.ui.handler.add;
+package flintstones.element.ui.handler.expert.add;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;

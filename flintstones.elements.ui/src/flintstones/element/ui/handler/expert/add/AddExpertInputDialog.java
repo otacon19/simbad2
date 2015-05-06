@@ -1,4 +1,4 @@
-package flintstones.element.ui.handler.add;
+package flintstones.element.ui.handler.expert.add;
 
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.SWT;

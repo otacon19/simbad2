@@ -98,15 +98,15 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="flintstones.element.ui.handler.add.AddExpertHandler"
+            class="flintstones.element.ui.handler.expert.add.AddExpertHandler"
             commandId="flintstones.element.expert.add">
       </handler>
       <handler
-            class="flintstones.element.ui.handler.modify.ModifyExpertHandler"
+            class="flintstones.element.ui.handler.expert.modify.ModifyExpertHandler"
             commandId="flintstones.element.expert.modify">
       </handler>
       <handler
-            class="flintstones.element.ui.handler.remove.RemoveExpertHandler"
+            class="flintstones.element.ui.handler.expert.remove.RemoveExpertHandler"
             commandId="flintstones.element.expert.remove">
       </handler>
    </extension>
