@@ -36,7 +36,16 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 		return _id;
 	}
 	
-	//TODO Función getCanonicalID
+	/**
+	 * Método abstracto para mostrar la jerarqía de los expertos a medida que se van añadiendo: ExpertoY es hijo de ExpertoX...
+	 * @return
+	 */
+	public abstract String getFormatId();
+	
+	@Override
+	public String toString() {
+		return getFormatId();
+	}
 	
 	/**
 	 * Método set del atributo id de la clase ProblemElement

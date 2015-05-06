@@ -34,7 +34,21 @@ public class Expert extends ProblemElement {
 		super(id);
 	}
 	
-	//TODO getCanonicalID
+	/**
+	 * Método que crea muestra de forma jerárquica la estructura de los expertos (recursivo).
+	 */
+	@Override
+	public String getFormatId(){
+		String result = null;
+		
+		if(_parent != null) {
+			result = _parent.getFormatId() + ":" + _id; //$NON-NLS-1$
+		} else {
+			result = _id;
+		}
+		
+		return result;
+	}
 	
 	/**
 	 * Método set del atributo _parent
