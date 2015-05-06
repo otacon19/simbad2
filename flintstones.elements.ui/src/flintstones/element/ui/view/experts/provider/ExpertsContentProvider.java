@@ -1,6 +1,5 @@
 package flintstones.element.ui.view.experts.provider;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;

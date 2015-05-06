@@ -11,12 +11,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.contexts.IContextActivation;
-import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
-import flintstones.element.expert.Expert;
 import flintstones.element.ui.view.experts.provider.ExpertIdLabelProvider;
 import flintstones.element.ui.view.experts.provider.ExpertsContentProvider;
 
@@ -34,7 +30,7 @@ public class ExpertsView extends ViewPart {
 	public static final String ID = "flintstones.element.ui.view.experts";
 	//public static final String CONTEXT_ID = "flintstones.element.ui.view.experts.experts_view";
 	
-	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
+	//private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 	
 	private TreeViewer _viewer;
 	
