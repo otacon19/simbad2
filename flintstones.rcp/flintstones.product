@@ -16,6 +16,8 @@
       <plugin id="flintstones.element"/>
       <plugin id="flintstones.element.ui"/>
       <plugin id="flintstones.rcp"/>
+      <plugin id="flintstones.resolutionphase"/>
+      <plugin id="flintstones.resolutionphase.framework"/>
       <plugin id="flintstones.resolutionphase.framework.ui"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
