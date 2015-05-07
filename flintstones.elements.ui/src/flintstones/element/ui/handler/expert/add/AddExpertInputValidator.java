@@ -32,12 +32,12 @@ public class AddExpertInputValidator implements IInputValidator {
 	public String isValid(String newText) {
 		newText = newText.trim();
 		
-		List<Expert> childrens = null;
+		List<Expert> brothers = null;
 		
 		if(_isMember) {
-			childrens = _parent.getMembers();
+			brothers = _parent.getMembers();
 		} else {
-			childrens = _elementSet.getExperts();
+			brothers = _elementSet.getExperts();
 		}
 		
 		if(newText.isEmpty()) {
@@ -45,8 +45,8 @@ public class AddExpertInputValidator implements IInputValidator {
 		} else if(newText.contains(":")) {
 			return "Carácter : no permitido";
 		} else {
-			if(childrens != null) {
-				for(Expert expert: childrens) {
+			if(brothers != null) {
+				for(Expert expert: brothers) {
 					if(newText.equals(expert.getId())) {
 						return "id's duplicados";
 					}
