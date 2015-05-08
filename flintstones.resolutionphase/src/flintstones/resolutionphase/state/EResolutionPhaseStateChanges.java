@@ -9,6 +9,6 @@ package flintstones.resolutionphase.state;
  * @version 1.0
  */
 public enum EResolutionPhaseStateChanges {
-	ACTIVED, DEACTIVED, CONTAINER_ACTIVATED, CONTAINER_DEACTIVATED;
+	ACTIVATED, DEACTIVATED, CONTAINER_ACTIVATED, CONTAINER_DEACTIVATED;
 
 }

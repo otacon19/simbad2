@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Resolutionscheme
-Bundle-SymbolicName: flintstones.resolutionscheme;singleton:=true
+Bundle-Name: Ui
+Bundle-SymbolicName: flintstones.resolutionphase.ui
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.runtime,

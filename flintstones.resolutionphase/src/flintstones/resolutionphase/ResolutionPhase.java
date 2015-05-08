@@ -101,11 +101,11 @@ public class ResolutionPhase {
 	}
 	
 	public void activate() {
-		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChanges.ACTIVED));
+		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChanges.ACTIVATED));
 	}
 	
 	public void deactivate() {
-		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChanges.DEACTIVED));
+		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChanges.DEACTIVATED));
 	}
 	
 	public void containerActivate() {

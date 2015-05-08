@@ -27,7 +27,7 @@ public class Framework  implements IResolutionPhase {
 
 	@Override
 	public void resolutionPhaseStateChange(ResolutionPhaseStateChangeEvent event) {
-		if(event.getChange().equals(EResolutionPhaseStateChanges.ACTIVED)) {
+		if(event.getChange().equals(EResolutionPhaseStateChanges.ACTIVATED)) {
 			activate();
 		}
 		
