@@ -17,6 +17,9 @@
          </appinfo>
       </annotation>
       <complexType>
+         <choice>
+            <element ref="scheme"/>
+         </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
@@ -38,6 +41,53 @@
                </documentation>
                <appinfo>
                   <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="scheme">
+      <complexType>
+         <choice minOccurs="1" maxOccurs="unbounded">
+            <element ref="phase"/>
+         </choice>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Scheme unique id
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="implementation" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="flintstones.resolutionscheme.ResolutionSchemeImplementation:"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="phase">
+      <complexType>
+         <attribute name="resolution_phase" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier" basedOn="flintstones.resolutionphase/resolution_phase/@id"/>
                </appinfo>
             </annotation>
          </attribute>
