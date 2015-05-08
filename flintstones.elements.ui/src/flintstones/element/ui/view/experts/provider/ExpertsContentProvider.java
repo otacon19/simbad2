@@ -1,5 +1,6 @@
 package flintstones.element.ui.view.experts.provider;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -10,7 +11,12 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeColumn;
 
+import flintstones.element.ElementSet;
+import flintstones.element.ElementsManager;
+import flintstones.element.IElementSetChangeListener;
 import flintstones.element.expert.Expert;
+import flintstones.element.expert.listener.ExpertsChangeEvent;
+import flintstones.element.expert.listener.IExpertsChangeListener;
 
 /**
  * ExpertsContentProvider.java
@@ -21,8 +27,10 @@ import flintstones.element.expert.Expert;
  * @version 1.0
  *
  */
-public class ExpertsContentProvider implements ITreeContentProvider {
+public class ExpertsContentProvider implements ITreeContentProvider, IExpertsChangeListener, IElementSetChangeListener {
 	
+	private ElementsManager _elementsManager;
+	private ElementSet _elementSet;
 	private List<Expert> _experts;
 	private TreeViewer _viewer;
 	
@@ -42,6 +50,13 @@ public class ExpertsContentProvider implements ITreeContentProvider {
 		this();
 		_viewer = viewer;
 		hookTreeListener();
+		
+		_elementsManager = ElementsManager.getInstance();
+		_elementSet = _elementsManager.getActiveElementSet();
+		_experts = _elementSet.getExperts();
+		
+		_elementSet.registerExpertsChangesListener(this);
+		_elementsManager.registerElementsSetChangeListener(this);
 		
 	}
 	
@@ -81,15 +96,13 @@ public class ExpertsContentProvider implements ITreeContentProvider {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		_elementSet.unregisterExpertsChangeListener(this);
+		_elementsManager.unregisterElementsSetChangeListener(this);
 
 	}
 
 	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// TODO Auto-generated method stub
-
-	}
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
 	
 	/**
 	 * Método get de los elementos de entrada (lista de expertos)
@@ -132,9 +145,46 @@ public class ExpertsContentProvider implements ITreeContentProvider {
 		return _experts;
 	}
 	
-	//TODO notifyExpertsChange
+	@SuppressWarnings("unchecked")
+	@Override
+	public void notifyExpertsChange(ExpertsChangeEvent event) {
+		
+		switch(event.getChange()) {
+			case EXPERTS_CHANGES:
+				_experts = (List<Expert>) event.getNewValue();
+				_viewer.setInput(_experts);
+				break;
+			case ADD_EXPERT:
+				addExpert((Expert) event.getNewValue());
+				break;
+		default:
+			break;
+		}
+		
+		packViewer();
+		
+	}
 	
-	//TODO addExpert
+	private void addExpert(Expert expert) {
+		Expert parent = expert.getParent();
+
+		if(parent != null) {
+			_viewer.add(parent, expert);
+			_viewer.refresh(parent);
+			_viewer.reveal(expert);
+		} else {
+			int pos = 0;
+			boolean find = false;
+			do {
+				if(_experts.get(pos) == expert) {
+					find = true;
+				} else {
+					pos++;
+				}
+			} while (!find);
+			_viewer.insert(_viewer.getInput(), expert, pos);
+		}
+	}
 	
 	//TODO removeExpert
 	
@@ -147,6 +197,18 @@ public class ExpertsContentProvider implements ITreeContentProvider {
 		for(TreeColumn column: _viewer.getTree().getColumns()) {
 			column.pack();
 		}
+	}
+
+	@Override
+	public void newActiveSetElementSet(ElementSet elementSet) {
+		if(_elementSet != elementSet) {
+			_elementSet.unregisterExpertsChangeListener(this);
+			_elementSet = elementSet;
+			_experts = _elementSet.getExperts();
+			_elementSet.registerExpertsChangesListener(this);
+			_viewer.setInput(_experts);
+		}
+		
 	}
 
 }

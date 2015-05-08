@@ -13,6 +13,18 @@
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension
             targetID="flintstones.resolutionphase.framework.perspective">
+         <view
+               closeable="false"
+               id="flintstones.element.ui.view.experts"
+               minimized="false"
+               moveable="false"
+               ratio="0.5"
+               relationship="top"
+               relative="org.eclipse.ui.editorss"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
       </perspectiveExtension>
    </extension>
 
