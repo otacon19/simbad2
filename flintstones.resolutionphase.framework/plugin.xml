@@ -3,6 +3,11 @@
 <plugin>
    <extension
          point="flintstones.resolutionphase">
+      <resolution_phase
+            id="flintstones.resolutionphase.framework"
+            implementation="flintstones.resolutionphase.framework.Framework"
+            name="Framework">
+      </resolution_phase>
    </extension>
 
 </plugin>

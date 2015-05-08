@@ -29,6 +29,14 @@
    </extension>
    <extension
          point="flintstones.resolutionphase.ui">
+      <ui
+            id="flintstones.resolutionphase.framework"
+            name="framework"
+            resolution_phase="flintstones.resolutionphase.framework">
+         <perspective
+               id="flintstones.resolutionphase.framework.perspective">
+         </perspective>
+      </ui>
    </extension>
 
 </plugin>

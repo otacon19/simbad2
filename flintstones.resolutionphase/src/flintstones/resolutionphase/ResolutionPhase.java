@@ -18,7 +18,7 @@ import flintstones.resolutionphase.state.ResolutionPhaseStateChangeEvent;
  * @version 1.0
  *
  */
-public class ResolutionPhase {
+public class ResolutionPhase implements Cloneable {
 	
 	private String _id;
 	private String _name;
@@ -132,4 +132,15 @@ public class ResolutionPhase {
 		}
 	}
 	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		ResolutionPhase result = null;
+		
+		result = (ResolutionPhase) super.clone();
+		result._implementation = _implementation.clone();
+		result._registry = (ResolutionPhaseRegistry) _registry.clone();
+		
+		return result;
+		
+	}
 }
