@@ -27,5 +27,8 @@
          </view>
       </perspectiveExtension>
    </extension>
+   <extension
+         point="flintstones.resolutionphase.ui">
+   </extension>
 
 </plugin>
