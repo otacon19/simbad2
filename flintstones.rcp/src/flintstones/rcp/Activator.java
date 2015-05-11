@@ -4,11 +4,16 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import flintstones.resolutionscheme.ui.ResolutionSchemeUI;
+import flintstones.resolutionscheme.ui.ResolutionSchemesUIManager;
+
 /**
  * The activator class controls the plug-in life cycle
  */
 public class Activator extends AbstractUIPlugin {
-
+	
+	private static ResolutionSchemesUIManager _resolutionSchemesUIManager = ResolutionSchemesUIManager.getInstance();
+	
 	// The plug-in ID
 	public static final String PLUGIN_ID = "flintstones.rcp"; //$NON-NLS-1$
 
@@ -19,7 +24,20 @@ public class Activator extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public Activator() {
+		ResolutionSchemeUI resolutionSchemeUI = null;
+		
+		_resolutionSchemesUIManager = ResolutionSchemesUIManager.getInstance();
+		String[] resolutionSchemesUI = _resolutionSchemesUIManager.getIDs();
+		
+		resolutionSchemeUI = _resolutionSchemesUIManager.getUI(resolutionSchemesUI[0]);
+		//resolutionSchemeUI.getResolutionScheme().getImplementation();
+		
+		System.out.println("ID " + resolutionSchemeUI.getId());
+		
+	   // _resolutionSchemesUIManager.activate(resolutionSchemeUI.getId());
+		
 	}
+
 
 	/*
 	 * (non-Javadoc)

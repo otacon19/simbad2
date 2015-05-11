@@ -1,6 +1,5 @@
 package flintstones.element.ui.view.experts.provider;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -52,9 +51,11 @@ public class ExpertsContentProvider implements ITreeContentProvider, IExpertsCha
 		hookTreeListener();
 		
 		_elementsManager = ElementsManager.getInstance();
-		_elementSet = _elementsManager.getActiveElementSet();
-		_experts = _elementSet.getExperts();
 		
+		_elementSet = _elementsManager.getActiveElementSet();
+
+		_experts = _elementSet.getExperts();
+				
 		_elementSet.registerExpertsChangesListener(this);
 		_elementsManager.registerElementsSetChangeListener(this);
 		
@@ -148,7 +149,6 @@ public class ExpertsContentProvider implements ITreeContentProvider, IExpertsCha
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyExpertsChange(ExpertsChangeEvent event) {
-		
 		switch(event.getChange()) {
 			case EXPERTS_CHANGES:
 				_experts = (List<Expert>) event.getNewValue();

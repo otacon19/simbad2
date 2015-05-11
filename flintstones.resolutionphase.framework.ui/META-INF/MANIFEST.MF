@@ -7,7 +7,8 @@ Bundle-Activator: flintstones.resolutionphase.framework.ui.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  flintstones.element.ui,
- flintstones.resolutionphase.ui
+ flintstones.resolutionphase.ui,
+ flintstones.resolutionphase.framework
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Bundle-ActivationPolicy: lazy

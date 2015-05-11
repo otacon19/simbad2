@@ -5,7 +5,9 @@ Bundle-SymbolicName: flintstones.rcp;singleton:=true
 Bundle-Version: 1
 Bundle-Activator: flintstones.rcp.Activator
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ flintstones.resolutionscheme.dm.ui,
+ flintstones.resolutionscheme.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Bundle-ActivationPolicy: lazy

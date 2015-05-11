@@ -4,6 +4,7 @@ Bundle-Name: Resolutionscheme
 Bundle-SymbolicName: flintstones.resolutionscheme;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.core.runtime,
- flintstones.resolutionphase
-Export-Package: flintstones.resolutionscheme
+Require-Bundle: flintstones.resolutionphase,
+ org.eclipse.core.runtime
+Export-Package: flintstones.resolutionscheme,
+ flintstones.resolutionscheme.state

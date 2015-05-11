@@ -7,4 +7,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Export-Package: flintstones.element,
  flintstones.element.expert,
- flintstones.element.expert.listener
+ flintstones.element.expert.listener,
+ flintstones.element.expert.operation
+Require-Bundle: flintstones.resolutionphase;bundle-version="1.0.0"

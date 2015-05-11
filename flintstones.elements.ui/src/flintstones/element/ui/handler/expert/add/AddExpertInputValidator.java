@@ -1,6 +1,5 @@
 package flintstones.element.ui.handler.expert.add;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IInputValidator;
@@ -39,7 +38,6 @@ public class AddExpertInputValidator implements IInputValidator {
 			brothers = _parent.getMembers();
 		} else {
 			brothers = _elementSet.getExperts();
-			brothers = new LinkedList<Expert>();
 		}
 		
 		if(newText.isEmpty()) {

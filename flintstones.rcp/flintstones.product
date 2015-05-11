@@ -21,6 +21,9 @@
       <plugin id="flintstones.resolutionphase.framework.ui"/>
       <plugin id="flintstones.resolutionphase.ui"/>
       <plugin id="flintstones.resolutionscheme"/>
+      <plugin id="flintstones.resolutionscheme.dm"/>
+      <plugin id="flintstones.resolutionscheme.dm.ui"/>
+      <plugin id="flintstones.resolutionscheme.ui"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>

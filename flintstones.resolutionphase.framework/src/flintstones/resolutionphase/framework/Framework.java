@@ -8,13 +8,14 @@ import flintstones.resolutionphase.state.ResolutionPhaseStateChangeEvent;
 
 public class Framework  implements IResolutionPhase {
 	
-	public static final String ID = "flintstones.resolutionphase.framework"; //$NONO-NLS-1$
+	public static final String ID = "flintstones.resolutionphase.framework"; //$NON-NLS-1$
 	
 	private ElementSet _elementSet;
 	
 	private ElementsManager _elementsManager;
 	
 	public Framework() {
+
 		_elementsManager = ElementsManager.getInstance();
 		
 		_elementSet = new ElementSet();
