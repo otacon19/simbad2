@@ -7,11 +7,11 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
-public class ResolutionSchemeManager {
+public class ResolutionSchemesManager {
 	
 	private final String EXTENSION_POINT = "flintstones.resolutionscheme"; //$NON-NLS-1$
 	
-	private static ResolutionSchemeManager _instance = null;
+	private static ResolutionSchemesManager _instance = null;
 	
 	private ResolutionScheme _activeResolutionScheme;
 	
@@ -19,7 +19,7 @@ public class ResolutionSchemeManager {
 	private Map<String, ResolutionScheme> _resolutionSchemes;
 	private Map<ResolutionSchemeImplementation, String> _implementationResolutionSchemes;
 	
-	private ResolutionSchemeManager() {
+	private ResolutionSchemesManager() {
 		_activeResolutionScheme = null;
 		_registers = new HashMap<String, ResolutionSchemeRegistry>();
 		_resolutionSchemes = new HashMap<String, ResolutionScheme>();
@@ -27,9 +27,9 @@ public class ResolutionSchemeManager {
 		loadRegisters();
 	}
 	
-	public static ResolutionSchemeManager getInstance() {
+	public static ResolutionSchemesManager getInstance() {
 		if(_instance == null) {
-			_instance = new ResolutionSchemeManager();
+			_instance = new ResolutionSchemesManager();
 		}
 		return _instance;
 	}

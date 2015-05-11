@@ -85,7 +85,7 @@ public class ResolutionScheme {
 				
 				_implementation.setResolutionScheme(this);
 				
-				ResolutionSchemeManager rsm = ResolutionSchemeManager.getInstance();
+				ResolutionSchemesManager rsm = ResolutionSchemesManager.getInstance();
 				rsm.setImplementationResolutionScheme(_implementation, _id);
 				
 				registerResolutionSchemeStateListener(_implementation);
@@ -102,7 +102,7 @@ public class ResolutionScheme {
 			unregisterResolutionSchemeStateListener(_implementation);
 			registerResolutionSchemeStateListener(implementation);
 			
-			ResolutionSchemeManager rsm = ResolutionSchemeManager.getInstance();
+			ResolutionSchemesManager rsm = ResolutionSchemesManager.getInstance();
 			rsm.setImplementationResolutionScheme(implementation, _id);
 			
 			_implementation = implementation;
