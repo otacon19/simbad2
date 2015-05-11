@@ -30,12 +30,9 @@ public class Activator extends AbstractUIPlugin {
 		String[] resolutionSchemesUI = _resolutionSchemesUIManager.getIDs();
 		
 		resolutionSchemeUI = _resolutionSchemesUIManager.getUI(resolutionSchemesUI[0]);
-		//resolutionSchemeUI.getResolutionScheme().getImplementation();
+		resolutionSchemeUI.getResolutionScheme().getImplementation();
 		
-		System.out.println("ID " + resolutionSchemeUI.getId());
-		
-	   // _resolutionSchemesUIManager.activate(resolutionSchemeUI.getId());
-		
+	    _resolutionSchemesUIManager.activate(resolutionSchemeUI.getId());
 	}
 
 

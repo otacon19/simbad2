@@ -51,7 +51,6 @@ public class ExpertsContentProvider implements ITreeContentProvider, IExpertsCha
 		hookTreeListener();
 		
 		_elementsManager = ElementsManager.getInstance();
-		
 		_elementSet = _elementsManager.getActiveElementSet();
 
 		_experts = _elementSet.getExperts();

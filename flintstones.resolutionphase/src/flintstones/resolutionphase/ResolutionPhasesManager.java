@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.Platform;
 
 public class ResolutionPhasesManager {
 	
-	private final String EXTENSION_POINT = "flintsontes.resolutionphase"; //NON-NLS-1$
+	private final String EXTENSION_POINT = "flintstones.resolutionphase"; //NON-NLS-1$
 	
 	private static ResolutionPhasesManager _instance = null;
 	
