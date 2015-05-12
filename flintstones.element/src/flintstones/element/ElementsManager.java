@@ -16,6 +16,7 @@ public class ElementsManager {
 	}
 	
 	public static ElementsManager getInstance() {
+		
 		if(_instance == null) {
 			_instance = new ElementsManager();
 		}

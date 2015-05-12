@@ -11,3 +11,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: flintstones.element.ui.view.experts
+Import-Package: flintstones.element,
+ flintstones.element.expert,
+ flintstones.element.expert.listener

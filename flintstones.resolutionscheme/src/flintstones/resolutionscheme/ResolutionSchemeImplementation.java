@@ -48,7 +48,7 @@ abstract public class ResolutionSchemeImplementation implements IResolutionSchem
 	}
 
 	public void setResolutionScheme(ResolutionScheme resolutionScheme) {
-		System.out.println("FASES" + resolutionScheme.getPhases());
+		
 		_resolutionScheme = resolutionScheme;
 		
 		_phasesNames = new LinkedList<String>();
@@ -61,6 +61,7 @@ abstract public class ResolutionSchemeImplementation implements IResolutionSchem
 			_phasesNames.add(name);
 			_phases.put(name, phase);
 			_phasesImplementation.put(name, phase.getImplementation());
+			System.out.println(phase.getImplementation());
 		}
 	}
 	

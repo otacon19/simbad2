@@ -10,5 +10,5 @@ package flintstones.element.expert.listener;
  *
  */
 public enum EExpertsChange {
-	ADD_EXPERT, MODIFY_EXPERT, REMOVE_EXPERT, EXPERTS_CHANGES;
+	EXPERTS_CHANGES, ADD_EXPERT, MODIFY_EXPERT, REMOVE_EXPERT;
 }

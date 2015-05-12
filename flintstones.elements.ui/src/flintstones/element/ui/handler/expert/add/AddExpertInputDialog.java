@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import flintstones.element.expert.Expert;
 
+
 public class AddExpertInputDialog extends InputDialog {
 	
 	private boolean _isMember;

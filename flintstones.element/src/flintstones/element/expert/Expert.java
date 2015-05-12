@@ -173,7 +173,7 @@ public class Expert extends ProblemElement {
 		if(hasMembers()) {
 			List<Expert> members = new LinkedList<Expert>();
 			for(Expert expert: _members){
-				members.add((Expert)expert.clone());
+				members.add((Expert) expert.clone());
 			}
 			result.setMembers(members);
 		}
