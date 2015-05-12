@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dm
+Bundle-SymbolicName: flintstones.resolutionscheme.dm;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: flintstones.resolutionscheme,
+ flintstones.resolutionphase.framework;bundle-version="1.0.0"
+Import-Package: flintstones.resolutionphase

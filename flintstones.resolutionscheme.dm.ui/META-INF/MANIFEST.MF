@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Ui
+Bundle-SymbolicName: flintstones.resolutionscheme.dm.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: flintstones.resolutionscheme.ui,
+ flintstones.resolutionscheme.dm;bundle-version="1.0.0",
+ flintstones.resolutionphase.framework.ui;bundle-version="1.0.0"

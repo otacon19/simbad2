@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.resolutionscheme.ui">
+      <scheme_ui
+            id="flintstones.resolutionscheme.dm.ui"
+            name="Toma de decisiones"
+            scheme="flintstones.resolutionscheme.dm">
+         <ui
+               id="flintstones.resolutionphase.framework.ui">
+         </ui>
+      </scheme_ui>
+   </extension>
+
+</plugin>

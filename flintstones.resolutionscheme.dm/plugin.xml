@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.resolutionscheme">
+      <scheme
+            id="flintstones.resolutionscheme.dm"
+            implementation="flintstones.resolutionscheme.dm.DecisionMaking"
+            name="Toma de decisiones">
+         <phase
+               resolution_phase="flintstones.resolutionphase.framework">
+         </phase>
+      </scheme>
+   </extension>
+
+</plugin>
