@@ -5,7 +5,7 @@ Bundle-SymbolicName: flintstones.resolutionscheme.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.runtime,
- flintstones.resolutionphase.ui,
- flintstones.resolutionscheme,
+ flintstones.resolutionphase.ui;bundle-version="1.0.0",
+ flintstones.resolutionscheme;bundle-version="1.0.0",
  flintstones.resolutionphase
 Export-Package: flintstones.resolutionscheme.ui

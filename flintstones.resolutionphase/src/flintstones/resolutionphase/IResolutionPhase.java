@@ -19,7 +19,7 @@ public interface IResolutionPhase extends IResolutionPhaseStateListener {
 	
 	public IResolutionPhase clone();
 	
-	public IResolutionPhase copyEstructure();
+	public IResolutionPhase copyStructure();
 	
 	public void copyData(IResolutionPhase iResolutionPhase);
 	

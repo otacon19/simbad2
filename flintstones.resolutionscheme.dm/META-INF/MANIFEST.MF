@@ -4,6 +4,7 @@ Bundle-Name: Dm
 Bundle-SymbolicName: flintstones.resolutionscheme.dm;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: flintstones.resolutionscheme,
- flintstones.resolutionphase.framework;bundle-version="1.0.0"
-Import-Package: flintstones.resolutionphase
+Require-Bundle: flintstones.resolutionscheme;bundle-version="1.0.0",
+ flintstones.resolutionphase.framework;bundle-version="1.0.0",
+ flintstones.resolutionphase;bundle-version="1.0.0",
+ flintstones.workspace;bundle-version="1.0.0"

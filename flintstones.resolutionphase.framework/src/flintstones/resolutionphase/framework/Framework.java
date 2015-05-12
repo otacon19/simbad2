@@ -55,7 +55,7 @@ public class Framework  implements IResolutionPhase {
 	}
 
 	@Override
-	public IResolutionPhase copyEstructure() {
+	public IResolutionPhase copyStructure() {
 		return new Framework();
 	}
 
@@ -83,6 +83,5 @@ public class Framework  implements IResolutionPhase {
 		
 		return true;
 	}
-	
 
 }

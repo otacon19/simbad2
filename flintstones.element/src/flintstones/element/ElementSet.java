@@ -85,7 +85,7 @@ public class ElementSet implements Cloneable {
 			listener.notifyExpertsChange(event);
 		}
 		
-		//TODO clase Workspace
+		//TODO workspace
 	}
 	
 	public void clear() {

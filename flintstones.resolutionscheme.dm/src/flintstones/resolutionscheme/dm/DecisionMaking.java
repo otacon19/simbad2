@@ -9,6 +9,10 @@ public class DecisionMaking extends ResolutionSchemeImplementation {
 	
 	public static final String ID = "flintstones.resolutionscheme.dm"; //$NON-NLS-1$
 	
+	@Override
+	public ResolutionSchemeImplementation newInstance() {
+		return new DecisionMaking();
+	}
 	
 	@Override
 	public void resolutionSchemeStateChange(ResolutionSchemeStateChangeEvent event) {
@@ -23,11 +27,5 @@ public class DecisionMaking extends ResolutionSchemeImplementation {
 				break;
 		}
 		
-	}
-
-
-	@Override
-	public ResolutionSchemeImplementation newInstance() {
-		return new DecisionMaking();
 	}
 }

@@ -5,5 +5,6 @@ Bundle-SymbolicName: flintstones.resolutionphase.framework;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
-Require-Bundle: flintstones.element,
- flintstones.resolutionphase;bundle-version="1.0.0"
+Require-Bundle: flintstones.element;bundle-version="1.0.0",
+ flintstones.resolutionphase;bundle-version="1.0.0",
+ flintstones.workspace;bundle-version="1.0.0"

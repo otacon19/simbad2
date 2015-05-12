@@ -6,6 +6,7 @@ import org.osgi.framework.BundleContext;
 
 import flintstones.resolutionscheme.ui.ResolutionSchemeUI;
 import flintstones.resolutionscheme.ui.ResolutionSchemesUIManager;
+import flintstones.workspace.Workspace;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -30,7 +31,8 @@ public class Activator extends AbstractUIPlugin {
 		String[] resolutionSchemesUI = _resolutionSchemesUIManager.getIDs();
 		
 		resolutionSchemeUI = _resolutionSchemesUIManager.getUI(resolutionSchemesUI[0]);
-		resolutionSchemeUI.getResolutionScheme().getImplementation();
+		Workspace workspace = Workspace.getWorkspace();
+		workspace.setContent(resolutionSchemeUI.getResolutionScheme().getImplementation());
 		
 	    _resolutionSchemesUIManager.activate(resolutionSchemeUI.getId());
 	}
