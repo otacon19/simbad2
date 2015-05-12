@@ -52,13 +52,13 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 	 * @param id: id del elemento del problema
 	 */
 	public void setId(String id) {
-		this._id = id;
+		_id = id;
 	}
 
 	@Override
 	public int compareTo(ProblemElement other) {
 		// TODO validator
-		return this.getFormatId().compareTo(other.getFormatId());
+		return getFormatId().compareTo(other.getFormatId());
 	}
 	
 	/**

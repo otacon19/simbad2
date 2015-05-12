@@ -11,6 +11,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import flintstones.element.ElementSet;
 import flintstones.element.ElementsManager;
 import flintstones.element.expert.Expert;
+import flintstones.element.expert.operation.AddExpertOperation;
 
 
 public class AddExpertHandler extends AbstractHandler {
@@ -42,12 +43,16 @@ public class AddExpertHandler extends AbstractHandler {
 		}
 		
 		if(doit) {	
-			//TODO
+			AddExpertOperation operation = new AddExpertOperation("Add expert", id, parent, elementSet);
+			operation.execute(null, null);
+			
+			//TODO operationHistory
+			
 		}
-		
 		
 		return null;
 	}
+	
 
 	
 }

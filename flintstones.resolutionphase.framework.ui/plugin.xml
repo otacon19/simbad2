@@ -38,5 +38,16 @@
          </perspective>
       </ui>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.ui.main.menu?after=flintstones.menu.edit">
+         <menu
+               id="flinstones.menu.framework"
+               label="Framework">
+         </menu>
+      </menuContribution>
+   </extension>
 
 </plugin>

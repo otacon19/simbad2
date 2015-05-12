@@ -94,6 +94,19 @@
             </visibleWhen>
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:flintstones.menu.framework">
+         <menu
+               icon="icons/group-of-experts.png"
+               id="flintstones.menu.experts"
+               label="Expertos">
+            <command
+                  commandId="flintstones.element.expert.add"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">

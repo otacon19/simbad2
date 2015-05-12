@@ -156,6 +156,12 @@ public class ExpertsContentProvider implements ITreeContentProvider, IExpertsCha
 			case ADD_EXPERT:
 				addExpert((Expert) event.getNewValue());
 				break;
+			case REMOVE_EXPERT:
+				removeExpert((Expert) event.getOldValue());
+				break;
+			case MODIFY_EXPERT:
+				modifyExpert((Expert) event.getNewValue());
+				break;
 		default:
 			break;
 		}
@@ -185,9 +191,15 @@ public class ExpertsContentProvider implements ITreeContentProvider, IExpertsCha
 		}
 	}
 	
-	//TODO removeExpert
+	private void removeExpert(Expert expert) {
+		_viewer.refresh(expert.getParent());
+	}
 	
-	//TODO modifyExpert
+	private void modifyExpert(Expert expert) {
+		Object[] expandedElements = _viewer.getExpandedElements();
+		_viewer.refresh(expert.getParent());
+		_viewer.setExpandedElements(expandedElements);
+	}
 	
 	/**
 	 * Método que autoajusta el árbol cuando se hace una modificación sobre él

@@ -3,12 +3,33 @@ package flintstones.element.ui.handler.expert.remove;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.handlers.HandlerUtil;
+
+import flintstones.element.ElementSet;
+import flintstones.element.ElementsManager;
+import flintstones.element.expert.Expert;
+import flintstones.element.expert.operation.RemoveExpertOperation;
 
 public class RemoveExpertHandler extends AbstractHandler {
-
+	
+	public final static String ID = "flintstones.element.expert.remove";
+	
+	public RemoveExpertHandler() {}
+	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		// TODO Auto-generated method stub
+		
+		ElementsManager elementsManager = ElementsManager.getInstance();
+		ElementSet elementSet = elementsManager.getActiveElementSet();
+		
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
+		Expert expert = (Expert) selection.getFirstElement();
+		
+		RemoveExpertOperation operation = new RemoveExpertOperation("Remove expert", expert, elementSet);
+		operation.execute(null, null);
+		
+		
 		return null;
 	}
 

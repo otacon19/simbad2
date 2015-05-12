@@ -62,7 +62,6 @@ abstract public class ResolutionSchemeImplementation implements IResolutionSchem
 			_phasesNames.add(name);
 			_phases.put(name, phase);
 			_phasesImplementation.put(name, phase.getImplementation());
-			System.out.println(phase.getImplementation());
 		}
 	}
 	
