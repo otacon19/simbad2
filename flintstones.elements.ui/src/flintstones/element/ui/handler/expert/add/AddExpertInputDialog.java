@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import flintstones.element.expert.Expert;
+import flintstones.element.ui.nls.Messages;
 
 
 public class AddExpertInputDialog extends InputDialog {
@@ -25,6 +26,7 @@ public class AddExpertInputDialog extends InputDialog {
 
 		_validator = validator;
 		_parent = parent;
+		//TODO modificar esto
 		_isMember = true;
 	}
 	
@@ -36,7 +38,7 @@ public class AddExpertInputDialog extends InputDialog {
 		
 		if(_parent != null) {
 			_isMemberButton = new Button(container, SWT.CHECK);
-			_isMemberButton.setText("Is member of" + _parent.getFormatId());
+			_isMemberButton.setText(Messages.AddExpertInputDialog_Is_member_of + _parent.getFormatId());
 			_isMemberButton.setSelection(_isMember);
 			_isMemberButton.addSelectionListener(new SelectionAdapter() {
 				@Override

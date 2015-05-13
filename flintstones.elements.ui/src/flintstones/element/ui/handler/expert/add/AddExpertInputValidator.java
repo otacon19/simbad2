@@ -6,6 +6,7 @@ import org.eclipse.jface.dialogs.IInputValidator;
 
 import flintstones.element.ElementSet;
 import flintstones.element.expert.Expert;
+import flintstones.element.ui.nls.Messages;
 
 public class AddExpertInputValidator implements IInputValidator {
 	
@@ -41,14 +42,14 @@ public class AddExpertInputValidator implements IInputValidator {
 		}
 		
 		if(newText.isEmpty()) {
-			return "Valor vacío no permitido";
-		} else if(newText.contains(":")) {
-			return "Carácter : no permitido";
+			return Messages.AddExpertInputValidator_Empty_value_not_allowed;
+		} else if(newText.contains(":")) { //$NON-NLS-1$
+			return Messages.AddExpertInputValidator_Character_colon_not_allowed;
 		} else {
 			if(brothers != null) {
 				for(Expert expert: brothers) {
 					if(newText.equals(expert.getId())) {
-						return "id's duplicados";
+						return Messages.AddExpertInputValidator_Duplicated_id;
 					}
 				}
 			}

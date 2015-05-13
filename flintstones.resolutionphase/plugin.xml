@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="flintstones.resolutionphase" name="Resolution phase" schema="schema/flintstones.resolutionphase.exsd"/>
+   <extension-point id="flintstones.resolutionphase" name="%extension-point.name" schema="schema/flintstones.resolutionphase.exsd"/>
 
 </plugin>

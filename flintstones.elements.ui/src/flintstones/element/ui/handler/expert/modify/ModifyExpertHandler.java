@@ -13,10 +13,11 @@ import flintstones.element.ElementSet;
 import flintstones.element.ElementsManager;
 import flintstones.element.expert.Expert;
 import flintstones.element.expert.operation.ModifyExpertOperation;
+import flintstones.element.ui.nls.Messages;
 
 public class ModifyExpertHandler extends AbstractHandler {
 	
-	public final static String ID = "flintstones.element.expert.modify";
+	public final static String ID = "flintstones.element.expert.modify"; //$NON-NLS-1$
 	
 	public ModifyExpertHandler() {}
 	
@@ -34,8 +35,8 @@ public class ModifyExpertHandler extends AbstractHandler {
 		String oldId = expert.getId();
 		String newId = null;
 		
-		InputDialog dialog = new InputDialog(Display.getCurrent().getActiveShell(), "Modify expert", "Insert expert ID", 
-				expert.getId(), new ModifyExpertInputValidator(parent, elementSet, oldId));
+		InputDialog dialog = new InputDialog(Display.getCurrent().getActiveShell(), Messages.ModifyExpertHandler_Modify_expert, 
+				Messages.ModifyExpertHandler_Insert_expert_id, expert.getId(), new ModifyExpertInputValidator(parent, elementSet, oldId));
 		
 		if(dialog.open() == Window.OK) {
 			newId = dialog.getValue();
@@ -47,7 +48,7 @@ public class ModifyExpertHandler extends AbstractHandler {
 		}
 		
 		if(doit) {
-			ModifyExpertOperation operation = new ModifyExpertOperation("Modify expert", expert, newId, elementSet);
+			ModifyExpertOperation operation = new ModifyExpertOperation(Messages.ModifyExpertHandler_Modify_expert, expert, newId, elementSet);
 			operation.execute(null, null);
 		}
 		

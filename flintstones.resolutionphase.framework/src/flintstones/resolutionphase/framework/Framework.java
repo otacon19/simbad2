@@ -48,7 +48,7 @@ public class Framework  implements IResolutionPhase {
 			result = (Framework) super.clone();
 			result._elementSet = (ElementSet) _elementSet.clone();
 		} catch (CloneNotSupportedException e) {
-			System.out.println("Error " + e.getMessage());
+			System.out.println("Error " + e.getMessage()); //$NON-NLS-1$
 		}
 		
 		return result;

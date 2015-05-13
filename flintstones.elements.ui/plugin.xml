@@ -5,7 +5,7 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.elements.category"
-            name="Category">
+            name="%element.category.name">
       </category>
       <view
             allowMultiple="false"
@@ -13,7 +13,7 @@
             class="flintstones.element.ui.view.experts.ExpertsView"
             icon="icons/group-of-experts.png"
             id="flintstones.element.ui.view.experts"
-            name="Expertos"
+            name="%experts.view.name"
             restorable="false">
       </view>
    </extension>
@@ -100,7 +100,8 @@
          <menu
                icon="icons/group-of-experts.png"
                id="flintstones.menu.experts"
-               label="Expertos">
+               label="%experts.menu.label"
+               mnemonic="%experts.menu.mnemonic">
             <command
                   commandId="flintstones.element.expert.add"
                   style="push">
@@ -121,28 +122,68 @@
       <handler
             class="flintstones.element.ui.handler.expert.remove.RemoveExpertHandler"
             commandId="flintstones.element.expert.remove">
+         <activeWhen>
+            <and>
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="flintstones.element.expert.Expert">
+                     </instanceof>
+                  </iterate>
+               </with>
+               <reference
+                     definitionId="oneElementSelected">
+               </reference>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="flintstones.element.ui.handler.expert.remove.RemoveExpertsHandler"
+            commandId="flintstones.element.expert.remove">
+         <activeWhen>
+            <and>
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="flintstones.element.expert.Expert">
+                     </instanceof>
+                  </iterate>
+               </with>
+               <not>
+                  <reference
+                        definitionId="oneElementSelected">
+                  </reference>
+               </not>
+            </and>
+         </activeWhen>
       </handler>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <category
             id="flintstones.element.experts.category"
-            name="Expertos">
+            name="%expert.category.name">
       </category>
       <command
             categoryId="flintstones.element.experts.category"
             id="flintstones.element.expert.add"
-            name="Añadir">
+            name="%expert.command.add.name">
       </command>
       <command
             categoryId="flintstones.element.experts.category"
             id="flintstones.element.expert.modify"
-            name="Modificar">
+            name="%expert.command.modify.name">
       </command>
       <command
             categoryId="flintstones.element.experts.category"
             id="flintstones.element.expert.remove"
-            name="Eliminar">
+            name="%expert.command.remove.name">
       </command>
    </extension>
    <extension
@@ -159,6 +200,18 @@
             commandId="flintstones.element.expert.remove"
             icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/delete_obj.gif">
       </image>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="oneElementSelected">
+         <with
+               variable="selection">
+            <count
+                  value="1">
+            </count>
+         </with>
+      </definition>
    </extension>
 
 </plugin>

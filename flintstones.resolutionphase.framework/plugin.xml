@@ -6,7 +6,7 @@
       <resolution_phase
             id="flintstones.resolutionphase.framework"
             implementation="flintstones.resolutionphase.framework.Framework"
-            name="Framework">
+            name="%resolution_phase.name">
       </resolution_phase>
    </extension>
 

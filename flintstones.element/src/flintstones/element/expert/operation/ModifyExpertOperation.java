@@ -9,9 +9,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
-
 import flintstones.element.ElementSet;
 import flintstones.element.expert.Expert;
 import flintstones.element.expert.listener.EExpertsChange;
@@ -43,15 +40,6 @@ public class ModifyExpertOperation extends AbstractOperation {
 
 	@Override
 	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-
-		if(info != null) {
-			Shell shell = (Shell) info.getAdapter(Shell.class);
-			if(shell != null) {
-				if(!MessageDialog.openQuestion(shell, "Modificar experto", "¿Quiéres modificar el experto?")) {
-					return Status.CANCEL_STATUS;
-				}
-			}
-		}
 		
 		return redo(monitor, info);
 	}

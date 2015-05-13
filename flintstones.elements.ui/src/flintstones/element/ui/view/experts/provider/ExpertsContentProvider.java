@@ -156,8 +156,18 @@ public class ExpertsContentProvider implements ITreeContentProvider, IExpertsCha
 			case ADD_EXPERT:
 				addExpert((Expert) event.getNewValue());
 				break;
+			case ADD_EXPERTS:
+				for(Expert expert: (List<Expert>) event.getNewValue()) {
+					addExpert(expert);
+				}
+				break;
 			case REMOVE_EXPERT:
 				removeExpert((Expert) event.getOldValue());
+				break;
+			case REMOVE_EXPERTS:
+				for(Expert expert: (List<Expert>) event.getOldValue()) {
+					removeExpert(expert);
+				}
 				break;
 			case MODIFY_EXPERT:
 				modifyExpert((Expert) event.getNewValue());

@@ -8,8 +8,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
 
 import flintstones.element.ElementSet;
 import flintstones.element.expert.Expert;
@@ -35,15 +33,6 @@ public class RemoveExpertOperation extends AbstractOperation {
 	@Override
 	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 
-		if(info != null) {
-			Shell shell = (Shell) info.getAdapter(Shell.class);
-			if(shell != null) {
-				if(!MessageDialog.openQuestion(shell, "Borrar experto", "¿Quiéres eliminar el experto?")) {
-					return Status.CANCEL_STATUS;
-				}
-			}
-		}
-		
 		return redo(monitor, info);
 	}
 
@@ -78,7 +67,7 @@ public class RemoveExpertOperation extends AbstractOperation {
 		
 	}
 	
-	private void notify(EExpertsChange change, Object oldValue, Expert newValue) {
+	private void notify(EExpertsChange change, Object oldValue, Object newValue) {
 		_elementSet.notifyExpertsChanges(new ExpertsChangeEvent(change, oldValue, newValue));
 		
 	}

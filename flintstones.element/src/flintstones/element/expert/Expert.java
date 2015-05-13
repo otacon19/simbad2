@@ -140,8 +140,8 @@ public class Expert extends ProblemElement {
 	public static Expert getExpertByFormatId(List<Expert> elements, String formatId) {
 		//TODO validator
 		
-		if(formatId.contains(":")) {
-			String parentId = formatId.split(":")[0];
+		if(formatId.contains(":")) { //$NON-NLS-1$
+			String parentId = formatId.split(":")[0]; //$NON-NLS-1$
 			for(Expert expert: elements) {
 				if(expert.getId().equals(parentId)) {
 					return getExpertByFormatId(expert.getMembers(), formatId.substring(parentId.length() + 1));

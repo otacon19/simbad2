@@ -6,7 +6,7 @@
       <perspective
             class="flintstones.resolutionphase.framework.ui.FrameworkPerspective"
             id="flintstones.resolutionphase.framework.perspective"
-            name="Framework">
+            name="%framework.perspective.name">
       </perspective>
    </extension>
    <extension
@@ -31,7 +31,7 @@
          point="flintstones.resolutionphase.ui">
       <ui
             id="flintstones.resolutionphase.framework.ui"
-            name="framework"
+            name="%resolution.phase.ui.name"
             resolution_phase="flintstones.resolutionphase.framework">
          <perspective
                id="flintstones.resolutionphase.framework.perspective">
@@ -45,7 +45,8 @@
             locationURI="menu:org.eclipse.ui.main.menu?after=flintstones.menu.edit">
          <menu
                id="flinstones.menu.framework"
-               label="Framework">
+               label="%framework.menu.label"
+               mnemonic="%framework.menu.mnemonic">
          </menu>
       </menuContribution>
    </extension>

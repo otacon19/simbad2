@@ -12,11 +12,12 @@ import flintstones.element.ElementSet;
 import flintstones.element.ElementsManager;
 import flintstones.element.expert.Expert;
 import flintstones.element.expert.operation.AddExpertOperation;
+import flintstones.element.ui.nls.Messages;
 
 
 public class AddExpertHandler extends AbstractHandler {
 	
-	public final static String ID = "flintstones.element.expert.add";
+	public final static String ID = "flintstones.element.expert.add"; //$NON-NLS-1$
 	
 	 public AddExpertHandler() {}
 
@@ -33,7 +34,7 @@ public class AddExpertHandler extends AbstractHandler {
 		String id = null;
 		
 		AddExpertInputDialog dialog = new AddExpertInputDialog(Display.getCurrent().getActiveShell(), 
-				"Add expert", "Insert expert id", "", new AddExpertInputValidator(parent, elementSet), parent);
+				Messages.AddExpertHandler_Add_expert, Messages.AddExpertHandler_Insert_id_expert, "", new AddExpertInputValidator(parent, elementSet), parent); //$NON-NLS-3$ //$NON-NLS-1$
 		
 		if(dialog.open() == Window.OK) {
 			id = dialog.getValue();
@@ -43,7 +44,7 @@ public class AddExpertHandler extends AbstractHandler {
 		}
 		
 		if(doit) {	
-			AddExpertOperation operation = new AddExpertOperation("Add expert", id, parent, elementSet);
+			AddExpertOperation operation = new AddExpertOperation(Messages.AddExpertHandler_Add_expert, id, parent, elementSet);
 			operation.execute(null, null);
 			
 			//TODO operationHistory
