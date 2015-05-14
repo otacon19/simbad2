@@ -153,7 +153,7 @@ public class ResolutionPhaseUI implements IResolutionPhaseStateListener {
 
 
 	@Override
-	public void resolutionPhaseStateChange(ResolutionPhaseStateChangeEvent event) {
+	public void notifyResolutionPhaseStateChange(ResolutionPhaseStateChangeEvent event) {
 		ResolutionPhasesUIManager manager = ResolutionPhasesUIManager.getInstance();
 		switch(event.getChange()) {
 			case ACTIVATED:

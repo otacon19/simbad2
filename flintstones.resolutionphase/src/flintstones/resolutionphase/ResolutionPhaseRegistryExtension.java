@@ -2,24 +2,15 @@ package flintstones.resolutionphase;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 
-/**
- * ResolutionPhaseRegistry.java
- * 
- * Clase que registra las distintas fases que se vayan a introducir. Para esto usamos un atributo de tipo IConfigurationElement
- * que nos permite acceder a los hijos a atributos de las extensiones
- * 
- * @author Labella Romero, Álvaro
- *
- */
-public class ResolutionPhaseRegistry implements Cloneable {
+public class ResolutionPhaseRegistryExtension implements Cloneable {
 
 	private IConfigurationElement _configuration;
 	
-	private ResolutionPhaseRegistry() {
+	private ResolutionPhaseRegistryExtension() {
 		_configuration = null;
 	}
 	
-	public ResolutionPhaseRegistry(IConfigurationElement element) {
+	public ResolutionPhaseRegistryExtension(IConfigurationElement element) {
 		this();
 		_configuration = element;
 	}
@@ -28,7 +19,7 @@ public class ResolutionPhaseRegistry implements Cloneable {
 		return _configuration;
 	}
 	
-	public String getElement(EResolutionPhaseElements element) {
+	public String getAttribute(EResolutionPhaseElements element) {
 		
 		String result = null;
 		
@@ -44,9 +35,9 @@ public class ResolutionPhaseRegistry implements Cloneable {
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		
-		ResolutionPhaseRegistry result = null;
+		ResolutionPhaseRegistryExtension result = null;
 		
-		result = (ResolutionPhaseRegistry) super.clone();
+		result = (ResolutionPhaseRegistryExtension) super.clone();
 		result._configuration = this._configuration;
 		
 		return result;

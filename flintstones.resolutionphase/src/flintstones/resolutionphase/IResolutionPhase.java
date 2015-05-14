@@ -2,18 +2,9 @@ package flintstones.resolutionphase;
 
 import flintstones.resolutionphase.state.IResolutionPhaseStateListener;
 
-/**
- * IResolutionPhase.java
- * 
- * 
- * 
- * @author Labella Romero, Álvaro
- * @version 1.0
- *
- */
 public interface IResolutionPhase extends IResolutionPhaseStateListener {
 	
-	//TODO xml
+	//TODO operaciones xml
 	
 	public void clear();
 	

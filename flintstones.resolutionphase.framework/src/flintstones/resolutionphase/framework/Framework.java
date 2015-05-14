@@ -3,7 +3,7 @@ package flintstones.resolutionphase.framework;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import flintstones.resolutionphase.IResolutionPhase;
-import flintstones.resolutionphase.state.EResolutionPhaseStateChanges;
+import flintstones.resolutionphase.state.EResolutionPhaseStateChange;
 import flintstones.resolutionphase.state.ResolutionPhaseStateChangeEvent;
 
 public class Framework  implements IResolutionPhase {
@@ -27,8 +27,8 @@ public class Framework  implements IResolutionPhase {
 	}
 
 	@Override
-	public void resolutionPhaseStateChange(ResolutionPhaseStateChangeEvent event) {
-		if(event.getChange().equals(EResolutionPhaseStateChanges.ACTIVATED)) {
+	public void notifyResolutionPhaseStateChange(ResolutionPhaseStateChangeEvent event) {
+		if(event.getChange().equals(EResolutionPhaseStateChange.ACTIVATED)) {
 			activate();
 		}
 		

@@ -5,25 +5,16 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 
-import flintstones.resolutionphase.state.EResolutionPhaseStateChanges;
+import flintstones.resolutionphase.state.EResolutionPhaseStateChange;
 import flintstones.resolutionphase.state.IResolutionPhaseStateListener;
 import flintstones.resolutionphase.state.ResolutionPhaseStateChangeEvent;
 
-/**
- * ResolutionPhase.java
- * 
- * Clase que define una fase de resoluciñon
- * 
- * @author Labella Romero, Álvaro
- * @version 1.0
- *
- */
 public class ResolutionPhase implements Cloneable {
 	
 	private String _id;
 	private String _name;
 	private IResolutionPhase _implementation;
-	private ResolutionPhaseRegistry _registry;
+	private ResolutionPhaseRegistryExtension _registry;
 	
 	private List<IResolutionPhaseStateListener> _listeners;
 	
@@ -36,7 +27,7 @@ public class ResolutionPhase implements Cloneable {
 		_listeners = new LinkedList<IResolutionPhaseStateListener>();
 	}
 	
-	public ResolutionPhase(String id, String name, IResolutionPhase implementation, ResolutionPhaseRegistry registry) {
+	public ResolutionPhase(String id, String name, IResolutionPhase implementation, ResolutionPhaseRegistryExtension registry) {
 		this();
 		setId(id);
 		setName(name);
@@ -92,28 +83,28 @@ public class ResolutionPhase implements Cloneable {
 		}
 	}
 
-	public ResolutionPhaseRegistry getRegistry() {
+	public ResolutionPhaseRegistryExtension getRegistry() {
 		return _registry;
 	}
 
-	public void setRegistry(ResolutionPhaseRegistry registry) {
+	public void setRegistry(ResolutionPhaseRegistryExtension registry) {
 		_registry = registry;
 	}
 	
 	public void activate() {
-		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChanges.ACTIVATED));
+		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChange.ACTIVATED));
 	}
 	
 	public void deactivate() {
-		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChanges.DEACTIVATED));
+		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChange.DEACTIVATED));
 	}
 	
 	public void containerActivate() {
-		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChanges.CONTAINER_ACTIVATED));
+		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChange.CONTAINER_ACTIVATED));
 	}
 	
 	public void containerDeactivate() {
-		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChanges.CONTAINER_DEACTIVATED));
+		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChange.CONTAINER_DEACTIVATED));
 	}
 	
 	public void registerResolutionPhaseStateListener(IResolutionPhaseStateListener listener) {
@@ -128,7 +119,7 @@ public class ResolutionPhase implements Cloneable {
 	
 	public void notifyResolutionPhaseStateChange(ResolutionPhaseStateChangeEvent event) {
 		for(IResolutionPhaseStateListener listener: _listeners) {
-			listener.resolutionPhaseStateChange(event);
+			listener.notifyResolutionPhaseStateChange(event);
 		}
 	}
 	
@@ -138,9 +129,8 @@ public class ResolutionPhase implements Cloneable {
 		
 		result = (ResolutionPhase) super.clone();
 		result._implementation = _implementation.clone();
-		result._registry = (ResolutionPhaseRegistry) _registry.clone();
+		result._registry = (ResolutionPhaseRegistryExtension) _registry.clone();
 		
-		return result;
-		
+		return result;	
 	}
 }

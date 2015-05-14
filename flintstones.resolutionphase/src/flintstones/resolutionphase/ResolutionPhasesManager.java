@@ -15,14 +15,14 @@ public class ResolutionPhasesManager {
 	
 	private ResolutionPhase _activeResolutionPhase;
 	
-	private Map<String, ResolutionPhaseRegistry> _registers;
+	private Map<String, ResolutionPhaseRegistryExtension> _registers;
 	private Map<String, ResolutionPhase> _resolutionPhases;
 	private Map<IResolutionPhase, String> _implementationResolutionPhases;
 	
 	private ResolutionPhasesManager() {
 		_activeResolutionPhase = null;
 		
-		_registers = new HashMap<String, ResolutionPhaseRegistry>();
+		_registers = new HashMap<String, ResolutionPhaseRegistryExtension>();
 		_resolutionPhases = new HashMap<String, ResolutionPhase>();
 		_implementationResolutionPhases = new HashMap<IResolutionPhase, String>();
 		
@@ -42,10 +42,10 @@ public class ResolutionPhasesManager {
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
 		
-		ResolutionPhaseRegistry registry;
+		ResolutionPhaseRegistryExtension registry;
 		for(IConfigurationElement extension: extensions) {
-			registry = new ResolutionPhaseRegistry(extension);
-			_registers.put(registry.getElement(EResolutionPhaseElements.id), registry);
+			registry = new ResolutionPhaseRegistryExtension(extension);
+			_registers.put(registry.getAttribute(EResolutionPhaseElements.id), registry);
 		}
 		
 	}
@@ -54,7 +54,7 @@ public class ResolutionPhasesManager {
 		return _registers.keySet().toArray(new String[0]);
 	}
 	
-	public ResolutionPhaseRegistry getRegistry(String id) {
+	public ResolutionPhaseRegistryExtension getRegistry(String id) {
 		return _registers.get(id);
 	}
 	
@@ -80,11 +80,11 @@ public class ResolutionPhasesManager {
 			return _resolutionPhases.get(id);
 		} else {
 			try {
-				ResolutionPhaseRegistry resolutionPhaseRegistry = getRegistry(id);
+				ResolutionPhaseRegistryExtension resolutionPhaseRegistry = getRegistry(id);
 				
 				ResolutionPhase resolutionPhase = new ResolutionPhase();
 				resolutionPhase.setId(id);
-				resolutionPhase.setName(resolutionPhaseRegistry.getElement(EResolutionPhaseElements.name));
+				resolutionPhase.setName(resolutionPhaseRegistry.getAttribute(EResolutionPhaseElements.name));
 				resolutionPhase.setRegistry(resolutionPhaseRegistry);
 				
 				_resolutionPhases.put(id, resolutionPhase);
