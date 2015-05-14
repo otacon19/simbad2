@@ -1,4 +1,4 @@
-package flintstones.element.ui.handler.expert.add;
+package sinbad2.element.ui.handler.expert.add;
 
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.SWT;
@@ -9,15 +9,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import flintstones.element.expert.Expert;
-import flintstones.element.ui.nls.Messages;
+import sinbad2.element.expert.Expert;
+import sinbad2.element.ui.nls.Messages;
 
 
 public class AddExpertInputDialog extends InputDialog {
 	
 	private boolean _isMember;
-	private Button _isMemberButton;
-	private Expert _parent;
+	private Button _isMemberOfButton;
+	private Expert _parentOfNewExpert;
 	private AddExpertInputValidator _validator;
 
 	public AddExpertInputDialog(Shell parentShell, String dialogTitle,
@@ -25,7 +25,8 @@ public class AddExpertInputDialog extends InputDialog {
 		super(parentShell, dialogTitle, dialogMessage, initialValue, validator);
 
 		_validator = validator;
-		_parent = parent;
+		_parentOfNewExpert = parent;
+		
 		//TODO modificar esto
 		_isMember = true;
 	}
@@ -36,14 +37,14 @@ public class AddExpertInputDialog extends InputDialog {
 		Composite container = null;
 		container = (Composite) super.createDialogArea(parent);
 		
-		if(_parent != null) {
-			_isMemberButton = new Button(container, SWT.CHECK);
-			_isMemberButton.setText(Messages.AddExpertInputDialog_Is_member_of + _parent.getFormatId());
-			_isMemberButton.setSelection(_isMember);
-			_isMemberButton.addSelectionListener(new SelectionAdapter() {
+		if(_parentOfNewExpert != null) {
+			_isMemberOfButton = new Button(container, SWT.CHECK);
+			_isMemberOfButton.setText(Messages.AddExpertInputDialog_Is_member_of + " " + _parentOfNewExpert.getFormatId());
+			_isMemberOfButton.setSelection(_isMember);
+			_isMemberOfButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					_isMember = _isMemberButton.getSelection();
+					_isMember = _isMemberOfButton.getSelection();
 					_validator.setIsMember(_isMember);
 					AddExpertInputDialog.this.validateInput();
 				}

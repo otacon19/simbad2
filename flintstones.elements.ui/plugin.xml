@@ -10,7 +10,7 @@
       <view
             allowMultiple="false"
             category="flintstones.elements.category"
-            class="flintstones.element.ui.view.experts.ExpertsView"
+            class="sinbad2.element.ui.view.experts.ExpertsView"
             icon="icons/group-of-experts.png"
             id="flintstones.element.ui.view.experts"
             name="%experts.view.name"
@@ -120,19 +120,20 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="flintstones.element.ui.handler.expert.add.AddExpertHandler"
+            class="sinbad2.element.ui.handler.expert.add.AddExpertHandler"
             commandId="flintstones.element.expert.add">
       </handler>
       <handler
-            class="flintstones.element.ui.handler.expert.modify.ModifyExpertHandler"
+            class="sinbad2.element.ui.handler.expert.modify.ModifyExpertHandler"
             commandId="flintstones.element.expert.modify">
          <enabledWhen>
             <and>
                <with
                      variable="selection">
-                  <iterate>
+                  <iterate
+                        operator="and">
                      <instanceof
-                           value="flintstones.element.expert.Expert">
+                           value="sinbad2.element.expert.Expert">
                      </instanceof>
                   </iterate>
                </with>
@@ -143,7 +144,7 @@
          </enabledWhen>
       </handler>
       <handler
-            class="flintstones.element.ui.handler.expert.remove.RemoveExpertHandler"
+            class="sinbad2.element.ui.handler.expert.remove.RemoveExpertHandler"
             commandId="flintstones.element.expert.remove">
          <activeWhen>
             <and>
@@ -153,7 +154,7 @@
                         ifEmpty="false"
                         operator="and">
                      <instanceof
-                           value="flintstones.element.expert.Expert">
+                           value="sinbad2.element.expert.Expert">
                      </instanceof>
                   </iterate>
                </with>
@@ -164,7 +165,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="flintstones.element.ui.handler.expert.remove.RemoveExpertsHandler"
+            class="sinbad2.element.ui.handler.expert.remove.RemoveExpertsHandler"
             commandId="flintstones.element.expert.remove">
          <activeWhen>
             <and>
@@ -174,7 +175,7 @@
                         ifEmpty="false"
                         operator="and">
                      <instanceof
-                           value="flintstones.element.expert.Expert">
+                           value="sinbad2.element.expert.Expert">
                      </instanceof>
                   </iterate>
                </with>

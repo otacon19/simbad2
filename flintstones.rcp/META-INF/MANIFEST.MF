@@ -1,15 +1,15 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: flintstones.rcp;singleton:=true
+Bundle-SymbolicName: sinbad2.rcp;singleton:=true
 Bundle-Version: 1
 Bundle-Activator: flintstones.rcp.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- flintstones.resolutionscheme.dm.ui;bundle-version="1.0.0",
- flintstones.workspace;bundle-version="1.0.0",
- flintstones.resolutionscheme.ui;bundle-version="1.0.0",
- flintstones.resolutionscheme;bundle-version="1.0.0"
+ sinbad2.resolutionscheme.dm.ui;bundle-version="1.0.0",
+ sinbad2.workspace;bundle-version="1.0.0",
+ sinbad2.resolutionscheme.ui;bundle-version="1.0.0",
+ sinbad2.resolutionscheme;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Bundle-ActivationPolicy: lazy

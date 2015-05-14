@@ -1,33 +1,38 @@
-package flintstones.element.ui.handler.expert.modify;
+package sinbad2.element.ui.handler.expert.modify;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IInputValidator;
 
-import flintstones.element.ElementSet;
-import flintstones.element.expert.Expert;
-import flintstones.element.ui.nls.Messages;
+import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.expert.Expert;
+import sinbad2.element.ui.nls.Messages;
 
 public class ModifyExpertInputValidator implements IInputValidator {
 	
-	private Expert _parent;
-	private ElementSet _elementSet;
+	private ProblemElementsSet _elementSet;
+	private Expert _parentOfModifyExpert;
 	private List<Expert> _brothers;
+	private List<Expert> _others;
 	private String _id;
 	
 	public ModifyExpertInputValidator() {
 		super();
 	}
 	
-	public ModifyExpertInputValidator(Expert parent, ElementSet elementSet, String id) {
-		_parent = parent;
+	public ModifyExpertInputValidator(Expert parent, ProblemElementsSet elementSet, String id) {
+		_parentOfModifyExpert = parent;
 		_elementSet = elementSet;
 		_id = id;
 		
-		if(_parent != null) {
-			_brothers = _parent.getMembers();
+		_brothers = new LinkedList<Expert>();
+		_others = new LinkedList<Expert>();
+		
+		if(_parentOfModifyExpert != null) {
+			_brothers = _parentOfModifyExpert.getChildrens();
 		} else {
-			_brothers = _elementSet.getExperts();
+			_others = _elementSet.getExperts();
 		}
 	}
 	
@@ -48,6 +53,14 @@ public class ModifyExpertInputValidator implements IInputValidator {
 				for(Expert expert: _brothers) {
 					if(newText.equals(expert.getId())) {
 						return Messages.ModifyExpertInputValidator_Duplicated_id;
+					}
+				}
+			} else {
+				if(_others != null) {
+					for(Expert expert: _others) {
+						if(newText.equals(expert.getId())) {
+							return Messages.ModifyExpertInputValidator_Duplicated_id;
+						}
 					}
 				}
 			}

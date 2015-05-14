@@ -1,4 +1,4 @@
-package flintstones.element.ui;
+package sinbad2.element.ui;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -14,7 +14,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class Images {
 
-	private static final String PLUGIN_ID = "flintstones.element.ui"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "sinbad2.element.ui"; //$NON-NLS-1$
 
 	public static final Image Alternative = AbstractUIPlugin
 			.imageDescriptorFromPlugin(PLUGIN_ID, "icons/alternative.png").createImage(); //$NON-NLS-1$

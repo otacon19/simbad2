@@ -1,4 +1,4 @@
-package flintstones.element.ui.handler.expert.remove;
+package sinbad2.element.ui.handler.expert.remove;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -6,11 +6,11 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import flintstones.element.ElementSet;
-import flintstones.element.ElementsManager;
-import flintstones.element.expert.Expert;
-import flintstones.element.expert.operation.RemoveExpertOperation;
-import flintstones.element.ui.nls.Messages;
+import sinbad2.element.ProblemElementsManager;
+import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.expert.Expert;
+import sinbad2.element.expert.operation.RemoveExpertOperation;
+import sinbad2.element.ui.nls.Messages;
 
 public class RemoveExpertHandler extends AbstractHandler {
 	
@@ -21,8 +21,8 @@ public class RemoveExpertHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		
-		ElementsManager elementsManager = ElementsManager.getInstance();
-		ElementSet elementSet = elementsManager.getActiveElementSet();
+		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+		ProblemElementsSet elementSet = elementsManager.getActiveElementSet();
 		
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
 		Expert expert = (Expert) selection.getFirstElement();

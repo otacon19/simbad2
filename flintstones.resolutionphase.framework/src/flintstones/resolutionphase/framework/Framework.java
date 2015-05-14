@@ -1,7 +1,7 @@
 package flintstones.resolutionphase.framework;
 
-import flintstones.element.ElementSet;
-import flintstones.element.ElementsManager;
+import sinbad2.element.ProblemElementsManager;
+import sinbad2.element.ProblemElementsSet;
 import flintstones.resolutionphase.IResolutionPhase;
 import flintstones.resolutionphase.state.EResolutionPhaseStateChanges;
 import flintstones.resolutionphase.state.ResolutionPhaseStateChangeEvent;
@@ -10,19 +10,19 @@ public class Framework  implements IResolutionPhase {
 	
 	public static final String ID = "flintstones.resolutionphase.framework"; //$NON-NLS-1$
 	
-	private ElementSet _elementSet;
+	private ProblemElementsSet _elementSet;
 	
-	private ElementsManager _elementsManager;
+	private ProblemElementsManager _elementsManager;
 	
 	public Framework() {
 
-		_elementsManager = ElementsManager.getInstance();
+		_elementsManager = ProblemElementsManager.getInstance();
 		
-		_elementSet = new ElementSet();
+		_elementSet = new ProblemElementsSet();
 	}
 	
 	
-	public ElementSet getElementSet() {
+	public ProblemElementsSet getElementSet() {
 		return _elementSet;
 	}
 
@@ -46,7 +46,7 @@ public class Framework  implements IResolutionPhase {
 		
 		try {
 			result = (Framework) super.clone();
-			result._elementSet = (ElementSet) _elementSet.clone();
+			result._elementSet = (ProblemElementsSet) _elementSet.clone();
 		} catch (CloneNotSupportedException e) {
 			System.out.println("Error " + e.getMessage()); //$NON-NLS-1$
 		}

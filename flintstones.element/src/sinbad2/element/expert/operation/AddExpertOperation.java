@@ -18,7 +18,7 @@ public class AddExpertOperation extends AbstractOperation {
 	
 	private ProblemElementsSet _elementSet;
 	private List<Expert> _experts;
-	private Expert _newExpertParent;
+	private Expert _parentOfNewExpert;
 	private Expert _newExpert;
 	private String _newExpertID;
 
@@ -28,7 +28,7 @@ public class AddExpertOperation extends AbstractOperation {
 		_elementSet = elementSet;
 		_experts = _elementSet.getExperts();
 		_newExpertID = id;
-		_newExpertParent = parent;
+		_parentOfNewExpert = parent;
 		_newExpert = new Expert(_newExpertID);
 	}
 
@@ -42,10 +42,10 @@ public class AddExpertOperation extends AbstractOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		if(_newExpertParent == null) {
+		if(_parentOfNewExpert == null) {
 			_elementSet.insertExpert(_newExpert);
 		} else {
-			_newExpertParent.addChildren(_newExpert);
+			_parentOfNewExpert.addChildren(_newExpert);
 		}
 		
 		notify(EExpertsChange.ADD_EXPERT, null, _newExpert);
@@ -57,11 +57,11 @@ public class AddExpertOperation extends AbstractOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		if(_newExpertParent == null) {
+		if(_parentOfNewExpert == null) {
 			_experts.remove(_newExpert);
 		} else {
-			_newExpertParent.removeChildren(_newExpert);
-			_newExpert.setParent(_newExpertParent);
+			_parentOfNewExpert.removeChildren(_newExpert);
+			_newExpert.setParent(_parentOfNewExpert);
 		}
 		
 		notify(EExpertsChange.REMOVE_EXPERT, _newExpert, null);

@@ -1,9 +1,9 @@
-package flintstones.element.ui.nls;
+package sinbad2.element.ui.nls;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "flintstones.element.ui.nls.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "sinbad2.element.ui.nls.messages"; //$NON-NLS-1$
 	public static String AddExpertHandler_Add_expert;
 	public static String AddExpertHandler_Insert_id_expert;
 	public static String AddExpertInputDialog_Is_member_of;

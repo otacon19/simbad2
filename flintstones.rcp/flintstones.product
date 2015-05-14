@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="flintstones" uid="flintstones" id="flintstones.rcp.product" application="flintstones.rcp.application" version="1" useFeatures="false" includeLaunchers="true">
+<product name="flintstones" uid="flintstones" id="sinbad2.rcp.product" application="sinbad2.rcp.application" version="1" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -11,21 +11,19 @@
       </vmArgsMac>
    </launcherArgs>
 
+
+   <launcher>
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
+
    <plugins>
       <plugin id="com.ibm.icu"/>
-      <plugin id="flintstones.element"/>
-      <plugin id="flintstones.element.ui"/>
-      <plugin id="flintstones.rcp"/>
-      <plugin id="flintstones.resolutionphase"/>
-      <plugin id="flintstones.resolutionphase.framework"/>
-      <plugin id="flintstones.resolutionphase.framework.ui"/>
-      <plugin id="flintstones.resolutionphase.ui"/>
-      <plugin id="flintstones.resolutionscheme"/>
-      <plugin id="flintstones.resolutionscheme.dm"/>
-      <plugin id="flintstones.resolutionscheme.dm.ui"/>
-      <plugin id="flintstones.resolutionscheme.ui"/>
-      <plugin id="flintstones.workspace"/>
-      <plugin id="flintstones.workspace.ui"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>
@@ -64,6 +62,19 @@
       <plugin id="org.eclipse.ui"/>
       <plugin id="org.eclipse.ui.cocoa" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench"/>
+      <plugin id="sinbad2.element"/>
+      <plugin id="sinbad2.element.ui"/>
+      <plugin id="sinbad2.rcp"/>
+      <plugin id="sinbad2.resolutionphase"/>
+      <plugin id="sinbad2.resolutionphase.framework"/>
+      <plugin id="sinbad2.resolutionphase.framework.ui"/>
+      <plugin id="sinbad2.resolutionphase.ui"/>
+      <plugin id="sinbad2.resolutionscheme"/>
+      <plugin id="sinbad2.resolutionscheme.dm"/>
+      <plugin id="sinbad2.resolutionscheme.dm.ui"/>
+      <plugin id="sinbad2.resolutionscheme.ui"/>
+      <plugin id="sinbad2.workspace"/>
+      <plugin id="sinbad2.workspace.ui"/>
    </plugins>
 
 

@@ -1,4 +1,4 @@
-package flintstones.element.ui;
+package sinbad2.element.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

@@ -1,18 +1,19 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: flintstones.element.ui;singleton:=true
+Bundle-SymbolicName: sinbad2.element.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: flintstones.element.ui.Activator
+Bundle-Activator: sinbad2.element.ui.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- flintstones.element,
+ sinbad2.element,
  org.eclipse.core.expressions,
- flintstones.workspace.ui;bundle-version="1.0.0"
+ sinbad2.workspace.ui;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Export-Package: flintstones.element.ui.view.experts
-Import-Package: flintstones.element,
- flintstones.element.expert,
- flintstones.element.expert.listener
+Export-Package: sinbad2.element.ui.view.experts,
+ sinbad2.element.ui.view.experts.provider
+Import-Package: sinbad2.element,
+ sinbad2.element.expert,
+ sinbad2.element.expert.listener

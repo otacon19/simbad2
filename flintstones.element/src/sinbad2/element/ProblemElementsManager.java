@@ -32,7 +32,7 @@ public class ProblemElementsManager {
 	public void setActiveElementSet(ProblemElementsSet elementSet) {
 		if(_activeElementSet != elementSet) {
 			_activeElementSet = elementSet;
-			notifyElementSetChange();
+			notifyProblemElementsSetChange();
 		}
 	}
 	
@@ -44,9 +44,9 @@ public class ProblemElementsManager {
 		_listeners.remove(listener);
 	}
 	
-	public void notifyElementSetChange() {
+	public void notifyProblemElementsSetChange() {
 		for(IProblemElementsSetChangeListener listener: _listeners) {
-			listener.newActiveSetElementSet(_activeElementSet);
+			listener.notifyProblemElementsSetChange(_activeElementSet);
 		}
 	}
 

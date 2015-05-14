@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ui
-Bundle-SymbolicName: flintstones.workspace.ui;singleton:=true
+Bundle-SymbolicName: sinbad2.workspace.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.ui

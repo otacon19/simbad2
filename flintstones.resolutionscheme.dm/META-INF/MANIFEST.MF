@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: flintstones.resolutionscheme.dm;singleton:=true
+Bundle-SymbolicName: sinbad2.resolutionscheme.dm;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: flintstones.resolutionscheme;bundle-version="1.0.0",
- flintstones.resolutionphase.framework;bundle-version="1.0.0",
- flintstones.resolutionphase;bundle-version="1.0.0",
- flintstones.workspace;bundle-version="1.0.0"
+Require-Bundle: sinbad2.resolutionscheme;bundle-version="1.0.0",
+ sinbad2.resolutionphase.framework;bundle-version="1.0.0",
+ sinbad2.resolutionphase;bundle-version="1.0.0",
+ sinbad2.workspace;bundle-version="1.0.0"

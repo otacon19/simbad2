@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: flintstones.resolutionphase;singleton:=true
+Bundle-SymbolicName: sinbad2.resolutionphase;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Require-Bundle: org.eclipse.core.runtime,
- flintstones.workspace;bundle-version="1.0.0"
+ sinbad2.workspace;bundle-version="1.0.0"
 Export-Package: flintstones.resolutionphase,
  flintstones.resolutionphase.state

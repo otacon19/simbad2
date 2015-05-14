@@ -1,4 +1,4 @@
-package flintstones.element.ui.view.experts;
+package sinbad2.element.ui.view.experts;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -13,8 +13,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.part.ViewPart;
 
-import flintstones.element.ui.view.experts.provider.ExpertIdLabelProvider;
-import flintstones.element.ui.view.experts.provider.ExpertsContentProvider;
+import sinbad2.element.ui.view.experts.provider.ExpertIdLabelProvider;
+import sinbad2.element.ui.view.experts.provider.ExpertsContentProvider;
 
 /**
  * ExpertsView.java
