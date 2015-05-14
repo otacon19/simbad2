@@ -22,6 +22,49 @@
       <menuContribution
             allPopups="false"
             locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="flintstones.menu.file"
+               label="File"
+               mnemonic="A">
+            <command
+                  commandId="flintstones.workspace.ui.io.new"
+                  style="push">
+            </command>
+            <command
+                  commandId="flintstones.workspace.ui.io.read"
+                  style="push">
+            </command>
+            <command
+                  commandId="flintstones.workspace.ui.io.save"
+                  style="push">
+            </command>
+            <command
+                  commandId="flintstones.workspace.ui.io.save.as"
+                  style="push">
+            </command>
+            <command
+                  commandId="flintstones.workspace.ui.io.save.and.close"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.ui.file.exit"
+                  id="exit"
+                  label="&amp;Exit"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               id="flintstones.menu.edit"
+               label="Edit">
+            <command
+                  commandId="flintstones.workspace.ui.undo"
+                  style="push">
+            </command>
+            <command
+                  commandId="flintstones.workspace.ui.redo"
+                  style="push">
+            </command>
+         </menu>
       </menuContribution>
    </extension>
    <extension
@@ -68,6 +111,9 @@
             id="flintstones.workspace.ui.redo"
             name="&amp;Redo">
       </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
    </extension>
 
 </plugin>

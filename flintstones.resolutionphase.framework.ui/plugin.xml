@@ -44,9 +44,9 @@
             allPopups="false"
             locationURI="menu:org.eclipse.ui.main.menu?after=flintstones.menu.edit">
          <menu
-               id="flinstones.menu.framework"
-               label="%framework.menu.label"
-               mnemonic="%framework.menu.mnemonic">
+               id="flintstones.menu.framework"
+               label="Framework"
+               mnemonic="F">
          </menu>
       </menuContribution>
    </extension>

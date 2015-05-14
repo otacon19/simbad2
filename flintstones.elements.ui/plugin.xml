@@ -21,6 +21,28 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
+            locationURI="menu:flintstones.menu.framework">
+         <menu
+               icon="icons/group-of-experts.png"
+               id="flintstones.menu.experts"
+               label="%experts.menu.label"
+               mnemonic="%experts.menu.mnemonic">
+            <command
+                  commandId="flintstones.element.expert.add"
+                  style="push">
+            </command>
+            <command
+                  commandId="flintstones.element.expert.modify"
+                  style="push">
+            </command>
+            <command
+                  commandId="flintstones.element.expert.remove"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
             locationURI="popup:flintstones.element.ui.view.experts">
          <command
                commandId="flintstones.element.expert.add"
@@ -94,20 +116,6 @@
             </visibleWhen>
          </command>
       </menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:flintstones.menu.framework">
-         <menu
-               icon="icons/group-of-experts.png"
-               id="flintstones.menu.experts"
-               label="%experts.menu.label"
-               mnemonic="%experts.menu.mnemonic">
-            <command
-                  commandId="flintstones.element.expert.add"
-                  style="push">
-            </command>
-         </menu>
-      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -118,6 +126,21 @@
       <handler
             class="flintstones.element.ui.handler.expert.modify.ModifyExpertHandler"
             commandId="flintstones.element.expert.modify">
+         <enabledWhen>
+            <and>
+               <with
+                     variable="selection">
+                  <iterate>
+                     <instanceof
+                           value="flintstones.element.expert.Expert">
+                     </instanceof>
+                  </iterate>
+               </with>
+               <reference
+                     definitionId="oneElementSelected">
+               </reference>
+            </and>
+         </enabledWhen>
       </handler>
       <handler
             class="flintstones.element.ui.handler.expert.remove.RemoveExpertHandler"
@@ -200,18 +223,6 @@
             commandId="flintstones.element.expert.remove"
             icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/delete_obj.gif">
       </image>
-   </extension>
-   <extension
-         point="org.eclipse.core.expressions.definitions">
-      <definition
-            id="oneElementSelected">
-         <with
-               variable="selection">
-            <count
-                  value="1">
-            </count>
-         </with>
-      </definition>
    </extension>
 
 </plugin>
