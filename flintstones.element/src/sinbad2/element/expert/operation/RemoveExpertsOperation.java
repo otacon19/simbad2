@@ -1,4 +1,4 @@
-package flintstones.element.expert.operation;
+package sinbad2.element.expert.operation;
 
 import java.util.List;
 
@@ -9,25 +9,25 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import flintstones.element.ElementSet;
-import flintstones.element.expert.Expert;
-import flintstones.element.expert.listener.EExpertsChange;
-import flintstones.element.expert.listener.ExpertsChangeEvent;
+import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.expert.Expert;
+import sinbad2.element.expert.listener.EExpertsChange;
+import sinbad2.element.expert.listener.ExpertsChangeEvent;
 
 public class RemoveExpertsOperation extends AbstractOperation {
 	
-	private ElementSet _elementSet;
+	private ProblemElementsSet _elementSet;
 	private List<Expert> _experts;
-	private List<Expert> _expertsRemove;
-	private Expert _parent;
+	private List<Expert> _removeSeveralExperts;
+	private Expert _firstExpertParent;
 
-	public RemoveExpertsOperation(String label, List<Expert> expertsRemove, ElementSet elementSet) {
+	public RemoveExpertsOperation(String label, List<Expert> expertsRemove, ProblemElementsSet elementSet) {
 		super(label);
 		
 		_elementSet = elementSet;
 		_experts = _elementSet.getExperts();
-		_expertsRemove = expertsRemove;
-		_parent = _expertsRemove.get(0).getParent();
+		_removeSeveralExperts = expertsRemove;
+		_firstExpertParent = _removeSeveralExperts.get(0).getParent();
 	}
 
 	@Override
@@ -39,17 +39,17 @@ public class RemoveExpertsOperation extends AbstractOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		for(Expert expert: _expertsRemove) {
-			if(_parent == null) {
+		for(Expert expert: _removeSeveralExperts) {
+			if(_firstExpertParent == null) {
 				_experts.remove(expert);
 			} else {
-				_parent.removeMember(expert);
-				expert.setParent(_parent);
+				_firstExpertParent.removeChildren(expert);
+				expert.setParent(_firstExpertParent);
 			}
 		
 		}
 		
-		notify(EExpertsChange.REMOVE_EXPERTS, _expertsRemove, null);
+		notify(EExpertsChange.REMOVE_SEVERAL_EXPERTS, _removeSeveralExperts, null);
 			
 		return Status.OK_STATUS;
 		
@@ -58,15 +58,15 @@ public class RemoveExpertsOperation extends AbstractOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		for(Expert expert: _expertsRemove) {
-			if(_parent == null) {
+		for(Expert expert: _removeSeveralExperts) {
+			if(_firstExpertParent == null) {
 				_elementSet.insertExpert(expert);
 			} else {
-				_parent.addMember(expert);
+				_firstExpertParent.addChildren(expert);
 			}
 		}
 		
-		notify(EExpertsChange.ADD_EXPERTS, null, _expertsRemove);
+		notify(EExpertsChange.ADD_SEVERAL_EXPERTS, null, _removeSeveralExperts);
 		
 		return Status.OK_STATUS;
 	}

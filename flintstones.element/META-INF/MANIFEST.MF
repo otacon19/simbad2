@@ -1,15 +1,15 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: flintstones.element
+Bundle-SymbolicName: sinbad2.element
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
-Export-Package: flintstones.element,
- flintstones.element.expert,
- flintstones.element.expert.listener,
- flintstones.element.expert.operation
-Require-Bundle: flintstones.resolutionphase;bundle-version="1.0.0",
+Export-Package: sinbad2.element,
+ sinbad2.element.expert,
+ sinbad2.element.expert.listener,
+ sinbad2.element.expert.operation
+Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0",
  org.eclipse.core.commands,
  org.eclipse.equinox.registry,
  org.eclipse.swt,

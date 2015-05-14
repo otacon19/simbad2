@@ -1,4 +1,4 @@
-package flintstones.element;
+package sinbad2.element;
 
 /**
  * ProblemElement.java

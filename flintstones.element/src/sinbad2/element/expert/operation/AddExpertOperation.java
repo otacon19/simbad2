@@ -1,4 +1,4 @@
-package flintstones.element.expert.operation;
+package sinbad2.element.expert.operation;
 
 import java.util.List;
 
@@ -9,27 +9,27 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import flintstones.element.ElementSet;
-import flintstones.element.expert.Expert;
-import flintstones.element.expert.listener.EExpertsChange;
-import flintstones.element.expert.listener.ExpertsChangeEvent;
+import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.expert.Expert;
+import sinbad2.element.expert.listener.EExpertsChange;
+import sinbad2.element.expert.listener.ExpertsChangeEvent;
 
 public class AddExpertOperation extends AbstractOperation {
 	
+	private ProblemElementsSet _elementSet;
 	private List<Expert> _experts;
-	private Expert _parent;
-	private ElementSet _elementSet;
-	private String _id;
-	private Expert _expert;
+	private Expert _newExpertParent;
+	private Expert _newExpert;
+	private String _newExpertID;
 
-	public AddExpertOperation(String label, String id, Expert parent, ElementSet elementSet) {
+	public AddExpertOperation(String label, String id, Expert parent, ProblemElementsSet elementSet) {
 		super(label);
 		
 		_elementSet = elementSet;
 		_experts = _elementSet.getExperts();
-		_id = id;
-		_parent = parent;
-		_expert = new Expert(_id);
+		_newExpertID = id;
+		_newExpertParent = parent;
+		_newExpert = new Expert(_newExpertID);
 	}
 
 	@Override
@@ -42,13 +42,13 @@ public class AddExpertOperation extends AbstractOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		if(_parent == null) {
-			_elementSet.insertExpert(_expert);
+		if(_newExpertParent == null) {
+			_elementSet.insertExpert(_newExpert);
 		} else {
-			_parent.addMember(_expert);
+			_newExpertParent.addChildren(_newExpert);
 		}
 		
-		notify(EExpertsChange.ADD_EXPERT, null, _expert);
+		notify(EExpertsChange.ADD_EXPERT, null, _newExpert);
 		
 		return Status.OK_STATUS;
 		
@@ -57,14 +57,14 @@ public class AddExpertOperation extends AbstractOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		if(_parent == null) {
-			_experts.remove(_expert);
+		if(_newExpertParent == null) {
+			_experts.remove(_newExpert);
 		} else {
-			_parent.removeMember(_expert);
-			_expert.setParent(_parent);
+			_newExpertParent.removeChildren(_newExpert);
+			_newExpert.setParent(_newExpertParent);
 		}
 		
-		notify(EExpertsChange.REMOVE_EXPERT, _expert, null);
+		notify(EExpertsChange.REMOVE_EXPERT, _newExpert, null);
 		
 		return Status.OK_STATUS;
 		
