@@ -4,16 +4,10 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.element.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.element.ui.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- sinbad2.element,
- org.eclipse.core.expressions,
- sinbad2.workspace.ui;bundle-version="1.0.0"
+Require-Bundle: sinbad2.element;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.workspace.ui;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: sinbad2.element.ui.view.experts,
  sinbad2.element.ui.view.experts.provider
-Import-Package: sinbad2.element,
- sinbad2.element.expert,
- sinbad2.element.expert.listener

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Ui
 Bundle-SymbolicName: sinbad2.workspace.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.eclipse.core.expressions,
- org.eclipse.ui,
- sinbad2.workspace;bundle-version="1.0.0"
+Require-Bundle: org.eclipse.core.expressions;visibility:=reexport,
+ org.eclipse.ui;bundle-version="3.8.2";visibility:=reexport,
+ sinbad2.workspace;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

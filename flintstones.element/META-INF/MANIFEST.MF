@@ -10,8 +10,4 @@ Export-Package: sinbad2.element,
  sinbad2.element.expert.listener,
  sinbad2.element.expert.operation
 Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0",
- org.eclipse.core.commands,
- org.eclipse.equinox.registry,
- org.eclipse.swt,
- org.eclipse.jface,
- sinbad2.workspace
+ sinbad2.workspace.ui;bundle-version="1.0.0"

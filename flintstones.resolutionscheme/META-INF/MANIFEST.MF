@@ -4,8 +4,6 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.resolutionscheme;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0",
- org.eclipse.core.runtime,
- sinbad2.workspace
+Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.resolutionscheme,
  sinbad2.resolutionscheme.state

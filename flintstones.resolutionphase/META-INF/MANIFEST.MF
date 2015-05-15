@@ -5,7 +5,6 @@ Bundle-SymbolicName: sinbad2.resolutionphase;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
-Require-Bundle: org.eclipse.core.runtime,
- sinbad2.workspace;bundle-version="1.0.0"
+Require-Bundle: sinbad2.workspace;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.resolutionphase,
  sinbad2.resolutionphase.state
