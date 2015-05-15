@@ -10,7 +10,7 @@ import undoable.HistoryState;
 
 public class UndoHandler extends AbstractHandler {
 	
-public final static String ID = "flintstones.workspace.undo";
+public final static String ID = "flintstones.workspace.ui.undo";
 	
 	private HistoryState _historyState;
 	private IOperationHistory _operationHistory;

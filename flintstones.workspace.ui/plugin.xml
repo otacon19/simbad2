@@ -108,6 +108,7 @@
             name="&amp;Undo">
       </command>
       <command
+            categoryId="flintstones.workspace.undo_redo.category"
             id="flintstones.workspace.ui.redo"
             name="&amp;Redo">
       </command>
@@ -115,11 +116,9 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="undoable.handler.UndoHandler"
             commandId="flintstones.workspace.ui.undo">
       </handler>
       <handler
-            class="undoable.handler.RedoHandler"
             commandId="flintstones.workspace.ui.redo">
       </handler>
    </extension>

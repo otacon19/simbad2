@@ -10,7 +10,7 @@ import undoable.HistoryState;
 
 public class RedoHandler extends AbstractHandler {
 	
-	public final static String ID = "flintstones.workspace.redo";
+	public final static String ID = "flintstones.workspace.ui.redo";
 	
 	private HistoryState _historyState;
 	private IOperationHistory _operationHistory;
