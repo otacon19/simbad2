@@ -114,6 +114,14 @@
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
+      <handler
+            class="undoable.handler.UndoHandler"
+            commandId="flintstones.workspace.ui.undo">
+      </handler>
+      <handler
+            class="undoable.handler.RedoHandler"
+            commandId="flintstones.workspace.ui.redo">
+      </handler>
    </extension>
 
 </plugin>
