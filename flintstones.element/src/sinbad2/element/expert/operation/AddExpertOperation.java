@@ -1,7 +1,6 @@
 package sinbad2.element.expert.operation;
 
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.operations.AbstractOperation;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -9,8 +8,9 @@ import org.eclipse.core.runtime.Status;
 
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.expert.Expert;
+import undoable.UndoableOperation;
 
-public class AddExpertOperation extends AbstractOperation {
+public class AddExpertOperation extends UndoableOperation {
 	
 	private ProblemElementsSet _elementSet;
 	private Expert _parentOfNewExpert;
@@ -24,13 +24,6 @@ public class AddExpertOperation extends AbstractOperation {
 		_newExpertID = id;
 		_parentOfNewExpert = parent;
 		_newExpert = new Expert(_newExpertID);
-	}
-
-	@Override
-	public IStatus execute(IProgressMonitor monitor, IAdaptable info)
-			throws ExecutionException {
-
-		return redo(monitor, info);
 	}
 
 	@Override
@@ -64,6 +57,11 @@ public class AddExpertOperation extends AbstractOperation {
 		
 		return Status.OK_STATUS;
 		
+	}
+
+	@Override
+	public IStatus executeOperation(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+		return redo(monitor, info);
 	}
 
 }

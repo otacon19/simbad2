@@ -7,7 +7,7 @@
          point="org.eclipse.core.runtime.applications">
       <application>
          <run
-               class="flintstones.rcp.Application">
+               class="sinbad2.rcp.Application">
          </run>
       </application>
    </extension>

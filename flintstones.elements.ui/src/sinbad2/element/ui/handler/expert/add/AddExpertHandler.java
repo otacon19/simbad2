@@ -3,6 +3,9 @@ package sinbad2.element.ui.handler.expert.add;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
@@ -44,10 +47,11 @@ public class AddExpertHandler extends AbstractHandler {
 		}
 		
 		if(doit) {	
-			AddExpertOperation operation = new AddExpertOperation(Messages.AddExpertHandler_Add_expert, id, parent, elementSet);
-			operation.execute(null, null);
+			IUndoableOperation operation = (IUndoableOperation) new AddExpertOperation(Messages.AddExpertHandler_Add_expert, id, parent, elementSet);
+			IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 			
-			//TODO operationHistory
+			operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);
+			operationHistory.execute(operation, null, null);
 			
 		}
 		

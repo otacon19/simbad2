@@ -3,6 +3,9 @@ package sinbad2.element.ui.handler.expert.modify;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -48,8 +51,11 @@ public class ModifyExpertHandler extends AbstractHandler {
 		}
 		
 		if(doit) {
-			ModifyExpertOperation operation = new ModifyExpertOperation(Messages.ModifyExpertHandler_Modify_expert, expert, newId, elementSet);
-			operation.execute(null, null);
+			IUndoableOperation operation = (IUndoableOperation) new ModifyExpertOperation(Messages.ModifyExpertHandler_Modify_expert, expert, newId, elementSet);
+			IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
+			
+			operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);
+			operationHistory.execute(operation, null, null);
 		}
 		
 		return null;

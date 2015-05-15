@@ -5,7 +5,7 @@
          point="flintstones.resolutionphase">
       <resolution_phase
             id="flintstones.resolutionphase.framework"
-            implementation="flintstones.resolutionphase.framework.Framework"
+            implementation="sinbad2.resolutionphase.framework.Framework"
             name="%resolution_phase.name">
       </resolution_phase>
    </extension>

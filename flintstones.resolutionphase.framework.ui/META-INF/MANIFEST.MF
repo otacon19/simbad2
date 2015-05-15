@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.resolutionphase.framework.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: flintstones.resolutionphase.framework.ui.Activator
+Bundle-Activator: sinbad2.resolutionphase.framework.ui.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  sinbad2.element.ui;bundle-version="1.0.0",

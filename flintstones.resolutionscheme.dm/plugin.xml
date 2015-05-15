@@ -5,7 +5,7 @@
          point="flintstones.resolutionscheme">
       <scheme
             id="flintstones.resolutionscheme.dm"
-            implementation="flintstones.resolutionscheme.dm.DecisionMaking"
+            implementation="sinbad2.resolutionscheme.dm.DecisionMaking"
             name="Toma de decisiones">
          <phase
                resolution_phase="flintstones.resolutionphase.framework">

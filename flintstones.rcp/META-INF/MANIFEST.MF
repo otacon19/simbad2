@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.rcp;singleton:=true
 Bundle-Version: 1
-Bundle-Activator: flintstones.rcp.Activator
+Bundle-Activator: sinbad2.rcp.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  sinbad2.resolutionscheme.dm.ui;bundle-version="1.0.0",

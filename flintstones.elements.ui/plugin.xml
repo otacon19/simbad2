@@ -165,7 +165,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="sinbad2.element.ui.handler.expert.remove.RemoveExpertsHandler"
+            class="sinbad2.element.ui.handler.expert.remove.RemoveMultiplesExpertsHandler"
             commandId="flintstones.element.expert.remove">
          <activeWhen>
             <and>

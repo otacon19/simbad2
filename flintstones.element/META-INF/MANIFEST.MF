@@ -13,4 +13,5 @@ Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0",
  org.eclipse.core.commands,
  org.eclipse.equinox.registry,
  org.eclipse.swt,
- org.eclipse.jface
+ org.eclipse.jface,
+ sinbad2.workspace

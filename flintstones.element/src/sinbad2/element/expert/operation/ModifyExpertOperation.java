@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.operations.AbstractOperation;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -13,8 +12,9 @@ import org.eclipse.core.runtime.Status;
 
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.expert.Expert;
+import undoable.UndoableOperation;
 
-public class ModifyExpertOperation extends AbstractOperation {
+public class ModifyExpertOperation extends UndoableOperation {
 	
 	private ProblemElementsSet _elementSet;
 	private Expert _modifyExpert;
@@ -41,12 +41,6 @@ public class ModifyExpertOperation extends AbstractOperation {
 		} else {
 			_others = elementSet.getExperts();
 		}
-	}
-
-	@Override
-	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		
-		return redo(monitor, info);
 	}
 
 	@Override
@@ -77,6 +71,11 @@ public class ModifyExpertOperation extends AbstractOperation {
 		
 		return Status.OK_STATUS;
 		
+	}
+
+	@Override
+	public IStatus executeOperation(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+		return redo(monitor,info);
 	}
 
 }

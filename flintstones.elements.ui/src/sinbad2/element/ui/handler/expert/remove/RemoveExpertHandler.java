@@ -3,6 +3,9 @@ package sinbad2.element.ui.handler.expert.remove;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -27,9 +30,11 @@ public class RemoveExpertHandler extends AbstractHandler {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
 		Expert expert = (Expert) selection.getFirstElement();
 		
-		RemoveExpertOperation operation = new RemoveExpertOperation(Messages.RemoveExpertHandler_Remove_expert, expert, elementSet);
-		operation.execute(null, null);
+		IUndoableOperation operation = (IUndoableOperation) new RemoveExpertOperation(Messages.RemoveExpertHandler_Remove_expert, expert, elementSet);
+		IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 		
+		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);
+		operationHistory.execute(operation, null, null);
 		
 		return null;
 	}

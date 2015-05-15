@@ -6,4 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.runtime,
  sinbad2.resolutionphase;bundle-version="1.0.0"
-Export-Package: flintstones.resolutionphase.ui
+Export-Package: sinbad2.resolutionphase.ui

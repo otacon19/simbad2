@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="flintstones.resolutionphase.framework.ui.FrameworkPerspective"
+            class="sinbad2.resolutionphase.framework.ui.FrameworkPerspective"
             id="flintstones.resolutionphase.framework.perspective"
             name="%framework.perspective.name">
       </perspective>
