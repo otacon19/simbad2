@@ -34,9 +34,64 @@ public class ProblemElementsSet implements Cloneable {
 		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.EXPERTS_CHANGES, null, _experts));
 	}
 
-	public void insertExpert(Expert newExpert) {
-		_experts.add(newExpert);
-		Collections.sort(_experts);
+	public void insertExpert(Expert expert, Boolean hasParent) {
+		
+		if(!hasParent) {
+			_experts.add(expert);
+			Collections.sort(_experts);
+		}
+		
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.ADD_EXPERT, null, expert));
+		
+	}
+	
+	public void insertSeveralExperts(List<Expert> insertExperts, Boolean hasParent) {
+		Expert parent = insertExperts.get(0).getParent();
+		
+		for(Expert expert: insertExperts) {	
+			if(!hasParent) {
+				_experts.add(expert);
+			} else {
+				parent.addChildren(expert);
+			}
+		}
+		
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_SEVERAL_EXPERTS, null, insertExperts));
+		
+	}
+	
+	public void removeExpert(Expert expert, Boolean hasParent) {
+		
+		if(!hasParent) {
+			_experts.remove(expert);
+			Collections.sort(_experts);
+		}
+		
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_EXPERT, expert, null));
+		
+	}
+	
+	public void removeSeveralExperts(List<Expert> removeExperts, Boolean hasParent) {
+		Expert parent = removeExperts.get(0).getParent();
+		
+		for(Expert expert: removeExperts) {	
+			if(!hasParent) {
+				_experts.remove(expert);
+			} else {
+				parent.removeChildren(expert);
+				expert.setParent(parent);
+			}
+		}
+		
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_SEVERAL_EXPERTS, removeExperts, null));
+		
+	}
+	
+	public void modifyExpert(Expert modifyExpert, String id) {
+		Expert oldExpert = (Expert) modifyExpert.clone();
+		modifyExpert.setId(id);
+		
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.MODIFY_EXPERT, oldExpert, modifyExpert));
 		
 	}
 	

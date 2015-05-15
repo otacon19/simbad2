@@ -30,7 +30,7 @@ public class ResolutionPhaseRegistryExtension implements Cloneable {
 		return result;
 	}
 	
-	//TODO hash
+	//TODO hashcode
 	
 	@Override
 	protected Object clone() throws CloneNotSupportedException {

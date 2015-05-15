@@ -70,7 +70,6 @@ public class ResolutionPhasesUIManager {
 				resolutionPhaseUI.setUiId(resolutionPhaseUIRegistry.getUIID(uiType));
 				
 				resolutionPhaseUI.setRegistry(resolutionPhaseUIRegistry);
-				resolutionPhaseUI.getResolutionPhase().registerResolutionPhaseStateListener(resolutionPhaseUI);
 				
 				_resolutionPhasesUIs.put(id, resolutionPhaseUI);
 				

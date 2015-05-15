@@ -88,7 +88,6 @@ public class ResolutionScheme {
 				ResolutionSchemesManager rsm = ResolutionSchemesManager.getInstance();
 				rsm.setImplementationResolutionScheme(_implementation, _id);
 				
-				registerResolutionSchemeStateListener(_implementation);
 			} catch (CoreException e) {
 				return null;
 			}
@@ -99,8 +98,6 @@ public class ResolutionScheme {
 
 	public void setImplementation(ResolutionSchemeImplementation implementation) {
 		if(implementation != _implementation) {
-			unregisterResolutionSchemeStateListener(_implementation);
-			registerResolutionSchemeStateListener(implementation);
 			
 			ResolutionSchemesManager rsm = ResolutionSchemesManager.getInstance();
 			rsm.setImplementationResolutionScheme(implementation, _id);
@@ -158,7 +155,7 @@ public class ResolutionScheme {
 	
 	public void notifyResolutionSchemeStateChange(ResolutionSchemeStateChangeEvent event) {
 		for(IResolutionSchemeStateListener listener: _listeners) {
-			listener.resolutionSchemeStateChange(event);
+			listener.notifyResolutionSchemeStateChange(event);
 		}
 	}
 	

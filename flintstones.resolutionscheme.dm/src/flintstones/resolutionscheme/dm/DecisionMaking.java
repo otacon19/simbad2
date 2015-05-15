@@ -15,7 +15,7 @@ public class DecisionMaking extends ResolutionSchemeImplementation {
 	}
 	
 	@Override
-	public void resolutionSchemeStateChange(ResolutionSchemeStateChangeEvent event) {
+	public void notifyResolutionSchemeStateChange(ResolutionSchemeStateChangeEvent event) {
 
 		ResolutionPhasesManager resolutionPhasesManager = ResolutionPhasesManager.getInstance();
 		

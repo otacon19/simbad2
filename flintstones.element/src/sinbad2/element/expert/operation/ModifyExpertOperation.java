@@ -13,14 +13,12 @@ import org.eclipse.core.runtime.Status;
 
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.expert.Expert;
-import sinbad2.element.expert.listener.EExpertsChange;
-import sinbad2.element.expert.listener.ExpertsChangeEvent;
 
 public class ModifyExpertOperation extends AbstractOperation {
 	
 	private ProblemElementsSet _elementSet;
 	private Expert _modifyExpert;
-	private List<Expert> _brothers;
+	private List<Expert> _others;
 	private List<Expert> _childrens;
 	private String _newIdExpert;
 	private String _oldIdExpert;
@@ -34,13 +32,14 @@ public class ModifyExpertOperation extends AbstractOperation {
 		_oldIdExpert = expert.getId();
 		
 		_childrens = new LinkedList<Expert>();
-		_brothers = new LinkedList<Expert>();
+		_others = new LinkedList<Expert>();
 		
 		Expert parent = _modifyExpert.getParent();
+		
 		if(parent != null) {
 			_childrens = parent.getChildrens();
 		} else {
-			_brothers = elementSet.getExperts();
+			_others = elementSet.getExperts();
 		}
 	}
 
@@ -53,17 +52,13 @@ public class ModifyExpertOperation extends AbstractOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		Expert oldExpert = (Expert) _modifyExpert.clone();
-		
-		_modifyExpert.setId(_newIdExpert);
+		_elementSet.modifyExpert(_modifyExpert, _newIdExpert);
 		
 		if(_childrens.size() == 0) {
-			Collections.sort(_brothers);
+			Collections.sort(_others);
 		} else {
 			Collections.sort(_childrens);
 		}
-		
-		notify(EExpertsChange.MODIFY_EXPERT, oldExpert, _modifyExpert);
 		
 		return Status.OK_STATUS;
 
@@ -72,24 +67,16 @@ public class ModifyExpertOperation extends AbstractOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		Expert oldExpert = (Expert) _modifyExpert.clone();
-		
-		_modifyExpert.setId(_oldIdExpert);
+		_elementSet.modifyExpert(_modifyExpert, _oldIdExpert);
 		
 		if(_childrens.size() == 0) {
-			Collections.sort(_brothers);
+			Collections.sort(_others);
 		} else {
 			Collections.sort(_childrens);
 		}
 		
-		notify(EExpertsChange.MODIFY_EXPERT, oldExpert, _modifyExpert);
-		
 		return Status.OK_STATUS;
 		
-	}
-	
-	public void notify(EExpertsChange change, Object oldValue, Object newValue) {
-		_elementSet.notifyExpertsChanges(new ExpertsChangeEvent(change, oldValue, newValue));
 	}
 
 }

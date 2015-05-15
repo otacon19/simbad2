@@ -11,13 +11,10 @@ import org.eclipse.core.runtime.Status;
 
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.expert.Expert;
-import sinbad2.element.expert.listener.EExpertsChange;
-import sinbad2.element.expert.listener.ExpertsChangeEvent;
 
 public class RemoveExpertsOperation extends AbstractOperation {
 	
 	private ProblemElementsSet _elementSet;
-	private List<Expert> _experts;
 	private List<Expert> _removeSeveralExperts;
 	private Expert _firstParentOfRemoveExperts;
 
@@ -25,7 +22,6 @@ public class RemoveExpertsOperation extends AbstractOperation {
 		super(label);
 		
 		_elementSet = elementSet;
-		_experts = _elementSet.getExperts();
 		_removeSeveralExperts = expertsRemove;
 		_firstParentOfRemoveExperts = _removeSeveralExperts.get(0).getParent();
 	}
@@ -38,18 +34,15 @@ public class RemoveExpertsOperation extends AbstractOperation {
 
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+		boolean hasParent = false;
 		
-		for(Expert expert: _removeSeveralExperts) {
-			if(_firstParentOfRemoveExperts == null) {
-				_experts.remove(expert);
-			} else {
-				_firstParentOfRemoveExperts.removeChildren(expert);
-				expert.setParent(_firstParentOfRemoveExperts);
-			}
-		
+		if(_firstParentOfRemoveExperts == null) {
+			_elementSet.removeSeveralExperts(_removeSeveralExperts, hasParent);
+		} else {
+			hasParent = true;
+			_elementSet.removeSeveralExperts(_removeSeveralExperts, hasParent);
 		}
 		
-		notify(EExpertsChange.REMOVE_SEVERAL_EXPERTS, _removeSeveralExperts, null);
 			
 		return Status.OK_STATUS;
 		
@@ -57,22 +50,16 @@ public class RemoveExpertsOperation extends AbstractOperation {
 
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+		boolean hasParent = false;
 		
-		for(Expert expert: _removeSeveralExperts) {
-			if(_firstParentOfRemoveExperts == null) {
-				_elementSet.insertExpert(expert);
-			} else {
-				_firstParentOfRemoveExperts.addChildren(expert);
-			}
+		if(_firstParentOfRemoveExperts == null) {
+			_elementSet.insertSeveralExperts(_removeSeveralExperts, hasParent);
+		} else {
+			hasParent = true;
+			_elementSet.insertSeveralExperts(_removeSeveralExperts, hasParent);
 		}
-		
-		notify(EExpertsChange.ADD_SEVERAL_EXPERTS, null, _removeSeveralExperts);
 		
 		return Status.OK_STATUS;
 	}
 	
-	private void notify(EExpertsChange change, Object oldValue, Object newValue) {
-		_elementSet.notifyExpertsChanges(new ExpertsChangeEvent(change, oldValue, newValue));
-		
-	}
 }

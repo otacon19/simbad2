@@ -16,7 +16,7 @@ import sinbad2.element.ui.nls.Messages;
 public class AddExpertInputDialog extends InputDialog {
 	
 	private boolean _isMember;
-	private Button _isMemberOfButton;
+	private Button _isMemberButton;
 	private Expert _parentOfNewExpert;
 	private AddExpertInputValidator _validator;
 
@@ -38,13 +38,13 @@ public class AddExpertInputDialog extends InputDialog {
 		container = (Composite) super.createDialogArea(parent);
 		
 		if(_parentOfNewExpert != null) {
-			_isMemberOfButton = new Button(container, SWT.CHECK);
-			_isMemberOfButton.setText(Messages.AddExpertInputDialog_Is_member_of + " " + _parentOfNewExpert.getFormatId());
-			_isMemberOfButton.setSelection(_isMember);
-			_isMemberOfButton.addSelectionListener(new SelectionAdapter() {
+			_isMemberButton = new Button(container, SWT.CHECK);
+			_isMemberButton.setText(Messages.AddExpertInputDialog_Is_member_of + " " + _parentOfNewExpert.getFormatId());
+			_isMemberButton.setSelection(_isMember);
+			_isMemberButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					_isMember = _isMemberOfButton.getSelection();
+					_isMember = _isMemberButton.getSelection();
 					_validator.setIsMember(_isMember);
 					AddExpertInputDialog.this.validateInput();
 				}

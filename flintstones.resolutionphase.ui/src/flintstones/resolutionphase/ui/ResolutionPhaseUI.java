@@ -50,6 +50,8 @@ public class ResolutionPhaseUI implements IResolutionPhaseStateListener {
 		setUi(ui);
 		setResolutionPhaseUIType(resolutionPhaseUIType);
 		setRegistry(registry);
+		
+		_resolutionPhase.registerResolutionPhaseStateListener(this);
 	}
 
 	public String getId() {

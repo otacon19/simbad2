@@ -1,7 +1,5 @@
 package sinbad2.element.expert.operation;
 
-import java.util.List;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.AbstractOperation;
 import org.eclipse.core.runtime.IAdaptable;
@@ -11,13 +9,10 @@ import org.eclipse.core.runtime.Status;
 
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.expert.Expert;
-import sinbad2.element.expert.listener.EExpertsChange;
-import sinbad2.element.expert.listener.ExpertsChangeEvent;
 
 public class RemoveExpertOperation extends AbstractOperation {
 	
 	private ProblemElementsSet _elementSet;
-	private List<Expert> _experts;
 	private Expert _removeExpert;
 	private Expert _parentOfRemoveExpert;
 
@@ -25,7 +20,6 @@ public class RemoveExpertOperation extends AbstractOperation {
 		super(label);
 		
 		_elementSet = elementSet;
-		_experts = _elementSet.getExperts();
 		_removeExpert = expert;
 		_parentOfRemoveExpert = _removeExpert.getParent();
 	}
@@ -38,37 +32,35 @@ public class RemoveExpertOperation extends AbstractOperation {
 
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+		boolean hasParent = false;
 		
 		if(_parentOfRemoveExpert == null) {
-			_experts.remove(_removeExpert);
+			_elementSet.removeExpert(_removeExpert, hasParent);
 		} else {
+			hasParent = true;
 			_parentOfRemoveExpert.removeChildren(_removeExpert);
 			_removeExpert.setParent(_parentOfRemoveExpert);
+			_elementSet.removeExpert(_removeExpert, hasParent);
 		}
-		
-		notify(EExpertsChange.REMOVE_EXPERT, _removeExpert, null);
-		
+			
 		return Status.OK_STATUS;
 		
 	}
 
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+		boolean hasParent = false;
 		
 		if(_parentOfRemoveExpert == null) {
-			_elementSet.insertExpert(_removeExpert);
+			_elementSet.insertExpert(_removeExpert, hasParent);
 		} else {
+			hasParent = true;
 			_parentOfRemoveExpert.addChildren(_removeExpert);
+			_elementSet.insertExpert(_removeExpert, hasParent);
+			
 		}
 		
-		notify(EExpertsChange.ADD_EXPERT, null, _removeExpert);
-		
 		return Status.OK_STATUS;
-		
-	}
-	
-	private void notify(EExpertsChange change, Object oldValue, Object newValue) {
-		_elementSet.notifyExpertsChanges(new ExpertsChangeEvent(change, oldValue, newValue));
 		
 	}
 
