@@ -6,9 +6,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
+import sinbad2.core.undoable.UndoableOperation;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.expert.Expert;
-import sinbad2.workspace.undoable.UndoableOperation;
 
 public class AddExpertOperation extends UndoableOperation {
 	

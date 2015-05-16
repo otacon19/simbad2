@@ -4,9 +4,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionscheme.ui.ResolutionSchemeUI;
 import sinbad2.resolutionscheme.ui.ResolutionSchemesUIManager;
-import sinbad2.workspace.Workspace;
 
 /**
  * The activator class controls the plug-in life cycle

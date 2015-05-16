@@ -5,13 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import sinbad2.core.workspace.IWorkspaceContent;
 import sinbad2.resolutionphase.IResolutionPhase;
 import sinbad2.resolutionphase.ResolutionPhase;
 import sinbad2.resolutionscheme.state.IResolutionSchemeStateListener;
-import sinbad2.workspace.IWorkspaceContent;
 
-abstract public class ResolutionSchemeImplementation implements
-		IResolutionSchemeStateListener, IWorkspaceContent {
+abstract public class ResolutionSchemeImplementation implements IResolutionSchemeStateListener, IWorkspaceContent {
 
 	protected List<String> _phasesNames;
 	protected Map<String, ResolutionPhase> _phases;
