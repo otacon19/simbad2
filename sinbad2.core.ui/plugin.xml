@@ -139,6 +139,14 @@
       <handler
             class="sinbad2.core.undoable.handler.RedoOperationHandler"
             commandId="sinbad2.workspace.redo">
+         <enabledWhen>
+            <with
+                  variable="flintstones.ui.redo.state">
+               <equals
+                     value="ENABLED">
+               </equals>
+            </with>
+         </enabledWhen>
       </handler>
       <handler
             class="sinbad2.core.undoable.handler.UndoOperationHandler"
@@ -201,6 +209,16 @@
             disabledIcon="platform:/plugin/org.eclipse.ui/icons/full/dtool16/redo_edit.gif"
             icon="platform:/plugin/org.eclipse.ui/icons/full/etool16/redo_edit.gif">
       </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.services">
+      <sourceProvider
+            provider="sinbad2.core.ui.undoable.UndoableSourceProvider">
+         <variable
+               name="sinbad2.core.ui.variable1"
+               priorityLevel="workbench">
+         </variable>
+      </sourceProvider>
    </extension>
 
 </plugin>
