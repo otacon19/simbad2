@@ -5,5 +5,5 @@ Bundle-SymbolicName: sinbad2.resolutionphase.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.workspace.ui;bundle-version="1.0.0";visibility:=reexport
+ sinbad2.application.ui;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.resolutionphase.ui

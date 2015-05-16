@@ -34,7 +34,7 @@ public class RemoveMultiplesExpertsHandler extends AbstractHandler {
 		@SuppressWarnings("unchecked")
 		List<Expert> experts = selection.toList();
 		
-		IUndoableOperation operation = (IUndoableOperation) new RemoveMultipleExpertsOperation(Messages.RemoveExpertsHandler_Remove_multiple_experts, experts, elementSet);
+		IUndoableOperation operation = new RemoveMultipleExpertsOperation(Messages.RemoveExpertsHandler_Remove_multiple_experts, experts, elementSet);
 		IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 		
 		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

@@ -7,4 +7,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Require-Bundle: sinbad2.element;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.resolutionphase;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.workspace;bundle-version="1.0.0";visibility:=reexport
+ sinbad2.application.core;bundle-version="1.0.0";visibility:=reexport

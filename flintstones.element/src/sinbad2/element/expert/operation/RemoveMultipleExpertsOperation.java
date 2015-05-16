@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.Status;
 
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.expert.Expert;
-import undoable.UndoableOperation;
+import sinbad2.workspace.undoable.UndoableOperation;
 
 public class RemoveMultipleExpertsOperation extends UndoableOperation {
 	

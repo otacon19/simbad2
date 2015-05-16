@@ -5,7 +5,7 @@ Bundle-SymbolicName: sinbad2.element.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.element.ui.Activator
 Require-Bundle: sinbad2.element;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.workspace.ui;bundle-version="1.0.0";visibility:=reexport
+ sinbad2.application.ui;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Bundle-ActivationPolicy: lazy

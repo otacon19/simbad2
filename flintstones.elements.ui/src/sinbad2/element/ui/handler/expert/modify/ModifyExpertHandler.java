@@ -51,7 +51,7 @@ public class ModifyExpertHandler extends AbstractHandler {
 		}
 		
 		if(doit) {
-			IUndoableOperation operation = (IUndoableOperation) new ModifyExpertOperation(Messages.ModifyExpertHandler_Modify_expert, expert, newId, elementSet);
+			IUndoableOperation operation = new ModifyExpertOperation(Messages.ModifyExpertHandler_Modify_expert, expert, newId, elementSet);
 			IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 			
 			operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

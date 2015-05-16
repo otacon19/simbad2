@@ -30,7 +30,7 @@ public class RemoveExpertHandler extends AbstractHandler {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
 		Expert expert = (Expert) selection.getFirstElement();
 		
-		IUndoableOperation operation = (IUndoableOperation) new RemoveExpertOperation(Messages.RemoveExpertHandler_Remove_expert, expert, elementSet);
+		IUndoableOperation operation = new RemoveExpertOperation(Messages.RemoveExpertHandler_Remove_expert, expert, elementSet);
 		IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 		
 		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

@@ -47,7 +47,7 @@ public class AddExpertHandler extends AbstractHandler {
 		}
 		
 		if(doit) {	
-			IUndoableOperation operation = (IUndoableOperation) new AddExpertOperation(Messages.AddExpertHandler_Add_expert, id, parent, elementSet);
+			IUndoableOperation operation = new AddExpertOperation(Messages.AddExpertHandler_Add_expert, id, parent, elementSet);
 			IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 			
 			operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);
