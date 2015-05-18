@@ -15,13 +15,13 @@ public class ResolutionSchemesManager {
 
 	private ResolutionScheme _activeResolutionScheme;
 
-	private Map<String, ResolutionSchemeRegistry> _registers;
+	private Map<String, ResolutionSchemeRegistryExtension> _registers;
 	private Map<String, ResolutionScheme> _resolutionSchemes;
 	private Map<ResolutionSchemeImplementation, String> _implementationResolutionSchemes;
 
 	private ResolutionSchemesManager() {
 		_activeResolutionScheme = null;
-		_registers = new HashMap<String, ResolutionSchemeRegistry>();
+		_registers = new HashMap<String, ResolutionSchemeRegistryExtension>();
 		_resolutionSchemes = new HashMap<String, ResolutionScheme>();
 		_implementationResolutionSchemes = new HashMap<ResolutionSchemeImplementation, String>();
 		loadRegisters();
@@ -39,9 +39,9 @@ public class ResolutionSchemesManager {
 		IConfigurationElement[] extensions = reg
 				.getConfigurationElementsFor(EXTENSION_POINT);
 
-		ResolutionSchemeRegistry registry;
+		ResolutionSchemeRegistryExtension registry;
 		for (IConfigurationElement extension : extensions) {
-			registry = new ResolutionSchemeRegistry(extension);
+			registry = new ResolutionSchemeRegistryExtension(extension);
 			_registers.put(registry.getElement(EResolutionSchemeElements.id),
 					registry);
 		}
@@ -51,7 +51,7 @@ public class ResolutionSchemesManager {
 		return _registers.keySet().toArray(new String[0]);
 	}
 
-	public ResolutionSchemeRegistry getRegistry(String id) {
+	public ResolutionSchemeRegistryExtension getRegistry(String id) {
 		return _registers.get(id);
 	}
 
@@ -82,7 +82,7 @@ public class ResolutionSchemesManager {
 		} else {
 			try {
 
-				ResolutionSchemeRegistry resolutionSchemeRegistry = getRegistry(id);
+				ResolutionSchemeRegistryExtension resolutionSchemeRegistry = getRegistry(id);
 				ResolutionScheme resolutionScheme = new ResolutionScheme();
 				resolutionScheme.setId(id);
 				resolutionScheme.setName(resolutionSchemeRegistry

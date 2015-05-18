@@ -2,15 +2,15 @@ package sinbad2.resolutionscheme;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 
-public class ResolutionSchemeRegistry {
+public class ResolutionSchemeRegistryExtension {
 
 	private IConfigurationElement _configuration;
 
-	private ResolutionSchemeRegistry() {
+	private ResolutionSchemeRegistryExtension() {
 		_configuration = null;
 	}
 
-	public ResolutionSchemeRegistry(IConfigurationElement element) {
+	public ResolutionSchemeRegistryExtension(IConfigurationElement element) {
 		this();
 		_configuration = element;
 	}

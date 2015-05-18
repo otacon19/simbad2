@@ -1,4 +1,4 @@
-package sinbad2.resolutionphase;
+ package sinbad2.resolutionphase;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,11 +9,11 @@ import sinbad2.resolutionphase.state.EResolutionPhaseStateChange;
 import sinbad2.resolutionphase.state.IResolutionPhaseStateListener;
 import sinbad2.resolutionphase.state.ResolutionPhaseStateChangeEvent;
 
-public class ResolutionPhase implements Cloneable {
+public class ResolutionPhase {
 	
 	private String _id;
 	private String _name;
-	private IResolutionPhase _implementation;
+	private ResolutionPhaseImplementation _implementation;
 	private ResolutionPhaseRegistryExtension _registry;
 	
 	private List<IResolutionPhaseStateListener> _listeners;
@@ -27,7 +27,7 @@ public class ResolutionPhase implements Cloneable {
 		_listeners = new LinkedList<IResolutionPhaseStateListener>();
 	}
 	
-	public ResolutionPhase(String id, String name, IResolutionPhase implementation, ResolutionPhaseRegistryExtension registry) {
+	public ResolutionPhase(String id, String name, ResolutionPhaseImplementation implementation, ResolutionPhaseRegistryExtension registry) {
 		this();
 		setId(id);
 		setName(name);
@@ -51,11 +51,11 @@ public class ResolutionPhase implements Cloneable {
 		_name = name;
 	}
 
-	public IResolutionPhase getImplementation() {
+	public ResolutionPhaseImplementation getImplementation() {
 		
 		if(_implementation == null) {
 			try {
-				_implementation = (IResolutionPhase) _registry.getConfiguration().
+				_implementation = (ResolutionPhaseImplementation) _registry.getConfiguration().
 						createExecutableExtension(EResolutionPhaseElements.implementation.toString());
 				
 				ResolutionPhasesManager rpm = ResolutionPhasesManager.getInstance();
@@ -69,7 +69,7 @@ public class ResolutionPhase implements Cloneable {
 		return _implementation;
 	}
 
-	public void setImplementation(IResolutionPhase implementation) {
+	public void setImplementation(ResolutionPhaseImplementation implementation) {
 		
 		if(implementation != _implementation) {
 			unregisterResolutionPhaseStateListener(_implementation);
@@ -121,16 +121,5 @@ public class ResolutionPhase implements Cloneable {
 		for(IResolutionPhaseStateListener listener: _listeners) {
 			listener.notifyResolutionPhaseStateChange(event);
 		}
-	}
-	
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		ResolutionPhase result = null;
-		
-		result = (ResolutionPhase) super.clone();
-		result._implementation = _implementation.clone();
-		result._registry = (ResolutionPhaseRegistryExtension) _registry.clone();
-		
-		return result;	
 	}
 }

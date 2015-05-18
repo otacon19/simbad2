@@ -5,13 +5,11 @@ import java.util.List;
 
 import sinbad2.resolutionphase.ResolutionPhase;
 import sinbad2.resolutionphase.ResolutionPhasesManager;
-import sinbad2.resolutionphase.state.IResolutionPhaseStateListener;
-import sinbad2.resolutionphase.state.ResolutionPhaseStateChangeEvent;
 import sinbad2.resolutionphase.ui.state.EResolutionPhaseUIStateChanges;
 import sinbad2.resolutionphase.ui.state.IResolutionPhaseUIStateListener;
 import sinbad2.resolutionphase.ui.state.ResolutionPhaseUIStateChangeEvent;
 
-public class ResolutionPhaseUI implements IResolutionPhaseStateListener {
+public class ResolutionPhaseUI {
 	
 	private String _id;
 	private String _name;
@@ -19,6 +17,7 @@ public class ResolutionPhaseUI implements IResolutionPhaseStateListener {
 	private ResolutionPhase _resolutionPhase;
 	private String _uiId;
 	private Object _ui;
+	
 	private EResolutionPhaseUIType _resolutionPhaseUIType;
 	private ResolutionPhaseUIRegistry _registry;
 	
@@ -51,7 +50,6 @@ public class ResolutionPhaseUI implements IResolutionPhaseStateListener {
 		setResolutionPhaseUIType(resolutionPhaseUIType);
 		setRegistry(registry);
 		
-		_resolutionPhase.registerResolutionPhaseStateListener(this);
 	}
 
 	public String getId() {
@@ -151,21 +149,5 @@ public class ResolutionPhaseUI implements IResolutionPhaseStateListener {
 		for(IResolutionPhaseUIStateListener listener: _listeners) {
 			listener.resolutionPhaseUIStateChange(event);
 		}
-	}
-
-
-	@Override
-	public void notifyResolutionPhaseStateChange(ResolutionPhaseStateChangeEvent event) {
-		ResolutionPhasesUIManager manager = ResolutionPhasesUIManager.getInstance();
-		switch(event.getChange()) {
-			case ACTIVATED:
-				manager.activate(_id);
-				break;
-			case DEACTIVATED:
-				manager.deactiveCurrentActive();
-				break;
-		default:
-			break;
-		}	
 	}
 }

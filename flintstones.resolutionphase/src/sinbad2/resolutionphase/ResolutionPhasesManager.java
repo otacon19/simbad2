@@ -17,14 +17,14 @@ public class ResolutionPhasesManager {
 	
 	private Map<String, ResolutionPhaseRegistryExtension> _registers;
 	private Map<String, ResolutionPhase> _resolutionPhases;
-	private Map<IResolutionPhase, String> _implementationResolutionPhases;
+	private Map<ResolutionPhaseImplementation, String> _implementationResolutionPhases;
 	
 	private ResolutionPhasesManager() {
 		_activeResolutionPhase = null;
 		
 		_registers = new HashMap<String, ResolutionPhaseRegistryExtension>();
 		_resolutionPhases = new HashMap<String, ResolutionPhase>();
-		_implementationResolutionPhases = new HashMap<IResolutionPhase, String>();
+		_implementationResolutionPhases = new HashMap<ResolutionPhaseImplementation, String>();
 		
 		loadRegisters();
 	}
@@ -58,11 +58,11 @@ public class ResolutionPhasesManager {
 		return _registers.get(id);
 	}
 	
-	public void setImplementationResolutionPhase(IResolutionPhase implementation, String resolutionPhaseId) {
+	public void setImplementationResolutionPhase(ResolutionPhaseImplementation implementation, String resolutionPhaseId) {
 		_implementationResolutionPhases.put(implementation, resolutionPhaseId);
 	}
 	
-	public ResolutionPhase getImplementationResolutionPhase(IResolutionPhase implementation) {
+	public ResolutionPhase getImplementationResolutionPhase(ResolutionPhaseImplementation implementation) {
 		ResolutionPhase result = null;
 		
 		String id = _implementationResolutionPhases.get(implementation);

@@ -17,7 +17,7 @@ public class ResolutionScheme {
 	private String _name;
 	private List<ResolutionPhase> _phases;
 	private ResolutionSchemeImplementation _implementation;
-	private ResolutionSchemeRegistry _registry;
+	private ResolutionSchemeRegistryExtension _registry;
 
 	private List<IResolutionSchemeStateListener> _listeners;
 
@@ -34,7 +34,7 @@ public class ResolutionScheme {
 
 	public ResolutionScheme(String id, String name,
 			ResolutionSchemeImplementation implementation,
-			List<ResolutionPhase> phases, ResolutionSchemeRegistry registry) {
+			List<ResolutionPhase> phases, ResolutionSchemeRegistryExtension registry) {
 		this();
 		setId(id);
 		setName(name);
@@ -112,11 +112,11 @@ public class ResolutionScheme {
 		}
 	}
 
-	public ResolutionSchemeRegistry getregistry() {
+	public ResolutionSchemeRegistryExtension getregistry() {
 		return _registry;
 	}
 
-	public void setRegistry(ResolutionSchemeRegistry registry) {
+	public void setRegistry(ResolutionSchemeRegistryExtension registry) {
 		_registry = registry;
 
 	}
