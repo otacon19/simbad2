@@ -11,81 +11,49 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextActivation;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.element.ui.view.experts.provider.ExpertIdLabelProvider;
 import sinbad2.element.ui.view.experts.provider.ExpertsContentProvider;
 
-/**
- * ExpertsView.java
- * 
- * Clase que define la vista de expertos
- * 
- * @author Labella Romero, Álvaro
- * @version 1.0
- *
- */
 public class ExpertsView extends ViewPart {
 	
 	public static final String ID = "flintstones.element.ui.view.experts"; //$NON-NLS-1$
-	//public static final String CONTEXT_ID = "flintstones.element.ui.view.experts.experts_view";
+	public static final String CONTEXT_ID = "flintstones.element.ui.view.experts.experts_view"; //$NON-NLS-1$
 	
-	//private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
+	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 	
 	private TreeViewer _viewer;
 	
 	private ExpertsContentProvider _provider;
 	
-	/**
-	 * Constructor de la clase ExpertsView
-	 */
 	public ExpertsView() {
 		
 	}
-	
-	/**
-	 * Método get del parámetro _viewer
-	 * @return árbol
-	 */
+
 	public TreeViewer getViewer() {
 		return _viewer;
 	}
 
-	/**
-	 * Método set del parámetro _viewer
-	 * @param _viewer árbol a asignar
-	 */
 	public void setViewer(TreeViewer _viewer) {
 		this._viewer = _viewer;
 	}
 	
-	/**
-	 * Método get del atributo _provider
-	 * @return proveedor de contenido de la vista
-	 */
 	public ExpertsContentProvider getProvider() {
 		return _provider;
 	}
 	
-	/**
-	 * Método set del atributo _provider
-	 * @param _provider proveedor de contenido a asignar
-	 */
 	public void setProvider(ExpertsContentProvider _provider) {
 		this._provider = _provider;
 	}
 	
-	/**
-	 * Método get del atributo ID
-	 * @return ID de la vista
-	 */
 	public static String getId() {
 		return ID;
 	}
 
-	/**
-	 * Método que crea los controles que forman la vista
-	 */
 	@Override
 	public void createPartControl(Composite parent) {
 		
@@ -108,6 +76,8 @@ public class ExpertsView extends ViewPart {
 		addColumns();
 		hookContextMenu();
 		hookFocusListener();
+		//TODO hookSelectionChangeListener()
+		//TODO hookDoubleClickListener()
 
 		_viewer.setInput(_provider.getInput());
 		getSite().setSelectionProvider(_viewer);
@@ -135,7 +105,7 @@ public class ExpertsView extends ViewPart {
 	private void hookFocusListener() {
 		_viewer.getControl().addFocusListener(new FocusListener() {
 			
-			//private IContextActivation activation = null;
+			private IContextActivation activation = null;
 			
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -151,9 +121,6 @@ public class ExpertsView extends ViewPart {
 		});
 	}
 	
-	/**
-	 * Método que asigna el foco en el control de la vista adecuado
-	 */
 	@Override
 	public void setFocus() {
 		_viewer.getControl().setFocus();

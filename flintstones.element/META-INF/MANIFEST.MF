@@ -6,6 +6,9 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Export-Package: sinbad2.element,
+ sinbad2.element.alternative,
+ sinbad2.element.alternative.listener,
+ sinbad2.element.alternative.operation,
  sinbad2.element.expert,
  sinbad2.element.expert.listener,
  sinbad2.element.expert.operation

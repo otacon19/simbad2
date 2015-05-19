@@ -6,6 +6,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 import sinbad2.core.undoable.UndoableOperation;
 import sinbad2.element.ProblemElementsSet;
@@ -31,13 +32,19 @@ public class RemoveMultipleAlternativesOperation extends UndoableOperation {
 
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		return null;
+		
+		_elementSet.removeSeveralAlternatives(_removeAlternatives);
+		
+		return Status.OK_STATUS;
 		
 	}
 
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		return null;
+		
+		_elementSet.insertSeveralAlternatives(_removeAlternatives);
+		
+		return Status.OK_STATUS;
 	}
 
 }

@@ -25,6 +25,18 @@
                standalone="true"
                visible="true">
          </view>
+         <view
+               closeable="false"
+               id="flintstones.element.ui.view.alternatives"
+               minimized="false"
+               moveable="false"
+               ratio="0.33"
+               relationship="right"
+               relative="flintstones.element.ui.view.experts"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
       </perspectiveExtension>
    </extension>
    <extension

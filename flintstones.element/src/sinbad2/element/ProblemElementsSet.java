@@ -90,6 +90,19 @@ public class ProblemElementsSet implements Cloneable {
 		
 	}
 	
+	public void insertSeveralAlternatives(List<Alternative> insertAlternatives) {
+		
+		for(Alternative alternative: insertAlternatives) {	
+			_alternatives.add(alternative);
+		
+		}
+		
+		Collections.sort(_alternatives);
+		
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_SEVERAL_ALTERNATIVES, null, insertAlternatives));
+		
+	}
+	
 	public void removeExpert(Expert expert, Boolean hasParent) {
 		
 		if(!hasParent) {

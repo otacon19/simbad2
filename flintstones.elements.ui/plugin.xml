@@ -16,6 +16,15 @@
             name="%experts.view.name"
             restorable="false">
       </view>
+      <view
+            allowMultiple="true"
+            category="flintstones.elements.category"
+            class="sinbad2.element.ui.view.alternatives.AlternativesView"
+            icon="icons/alternatives.png"
+            id="flintstones.element.ui.view.alternatives"
+            name="Alternatives"
+            restorable="false">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -116,6 +125,69 @@
             </visibleWhen>
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:flintstones.element.ui.view.alternatives">
+         <command
+               commandId="flintstones.element.alternative.add"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
+         <command
+               commandId="flintstones.element.alternative.modify"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
+         <command
+               commandId="flintstones.element.alternative.remove"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:flintstones.element.ui.view.alternatives">
+         <command
+               commandId="flintstones.element.alternative.add"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
+         <command
+               commandId="flintstones.element.alternative.modify"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
+         <command
+               commandId="flintstones.element.alternative.remove"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:flintstones.element.ui.view.alternatives">
+         <command
+               commandId="flintstones.element.alternative.add"
+               style="push">
+         </command>
+         <command
+               commandId="flintstones.element.alternative.modify"
+               style="push">
+         </command>
+         <command
+               commandId="flintstones.element.alternative.remove"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -187,6 +259,48 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="sinbad2.element.ui.handler.alternative.add.AddAlternativeHandler"
+            commandId="flintstones.element.alternative.add">
+      </handler>
+      <handler
+            class="sinbad2.element.ui.handler.alternative.modify.ModifyAlternativeHandler"
+            commandId="flintstones.element.alternative.modify">
+         <enabledWhen>
+            <and>
+               <with
+                     variable="selection">
+                  <iterate>
+                     <instanceof
+                           value="sinbad2.element.alternative.Alternative">
+                     </instanceof>
+                  </iterate>
+               </with>
+               <reference
+                     definitionId="oneElementSelected">
+               </reference>
+            </and>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="sinbad2.element.ui.handler.alternative.remove.RemoveAlternativeHandler"
+            commandId="flintstones.element.alternative.remove">
+         <activeWhen>
+            <and>
+               <with
+                     variable="selection">
+                  <iterate>
+                     <instanceof
+                           value="sinbad2.element.alternative.Alternative">
+                     </instanceof>
+                  </iterate>
+               </with>
+               <reference
+                     definitionId="oneElementSelected">
+               </reference>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -209,6 +323,25 @@
             id="flintstones.element.expert.remove"
             name="%expert.command.remove.name">
       </command>
+      <category
+            id="flintstones.element.alternatives.category"
+            name="alternatives">
+      </category>
+      <command
+            categoryId="flintstones.element.alternatives.category"
+            id="flintstones.element.alternative.add"
+            name="&amp;Add">
+      </command>
+      <command
+            categoryId="flintstones.element.alternatives.category"
+            id="flintstones.element.alternative.modify"
+            name="&amp;Modify">
+      </command>
+      <command
+            categoryId="flintstones.element.alternatives.category"
+            id="flintstones.element.alternative.remove"
+            name="&amp;Remove">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.commandImages">
@@ -222,6 +355,18 @@
       </image>
       <image
             commandId="flintstones.element.expert.remove"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/delete_obj.gif">
+      </image>
+      <image
+            commandId="flintstones.element.alternative.add"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/add_obj.gif">
+      </image>
+      <image
+            commandId="flintstones.element.alternative.modify"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/etool16/editor_area.gif">
+      </image>
+      <image
+            commandId="flintstones.element.alternative.remove"
             icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/delete_obj.gif">
       </image>
    </extension>
