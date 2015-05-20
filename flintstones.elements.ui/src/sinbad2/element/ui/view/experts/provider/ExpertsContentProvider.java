@@ -138,8 +138,9 @@ public class ExpertsContentProvider implements ITreeContentProvider, IExpertsCha
 			case MODIFY_EXPERT:
 				modifyExpert((Expert) event.getNewValue());
 				break;
-		default:
-			break;
+			case MOVE_EXPERT:
+				_treeViewer.refresh();
+				break;
 		}
 		
 		packViewer();

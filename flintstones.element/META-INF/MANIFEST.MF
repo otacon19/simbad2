@@ -9,7 +9,11 @@ Export-Package: sinbad2.element,
  sinbad2.element.alternative,
  sinbad2.element.alternative.listener,
  sinbad2.element.alternative.operation,
+ sinbad2.element.criterion,
+ sinbad2.element.criterion.listener,
+ sinbad2.element.criterion.operation,
  sinbad2.element.expert,
+ sinbad2.element.expert.handler.move,
  sinbad2.element.expert.listener,
  sinbad2.element.expert.operation
 Require-Bundle: sinbad2.core.ui;bundle-version="1.0.0"

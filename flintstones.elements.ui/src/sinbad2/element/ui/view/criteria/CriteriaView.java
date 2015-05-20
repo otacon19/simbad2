@@ -1,12 +1,9 @@
-package sinbad2.element.ui.view.experts;
+package sinbad2.element.ui.view.criteria;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
@@ -19,50 +16,29 @@ import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
-import sinbad2.element.ui.view.experts.draganddrop.ExpertsDragListener;
-import sinbad2.element.ui.view.experts.draganddrop.ExpertsDropListener;
-import sinbad2.element.ui.view.experts.provider.ExpertIdLabelProvider;
-import sinbad2.element.ui.view.experts.provider.ExpertsContentProvider;
+import sinbad2.element.ui.Images;
+import sinbad2.element.ui.view.criteria.editing.CriterionCostEditingSupport;
+import sinbad2.element.ui.view.criteria.provider.CriteriaContentProvider;
+import sinbad2.element.ui.view.criteria.provider.CriterionCostLabelProvider;
+import sinbad2.element.ui.view.criteria.provider.CriterionIdLabelProvider;
 
-public class ExpertsView extends ViewPart {
+public class CriteriaView extends ViewPart {
 	
-	public static final String ID = "flintstones.element.ui.view.experts"; //$NON-NLS-1$
-	public static final String CONTEXT_ID = "flintstones.element.ui.view.experts.experts_view"; //$NON-NLS-1$
-	
-	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
+	public static final String ID = "flintstones.element.ui.view.criteria"; //$NON-NLS-1$
+	public static final String CONTEXT_ID = "flintstones.element.ui.view.criteria.critera_view"; //$NON-NLS-1$
 	
 	private TreeViewer _treeViewer;
 	
-	private ExpertsContentProvider _provider;
+	private CriteriaContentProvider _provider;
 	
-	public ExpertsView() {
-		
-	}
-
-	public TreeViewer getViewer() {
-		return _treeViewer;
-	}
-
-	public void setViewer(TreeViewer _viewer) {
-		this._treeViewer = _viewer;
-	}
+	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 	
-	public ExpertsContentProvider getProvider() {
-		return _provider;
-	}
+	public CriteriaView() {}
 	
-	public void setProvider(ExpertsContentProvider _provider) {
-		this._provider = _provider;
-	}
-	
-	public static String getId() {
-		return ID;
-	}
-
 	@Override
 	public void createPartControl(Composite parent) {
-		
-		_treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
+		_treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+		_treeViewer.getTree().setHeaderVisible(true);
 		
 		_treeViewer.getTree().addListener(SWT.MeasureItem, new Listener() {
 			
@@ -73,33 +49,40 @@ public class ExpertsView extends ViewPart {
 			}
 		});
 		
-		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		Transfer[] transferTypes = new Transfer[] { TextTransfer.getInstance() };
-		_treeViewer.addDragSupport(operations, transferTypes, new ExpertsDragListener(_treeViewer));
-		_treeViewer.addDropSupport(operations, transferTypes, new ExpertsDropListener(_treeViewer));
+		//TODO drop&move
 		
-		_provider = new ExpertsContentProvider(_treeViewer);
+		_provider = new CriteriaContentProvider(_treeViewer);
 		_treeViewer.setContentProvider(_provider);
 		
 		addColumns();
 		hookContextMenu();
 		hookFocusListener();
-		//TODO hookSelectionChangeListener()
-		//TODO hookDoubleClickListener()
-
+		//TODO hookSelectionChangedListener();
+		//TODO hookDoubleClickListener();
+		
 		_treeViewer.setInput(_provider.getInput());
 		getSite().setSelectionProvider(_treeViewer);
-			
-		
 	}
 	
 	private void addColumns() {
 		TreeViewerColumn tvc = new TreeViewerColumn(_treeViewer, SWT.NONE);
-		tvc.setLabelProvider(new ExpertIdLabelProvider());
+		tvc.setLabelProvider(new CriterionIdLabelProvider());
 		TreeColumn tc = tvc.getColumn();
-		tc.setMoveable(false);
+		tc.setMoveable(true);
 		tc.setResizable(false);
+		tc.setText("Criteria");
+		tc.setImage(Images.Criterion);
 		tc.pack();	
+		
+		tvc = new TreeViewerColumn(_treeViewer, SWT.NONE);
+		tvc.setLabelProvider(new CriterionCostLabelProvider());
+		tvc.setEditingSupport(new CriterionCostEditingSupport(_treeViewer));
+		tc = tvc.getColumn();
+		tc.setToolTipText("Cost/Benefit");
+		tc.setMoveable(true);
+		tc.setResizable(false);
+		tc.setImage(Images.TypeOfCriterion);
+		tc.pack();
 	}
 	
 	private void hookContextMenu() {
@@ -107,7 +90,6 @@ public class ExpertsView extends ViewPart {
 		Menu menu = menuManager.createContextMenu(_treeViewer.getTree());
 		_treeViewer.getTree().setMenu(menu);
 		getSite().registerContextMenu(menuManager, _treeViewer);
-		
 	}
 	
 	private void hookFocusListener() {

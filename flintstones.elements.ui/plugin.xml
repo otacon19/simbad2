@@ -25,6 +25,15 @@
             name="Alternatives"
             restorable="false">
       </view>
+      <view
+            allowMultiple="false"
+            category="flintstones.elements.category"
+            class="sinbad2.element.ui.view.criteria.CriteriaView"
+            icon="icons/criteria.png"
+            id="flintstones.element.ui.view.criteria"
+            name="Criteria"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -52,7 +61,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:flintstones.element.ui.view.experts">
+            locationURI="menu:flintstones.element.ui.view.expert">
          <command
                commandId="flintstones.element.expert.add"
                style="push">
@@ -77,7 +86,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="menu:flintstones.element.ui.view.expert">
+            locationURI="popup:flintstones.element.ui.view.experts">
          <command
                commandId="flintstones.element.expert.add"
                style="push">
@@ -149,6 +158,22 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
+            locationURI="popup:flintstones.element.ui.view.alternatives">
+         <command
+               commandId="flintstones.element.alternative.add"
+               style="push">
+         </command>
+         <command
+               commandId="flintstones.element.alternative.modify"
+               style="push">
+         </command>
+         <command
+               commandId="flintstones.element.alternative.remove"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
             locationURI="toolbar:flintstones.element.ui.view.alternatives">
          <command
                commandId="flintstones.element.alternative.add"
@@ -174,18 +199,77 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="popup:flintstones.element.ui.view.alternatives">
+            locationURI="menu:flintstones.element.ui.view.criteria">
          <command
-               commandId="flintstones.element.alternative.add"
+               commandId="flintstones.element.criterion.add"
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
          </command>
          <command
-               commandId="flintstones.element.alternative.modify"
+               commandId="flintstones.element.criterion.modify"
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
          </command>
          <command
-               commandId="flintstones.element.alternative.remove"
+               commandId="flintstones.element.criterion.remove"
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:flintstones.element.ui.view.criteria">
+         <command
+               commandId="flintstones.element.criterion.add"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
+         <command
+               commandId="flintstones.element.criterion.modify"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
+         <command
+               commandId="flintstones.element.criterion.remove"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:flintstones.element.ui.view.criteria">
+         <command
+               commandId="flintstones.element.criterion.add"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
+         <command
+               commandId="flintstones.element.criterion.modify"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
+         <command
+               commandId="flintstones.element.criterion.remove"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
          </command>
       </menuContribution>
    </extension>
@@ -289,7 +373,9 @@
             <and>
                <with
                      variable="selection">
-                  <iterate>
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
                      <instanceof
                            value="sinbad2.element.alternative.Alternative">
                      </instanceof>
@@ -298,6 +384,95 @@
                <reference
                      definitionId="oneElementSelected">
                </reference>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="sinbad2.element.ui.handler.alternative.remove.RemoveMultipleAlternativeHandler"
+            commandId="flintstones.element.alternative.remove">
+         <activeWhen>
+            <and>
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="sinbad2.element.alternative.Alternative">
+                     </instanceof>
+                  </iterate>
+               </with>
+               <not>
+                  <reference
+                        definitionId="oneElementSelected">
+                  </reference>
+               </not>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="sinbad2.element.ui.handler.criterion.add.AddCriterionHandler"
+            commandId="flintstones.element.criterion.add">
+      </handler>
+      <handler
+            class="sinbad2.element.ui.handler.criterion.modify.ModifyCriterionHandler"
+            commandId="flintstones.element.criterion.modify">
+         <enabledWhen>
+            <and>
+               <with
+                     variable="selection">
+                  <iterate>
+                     <instanceof
+                           value="sinbad2.element.criterion.Criterion">
+                     </instanceof>
+                  </iterate>
+               </with>
+               <reference
+                     definitionId="oneElementSelected">
+               </reference>
+            </and>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="sinbad2.element.ui.handler.criterion.remove.RemoveCriterionHandler"
+            commandId="flintstones.element.criterion.remove">
+         <activeWhen>
+            <and>
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="sinbad2.element.criterion.Criterion">
+                     </instanceof>
+                  </iterate>
+               </with>
+               <reference
+                     definitionId="oneElementSelected">
+               </reference>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="sinbad2.element.ui.handler.criterion.remove.RemoveMultipleCriteriaHandler"
+            commandId="flintstones.element.criterion.remove">
+         <activeWhen>
+            <and>
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="and">
+                     <instanceof
+                           value="sinbad2.element.criterion.Criterion">
+                     </instanceof>
+                  </iterate>
+               </with>
+               <not>
+                  <reference
+                        definitionId="oneElementSelected">
+                  </reference></not>
             </and>
          </activeWhen>
       </handler>
@@ -342,6 +517,25 @@
             id="flintstones.element.alternative.remove"
             name="&amp;Remove">
       </command>
+      <category
+            id="flintstones.element.criteria.category"
+            name="criteria">
+      </category>
+      <command
+            categoryId="flintstones.element.criteria.category"
+            id="flintstones.element.criterion.add"
+            name="&amp;Add">
+      </command>
+      <command
+            categoryId="flintstones.element.criteria.category"
+            id="flintstones.element.criterion.modify"
+            name="&amp;Modify">
+      </command>
+      <command
+            categoryId="flintstones.element.criteria.category"
+            id="flintstones.element.criterion.remove"
+            name="&amp;Remove">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.commandImages">
@@ -367,6 +561,18 @@
       </image>
       <image
             commandId="flintstones.element.alternative.remove"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/delete_obj.gif">
+      </image>
+      <image
+            commandId="flintstones.element.criterion.add"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/add_obj.gif">
+      </image>
+      <image
+            commandId="flintstones.element.criterion.modify"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/etool16/editor_area.gif">
+      </image>
+      <image
+            commandId="flintstones.element.criterion.remove"
             icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/delete_obj.gif">
       </image>
    </extension>

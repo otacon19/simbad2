@@ -106,6 +106,23 @@ public class ProblemElementsSet implements Cloneable {
 		
 	}
 	
+	public void moveExpert(Expert moveExpert, Expert newParent, Expert oldParent) {
+		
+		if(oldParent == null) {
+			_experts.remove(moveExpert);
+			newParent.addChildren(moveExpert);
+		} else {
+			oldParent.removeChildren(moveExpert);
+			if(newParent == null) {
+				insertExpert(moveExpert, false);
+			} else {
+				newParent.addChildren(moveExpert);
+			}
+		}
+		
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.MOVE_EXPERT, oldParent, moveExpert));
+	}
+	
 	public void insertSeveralExperts(List<Expert> insertExperts, Boolean hasParent) {
 		Expert parent = insertExperts.get(0).getParent();
 		
