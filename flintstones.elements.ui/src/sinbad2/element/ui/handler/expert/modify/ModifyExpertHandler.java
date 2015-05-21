@@ -22,7 +22,13 @@ public class ModifyExpertHandler extends AbstractHandler {
 	
 	public final static String ID = "flintstones.element.expert.modify"; //$NON-NLS-1$
 	
+	private Expert _expertDoubleClick;
+	
 	public ModifyExpertHandler() {}
+	
+	public ModifyExpertHandler(Expert expert) {
+		_expertDoubleClick = expert;
+	}
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -30,9 +36,13 @@ public class ModifyExpertHandler extends AbstractHandler {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		ProblemElementsSet elementSet = elementsManager.getActiveElementSet();
 		
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
-		Expert expert = (Expert) selection.getFirstElement();
-		Expert parent = expert.getParent();
+		Expert expert = _expertDoubleClick;
+		if(expert == null) {
+			IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
+			expert = (Expert) selection.getFirstElement();
+		}
+			Expert parent = expert.getParent();
+		
 		
 		boolean doit = true;
 		String oldId = expert.getId();

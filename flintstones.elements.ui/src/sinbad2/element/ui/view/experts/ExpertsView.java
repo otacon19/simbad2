@@ -1,6 +1,12 @@
 package sinbad2.element.ui.view.experts;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
@@ -9,6 +15,8 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -19,6 +27,8 @@ import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.element.expert.Expert;
+import sinbad2.element.ui.handler.expert.modify.ModifyExpertHandler;
 import sinbad2.element.ui.view.experts.draganddrop.ExpertsDragListener;
 import sinbad2.element.ui.view.experts.draganddrop.ExpertsDropListener;
 import sinbad2.element.ui.view.experts.provider.ExpertIdLabelProvider;
@@ -84,8 +94,8 @@ public class ExpertsView extends ViewPart {
 		addColumns();
 		hookContextMenu();
 		hookFocusListener();
-		//TODO hookSelectionChangeListener()
-		//TODO hookDoubleClickListener()
+		//TODO hookSelectionChangeListener();
+		hookDoubleClickListener();
 
 		_treeViewer.setInput(_provider.getInput());
 		getSite().setSelectionProvider(_treeViewer);
@@ -124,6 +134,25 @@ public class ExpertsView extends ViewPart {
 			@Override
 			public void focusGained(FocusEvent e) {
 				//activation = _contextService.activateContext(CONTEXT_ID);
+				
+			}
+		});
+	}
+	
+	private void hookDoubleClickListener() {
+		_treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				Expert expert = (Expert) selection.getFirstElement();
+				
+				ModifyExpertHandler modifyExpertHandler = new ModifyExpertHandler(expert);
+				try {
+					modifyExpertHandler.execute(null);
+				} catch (ExecutionException e) {
+					
+				}
 				
 			}
 		});

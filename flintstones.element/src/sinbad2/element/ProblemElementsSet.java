@@ -123,6 +123,23 @@ public class ProblemElementsSet implements Cloneable {
 		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.MOVE_EXPERT, oldParent, moveExpert));
 	}
 	
+	public void moveCriterion(Criterion moveCriterion, Criterion newParent, Criterion oldParent) {
+		
+		if(oldParent == null) {
+			_criteria.remove(moveCriterion);
+			newParent.addSubcriterion(moveCriterion);
+		} else {
+			oldParent.removeSubcriterion(moveCriterion);
+			if(newParent == null) {
+				insertCriterion(moveCriterion, false);
+			} else {
+				newParent.addSubcriterion(moveCriterion);
+			}
+		}
+		
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.MOVE_CRITERION, oldParent, moveCriterion));
+	}
+	
 	public void insertSeveralExperts(List<Expert> insertExperts, Boolean hasParent) {
 		Expert parent = insertExperts.get(0).getParent();
 		

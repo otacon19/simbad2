@@ -4,6 +4,9 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
@@ -17,6 +20,8 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.element.ui.Images;
+import sinbad2.element.ui.view.criteria.draganddrop.CriteriaDragListener;
+import sinbad2.element.ui.view.criteria.draganddrop.CriteriaDropListener;
 import sinbad2.element.ui.view.criteria.editing.CriterionCostEditingSupport;
 import sinbad2.element.ui.view.criteria.provider.CriteriaContentProvider;
 import sinbad2.element.ui.view.criteria.provider.CriterionCostLabelProvider;
@@ -49,7 +54,10 @@ public class CriteriaView extends ViewPart {
 			}
 		});
 		
-		//TODO drop&move
+		int operations = DND.DROP_COPY | DND.DROP_MOVE;
+		Transfer[] transferTypes = new Transfer[] { TextTransfer.getInstance() };
+		_treeViewer.addDragSupport(operations, transferTypes, new CriteriaDragListener(_treeViewer));
+		_treeViewer.addDropSupport(operations, transferTypes, new CriteriaDropListener(_treeViewer));
 		
 		_provider = new CriteriaContentProvider(_treeViewer);
 		_treeViewer.setContentProvider(_provider);

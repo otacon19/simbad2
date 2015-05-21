@@ -136,6 +136,7 @@ public class CriteriaContentProvider implements ITreeContentProvider, ICriteriaC
 				modifyCriterion((Criterion) event.getNewValue());
 				break;
 			case MOVE_CRITERION:
+				_treeViewer.refresh();
 				break;
 		}
 		
