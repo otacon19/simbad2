@@ -14,7 +14,7 @@ public class AddCriterionOperation extends UndoableOperation {
 	
 	private ProblemElementsSet _elementSet;
 	private Criterion _newCriterion;
-	private Criterion _parentOfNewCriterion;
+	private Criterion _parent;
 	private String _newCriterionId;
 	private boolean _cost;
 
@@ -24,7 +24,7 @@ public class AddCriterionOperation extends UndoableOperation {
 		_elementSet = elementSet;
 		_newCriterionId = newCriterionId;
 		_cost = cost;
-		_parentOfNewCriterion = parent;
+		_parent = parent;
 		
 		_newCriterion = new Criterion(_newCriterionId);
 		_newCriterion.setCost(_cost);
@@ -39,11 +39,11 @@ public class AddCriterionOperation extends UndoableOperation {
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		boolean hasParent = false;
 		
-		if(_parentOfNewCriterion == null) {
+		if(_parent == null) {
 			_elementSet.insertCriterion(_newCriterion, hasParent);
 		} else {
 			hasParent = true;
-			_parentOfNewCriterion.addSubcriterion(_newCriterion);
+			_parent.addSubcriterion(_newCriterion);
 			_elementSet.insertCriterion(_newCriterion, hasParent);
 		}
 
@@ -54,12 +54,12 @@ public class AddCriterionOperation extends UndoableOperation {
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		boolean hasParent = false;
 		
-		if(_parentOfNewCriterion == null) {
+		if(_parent == null) {
 			_elementSet.removeCriterion(_newCriterion, hasParent);
 		} else {
 			hasParent = true;
-			_parentOfNewCriterion.removeSubcriterion(_newCriterion);
-			_newCriterion.setParent(_parentOfNewCriterion);
+			_parent.removeSubcriterion(_newCriterion);
+			_newCriterion.setParent(_parent);
 			_elementSet.removeCriterion(_newCriterion, hasParent);
 		}
 		

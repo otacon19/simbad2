@@ -13,3 +13,5 @@ Export-Package:
  sinbad2.core.undoable.listener,
  sinbad2.core.workspace,
  sinbad2.core.workspace.listener
+Import-Package: org.eclipse.jface.viewers,
+ org.eclipse.swt.dnd

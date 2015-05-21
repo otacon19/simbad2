@@ -13,7 +13,7 @@ import sinbad2.element.expert.Expert;
 public class AddExpertOperation extends UndoableOperation {
 	
 	private ProblemElementsSet _elementSet;
-	private Expert _parentOfNewExpert;
+	private Expert _parent;
 	private Expert _newExpert;
 	private String _newExpertID;
 
@@ -22,7 +22,7 @@ public class AddExpertOperation extends UndoableOperation {
 		
 		_elementSet = elementSet;
 		_newExpertID = id;
-		_parentOfNewExpert = parent;
+		_parent = parent;
 		_newExpert = new Expert(_newExpertID);
 	}
 
@@ -30,11 +30,11 @@ public class AddExpertOperation extends UndoableOperation {
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		boolean hasParent = false;
 		
-		if(_parentOfNewExpert == null) {
+		if(_parent == null) {
 			_elementSet.insertExpert(_newExpert, hasParent);
 		} else {
 			hasParent = true;
-			_parentOfNewExpert.addChildren(_newExpert);
+			_parent.addChildren(_newExpert);
 			_elementSet.insertExpert(_newExpert, hasParent);
 		}
 
@@ -46,12 +46,12 @@ public class AddExpertOperation extends UndoableOperation {
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		boolean hasParent = false;
 		
-		if(_parentOfNewExpert == null) {
+		if(_parent == null) {
 			_elementSet.removeExpert(_newExpert, hasParent);
 		} else {
 			hasParent = true;
-			_parentOfNewExpert.removeChildren(_newExpert);
-			_newExpert.setParent(_parentOfNewExpert);
+			_parent.removeChildren(_newExpert);
+			_newExpert.setParent(_parent);
 			_elementSet.removeExpert(_newExpert, hasParent);
 		}
 		

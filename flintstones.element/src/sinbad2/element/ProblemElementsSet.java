@@ -50,6 +50,10 @@ public class ProblemElementsSet implements Cloneable {
 		return _criteria;
 	}
 	
+	public List<Criterion> getElements() {
+		return _criteria;
+	}
+	
 	public void setExperts(List<Expert> experts) {
 		//TODO Clase validator
 		

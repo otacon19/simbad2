@@ -4,9 +4,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
@@ -15,8 +13,6 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -29,8 +25,8 @@ import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.element.expert.Expert;
 import sinbad2.element.ui.handler.expert.modify.ModifyExpertHandler;
-import sinbad2.element.ui.view.experts.draganddrop.ExpertsDragListener;
-import sinbad2.element.ui.view.experts.draganddrop.ExpertsDropListener;
+import sinbad2.element.ui.view.draganddrop.DragListener;
+import sinbad2.element.ui.view.draganddrop.ExpertsDropListener;
 import sinbad2.element.ui.view.experts.provider.ExpertIdLabelProvider;
 import sinbad2.element.ui.view.experts.provider.ExpertsContentProvider;
 
@@ -85,7 +81,7 @@ public class ExpertsView extends ViewPart {
 		
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		Transfer[] transferTypes = new Transfer[] { TextTransfer.getInstance() };
-		_treeViewer.addDragSupport(operations, transferTypes, new ExpertsDragListener(_treeViewer));
+		_treeViewer.addDragSupport(operations, transferTypes, new DragListener(_treeViewer));
 		_treeViewer.addDropSupport(operations, transferTypes, new ExpertsDropListener(_treeViewer));
 		
 		_provider = new ExpertsContentProvider(_treeViewer);

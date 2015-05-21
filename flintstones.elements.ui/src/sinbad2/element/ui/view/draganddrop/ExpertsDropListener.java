@@ -1,5 +1,4 @@
-package sinbad2.element.ui.view.experts.draganddrop;
-
+package sinbad2.element.ui.view.draganddrop;
 
 import java.util.List;
 
@@ -44,6 +43,7 @@ public class ExpertsDropListener extends ViewerDropAdapter {
 		boolean result = false;
 		
 		Object selectedObject = getSelectedObject();
+
 		if(selectedObject instanceof Expert) {
 			_expert = (Expert) selectedObject;
 			_oldParent = _expert.getParent();

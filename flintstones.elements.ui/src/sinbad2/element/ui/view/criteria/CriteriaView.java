@@ -20,12 +20,12 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.element.ui.Images;
-import sinbad2.element.ui.view.criteria.draganddrop.CriteriaDragListener;
-import sinbad2.element.ui.view.criteria.draganddrop.CriteriaDropListener;
 import sinbad2.element.ui.view.criteria.editing.CriterionCostEditingSupport;
 import sinbad2.element.ui.view.criteria.provider.CriteriaContentProvider;
 import sinbad2.element.ui.view.criteria.provider.CriterionCostLabelProvider;
 import sinbad2.element.ui.view.criteria.provider.CriterionIdLabelProvider;
+import sinbad2.element.ui.view.draganddrop.CriteriaDropListener;
+import sinbad2.element.ui.view.draganddrop.DragListener;
 
 public class CriteriaView extends ViewPart {
 	
@@ -56,7 +56,7 @@ public class CriteriaView extends ViewPart {
 		
 		int operations = DND.DROP_COPY | DND.DROP_MOVE;
 		Transfer[] transferTypes = new Transfer[] { TextTransfer.getInstance() };
-		_treeViewer.addDragSupport(operations, transferTypes, new CriteriaDragListener(_treeViewer));
+		_treeViewer.addDragSupport(operations, transferTypes, new DragListener(_treeViewer));
 		_treeViewer.addDropSupport(operations, transferTypes, new CriteriaDropListener(_treeViewer));
 		
 		_provider = new CriteriaContentProvider(_treeViewer);

@@ -1,4 +1,4 @@
-package sinbad2.element.ui.view.criteria.draganddrop;
+package sinbad2.element.ui.view.draganddrop;
 
 import java.util.List;
 
