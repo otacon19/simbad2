@@ -24,9 +24,9 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.element.expert.Expert;
+import sinbad2.element.ui.draganddrop.DragListener;
+import sinbad2.element.ui.draganddrop.ExpertsDropListener;
 import sinbad2.element.ui.handler.expert.modify.ModifyExpertHandler;
-import sinbad2.element.ui.view.draganddrop.DragListener;
-import sinbad2.element.ui.view.draganddrop.ExpertsDropListener;
 import sinbad2.element.ui.view.experts.provider.ExpertIdLabelProvider;
 import sinbad2.element.ui.view.experts.provider.ExpertsContentProvider;
 

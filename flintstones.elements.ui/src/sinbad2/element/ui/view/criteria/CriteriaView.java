@@ -20,12 +20,12 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.element.ui.Images;
+import sinbad2.element.ui.draganddrop.CriteriaDropListener;
+import sinbad2.element.ui.draganddrop.DragListener;
 import sinbad2.element.ui.view.criteria.editing.CriterionCostEditingSupport;
 import sinbad2.element.ui.view.criteria.provider.CriteriaContentProvider;
 import sinbad2.element.ui.view.criteria.provider.CriterionCostLabelProvider;
 import sinbad2.element.ui.view.criteria.provider.CriterionIdLabelProvider;
-import sinbad2.element.ui.view.draganddrop.CriteriaDropListener;
-import sinbad2.element.ui.view.draganddrop.DragListener;
 
 public class CriteriaView extends ViewPart {
 	

@@ -1,4 +1,4 @@
-package sinbad2.element.ui.view.draganddrop;
+package sinbad2.element.ui.draganddrop;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
