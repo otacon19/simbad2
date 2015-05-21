@@ -126,7 +126,7 @@ public class ResolutionSchemeUI {
 		notifyResolutionSchemeUIStateChange(new ResolutionSchemeUIStateChangeEvent(EResolutionSchemeUIStateChanges.ACTIVATED));
 	}
 	
-public void deactivate() {
+	public void deactivate() {
 		
 		ResolutionSchemesManager resolutionSchemesManager = ResolutionSchemesManager.getInstance();
 		resolutionSchemesManager.deactiveCurrentActive();
