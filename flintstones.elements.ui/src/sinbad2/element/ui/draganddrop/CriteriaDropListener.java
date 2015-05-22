@@ -35,11 +35,6 @@ public class CriteriaDropListener extends ViewerDropAdapter {
 
 	@Override
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {
-		
-		ProblemElementsManager elementManager = ProblemElementsManager.getInstance();
-		ProblemElementsSet elementSet = elementManager.getActiveElementSet();
-		List<Criterion> criteria = elementSet.getCriteria();
-		
 		boolean result = false;
 		
 		Object selectedObject = getSelectedObject();
@@ -49,23 +44,29 @@ public class CriteriaDropListener extends ViewerDropAdapter {
 			if(target != null) {
 				_newParent = (Criterion) target;
 			}
-			
-			if(_criterion == _newParent){
-				result = false;
-			} else if((_oldParent == null) && (_newParent == null)) {
-				result = false;
-			} else if(_newParent == null) {
-				result = !(duplicateID(criteria, _criterion.getId()));
-			} else {
-				if((!duplicateID(_newParent.getSubcriteria(), _criterion.getId()))) {
-					result = !isMember(_criterion, _newParent);
-				} else {
-					result = false;
-				}
-			}
+			result = checkDropCriterion();	
 		}
 		
 		return result;
+	}
+	
+	private boolean checkDropCriterion() {	
+		ProblemElementsManager elementManager = ProblemElementsManager.getInstance();
+		ProblemElementsSet elementSet = elementManager.getActiveElementSet();
+		
+		List<Criterion> criteria = elementSet.getCriteria();
+		
+		if(_criterion == _newParent || ((_oldParent == null) && (_newParent == null))){
+			return false;
+		} else if(_newParent == null) {
+			return !(duplicateID(criteria, _criterion.getId()));
+		} else {
+			if((!duplicateID(_newParent.getSubcriteria(), _criterion.getId()))) {
+				return !isMember(_criterion, _newParent);
+			} else {
+				return false;
+			}
+		}
 	}
 
 	private boolean isMember(Criterion criterion, Criterion maybeMember) {

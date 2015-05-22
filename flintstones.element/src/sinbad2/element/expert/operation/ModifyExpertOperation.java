@@ -18,41 +18,35 @@ public class ModifyExpertOperation extends UndoableOperation {
 	
 	private ProblemElementsSet _elementSet;
 	private Expert _modifyExpert;
-	private List<Expert> _others;
-	private List<Expert> _childrens;
-	private String _newIdExpert;
-	private String _oldIdExpert;
+	private List<Expert> _childrensOrOthers;
+	private String _newId;
+	private String _oldId;
 
 	public ModifyExpertOperation(String label, Expert expert, String newId, ProblemElementsSet elementSet) {
 		super(label);
 		
 		_elementSet = elementSet;
 		_modifyExpert = expert;
-		_newIdExpert = newId;
-		_oldIdExpert = expert.getId();
+		_newId = newId;
+		_oldId = expert.getId();
 		
-		_childrens = new LinkedList<Expert>();
-		_others = new LinkedList<Expert>();
+		_childrensOrOthers = new LinkedList<Expert>();
 		
 		Expert parent = _modifyExpert.getParent();
 		
 		if(parent != null) {
-			_childrens = parent.getChildrens();
+			_childrensOrOthers = parent.getChildrens();
 		} else {
-			_others = elementSet.getExperts();
+			_childrensOrOthers = elementSet.getExperts();
 		}
 	}
 
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.modifyExpert(_modifyExpert, _newIdExpert);
-		
-		if(_childrens.size() == 0) {
-			Collections.sort(_others);
-		} else {
-			Collections.sort(_childrens);
-		}
+		_elementSet.modifyExpert(_modifyExpert, _newId);
+
+		Collections.sort(_childrensOrOthers);
 		
 		return Status.OK_STATUS;
 
@@ -61,13 +55,9 @@ public class ModifyExpertOperation extends UndoableOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.modifyExpert(_modifyExpert, _oldIdExpert);
+		_elementSet.modifyExpert(_modifyExpert, _oldId);
 		
-		if(_childrens.size() == 0) {
-			Collections.sort(_others);
-		} else {
-			Collections.sort(_childrens);
-		}
+		Collections.sort(_childrensOrOthers);
 		
 		return Status.OK_STATUS;
 		

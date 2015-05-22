@@ -17,8 +17,7 @@ public class ModifyCriterionOperation extends UndoableOperation {
 	
 	private ProblemElementsSet _elementSet;
 	private Criterion _modifyCriterion;
-	private List<Criterion> _brothers;
-	private List<Criterion> _others;
+	private List<Criterion> _subcriteriaOrOthers;
 	private String _newId;
 	private String _oldId;
 	private boolean _newCost;
@@ -35,14 +34,13 @@ public class ModifyCriterionOperation extends UndoableOperation {
 		_oldId = _modifyCriterion.getId();
 		_oldCost = modifyCriterion.getCost();
 		
-		_brothers = null;
-		_others = null;
+		_subcriteriaOrOthers = null;
 		
 		Criterion parent = _modifyCriterion.getParent();
 		if(parent != null) {
-			_brothers = parent.getSubcriteria();
+			_subcriteriaOrOthers = parent.getSubcriteria();
 		} else {
-			_others = _elementSet.getCriteria();
+			_subcriteriaOrOthers = _elementSet.getCriteria();
 		}
 	}
 	
@@ -61,11 +59,8 @@ public class ModifyCriterionOperation extends UndoableOperation {
 		_elementSet.modifyCriterion(_modifyCriterion, _newId, _newCost);
 		
 		if(!_newId.equals(_oldId)) {
-			if(_brothers == null) {
-				Collections.sort(_others);
-			} else {
-				Collections.sort(_brothers);
-			}
+			Collections.sort(_subcriteriaOrOthers);
+			
 		}
 		
 		return Status.OK_STATUS;
@@ -77,11 +72,7 @@ public class ModifyCriterionOperation extends UndoableOperation {
 		_elementSet.modifyCriterion(_modifyCriterion, _oldId, _oldCost);
 		
 		if(!_oldId.equals(_newId)) {
-			if(_brothers == null) {
-				Collections.sort(_others);
-			} else {
-				Collections.sort(_brothers);
-			}
+			Collections.sort(_subcriteriaOrOthers);
 		}
 		
 		return Status.OK_STATUS;

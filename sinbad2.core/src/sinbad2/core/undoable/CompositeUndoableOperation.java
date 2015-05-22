@@ -24,7 +24,7 @@ public class CompositeUndoableOperation extends AbstractOperation implements IOp
 		_iterations = 0;
 		_redo = redo;
 	}
-
+	
 	@Override
 	public IStatus execute(IProgressMonitor monitor, IAdaptable info)
 			throws ExecutionException {
@@ -80,11 +80,8 @@ public class CompositeUndoableOperation extends AbstractOperation implements IOp
 				_operationHistory.removeOperationHistoryListener(this);
 				if (!_redo) {
 					for (int i = 0; i < _iterations; i++) {
-						_operationHistory.undo(
-								IOperationHistory.GLOBAL_UNDO_CONTEXT, null,
-								null);
+						_operationHistory.undo(IOperationHistory.GLOBAL_UNDO_CONTEXT, null,null);
 					}
-
 				}
 
 			} else if (event.getEventType() == OperationHistoryEvent.REDONE) {
@@ -93,8 +90,7 @@ public class CompositeUndoableOperation extends AbstractOperation implements IOp
 					IUndoableOperation operation = null;
 					boolean exit = false;
 					do {
-						if (_operationHistory
-								.canRedo(IOperationHistory.GLOBAL_UNDO_CONTEXT)) {
+						if (_operationHistory.canRedo(IOperationHistory.GLOBAL_UNDO_CONTEXT)) {
 							operation = _operationHistory
 									.getRedoOperation(IOperationHistory.GLOBAL_UNDO_CONTEXT);
 						} else {
@@ -109,9 +105,7 @@ public class CompositeUndoableOperation extends AbstractOperation implements IOp
 						}
 
 						if (operation != null) {
-							_operationHistory.redo(
-									IOperationHistory.GLOBAL_UNDO_CONTEXT,
-									null, null);
+							_operationHistory.redo(IOperationHistory.GLOBAL_UNDO_CONTEXT,null, null);
 						}
 
 					} while (!exit);

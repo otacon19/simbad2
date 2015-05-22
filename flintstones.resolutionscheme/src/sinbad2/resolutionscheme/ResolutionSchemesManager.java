@@ -81,19 +81,9 @@ public class ResolutionSchemesManager {
 			return _resolutionSchemes.get(id);
 		} else {
 			try {
-
-				ResolutionSchemeRegistryExtension resolutionSchemeRegistry = getRegistry(id);
-				ResolutionScheme resolutionScheme = new ResolutionScheme();
-				resolutionScheme.setId(id);
-				resolutionScheme.setName(resolutionSchemeRegistry
-						.getElement(EResolutionSchemeElements.name));
-				resolutionScheme.setRegistry(resolutionSchemeRegistry);
-
-				_resolutionSchemes.put(id, resolutionScheme);
-
-				return resolutionScheme;
-
+				return initializeResolutionScheme(id);
 			} catch (Exception e) {
+				System.out.println(e.getMessage());
 				return null;
 			}
 		}
@@ -127,5 +117,19 @@ public class ResolutionSchemesManager {
 			}
 		}
 	}
+	
+	private ResolutionScheme initializeResolutionScheme(String id) {
 
+		ResolutionSchemeRegistryExtension resolutionSchemeRegistry = getRegistry(id);
+		ResolutionScheme resolutionScheme = new ResolutionScheme();
+		resolutionScheme.setId(id);
+		resolutionScheme.setName(resolutionSchemeRegistry
+				.getElement(EResolutionSchemeElements.name));
+		resolutionScheme.setRegistry(resolutionSchemeRegistry);
+
+		_resolutionSchemes.put(id, resolutionScheme);
+
+		return resolutionScheme;
+
+	}
 }

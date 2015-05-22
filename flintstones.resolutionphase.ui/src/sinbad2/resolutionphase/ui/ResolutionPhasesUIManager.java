@@ -59,23 +59,10 @@ public class ResolutionPhasesUIManager {
 			return _resolutionPhasesUIs.get(id);
 		} else {
 			try {
-				ResolutionPhaseUIRegistry resolutionPhaseUIRegistry = getRegistry(id);
-				
-				ResolutionPhaseUI resolutionPhaseUI = new ResolutionPhaseUI();
-				resolutionPhaseUI.setId(id);
-				resolutionPhaseUI.setName(resolutionPhaseUIRegistry.getElement(EResolutionPhaseUIElements.name));
-				resolutionPhaseUI.setResolutionPhaseId(resolutionPhaseUIRegistry.getElement(EResolutionPhaseUIElements.resolution_phase));
-				EResolutionPhaseUIType uiType = resolutionPhaseUIRegistry.getUIType();
-				resolutionPhaseUI.setResolutionPhaseUIType(uiType);
-				resolutionPhaseUI.setUiId(resolutionPhaseUIRegistry.getUIID(uiType));
-				
-				resolutionPhaseUI.setRegistry(resolutionPhaseUIRegistry);
-				
-				_resolutionPhasesUIs.put(id, resolutionPhaseUI);
-				
-				return resolutionPhaseUI;
-				
+				return initializeResolutionPhaseUI(id);
 			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				
 				return null;
 			}
 		}
@@ -109,6 +96,25 @@ public class ResolutionPhasesUIManager {
 				_activeResolutionPhaseUI.activate();
 			}
 		}
+	}
+	
+	private ResolutionPhaseUI initializeResolutionPhaseUI(String id) {
+		
+		ResolutionPhaseUIRegistry resolutionPhaseUIRegistry = getRegistry(id);
+		
+		ResolutionPhaseUI resolutionPhaseUI = new ResolutionPhaseUI();
+		resolutionPhaseUI.setId(id);
+		resolutionPhaseUI.setName(resolutionPhaseUIRegistry.getElement(EResolutionPhaseUIElements.name));
+		resolutionPhaseUI.setResolutionPhaseId(resolutionPhaseUIRegistry.getElement(EResolutionPhaseUIElements.resolution_phase));
+		EResolutionPhaseUIType uiType = resolutionPhaseUIRegistry.getUIType();
+		resolutionPhaseUI.setResolutionPhaseUIType(uiType);
+		resolutionPhaseUI.setUiId(resolutionPhaseUIRegistry.getUIID(uiType));
+		
+		resolutionPhaseUI.setRegistry(resolutionPhaseUIRegistry);
+		
+		_resolutionPhasesUIs.put(id, resolutionPhaseUI);
+		
+		return resolutionPhaseUI;
 	}
 
 }

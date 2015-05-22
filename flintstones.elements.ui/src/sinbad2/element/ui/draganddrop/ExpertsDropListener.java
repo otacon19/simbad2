@@ -35,11 +35,6 @@ public class ExpertsDropListener extends ViewerDropAdapter {
 
 	@Override
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {
-		
-		ProblemElementsManager elementManager = ProblemElementsManager.getInstance();
-		ProblemElementsSet elementSet = elementManager.getActiveElementSet();
-		List<Expert> experts = elementSet.getExperts();
-		
 		boolean result = false;
 		
 		Object selectedObject = getSelectedObject();
@@ -51,24 +46,33 @@ public class ExpertsDropListener extends ViewerDropAdapter {
 				_newParent = (Expert) target;
 			}
 			
-			if(_expert == _newParent){
-				result = false;
-			} else if((_oldParent == null) && (_newParent == null)) {
-				result = false;
-			} else if(_newParent == null) {
-				result = !(duplicateID(experts, _expert.getId()));
-			} else {
-				if((!duplicateID(_newParent.getChildrens(), _expert.getId()))) {
-					result = !isMember(_expert, _newParent);
-				} else {
-					result = false;
-				}
-			}
+			result = checkDropExpert();
+			
 		}
 		
 		return result;
 	}
-
+	
+	private boolean checkDropExpert() {
+		ProblemElementsManager elementManager = ProblemElementsManager.getInstance();
+		ProblemElementsSet elementSet = elementManager.getActiveElementSet();
+		
+		List<Expert> experts = elementSet.getExperts();
+		
+		if(_expert == _newParent || (_oldParent == null) && (_newParent == null)){
+			 return false;
+		} else if(_newParent == null) {
+			return !(duplicateID(experts, _expert.getId()));
+		} else {
+			if((!duplicateID(_newParent.getChildrens(), _expert.getId()))) {
+				return !isMember(_expert, _newParent);
+			} else {
+				return false;
+			}
+		}
+		
+	}
+	
 	private boolean isMember(Expert expert, Expert maybeMember) {
 		
 		if(expert.hasChildrens()) {

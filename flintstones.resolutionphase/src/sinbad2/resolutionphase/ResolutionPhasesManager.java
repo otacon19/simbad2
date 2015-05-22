@@ -80,16 +80,7 @@ public class ResolutionPhasesManager {
 			return _resolutionPhases.get(id);
 		} else {
 			try {
-				ResolutionPhaseRegistryExtension resolutionPhaseRegistry = getRegistry(id);
-				
-				ResolutionPhase resolutionPhase = new ResolutionPhase();
-				resolutionPhase.setId(id);
-				resolutionPhase.setName(resolutionPhaseRegistry.getAttribute(EResolutionPhaseElements.name));
-				resolutionPhase.setRegistry(resolutionPhaseRegistry);
-				
-				_resolutionPhases.put(id, resolutionPhase);
-				
-				return resolutionPhase;
+				return initializeResolutionPhase(id);
 			} catch (Exception e) {
 				return null;
 			}
@@ -124,6 +115,19 @@ public class ResolutionPhasesManager {
 				_activeResolutionPhase.activate();
 			}
 		}
+	}
+	
+	private ResolutionPhase initializeResolutionPhase(String id) {
+		ResolutionPhaseRegistryExtension resolutionPhaseRegistry = getRegistry(id);
+		
+		ResolutionPhase resolutionPhase = new ResolutionPhase();
+		resolutionPhase.setId(id);
+		resolutionPhase.setName(resolutionPhaseRegistry.getAttribute(EResolutionPhaseElements.name));
+		resolutionPhase.setRegistry(resolutionPhaseRegistry);
+		
+		_resolutionPhases.put(id, resolutionPhase);
+		
+		return resolutionPhase;
 	}
 
 }

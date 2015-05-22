@@ -13,15 +13,15 @@ import sinbad2.element.alternative.Alternative;
 public class AddAlternativeOperation extends UndoableOperation {
 	
 	private ProblemElementsSet _elementSet;
-	private Alternative _newAlternative;
-	private String _newAlternativeID;
+	private Alternative _addAlternative;
+	private String _addAlternativeId;
 	
-	public AddAlternativeOperation(String label, ProblemElementsSet elementSet, String newAlternativeID) {
+	public AddAlternativeOperation(String label, ProblemElementsSet elementSet, String addAlternativeId) {
 		super(label);
 		
 		_elementSet = elementSet;
-		_newAlternativeID = newAlternativeID;
-		_newAlternative = new Alternative(_newAlternativeID);
+		_addAlternativeId = addAlternativeId;
+		_addAlternative = new Alternative(_addAlternativeId);
 		
 	}
 
@@ -33,7 +33,7 @@ public class AddAlternativeOperation extends UndoableOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.insertAlternative(_newAlternative);
+		_elementSet.insertAlternative(_addAlternative);
 		
 		return Status.OK_STATUS;
 	}
@@ -41,7 +41,7 @@ public class AddAlternativeOperation extends UndoableOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.removeAlternative(_newAlternative);
+		_elementSet.removeAlternative(_addAlternative);
 		
 		return Status.OK_STATUS;
 	}

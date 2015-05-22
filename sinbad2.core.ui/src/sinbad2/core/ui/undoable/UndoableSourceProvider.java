@@ -51,6 +51,7 @@ public class UndoableSourceProvider extends AbstractSourceProvider implements
 	public void notifyUndoHistoryChange(EUndoHistoryChange undoHistoryChange) {
 		boolean oldUndo = undo;
 		boolean oldRedo = redo;
+
 		switch (undoHistoryChange) {
 		case UNDO_ENABLED:
 			undo = true;

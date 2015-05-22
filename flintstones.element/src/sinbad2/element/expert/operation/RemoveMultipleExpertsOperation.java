@@ -16,14 +16,14 @@ public class RemoveMultipleExpertsOperation extends UndoableOperation {
 	
 	private ProblemElementsSet _elementSet;
 	private List<Expert> _removeSeveralExperts;
-	private Expert _firstParentOfRemoveExperts;
+	private Expert _firstParent;
 
 	public RemoveMultipleExpertsOperation(String label, List<Expert> expertsRemove, ProblemElementsSet elementSet) {
 		super(label);
 		
 		_elementSet = elementSet;
 		_removeSeveralExperts = expertsRemove;
-		_firstParentOfRemoveExperts = _removeSeveralExperts.get(0).getParent();
+		_firstParent = _removeSeveralExperts.get(0).getParent();
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class RemoveMultipleExpertsOperation extends UndoableOperation {
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		boolean hasParent = false;
 		
-		if(_firstParentOfRemoveExperts == null) {
+		if(_firstParent == null) {
 			_elementSet.removeSeveralExperts(_removeSeveralExperts, hasParent);
 		} else {
 			hasParent = true;
@@ -49,7 +49,7 @@ public class RemoveMultipleExpertsOperation extends UndoableOperation {
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		boolean hasParent = false;
 		
-		if(_firstParentOfRemoveExperts == null) {
+		if(_firstParent == null) {
 			_elementSet.insertSeveralExperts(_removeSeveralExperts, hasParent);
 		} else {
 			hasParent = true;

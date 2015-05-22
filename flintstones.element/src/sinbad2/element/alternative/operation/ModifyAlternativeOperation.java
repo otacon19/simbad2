@@ -14,16 +14,16 @@ public class ModifyAlternativeOperation extends UndoableOperation {
 	
 	private ProblemElementsSet _elementSet;
 	private Alternative _modifyAlternative;
-	private String _newIdAlternative;
-	private String _oldIdAlternative;
+	private String _newId;
+	private String _oldId;
 
-	public ModifyAlternativeOperation(String label, ProblemElementsSet elementSet, Alternative modifyAlternative, String newIdAlternative) {
+	public ModifyAlternativeOperation(String label, ProblemElementsSet elementSet, Alternative modifyAlternative, String newId) {
 		super(label);
 		
 		_elementSet = elementSet;
 		_modifyAlternative = modifyAlternative;
-		_newIdAlternative = newIdAlternative;
-		_oldIdAlternative = modifyAlternative.getId();
+		_newId = newId;
+		_oldId = modifyAlternative.getId();
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class ModifyAlternativeOperation extends UndoableOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.modifyAlternative(_modifyAlternative, _newIdAlternative);
+		_elementSet.modifyAlternative(_modifyAlternative, _newId);
 		
 		return Status.OK_STATUS;
 		
@@ -43,7 +43,7 @@ public class ModifyAlternativeOperation extends UndoableOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.modifyAlternative(_modifyAlternative, _oldIdAlternative);
+		_elementSet.modifyAlternative(_modifyAlternative, _oldId);
 		
 		return Status.OK_STATUS;
 		

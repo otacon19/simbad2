@@ -16,11 +16,11 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 		return _id;
 	}
 
-	public abstract String getFormatId();
+	public abstract String getPathId();
 	
 	@Override
 	public String toString() {
-		return getFormatId();
+		return getPathId();
 	}
 
 	public void setId(String id) {
@@ -30,7 +30,8 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 	@Override
 	public int compareTo(ProblemElement other) {
 		// TODO validator
-		return getFormatId().compareTo(other.getFormatId());
+		
+		return getPathId().compareTo(other.getPathId());
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 		try {
 			result = (ProblemElement) super.clone();
 		} catch (CloneNotSupportedException e) {
-			//No ocurre nunca
+			e.getStackTrace();
 		}
 		
 		result.setId(new String(_id));

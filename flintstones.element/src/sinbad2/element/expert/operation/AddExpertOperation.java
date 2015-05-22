@@ -14,16 +14,16 @@ public class AddExpertOperation extends UndoableOperation {
 	
 	private ProblemElementsSet _elementSet;
 	private Expert _parent;
-	private Expert _newExpert;
-	private String _newExpertID;
+	private Expert _addExpert;
+	private String _newId;
 
 	public AddExpertOperation(String label, String id, Expert parent, ProblemElementsSet elementSet) {
 		super(label);
 		
 		_elementSet = elementSet;
-		_newExpertID = id;
+		_newId = id;
 		_parent = parent;
-		_newExpert = new Expert(_newExpertID);
+		_addExpert = new Expert(_newId);
 	}
 
 	@Override
@@ -31,11 +31,11 @@ public class AddExpertOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.insertExpert(_newExpert, hasParent);
+			_elementSet.insertExpert(_addExpert, hasParent);
 		} else {
 			hasParent = true;
-			_parent.addChildren(_newExpert);
-			_elementSet.insertExpert(_newExpert, hasParent);
+			_parent.addChildren(_addExpert);
+			_elementSet.insertExpert(_addExpert, hasParent);
 		}
 
 		return Status.OK_STATUS;
@@ -47,12 +47,12 @@ public class AddExpertOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.removeExpert(_newExpert, hasParent);
+			_elementSet.removeExpert(_addExpert, hasParent);
 		} else {
 			hasParent = true;
-			_parent.removeChildren(_newExpert);
-			_newExpert.setParent(_parent);
-			_elementSet.removeExpert(_newExpert, hasParent);
+			_parent.removeChildren(_addExpert);
+			_addExpert.setParent(_parent);
+			_elementSet.removeExpert(_addExpert, hasParent);
 		}
 		
 		return Status.OK_STATUS;

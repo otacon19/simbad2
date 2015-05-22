@@ -27,7 +27,7 @@ public class DragListener implements DragSourceListener {
 		ProblemElement firstElement = (ProblemElement) selection.getFirstElement();
 		
 		if(TextTransfer.getInstance().isSupportedType(event.dataType)) {
-			event.data = firstElement.getFormatId();
+			event.data = firstElement.getPathId();
 		}
 		
 	}

@@ -13,21 +13,21 @@ import sinbad2.element.criterion.Criterion;
 public class AddCriterionOperation extends UndoableOperation {
 	
 	private ProblemElementsSet _elementSet;
-	private Criterion _newCriterion;
+	private Criterion _addCriterion;
 	private Criterion _parent;
-	private String _newCriterionId;
+	private String _id;
 	private boolean _cost;
 
-	public AddCriterionOperation(String label, String newCriterionId, boolean cost, Criterion parent, ProblemElementsSet elementSet) {
+	public AddCriterionOperation(String label, String id, boolean cost, Criterion parent, ProblemElementsSet elementSet) {
 		super(label);
 		
 		_elementSet = elementSet;
-		_newCriterionId = newCriterionId;
+		_id = id;
 		_cost = cost;
 		_parent = parent;
 		
-		_newCriterion = new Criterion(_newCriterionId);
-		_newCriterion.setCost(_cost);
+		_addCriterion = new Criterion(_id);
+		_addCriterion.setCost(_cost);
 	}
 
 	@Override
@@ -40,11 +40,11 @@ public class AddCriterionOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.insertCriterion(_newCriterion, hasParent);
+			_elementSet.insertCriterion(_addCriterion, hasParent);
 		} else {
 			hasParent = true;
-			_parent.addSubcriterion(_newCriterion);
-			_elementSet.insertCriterion(_newCriterion, hasParent);
+			_parent.addSubcriterion(_addCriterion);
+			_elementSet.insertCriterion(_addCriterion, hasParent);
 		}
 
 		return Status.OK_STATUS;
@@ -55,12 +55,12 @@ public class AddCriterionOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.removeCriterion(_newCriterion, hasParent);
+			_elementSet.removeCriterion(_addCriterion, hasParent);
 		} else {
 			hasParent = true;
-			_parent.removeSubcriterion(_newCriterion);
-			_newCriterion.setParent(_parent);
-			_elementSet.removeCriterion(_newCriterion, hasParent);
+			_parent.removeSubcriterion(_addCriterion);
+			_addCriterion.setParent(_parent);
+			_elementSet.removeCriterion(_addCriterion, hasParent);
 		}
 		
 		return Status.OK_STATUS;

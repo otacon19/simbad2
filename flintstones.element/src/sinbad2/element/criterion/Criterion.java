@@ -25,11 +25,11 @@ public class Criterion extends ProblemElement {
 	}
 	
 	@Override
-	public String getFormatId() {
+	public String getPathId() {
 		String result = null;
 		
 		if(_parent != null) {
-			result = _parent.getFormatId() + ":" + _id; //$NON-NLS-1$
+			result = _parent.getPathId() + ">" + _id; //$NON-NLS-1$
 		} else {
 			result = _id;
 		}
@@ -62,6 +62,7 @@ public class Criterion extends ProblemElement {
 		
 		subcriterion.setParent(this);
 		_subcriteria.add(subcriterion);
+		
 		Collections.sort(_subcriteria);
 	}
 	
@@ -101,11 +102,7 @@ public class Criterion extends ProblemElement {
 			return true;
 		}
 		
-		if(obj == null) {
-			return false;
-		}
-		
-		if(obj.getClass() != this.getClass()) {
+		if(obj == null || obj.getClass() != this.getClass()) {
 			return false;
 		}
 		
@@ -114,19 +111,15 @@ public class Criterion extends ProblemElement {
 		return false;
 	}
 	
-	public static Criterion getCriterionByFormatId(List<Criterion> elements, String formatId) {
+	public static Criterion getCriterionByFormatId(List<Criterion> criteria, String formatId) {
 		
 		//TODO validator
 		
-		if(formatId.contains(":")) {
-			String parentID = formatId.split(":")[0];		
-			for(Criterion criterion: elements) {
-				if(criterion.getId().equals(parentID)) {
-					return getCriterionByFormatId(criterion.getSubcriteria(), formatId.substring(parentID.length() + 1));
-				}
-			}
+		if(formatId.contains(">")) {
+			String parentId = formatId.split(">")[0];
+			return searchCriterionForPathId(parentId, formatId, criteria);
 		} else {
-			for(Criterion criterion: elements) {
+			for(Criterion criterion: criteria) {
 				if(criterion.getId().equals(formatId)) {
 					return criterion;
 				}
@@ -155,5 +148,16 @@ public class Criterion extends ProblemElement {
 		}
 		
 		return result;
+	}
+	
+	private static Criterion searchCriterionForPathId(String parentId, String formatId, List<Criterion> criteria) {
+		
+		for(Criterion criterion: criteria) {
+			if(criterion.getId().equals(parentId)) {
+				return getCriterionByFormatId(criterion.getSubcriteria(), formatId.substring(parentId.length() + 1));
+			}
+		}
+		
+		return null;
 	}
 }

@@ -8,23 +8,29 @@ import sinbad2.element.ProblemElement;
 
 public class Expert extends ProblemElement {
 	
-	private List<Expert> _childrens = null;
-	private Expert _parent = null;
+	private List<Expert> _childrens;
+	private Expert _parent;
 
 	public Expert() {
 		super();
+		
+		_childrens = null;
+		_parent = null;
 	}
 
 	public Expert(String id) {
 		super(id);
+		
+		_childrens = null;
+		_parent = null;
 	}
 	
 	@Override
-	public String getFormatId(){
+	public String getPathId(){
 		String result = null;
 		
 		if(_parent != null) {
-			result = _parent.getFormatId() + ":" + _id; //$NON-NLS-1$
+			result = _parent.getPathId() + ">" + _id; //$NON-NLS-1$
 		} else {
 			result = _id;
 		}
@@ -48,6 +54,7 @@ public class Expert extends ProblemElement {
 		}
 		_childrens.add(children);
 		children.setParent(this);
+		
 		Collections.sort(_childrens);
 	}
 	
@@ -93,19 +100,15 @@ public class Expert extends ProblemElement {
 		return false;
 	}
 	
-	public static Expert getExpertByFormatId(List<Expert> experts, String idExpertFormat) {
+	public static Expert getExpertByFormatId(List<Expert> experts, String formatId) {
 		//TODO validator
 		
-		if(idExpertFormat.contains(":")) { //$NON-NLS-1$
-			String parentId = idExpertFormat.split(":")[0]; //$NON-NLS-1$
-			for(Expert expert: experts) {
-				if(expert.getId().equals(parentId)) {
-					return getExpertByFormatId(expert.getChildrens(), idExpertFormat.substring(parentId.length() + 1));
-				}
-			}
+		if(formatId.contains(">")) { //$NON-NLS-1$
+			String parentId = formatId.split(">")[0]; //$NON-NLS-1$
+			return searchExpertForPathId(parentId, formatId, experts);
 		} else {
 			for(Expert expert: experts) {
-				if(expert.getId().equals(idExpertFormat)) {
+				if(expert.getId().equals(formatId)) {
 					return expert;
 				}
 			}
@@ -132,5 +135,16 @@ public class Expert extends ProblemElement {
 		}
 		
 		return result;
+	}
+	
+	private static Expert searchExpertForPathId(String parentId, String formatId, List<Expert> experts) {
+		
+		for(Expert expert: experts) {
+			if(expert.getId().equals(parentId)) {
+				return getExpertByFormatId(expert.getChildrens(), formatId.substring(parentId.length() + 1));
+			}
+		}
+		
+		return null;
 	}
 }

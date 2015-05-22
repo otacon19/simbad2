@@ -3,15 +3,6 @@ package sinbad2.element.ui;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-/**
- * Images.java
- * 
- * Clase que crear genera una imagen a partir de las almacenadas en el proyecto.
- * 
- * @author Labella Romero, Álvaro
- * @version 1.0
- *
- */
 public class Images {
 
 	private static final String PLUGIN_ID = "sinbad2.element.ui"; //$NON-NLS-1$

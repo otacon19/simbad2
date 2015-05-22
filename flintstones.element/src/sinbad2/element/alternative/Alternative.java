@@ -2,7 +2,7 @@ package sinbad2.element.alternative;
 
 import sinbad2.element.ProblemElement;
 
-public class Alternative extends ProblemElement{
+public class Alternative extends ProblemElement {
 	
 	public Alternative() {
 		super();
@@ -13,12 +13,13 @@ public class Alternative extends ProblemElement{
 	}
 	
 	@Override
-	public String getFormatId() {
+	public String getPathId() {
 		return _id;
 	}
 	
 	@Override
 	public boolean equals(Object object) {
+		
 		if(this == object) {
 			return true;
 		}
