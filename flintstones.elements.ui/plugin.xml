@@ -58,6 +58,42 @@
                   style="push">
             </command>
          </menu>
+         <menu
+               icon="icons/alternatives.png"
+               id="flintstones.menu.alternatives"
+               label="Alternatives"
+               mnemonic="A">
+            <command
+                  commandId="flintstones.element.alternative.add"
+                  style="push">
+            </command>
+            <command
+                  commandId="flintstones.element.alternative.modify"
+                  style="push">
+            </command>
+            <command
+                  commandId="flintstones.element.alternative.remove"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               icon="icons/criteria.png"
+               id="flintstones.menu.criteria"
+               label="Criteria"
+               mnemonic="C">
+            <command
+                  commandId="flintstones.element.criterion.add"
+                  style="push">
+            </command>
+            <command
+                  commandId="flintstones.element.criterion.modify"
+                  style="push">
+            </command>
+            <command
+                  commandId="flintstones.element.criterion.remove"
+                  style="push">
+            </command>
+         </menu>
       </menuContribution>
       <menuContribution
             allPopups="false"
