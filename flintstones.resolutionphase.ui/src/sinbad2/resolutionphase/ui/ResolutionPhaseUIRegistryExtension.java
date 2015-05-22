@@ -2,28 +2,22 @@ package sinbad2.resolutionphase.ui;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 
-public class ResolutionPhaseUIRegistry {
+import sinbad2.core.registry.RegistryExtension;
+
+public class ResolutionPhaseUIRegistryExtension extends RegistryExtension {
 	
 	private IConfigurationElement _configuration;
 	
-	private ResolutionPhaseUIRegistry() {
-		_configuration = null;
-	}
-	
-	public ResolutionPhaseUIRegistry(IConfigurationElement element) {
-		this();
-		_configuration = element;
-	}
-	
-	public IConfigurationElement getConfiguration() {
-		return _configuration;
+	public ResolutionPhaseUIRegistryExtension(IConfigurationElement element) {
+		super(element);
+		_configuration = super.getConfiguration();
 	}
 	
 	public String getElement(EResolutionPhaseUIElements element) {
 		String result = null;
 		
 		if(_configuration != null) {
-			result = _configuration.getAttribute(element.toString());
+			result = super.getConfiguration().getAttribute(element.toString());
 		}
 		
 		return result;

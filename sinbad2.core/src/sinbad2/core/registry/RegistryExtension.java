@@ -3,7 +3,7 @@ package sinbad2.core.registry;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 public class RegistryExtension implements Cloneable {
-
+	
 	private IConfigurationElement _configuration;
 	
 	private RegistryExtension() {
@@ -19,19 +19,6 @@ public class RegistryExtension implements Cloneable {
 		return _configuration;
 	}
 	
-	public String getAttribute(RegistryExtension element) {
-		
-		String result = null;
-		
-		if(_configuration != null) {
-			result = _configuration.getAttribute(element.toString());
-		}
-		
-		return result;
-	}
-	
-	//TODO hashcode
-	
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		
@@ -43,4 +30,7 @@ public class RegistryExtension implements Cloneable {
 		return result;
 		
 	}
+	
+	//TODO hashCode
+
 }

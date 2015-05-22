@@ -97,7 +97,7 @@
       </menuContribution>
       <menuContribution
             allPopups="false"
-            locationURI="menu:flintstones.element.ui.view.expert">
+            locationURI="menu:flintstones.element.ui.view.experts">
          <command
                commandId="flintstones.element.expert.add"
                style="push">

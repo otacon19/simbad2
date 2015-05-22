@@ -15,12 +15,12 @@ public class ResolutionPhasesUIManager {
 	
 	private ResolutionPhaseUI _activeResolutionPhaseUI;
 	
-	private Map<String, ResolutionPhaseUIRegistry> _registers;
+	private Map<String, ResolutionPhaseUIRegistryExtension> _registers;
 	private Map<String, ResolutionPhaseUI> _resolutionPhasesUIs;
 	
 	private ResolutionPhasesUIManager() {
 		_activeResolutionPhaseUI = null;
-		_registers = new HashMap<String, ResolutionPhaseUIRegistry>();
+		_registers = new HashMap<String, ResolutionPhaseUIRegistryExtension>();
 		_resolutionPhasesUIs = new HashMap<String, ResolutionPhaseUI>();
 		loadRegisters();
 	}
@@ -38,9 +38,9 @@ public class ResolutionPhasesUIManager {
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
 		
-		ResolutionPhaseUIRegistry registry;
+		ResolutionPhaseUIRegistryExtension registry;
 		for(IConfigurationElement extension: extensions) {
-			registry = new ResolutionPhaseUIRegistry(extension);
+			registry = new ResolutionPhaseUIRegistryExtension(extension);
 			_registers.put(registry.getElement(EResolutionPhaseUIElements.id), registry);
 		}
 	}
@@ -49,7 +49,7 @@ public class ResolutionPhasesUIManager {
 		return _registers.keySet().toArray(new String[0]);
 	}
 	
-	public ResolutionPhaseUIRegistry getRegistry(String id) {
+	public ResolutionPhaseUIRegistryExtension getRegistry(String id) {
 		return _registers.get(id);
 	}
 	
@@ -100,7 +100,7 @@ public class ResolutionPhasesUIManager {
 	
 	private ResolutionPhaseUI initializeResolutionPhaseUI(String id) {
 		
-		ResolutionPhaseUIRegistry resolutionPhaseUIRegistry = getRegistry(id);
+		ResolutionPhaseUIRegistryExtension resolutionPhaseUIRegistry = getRegistry(id);
 		
 		ResolutionPhaseUI resolutionPhaseUI = new ResolutionPhaseUI();
 		resolutionPhaseUI.setId(id);

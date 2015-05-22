@@ -19,7 +19,7 @@ public class ResolutionPhaseUI {
 	private Object _ui;
 	
 	private EResolutionPhaseUIType _resolutionPhaseUIType;
-	private ResolutionPhaseUIRegistry _registry;
+	private ResolutionPhaseUIRegistryExtension _registry;
 	
 	private List<IResolutionPhaseUIStateListener> _listeners;
 	
@@ -39,7 +39,7 @@ public class ResolutionPhaseUI {
 	}
 	
 	public ResolutionPhaseUI(String id, String name, String resolutionPhaseId, ResolutionPhase resolutionPhase, String uiId, Object ui,
-			EResolutionPhaseUIType resolutionPhaseUIType, ResolutionPhaseUIRegistry registry) {
+			EResolutionPhaseUIType resolutionPhaseUIType, ResolutionPhaseUIRegistryExtension registry) {
 		this();
 		setId(id);
 		setName(name);
@@ -113,11 +113,11 @@ public class ResolutionPhaseUI {
 		_resolutionPhaseUIType = resolutionPhaseUIType;
 	}
 
-	public ResolutionPhaseUIRegistry getRegistry() {
+	public ResolutionPhaseUIRegistryExtension getRegistry() {
 		return _registry;
 	}
 
-	public void setRegistry(ResolutionPhaseUIRegistry registry) {
+	public void setRegistry(ResolutionPhaseUIRegistryExtension registry) {
 		_registry = registry;
 	}
 	

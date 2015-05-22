@@ -83,7 +83,6 @@ public class ResolutionSchemesManager {
 			try {
 				return initializeResolutionScheme(id);
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
 				return null;
 			}
 		}

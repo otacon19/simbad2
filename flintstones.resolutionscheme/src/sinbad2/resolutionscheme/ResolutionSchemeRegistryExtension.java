@@ -2,21 +2,15 @@ package sinbad2.resolutionscheme;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 
-public class ResolutionSchemeRegistryExtension {
+import sinbad2.core.registry.RegistryExtension;
+
+public class ResolutionSchemeRegistryExtension extends RegistryExtension {
 
 	private IConfigurationElement _configuration;
 
-	private ResolutionSchemeRegistryExtension() {
-		_configuration = null;
-	}
-
 	public ResolutionSchemeRegistryExtension(IConfigurationElement element) {
-		this();
-		_configuration = element;
-	}
-
-	public IConfigurationElement getConfiguration() {
-		return _configuration;
+		super(element);
+		_configuration = super.getConfiguration();
 	}
 
 	public String getElement(EResolutionSchemeElements element) {
@@ -50,7 +44,5 @@ public class ResolutionSchemeRegistryExtension {
 		return result;
 
 	}
-
-	// TODO hasCode
 
 }

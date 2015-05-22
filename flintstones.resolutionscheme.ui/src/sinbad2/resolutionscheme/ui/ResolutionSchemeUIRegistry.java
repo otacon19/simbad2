@@ -5,25 +5,18 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 
+import sinbad2.core.registry.RegistryExtension;
 import sinbad2.resolutionphase.ui.EResolutionPhaseUIElements;
-import sinbad2.resolutionphase.ui.ResolutionPhaseUIRegistry;
+import sinbad2.resolutionphase.ui.ResolutionPhaseUIRegistryExtension;
 import sinbad2.resolutionphase.ui.ResolutionPhasesUIManager;
 
-public class ResolutionSchemeUIRegistry {
+public class ResolutionSchemeUIRegistry extends RegistryExtension {
 	
 	private IConfigurationElement _configuration;
 	
-	private ResolutionSchemeUIRegistry() {
-		_configuration = null;
-	}
-	
 	public ResolutionSchemeUIRegistry(IConfigurationElement element) {
-		this();
-		_configuration = element;
-	}
-	
-	public IConfigurationElement getConfiguration() {
-		return _configuration;
+		super(element);
+		_configuration = super.getConfiguration();
 	}
 	
 	public String getElement(EResolutionSchemeUIElements element) {
@@ -46,7 +39,7 @@ public class ResolutionSchemeUIRegistry {
 			if(uis != null) {
 				String resolutionPhaseUIID;
 				String resolutionPhaseID;
-				ResolutionPhaseUIRegistry resolutionPhaseUIRegistry;
+				ResolutionPhaseUIRegistryExtension resolutionPhaseUIRegistry;
 				ResolutionPhasesUIManager resolutionPhasesUIManager = ResolutionPhasesUIManager.getInstance();
 				for(int i = 0; i < uis.length; ++i) {
 					resolutionPhaseUIID = uis[i].getAttribute(EResolutionSchemeUIElements.id.toString());
