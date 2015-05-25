@@ -11,12 +11,9 @@ import sinbad2.resolutionphase.ui.ResolutionPhaseUIRegistryExtension;
 import sinbad2.resolutionphase.ui.ResolutionPhasesUIManager;
 
 public class ResolutionSchemeUIRegistry extends RegistryExtension {
-	
-	private IConfigurationElement _configuration;
-	
+
 	public ResolutionSchemeUIRegistry(IConfigurationElement element) {
 		super(element);
-		_configuration = super.getConfiguration();
 	}
 	
 	public String getElement(EResolutionSchemeUIElements element) {

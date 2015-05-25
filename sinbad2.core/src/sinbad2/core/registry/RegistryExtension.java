@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 
 public class RegistryExtension implements Cloneable {
 	
-	private IConfigurationElement _configuration;
+	protected IConfigurationElement _configuration;
 	
 	private RegistryExtension() {
 		_configuration = null;

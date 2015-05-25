@@ -6,11 +6,8 @@ import sinbad2.core.registry.RegistryExtension;
 
 public class ResolutionPhaseUIRegistryExtension extends RegistryExtension {
 	
-	private IConfigurationElement _configuration;
-	
 	public ResolutionPhaseUIRegistryExtension(IConfigurationElement element) {
 		super(element);
-		_configuration = super.getConfiguration();
 	}
 	
 	public String getElement(EResolutionPhaseUIElements element) {

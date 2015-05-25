@@ -122,7 +122,7 @@ public class ExpertsContentProvider implements ITreeContentProvider, IExpertsCha
 			case ADD_EXPERT:
 				addExpert((Expert) event.getNewValue());
 				break;
-			case ADD_SEVERAL_EXPERTS:
+			case ADD_MULTIPLE_EXPERTS:
 				for(Expert expert: (List<Expert>) event.getNewValue()) {
 					addExpert(expert);
 				}

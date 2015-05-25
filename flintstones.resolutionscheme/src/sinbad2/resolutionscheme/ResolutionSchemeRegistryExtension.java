@@ -6,8 +6,6 @@ import sinbad2.core.registry.RegistryExtension;
 
 public class ResolutionSchemeRegistryExtension extends RegistryExtension {
 
-	private IConfigurationElement _configuration;
-
 	public ResolutionSchemeRegistryExtension(IConfigurationElement element) {
 		super(element);
 		_configuration = super.getConfiguration();
