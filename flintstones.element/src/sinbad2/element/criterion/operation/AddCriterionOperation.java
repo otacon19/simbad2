@@ -40,11 +40,11 @@ public class AddCriterionOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.insertCriterion(_addCriterion, hasParent);
+			_elementSet.addCriterion(_addCriterion, hasParent);
 		} else {
 			hasParent = true;
 			_parent.addSubcriterion(_addCriterion);
-			_elementSet.insertCriterion(_addCriterion, hasParent);
+			_elementSet.addCriterion(_addCriterion, hasParent);
 		}
 
 		return Status.OK_STATUS;

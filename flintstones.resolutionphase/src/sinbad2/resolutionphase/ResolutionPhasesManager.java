@@ -26,7 +26,7 @@ public class ResolutionPhasesManager {
 		_resolutionPhases = new HashMap<String, ResolutionPhase>();
 		_implementationResolutionPhases = new HashMap<ResolutionPhaseImplementation, String>();
 		
-		loadRegisters();
+		loadRegistersExtension();
 	}
 	
 	public static ResolutionPhasesManager getInstance() {
@@ -37,7 +37,7 @@ public class ResolutionPhasesManager {
 		return _instance;
 	}
 	
-	private void loadRegisters() {
+	private void loadRegistersExtension() {
 		
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
@@ -50,7 +50,7 @@ public class ResolutionPhasesManager {
 		
 	}
 	
-	public String[] getIDs() {
+	public String[] getIdsRegisters() {
 		return _registers.keySet().toArray(new String[0]);
 	}
 	

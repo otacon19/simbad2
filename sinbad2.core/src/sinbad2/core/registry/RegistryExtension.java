@@ -20,11 +20,16 @@ public class RegistryExtension implements Cloneable {
 	}
 	
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
+	public Object clone() {
 		
 		RegistryExtension result = null;
 		
-		result = (RegistryExtension) super.clone();
+		try {
+			result = (RegistryExtension) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
 		result._configuration = this._configuration;
 		
 		return result;

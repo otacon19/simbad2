@@ -130,7 +130,7 @@ public class ExpertsContentProvider implements ITreeContentProvider, IExpertsCha
 			case REMOVE_EXPERT:
 				removeExpert((Expert) event.getOldValue());
 				break;
-			case REMOVE_SEVERAL_EXPERTS:
+			case REMOVE_MULTIPLE_EXPERTS:
 				for(Expert expert: (List<Expert>) event.getOldValue()) {
 					removeExpert(expert);
 				}

@@ -28,7 +28,7 @@ public class Activator extends AbstractUIPlugin {
 		ResolutionSchemeUI resolutionSchemeUI = null;
 		
 		_resolutionSchemesUIManager = ResolutionSchemesUIManager.getInstance();
-		String[] resolutionSchemesUI = _resolutionSchemesUIManager.getIDs();
+		String[] resolutionSchemesUI = _resolutionSchemesUIManager.getIdsRegisters();
 		
 		resolutionSchemeUI = _resolutionSchemesUIManager.getUI(resolutionSchemesUI[0]);
 		Workspace workspace = Workspace.getWorkspace();

@@ -22,7 +22,7 @@ public class ResolutionSchemesUIManager {
 		_activeResolutionSchemeUI = null;
 		_registers = new HashMap<String, ResolutionSchemeUIRegistry>();
 		_resolutionSchemesUIs = new HashMap<String, ResolutionSchemeUI>();
-		loadRegisters();
+		loadRegistersExtension();
 	}
 	
 	public static ResolutionSchemesUIManager getInstance() {
@@ -33,7 +33,7 @@ public class ResolutionSchemesUIManager {
 		return _instance;
 	}
 	
-	public void loadRegisters() {
+	public void loadRegistersExtension() {
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
 		
@@ -44,7 +44,7 @@ public class ResolutionSchemesUIManager {
 		}
 	}
 	
-	public String[] getIDs() {
+	public String[] getIdsRegisters() {
 		return _registers.keySet().toArray(new String[0]);
 	}
 	

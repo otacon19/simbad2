@@ -72,7 +72,7 @@ public class AlternativesContentProvider implements IStructuredContentProvider,
 			case ADD_ALTERNATIVE:
 				addAlternative((Alternative) event.getNewValue());
 				break;
-			case ADD_SEVERAL_ALTERNATIVES:
+			case ADD_MULTIPLE_ALTERNATIVES:
 				for(Alternative alternative: (List<Alternative>) event.getNewValue()) {
 					addAlternative(alternative);
 				}
@@ -81,7 +81,7 @@ public class AlternativesContentProvider implements IStructuredContentProvider,
 				_tableViewer.refresh();
 				break;
 				
-			case REMOVE_SEVERAL_ALTERNATIVES:
+			case REMOVE_MULTIPLE_ALTERNATIVES:
 				_tableViewer.refresh();
 				break;
 				

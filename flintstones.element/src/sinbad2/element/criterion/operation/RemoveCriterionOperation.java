@@ -52,11 +52,11 @@ public class RemoveCriterionOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.insertCriterion(_removeCriterion, hasParent);
+			_elementSet.addCriterion(_removeCriterion, hasParent);
 		} else {
 			hasParent = true;
 			_parent.addSubcriterion(_removeCriterion);
-			_elementSet.insertCriterion(_removeCriterion, hasParent);
+			_elementSet.addCriterion(_removeCriterion, hasParent);
 			
 		}
 		

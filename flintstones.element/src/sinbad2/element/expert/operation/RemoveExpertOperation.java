@@ -52,11 +52,11 @@ public class RemoveExpertOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.insertExpert(_removeExpert, hasParent);
+			_elementSet.addExpert(_removeExpert, hasParent);
 		} else {
 			hasParent = true;
 			_parent.addChildren(_removeExpert);
-			_elementSet.insertExpert(_removeExpert, hasParent);
+			_elementSet.addExpert(_removeExpert, hasParent);
 			
 		}
 		

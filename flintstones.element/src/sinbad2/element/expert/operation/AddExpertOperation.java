@@ -31,11 +31,11 @@ public class AddExpertOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.insertExpert(_addExpert, hasParent);
+			_elementSet.addExpert(_addExpert, hasParent);
 		} else {
 			hasParent = true;
 			_parent.addChildren(_addExpert);
-			_elementSet.insertExpert(_addExpert, hasParent);
+			_elementSet.addExpert(_addExpert, hasParent);
 		}
 
 		return Status.OK_STATUS;

@@ -36,10 +36,10 @@ public class RemoveMultipleExpertsOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_firstParent == null) {
-			_elementSet.removeSeveralExperts(_removeSeveralExperts, hasParent);
+			_elementSet.removeMultipleExperts(_removeSeveralExperts, hasParent);
 		} else {
 			hasParent = true;
-			_elementSet.removeSeveralExperts(_removeSeveralExperts, hasParent);
+			_elementSet.removeMultipleExperts(_removeSeveralExperts, hasParent);
 		}
 				
 		return Status.OK_STATUS;	
@@ -50,10 +50,10 @@ public class RemoveMultipleExpertsOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_firstParent == null) {
-			_elementSet.insertSeveralExperts(_removeSeveralExperts, hasParent);
+			_elementSet.addMultipleExperts(_removeSeveralExperts, hasParent);
 		} else {
 			hasParent = true;
-			_elementSet.insertSeveralExperts(_removeSeveralExperts, hasParent);
+			_elementSet.addMultipleExperts(_removeSeveralExperts, hasParent);
 		}
 		
 		return Status.OK_STATUS;

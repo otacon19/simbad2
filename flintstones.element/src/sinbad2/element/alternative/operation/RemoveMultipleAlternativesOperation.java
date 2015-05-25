@@ -33,7 +33,7 @@ public class RemoveMultipleAlternativesOperation extends UndoableOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.removeSeveralAlternatives(_removeAlternatives);
+		_elementSet.removeMultipleAlternatives(_removeAlternatives);
 		
 		return Status.OK_STATUS;
 		
@@ -42,7 +42,7 @@ public class RemoveMultipleAlternativesOperation extends UndoableOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.insertSeveralAlternatives(_removeAlternatives);
+		_elementSet.addMultipleAlternatives(_removeAlternatives);
 		
 		return Status.OK_STATUS;
 	}

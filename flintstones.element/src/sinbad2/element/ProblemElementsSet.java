@@ -79,7 +79,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 	}
 
-	public void insertExpert(Expert expert, Boolean hasParent) {
+	public void addExpert(Expert expert, Boolean hasParent) {
 		
 		if(!hasParent) {
 			_experts.add(expert);
@@ -90,7 +90,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 	}
 	
-	public void insertAlternative(Alternative alternative) {
+	public void addAlternative(Alternative alternative) {
 		
 		_alternatives.add(alternative);
 		Collections.sort(_alternatives);
@@ -99,7 +99,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 	}
 	
-	public void insertCriterion(Criterion criterion, Boolean hasParent) {
+	public void addCriterion(Criterion criterion, Boolean hasParent) {
 		
 		if(!hasParent) {
 			_criteria.add(criterion);
@@ -118,7 +118,7 @@ public class ProblemElementsSet implements Cloneable {
 		} else {
 			oldParent.removeChildren(moveExpert);
 			if(newParent == null) {
-				insertExpert(moveExpert, false);
+				addExpert(moveExpert, false);
 			} else {
 				newParent.addChildren(moveExpert);
 			}
@@ -135,7 +135,7 @@ public class ProblemElementsSet implements Cloneable {
 		} else {
 			oldParent.removeSubcriterion(moveCriterion);
 			if(newParent == null) {
-				insertCriterion(moveCriterion, false);
+				addCriterion(moveCriterion, false);
 			} else {
 				newParent.addSubcriterion(moveCriterion);
 			}
@@ -144,7 +144,7 @@ public class ProblemElementsSet implements Cloneable {
 		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.MOVE_CRITERION, oldParent, moveCriterion));
 	}
 	
-	public void insertSeveralExperts(List<Expert> insertExperts, Boolean hasParent) {
+	public void addMultipleExperts(List<Expert> insertExperts, Boolean hasParent) {
 		Expert parent = insertExperts.get(0).getParent();
 		
 		for(Expert expert: insertExperts) {	
@@ -155,11 +155,11 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		}
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_SEVERAL_EXPERTS, null, insertExperts));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_MULTIPLE_EXPERTS, null, insertExperts));
 		
 	}
 	
-	public void insertSeveralAlternatives(List<Alternative> insertAlternatives) {
+	public void addMultipleAlternatives(List<Alternative> insertAlternatives) {
 		
 		for(Alternative alternative: insertAlternatives) {	
 			_alternatives.add(alternative);
@@ -168,11 +168,11 @@ public class ProblemElementsSet implements Cloneable {
 		
 		Collections.sort(_alternatives);
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_SEVERAL_ALTERNATIVES, null, insertAlternatives));
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_MULTIPLE_ALTERNATIVES, null, insertAlternatives));
 		
 	}
 	
-	public void insertSeveralCriteria(List<Criterion> insertCriteria, Boolean hasParent) {
+	public void addMultipleCriteria(List<Criterion> insertCriteria, Boolean hasParent) {
 		Criterion parent = insertCriteria.get(0).getParent();
 		
 		for(Criterion criterion: insertCriteria) {	
@@ -218,7 +218,7 @@ public class ProblemElementsSet implements Cloneable {
 		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.REMOVE_CRITERION, criterion, null));
 	}
 	
-	public void removeSeveralExperts(List<Expert> removeExperts, Boolean hasParent) {
+	public void removeMultipleExperts(List<Expert> removeExperts, Boolean hasParent) {
 		Expert parent = removeExperts.get(0).getParent();
 		
 		for(Expert expert: removeExperts) {	
@@ -230,11 +230,11 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		}
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_SEVERAL_EXPERTS, removeExperts, null));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_MULTIPLE_EXPERTS, removeExperts, null));
 		
 	}
 	
-	public void removeSeveralAlternatives(List<Alternative> removeAlternatives) {
+	public void removeMultipleAlternatives(List<Alternative> removeAlternatives) {
 		
 		for(Alternative alternative: removeAlternatives) {
 			_alternatives.remove(alternative);
@@ -243,11 +243,11 @@ public class ProblemElementsSet implements Cloneable {
 		
 		Collections.sort(_alternatives);
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.REMOVE_SEVERAL_ALTERNATIVES, removeAlternatives, null));	
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.REMOVE_MULTIPLE_ALTERNATIVES, removeAlternatives, null));	
 	
 	}
 	
-	public void removeSeveralCriteria(List<Criterion> removeCriteria, Boolean hasParent) {
+	public void removeMultipleCriteria(List<Criterion> removeCriteria, Boolean hasParent) {
 		Criterion parent = removeCriteria.get(0).getParent();
 		
 		for(Criterion criterion: removeCriteria) {
