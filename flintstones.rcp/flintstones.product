@@ -64,6 +64,8 @@
       <plugin id="sinbad2.core"/>
       <plugin id="sinbad2.core.ui"/>
       <plugin id="sinbad2.domain"/>
+      <plugin id="sinbad2.domain.numeric"/>
+      <plugin id="sinbad2.domain.ui"/>
       <plugin id="sinbad2.element"/>
       <plugin id="sinbad2.element.ui"/>
       <plugin id="sinbad2.rcp"/>

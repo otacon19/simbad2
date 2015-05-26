@@ -11,16 +11,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.contexts.IContextActivation;
-import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.element.expert.Expert;
@@ -33,9 +28,6 @@ import sinbad2.element.ui.view.experts.provider.ExpertsContentProvider;
 public class ExpertsView extends ViewPart {
 	
 	public static final String ID = "flintstones.element.ui.view.experts"; //$NON-NLS-1$
-	public static final String CONTEXT_ID = "flintstones.element.ui.view.experts.experts_view"; //$NON-NLS-1$
-	
-	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 	
 	private TreeViewer _treeViewer;
 	
@@ -89,7 +81,7 @@ public class ExpertsView extends ViewPart {
 		
 		addColumns();
 		hookContextMenu();
-		hookFocusListener();
+		//hookFocusListener();
 		//TODO hookSelectionChangeListener();
 		hookDoubleClickListener();
 
@@ -114,25 +106,6 @@ public class ExpertsView extends ViewPart {
 		_treeViewer.getTree().setMenu(menu);
 		getSite().registerContextMenu(menuManager, _treeViewer);
 		
-	}
-	
-	private void hookFocusListener() {
-		_treeViewer.getControl().addFocusListener(new FocusListener() {
-			
-			private IContextActivation activation = null;
-			
-			@Override
-			public void focusLost(FocusEvent e) {
-				//_contextService.deactivateContext(activation);
-				
-			}
-			
-			@Override
-			public void focusGained(FocusEvent e) {
-				//activation = _contextService.activateContext(CONTEXT_ID);
-				
-			}
-		});
 	}
 	
 	private void hookDoubleClickListener() {

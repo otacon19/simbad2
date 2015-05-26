@@ -49,6 +49,17 @@
                standalone="true"
                visible="true">
          </view>
+         <view
+               closeable="false"
+               id="flintstones.domain.ui.view.domain"
+               minimized="false"
+               moveable="false"
+               ratio="0.5"
+               relationship="right"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
       </perspectiveExtension>
    </extension>
    <extension
