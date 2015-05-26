@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="flintstones.domain.ui.modify.dialog" name="Modify domain dialog" schema="schema/flintstones.domain.ui.modify.dialog.exsd"/>
+   <extension-point id="flintstones.domain.ui.new.dialog" name="New domain dialog" schema="schema/flintstones.domain.ui.new.dialog.exsd"/>
+   <extension-point id="flintstones.domain.ui" name="Flintstones domain ui" schema="schema/flintstones.domain.ui.exsd"/>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.domain.category"
+            name="Domains">
+      </category>
+      <view
+            allowMultiple="false"
+            category="flintstones.domain.category"
+            class="sinbad2.domain.ui.view.domain.DomainView"
+            icon="icons/domain.png"
+            id="flintstones.domain.ui.view.domain"
+            name="Domain"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>

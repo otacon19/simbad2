@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Valuation
+Bundle-SymbolicName: sinbad2.valuation
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: sinbad2.domain;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.element;bundle-version="1.0.0";visibility:=reexport
