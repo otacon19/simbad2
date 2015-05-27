@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.valuation">
+      <valuation
+            domain="flintstones.domain.numeric"
+            id="flintstones.valuation.real.interval"
+            name="Real interval">
+         <type>
+            <normalized
+                  implementation="sinbad2.valuation.real.interval.RealInterval">
+            </normalized>
+         </type>
+      </valuation>
+   </extension>
+
+</plugin>

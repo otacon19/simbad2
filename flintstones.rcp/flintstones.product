@@ -66,6 +66,7 @@
       <plugin id="sinbad2.domain"/>
       <plugin id="sinbad2.domain.numeric"/>
       <plugin id="sinbad2.domain.ui"/>
+      <plugin id="sinbad2.domain.valuations"/>
       <plugin id="sinbad2.element"/>
       <plugin id="sinbad2.element.ui"/>
       <plugin id="sinbad2.rcp"/>
@@ -77,6 +78,11 @@
       <plugin id="sinbad2.resolutionscheme.dm"/>
       <plugin id="sinbad2.resolutionscheme.dm.ui"/>
       <plugin id="sinbad2.resolutionscheme.ui"/>
+      <plugin id="sinbad2.valuation"/>
+      <plugin id="sinbad2.valuation.integer"/>
+      <plugin id="sinbad2.valuation.integer.interval"/>
+      <plugin id="sinbad2.valuation.real"/>
+      <plugin id="sinbad2.valuation.real.interval"/>
    </plugins>
 
 

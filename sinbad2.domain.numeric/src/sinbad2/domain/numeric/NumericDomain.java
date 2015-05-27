@@ -1,3 +1,5 @@
+
+
 package sinbad2.domain.numeric;
 
 import sinbad2.domain.Domain;
@@ -41,7 +43,7 @@ public class NumericDomain extends Domain {
 		return _inRange;
 	}
 	
-	public void setMinMax(int min, int max) {
+	public void setMinMax(Double min, Double max) {
 		//TODO validator
 		_min = min;
 		_max = max;

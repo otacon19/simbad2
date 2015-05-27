@@ -82,7 +82,7 @@ public class DomainsManager {
 		}
 	}
 	
-	public Domain getCopyDomain(String id) {
+	public Domain copyDomain(String id) {
 		Domain result = getDomainImplementation(id);
 		
 		if(result != null) {

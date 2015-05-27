@@ -87,10 +87,9 @@ public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 		
 	}
 	
+	public abstract Valuation negateValutation();
 	
-	public abstract Valuation neg();
-	
-	public abstract String pretty();
+	public abstract String changeFormatValuationToString();
 	
 	
 
