@@ -6,6 +6,5 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: sinbad2.domain,
   sinbad2.domain.listener,
-  sinbad2.domain.operation,
-  sinbad2.domain.types
+  sinbad2.domain.operation
 Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0";visibility:=reexport

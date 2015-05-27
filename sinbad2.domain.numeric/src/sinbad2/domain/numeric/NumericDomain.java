@@ -1,5 +1,3 @@
-
-
 package sinbad2.domain.numeric;
 
 import sinbad2.domain.Domain;
