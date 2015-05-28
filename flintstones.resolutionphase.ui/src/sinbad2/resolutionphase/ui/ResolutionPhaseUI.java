@@ -89,7 +89,7 @@ public class ResolutionPhaseUI {
 		_resolutionPhase = resolutionPhase;
 	}
 
-	public String getUiId() {
+	public String getUIId() {
 		return _uiId;
 	}
 

@@ -4,7 +4,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 import sinbad2.domain.Domain;
 
-public class DomainColumnLabelProvider extends ColumnLabelProvider {
+public class DomainDescriptionLabelProvider extends ColumnLabelProvider {
 	
 	@Override
 	public String getText(Object element) {

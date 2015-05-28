@@ -8,8 +8,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
-import sinbad2.domain.Domain;
-import sinbad2.domain.DomainsManager;
+import sinbad2.domain.valuations.DomainValuationsManager;
+
 
 public class ValuationsManager {
 	
@@ -76,6 +76,13 @@ public class ValuationsManager {
 			valuation.setRegistry(valuationRegistry);
 			valuation.setDomainExtensionId(valuationRegistry.getElement(EValuationElements.domain));
 			
+			//TODO hecho por mi, no se si aquí el dominio estaría ya introducido o sería un null
+			DomainValuationsManager dvm = DomainValuationsManager.getInstance();
+			dvm.addValuation(valuation.getId(), valuation.getName());
+			
+			_valuations.put(id, valuation);
+			
+	
 			return valuation;
 			
 		} catch (CoreException e) {
@@ -88,18 +95,13 @@ public class ValuationsManager {
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
 		
-		Domain domain;
 		ValuationRegistryExtension registry;
-		String id, name;
+		String id;
 		
-		DomainsManager domainsManager = DomainsManager.getInstance();
 		for(IConfigurationElement extension: extensions) {
 			registry = new ValuationRegistryExtension(extension);
 			id = registry.getElement(EValuationElements.name);
 			_registers.put(id, registry);
-			
-			domain = domainsManager.getDomainImplementation(registry.getElement(EValuationElements.domain));
-			//TODO aquí se añadía al dominio una valoracion soportada
 		}
 	}
 

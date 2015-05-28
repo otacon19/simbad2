@@ -5,6 +5,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="sinbad2.resolutionphase.framework.ui.FrameworkPerspective"
+            icon="icon/framework.png"
             id="flintstones.resolutionphase.framework.perspective"
             name="%framework.perspective.name">
       </perspective>
@@ -51,14 +52,26 @@
          </view>
          <view
                closeable="false"
+               id="flintstones.domain.ui.view.domains"
+               minimized="false"
+               moveable="false"
+               relationship="bottom"
+               relative="org.eclipse.ui.editorss"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
+         <view
+               closeable="false"
                id="flintstones.domain.ui.view.domain"
                minimized="false"
                moveable="false"
                ratio="0.5"
                relationship="right"
+               relative="flintstones.domain.ui.view.domains"
                showTitle="true"
                standalone="true"
-               visible="true">
+               visible="false">
          </view>
       </perspectiveExtension>
    </extension>

@@ -1,5 +1,17 @@
 package sinbad2.domain.ui.handler.remove;
 
-public class RemoveMultipleDomainsHandler {
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+
+public class RemoveMultipleDomainsHandler extends AbstractHandler {
+	
+	public static final String ID = "flintstones.domain.remove";
+	
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

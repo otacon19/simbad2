@@ -4,6 +4,10 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 
+import sinbad2.resolutionphase.ui.EResolutionPhaseUIType;
+import sinbad2.resolutionphase.ui.ResolutionPhaseUI;
+import sinbad2.resolutionphase.ui.ResolutionPhasesUIManager;
+
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	
 
@@ -13,7 +17,16 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	}
 	
 	public String getInitialWindowPerspectiveId() {
-		return "flintstones.resolutionphase.framework.perspective";
+		ResolutionPhasesUIManager resolutionPhasesUIManager = ResolutionPhasesUIManager.getInstance();
+		ResolutionPhaseUI resolutionPhaseUI = resolutionPhasesUIManager.getActiveResolutionPhasesUI();
+		
+		resolutionPhaseUI = resolutionPhasesUIManager.getUI("flintstones.resolutionphase.framework.ui");
+		
+		if(EResolutionPhaseUIType.perspective == resolutionPhaseUI.getResolutionPhaseUIType()) {
+			return resolutionPhaseUI.getUIId();
+		} else {
+			return null;
+		}
 	}
 
 }

@@ -111,6 +111,7 @@ public abstract class ResolutionSchemeImplementation implements IResolutionSchem
 
 	@Override
 	public void activate() {
+		
 		for (String name : _phasesNames) {
 			_phasesImplementation.get(name).activate();
 		}

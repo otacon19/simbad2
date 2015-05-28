@@ -114,13 +114,13 @@ public class ResolutionSchemeUI {
 			initResolutionPhasesUIIndex();
 		}
 		
-		ResolutionSchemesUIManager resolutionSchemesManager = ResolutionSchemesUIManager.getInstance();
+		ResolutionSchemesManager resolutionSchemesManager = ResolutionSchemesManager.getInstance();
 		resolutionSchemesManager.activate(getResolutionScheme().getId());
 		
 		ResolutionPhaseUI resolutionPhaseUI;
 		for(String resolutionPhaseId: _resolutionPhasesUIIndex.keySet()) {
 			resolutionPhaseUI = getResolutionPhaseUI(resolutionPhaseId);
-			resolutionPhaseUI.activate();
+			resolutionPhaseUI.containerActivate();
 		}
 		
 		notifyResolutionSchemeUIStateChange(new ResolutionSchemeUIStateChangeEvent(EResolutionSchemeUIStateChanges.ACTIVATED));

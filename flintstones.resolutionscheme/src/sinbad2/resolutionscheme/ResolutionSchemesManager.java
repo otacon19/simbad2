@@ -55,15 +55,11 @@ public class ResolutionSchemesManager {
 		return _registers.get(id);
 	}
 
-	public void setImplementationResolutionScheme(
-			ResolutionSchemeImplementation implementation,
-			String resolutionSchemeId) {
-		_implementationResolutionSchemes
-				.put(implementation, resolutionSchemeId);
+	public void setImplementationResolutionScheme(ResolutionSchemeImplementation implementation, String resolutionSchemeId) {
+		_implementationResolutionSchemes.put(implementation, resolutionSchemeId);
 	}
 
-	public ResolutionScheme getImplementationResolutionScheme(
-			ResolutionSchemeImplementation implementation) {
+	public ResolutionScheme getImplementationResolutionScheme(ResolutionSchemeImplementation implementation) {
 		ResolutionScheme result = null;
 
 		String id = _implementationResolutionSchemes.get(implementation);
@@ -122,8 +118,7 @@ public class ResolutionSchemesManager {
 		ResolutionSchemeRegistryExtension resolutionSchemeRegistry = getRegistry(id);
 		ResolutionScheme resolutionScheme = new ResolutionScheme();
 		resolutionScheme.setId(id);
-		resolutionScheme.setName(resolutionSchemeRegistry
-				.getElement(EResolutionSchemeElements.name));
+		resolutionScheme.setName(resolutionSchemeRegistry.getElement(EResolutionSchemeElements.name));
 		resolutionScheme.setRegistry(resolutionSchemeRegistry);
 
 		_resolutionSchemes.put(id, resolutionScheme);

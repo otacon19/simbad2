@@ -4,3 +4,4 @@ Bundle-Name: Valorations
 Bundle-SymbolicName: sinbad2.domain.valuations
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: sinbad2.domain.valuations

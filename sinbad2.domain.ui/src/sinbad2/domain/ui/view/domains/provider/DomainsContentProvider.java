@@ -52,6 +52,10 @@ public class DomainsContentProvider implements IStructuredContentProvider, IDoma
 		return ((List<Domain>) inputElement).toArray(new Domain[0]);
 	}
 	
+	public Object getInput() {
+		return _domains;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyDomainSetListener(DomainSetChangeEvent event) {

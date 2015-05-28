@@ -6,6 +6,7 @@ import org.eclipse.core.commands.ExecutionException;
 
 public class RemoveDomainHandler extends AbstractHandler {
 	
+	public static final String ID = "flintstones.domain.remove";
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
