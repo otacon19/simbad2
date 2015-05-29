@@ -107,8 +107,6 @@ public abstract class ResolutionPhaseImplementation implements IResolutionPhaseS
 		
 	}
 	
-	
-	
 	public abstract ResolutionPhaseImplementation newInstance();
 
 }

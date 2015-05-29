@@ -19,6 +19,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.apache.commons.lang.WordUtils;
 
 import sinbad2.core.workspace.Workspace;
 import sinbad2.core.workspace.listener.IWorkspaceListener;
@@ -116,8 +117,8 @@ public class MultiplePerspectives implements IWorkspaceListener {
 		
 		for(ResolutionPhaseUI phase: _phasesUI) {
 			perspective = _perspectives.get(phase.getId());
-			action = _actions.get(phase.getId());
-			name = phase.getName();
+			action = _actions.get(phase.getId());			
+			name =  WordUtils.capitalize(phase.getName());
 			iconPath = perspective.getAttribute("icon");
 			imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(perspective.getDeclaringExtension().
 					getContributor().getName(), iconPath);

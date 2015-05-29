@@ -92,6 +92,7 @@ public class ResolutionPhase {
 	}
 	
 	public void activate() {
+	
 		notifyResolutionPhaseStateChange(new ResolutionPhaseStateChangeEvent(EResolutionPhaseStateChange.ACTIVATED));
 	}
 	

@@ -5,11 +5,13 @@ import java.util.List;
 
 import sinbad2.resolutionphase.ResolutionPhase;
 import sinbad2.resolutionphase.ResolutionPhasesManager;
+import sinbad2.resolutionphase.state.IResolutionPhaseStateListener;
+import sinbad2.resolutionphase.state.ResolutionPhaseStateChangeEvent;
 import sinbad2.resolutionphase.ui.state.EResolutionPhaseUIStateChanges;
 import sinbad2.resolutionphase.ui.state.IResolutionPhaseUIStateListener;
 import sinbad2.resolutionphase.ui.state.ResolutionPhaseUIStateChangeEvent;
 
-public class ResolutionPhaseUI {
+public class ResolutionPhaseUI implements IResolutionPhaseStateListener {
 	
 	private String _id;
 	private String _name;
@@ -149,5 +151,21 @@ public class ResolutionPhaseUI {
 		for(IResolutionPhaseUIStateListener listener: _listeners) {
 			listener.resolutionPhaseUIStateChange(event);
 		}
+	}
+
+	@Override
+	public void notifyResolutionPhaseStateChange(ResolutionPhaseStateChangeEvent event) {
+		ResolutionPhasesUIManager resolutionPhasesUiManager = ResolutionPhasesUIManager.getInstance();
+
+		switch(event.getChange()) {
+			case ACTIVATED:
+				resolutionPhasesUiManager.activate(_id);
+			break;
+			case DEACTIVATED:
+				resolutionPhasesUiManager.deactiveCurrentActive();
+				break;
+			default:
+		}
+		
 	}
 }

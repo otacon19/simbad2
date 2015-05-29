@@ -99,7 +99,6 @@ public class ResolutionPhasesUIManager {
 	}
 	
 	private ResolutionPhaseUI initializeResolutionPhaseUI(String id) {
-		
 		ResolutionPhaseUIRegistryExtension resolutionPhaseUIRegistry = getRegistry(id);
 		
 		ResolutionPhaseUI resolutionPhaseUI = new ResolutionPhaseUI();
@@ -111,6 +110,8 @@ public class ResolutionPhasesUIManager {
 		resolutionPhaseUI.setUiId(resolutionPhaseUIRegistry.getUIID(uiType));
 		
 		resolutionPhaseUI.setRegistry(resolutionPhaseUIRegistry);
+		resolutionPhaseUI.getResolutionPhase().registerResolutionPhaseStateListener(resolutionPhaseUI);
+
 		
 		_resolutionPhasesUIs.put(id, resolutionPhaseUI);
 		

@@ -32,8 +32,7 @@ public class ResolutionScheme {
 
 	}
 
-	public ResolutionScheme(String id, String name,
-			ResolutionSchemeImplementation implementation,
+	public ResolutionScheme(String id, String name, ResolutionSchemeImplementation implementation, 
 			List<ResolutionPhase> phases, ResolutionSchemeRegistryExtension registry) {
 		this();
 		setId(id);
@@ -41,7 +40,6 @@ public class ResolutionScheme {
 		setImplementation(implementation);
 		setPhases(phases);
 		setRegistry(registry);
-
 	}
 
 	public String getId() {
@@ -80,6 +78,7 @@ public class ResolutionScheme {
 	}
 
 	public ResolutionSchemeImplementation getImplementation() {
+		
 		if (_implementation == null) {
 			try {
 				_implementation = (ResolutionSchemeImplementation) _registry
@@ -92,7 +91,8 @@ public class ResolutionScheme {
 				ResolutionSchemesManager rsm = ResolutionSchemesManager
 						.getInstance();
 				rsm.setImplementationResolutionScheme(_implementation, _id);
-
+				
+				registerResolutionSchemeStateListener(_implementation);
 			} catch (CoreException e) {
 				return null;
 			}
@@ -102,10 +102,12 @@ public class ResolutionScheme {
 	}
 
 	public void setImplementation(ResolutionSchemeImplementation implementation) {
+		
 		if (implementation != _implementation) {
-
-			ResolutionSchemesManager rsm = ResolutionSchemesManager
-					.getInstance();
+			unregisterResolutionSchemeStateListener(_implementation);
+			registerResolutionSchemeStateListener(implementation);
+			
+			ResolutionSchemesManager rsm = ResolutionSchemesManager.getInstance();
 			rsm.setImplementationResolutionScheme(implementation, _id);
 
 			_implementation = implementation;
