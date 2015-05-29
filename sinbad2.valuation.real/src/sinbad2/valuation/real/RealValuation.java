@@ -1,6 +1,6 @@
 package sinbad2.valuation.real;
 
-import sinbad2.domain.numeric.NumericDomain;
+import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 
@@ -10,7 +10,7 @@ public class RealValuation extends Normalized {
 	
 	public double _value;
 	
-	protected NumericDomain _domain;
+	protected NumericRealDomain _domain;
 	
 	public RealValuation() {
 		super();

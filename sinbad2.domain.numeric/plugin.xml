@@ -4,11 +4,11 @@
    <extension
          point="flintstones.domain">
       <domain
-            id="flintstones.domain.numeric"
-            name="Numeric">
+            id="flintstones.domain.numeric.integer"
+            name="Integer numeric">
          <type>
             <numeric
-                  implementation="sinbad2.domain.numeric.NumericDomain">
+                  implementation="sinbad2.domain.numeric.NumericIntegerDomain">
             </numeric>
          </type>
       </domain>

@@ -1,47 +1,37 @@
 package sinbad2.domain.numeric;
 
-import sinbad2.domain.Domain;
+import sinbad2.domain.type.Numeric;
 
-public class NumericDomain extends Domain {
+public class NumericIntegerDomain extends Numeric {
 	
-	public static final String ID = "flintstones.domain.numeric";
+	public static final String ID = "flintstones.domain.numeric.integer";
 	
-	private boolean _inRange;
-	private double _min;
-	private double _max;
+	private int _min;
+	private int _max;
 	
-	public NumericDomain() {
+	public NumericIntegerDomain() {
 		super();
 		_min = 0;
 		_max = 0;
-		_inRange = true;
 	}
 	
-	public void setMin(Double min) {
+	public void setMin(Integer min) {
 		_min = min;
 	}
 	
-	public double getMin() {
+	public int getMin() {
 		return _min;
 	}
 	
-	public void setMax(Double max) {
+	public void setMax(Integer max) {
 		_max = max;
 	}
 	
-	public double getMax() {
+	public int getMax() {
 		return _max;
 	}
-	
-	public void setInRange(Boolean inRange) {
-		_inRange = inRange;
-	}
-	
-	public boolean getInRange() {
-		return _inRange;
-	}
-	
-	public void setMinMax(Double min, Double max) {
+
+	public void setMinMax(Integer min, Integer max) {
 		//TODO validator
 		_min = min;
 		_max = max;
@@ -91,9 +81,9 @@ public class NumericDomain extends Domain {
 	
 	@Override
 	public Object clone() {
-		NumericDomain result = null;
+		NumericIntegerDomain result = null;
 		
-		result = (NumericDomain) super.clone();
+		result = (NumericIntegerDomain) super.clone();
 		
 		return result;
 	}

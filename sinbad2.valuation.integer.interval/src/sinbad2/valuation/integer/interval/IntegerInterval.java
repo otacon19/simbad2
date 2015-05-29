@@ -1,7 +1,7 @@
 package sinbad2.valuation.integer.interval;
 
 import sinbad2.domain.DomainsManager;
-import sinbad2.domain.numeric.NumericDomain;
+import sinbad2.domain.numeric.NumericIntegerDomain;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
@@ -13,7 +13,7 @@ public class IntegerInterval extends Normalized {
 	public long _min;
 	public long _max;
 	
-	protected NumericDomain _domain;
+	protected NumericIntegerDomain _domain;
 	
 	public IntegerInterval() {
 		super();
@@ -51,7 +51,7 @@ public class IntegerInterval extends Normalized {
 		IntegerInterval result = (IntegerInterval) valuationsManager.copyValuation(ID);
 		
 		DomainsManager domainsManager = DomainsManager.getInstance();
-		NumericDomain domain = (NumericDomain) domainsManager.copyDomain(NumericDomain.ID);
+		NumericIntegerDomain domain = (NumericIntegerDomain) domainsManager.copyDomain(NumericIntegerDomain.ID);
 		
 		domain.setMinMax(_domain.getMin(), _domain.getMax());
 		domain.setInRange(_domain.getInRange());
@@ -138,7 +138,7 @@ public class IntegerInterval extends Normalized {
 		max = ((long) (_max - min) / intervalSize);
 		min = ((long) (_min - min) / intervalSize);
 		
-		result._domain.setMinMax(0d, 1d);
+		result._domain.setMinMax(0, 1);
 		
 		result._min = min;
 		result._max = max;

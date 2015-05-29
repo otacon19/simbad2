@@ -26,6 +26,7 @@ public class AddDomainHandler extends AbstractHandler {
 		DomainSet domainSet = domainsManager.getActiveDomainSet();
 		
 		String[] ids = domainUIsManager.getRegistersIDs();
+	
 		
 		List<Object[]> input = new LinkedList<Object[]>();
 		Domain domain;

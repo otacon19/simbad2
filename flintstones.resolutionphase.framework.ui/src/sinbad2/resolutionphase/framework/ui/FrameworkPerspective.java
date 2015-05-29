@@ -9,7 +9,7 @@ public class FrameworkPerspective implements IPerspectiveFactory {
 
 	@Override
 	public void createInitialLayout(IPageLayout layout) {
-		layout.setEditorAreaVisible(true);
+		layout.setEditorAreaVisible(false);
 		layout.setFixed(true);
 	}
 

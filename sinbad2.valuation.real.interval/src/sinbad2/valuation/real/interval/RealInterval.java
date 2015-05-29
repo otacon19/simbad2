@@ -1,6 +1,6 @@
 package sinbad2.valuation.real.interval;
 
-import sinbad2.domain.numeric.NumericDomain;
+import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 
@@ -11,7 +11,7 @@ public class RealInterval extends Normalized {
 	public double _min;
 	public double _max;
 	
-	protected NumericDomain _domain;
+	protected NumericRealDomain _domain;
 	
 	public RealInterval() {
 		super();
@@ -52,8 +52,8 @@ public class RealInterval extends Normalized {
 		max = _domain.getMax();
 		intervalSize = max - min;
 		
-		max = ((double) (_max - min)) / intervalSize;
-		min = ((double) (_min - min)) / intervalSize;
+		max = (_max - min) / intervalSize;
+		min = (_min - min) / intervalSize;
 		
 		result._domain.setMinMax(0d, 1d);
 		result.setMinMax(min, max);

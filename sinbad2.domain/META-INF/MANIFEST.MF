@@ -5,6 +5,7 @@ Bundle-SymbolicName: sinbad2.domain;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: sinbad2.domain,
-  sinbad2.domain.listener,
-  sinbad2.domain.operation
+ sinbad2.domain.listener,
+ sinbad2.domain.operation,
+ sinbad2.domain.type
 Require-Bundle: sinbad2.core;visibility:=reexport

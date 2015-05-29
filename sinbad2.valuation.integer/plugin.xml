@@ -4,7 +4,7 @@
    <extension
          point="flintstones.valuation">
       <valuation
-            domain="flintstones.domain.numeric"
+            domain="flintstones.domain.numeric.integer"
             id="flintstones.valuation.integer"
             name="Integer">
          <type>

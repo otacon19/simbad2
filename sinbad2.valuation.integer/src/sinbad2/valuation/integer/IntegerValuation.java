@@ -1,7 +1,7 @@
 package sinbad2.valuation.integer;
 
 import sinbad2.domain.DomainsManager;
-import sinbad2.domain.numeric.NumericDomain;
+import sinbad2.domain.numeric.NumericIntegerDomain;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
@@ -13,7 +13,7 @@ public class IntegerValuation extends Normalized {
 	public long _value;
 	
 	//TODO cambio
-	protected NumericDomain _domain;
+	protected NumericIntegerDomain _domain;
 	
 	public IntegerValuation() {
 		super();
@@ -36,9 +36,9 @@ public class IntegerValuation extends Normalized {
 		IntegerValuation result = (IntegerValuation) valuationsManager.copyValuation(IntegerValuation.ID);
 		
 		DomainsManager domainsManager = DomainsManager.getInstance();
-		NumericDomain domain = (NumericDomain) domainsManager.copyDomain(NumericDomain.ID);
+		NumericIntegerDomain domain = (NumericIntegerDomain) domainsManager.copyDomain(NumericIntegerDomain.ID);
 
-		domain.setMinMax((double) Math.round(_domain.getMin()), (double) Math.round(_domain.getMax()));
+		domain.setMinMax(_domain.getMin(), _domain.getMax());
 		domain.setInRange(_domain.getInRange());
 		
 		result.setDomain(domain);
@@ -116,7 +116,7 @@ public class IntegerValuation extends Normalized {
 		max = Math.round(_domain.getMax());
 		intervalSize = max - min;
 		
-		result._domain.setMinMax(0d, 1d);
+		result._domain.setMinMax(0, 1);
 		result._value = (_value - min) / intervalSize;
 		
 		return result;
