@@ -17,20 +17,20 @@ import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
 import sinbad2.domain.ui.dialog.newDialog.NewDomainDialogRegistryExtension;
 import sinbad2.domain.ui.jfreechart.DomainChart;
 
-public class DomainsUIsManager {
+public class DomainUIsManager {
 
 	private final String EXTENSION_POINT = "flintstones.domain.ui";
 	private final String NEW_DOMAIN_DIALOG_EXTENSION_POINT = "flintstones.domain.ui.new.dialog";
 	private final String MODIFY_DOMAIN_DIALOG_EXTENSION_POINT = "flintstones.domain.ui.modify.dialog";
 	
-	private static DomainsUIsManager _instance = null;
+	private static DomainUIsManager _instance = null;
 	
 	private Map<String, DomainUIRegistryExtension> _registers;
 	private Map<String, DomainUI> _domainUIs;
 	private Map<String, NewDomainDialogRegistryExtension> _newDomainDialogRegisters;
 	private Map<String, ModifyDomainDialogRegistryExtension> _modifyDomainDialogRegisters;
 	
-	private DomainsUIsManager() {
+	private DomainUIsManager() {
 		_registers = new HashMap<String, DomainUIRegistryExtension>();
 		_domainUIs = new HashMap<String, DomainUI>();
 		_newDomainDialogRegisters = new HashMap<String, NewDomainDialogRegistryExtension>();
@@ -39,10 +39,10 @@ public class DomainsUIsManager {
 		loadRegisters();
 	}
 	
-	public static DomainsUIsManager getInstance() {
+	public static DomainUIsManager getInstance() {
 		
 		if(_instance == null) {
-			_instance = new DomainsUIsManager();
+			_instance = new DomainUIsManager();
 		}
 		
 		return _instance;

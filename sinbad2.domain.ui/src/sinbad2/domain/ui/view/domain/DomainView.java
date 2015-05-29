@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.Domain;
-import sinbad2.domain.ui.DomainsUIsManager;
+import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.jfreechart.DomainChart;
 
 public class DomainView extends ViewPart implements IDisplayDomainChangeListener {
@@ -50,7 +50,7 @@ public class DomainView extends ViewPart implements IDisplayDomainChangeListener
 		
 		if(_domain != null) {
 			Point size = _container.getSize();
-			DomainsUIsManager manager = DomainsUIsManager.getInstance();
+			DomainUIsManager manager = DomainUIsManager.getInstance();
 			_chart = manager.newDomainChart(_domain);
 			_chart.initialize(_domain, _container, size.x, size.y, SWT.NONE);
 			if(_ranking != null) {

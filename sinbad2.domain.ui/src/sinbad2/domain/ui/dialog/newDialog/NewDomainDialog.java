@@ -10,7 +10,7 @@ import sinbad2.domain.ui.dialog.DomainDialog;
 public class NewDomainDialog extends DomainDialog {
 
 	private Domain _domain;
-
+	
 	public NewDomainDialog(Shell parentShell) {
 		super(Display.getCurrent().getActiveShell());
 	}
