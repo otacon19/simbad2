@@ -134,7 +134,7 @@ public class DomainUIsManager {
 	private void loadRegisters() {
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
-		
+
 		DomainUIRegistryExtension registry;
 		for(IConfigurationElement extension: extensions) {
 			registry = new DomainUIRegistryExtension(extension);

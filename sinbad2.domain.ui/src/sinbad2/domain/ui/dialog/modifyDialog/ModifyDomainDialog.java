@@ -1,8 +1,5 @@
 package sinbad2.domain.ui.dialog.modifyDialog;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-
 import sinbad2.domain.Domain;
 import sinbad2.domain.ui.dialog.DomainDialog;
 
@@ -11,8 +8,8 @@ public class ModifyDomainDialog extends DomainDialog {
 	private Domain _newDomain;
 	private Domain _oldDomain;
 
-	public ModifyDomainDialog(Shell parentShell) {
-		super(Display.getCurrent().getActiveShell());
+	public ModifyDomainDialog() {
+		super();
 	}
 	
 	public void setDomain(Domain domain) {

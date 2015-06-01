@@ -66,6 +66,7 @@
       <plugin id="sinbad2.domain"/>
       <plugin id="sinbad2.domain.linguistic.fuzzy"/>
       <plugin id="sinbad2.domain.numeric.integer"/>
+      <plugin id="sinbad2.domain.numeric.integer.ui"/>
       <plugin id="sinbad2.domain.numeric.real"/>
       <plugin id="sinbad2.domain.ui"/>
       <plugin id="sinbad2.domain.valuations"/>

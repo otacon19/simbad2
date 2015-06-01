@@ -35,5 +35,5 @@ public abstract class DomainChart {
 	
 	public abstract void initialize(Domain domain, Composite container, int width, int height, int style);
 	
-	public abstract void displayRanking(Object ranking);
+	//TODO ranking?
 }

@@ -10,7 +10,6 @@ import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sinbad2.domain.DomainsManager;
@@ -20,8 +19,9 @@ public class DomainDialog extends Dialog {
 	
 	protected Set<String> _ids;
 	protected String _id;
-
-	protected DomainDialog(Shell parentShell) {
+	
+	
+	protected DomainDialog() {
 		super(Display.getCurrent().getActiveShell());
 		
 		DomainsManager domainManager = DomainsManager.getInstance();

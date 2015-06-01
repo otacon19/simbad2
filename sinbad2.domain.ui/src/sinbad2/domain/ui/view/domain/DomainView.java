@@ -21,7 +21,7 @@ public class DomainView extends ViewPart implements IDisplayDomainChangeListener
 	private Composite _container;
 	private DomainChart _chart = null;
 	private Domain _domain = null;
-	private Object _ranking = null;
+	//TODO ranking?
 	
 	@Override
 	public void createPartControl(Composite parent) {
@@ -53,9 +53,7 @@ public class DomainView extends ViewPart implements IDisplayDomainChangeListener
 			DomainUIsManager manager = DomainUIsManager.getInstance();
 			_chart = manager.newDomainChart(_domain);
 			_chart.initialize(_domain, _container, size.x, size.y, SWT.NONE);
-			if(_ranking != null) {
-				_chart.displayRanking(_ranking);
-			}
+			//TODO preguntar sobre el displayRanking
 			_container.layout();
 		}
 		
@@ -76,7 +74,6 @@ public class DomainView extends ViewPart implements IDisplayDomainChangeListener
 	@Override
 	public void displayDomainChangeListener(Domain domain, Object ranking) {
 		_domain = domain;
-		_ranking = ranking;
 		
 		refreshDomainChart();
 		

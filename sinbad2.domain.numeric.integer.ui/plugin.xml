@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension
+         point="flintstones.domain.ui">
+      <domain_ui
+            chart="sinbad2.domain.numeric.integer.ui.jfreechart.NumericIntegerDomainChart"
+            domain="flintstones.domain.numeric.integer"
+            icon="icon/icon_16.png">
+      </domain_ui>
+   </extension>
+   <extension
+         point="flintstones.domain.ui.new.dialog">
+      <dialog
+            domain="flintstones.domain.numeric.integer"
+            id="sinbad2.domain.numeric.integer.new"
+            implementation="sinbad2.domain.numeric.integer.ui.dialog.NumericIntegerDomainDialog">
+      </dialog>
+   </extension>
+   <extension
+         point="flintstones.domain.ui.modify.dialog">
+      <dialog
+            domain="flintstones.domain.numeric.integer"
+            id="sinbad2.domain.numeric.integer.modify"
+            implementation="sinbad2.domain.numeric.integer.ui.dialog.NumericIntegerDomainDialog">
+      </dialog>
+   </extension>
 
 </plugin>
