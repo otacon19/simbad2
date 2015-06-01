@@ -5,7 +5,7 @@ import sinbad2.domain.ui.dialog.DomainDialog;
 
 public class ModifyDomainDialog extends DomainDialog {
 	
-	private Domain _newDomain;
+	protected Domain _newDomain;
 	private Domain _oldDomain;
 
 	public ModifyDomainDialog() {

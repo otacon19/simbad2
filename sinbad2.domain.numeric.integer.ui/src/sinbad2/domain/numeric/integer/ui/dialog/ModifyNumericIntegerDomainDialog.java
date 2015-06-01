@@ -24,10 +24,9 @@ import sinbad2.domain.Domain;
 import sinbad2.domain.numeric.NumericIntegerDomain;
 import sinbad2.domain.numeric.integer.ui.jfreechart.NumericIntegerDomainChart;
 import sinbad2.domain.ui.DomainUIsManager;
-import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
+import sinbad2.domain.ui.dialog.modifyDialog.ModifyDomainDialog;
 
-public class NumericIntegerDomainDialog extends NewDomainDialog {
-
+public class ModifyNumericIntegerDomainDialog extends ModifyDomainDialog {
 	private static final int MINIMUN = Integer.MIN_VALUE;
 	private static final int MAXIMUN = Integer.MAX_VALUE;
 	
@@ -46,14 +45,14 @@ public class NumericIntegerDomainDialog extends NewDomainDialog {
 	private Button _okButton;
 	
 	
-	public NumericIntegerDomainDialog() {
+	public ModifyNumericIntegerDomainDialog() {
 		super();
 	}
 	
 	@Override
 	public void setDomain(Domain domain) {
 		super.setDomain(domain);
-		_specificDomain = (NumericIntegerDomain) _domain;
+		_specificDomain = (NumericIntegerDomain) _newDomain;
 		_lowerLimit = _specificDomain.getMin();
 		_upperLimit = _specificDomain.getMax();
 		_inRangeValue = _specificDomain.getInRange();

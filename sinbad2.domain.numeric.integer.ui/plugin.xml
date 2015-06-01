@@ -14,7 +14,7 @@
       <dialog
             domain="flintstones.domain.numeric.integer"
             id="sinbad2.domain.numeric.integer.new"
-            implementation="sinbad2.domain.numeric.integer.ui.dialog.NumericIntegerDomainDialog">
+            implementation="sinbad2.domain.numeric.integer.ui.dialog.NewNumericIntegerDomainDialog">
       </dialog>
    </extension>
    <extension
@@ -22,7 +22,7 @@
       <dialog
             domain="flintstones.domain.numeric.integer"
             id="sinbad2.domain.numeric.integer.modify"
-            implementation="sinbad2.domain.numeric.integer.ui.dialog.NumericIntegerDomainDialog">
+            implementation="sinbad2.domain.numeric.integer.ui.dialog.ModifyNumericIntegerDomainDialog">
       </dialog>
    </extension>
 
