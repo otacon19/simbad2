@@ -41,6 +41,8 @@ public class AddDomainHandler extends AbstractHandler {
 		dialogTwoPanes.setLowerListLabel("To assess valuations");
 		dialogTwoPanes.setMultipleSelection(false);
 		
+		dialogTwoPanes.open();
+		
 		return null;
 	}
 
