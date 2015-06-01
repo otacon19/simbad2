@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.domain.ui">
+      <domain_ui
+            chart="sinbad2.domain.numeric.real.ui.jfreechart.NumericRealDomainChart"
+            domain="flintstones.domain.numeric.real"
+            icon="icon/icon_16.png">
+      </domain_ui>
+   </extension>
+   <extension
+         point="flintstones.domain.ui.new.dialog">
+      <dialog
+            domain="flintstones.domain.numeric.real"
+            id="sinbad2.domain.numeric.real.new"
+            implementation="sinbad2.domain.numeric.real.ui.dialog.NewNumericRealDomainDialog">
+      </dialog>
+   </extension>
+   <extension
+         point="flintstones.domain.ui.modify.dialog">
+      <dialog
+            domain="flintstones.domain.numeric.real"
+            id="sinbad2.domain.numeric.real.modify"
+            implementation="sinbad2.domain.numeric.real.ui.dialog.ModifyNumericRealDomainDialog">
+      </dialog>
+   </extension>
+
+</plugin>

@@ -68,6 +68,7 @@
       <plugin id="sinbad2.domain.numeric.integer"/>
       <plugin id="sinbad2.domain.numeric.integer.ui"/>
       <plugin id="sinbad2.domain.numeric.real"/>
+      <plugin id="sinbad2.domain.numeric.real.ui"/>
       <plugin id="sinbad2.domain.ui"/>
       <plugin id="sinbad2.domain.valuations"/>
       <plugin id="sinbad2.element"/>
