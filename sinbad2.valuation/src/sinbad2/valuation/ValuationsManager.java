@@ -41,11 +41,11 @@ public class ValuationsManager {
 	}
 	
 	public ValuationRegistryExtension getRegistry(String id) {
+		
 		return _registers.get(id);
 	}
 	
 	public Valuation getValuationImplementation(String id) {
-		
 		if(_valuations.containsKey(id)) {
 			return _valuations.get(id);
 		} else {
@@ -65,7 +65,7 @@ public class ValuationsManager {
 	
 	private Valuation initializeValuation(String id) {
 		ValuationRegistryExtension valuationRegistry = getRegistry(id);
-		
+
 		IConfigurationElement type = valuationRegistry.getConfiguration().getChildren(EValuationElements.type.toString())[0];
 		IConfigurationElement typeSpecific = type.getChildren()[0];
 		
@@ -75,10 +75,10 @@ public class ValuationsManager {
 			valuation.setName(valuationRegistry.getElement(EValuationElements.name));
 			valuation.setRegistry(valuationRegistry);
 			valuation.setDomainExtensionId(valuationRegistry.getElement(EValuationElements.domain));
-			
-			//TODO hecho por mi, no se si aquí el dominio estaría ya introducido o sería un null
-			DomainValuationsManager dvm = DomainValuationsManager.getInstance();
-			dvm.addValuation(valuation.getId(), valuation.getName());
+
+			DomainValuationsManager domainValuationsManager = DomainValuationsManager.getInstance();
+			domainValuationsManager.addValuation(valuation.getId(), valuation.getName());
+			domainValuationsManager.addSupportedValuation(valuation.getDomainExtensionId(), valuation.getName());
 			
 			_valuations.put(id, valuation);
 			
@@ -100,7 +100,7 @@ public class ValuationsManager {
 		
 		for(IConfigurationElement extension: extensions) {
 			registry = new ValuationRegistryExtension(extension);
-			id = registry.getElement(EValuationElements.name);
+			id = registry.getElement(EValuationElements.id); 
 			_registers.put(id, registry);
 		}
 	}

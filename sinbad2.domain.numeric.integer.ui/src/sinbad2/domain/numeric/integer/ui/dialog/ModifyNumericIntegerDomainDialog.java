@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.Domain;
-import sinbad2.domain.numeric.NumericIntegerDomain;
+import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.domain.numeric.integer.ui.jfreechart.NumericIntegerDomainChart;
 import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.modifyDialog.ModifyDomainDialog;

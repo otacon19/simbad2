@@ -1,7 +1,7 @@
 package sinbad2.valuation.integer.interval;
 
 import sinbad2.domain.DomainsManager;
-import sinbad2.domain.numeric.NumericIntegerDomain;
+import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;

@@ -16,7 +16,7 @@ import org.jfree.data.xy.IntervalXYDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 
 import sinbad2.domain.Domain;
-import sinbad2.domain.numeric.NumericIntegerDomain;
+import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.domain.ui.jfreechart.DomainChart;
 
 public class NumericIntegerDomainChart extends DomainChart {

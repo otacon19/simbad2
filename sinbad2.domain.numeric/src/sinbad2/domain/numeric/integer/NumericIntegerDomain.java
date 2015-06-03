@@ -1,4 +1,4 @@
-package sinbad2.domain.numeric;
+package sinbad2.domain.numeric.integer;
 
 import sinbad2.domain.type.Numeric;
 

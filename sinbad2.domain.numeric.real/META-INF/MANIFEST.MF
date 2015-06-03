@@ -4,5 +4,5 @@ Bundle-Name: Real
 Bundle-SymbolicName: sinbad2.domain.numeric.real;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: sinbad2.domain
+Require-Bundle: sinbad2.domain;bundle-version="1.0.0"
 Export-Package: sinbad2.domain.numeric.real

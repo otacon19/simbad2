@@ -7,13 +7,6 @@ public abstract class Domain implements Cloneable, Comparable<Domain> {
 	private String _type;
 	private DomainRegistryExtension _registry;
 	
-	/**TODO
-	 * Aquí aperecían unos atributos que asociaban Dominios-Valoraciones (valuation), es decir, se le decia a un dominio
-	 * que tipo de valoración tenía, por ejemplo, real, entero etc. Lo ideal es que una valoración si sepa el 
-	 * dominio pero no lo contrario. Una posible opción es crear un plugin entre medias.
-	 */
-	
-	
 	public Domain() {
 		_id = null;
 		_name = null;

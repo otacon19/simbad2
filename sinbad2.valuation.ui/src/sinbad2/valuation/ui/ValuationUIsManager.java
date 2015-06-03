@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.Platform;
 
 import sinbad2.domain.ui.DomainUI;
 import sinbad2.domain.ui.DomainUIsManager;
+import sinbad2.domain.valuations.DomainValuationsManager;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
 import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
@@ -44,10 +45,7 @@ public class ValuationUIsManager {
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
 		
 		Valuation valuation;
-		DomainUI domainUI;
 		ValuationUIRegistryExtension registry;
-		
-		DomainUIsManager domainUIsManager = DomainUIsManager.getInstance();
 		ValuationsManager valuationsManager = ValuationsManager.getInstance();
 		
 		for(IConfigurationElement extension: extensions) {
@@ -58,10 +56,10 @@ public class ValuationUIsManager {
 			
 			if(newDomainDialogs.length > 0) {
 				valuation = valuationsManager.getValuationImplementation(registry.getElement(EValuationUIElements.valuation));
-				domainUI = domainUIsManager.getDomainUI(valuation.getDomainExtensionId());
+				DomainValuationsManager dvm = DomainValuationsManager.getInstance();
 				
 				for(IConfigurationElement newDomainDialog: newDomainDialogs) {
-					//TODO aquí se registraban las valoraciones a los dominios
+					dvm.addValuationNewDomainDialog(valuation.getId(), newDomainDialog.getAttribute(EValuationUIElements.dialog.toString()));
 				}
 			}
 			
@@ -69,10 +67,10 @@ public class ValuationUIsManager {
 			
 			if(modifyDomainDialogs.length > 0) {
 				valuation = valuationsManager.getValuationImplementation(registry.getElement(EValuationUIElements.valuation));
-				domainUI = domainUIsManager.getDomainUI(valuation.getDomainExtensionId());
+				DomainValuationsManager dvm = DomainValuationsManager.getInstance();
 				
 				for(IConfigurationElement modifyDomainDialog: modifyDomainDialogs) {
-					//TODO aquí se registraban las valoraciones a los dominios
+					dvm.addValuationModifyDomainDialog(valuation.getId(), modifyDomainDialog.getAttribute(EValuationUIElements.dialog.toString()));
 				}
 			}
 			

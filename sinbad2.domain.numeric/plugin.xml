@@ -8,7 +8,7 @@
             name="Integer numeric">
          <type>
             <numeric
-                  implementation="sinbad2.domain.numeric.NumericIntegerDomain">
+                  implementation="sinbad2.domain.numeric.integer.NumericIntegerDomain">
             </numeric>
          </type>
       </domain>
