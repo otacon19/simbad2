@@ -7,6 +7,7 @@ import org.osgi.framework.BundleContext;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionscheme.ui.ResolutionSchemeUI;
 import sinbad2.resolutionscheme.ui.ResolutionSchemesUIManager;
+import sinbad2.valuation.ui.ValuationUIsManager;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -35,6 +36,9 @@ public class Activator extends AbstractUIPlugin {
 		workspace.setContent(resolutionSchemeUI.getResolutionScheme().getImplementation());
 		
 	    _resolutionSchemesUIManager.activate(resolutionSchemeUI.getId());
+	    
+	    //TODO temporal, para cargar las valoraciones
+	    ValuationUIsManager.getInstance();
 	}
 
 

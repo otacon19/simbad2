@@ -85,8 +85,10 @@
       <plugin id="sinbad2.valuation"/>
       <plugin id="sinbad2.valuation.integer"/>
       <plugin id="sinbad2.valuation.integer.interval"/>
+      <plugin id="sinbad2.valuation.integer.ui"/>
       <plugin id="sinbad2.valuation.real"/>
       <plugin id="sinbad2.valuation.real.interval"/>
+      <plugin id="sinbad2.valuation.ui"/>
    </plugins>
 
 

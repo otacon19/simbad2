@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="sinbad2.domain" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="sinbad2.valuation.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="sinbad2.domain" id="flintstones.domain" name="Domain"/>
+         <meta.schema plugin="sinbad2.valuation.ui" id="flintstones.valuation.ui" name="Valuation ui"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <choice minOccurs="1" maxOccurs="unbounded">
-            <element ref="domain"/>
+            <element ref="valuation_ui"/>
          </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,64 +47,65 @@
       </complexType>
    </element>
 
-   <element name="domain">
+   <element name="valuation_ui">
       <complexType>
-         <choice>
-            <element ref="type"/>
+         <choice minOccurs="1" maxOccurs="unbounded">
+            <element ref="new_domain_dialog"/>
+            <element ref="modify_domain_dialog"/>
+            <element ref="valuation_panel"/>
          </choice>
-         <attribute name="id" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="name" type="string" use="required">
+         <attribute name="valuation" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
                <appinfo>
-                  <meta.attribute translatable="true"/>
+                  <meta.attribute kind="identifier" basedOn="flintstones.valuation/valuation/@id"/>
                </appinfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
-   <element name="type">
+   <element name="new_domain_dialog">
       <complexType>
-         <choice>
-            <element ref="numeric"/>
-            <element ref="linguistic"/>
-         </choice>
-      </complexType>
-   </element>
-
-   <element name="numeric">
-      <complexType>
-         <attribute name="implementation" type="string" use="required">
+         <attribute name="dialog" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="sinbad2.domain.type.Numeric:"/>
+                  <meta.attribute kind="identifier" basedOn="flintstones.domain.ui.new.dialog/dialog/@id"/>
                </appinfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
-   <element name="linguistic">
+   <element name="modify_domain_dialog">
       <complexType>
-         <attribute name="implementation" type="string" use="required">
+         <attribute name="dialog" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="sinbad2.domain.type.Linguistic:"/>
+                  <meta.attribute kind="identifier" basedOn="flintstones.domain.ui.modify.dialog/dialog/@id"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="valuation_panel">
+      <complexType>
+         <attribute name="panel" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="sinbad2.valuation.ui.valuationpanel.ValuationPanel:"/>
                </appinfo>
             </annotation>
          </attribute>

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Ui
+Bundle-SymbolicName: sinbad2.valuation.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: sinbad2.valuation;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.domain.ui;bundle-version="1.0.0";visibility:=reexport
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: sinbad2.valuation.ui

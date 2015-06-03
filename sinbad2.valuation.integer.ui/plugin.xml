@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.valuation.ui">
+      <valuation_ui
+            valuation="flintstones.valuation.integer">
+         <new_domain_dialog
+               dialog="sinbad2.domain.numeric.integer.new">
+         </new_domain_dialog>
+         <modify_domain_dialog
+               dialog="sinbad2.domain.numeric.integer.modify">
+         </modify_domain_dialog>
+      </valuation_ui>
+   </extension>
+
+</plugin>
