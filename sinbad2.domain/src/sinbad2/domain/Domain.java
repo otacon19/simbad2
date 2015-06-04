@@ -81,7 +81,6 @@ public abstract class Domain implements Cloneable, Comparable<Domain> {
 		result._registry = (DomainRegistryExtension) _registry.clone();
 		
 		return result;
-		
 	}
 	
 	@Override

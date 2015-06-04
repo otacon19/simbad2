@@ -5,8 +5,6 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -63,14 +61,7 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 	protected Control createDialogArea(Composite parent) {
 		
 		_container = (Composite) super.createDialogArea(parent);
-		_container.addPaintListener(new PaintListener() {
-			
-			@Override
-			public void paintControl(PaintEvent e) {
-				validateText();
-			}
-		});
-		
+
 		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.marginRight = 10;
 		gridLayout.marginTop = 10;
@@ -258,29 +249,31 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 		
 	}
 
-	private void validateText() {
+	private void validateText() {		
 		boolean validId, validDomain;
-		
 		String message = "";
-		
+				
 		if(!_id.isEmpty()) {
 			if(_ids.contains(_id)) {
 				message = "Duplicated id";
 			}
 		} else {
-			message = "Empty value";
+				message = "Empty value";
 		}
-		
+				
 		validId = validate(_domainNameTextControlDecoration, message);
 		validDomain = (!_inRangeValue || (_lowerLimit <= _upperLimit));
-		
+				
+				
 		_okButton.setEnabled(validId && validDomain);
+				
 	}
-	
 	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		_okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		_okButton.setEnabled(false);
+		_domainNameTextControlDecoration.show();
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 	

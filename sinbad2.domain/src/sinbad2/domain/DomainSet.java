@@ -32,7 +32,6 @@ public class DomainSet {
 	}
 	
 	public void addDomain(Domain domain) {
-		System.out.println(domain.getId());
 		//TODO validator
 		_domains.add(domain);
 		
