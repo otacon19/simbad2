@@ -34,7 +34,7 @@ public class DomainView extends ViewPart implements IDisplayDomainChangeListener
 			}
 		});
 		
-		DomainsViewManager.getInstance().registerDisplayDomainChangeListener(this);
+		DomainViewManager.getInstance().registerDisplayDomainChangeListener(this);
 		
 	}
 	
@@ -61,7 +61,7 @@ public class DomainView extends ViewPart implements IDisplayDomainChangeListener
 	
 	@Override
 	public void dispose() {
-		DomainsViewManager.getInstance().unregisterDisplayDomainChangeListener(this);
+		DomainViewManager.getInstance().unregisterDisplayDomainChangeListener(this);
 		super.dispose();
 	}
 	

@@ -56,12 +56,12 @@ public class DomainUIsManager {
 		return _registers.get(id);
 	}
 	
-	public DomainUI getDomainUI(String domain) {
+	public DomainUI getDomainUI(String domainUI) {
 		
-		if(_domainUIs.containsKey(domain)) {
-			return _domainUIs.get(domain);
+		if(_domainUIs.containsKey(domainUI)) {
+			return _domainUIs.get(domainUI);
 		} else {
-			return initializeDomainUI(domain);
+			return initializeDomainUI(domainUI);
 		}
 	}
 	

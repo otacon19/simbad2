@@ -10,7 +10,7 @@ public class DomainValuationUsedLabelProvider extends ColumnLabelProvider {
 	@Override
 	public String getText(Object element) {
 		DomainValuationsManager dvm = DomainValuationsManager.getInstance();
-		return dvm.getTypeOfValuation(((Domain) element).getId());
+		return dvm.getValuationSupportedForNewDomain(((Domain) element).getId());
 	}
 
 }

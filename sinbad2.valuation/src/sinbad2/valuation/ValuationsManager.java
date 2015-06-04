@@ -78,7 +78,7 @@ public class ValuationsManager {
 
 			DomainValuationsManager domainValuationsManager = DomainValuationsManager.getInstance();
 			domainValuationsManager.addValuation(valuation.getId(), valuation.getName());
-			domainValuationsManager.addSupportedValuation(valuation.getDomainExtensionId(), valuation.getName());
+			domainValuationsManager.addSupportedValuation(valuation.getId(), valuation.getDomainExtensionId());
 			
 			_valuations.put(id, valuation);
 			

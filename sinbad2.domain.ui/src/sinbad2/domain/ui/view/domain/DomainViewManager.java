@@ -5,26 +5,26 @@ import java.util.List;
 
 import sinbad2.domain.Domain;
 
-public class DomainsViewManager {
+public class DomainViewManager {
 	
-	public static DomainsViewManager _instance = null;
+	public static DomainViewManager _instance = null;
 	
 	private Domain _activeDomain;
 	private Object _activeRanking;
 	
 	private List<IDisplayDomainChangeListener> _listeners;
 	
-	private DomainsViewManager() {
+	private DomainViewManager() {
 		_activeDomain = null;
 		_activeRanking = null;
 		
 		_listeners = new LinkedList<IDisplayDomainChangeListener>();
 	}
 	
-	public static DomainsViewManager getInstance() {
+	public static DomainViewManager getInstance() {
 		
 		if(_instance == null) {
-			_instance = new DomainsViewManager();
+			_instance = new DomainViewManager();
 		}
 		
 		return _instance;

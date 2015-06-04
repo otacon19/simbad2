@@ -8,8 +8,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
-import sinbad2.domain.ui.DomainUI;
-import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.valuations.DomainValuationsManager;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;

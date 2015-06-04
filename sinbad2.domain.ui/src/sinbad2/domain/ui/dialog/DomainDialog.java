@@ -20,7 +20,6 @@ public class DomainDialog extends Dialog {
 	protected Set<String> _ids;
 	protected String _id;
 	
-	
 	protected DomainDialog() {
 		super(Display.getCurrent().getActiveShell());
 		
@@ -45,13 +44,13 @@ public class DomainDialog extends Dialog {
 	
 	protected boolean validate(ControlDecoration controlDecoration, String text) {
 		controlDecoration.setDescriptionText(text);
-		
 		if(text.isEmpty()) {
 			controlDecoration.hide();
 			return true;
 		} else {
 			controlDecoration.show();
 			return false;
+			
 		}
 	}
 

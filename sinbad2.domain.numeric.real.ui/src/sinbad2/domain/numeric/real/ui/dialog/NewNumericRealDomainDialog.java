@@ -133,6 +133,13 @@ public class NewNumericRealDomainDialog extends NewDomainDialog {
 		_upperLimitLabel.setLayoutData(gridData);
 		_upperLimitLabel.setText("Upper");
 		
+		_upperLimitSpinner = new Spinner(_container, SWT.BORDER);
+		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gridData.widthHint = 90;
+		if(!_inRangeValue) {
+			gridData.horizontalIndent = -50;
+		}
+		
 		_upperLimitSpinner.setLayoutData(gridData);
 		_upperLimitSpinner.setIncrement(10);
 		_upperLimitSpinner.setMinimum(MINIMUN);
@@ -175,13 +182,13 @@ public class NewNumericRealDomainDialog extends NewDomainDialog {
 					_upperLimitSpinner.setMinimum(MINIMUN);
 					_upperLimitSpinner.setSelection(MAXIMUN);
 					_upperLimitSpinner.setEnabled(false);
-					_upperLimitLabel.setVisible(false);
+					_upperLimitSpinner.setVisible(false);
 					
 					_specificDomain.setMin(_lowerLimit);
 					_specificDomain.setMax(_upperLimit);
 					
 					_lowerLimitLabel.setText("Lower" + " " + Double.toString(Double.NEGATIVE_INFINITY));
-					_upperLimitLabel.setText("Upper" + " " + Double.toString(Double.POSITIVE_INFINITY));
+					_upperLimitLabel.setText("Upper" + " -" + Double.toString(Double.POSITIVE_INFINITY));
 					
 					_specificDomain.setInRange(false);
 					
@@ -193,6 +200,8 @@ public class NewNumericRealDomainDialog extends NewDomainDialog {
 					_upperLimitSpinner.setEnabled(true);
 					_lowerLimitSpinner.setVisible(true);
 					_upperLimitSpinner.setVisible(true);
+					_lowerLimitSpinner.setSelection(0);
+					_upperLimitSpinner.setSelection(0);
 					_specificDomain.setInRange(true);
 					
 				}

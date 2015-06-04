@@ -1,5 +1,6 @@
 package sinbad2.domain.ui.view.domains;
 
+
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -21,7 +22,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.ui.view.domain.DomainView;
-import sinbad2.domain.ui.view.domain.DomainsViewManager;
+import sinbad2.domain.ui.view.domain.DomainViewManager;
 import sinbad2.domain.ui.view.domains.provider.DomainDescriptionLabelProvider;
 import sinbad2.domain.ui.view.domains.provider.DomainIdLabelProvider;
 import sinbad2.domain.ui.view.domains.provider.DomainTypeLabelProvider;
@@ -100,8 +101,8 @@ public class DomainsView extends ViewPart {
 		tvc.setLabelProvider(new DomainDescriptionLabelProvider());
 		
 		tvc = new TableViewerColumn(_tableViewer, SWT.NONE);
-		tvc.getColumn().setWidth(150);
 		tvc.getColumn().setText("Valuations");
+		tvc.getColumn().setWidth(150);
 		tvc.setLabelProvider(new DomainValuationUsedLabelProvider());
 		
 	}
@@ -126,7 +127,7 @@ public class DomainsView extends ViewPart {
 					_selectedDomain = null;
 				}
 				
-				DomainsViewManager domainViewManager = DomainsViewManager.getInstance();
+				DomainViewManager domainViewManager = DomainViewManager.getInstance();
 				
 				if(_multiViews == null) {
 					_multiViews = getSite().getPage();
@@ -134,7 +135,7 @@ public class DomainsView extends ViewPart {
 				
 				if(_domainView == null) {
 					for(IViewReference viewReference: _multiViews.getViewReferences()) {
-						if(DomainsView.ID.equals(viewReference.getId())) {
+						if(DomainView.ID.equals(viewReference.getId())) {
 							_domainView = (DomainView) viewReference.getView(false);
 						}
 					}
@@ -146,11 +147,13 @@ public class DomainsView extends ViewPart {
 					if(_selectedDomain == null) {
 						if(_domainView != null) {
 							_multiViews.hideView(_domainView);
+							_domainView = null;
 						}
 					} else {
 						if(_domainView == null) {
 							try {
-								_domainView = (DomainView) _multiViews.showView(DomainsView.ID);
+								_domainView = (DomainView) _multiViews.showView(DomainView.ID);
+								setFocus();
 							} catch (PartInitException e) {
 								e.printStackTrace();
 							}

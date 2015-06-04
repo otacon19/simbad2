@@ -67,7 +67,7 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 			
 			@Override
 			public void paintControl(PaintEvent e) {
-				validate();
+				validateText();
 			}
 		});
 		
@@ -94,7 +94,7 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 			public void modifyText(ModifyEvent e) {
 				_id = ((Text) e.getSource()).getText().trim();
 				_specificDomain.setId(_id);
-				validate();
+				validateText();
 			}
 		});
 		
@@ -133,6 +133,13 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 		gridData = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		_upperLimitLabel.setLayoutData(gridData);
 		_upperLimitLabel.setText("Upper");
+		
+		_upperLimitSpinner = new Spinner(_container, SWT.BORDER);
+		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gridData.widthHint = 90;
+		if(!_inRangeValue) {
+			gridData.horizontalIndent = -50;
+		}
 		
 		_upperLimitSpinner.setLayoutData(gridData);
 		_upperLimitSpinner.setIncrement(1);
@@ -176,33 +183,38 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 					_upperLimitSpinner.setMinimum(MINIMUN);
 					_upperLimitSpinner.setSelection(MAXIMUN);
 					_upperLimitSpinner.setEnabled(false);
-					_upperLimitLabel.setVisible(false);
+					_upperLimitSpinner.setVisible(false);
 					
 					_specificDomain.setMin(_lowerLimit);
 					_specificDomain.setMax(_upperLimit);
 					
 					_lowerLimitLabel.setText("Lower" + " " + Double.toString(Double.NEGATIVE_INFINITY));
-					_upperLimitLabel.setText("Upper" + " " + Double.toString(Double.POSITIVE_INFINITY));
+					_upperLimitLabel.setText("Upper" + " -" + Double.toString(Double.POSITIVE_INFINITY));
+					
+					_lowerLimitLabel.pack();
+					_upperLimitLabel.pack();
 					
 					_specificDomain.setInRange(false);
 					
 				} else {
 					_lowerLimitLabel.setText("Lower");
 					_upperLimitLabel.setText("Upper");
+					_lowerLimitLabel.pack();
+					_upperLimitLabel.pack();
 					
 					_lowerLimitSpinner.setEnabled(true);
 					_upperLimitSpinner.setEnabled(true);
 					_lowerLimitSpinner.setVisible(true);
 					_upperLimitSpinner.setVisible(true);
+					_lowerLimitSpinner.setSelection(0);
+					_upperLimitSpinner.setSelection(0);
+					
 					_specificDomain.setInRange(true);
 					
 				}
 				
-				_lowerLimitLabel.pack();
-				_upperLimitLabel.pack();
-				
 				_chart.setDomain(_specificDomain);
-				validate();
+				validateText();
 				
 			}
 			
@@ -236,7 +248,7 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 					_chart.setDomain(_specificDomain);
 				}
 				
-				validate();
+				validateText();
 				
 			}
 		};
@@ -246,7 +258,7 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 		
 	}
 
-	protected void validate() {
+	private void validateText() {
 		boolean validId, validDomain;
 		
 		String message = "";
@@ -264,6 +276,7 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 		
 		_okButton.setEnabled(validId && validDomain);
 	}
+	
 	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
