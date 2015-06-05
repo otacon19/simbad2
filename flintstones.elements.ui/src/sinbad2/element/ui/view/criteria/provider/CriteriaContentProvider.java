@@ -8,7 +8,6 @@ import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.TreeColumn;
 
 import sinbad2.element.IProblemElementsSetChangeListener;
 import sinbad2.element.ProblemElementsManager;
@@ -178,8 +177,8 @@ public class CriteriaContentProvider implements ITreeContentProvider, ICriteriaC
 	}
 	
 	private void packViewer() {
-		for(TreeColumn column: _treeViewer.getTree().getColumns()) {
-			column.pack();
+		for(int i = 0; i < _treeViewer.getTree().getColumns().length - 1; ++i ) {
+			 _treeViewer.getTree().getColumn(i).pack();
 		}
 	}
 

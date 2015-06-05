@@ -6,7 +6,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.widgets.TableColumn;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.DomainsManager;
@@ -120,8 +119,8 @@ public class DomainsContentProvider implements IStructuredContentProvider, IDoma
 	
 	private void packViewer() {
 		
-		for(TableColumn column: _tableViewer.getTable().getColumns()) {
-			column.pack();
+		for(int i = 0; i < _tableViewer.getTable().getColumns().length; ++i ) {
+			 _tableViewer.getTable().getColumn(i).pack();
 		}
 	}
 	

@@ -21,7 +21,15 @@ public class ModifyCriterionHandler extends AbstractHandler {
 	
 	public final static String ID = "flintstones.element.criterion.modify"; //$NON-NLS-1$
 	
+	private Criterion _criterion = null;
+	
 	public ModifyCriterionHandler() {}
+	
+	public ModifyCriterionHandler(Criterion criterion) {
+		this();
+		
+		_criterion = criterion;
+	}
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -29,8 +37,11 @@ public class ModifyCriterionHandler extends AbstractHandler {
 		ProblemElementsManager elementManager = ProblemElementsManager.getInstance();
 		ProblemElementsSet elementSet = elementManager.getActiveElementSet();
 		
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
-		Criterion criterion = (Criterion) selection.getFirstElement();
+		Criterion criterion = _criterion;
+		if(_criterion == null) {
+			IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
+			criterion = (Criterion) selection.getFirstElement();
+		}
 		
 		Criterion parent = criterion.getParent();
 		

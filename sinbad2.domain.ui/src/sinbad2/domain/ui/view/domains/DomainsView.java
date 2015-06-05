@@ -10,10 +10,16 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -51,9 +57,8 @@ public class DomainsView extends ViewPart {
 	
 	@Override
 	public void createPartControl(Composite parent) {
-		_tableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
+		_tableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION | SWT.NO_SCROLL);
 		_tableViewer.getTable().setHeaderVisible(true);
-		
 		_tableViewer.getTable().addListener(SWT.MeasureItem, new Listener() {
 			
 			@Override
@@ -101,10 +106,42 @@ public class DomainsView extends ViewPart {
 		tvc.setLabelProvider(new DomainDescriptionLabelProvider());
 		
 		tvc = new TableViewerColumn(_tableViewer, SWT.NONE);
-		tvc.getColumn().setText("Valuation");
 		tvc.getColumn().setWidth(150);
+		tvc.getColumn().setText("Valuation");
 		tvc.setLabelProvider(new DomainValuationUsedLabelProvider());
 		
+		_tableViewer.getTable().addControlListener(new ControlAdapter() {
+	        
+			public void controlResized(ControlEvent e) {
+	            packAndFillLastColumn();
+	        }
+
+			private void packAndFillLastColumn() {
+				Table table = _tableViewer.getTable();
+			    int columnsWidth = 0;
+			    
+			    for (int i = 0; i < table.getColumnCount() - 1; i++) {
+			        columnsWidth += table.getColumn(i).getWidth();
+			    }
+			    TableColumn lastColumn = table.getColumn(table.getColumnCount() - 1);
+			    lastColumn.pack();
+
+			    Rectangle area = table.getClientArea();
+
+			    Point preferredSize = table.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+			    int width = area.width - 2*table.getBorderWidth();
+
+			    if (preferredSize.y > area.height + table.getHeaderHeight()) {
+			        Point vBarSize = table.getVerticalBar().getSize();
+			        width -= vBarSize.x;
+			    }
+
+			    if(lastColumn.getWidth() < width - columnsWidth) {
+			        lastColumn.setWidth(width - columnsWidth);
+			    }
+				
+			}
+	    });
 	}
 	
 	private void hookContextMenu() {

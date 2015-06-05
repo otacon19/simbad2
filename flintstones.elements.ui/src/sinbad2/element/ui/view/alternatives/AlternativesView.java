@@ -43,13 +43,18 @@ public class AlternativesView extends ViewPart {
 		addColumns();
 		hookContextMenu();
 		//hookFocusListener();
-		//TODO hookDoubleClickListener();
+		hookDoubleClickListener();
 		
 		_tableViewer.setInput(_provider.getInput());
 		getSite().setSelectionProvider(_tableViewer);
 		
 	}
 	
+	private void hookDoubleClickListener() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void addColumns() {
 		TableViewerColumn tvc = new TableViewerColumn(_tableViewer, SWT.NONE);
 		tvc.setLabelProvider(new AlternativeIdLabelProvider());
