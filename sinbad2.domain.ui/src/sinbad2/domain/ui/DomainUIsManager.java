@@ -94,13 +94,13 @@ public class DomainUIsManager {
 		return result;
 	}
 	
-	public ModifyDomainDialog modifyDomainDialog(Domain domain, String modifyDomainDialogId) {
+	public ModifyDomainDialog modifyDomainDialog(Domain oldDomain, String modifyDomainDialogId) {
 		ModifyDomainDialog result = null;
 		
 		ModifyDomainDialogRegistryExtension registry = _modifyDomainDialogRegisters.get(modifyDomainDialogId);
 		try {
 			result = registry.modifyDomainDialog();
-			result.setDomain(domain);
+			result.setDomain(oldDomain);
 		} catch (CoreException e) {
 			e.printStackTrace();
 			return null;

@@ -79,21 +79,23 @@ public class AddDomainHandler extends AbstractHandler {
 				
 				NewDomainDialog newDomainDialog = null;
 								
-				List<String> dialogsIDs = domainValuationsManager.getValuationNewDomainDialogs(((String[]) selections[1])[0]);
+				List<String> dialogsIDs = domainValuationsManager.getOneValuationNewDomainDialogs(((String[]) selections[1])[0]);
 				
 				if(!dialogsIDs.isEmpty()) {
-					String selected = null;
+					String domainSelected = null;
 					
 					if(dialogsIDs.size() == 1) {
-						selected = dialogsIDs.get(0);
+						domainSelected = dialogsIDs.get(0);
+					} else {
+						//TODO Diálogo para seleccionar varios diálogos de nuevo dominio
 					}
 					
-					if(selected != null) {
-						newDomainDialog = domainUIsManager.newDomainDialog(domain, selected);
+					if(domainSelected != null) {
+						newDomainDialog = domainUIsManager.newDomainDialog(domain, domainSelected);
 						if(newDomainDialog.open() == Window.OK) {
 							domain = newDomainDialog.getDomain();
 							
-							domainValuationsManager.addSupportedValuationNewDomain(domain.getId(), ((String[]) selections[1])[1]);
+							domainValuationsManager.addSupportedValuationNewDomain(domain.getId(), ((String[]) selections[1])[0]);
 							
 							IUndoableOperation operation = new AddDomainOperation("Add domain", domain, domainSet);
 							IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();

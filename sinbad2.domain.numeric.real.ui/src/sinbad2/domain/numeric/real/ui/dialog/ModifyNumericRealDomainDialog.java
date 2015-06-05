@@ -5,8 +5,6 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -62,13 +60,6 @@ public class ModifyNumericRealDomainDialog extends ModifyDomainDialog {
 	protected Control createDialogArea(Composite parent) {
 		
 		_container = (Composite) super.createDialogArea(parent);
-		_container.addPaintListener(new PaintListener() {
-			
-			@Override
-			public void paintControl(PaintEvent e) {
-				validate();
-			}
-		});
 		
 		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.marginRight = 10;
@@ -133,6 +124,13 @@ public class ModifyNumericRealDomainDialog extends ModifyDomainDialog {
 		_upperLimitLabel.setLayoutData(gridData);
 		_upperLimitLabel.setText("Upper");
 		
+		_upperLimitSpinner = new Spinner(_container, SWT.BORDER);
+		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gridData.widthHint = 90;
+		if(!_inRangeValue) {
+			gridData.horizontalIndent = - 50;
+		}
+		
 		_upperLimitSpinner.setLayoutData(gridData);
 		_upperLimitSpinner.setIncrement(10);
 		_upperLimitSpinner.setMinimum(MINIMUN);
@@ -175,13 +173,13 @@ public class ModifyNumericRealDomainDialog extends ModifyDomainDialog {
 					_upperLimitSpinner.setMinimum(MINIMUN);
 					_upperLimitSpinner.setSelection(MAXIMUN);
 					_upperLimitSpinner.setEnabled(false);
-					_upperLimitLabel.setVisible(false);
+					_upperLimitSpinner.setVisible(false);
 					
 					_specificDomain.setMin(_lowerLimit);
 					_specificDomain.setMax(_upperLimit);
 					
 					_lowerLimitLabel.setText("Lower" + " " + Double.toString(Double.NEGATIVE_INFINITY));
-					_upperLimitLabel.setText("Upper" + " " + Double.toString(Double.POSITIVE_INFINITY));
+					_upperLimitLabel.setText("Upper" + " -" + Double.toString(Double.POSITIVE_INFINITY));
 					
 					_specificDomain.setInRange(false);
 					
@@ -267,6 +265,8 @@ public class ModifyNumericRealDomainDialog extends ModifyDomainDialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		_okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		_okButton.setEnabled(false);
+		_domainNameTextControlDecoration.show();
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 	

@@ -6,19 +6,17 @@ import sinbad2.domain.ui.dialog.DomainDialog;
 public class ModifyDomainDialog extends DomainDialog {
 	
 	protected Domain _newDomain;
-	private Domain _oldDomain;
+	protected Domain _oldDomain;
 
 	public ModifyDomainDialog() {
 		super();
 	}
 	
 	public void setDomain(Domain domain) {
-		//TODO no le veo sentido a esta funcion (cambiada)
-		//_oldDomain = domain;
+		_oldDomain = domain;
 		_newDomain = (Domain) domain.clone();
-		_id = domain.getId();
-		//_ids.remove(_id);
-		_ids.remove(_oldDomain.getId());
+		_id = _newDomain.getId();
+		_ids.remove(_id);
 	}
 	
 	public void setNewDomain(Domain newDomain) {

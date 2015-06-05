@@ -70,15 +70,19 @@ public class DomainValuationsManager {
 		
 	}
 	
-	public void addSupportedValuationNewDomain(String domainID, String valuationName) {
-		_valuationSupportedForNewDomain.put(domainID, valuationName);
+	public void addSupportedValuationNewDomain(String domainID, String valuationId) {
+		_valuationSupportedForNewDomain.put(domainID, valuationId);
+	}
+	
+	public void removeSupportedValuationNewDomain(String domainID) {
+		_valuationSupportedForNewDomain.remove(domainID);
 	}
 	
 	public boolean hasNewDomainDialogs(String valuationID) {
 		return _valuationsNewDomainDialogs.containsKey(valuationID);
 	}
 	
-	public List<String> getValuationNewDomainDialogs(String valuationID) {
+	public List<String> getOneValuationNewDomainDialogs(String valuationID) {
 		List<String> result = new LinkedList<String>();
 		Set<String> valuationNewDomainDialogs = _valuationsNewDomainDialogs.get(valuationID);
 		
@@ -94,7 +98,7 @@ public class DomainValuationsManager {
 		return _valuations.get(idValuation);
 	}
 	
-	public List<String> getValuationModifyDomainDialogs(String valuationID) {
+	public List<String> getOneValuationModifyDomainDialogs(String valuationID) {
 		List<String> result = new LinkedList<String>();
 		Set<String> valuationModifyDomainDialogs = _valuationsModifyDomainDialogs.get(valuationID);
 		
@@ -131,7 +135,7 @@ public class DomainValuationsManager {
 		return _valuationsModifyDomainDialogs;
 	}
 	
-	public String getTypeOfValuationById(String domainId) {
+	public String getTypeOfValuationByDomainId(String domainId) {
 		return _valuations.get(domainId);
 	}
 	
