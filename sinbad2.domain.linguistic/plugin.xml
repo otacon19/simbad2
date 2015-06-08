@@ -8,7 +8,7 @@
             name="Linguistic">
          <type>
             <linguistic
-                  implementation="sinbad2.domain.linguistic.fuzzy.LinguisticDomain">
+                  implementation="sinbad2.domain.linguistic.fuzzy.FuzzySet">
             </linguistic>
          </type>
       </domain>

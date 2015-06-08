@@ -2,7 +2,7 @@ package sinbad2.domain.linguistic.fuzzy;
 
 import sinbad2.domain.type.Linguistic;
 
-public class LinguisticDomain extends Linguistic {
+public class FuzzySet extends Linguistic {
 	
 	public static final String ID = "flintstones.domain.linguistic";
 

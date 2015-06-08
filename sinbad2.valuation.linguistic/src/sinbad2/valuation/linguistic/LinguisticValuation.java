@@ -1,12 +1,12 @@
 package sinbad2.valuation.linguistic;
 
-import sinbad2.domain.linguistic.fuzzy.LinguisticDomain;
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 
 public class LinguisticValuation extends Normalized {
 	
-	private LinguisticDomain _domain;
+	private FuzzySet _domain;
 	
 	public static final String ID = "flintstones.valuation.linguistic";
 
