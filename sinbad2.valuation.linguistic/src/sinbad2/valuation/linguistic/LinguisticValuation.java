@@ -1,6 +1,5 @@
 package sinbad2.valuation.linguistic;
 
-import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 

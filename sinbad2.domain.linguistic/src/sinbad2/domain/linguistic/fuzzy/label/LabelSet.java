@@ -25,6 +25,10 @@ public class LabelSet implements Cloneable {
 		_labels = labels;
 	}
 	
+	public List<Label> getLabels() {
+		return _labels;
+	}
+	
 	public void addLabel(Label label) {
 		addLabel(getCardinality(), label);
 	}
