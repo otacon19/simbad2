@@ -149,7 +149,6 @@ public class CriteriaView extends ViewPart {
 				try {
 					modifyCriterionHandler.execute(null);
 				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

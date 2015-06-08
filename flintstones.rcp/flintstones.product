@@ -65,6 +65,7 @@
       <plugin id="sinbad2.core.ui"/>
       <plugin id="sinbad2.domain"/>
       <plugin id="sinbad2.domain.linguistic.fuzzy"/>
+      <plugin id="sinbad2.domain.linguistic.fuzzy.ui"/>
       <plugin id="sinbad2.domain.numeric.integer"/>
       <plugin id="sinbad2.domain.numeric.integer.ui"/>
       <plugin id="sinbad2.domain.numeric.real"/>
@@ -87,6 +88,8 @@
       <plugin id="sinbad2.valuation.integer.interval"/>
       <plugin id="sinbad2.valuation.integer.interval.ui"/>
       <plugin id="sinbad2.valuation.integer.ui"/>
+      <plugin id="sinbad2.valuation.linguistic"/>
+      <plugin id="sinbad2.valuation.linguistic.ui"/>
       <plugin id="sinbad2.valuation.real"/>
       <plugin id="sinbad2.valuation.real.interval"/>
       <plugin id="sinbad2.valuation.real.interval.ui"/>

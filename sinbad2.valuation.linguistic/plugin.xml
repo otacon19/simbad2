@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.valuation">
+      <valuation
+            domain="flintstones.domain.linguistic"
+            id="flintstones.valuation.linguistic"
+            name="Linguistic">
+         <type>
+            <normalized
+                  implementation="sinbad2.valuation.linguistic.LinguisticValuation">
+            </normalized>
+         </type>
+      </valuation>
+   </extension>
+
+</plugin>

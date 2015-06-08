@@ -8,7 +8,6 @@ public class DomainUI {
 	private String _domain;
 	private Image _icon;
 	private DomainUIRegistryExtension _registry;
-	//TODO aquí podría haber 2 atributos con las valuations de cada dialog (new y modify) vamos a intetar evitar esa relacion
 	
 	public DomainUI() {
 		_domain = null;

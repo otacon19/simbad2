@@ -1,7 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Linguistic
-Bundle-SymbolicName: sinbad2.domain.linguistic.fuzzy
+Bundle-SymbolicName: sinbad2.domain.linguistic.fuzzy;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: sinbad2.domain
+Require-Bundle: sinbad2.domain;bundle-version="1.0.0",
+ sinbad2.domain.numeric.real
+Export-Package: sinbad2.domain.linguistic.fuzzy

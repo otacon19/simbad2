@@ -49,7 +49,7 @@ public class AddDomainHandler extends AbstractHandler {
 			valuationsSupported = domainValuationsManager.getValuationsSupportedForDomain(id);
 			if(valuationsSupported != null) {
 				for(String valuationID: valuationsSupported) {
-					if(domainValuationsManager.hasNewDomainDialogs(valuationID)) {
+					if(domainValuationsManager.hasValuationsNewDomainDialogs(valuationID)) {
 						input.add(new Object[] { domain, new String[] { valuationID, domainValuationsManager.getNameValuation(valuationID)}});
 					}
 				}
@@ -79,7 +79,7 @@ public class AddDomainHandler extends AbstractHandler {
 				
 				NewDomainDialog newDomainDialog = null;
 								
-				List<String> dialogsIDs = domainValuationsManager.getOneValuationNewDomainDialogs(((String[]) selections[1])[0]);
+				List<String> dialogsIDs = domainValuationsManager.getValuationNewDomainDialogs(((String[]) selections[1])[0]);
 				
 				if(!dialogsIDs.isEmpty()) {
 					String domainSelected = null;
@@ -95,7 +95,7 @@ public class AddDomainHandler extends AbstractHandler {
 						if(newDomainDialog.open() == Window.OK) {
 							domain = newDomainDialog.getDomain();
 							
-							domainValuationsManager.addSupportedValuationNewDomain(domain.getId(), ((String[]) selections[1])[0]);
+							domainValuationsManager.addSupportedValuationForNewDomain(domain.getId(), ((String[]) selections[1])[0]);
 							
 							IUndoableOperation operation = new AddDomainOperation("Add domain", domain, domainSet);
 							IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();

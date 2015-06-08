@@ -46,7 +46,7 @@ public class ModifyDomainHandler extends AbstractHandler {
 		DomainUIsManager domainUIsManager = DomainUIsManager.getInstance();
 		String valuationID = domainValuationsManager.getValuationSupportedForNewDomain(_oldDomain.getId());
 		
-		List<String> dialogsIds = domainValuationsManager.getOneValuationModifyDomainDialogs(valuationID);
+		List<String> dialogsIds = domainValuationsManager.getValuationModifyDomainDialogs(valuationID);
 		
 		String selected = "";
 		if(dialogsIds.size() == 1) {
@@ -59,8 +59,8 @@ public class ModifyDomainHandler extends AbstractHandler {
 			if(modifyDomainDialog.open() == Window.OK) {
 				Domain newDomain = modifyDomainDialog.getNewDomain();
 				
-				domainValuationsManager.removeSupportedValuationNewDomain(_oldDomain.getId());
-				domainValuationsManager.addSupportedValuationNewDomain(newDomain.getId(), _valuationOldDomain);
+				domainValuationsManager.removeSupportedValuationForNewDomain(_oldDomain.getId());
+				domainValuationsManager.addSupportedValuationForNewDomain(newDomain.getId(), _valuationOldDomain);
 				
 				IUndoableOperation operation = new ModifyDomainOperation("Modify domain", newDomain, _oldDomain, domainSet);
 				IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
