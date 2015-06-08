@@ -1,0 +1,268 @@
+package sinbad2.domain.linguistic.fuzzy.function.types;
+
+import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
+import sinbad2.domain.linguistic.fuzzy.semantic.IMembership;
+import sinbad2.domain.numeric.real.NumericRealDomain;
+import sinbad2.valuation.real.interval.RealInterval;
+
+public class TrapezoidalFunction implements IMembership {
+	
+	private final static double EPSILON = 0.000001;
+	
+	private double _a;
+	private double _b;
+	private double _c;
+	private double _d;
+	
+	private TrapezoidalFunction() {
+		_a = _b = _c = _d = 0d;
+	}
+	
+	public TrapezoidalFunction(double[] limits) {
+		this();
+		
+		//TODO validator
+		
+		if(limits.length == 3) {
+			_a = limits[0];
+			_b = _c = limits[1];
+			_d = limits[2];
+		} else if(limits.length == 4) {
+			_a = limits[0];
+			_b = limits[1];
+			_c = limits[2];
+			_d = limits[3];
+		}
+	}
+
+	@Override
+	public FragmentFunction toFragmentFunction() {
+		FragmentFunction result = new FragmentFunction();
+		LinearPieceFunction piece;
+		NumericRealDomain domain;
+		double slope, cutoffY;
+		
+		if(_a != _b) {
+			slope = 1d / (_b - _a);
+			cutoffY = -(slope * _a);
+			piece = new LinearPieceFunction(slope, cutoffY);
+			domain = new NumericRealDomain();
+			domain.setMinMax(_a, _b);
+			result.addPiece(domain, piece);
+		}
+		
+		if(_b != _c) {
+			slope = 0;
+			cutoffY = 1;
+			piece = new LinearPieceFunction(slope, cutoffY);
+			domain = new NumericRealDomain();
+			domain.setMinMax(_b, _c);
+			result.addPiece(domain, piece);
+		}
+		
+		if(_c != _d) {
+			slope = 1d / (_c - _d);
+			cutoffY = -(slope * _d);
+			piece = new LinearPieceFunction(slope, cutoffY);
+			domain = new NumericRealDomain();
+			domain.setMinMax(_c, _d);
+			result.addPiece(domain, piece);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public boolean isSymmetrical() {
+		return (Math.abs((_b - _a) - (_d - _c)) < EPSILON);
+	}
+	
+	@Override
+	public boolean isSymmetrical(IMembership other, double center) {
+		double displacement = (center - _d) * 2;
+		
+		TrapezoidalFunction clone = (TrapezoidalFunction) clone();
+		
+		clone._a = _d;
+		clone._b = clone._a + (_d - _c);
+		clone._c = clone._b + (_c - _b);
+		clone._d = clone._c + (_b - _a);
+		
+		clone._a += displacement;
+		clone._b += displacement;
+		clone._c += displacement;
+		clone._d += displacement;
+		
+		return clone.equals(other);
+	}
+	
+	@Override
+	public NumericRealDomain getCenter() {
+		//TODO revisar
+		NumericRealDomain result = new NumericRealDomain();
+		result.setMinMax(_b, _c);
+		
+		return result;
+	}
+	
+	@Override
+	public NumericRealDomain getCoverage() {
+		// TODO revisar
+		NumericRealDomain result = new NumericRealDomain();
+		result.setMinMax(_a, _d);
+		
+		return result;
+	}
+	
+	@Override
+	public double getMembershipValue(double x) {
+		double result;
+		
+		if(x >= _b && x <= _c) {
+			result = 1d;
+		} else if(x <= _a || x >= _d) {
+			result = 0d;
+		} else if(x < _b) {
+			result = (x - _a) / (_b - _a);
+		} else {
+			result = (x - _d) / (_c - _d);
+		}
+		
+		return result;
+	}
+	
+	public double centroid() {
+		double centroidLeft, centroidCenter, centroidRight, areaLeft, areaCenter, areaRight,
+			areaSum, result;
+		
+		centroidLeft = (_a + ( 2 * _b)) / 3.;
+		centroidCenter = (_b + _c) / 2.;
+		centroidRight = ((2 * _c) + _d) / 3.;
+		
+		areaLeft = (_b - _a) / 2.;
+		areaCenter = (_c - _b);
+		areaRight = (_d - _c) / 2;
+		areaSum = areaLeft + areaCenter + areaRight;
+		
+		result = ((centroidLeft * areaLeft) + (centroidCenter + areaCenter)
+				+ (centroidRight + areaRight)) / areaSum;
+		
+		return result;
+	}
+	
+	public boolean isTriangular() {
+		return (_b == _c);
+	}
+	
+	@Override
+	public double midPoint() {
+		return centroid();
+	}
+	
+
+	@Override
+	public double maxMin(RealInterval interval) {
+		//TODO validator
+		
+		RealInterval normalized;
+		double min, max;
+		
+		normalized = (RealInterval) interval.normalize();
+		min = normalized.getMin();
+		max = normalized.getMax();
+		
+		if(( max >= _b) && (min <= _c)) {
+			return 1d;
+		} else if(max < _b) {
+			return getMembershipValue(max);
+		} else {
+			return getMembershipValue(min);
+		}
+	}
+
+	@Override
+	public double maxMin(IMembership function) {
+		TrapezoidalFunction trapezoidalFunction;
+		
+		//TODO validator
+		
+		if(function instanceof TrapezoidalFunction) {
+			trapezoidalFunction = (TrapezoidalFunction) function;
+		} else {
+			throw new IllegalArgumentException("Invalid element type");
+		}
+		
+		double values[] = new double[5], result, slopeAB, slopeFunctionAB, slopeCD, 
+				slopeFunctionCD;
+		
+		RealInterval interval = new RealInterval();
+		NumericRealDomain domain = new NumericRealDomain();
+		domain.setMinMax(0d, 1d);
+		
+		interval.setDomain(domain);
+		interval.setMinMax(trapezoidalFunction._b, trapezoidalFunction._c);
+		
+		values[0] = maxMin(interval);
+		
+		if(values[0] == 1) {
+			return 1d;
+		}
+	}
+	
+	@Override
+	public String toString() {
+		
+		if(_b == _c) {
+			return ("Trapezoidal(" + _a + ", " + _b + "," + _d + ")");
+		} else {
+			return ("Trapezoidal(" + _a + ", " + _b + "," + _c + ", " + _d + ")");
+		}
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if(this == obj) {
+			return true;
+		}
+		
+		if(obj == null || (this.getClass() != obj.getClass())) {
+			return false;
+		}
+		
+		final TrapezoidalFunction other = (TrapezoidalFunction) obj;
+		
+		if(Math.abs(_a - other._a) < EPSILON) {
+			if(Math.abs(_b - other._b) < EPSILON) {
+				if(Math.abs(_c - other._c) < EPSILON) {
+					if(Math.abs(_d - other._d) < EPSILON) {
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	//TODO hashcode
+	
+	@Override
+	public Object clone() {
+		Object result = null;
+		
+		try {
+			result = super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public int compareTo(IMembership other) {
+		//TODO validator
+		return Double.compare(this.midPoint(), other.midPoint());
+	}
+}

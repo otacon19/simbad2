@@ -2,7 +2,7 @@ package sinbad2.domain.numeric.real;
 
 import sinbad2.domain.type.Numeric;
 
-public class NumericRealDomain extends Numeric{
+public class NumericRealDomain extends Numeric {
 	
 public static final String ID = "flintstones.domain.numeric.real";
 	

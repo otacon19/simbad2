@@ -6,3 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.valuation;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.domain.numeric.real;bundle-version="1.0.0";visibility:=reexport
+Export-Package: sinbad2.valuation.real.interval

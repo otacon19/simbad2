@@ -8,31 +8,31 @@ public class LinearPieceFunction implements IFragmentFunction {
 	private final static double EPSILON = 0.00001;
 	
 	private double _slope;
-	private double _cutOff;
+	private double _cutOffY;
 	
 	public LinearPieceFunction(Double slope, Double cutOff) {
 		_slope = slope;
-		_cutOff = cutOff;
+		_cutOffY = cutOff;
 	}
 	
 	public double getSlope() {
 		return _slope;
 	}
 	
-	public double getCutOff() {
-		return _cutOff;
+	public double getCutOffY() {
+		return _cutOffY;
 	}
 	
 	@Override
 	public IFragmentFunction sumFunctions(IFragmentFunction other) {
 		//TODO validator
 		
-		return new LinearPieceFunction(_slope + ((LinearPieceFunction) other)._slope, _cutOff + ((LinearPieceFunction) other)._cutOff);
+		return new LinearPieceFunction(_slope + ((LinearPieceFunction) other)._slope, _cutOffY + ((LinearPieceFunction) other)._cutOffY);
 	}
 	
 	@Override
 	public String toString() {
-		return (_cutOff < 0) ? (_slope + "x " + _cutOff) : (_slope + "x + " + _cutOff);
+		return (_cutOffY < 0) ? (_slope + "x " + _cutOffY) : (_slope + "x + " + _cutOffY);
 	}
 	
 	@Override
@@ -49,7 +49,7 @@ public class LinearPieceFunction implements IFragmentFunction {
 		final LinearPieceFunction other = (LinearPieceFunction) obj;
 		
 		if(Math.abs(_slope - other._slope) < EPSILON) {
-			if(Math.abs(_cutOff - other._cutOff) < EPSILON) {
+			if(Math.abs(_cutOffY - other._cutOffY) < EPSILON) {
 				return true;
 			}
 		}
