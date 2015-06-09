@@ -1,15 +1,15 @@
 package sinbad2.domain.linguistic.fuzzy.label;
 
-import sinbad2.domain.linguistic.fuzzy.semantic.IMembership;
+import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 
-public class Label implements Cloneable, Comparable<Label> {
+public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguisticDomain> {
 	
 	private String _name;
-	private IMembership _semantic;
+	private IMembershipFunction _semantic;
 	
-	private Label() {}
+	private LabelLinguisticDomain() {}
 	
-	public Label(String name, IMembership semantic) {
+	public LabelLinguisticDomain(String name, IMembershipFunction semantic) {
 		this();
 		
 		//TODO validator;
@@ -22,7 +22,7 @@ public class Label implements Cloneable, Comparable<Label> {
 		return _name;
 	}
 	
-	public IMembership getSemantic() {
+	public IMembershipFunction getSemantic() {
 		return _semantic;
 	}
 	
@@ -60,15 +60,15 @@ public class Label implements Cloneable, Comparable<Label> {
 			e.printStackTrace();
 		}
 		
-		((Label) result)._name = new String(_name);
-		((Label) result)._semantic = (IMembership) _semantic.clone();
+		((LabelLinguisticDomain) result)._name = new String(_name);
+		((LabelLinguisticDomain) result)._semantic = (IMembershipFunction) _semantic.clone();
 		
 		return result;
 		
 	}
 	
 	@Override
-	public int compareTo(Label other) {
+	public int compareTo(LabelLinguisticDomain other) {
 		//TODO validator
 		
 		return _semantic.compareTo(other._semantic);

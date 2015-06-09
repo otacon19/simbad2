@@ -7,4 +7,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.domain;bundle-version="1.0.0",
  sinbad2.domain.numeric.real,
  sinbad2.valuation.real.interval
-Export-Package: sinbad2.domain.linguistic.fuzzy
+Export-Package: sinbad2.domain.linguistic.fuzzy,
+ sinbad2.domain.linguistic.fuzzy.function.types,
+ sinbad2.domain.linguistic.fuzzy.label,
+ sinbad2.domain.linguistic.fuzzy.semantic

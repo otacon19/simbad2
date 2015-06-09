@@ -9,5 +9,21 @@
             icon="icons/Letter-L-icon_16.png">
       </domain_ui>
    </extension>
+   <extension
+         point="flintstones.domain.ui.new.dialog">
+      <dialog
+            domain="flintstones.domain.linguistic"
+            id="sinbad2.domain.linguistic.new"
+            implementation="dialog.NewLinguisticDomainDialog">
+      </dialog>
+   </extension>
+   <extension
+         point="flintstones.domain.ui.modify.dialog">
+      <dialog
+            domain="flintstones.domain.linguistic"
+            id="sinbad2.domain.linguistic.modify"
+            implementation="dialog.ModifyLinguisticDomainDialog">
+      </dialog>
+   </extension>
 
 </plugin>

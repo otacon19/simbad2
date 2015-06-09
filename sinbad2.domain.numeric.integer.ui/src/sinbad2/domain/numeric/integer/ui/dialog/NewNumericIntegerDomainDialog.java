@@ -85,7 +85,7 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 			public void modifyText(ModifyEvent e) {
 				_id = ((Text) e.getSource()).getText().trim();
 				_specificDomain.setId(_id);
-				validateText();
+				validate();
 			}
 		});
 		
@@ -182,9 +182,6 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 					_lowerLimitLabel.setText("Lower" + " " + Double.toString(Double.NEGATIVE_INFINITY));
 					_upperLimitLabel.setText("Upper" + " -" + Double.toString(Double.POSITIVE_INFINITY));
 					
-					_lowerLimitLabel.pack();
-					_upperLimitLabel.pack();
-					
 					_specificDomain.setInRange(false);
 					
 				} else {
@@ -204,8 +201,11 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 					
 				}
 				
+				_lowerLimitLabel.pack();
+				_upperLimitLabel.pack();
+				
 				_chart.setDomain(_specificDomain);
-				validateText();
+				validate();
 				
 			}
 			
@@ -239,7 +239,7 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 					_chart.setDomain(_specificDomain);
 				}
 				
-				validateText();
+				validate();
 				
 			}
 		};
@@ -249,7 +249,7 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 		
 	}
 
-	private void validateText() {		
+	private void validate() {		
 		boolean validId, validDomain;
 		String message = "";
 				

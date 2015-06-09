@@ -8,9 +8,9 @@ import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
 import sinbad2.domain.linguistic.fuzzy.function.IFragmentFunction;
 import sinbad2.domain.linguistic.fuzzy.function.types.LinearPieceFunction;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
-import sinbad2.domain.linguistic.fuzzy.label.Label;
-import sinbad2.domain.linguistic.fuzzy.label.LabelSet;
-import sinbad2.domain.linguistic.fuzzy.semantic.IMembership;
+import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
+import sinbad2.domain.linguistic.fuzzy.label.LabelSetLinguisticDomain;
+import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.domain.type.Linguistic;
 
@@ -18,7 +18,7 @@ public class FuzzySet extends Linguistic {
 	
 	public static final String ID = "flintstones.domain.linguistic";
 	
-	protected LabelSet _labelSet;
+	protected LabelSetLinguisticDomain _labelSet;
 	protected List<Double> _values;
 	
 	//TODO unbalancedinfo
@@ -26,11 +26,11 @@ public class FuzzySet extends Linguistic {
 	public FuzzySet() {
 		super();
 		
-		_labelSet = new LabelSet();
+		_labelSet = new LabelSetLinguisticDomain();
 		_values = new LinkedList<Double>();
 	}
 	
-	public FuzzySet(List<Label> labels) {
+	public FuzzySet(List<LabelLinguisticDomain> labels) {
 		_labelSet.setLabels(labels);
 		addValues(labels);
 	}
@@ -59,7 +59,7 @@ public class FuzzySet extends Linguistic {
 		}
 	}
 	
-	public void setValue(Label label, double value) {
+	public void setValue(LabelLinguisticDomain label, double value) {
 		//TODO validator
 		
 		int pos = _labelSet.getPos(label);
@@ -88,7 +88,7 @@ public class FuzzySet extends Linguistic {
 		}
 	}
 	
-	public Double getValue(Label label) {
+	public Double getValue(LabelLinguisticDomain label) {
 		
 		int pos = _labelSet.getPos(label);
 		
@@ -104,15 +104,15 @@ public class FuzzySet extends Linguistic {
 		return _values;
 	}
 	
-	public void setLabelSet(LabelSet labelSet) {
+	public void setLabelSet(LabelSetLinguisticDomain labelSet) {
 		_labelSet = labelSet;
 	}
 	
-	public LabelSet getLabelSet() {
+	public LabelSetLinguisticDomain getLabelSet() {
 		return _labelSet;
 	}
 	
-	public void addLabel(Label label) {
+	public void addLabel(LabelLinguisticDomain label) {
 		int labels = _labelSet.getCardinality();
 		
 		if(labels == 0) {
@@ -135,16 +135,16 @@ public class FuzzySet extends Linguistic {
 		}
 	}
 	
-	public void addLabel(Label label, Double value) {
+	public void addLabel(LabelLinguisticDomain label, Double value) {
 		addLabel(_labelSet.getCardinality(), label, value);
 	}
 	
-	public void addLabel(int pos, Label label) {
+	public void addLabel(int pos, LabelLinguisticDomain label) {
 		_labelSet.addLabel(pos, label);
 		_values.add(pos, 0d);
 	}
 	
-	public void addLabel(int pos, Label label, double value) {
+	public void addLabel(int pos, LabelLinguisticDomain label, double value) {
 		_labelSet.addLabel(pos, label);
 		
 		//TODO validator
@@ -172,7 +172,7 @@ public class FuzzySet extends Linguistic {
 		}
 	}
 	
-	public void removeLabel(Label label) {
+	public void removeLabel(LabelLinguisticDomain label) {
 		
 		if(label == null) {
 			return;
@@ -185,7 +185,7 @@ public class FuzzySet extends Linguistic {
 		}
 	}
 	
-	public void addValues(List<Label> labels) {
+	public void addValues(List<LabelLinguisticDomain> labels) {
 		List<Double> values = new LinkedList<Double>();
 		for(int element = 0; element < labels.size(); ++element) {
 			values.add(0d);
@@ -224,7 +224,7 @@ public class FuzzySet extends Linguistic {
 		FragmentFunction fragmentFunction = new FragmentFunction();
 		FragmentFunction semantic;
 		Map<NumericRealDomain, IFragmentFunction> pieces;
-		for(Label label: _labelSet.getLabels()) {
+		for(LabelLinguisticDomain label: _labelSet.getLabels()) {
 			semantic = label.getSemantic().toFragmentFunction();
 			pieces = semantic.getPieces();
 			for(NumericRealDomain domain: pieces.keySet()) {
@@ -259,8 +259,8 @@ public class FuzzySet extends Linguistic {
 			return false;
 		}
 		
-		IMembership semantic;
-		for(Label label: _labelSet.getLabels()) {
+		IMembershipFunction semantic;
+		for(LabelLinguisticDomain label: _labelSet.getLabels()) {
 			semantic = label.getSemantic();
 			if(semantic instanceof TrapezoidalFunction) {
 				if(!((TrapezoidalFunction) semantic).isTriangular()) {
@@ -294,7 +294,7 @@ public class FuzzySet extends Linguistic {
 		double midPoint = midpoint();
 		
 		if(midPoint != -1){
-			Label label1, label2;
+			LabelLinguisticDomain label1, label2;
 			int centralPos = _labelSet.getCardinality() / 2;
 		
 			for(int i = 0; i < centralPos; ++i) {
@@ -319,8 +319,8 @@ public class FuzzySet extends Linguistic {
 			return true;
 		}
 		
-		Label label1 = _labelSet.getLabels().get(0);
-		Label label2 = _labelSet.getLabels().get(1);
+		LabelLinguisticDomain label1 = _labelSet.getLabels().get(0);
+		LabelLinguisticDomain label2 = _labelSet.getLabels().get(1);
 		
 		double center1 = label1.getSemantic().getCenter().midpoint();
 		double center2 = label2.getSemantic().getCenter().midpoint();
@@ -330,7 +330,7 @@ public class FuzzySet extends Linguistic {
 		double distanceUpper = distance + error;
 		
 		for(int i = 2; i < cardinality; ++i) {
-			label1 = (Label) label2.clone();
+			label1 = (LabelLinguisticDomain) label2.clone();
 			label2 = _labelSet.getLabels().get(i);
 			center1 = center2;
 			center2 = label2.getSemantic().getCenter().midpoint();
@@ -356,13 +356,13 @@ public class FuzzySet extends Linguistic {
 	
 	@Override
 	public double midpoint() {
-		Label label1, label2;
+		LabelLinguisticDomain label1, label2;
 		int centralPos = _labelSet.getCardinality() / 2;
 		double midPoint;
 		
 		if(isOdd()) {
 			label1 = _labelSet.getLabels().get(centralPos);
-			IMembership semantic = label1.getSemantic();
+			IMembershipFunction semantic = label1.getSemantic();
 			if(!semantic.isSymmetrical()) {
 				return -1;
 			} else {

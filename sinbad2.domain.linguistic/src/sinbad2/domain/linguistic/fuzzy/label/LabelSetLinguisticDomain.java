@@ -3,37 +3,37 @@ package sinbad2.domain.linguistic.fuzzy.label;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LabelSet implements Cloneable {
+public class LabelSetLinguisticDomain implements Cloneable {
 
-	protected List<Label> _labels;
+	protected List<LabelLinguisticDomain> _labels;
 	
-	public LabelSet() {
-		_labels = new LinkedList<Label>();
+	public LabelSetLinguisticDomain() {
+		_labels = new LinkedList<LabelLinguisticDomain>();
 	}
 	
-	public LabelSet(List<Label> labels) {
+	public LabelSetLinguisticDomain(List<LabelLinguisticDomain> labels) {
 		this();
 		setLabels(labels);
 	}
 	
-	public void setLabels(List<Label> labels) {
+	public void setLabels(List<LabelLinguisticDomain> labels) {
 		//TODO validator
-		for(Label label: labels) {
+		for(LabelLinguisticDomain label: labels) {
 			addLabel(label);
 		}
 		
 		_labels = labels;
 	}
 	
-	public List<Label> getLabels() {
+	public List<LabelLinguisticDomain> getLabels() {
 		return _labels;
 	}
 	
-	public void addLabel(Label label) {
+	public void addLabel(LabelLinguisticDomain label) {
 		addLabel(getCardinality(), label);
 	}
 	
-	public void addLabel(int pos, Label label) {
+	public void addLabel(int pos, LabelLinguisticDomain label) {
 		//TODO validator
 		
 		if(containsLabel(label.getName())) {
@@ -49,7 +49,7 @@ public class LabelSet implements Cloneable {
 		_labels.remove(pos);
 	}
 	
-	public void removeLabel(Label label) {
+	public void removeLabel(LabelLinguisticDomain label) {
 		
 		if(label == null) {
 			return;
@@ -70,13 +70,13 @@ public class LabelSet implements Cloneable {
 		return _labels.size();
 	}
 	
-	public Label getLabel(int pos) {
+	public LabelLinguisticDomain getLabel(int pos) {
 		//TODO validator
 		
 		return _labels.get(pos);
 	}
 	
-	public Label getLabel(String name) {
+	public LabelLinguisticDomain getLabel(String name) {
 		int pos = getPos(name);
 		
 		if(pos != -1) {
@@ -94,7 +94,7 @@ public class LabelSet implements Cloneable {
 		
 		//TODO validator
 		
-		for(Label auxLabel: _labels) {
+		for(LabelLinguisticDomain auxLabel: _labels) {
 			if(auxLabel.getName().equals(name)) {
 				return _labels.indexOf(auxLabel);
 			}
@@ -104,7 +104,7 @@ public class LabelSet implements Cloneable {
 		
 	}
 	
-	public int getPos(Label label) {
+	public int getPos(LabelLinguisticDomain label) {
 		return _labels.indexOf(label);
 	}
 	
@@ -154,12 +154,12 @@ public class LabelSet implements Cloneable {
 			e.printStackTrace();
 		}
 		
-		List<Label> resultLabels = new LinkedList<Label>();
-		for(Label label: _labels) {
-			resultLabels.add((Label)label.clone()); 
+		List<LabelLinguisticDomain> resultLabels = new LinkedList<LabelLinguisticDomain>();
+		for(LabelLinguisticDomain label: _labels) {
+			resultLabels.add((LabelLinguisticDomain)label.clone()); 
 		}
 		
-		((LabelSet) result)._labels = resultLabels;
+		((LabelSetLinguisticDomain) result)._labels = resultLabels;
 		
 		return result;
 	}

@@ -1,11 +1,11 @@
 package sinbad2.domain.linguistic.fuzzy.function.types;
 
 import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
-import sinbad2.domain.linguistic.fuzzy.semantic.IMembership;
+import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.valuation.real.interval.RealInterval;
 
-public class TrapezoidalFunction implements IMembership {
+public class TrapezoidalFunction implements IMembershipFunction {
 	
 	private final static double EPSILON = 0.000001;
 	
@@ -78,7 +78,7 @@ public class TrapezoidalFunction implements IMembership {
 	}
 	
 	@Override
-	public boolean isSymmetrical(IMembership other, double center) {
+	public boolean isSymmetrical(IMembershipFunction other, double center) {
 		double displacement = (center - _d) * 2;
 		
 		TrapezoidalFunction clone = (TrapezoidalFunction) clone();
@@ -181,7 +181,7 @@ public class TrapezoidalFunction implements IMembership {
 	}
 
 	@Override
-	public double maxMin(IMembership function) {
+	public double maxMin(IMembershipFunction function) {
 		TrapezoidalFunction trapezoidalFunction;
 		
 		//TODO validator
@@ -207,6 +207,64 @@ public class TrapezoidalFunction implements IMembership {
 		if(values[0] == 1) {
 			return 1d;
 		}
+		
+		if(_b == _a) {
+			values[1] = values[2] = trapezoidalFunction.getMembershipValue(_a);
+		} else {
+			slopeAB = 1d / (_b - _a);
+			
+			if(trapezoidalFunction._a == trapezoidalFunction._b) {
+				values[1] = getMembershipValue(trapezoidalFunction._a);
+			} else {
+				slopeFunctionAB = 1d / (trapezoidalFunction._b - trapezoidalFunction._a);
+				if(slopeAB == slopeFunctionAB) {
+					values[1] = 0d;
+				} else {
+					values[1] = slopeFunctionAB * slopeAB * (_a - trapezoidalFunction._a) / (slopeAB - slopeFunctionAB);
+				}
+			}
+			
+			if(trapezoidalFunction._c == trapezoidalFunction._d) {
+				values[2] = getMembershipValue(trapezoidalFunction._c);
+			} else {
+				slopeFunctionCD = 1d / (trapezoidalFunction._c - trapezoidalFunction._d);
+				values[2] = slopeFunctionCD * slopeAB * (_a - trapezoidalFunction._a) / (slopeAB - slopeFunctionCD);
+			}
+		}
+		
+		if(_c == _d) {
+			values[3] = values[4] = trapezoidalFunction.getMembershipValue(_c);
+		} else {
+			slopeCD = 1d / (_c - _d);
+			
+			if(trapezoidalFunction._a == trapezoidalFunction._b) {
+				values[3] = getMembershipValue(trapezoidalFunction._a);
+			} else {
+				slopeFunctionAB = 1d / (trapezoidalFunction._b - trapezoidalFunction._a);
+				values[3] = slopeFunctionAB * slopeCD * (_d - trapezoidalFunction._a) / (slopeCD - slopeFunctionAB);
+			}
+			
+			if(trapezoidalFunction._c == trapezoidalFunction._d) {
+				values[4] = getMembershipValue(trapezoidalFunction._c);
+			} else {
+				slopeFunctionCD = 1d / (trapezoidalFunction._c - trapezoidalFunction. _d);
+				if(slopeCD == slopeFunctionCD) {
+					values[4] = 0d;
+				} else {
+					values[4] = slopeFunctionCD * slopeCD * (_d - trapezoidalFunction._d) / (slopeCD - slopeFunctionCD);
+				}
+			}
+		}
+		
+		for(int i = 0; i < values.length; ++i) {
+			if(values[i] > 1) {
+				values[i] = 0d;
+			}
+		}
+		
+		result = Math.max(values[0], Math.max(values[1], Math.max(values[2], Math.max(values[3], values[4]))));
+		
+		return result;
 	}
 	
 	@Override
@@ -261,7 +319,7 @@ public class TrapezoidalFunction implements IMembership {
 	}
 	
 	@Override
-	public int compareTo(IMembership other) {
+	public int compareTo(IMembershipFunction other) {
 		//TODO validator
 		return Double.compare(this.midPoint(), other.midPoint());
 	}

@@ -55,7 +55,7 @@ public class NumericIntegerDomainChart extends DomainChart {
 		} else {
 			//TODO intentar hacer esto menos chapucero
 			_chart.getXYPlot().getRangeAxis().setLabel(Double.toString(Double.NEGATIVE_INFINITY) + 
-					"                                         " + 
+					"                                           " + 
 					Double.toString(Double.POSITIVE_INFINITY));
 		}
 		

@@ -5,9 +5,11 @@
          point="flintstones.valuation.ui">
       <valuation_ui
             valuation="flintstones.valuation.linguistic">
-         <new_domain_dialog>
+         <new_domain_dialog
+               dialog="sinbad2.domain.linguistic.new">
          </new_domain_dialog>
-         <modify_domain_dialog>
+         <modify_domain_dialog
+               dialog="sinbad2.domain.linguistic.modify">
          </modify_domain_dialog>
       </valuation_ui>
    </extension>

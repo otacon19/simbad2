@@ -128,7 +128,7 @@ public class ModifyNumericIntegerDomainDialog extends ModifyDomainDialog {
 		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gridData.widthHint = 90;
 		if(!_inRangeValue) {
-			gridData.horizontalIndent = - 50;
+			gridData.horizontalIndent = -50;
 		}
 		
 		_upperLimitSpinner.setLayoutData(gridData);
