@@ -46,9 +46,9 @@ public class NewLinguisticDomainDialog extends NewDomainDialog {
 	private Composite _container;
 	private FuzzySet _specificDomain;
 	private Label _previewLabel;
-	private TableViewer _labelsTable;
-	private TableViewerColumn _labelsTableNameCol;
-	private TableViewerColumn _labelsTableSemanticCol;
+	private TableViewer _tableViewer;
+	private TableViewerColumn _tableViewerNameCol;
+	private TableViewerColumn _tableViewerSemanticCol;
 	private LinguisticDomainChart _chart;
 	private Composite _tableViewerComposite;
 	private ActionContributionItem _addButton;
@@ -99,26 +99,26 @@ public class NewLinguisticDomainDialog extends NewDomainDialog {
 		gl_tableViewerComposite.horizontalSpacing = 12;
 		_tableViewerComposite.setLayout(gl_tableViewerComposite);
 
-		_labelsTable = new TableViewer(_tableViewerComposite, SWT.BORDER | SWT.MULTI);
-		_labelsTable.setContentProvider(new FuzzyTableContentProvider());
+		_tableViewer = new TableViewer(_tableViewerComposite, SWT.BORDER | SWT.MULTI);
+		_tableViewer.setContentProvider(new FuzzyTableContentProvider());
 
-		Table table = _labelsTable.getTable();
-		GridData gd_table = new GridData(SWT.LEFT, SWT.TOP, false, true, 1, 5);
-		gd_table.heightHint = 170;
+		Table table = _tableViewer.getTable();
+		GridData gd_table = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 5);
+		gd_table.heightHint = 140;
 		table.setLayoutData(gd_table);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		_labelsTable.setInput(_specificDomain);
+		_tableViewer.setInput(_specificDomain);
 
-		_labelsTableNameCol = new TableViewerColumn(_labelsTable, SWT.NONE);
-		_labelsTableNameCol.getColumn().setWidth(140);
-		_labelsTableNameCol.getColumn().setText("Name");
-		_labelsTableNameCol.setLabelProvider(new FuzzyNameColumnLabelProvider());
+		_tableViewerNameCol = new TableViewerColumn(_tableViewer, SWT.NONE);
+		_tableViewerNameCol.getColumn().setWidth(140);
+		_tableViewerNameCol.getColumn().setText("Name");
+		_tableViewerNameCol.setLabelProvider(new FuzzyNameColumnLabelProvider());
 
-		_labelsTableSemanticCol = new TableViewerColumn(_labelsTable, SWT.NONE);
-		_labelsTableSemanticCol.getColumn().setWidth(345);
-		_labelsTableSemanticCol.getColumn().setText("Semantic");
-		_labelsTableSemanticCol.setLabelProvider(new FuzzySemanticColumnLabelProvider());
+		_tableViewerSemanticCol = new TableViewerColumn(_tableViewer, SWT.NONE);
+		_tableViewerSemanticCol.getColumn().setWidth(345);
+		_tableViewerSemanticCol.getColumn().setText("Semantic");
+		_tableViewerSemanticCol.setLabelProvider(new FuzzySemanticColumnLabelProvider());
 
 		hookSelectAction();
 
@@ -148,11 +148,11 @@ public class NewLinguisticDomainDialog extends NewDomainDialog {
 		_previewLabel.setText("Preview");
 
 		Composite composite = new Composite(_container, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
 		DomainUIsManager manager = DomainUIsManager.getInstance();
 		_chart = (LinguisticDomainChart) manager.newDomainChart(_specificDomain);
-		_chart.initialize(_specificDomain, composite, 600, 250, SWT.BORDER);
-
+		_chart.initialize(_specificDomain, composite, 600, 235, SWT.BORDER);
+		
 		refreshViewer();
 
 		return _container;		
@@ -198,7 +198,7 @@ public class NewLinguisticDomainDialog extends NewDomainDialog {
 		_modify = new Action() {
 			@Override
 			public void run() {
-				ISelection selection = _labelsTable.getSelection();
+				ISelection selection = _tableViewer.getSelection();
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
 				LabelLinguisticDomain currentLabel = (LabelLinguisticDomain) obj;
 				
@@ -215,7 +215,7 @@ public class NewLinguisticDomainDialog extends NewDomainDialog {
 		_remove = new Action() {
 			@Override
 			public void run() {
-				ISelection selection = _labelsTable.getSelection();
+				ISelection selection = _tableViewer.getSelection();
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
 				_specificDomain.removeLabel((LabelLinguisticDomain) obj);
 				refreshViewer();
@@ -226,7 +226,7 @@ public class NewLinguisticDomainDialog extends NewDomainDialog {
 	}
 	
 	private void hookSelectAction() {
-		_labelsTable.addSelectionChangedListener(new ISelectionChangedListener() {
+		_tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -237,7 +237,7 @@ public class NewLinguisticDomainDialog extends NewDomainDialog {
 	}
 	
 	private void modifyActionsState() {
-		boolean state = !_labelsTable.getSelection().isEmpty();
+		boolean state = !_tableViewer.getSelection().isEmpty();
 		_modify.setEnabled(state);
 		_remove.setEnabled(state);
 	}
@@ -245,8 +245,8 @@ public class NewLinguisticDomainDialog extends NewDomainDialog {
 	private void refreshViewer() {
 		modifyActionsState();
 		
-		_labelsTable.setInput(_specificDomain);
-		_labelsTable.refresh();
+		_tableViewer.setInput(_specificDomain);
+		_tableViewer.refresh();
 		_chart.setDomain(_specificDomain);
 	}
 	
