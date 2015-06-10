@@ -69,6 +69,7 @@ public class DomainUIsManager {
 		DomainChart result = null;
 		
 		DomainUI domainUI = getDomainUI(domain.getType());
+
 		try {
 			result = (DomainChart) domainUI.getRegistry().getConfiguration().createExecutableExtension(EDomainUIElements.chart.toString());
 		} catch (CoreException e) {

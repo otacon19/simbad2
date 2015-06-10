@@ -113,6 +113,7 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	public void addLabel(LabelLinguisticDomain label) {
+		
 		int labels = _labelSet.getCardinality();
 		
 		if(labels == 0) {
@@ -129,7 +130,8 @@ public class FuzzySet extends Linguistic {
 			} while ((!lower) && (counter < labels));
 			
 			if(lower) {
-				addLabel(counter, label);
+				addLabel(counter, label);				
+			} else {
 				addLabel(labels, label);
 			}
 		}

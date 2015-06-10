@@ -28,17 +28,17 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import dialog.label.LabelDialog;
 import dialog.provider.FuzzyNameColumnLabelProvider;
 import dialog.provider.FuzzySemanticColumnLabelProvider;
 import dialog.provider.FuzzyTableContentProvider;
+import dialog.subdialog.CreateManualDomainDialog;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
 
-public class NewLinguisticDomainDialog extends NewDomainDialog {
+public class ManualLinguisticDomainDialog extends NewDomainDialog {
 	
 	private Action _add;
 	private Action _remove;
@@ -55,7 +55,7 @@ public class NewLinguisticDomainDialog extends NewDomainDialog {
 	private ActionContributionItem _modifyButton;
 	private ActionContributionItem _removeButton;
 	
-	public NewLinguisticDomainDialog() {
+	public ManualLinguisticDomainDialog() {
 		super();
 	}
 	
@@ -99,9 +99,18 @@ public class NewLinguisticDomainDialog extends NewDomainDialog {
 		gl_tableViewerComposite.horizontalSpacing = 12;
 		_tableViewerComposite.setLayout(gl_tableViewerComposite);
 
-		_tableViewer = new TableViewer(_tableViewerComposite, SWT.BORDER | SWT.MULTI);
+		_tableViewer = new TableViewer(_tableViewerComposite, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 		_tableViewer.setContentProvider(new FuzzyTableContentProvider());
-
+		
+		_tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				_chart.setSelection(_tableViewer.getTable().getSelectionIndex());
+				
+			}
+		});
+		
 		Table table = _tableViewer.getTable();
 		GridData gd_table = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 5);
 		gd_table.heightHint = 140;
@@ -186,9 +195,9 @@ public class NewLinguisticDomainDialog extends NewDomainDialog {
 		_add = new Action() {
 			@Override
 			public void run() {
-				LabelDialog labelDialog = new LabelDialog(_container.getShell(), _specificDomain, null);
-				if(labelDialog.open() == Window.OK) {
-					LabelLinguisticDomain label = labelDialog.getLabel();
+				CreateManualDomainDialog manualDomainDialog = new CreateManualDomainDialog(_container.getShell(), _specificDomain, null);
+				if(manualDomainDialog.open() == Window.OK) {
+					LabelLinguisticDomain label = manualDomainDialog.getLabel();
 					_specificDomain.addLabel(label);
 					refreshViewer();
 				}
@@ -202,9 +211,9 @@ public class NewLinguisticDomainDialog extends NewDomainDialog {
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
 				LabelLinguisticDomain currentLabel = (LabelLinguisticDomain) obj;
 				
-				LabelDialog labelDialog = new LabelDialog(_container.getShell(), _specificDomain, currentLabel);
-				if(labelDialog.open() == Window.OK) {
-					LabelLinguisticDomain label = labelDialog.getLabel();
+				CreateManualDomainDialog manualDomainDialog = new CreateManualDomainDialog(_container.getShell(), _specificDomain, currentLabel);
+				if(manualDomainDialog.open() == Window.OK) {
+					LabelLinguisticDomain label = manualDomainDialog.getLabel();
 					_specificDomain.removeLabel(currentLabel);
 					_specificDomain.addLabel(label);
 					refreshViewer();

@@ -51,6 +51,7 @@ public class AddDomainHandler extends AbstractHandler {
 				for(String valuationID: valuationsSupported) {
 					if(domainValuationsManager.hasValuationsNewDomainDialogs(valuationID)) {
 						input.add(new Object[] { domain, new String[] { valuationID, domainValuationsManager.getNameValuation(valuationID)}});
+							
 					}
 				}
 			}
@@ -58,8 +59,7 @@ public class AddDomainHandler extends AbstractHandler {
 		
 		ILabelProvider domainLabelProvider = new DomainLabelProvider();
 		ILabelProvider domainValuationLabelProvider = new DomainValuationLabelProvider();
-		TwoPaneElementSelector dialogTwoPanes = new TwoPaneElementSelector(Display.getCurrent().getActiveShell(), 
-				domainLabelProvider, domainValuationLabelProvider);
+		TwoPaneElementSelector dialogTwoPanes = new TwoPaneElementSelector(Display.getCurrent().getActiveShell(), domainLabelProvider, domainValuationLabelProvider);
 		
 		dialogTwoPanes.setTitle("New domain");
 		dialogTwoPanes.setMessage("Domain");
@@ -83,7 +83,6 @@ public class AddDomainHandler extends AbstractHandler {
 				
 				if(!dialogsIDs.isEmpty()) {
 					String domainSelected = null;
-					
 					if(dialogsIDs.size() == 1) {
 						domainSelected = dialogsIDs.get(0);
 					} else {

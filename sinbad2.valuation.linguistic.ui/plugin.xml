@@ -6,7 +6,10 @@
       <valuation_ui
             valuation="flintstones.valuation.linguistic">
          <new_domain_dialog
-               dialog="sinbad2.domain.linguistic.new">
+               dialog="sinbad2.domain.linguistic.newmanual">
+         </new_domain_dialog>
+         <new_domain_dialog
+               dialog="sinbad2.domain.linguistic.newauto">
          </new_domain_dialog>
          <modify_domain_dialog
                dialog="sinbad2.domain.linguistic.modify">

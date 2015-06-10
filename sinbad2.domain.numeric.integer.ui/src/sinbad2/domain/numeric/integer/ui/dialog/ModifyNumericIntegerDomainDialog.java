@@ -88,7 +88,7 @@ public class ModifyNumericIntegerDomainDialog extends ModifyDomainDialog {
 			}
 		});
 		
-		_domainNameTextControlDecoration = createNotificationDecorator(text, _id);
+		_domainNameTextControlDecoration = createNotificationDecorator(text);
 		
 		Label titleLabel = new Label(_container, SWT.NULL);
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);

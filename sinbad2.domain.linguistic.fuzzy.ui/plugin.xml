@@ -13,8 +13,13 @@
          point="flintstones.domain.ui.new.dialog">
       <dialog
             domain="flintstones.domain.linguistic"
-            id="sinbad2.domain.linguistic.new"
-            implementation="dialog.NewLinguisticDomainDialog">
+            id="sinbad2.domain.linguistic.newmanual"
+            implementation="dialog.ManualLinguisticDomainDialog">
+      </dialog>
+      <dialog
+            domain="flintstones.domain.linguistic"
+            id="sinbad2.domain.linguistic.newauto"
+            implementation="dialog.AutoGenerateLinguisticDomainDialog">
       </dialog>
    </extension>
    <extension

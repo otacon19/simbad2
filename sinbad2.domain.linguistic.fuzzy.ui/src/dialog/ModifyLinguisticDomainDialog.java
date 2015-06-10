@@ -28,10 +28,10 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import dialog.label.LabelDialog;
 import dialog.provider.FuzzyNameColumnLabelProvider;
 import dialog.provider.FuzzySemanticColumnLabelProvider;
 import dialog.provider.FuzzyTableContentProvider;
+import dialog.subdialog.CreateManualDomainDialog;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
@@ -184,7 +184,7 @@ public class ModifyLinguisticDomainDialog extends ModifyDomainDialog {
 		_add = new Action() {
 			@Override
 			public void run() {
-				LabelDialog labelDialog = new LabelDialog(_container.getShell(), _specificDomain, null);
+				CreateManualDomainDialog labelDialog = new CreateManualDomainDialog(_container.getShell(), _specificDomain, null);
 				if(labelDialog.open() == Window.OK) {
 					LabelLinguisticDomain label = labelDialog.getLabel();
 					_specificDomain.addLabel(label);
@@ -200,7 +200,7 @@ public class ModifyLinguisticDomainDialog extends ModifyDomainDialog {
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
 				LabelLinguisticDomain currentLabel = (LabelLinguisticDomain) obj;
 				
-				LabelDialog labelDialog = new LabelDialog(_container.getShell(), _specificDomain, currentLabel);
+				CreateManualDomainDialog labelDialog = new CreateManualDomainDialog(_container.getShell(), _specificDomain, currentLabel);
 				if(labelDialog.open() == Window.OK) {
 					LabelLinguisticDomain label = labelDialog.getLabel();
 					_specificDomain.removeLabel(currentLabel);

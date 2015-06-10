@@ -1,10 +1,9 @@
-package dialog.label;
+package dialog.subdialog;
 
-import org.eclipse.jface.dialogs.Dialog;
+import jfreechart.CreateManualDomainDialogChart;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecoration;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -20,11 +19,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
+import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
+import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
 
-public class LabelDialog extends Dialog {
+public class CreateManualDomainDialog extends NewDomainDialog {
 
-	//private LabelFactory _labelFactory;
 	private FuzzySet _currentDomain;
 	private LabelLinguisticDomain _currentLabel;
 	private LabelLinguisticDomain _label;
@@ -43,15 +44,12 @@ public class LabelDialog extends Dialog {
 	private ControlDecoration _bValueTextControlDecoration;
 	private ControlDecoration _cValueTextControlDecoration;
 	private ControlDecoration _dValueTextControlDecoration;
-	//private LabelChart _labelChart;
-	private Composite _composite;
+	private CreateManualDomainDialogChart _chart;
 	private boolean _validFields;
 
-	public LabelDialog(Shell parentShell, FuzzySet domain, LabelLinguisticDomain label) {
-		super(parentShell);
-		/*mcdacw.valuation.domain.fuzzyset.Activator activator = mcdacw.valuation.domain.fuzzyset.Activator
-				.getActivator();
-		_labelFactory = activator.getLabelFactory();*/
+	public CreateManualDomainDialog(Shell parentShell, FuzzySet domain, LabelLinguisticDomain label) {
+		super();
+		
 		_currentDomain = domain;
 		_currentLabel = label;
 		_label = null;
@@ -84,11 +82,12 @@ public class LabelDialog extends Dialog {
 		gd_nameText.widthHint = 75;
 		_nameText.setLayoutData(gd_nameText);
 
-		_nameTextControlDecoration = createExceptionDecorator(_nameText);
+		_nameTextControlDecoration = createNotificationDecorator(_nameText);
 
-		_composite = new Composite(container, SWT.NONE);
-		_composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 3));
-		//_labelChart = new LabelChart(_label, _composite, 230, 150, SWT.BORDER);
+		Composite composite = new Composite(container, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 3));
+		_chart = new CreateManualDomainDialogChart();
+		_chart.initialize(_currentDomain, composite, 315, 150, SWT.BORDER);
 
 		Label lblSemantic = new Label(container, SWT.NONE);
 		GridData gd_lblSemantic = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -110,7 +109,7 @@ public class LabelDialog extends Dialog {
 		lblValues.setText("Values");
 		new Label(container, SWT.NONE);
 
-		Composite composite = new Composite(container, SWT.NONE);
+		composite = new Composite(container, SWT.NONE);
 		composite.setLayout(new GridLayout(4, false));
 		GridData gd_composite = new GridData(SWT.CENTER, SWT.CENTER, true, false, 2, 1);
 		gd_composite.widthHint = 330;
@@ -142,7 +141,7 @@ public class LabelDialog extends Dialog {
 		gd__aValueText.widthHint = 65;
 		_aValueText.setLayoutData(gd__aValueText);
 		_aValueText.setBounds(0, 0, 100, 31);
-		_aValueTextControlDecoration = createExceptionDecorator(_aValueText);
+		_aValueTextControlDecoration = createNotificationDecorator(_aValueText);
 		validate(_aValueTextControlDecoration, "Empty value");
 
 		_bValueText = new Text(composite, SWT.BORDER);
@@ -151,7 +150,7 @@ public class LabelDialog extends Dialog {
 		gd__bValueText.widthHint = 65;
 		_bValueText.setLayoutData(gd__bValueText);
 		_bValueText.setBounds(0, 0, 100, 31);
-		_bValueTextControlDecoration = createExceptionDecorator(_bValueText);
+		_bValueTextControlDecoration = createNotificationDecorator(_bValueText);
 		validate(_bValueTextControlDecoration, "Empty value");
 
 		_cValueText = new Text(composite, SWT.BORDER);
@@ -160,7 +159,7 @@ public class LabelDialog extends Dialog {
 		gd__cValueText.widthHint = 65;
 		_cValueText.setLayoutData(gd__cValueText);
 		_cValueText.setBounds(0, 0, 100, 31);
-		_cValueTextControlDecoration = createExceptionDecorator(_cValueText);
+		_cValueTextControlDecoration = createNotificationDecorator(_cValueText);
 		validate(_cValueTextControlDecoration, "Empty value");
 
 		_dValueText = new Text(composite, SWT.BORDER);
@@ -169,7 +168,7 @@ public class LabelDialog extends Dialog {
 		gd__dValueText.widthHint = 65;
 		_dValueText.setLayoutData(gd__dValueText);
 		_dValueText.setBounds(0, 0, 100, 31);
-		_dValueTextControlDecoration = createExceptionDecorator(_dValueText);
+		_dValueTextControlDecoration = createNotificationDecorator(_dValueText);
 		validate(_dValueTextControlDecoration, "Empty value");
 
 		hookNameModifyListener();
@@ -177,14 +176,10 @@ public class LabelDialog extends Dialog {
 
 		if (_currentLabel != null) {
 			_nameText.setText(_currentLabel.getName());
-			_aValueText.setText(((Double) _currentLabel.getSemantic()
-					.getCoverage().getMin()).toString());
-			_bValueText.setText(((Double) _currentLabel.getSemantic()
-					.getCenter().getMin()).toString());
-			_cValueText.setText(((Double) _currentLabel.getSemantic()
-					.getCenter().getMax()).toString());
-			_dValueText.setText(((Double) _currentLabel.getSemantic()
-					.getCoverage().getMax()).toString());
+			_aValueText.setText(((Double) _currentLabel.getSemantic().getCoverage().getMin()).toString());
+			_bValueText.setText(((Double) _currentLabel.getSemantic().getCenter().getMin()).toString());
+			_cValueText.setText(((Double) _currentLabel.getSemantic().getCenter().getMax()).toString());
+			_dValueText.setText(((Double) _currentLabel.getSemantic().getCoverage().getMax()).toString());
 		}
 
 		validateFields();
@@ -194,35 +189,14 @@ public class LabelDialog extends Dialog {
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
-				true);
-		createButton(parent, IDialogConstants.CANCEL_ID,
-				IDialogConstants.CANCEL_LABEL, false);
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 		validateFields();
 	}
 	
 	@Override
 	protected Point getInitialSize() {
 		return new Point(441, 409);
-	}
-
-	private ControlDecoration createExceptionDecorator(Text text) {
-		ControlDecoration controlDecoration = new ControlDecoration(text, SWT.LEFT | SWT.TOP);
-		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
-		controlDecoration.setImage(fieldDecoration.getImage());
-		validate(controlDecoration, ""); //$NON-NLS-1$
-		return controlDecoration;
-	}
-
-	private boolean validate(ControlDecoration controlDecoration, String text) {
-		controlDecoration.setDescriptionText(text);
-		if (text.isEmpty()) {
-			controlDecoration.hide();
-			return true;
-		} else {
-			controlDecoration.show();
-			return false;
-		}
 	}
 
 	private void hookNameModifyListener() {
@@ -309,21 +283,23 @@ public class LabelDialog extends Dialog {
 
 	}
 
-	private boolean validateDoubleValue(Text text,
-			ControlDecoration controlDecoration) {
+	private boolean validateDoubleValue(Text text, ControlDecoration controlDecoration) {
 
 		String value = text.getText();
 		try {
 			Double.parseDouble(value);
-			return validate(controlDecoration, ""); //$NON-NLS-1$
+			if(Double.parseDouble(value) >= 0 && Double.parseDouble(value) <= 1) {
+				return validate(controlDecoration, ""); //$NON-NLS-1$
+			} else {
+				return validate(controlDecoration, "Invalid value"); 
+			}
 		} catch (Exception e) {
 			return validate(controlDecoration, "Invalid value");
 		}
 
 	}
 
-	private boolean validateOrdererValues(Text x, Text y,
-			ControlDecoration controlDecoration) {
+	private boolean validateOrdererValues(Text x, Text y, ControlDecoration controlDecoration) {
 
 		double xValue = Double.parseDouble(x.getText());
 		double yValue = Double.parseDouble(y.getText());
@@ -338,8 +314,7 @@ public class LabelDialog extends Dialog {
 	private void validateFields() {
 
 		Boolean[] values = new Boolean[4];
-		Text[] texts = new Text[] { _aValueText, _bValueText, _cValueText,
-				_dValueText };
+		Text[] texts = new Text[] { _aValueText, _bValueText, _cValueText, _dValueText };
 		ControlDecoration[] controlDecorations = new ControlDecoration[] {
 				_aValueTextControlDecoration, _bValueTextControlDecoration,
 				_cValueTextControlDecoration, _dValueTextControlDecoration };
@@ -360,8 +335,7 @@ public class LabelDialog extends Dialog {
 		Boolean auxValues[] = new Boolean[] { null, null, null };
 		for (int i = 0; i < texts.length - 1; i++) {
 			if (values[i] && values[i + 1]) {
-				auxValues[i] = validateOrdererValues(texts[i], texts[i + 1],
-						controlDecorations[i + 1]);
+				auxValues[i] = validateOrdererValues(texts[i], texts[i + 1], controlDecorations[i + 1]);
 			}
 		}
 
@@ -381,15 +355,15 @@ public class LabelDialog extends Dialog {
 	private void setLabel() {
 
 		try {
-			/*_label = _labelFactory.buildTrapezoidalLabel(_name, new double[] {
-					_a, _b, _c, _d });*/
+			IMembershipFunction semantic = new TrapezoidalFunction(new double[] {_a, _b, _c, _d});
+			_label = new LabelLinguisticDomain(_name, semantic);
 		} catch (Exception e) {
 			_label = null;
 		}
 
 		validateFields();
 
-		//_labelChart.setLabel(_label);
+		_chart.setLabel(_label);
 	}
 
 	public LabelLinguisticDomain getLabel() {

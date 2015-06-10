@@ -33,7 +33,7 @@ public class DomainDialog extends Dialog {
 		}
 	}
 	
-	protected ControlDecoration createNotificationDecorator(Text text, Object o) {
+	protected ControlDecoration createNotificationDecorator(Text text) {
 		ControlDecoration controlDecoration = new ControlDecoration(text, SWT.LEFT | SWT.TOP);
 		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
 		controlDecoration.setImage(fieldDecoration.getImage());
