@@ -97,7 +97,7 @@ public class DomainsContentProvider implements IStructuredContentProvider, IDoma
 				break;
 		}
 		
-		packViewer();
+		//packViewer();
 		
 	}
 	
@@ -117,12 +117,12 @@ public class DomainsContentProvider implements IStructuredContentProvider, IDoma
 		_tableViewer.refresh();
 	}
 	
-	private void packViewer() {
+	/*private void packViewer() {
 		
-		for(int i = 0; i < _tableViewer.getTable().getColumns().length; ++i ) {
+		for(int i = 0; i < _tableViewer.getTable().getColumns().length - 1; ++i ) {
 			 _tableViewer.getTable().getColumn(i).pack();
 		}
-	}
+	}*/
 	
 	@Override
 	public void notifyDomainSetChangeListener(DomainSet domainSet) {

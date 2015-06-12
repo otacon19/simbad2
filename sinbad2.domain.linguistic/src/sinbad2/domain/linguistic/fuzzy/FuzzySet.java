@@ -196,6 +196,40 @@ public class FuzzySet extends Linguistic {
 		_values = values;
 	}
 	
+	public FuzzySet createTrapezoidalFunction(String[] labels) {
+		LabelLinguisticDomain currentLabel;
+		IMembershipFunction semantic;
+		
+		FuzzySet copy = this;
+		copy._labelSet = new LabelSetLinguisticDomain();
+		copy._values = new LinkedList<Double>();
+		
+		if(labels.length == 1) {
+			semantic = new TrapezoidalFunction(new double[] {0, 0, 1, 1});
+			currentLabel = new LabelLinguisticDomain(labels[0], semantic);
+			copy.addLabel(currentLabel);
+		} else {
+			int numLabels = labels.length;
+			double lower, central, upper, increment = 1d / (numLabels  - 1), factor = 1e5;
+			
+			for(int i = 0; i < numLabels; ++i) {
+				lower = (i == 0) ? 0 : increment * (i - 1);
+				central = increment * i;
+				upper = (i == (numLabels - 1)) ? 1: increment * (i + 1);
+				
+				lower = Math.round(lower * factor) / factor;
+				central = Math.round(central * factor) / factor;
+				upper = Math.round(upper * factor) / factor;
+				
+				semantic = new TrapezoidalFunction(new double[] {lower, central, upper});
+				currentLabel = new LabelLinguisticDomain(labels[i], semantic);
+				copy.addLabel(currentLabel);
+			}
+		}
+		
+		return copy;
+	}
+	
 	public double chi() {
 		double result, valuesSum, sum;
 		int pos;
@@ -380,6 +414,11 @@ public class FuzzySet extends Linguistic {
 		
 		return midPoint;
 	}
+	
+	public void clearFuzzySet() {
+		_labelSet.getLabels().clear();
+		_values.clear();
+	}
 
 	@Override
 	public String formatDescriptionDomain() {
@@ -389,7 +428,7 @@ public class FuzzySet extends Linguistic {
 		if((cardinality = _labelSet.getCardinality()) != 0){
 			result += "(";
 			for(int i = 0; i < cardinality - 1; ++i) {
-				result += _labelSet.getLabels().get(i).getName() + ")";
+				result += _labelSet.getLabels().get(i).getName() + ", ";
 			}
 			result += _labelSet.getLabels().get(cardinality - 1).getName() + ")";
 		}

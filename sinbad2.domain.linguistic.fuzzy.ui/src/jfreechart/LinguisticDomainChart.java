@@ -88,10 +88,11 @@ public class LinguisticDomainChart extends DomainChart {
 	private XYSeriesCollection createDataset() {
 		
 		_dataset = new XYSeriesCollection();
-		
+
 		if(_domain != null) {
 			if(((FuzzySet) _domain).getLabelSet().getCardinality() > 0 ) {
 				XYSeries series;
+
 				for(LabelLinguisticDomain label: ((FuzzySet) _domain).getLabelSet().getLabels()) {
 					series = new XYSeries(label.getName());
 					IMembershipFunction membershipFunction = label.getSemantic();

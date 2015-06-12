@@ -5,6 +5,7 @@ import jfreechart.LinguisticDomainChart;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -14,6 +15,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Point;
@@ -23,7 +26,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -50,10 +55,13 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 	private TableViewerColumn _tableViewerNameCol;
 	private TableViewerColumn _tableViewerSemanticCol;
 	private LinguisticDomainChart _chart;
+	private ControlDecoration _domainNameTextControlDecoration;
 	private Composite _tableViewerComposite;
+	private Button _okButton;
 	private ActionContributionItem _addButton;
 	private ActionContributionItem _modifyButton;
 	private ActionContributionItem _removeButton;
+	
 	
 	public ManualLinguisticDomainDialog() {
 		super();
@@ -75,6 +83,27 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 		layout.marginTop = 10;
 		layout.marginLeft = 10;
 		layout.numColumns = 2;
+		
+		Label idLabel = new Label(_container, SWT.NULL);
+		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
+		idLabel.setLayoutData(gridData);
+		idLabel.setText("Domain id");
+		idLabel.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		
+		Text textID = new Text(_container, SWT.BORDER);
+		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
+		textID.setLayoutData(gridData);
+		textID.setText(_id);
+		textID.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				_id = ((Text) e.getSource()).getText().trim();
+				_specificDomain.setId(_id);
+				validate();
+			}
+		});
+		
 		_container.setLayout(layout);
 		_container.addPaintListener(new PaintListener() {
 
@@ -87,8 +116,10 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 		});
 
 		Label _labels = new Label(_container, SWT.NULL);
-		_labels.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1));
-		_labels.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
+		gridData = new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1);
+		gridData.verticalIndent = 15;
+		_labels.setLayoutData(gridData);
+		_labels.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD)); //$NON-NLS-1$
 		_labels.setText("Labels");
 
 		_tableViewerComposite = new Composite(_container, SWT.NONE);
@@ -133,7 +164,8 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 
 		makeActions();
 		
-		new Label(_tableViewerComposite, SWT.NONE);
+		_domainNameTextControlDecoration = createNotificationDecorator(textID);
+
 		_addButton = new ActionContributionItem(_add);
 		_addButton.fill(_tableViewerComposite);
 		_addButton.setMode(ActionContributionItem.MODE_FORCE_TEXT);
@@ -142,17 +174,10 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 		_modifyButton.setMode(ActionContributionItem.MODE_FORCE_TEXT);
 		_removeButton = new ActionContributionItem(_remove);
 		_removeButton.fill(_tableViewerComposite);
-		new Label(_tableViewerComposite, SWT.NONE);
-		new Label(_tableViewerComposite, SWT.NONE);
-		new Label(_tableViewerComposite, SWT.NONE);
-		new Label(_tableViewerComposite, SWT.NONE);
 		_removeButton.setMode(ActionContributionItem.MODE_FORCE_TEXT);
 
-		new Label(_container, SWT.NONE);
-		new Label(_container, SWT.NONE);
-
 		_previewLabel = new Label(_container, SWT.NONE);
-		_previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		_previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD));
 		_previewLabel.setLayoutData(new GridData(SWT.CENTER, SWT.BOTTOM, false, false, 2, 1));
 		_previewLabel.setText("Preview");
 
@@ -160,7 +185,7 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
 		DomainUIsManager manager = DomainUIsManager.getInstance();
 		_chart = (LinguisticDomainChart) manager.newDomainChart(_specificDomain);
-		_chart.initialize(_specificDomain, composite, 600, 235, SWT.BORDER);
+		_chart.initialize(_specificDomain, composite, 600, 200, SWT.BORDER);
 		
 		refreshViewer();
 
@@ -169,12 +194,20 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 	
 	@Override
 	protected Point getInitialSize() {
-		return new Point(640, 570);
+		return new Point(640, 600);
+	}
+	
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText("Manually create domain");
 	}
 	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		_okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		_okButton.setEnabled(false);
+		_domainNameTextControlDecoration.show();
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 	
@@ -257,6 +290,23 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 		_tableViewer.setInput(_specificDomain);
 		_tableViewer.refresh();
 		_chart.setDomain(_specificDomain);
+	}
+	
+	private void validate() {		
+		boolean validId;
+		String msgId = "";
+		
+		if(!_id.isEmpty()) {
+			if(_ids.contains(_id)) {
+				msgId = "Duplicated id";
+			}
+		} else {
+				msgId = "Empty value";
+		}
+		
+		validId = validate(_domainNameTextControlDecoration, msgId);
+							
+		_okButton.setEnabled(validId);			
 	}
 	
 }

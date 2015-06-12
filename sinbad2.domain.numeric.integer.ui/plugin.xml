@@ -12,6 +12,7 @@
    <extension
          point="flintstones.domain.ui.new.dialog">
       <dialog
+            description="New integer domain"
             domain="flintstones.domain.numeric.integer"
             id="sinbad2.domain.numeric.integer.new"
             implementation="sinbad2.domain.numeric.integer.ui.dialog.NewNumericIntegerDomainDialog">

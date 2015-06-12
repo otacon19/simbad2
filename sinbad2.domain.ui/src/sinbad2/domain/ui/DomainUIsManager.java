@@ -65,6 +65,12 @@ public class DomainUIsManager {
 		}
 	}
 	
+	public String getDescriptionNewDomainDialog(String id) {
+		NewDomainDialogRegistryExtension registry = _newDomainDialogRegisters.get(id);
+		
+		return registry.getElement(ENewDomainDialogElements.description);
+	}
+	
 	public DomainChart newDomainChart(Domain domain) {
 		DomainChart result = null;
 		

@@ -12,14 +12,16 @@
    <extension
          point="flintstones.domain.ui.new.dialog">
       <dialog
-            domain="flintstones.domain.linguistic"
-            id="sinbad2.domain.linguistic.newmanual"
-            implementation="dialog.ManualLinguisticDomainDialog">
-      </dialog>
-      <dialog
+            description="Create auto-generated domain"
             domain="flintstones.domain.linguistic"
             id="sinbad2.domain.linguistic.newauto"
             implementation="dialog.AutoGenerateLinguisticDomainDialog">
+      </dialog>
+      <dialog
+            description="Manually create domain"
+            domain="flintstones.domain.linguistic"
+            id="sinbad2.domain.linguistic.newmanual"
+            implementation="dialog.ManualLinguisticDomainDialog">
       </dialog>
    </extension>
    <extension

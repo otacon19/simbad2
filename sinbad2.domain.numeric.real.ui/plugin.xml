@@ -12,6 +12,7 @@
    <extension
          point="flintstones.domain.ui.new.dialog">
       <dialog
+            description="New real domain"
             domain="flintstones.domain.numeric.real"
             id="sinbad2.domain.numeric.real.new"
             implementation="sinbad2.domain.numeric.real.ui.dialog.NewNumericRealDomainDialog">

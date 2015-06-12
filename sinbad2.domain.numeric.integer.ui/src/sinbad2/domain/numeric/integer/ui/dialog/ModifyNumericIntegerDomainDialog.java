@@ -72,7 +72,7 @@ public class ModifyNumericIntegerDomainDialog extends ModifyDomainDialog {
 		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
 		idLabel.setLayoutData(gridData);
 		idLabel.setText("Domain id");
-		idLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
+		idLabel.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
 		
 		Text text = new Text(_container, SWT.BORDER);
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
@@ -94,7 +94,7 @@ public class ModifyNumericIntegerDomainDialog extends ModifyDomainDialog {
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
 		gridData.verticalIndent = 15;
 		titleLabel.setLayoutData(gridData);
-		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
+		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD));
 		titleLabel.setText("Limits");
 		
 		_lowerLimitLabel = new Label(_container, SWT.NONE);
@@ -147,7 +147,7 @@ public class ModifyNumericIntegerDomainDialog extends ModifyDomainDialog {
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
 		gridData.verticalIndent = 15;
 		previewLabel.setLayoutData(gridData);
-		previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
+		previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD));
 		previewLabel.setText("Preview");
 		
 		Composite composite = new Composite(_container, SWT.NONE);
