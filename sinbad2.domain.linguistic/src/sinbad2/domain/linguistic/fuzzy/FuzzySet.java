@@ -10,6 +10,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
 import sinbad2.domain.linguistic.fuzzy.function.IFragmentFunction;
 import sinbad2.domain.linguistic.fuzzy.function.types.LinearPieceFunction;
@@ -48,19 +49,31 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	public void setValues(List<Double> values) {
-		//TODO validator
+		Validator.notNull(values);
+		int cardinality = _labelSet.getCardinality();
+		Validator.notInvalidSize(values.size(), cardinality, cardinality);
+		for(Double value: values) {
+			Validator.notNull(value);
+			Validator.notInvalidSize(value, 0.0, 1.0, "value");
+		}
 		
 		_values = values;
 	}
 	
-	public void setValue(int pos, double value) {
-		//TODO validator
+	public void setValue(int pos, Double value) {
+		Validator.notEmpty(_labelSet.getLabels().toArray());
+		Validator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1);
+		
+		Validator.notNull(value);
+		Validator.notInvalidSize(value, 0.0, 1.0, "value");
 		
 		_values.set(pos, value);
 	}
 	
-	public void setValue(String name, double value) {
-		//TODO validator
+	public void setValue(String name, Double value) {
+		Validator.notNull(name);
+		Validator.notNull(value);
+		Validator.notInvalidSize(value, 0.0, 1.0, "value");
 		
 		int pos = _labelSet.getPos(name);
 		
@@ -71,8 +84,10 @@ public class FuzzySet extends Linguistic {
 		}
 	}
 	
-	public void setValue(LabelLinguisticDomain label, double value) {
-		//TODO validator
+	public void setValue(LabelLinguisticDomain label, Double value) {
+		Validator.notNull(label);
+		Validator.notNegative(value);
+		Validator.notInvalidSize(value, 0.0, 1.0, "value");
 		
 		int pos = _labelSet.getPos(label);
 		
@@ -84,7 +99,8 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	public Double getValue(int pos) {
-		//TODO validator
+		Validator.notEmpty(_labelSet.getLabels().toArray());
+		Validator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1);
 		
 		return _values.get(pos);
 	}
@@ -158,16 +174,19 @@ public class FuzzySet extends Linguistic {
 		_values.add(pos, 0d);
 	}
 	
-	public void addLabel(int pos, LabelLinguisticDomain label, double value) {
+	public void addLabel(int pos, LabelLinguisticDomain label, Double value) {
 		_labelSet.addLabel(pos, label);
 		
-		//TODO validator
+		Validator.notNull(value);
+		Validator.notInvalidSize(value, 0.0, 1.0, "value");
 		
+
 		_values.add(pos, value);
 	}
 	
 	public void removeLabel(int pos) {
-		//TODO validator
+		Validator.notEmpty(_labelSet.getLabels().toArray());
+		Validator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1);
 		
 		_labelSet.getLabels().remove(pos);
 		_values.remove(pos);

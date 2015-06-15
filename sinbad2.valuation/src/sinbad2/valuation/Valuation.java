@@ -5,6 +5,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.Domain;
 import sinbad2.resolutionphase.io.XMLRead;
 
@@ -56,7 +57,7 @@ public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 	}
 	
 	public void setDomain(Domain domain) {
-		//TODO validator
+		Validator.notNull(domain);
 		
 		if(_registry.getElement(EValuationElements.domain).equals(domain.getType())) {
 			_domain = domain;

@@ -3,6 +3,7 @@ package sinbad2.domain.linguistic.fuzzy.function.types;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.function.IFragmentFunction;
 
 public class LinearPieceFunction implements IFragmentFunction {
@@ -27,9 +28,12 @@ public class LinearPieceFunction implements IFragmentFunction {
 	
 	@Override
 	public IFragmentFunction sumFunctions(IFragmentFunction other) {
-		//TODO validator
+		Validator.notNull(other);
+		Validator.notIllegalElementType(other, new String[] { this.
+				getClass().toString() });
 		
-		return new LinearPieceFunction(_slope + ((LinearPieceFunction) other)._slope, _cutOffY + ((LinearPieceFunction) other)._cutOffY);
+		return new LinearPieceFunction(_slope + ((LinearPieceFunction) other)._slope, 
+				_cutOffY + ((LinearPieceFunction) other)._cutOffY);
 	}
 	
 	@Override

@@ -11,6 +11,7 @@ import javax.xml.stream.events.XMLEvent;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
+import sinbad2.core.workspace.Workspace;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.alternative.listener.AlternativesChangeEvent;
 import sinbad2.element.alternative.listener.EAlternativesChange;
@@ -327,7 +328,7 @@ public class ProblemElementsSet implements Cloneable {
 			listener.notifyExpertsChange(event);
 		}
 		
-		//TODO workspace
+		Workspace.getWorkspace().updateHashCode();
 	}
 	
 	public void notifyAlternativesChanges(AlternativesChangeEvent event) {
@@ -335,7 +336,7 @@ public class ProblemElementsSet implements Cloneable {
 			listener.notifyAlternativesChange(event);
 		}
 		
-		//TODO workspace
+		Workspace.getWorkspace().updateHashCode();
 	}
 	
 	public void notifyCriteriaChanges(CriteriaChangeEvent event) {
@@ -343,7 +344,7 @@ public class ProblemElementsSet implements Cloneable {
 			listener.notifyCriteriaChange(event);
 		}
 		
-		//TODO workspace
+		Workspace.getWorkspace().updateHashCode();
 	}
 	
 	public void clear() {

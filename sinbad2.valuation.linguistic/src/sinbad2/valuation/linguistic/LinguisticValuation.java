@@ -6,6 +6,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.resolutionphase.io.XMLRead;
@@ -26,21 +27,21 @@ public class LinguisticValuation extends Valuation {
 	}
 	
 	public void setLabel(int pos) {
-		//TODO validator
 		LabelLinguisticDomain label = _domain.getLabelSet().getLabel(pos);
+		Validator.notNull(label);
 		
 		_label = label;
 	}
 	
 	public void setLabel(String name) {
-		//TODO validator
 		LabelLinguisticDomain label = _domain.getLabelSet().getLabel(name);
+		Validator.notNull(label);
 		
 		_label = (LabelLinguisticDomain) label;
 	}
 	
 	public void setLabel(LabelLinguisticDomain label) {
-		//TODO validator
+		Validator.notNull(label);
 		
 		if(((FuzzySet) _domain).getLabelSet().containsLabel(label)) {
 			_label = (LabelLinguisticDomain) label;
@@ -100,7 +101,8 @@ public class LinguisticValuation extends Valuation {
 	
 	@Override
 	public int compareTo(Valuation other) {
-		//TODO validator
+		Validator.notNull(other);
+		Validator.notIllegalElementType(other, new String[] { LinguisticValuation.class.toString() });
 		
 		if(_domain.equals(other.getDomain())) {
 			return _label.compareTo(((LinguisticValuation) other)._label);

@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.element.ProblemElement;
 
 public class Criterion extends ProblemElement {
@@ -57,7 +58,8 @@ public class Criterion extends ProblemElement {
 	}
 	
 	public void addSubcriterion(Criterion subcriterion) {
-		//TODO validator
+		Validator.notNull(subcriterion);
+		Validator.notSameElement(this, subcriterion);
 		
 		if(_subcriteria == null) {
 			_subcriteria = new LinkedList<Criterion>();
@@ -122,7 +124,8 @@ public class Criterion extends ProblemElement {
 	
 	public static Criterion getCriterionByFormatId(List<Criterion> criteria, String formatId) {
 		
-		//TODO validator
+		Validator.notNull(criteria);
+		Validator.notNull(formatId);
 		
 		if(formatId.contains(">")) {
 			String parentId = formatId.split(">")[0];

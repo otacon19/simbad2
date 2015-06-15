@@ -3,6 +3,7 @@ package sinbad2.domain.linguistic.fuzzy.label;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 
 public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguisticDomain> {
@@ -14,7 +15,8 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 	
 	public LabelLinguisticDomain(String name, IMembershipFunction semantic) {
 		
-		//TODO validator;
+		Validator.notEmpty(name);
+		Validator.notNull(semantic);
 		
 		_name = name;
 		_semantic = semantic;
@@ -81,7 +83,7 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 	
 	@Override
 	public int compareTo(LabelLinguisticDomain other) {
-		//TODO validator
+		Validator.notNull(other);
 		
 		return _semantic.compareTo(other._semantic);
 	}

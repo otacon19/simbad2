@@ -44,7 +44,8 @@ public class RealInterval extends Normalized {
 	}
 	
 	public void setMinMax(Double min, Double max) {
-		//TODO validator
+		Validator.notNull(_domain);
+		Validator.notDisorder(new double[] { min, max }, false);
 		
 		_min = min;
 		_max = max;

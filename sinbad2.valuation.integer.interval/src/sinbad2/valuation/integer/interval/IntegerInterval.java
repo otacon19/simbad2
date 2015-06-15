@@ -46,7 +46,8 @@ public class IntegerInterval extends Normalized {
 	}
 	
 	public void setMinMax(Long min, Long max) {
-		//TODO validator
+		Validator.notNull(_domain);
+		Validator.notDisorder(new double[] {min,  max}, false);
 		
 		_min = min;
 		_max = max;

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.function.types.LinearPieceFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 
@@ -20,7 +21,8 @@ public class FragmentFunction {
 	}
 	
 	public void addPiece(NumericRealDomain domain, IFragmentFunction piece) {
-		//TODO validator
+		Validator.notNull(domain);
+		Validator.notNull(piece);
 		
 		double otherMin = domain.getMin();
 		double otherMax = domain.getMax();

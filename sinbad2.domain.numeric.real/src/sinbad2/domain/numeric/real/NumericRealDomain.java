@@ -6,6 +6,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.type.Numeric;
 import sinbad2.resolutionphase.io.XMLRead;
 
@@ -39,7 +40,7 @@ public static final String ID = "flintstones.domain.numeric.real";
 	}
 
 	public void setMinMax(Double min, Double max) {
-		//TODO validator
+		Validator.notDisorder(new double[] { min, max }, false);
 		_min = min;
 		_max = max;
 	}

@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.element.ProblemElement;
 
 public class Expert extends ProblemElement {
@@ -50,7 +51,8 @@ public class Expert extends ProblemElement {
 	}
 
 	public void addChildren(Expert children) {
-		//TODO validar member
+		Validator.notNull(children);
+		Validator.notSameElement(this, children);
 		
 		if(_childrens == null) {
 			_childrens = new LinkedList<Expert>();
@@ -109,7 +111,8 @@ public class Expert extends ProblemElement {
 	}
 	
 	public static Expert getExpertByFormatId(List<Expert> experts, String formatId) {
-		//TODO validator
+		Validator.notNull(experts);
+		Validator.notNull(formatId);
 		
 		if(formatId.contains(">")) { //$NON-NLS-1$
 			String parentId = formatId.split(">")[0]; //$NON-NLS-1$

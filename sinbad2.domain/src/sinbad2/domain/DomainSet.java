@@ -10,6 +10,8 @@ import javax.xml.stream.events.XMLEvent;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
+import sinbad2.core.workspace.Workspace;
 import sinbad2.domain.listener.DomainSetChangeEvent;
 import sinbad2.domain.listener.EDomainSetChange;
 import sinbad2.domain.listener.IDomainSetListener;
@@ -31,7 +33,7 @@ public class DomainSet {
 	}
 	
 	public void setDomains(List<Domain> domains) {
-		//TODO validator
+		Validator.notNull(domains);
 		
 		_domains = domains;
 		
@@ -39,7 +41,8 @@ public class DomainSet {
 	}
 	
 	public void addDomain(Domain domain) {
-		//TODO validator
+		Validator.notNull(domain);
+		
 		_domains.add(domain);
 		
 		Collections.sort(_domains);
@@ -49,7 +52,8 @@ public class DomainSet {
 	}
 	
 	public void removeDomain(Domain domain) {
-		//TODO validator
+		Validator.notNull(domain);
+		
 		_domains.remove(domain);
 		
 		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.REMOVE_DOMAIN, domain, null));
@@ -84,7 +88,10 @@ public class DomainSet {
 	}
 	
 	public void modifyIdDomain(String oldId, String newId) {
-		//TODO validator
+		Validator.notNull(oldId);
+		Validator.notEmpty(oldId);
+		Validator.notNull(newId);
+		Validator.notEmpty(newId);
 		
 		boolean find = false;
 		int pos = 0;
@@ -168,7 +175,8 @@ public class DomainSet {
 		for(IDomainSetListener listener: _listeners) {
 			listener.notifyDomainSetListener(event);
 		}
-		//TODO updateHashCode
+		
+		Workspace.getWorkspace().updateHashCode();
 	}
 	
 	public void save(XMLStreamWriter writer) throws XMLStreamException {

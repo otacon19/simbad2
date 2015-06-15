@@ -6,6 +6,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.resolutionphase.io.XMLRead;
@@ -28,8 +29,15 @@ public class IntegerValuation extends Normalized {
 	}
 	
 	public void setValue(Long value) {
-		//TODO validator
-		_value = value;
+		Validator.notNull(_domain);
+		
+		if(((NumericIntegerDomain) _domain).getInRange()) {
+			Validator.inRange(value, ((NumericIntegerDomain) _domain).getMin(), 
+					((NumericIntegerDomain) _domain).getMax());
+			_value = value;
+		} else {
+			_value = value;
+		}
 	}
 	
 	public long getValue() {
@@ -99,7 +107,9 @@ public class IntegerValuation extends Normalized {
 	
 	@Override
 	public int compareTo(Valuation other) {
-		// TODO validator
+		Validator.notNull(other);
+		Validator.notIllegalElementType(other, 
+				new String[] { Integer.class.toString() });
 		
 		if(_domain.equals(other.getDomain())) {
 			return Long.valueOf(_value).compareTo(Long.valueOf(((IntegerValuation) other)._value));

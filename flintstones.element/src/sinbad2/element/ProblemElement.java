@@ -1,5 +1,7 @@
 package sinbad2.element;
 
+import sinbad2.core.validator.Validator;
+
 public abstract class ProblemElement implements Cloneable, Comparable<ProblemElement> {
 	
 	protected String _id;
@@ -29,7 +31,7 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 
 	@Override
 	public int compareTo(ProblemElement other) {
-		// TODO validator
+		Validator.notNull(other);
 		
 		return getPathId().compareTo(other.getPathId());
 	}

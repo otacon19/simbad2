@@ -15,6 +15,7 @@ import org.jfree.data.xy.DefaultIntervalXYDataset;
 import org.jfree.data.xy.IntervalXYDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.Domain;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.domain.ui.jfreechart.DomainChart;
@@ -62,7 +63,10 @@ public class NumericRealDomainChart extends DomainChart {
 	
 	@Override
 	public void setDomain(Domain domain) {
-		//TODO validator
+		Validator.notNull(domain);
+		Validator.notIllegalElementType(domain, 
+				new String[] { NumericRealDomain.class.toString() });
+		
 		_domain = (NumericRealDomain) domain;
 		refreshChart();
 	}

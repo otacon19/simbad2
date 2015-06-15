@@ -6,6 +6,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Normalized;
@@ -25,8 +26,14 @@ public class RealValuation extends Normalized {
 	}
 	
 	public void setValue(Double value) {
-		//TODO validator
-		_value = value;
+		Validator.notNull(_domain);
+		
+		if(_domain.getInRange()) {
+			Validator.inRange(value, _domain.getMin(), _domain.getMax());
+			_value = value;
+		} else {
+			_value = value;
+		}
 	}
 	
 	public double getValue() {
@@ -94,7 +101,8 @@ public class RealValuation extends Normalized {
 	
 	@Override
 	public int compareTo(Valuation other) {
-		// TODO validator
+		Validator.notNull(other);
+		Validator.notIllegalElementType(other, new String[] { Integer.class.toString() });
 		
 		if(_domain.equals(other.getDomain())) {
 			return Double.compare(_value, ((RealValuation) other)._value);

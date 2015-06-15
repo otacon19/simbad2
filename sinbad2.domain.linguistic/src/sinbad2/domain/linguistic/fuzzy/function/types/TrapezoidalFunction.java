@@ -2,6 +2,7 @@ package sinbad2.domain.linguistic.fuzzy.function.types;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
@@ -23,7 +24,12 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	public TrapezoidalFunction(double[] limits) {
 		this();
 		
-		//TODO validator
+		Validator.notNull(limits);
+		Validator.notInvalidSize(limits.length, 3, 4);
+		
+		for(double limit: limits) {
+			Validator.notNegative(limit);
+		}
 		
 		if(limits.length == 3) {
 			_a = limits[0];
@@ -164,7 +170,8 @@ public class TrapezoidalFunction implements IMembershipFunction {
 
 	@Override
 	public double maxMin(RealInterval interval) {
-		//TODO validator
+		
+		Validator.notNull(interval);
 		
 		RealInterval normalized;
 		double min, max;
@@ -186,7 +193,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	public double maxMin(IMembershipFunction function) {
 		TrapezoidalFunction trapezoidalFunction;
 		
-		//TODO validator
+		Validator.notNull(function);
 		
 		if(function instanceof TrapezoidalFunction) {
 			trapezoidalFunction = (TrapezoidalFunction) function;
@@ -330,7 +337,8 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 	@Override
 	public int compareTo(IMembershipFunction other) {
-		//TODO validator
+		Validator.notNull(other);
+		
 		return Double.compare(this.midPoint(), other.midPoint());
 	}
 }

@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.validator.Validator;
+
 public class LabelSetLinguisticDomain implements Cloneable {
 
 	protected List<LabelLinguisticDomain> _labels;
@@ -20,7 +22,8 @@ public class LabelSetLinguisticDomain implements Cloneable {
 	}
 	
 	public void setLabels(List<LabelLinguisticDomain> labels) {
-		//TODO validator
+		Validator.notNull(labels);
+		
 		for(LabelLinguisticDomain label: labels) {
 			addLabel(label);
 		}
@@ -37,7 +40,8 @@ public class LabelSetLinguisticDomain implements Cloneable {
 	}
 	
 	public void addLabel(int pos, LabelLinguisticDomain label) {
-		//TODO validator
+		Validator.notNull(label);
+		Validator.notInvalidSize(pos, 0, getCardinality());
 		
 		if(containsLabel(label.getName())) {
 			throw new IllegalArgumentException("Duplicate label name");
@@ -47,7 +51,8 @@ public class LabelSetLinguisticDomain implements Cloneable {
 	}
 	
 	public void removeLabel(int pos) {
-		//TODO validator
+		Validator.notEmpty(_labels.toArray());
+		Validator.notInvalidSize(pos, 0, getCardinality() - 1);
 		
 		_labels.remove(pos);
 	}
@@ -78,7 +83,8 @@ public class LabelSetLinguisticDomain implements Cloneable {
 	}
 	
 	public LabelLinguisticDomain getLabel(int pos) {
-		//TODO validator
+		Validator.notEmpty(_labels.toArray());
+		Validator.notInvalidSize(pos, 0, getCardinality() - 1);
 		
 		return _labels.get(pos);
 	}
@@ -99,7 +105,9 @@ public class LabelSetLinguisticDomain implements Cloneable {
 			return -1;
 		}
 		
-		//TODO validator
+		if(Validator.isEmpty(name)) {
+			return -1;
+		}
 		
 		for(LabelLinguisticDomain auxLabel: _labels) {
 			if(auxLabel.getName().equals(name)) {

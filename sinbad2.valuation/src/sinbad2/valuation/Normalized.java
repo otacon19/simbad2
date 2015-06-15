@@ -2,6 +2,8 @@ package sinbad2.valuation;
 
 import java.util.List;
 
+import sinbad2.core.validator.Validator;
+
 public abstract class Normalized extends Valuation {
 	
 	private static final int MIN = -1;
@@ -10,7 +12,7 @@ public abstract class Normalized extends Valuation {
 	private static Normalized getLimit(List<Normalized> valuations, int type) {
 		Normalized result;
 		
-		//TODO validator
+		Validator.notNull(valuations);
 		
 		if(valuations.isEmpty()) {
 			return null;
