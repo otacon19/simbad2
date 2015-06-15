@@ -60,7 +60,19 @@ public class NumericIntegerDomain extends Numeric {
 		}
 	}
 	
-	//TODO save read
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeAttribute("inRange", Boolean.toString(_inRange));
+		writer.writeAttribute("min", Integer.toString(_min));
+		writer.writeAttribute("max", Integer.toString(_max));
+	}
+
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {
+		_inRange = Boolean.parseBoolean(reader.getStartElementAttribute("inRange"));
+		_min = Integer.parseInt(reader.getStartElementAttribute("min"));
+		_max = Integer.parseInt(reader.getStartElementAttribute("max"));	
+	}
 	
 	@Override
 	public String toString() {
@@ -106,20 +118,5 @@ public class NumericIntegerDomain extends Numeric {
 		
 		return result;
 	}
-
-	@Override
-	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void read(XMLRead reader) throws XMLStreamException {
-		// TODO Auto-generated method stub
-		
-	}
 	
-	
-	
-
 }

@@ -1,10 +1,14 @@
 package sinbad2.valuation.real.interval;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.numeric.real.NumericRealDomain;
+import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 
@@ -138,6 +142,17 @@ public class RealInterval extends Normalized {
 	public String changeFormatValuationToString() {
 		return "[" + Double.toString(_min) + ", " + Double.toString(_max) + "]";
 	}
-	
-	//TODO save y read
+
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeAttribute("min", Double.toString(_min));
+		writer.writeAttribute("max", Double.toString(_max));	
+	}
+
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {
+		_min = Double.parseDouble(reader.getStartElementAttribute("min"));
+		_max = Double.parseDouble(reader.getStartElementAttribute("max"));
+	}
+
 }

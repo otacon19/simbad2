@@ -460,6 +460,17 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
 		hcb.append(super.hashCode());
@@ -500,17 +511,5 @@ public class FuzzySet extends Linguistic {
 		((FuzzySet) result)._values = values;
 		
 		return result;
-	}
-
-	@Override
-	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void read(XMLRead reader) throws XMLStreamException {
-		// TODO Auto-generated method stub
-		
 	}
 }

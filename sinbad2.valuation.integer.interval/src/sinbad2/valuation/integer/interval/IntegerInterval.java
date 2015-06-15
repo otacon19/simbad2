@@ -1,11 +1,15 @@
 package sinbad2.valuation.integer.interval;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
+import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
@@ -140,7 +144,17 @@ public class IntegerInterval extends Normalized {
 		return "[" + Long.toString(_min) + ", " + Long.toString(_max) + "]";
 	}
 	
-	//TODO save y read
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeAttribute("min", Long.toString(_min));
+		writer.writeAttribute("max", Long.toString(_max));	
+	}
+
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {
+		_min = Long.parseLong(reader.getStartElementAttribute("min"));
+		_max = Long.parseLong(reader.getStartElementAttribute("max"));
+	}
 	
 	private Normalized normalizeInterval() {
 		//TODO función hecha por mi
@@ -162,4 +176,5 @@ public class IntegerInterval extends Normalized {
 		
 		return result;
 	}
+	
 }

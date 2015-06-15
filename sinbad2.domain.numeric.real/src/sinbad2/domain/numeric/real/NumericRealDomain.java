@@ -13,13 +13,13 @@ public class NumericRealDomain extends Numeric {
 	
 public static final String ID = "flintstones.domain.numeric.real";
 	
-	private double _min;
-	private double _max;
+	private Double _min;
+	private Double _max;
 	
 	public NumericRealDomain() {
 		super();
-		_min = 0;
-		_max = 0;
+		_min = 0d;
+		_max = 0d;
 	}
 	
 	public void setMin(Double min) {
@@ -60,7 +60,20 @@ public static final String ID = "flintstones.domain.numeric.real";
 		}
 	}
 	
-	//TODO save read
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeAttribute("inRange", Boolean.toString(_inRange));
+		writer.writeAttribute("min", _min.toString());
+		writer.writeAttribute("min", _min.toString());
+		writer.writeAttribute("max", _max.toString());
+	}
+
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {
+		_inRange = Boolean.parseBoolean(reader.getStartElementAttribute("inRange"));
+		_min = Double.parseDouble(reader.getStartElementAttribute("min"));
+		_max = Double.parseDouble(reader.getStartElementAttribute("max"));
+	}
 	
 	@Override
 	public String toString() {
@@ -105,18 +118,6 @@ public static final String ID = "flintstones.domain.numeric.real";
 		result = (NumericRealDomain) super.clone();
 		
 		return result;
-	}
-
-	@Override
-	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void read(XMLRead reader) throws XMLStreamException {
-		// TODO Auto-generated method stub
-		
 	}
 		
 }

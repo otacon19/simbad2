@@ -1,5 +1,6 @@
 package sinbad2.resolutionscheme;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,8 +9,10 @@ import java.util.Map;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.workspace.IWorkspaceContent;
+import sinbad2.core.workspace.WorkspaceContentPersistenceException;
 import sinbad2.resolutionphase.IResolutionPhase;
 import sinbad2.resolutionphase.ResolutionPhase;
+import sinbad2.resolutionscheme.io.XMLWriter;
 import sinbad2.resolutionscheme.state.IResolutionSchemeStateListener;
 
 public abstract class ResolutionSchemeImplementation implements IResolutionSchemeStateListener, IWorkspaceContent {
@@ -102,7 +105,23 @@ public abstract class ResolutionSchemeImplementation implements IResolutionSchem
 					rsi.getPhasesImplementation().get(name));
 		}
 	}
-
+	
+	@Override
+	public IWorkspaceContent read(String fileName) throws IOException,
+			WorkspaceContentPersistenceException {
+		ResolutionSchemeImplementation result = null;
+		sinbad2.resolutionscheme.io.XMLRead xmlRead = 
+				new sinbad2.resolutionscheme.io.XMLRead(fileName);
+		result = xmlRead.read();
+		return result;
+	}
+	
+	@Override
+	public void save(String fileName) throws IOException,
+			WorkspaceContentPersistenceException {
+		new XMLWriter(_resolutionScheme, fileName).save();
+	}
+	
 	@Override
 	public void clear() {
 		for (String name : _phasesNames) {
@@ -126,7 +145,7 @@ public abstract class ResolutionSchemeImplementation implements IResolutionSchem
 		}
 		return hcb.toHashCode();
 	}
-
+	
 	public abstract ResolutionSchemeImplementation newInstance();
 
 }

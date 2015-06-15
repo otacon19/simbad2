@@ -1,8 +1,12 @@
 package sinbad2.valuation;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.domain.Domain;
+import sinbad2.resolutionphase.io.XMLRead;
 
 public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 
@@ -75,8 +79,6 @@ public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 		return hcb.toHashCode();
 	}
 	
-	//TODO save and read
-	
 	public Object clone() {
 		Valuation result = null;
 		
@@ -101,6 +103,8 @@ public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 	
 	public abstract String changeFormatValuationToString();
 	
+	public abstract void save(XMLStreamWriter writer) throws XMLStreamException;
 	
-
+	public abstract void read(XMLRead reader) throws XMLStreamException;
+	
 }

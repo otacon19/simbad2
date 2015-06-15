@@ -1,10 +1,14 @@
 package sinbad2.valuation.linguistic;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
+import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 
 public class LinguisticValuation extends Valuation {
@@ -120,6 +124,18 @@ public class LinguisticValuation extends Valuation {
 		result = super.clone();
 		
 		return result;
+	}
+
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

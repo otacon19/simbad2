@@ -1,9 +1,13 @@
 package sinbad2.valuation.real;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.domain.numeric.real.NumericRealDomain;
+import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 
@@ -112,7 +116,15 @@ public class RealValuation extends Normalized {
 	public String changeFormatValuationToString() {
 		return Double.toString(_value);
 	}
-	
-	//TODO save and read
+
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeAttribute("value", Double.toString(_value));	
+	}
+
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {
+		_value = Double.parseDouble(reader.getStartElementAttribute("value"));
+	}
 
 }

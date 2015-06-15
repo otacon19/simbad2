@@ -1,10 +1,14 @@
 package sinbad2.valuation.integer;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
+import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
@@ -118,7 +122,16 @@ public class IntegerValuation extends Normalized {
 		return Long.toString(_value);
 	}
 	
-	//TODO save and read
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeAttribute("value", Long.toString(_value));
+		
+	}
+
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {
+		_value = Long.parseLong(reader.getStartElementAttribute("value"));	
+	}
 	
 	//TODO hecha por mi
 	private Normalized normalizeRange() {
@@ -134,6 +147,5 @@ public class IntegerValuation extends Normalized {
 		
 		return result;
 	}
-
 
 }
