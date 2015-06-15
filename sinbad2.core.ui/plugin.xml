@@ -11,23 +11,23 @@
                label="File"
                mnemonic="A">
             <command
-                  commandId="sinbad2.workspace.io.new"
+                  commandId="flintstones.core.io.new"
                   style="push">
             </command>
             <command
-                  commandId="sinbad2.workspace.io.read"
+                  commandId="flintstones.core.ui.io.read"
                   style="push">
             </command>
             <command
-                  commandId="sinbad2.workspace.io.save"
+                  commandId="flintstones.core.ui.io.save"
                   style="push">
             </command>
             <command
-                  commandId="sinbad2.workspace.io.save.as"
+                  commandId="flintstones.core.ui.io.save.as"
                   style="push">
             </command>
             <command
-                  commandId="sinbad2.workspace.io.save.and.close"
+                  commandId="flintstones.core.ui.io.save.and.close"
                   style="push">
             </command>
             <command
@@ -42,11 +42,17 @@
                label="Edit"
                mnemonic="E">
             <command
-                  commandId="sinbad2.workspace.undo"
+                  commandId="flintstones.core.undo"
                   style="push">
             </command>
             <command
-                  commandId="sinbad2.workspace.redo"
+                  commandId="flintstones.core.redo"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.ui.window.preferences"
+                  id="preferences"
+                  label="Preferences"
                   style="push">
             </command>
          </menu>
@@ -58,19 +64,19 @@
                id="sinbad2.toolbar.file"
                label="File">
             <command
-                  commandId="sinbad2.workspace.io.new"
+                  commandId="flintstones.core.io.new"
                   style="push">
             </command>
             <command
-                  commandId="sinbad2.workspace.io.read"
+                  commandId="flintstones.core.ui.io.read"
                   style="push">
             </command>
             <command
-                  commandId="sinbad2.workspace.io.save"
+                  commandId="flintstones.core.ui.io.save"
                   style="push">
             </command>
             <command
-                  commandId="sinbad2.workspace.io.save.and.close"
+                  commandId="flintstones.core.ui.io.save.and.close"
                   style="push">
             </command>
          </toolbar>
@@ -78,11 +84,11 @@
                id="sinbad2.toolbar.edit"
                label="Edit">
             <command
-                  commandId="sinbad2.workspace.undo"
+                  commandId="flintstones.core.undo"
                   style="push">
             </command>
             <command
-                  commandId="sinbad2.workspace.redo"
+                  commandId="flintstones.core.redo"
                   style="push">
             </command>
          </toolbar>
@@ -96,27 +102,27 @@
       </category>
       <command
             categoryId="sinbad2.workspace.commands.category"
-            id="sinbad2.workspace.io.new"
+            id="flintstones.core.io.new"
             name="&amp;New">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
-            id="sinbad2.workspace.io.read"
+            id="flintstones.core.ui.io.read"
             name="O&amp;pen">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
-            id="sinbad2.workspace.io.save"
+            id="flintstones.core.ui.io.save"
             name="&amp;Save">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
-            id="sinbad2.workspace.io.save.as"
+            id="flintstones.core.ui.io.save.as"
             name="Sa&amp;ve as...">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
-            id="sinbad2.workspace.io.save.and.close"
+            id="flintstones.core.ui.io.save.and.close"
             name="Save &amp;and close">
       </command>
       <category
@@ -125,12 +131,12 @@
       </category>
       <command
             categoryId="sinbad2.ui.category_undo_redo"
-            id="sinbad2.workspace.undo"
+            id="flintstones.core.undo"
             name="Undo">
       </command>
       <command
             categoryId="sinbad2.ui.category_undo_redo"
-            id="sinbad2.workspace.redo"
+            id="flintstones.core.redo"
             name="Redo">
       </command>
    </extension>
@@ -138,7 +144,7 @@
          point="org.eclipse.ui.handlers">
       <handler
             class="sinbad2.core.undoable.handler.RedoOperationHandler"
-            commandId="sinbad2.workspace.redo">
+            commandId="flintstones.core.redo">
          <enabledWhen>
             <with
                   variable="flintstones.ui.redo.state">
@@ -150,7 +156,7 @@
       </handler>
       <handler
             class="sinbad2.core.undoable.handler.UndoOperationHandler"
-            commandId="sinbad2.workspace.undo">
+            commandId="flintstones.core.undo">
          <enabledWhen>
             <with
                   variable="flintstones.ui.undo.state">
@@ -159,6 +165,34 @@
                </equals>
             </with>
          </enabledWhen>
+      </handler>
+      <handler
+            class="sinbad2.core.io.handler.NewHandler"
+            commandId="flintstones.core.io.new">
+      </handler>
+      <handler
+            class="sinbad2.core.ui.io.handler.ReadHandler"
+            commandId="flintstones.core.ui.io.read">
+      </handler>
+      <handler
+            class="sinbad2.core.ui.io.handler.SaveHandler"
+            commandId="flintstones.core.ui.io.save">
+         <enabledWhen>
+            <with
+                  variable="flintstones.ui.io.save.state">
+               <equals
+                     value="ENABLED">
+               </equals>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="sinbad2.core.ui.io.handler.SaveAsHandler"
+            commandId="flintstones.core.ui.io.save.as">
+      </handler>
+      <handler
+            class="sinbad2.core.ui.io.handler.SaveAndCloseHandler"
+            commandId="flintstones.core.ui.io.save.and.close">
       </handler>
    </extension>
    <extension
@@ -176,23 +210,23 @@
    <extension
          point="org.eclipse.ui.commandImages">
       <image
-            commandId="sinbad2.workspace.io.new"
+            commandId="flintstones.core.io.new"
             icon="icons/new_16.png">
       </image>
       <image
-            commandId="sinbad2.workspace.io.read"
+            commandId="flintstones.core.ui.io.read"
             icon="icons/read_16.png">
       </image>
       <image
-            commandId="sinbad2.workspace.io.save"
+            commandId="flintstones.core.ui.io.save"
             icon="icons/save_16.png">
       </image>
       <image
-            commandId="sinbad2.workspace.io.save.as"
+            commandId="flintstones.core.ui.io.save.as"
             icon="icons/save-as_16.png">
       </image>
       <image
-            commandId="sinbad2.workspace.io.save.and.close"
+            commandId="flintstones.core.ui.io.save.and.close"
             icon="bin/save-and-close_16.png">
       </image>
       <image
@@ -200,12 +234,12 @@
             icon="icons/exit_16.png">
       </image>
       <image
-            commandId="sinbad2.workspace.undo"
+            commandId="flintstones.core.undo"
             disabledIcon="platform:/plugin/org.eclipse.ui/icons/full/dtool16/undo_edit.gif"
             icon="platform:/plugin/org.eclipse.ui/icons/full/etool16/undo_edit.gif">
       </image>
       <image
-            commandId="sinbad2.workspace.redo"
+            commandId="flintstones.core.redo"
             disabledIcon="platform:/plugin/org.eclipse.ui/icons/full/dtool16/redo_edit.gif"
             icon="platform:/plugin/org.eclipse.ui/icons/full/etool16/redo_edit.gif">
       </image>
@@ -215,10 +249,86 @@
       <sourceProvider
             provider="sinbad2.core.ui.undoable.UndoableSourceProvider">
          <variable
-               name="sinbad2.core.ui.variable1"
+               name="flintstones.ui.undo.state"
+               priorityLevel="workbench">
+         </variable>
+         <variable
+               name="flintstones.ui.redo.state"
                priorityLevel="workbench">
          </variable>
       </sourceProvider>
+      <sourceProvider
+            provider="sinbad2.core.ui.workspace.WorkspaceSourceProvider">
+         <variable
+               name="flintstones.ui.io.save.state"
+               priorityLevel="workbench">
+         </variable>
+      </sourceProvider>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="flintstones.core.ui"
+            name="Flintstones ui context"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="flintstones.core.io.new"
+            contextId="flintstones.core.ui"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+N">
+      </key>
+      <key
+            commandId="flintstones.core.ui.io.read"
+            contextId="flintstones.core.ui"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+O">
+      </key>
+      <key
+            commandId="flintstones.core.ui.io.save"
+            contextId="flintstones.core.ui"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+S">
+      </key>
+      <key
+            commandId="flintstones.core.ui.io.save.as"
+            contextId="flintstones.core.ui"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+S">
+      </key>
+      <key
+            commandId="flintstones.core.ui.io.save.and.close"
+            contextId="flintstones.core.ui"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+W">
+      </key>
+      <key
+            commandId="flintstones.core.undo"
+            contextId="flintstones.core.ui"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Z">
+      </key>
+      <key
+            commandId="flintstones.core.redo"
+            contextId="flintstones.core.ui"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+Z">
+      </key>
+      <key
+            commandId="org.eclipse.ui.window.preferences"
+            contextId="flintstones.core.ui"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+P">
+      </key>
+      <key
+            commandId="org.eclipse.ui.file.exit"
+            contextId="flintstones.core.ui"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Q">
+      </key>
    </extension>
 
 </plugin>

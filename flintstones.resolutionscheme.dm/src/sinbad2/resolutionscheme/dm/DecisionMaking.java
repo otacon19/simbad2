@@ -1,5 +1,9 @@
 package sinbad2.resolutionscheme.dm;
 
+import java.io.IOException;
+
+import sinbad2.core.workspace.IWorkspaceContent;
+import sinbad2.core.workspace.WorkspaceContentPersistenceException;
 import sinbad2.resolutionphase.ResolutionPhasesManager;
 import sinbad2.resolutionscheme.ResolutionSchemeImplementation;
 import sinbad2.resolutionscheme.state.ResolutionSchemeStateChangeEvent;
@@ -26,5 +30,19 @@ public class DecisionMaking extends ResolutionSchemeImplementation {
 				break;
 		}
 		
+	}
+
+	@Override
+	public void save(String fileName) throws IOException,
+			WorkspaceContentPersistenceException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IWorkspaceContent read(String fileName) throws IOException,
+			WorkspaceContentPersistenceException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

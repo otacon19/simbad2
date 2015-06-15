@@ -9,6 +9,7 @@ Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.core.commands;visibility:=reexport,
  org.apache.commons.lang;bundle-version="2.4.0";visibility:=reexport
 Export-Package: 
+ sinbad2.core.io.handler,
  sinbad2.core.registry,
  sinbad2.core.undoable,
  sinbad2.core.undoable.handler,

@@ -1,5 +1,7 @@
 package sinbad2.core.workspace;
 
+import java.io.IOException;
+
 public interface IWorkspaceContent {
 	public void clear();
 
@@ -11,7 +13,11 @@ public interface IWorkspaceContent {
 
 	public Object getElement(String id);
 
-	//TODO read and save
+	public void save(String fileName) throws IOException, 
+		WorkspaceContentPersistenceException;
+	
+	public IWorkspaceContent read(String fileName) throws IOException,
+		WorkspaceContentPersistenceException;
 
 	public void activate();
 
