@@ -1,5 +1,8 @@
 package sinbad2.domain.linguistic.fuzzy.label;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 
 public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguisticDomain> {
@@ -7,10 +10,9 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 	private String _name;
 	private IMembershipFunction _semantic;
 	
-	private LabelLinguisticDomain() {}
+	public LabelLinguisticDomain(){}
 	
 	public LabelLinguisticDomain(String name, IMembershipFunction semantic) {
-		this();
 		
 		//TODO validator;
 		
@@ -42,13 +44,23 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 			return false;
 		}
 		
-		//TODO equalsBuilder
+		final LabelLinguisticDomain other = (LabelLinguisticDomain) obj;
 		
-		return false;
+		EqualsBuilder eb = new EqualsBuilder();
+		eb.append(_name, other._name);
+		eb.append(_semantic, other._semantic);
+		
+		return eb.isEquals();
 		
 	}
 	
-	//TODO hashcode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_name);
+		hcb.append(_semantic);
+		return hcb.hashCode();
+	}
 	
 	@Override
 	public Object clone() {

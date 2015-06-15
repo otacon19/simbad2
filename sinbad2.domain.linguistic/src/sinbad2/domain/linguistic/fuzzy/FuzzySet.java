@@ -4,6 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
 import sinbad2.domain.linguistic.fuzzy.function.IFragmentFunction;
 import sinbad2.domain.linguistic.fuzzy.function.types.LinearPieceFunction;
@@ -13,13 +19,14 @@ import sinbad2.domain.linguistic.fuzzy.label.LabelSetLinguisticDomain;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.domain.type.Linguistic;
+import sinbad2.resolutionphase.io.XMLRead;
 
 public class FuzzySet extends Linguistic {
 	
 	public static final String ID = "flintstones.domain.linguistic";
 	
-	protected LabelSetLinguisticDomain _labelSet;
-	protected List<Double> _values;
+	private LabelSetLinguisticDomain _labelSet;
+	private List<Double> _values;
 	
 	//TODO unbalancedinfo
 	
@@ -33,6 +40,11 @@ public class FuzzySet extends Linguistic {
 	public FuzzySet(List<LabelLinguisticDomain> labels) {
 		_labelSet.setLabels(labels);
 		addValues(labels);
+	}
+	
+	public void clearFuzzySet() {
+		_labelSet = new LabelSetLinguisticDomain();
+		_values = new LinkedList<Double>();
 	}
 	
 	public void setValues(List<Double> values) {
@@ -201,8 +213,7 @@ public class FuzzySet extends Linguistic {
 		IMembershipFunction semantic;
 		
 		FuzzySet copy = this;
-		copy._labelSet = new LabelSetLinguisticDomain();
-		copy._values = new LinkedList<Double>();
+		copy.clearFuzzySet();
 		
 		if(labels.length == 1) {
 			semantic = new TrapezoidalFunction(new double[] {0, 0, 1, 1});
@@ -415,11 +426,6 @@ public class FuzzySet extends Linguistic {
 		return midPoint;
 	}
 	
-	public void clearFuzzySet() {
-		_labelSet.getLabels().clear();
-		_values.clear();
-	}
-
 	@Override
 	public String formatDescriptionDomain() {
 		String result = "";
@@ -454,6 +460,13 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(super.hashCode());
+		return hcb.toHashCode();
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
 		
 		if(this == obj) {
@@ -464,9 +477,13 @@ public class FuzzySet extends Linguistic {
 			return false;
 		}
 		
-		//TODO equalsBuilder
+		final FuzzySet other = (FuzzySet) obj;
 		
-		return false;
+		EqualsBuilder eb = new EqualsBuilder();
+		eb.append(_labelSet, other._labelSet);
+		eb.append(_values, other._values);
+		
+		return eb.isEquals();
 	}
 	
 	@Override
@@ -483,5 +500,17 @@ public class FuzzySet extends Linguistic {
 		((FuzzySet) result)._values = values;
 		
 		return result;
+	}
+
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {
+		// TODO Auto-generated method stub
+		
 	}
 }

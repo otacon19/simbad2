@@ -1,5 +1,8 @@
 package sinbad2.element.alternative;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.element.ProblemElement;
 
 public class Alternative extends ProblemElement {
@@ -18,19 +21,26 @@ public class Alternative extends ProblemElement {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
+	public boolean equals(Object obj) {
 		
-		if(this == object) {
+		if(this == obj) {
 			return true;
 		}
 		
-		if(object == null || object.getClass() != this.getClass()) {
+		if(obj == null || obj.getClass() != this.getClass()) {
 			return false;
 		}
 		
-		//TODO builder
-		
-		return false;
+		final Alternative other = (Alternative) obj;
+		return new EqualsBuilder().append(_id, other._id).isEquals();
+
+	}
+	
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_id);
+		return hcb.toHashCode();
 	}
 	
 	@Override

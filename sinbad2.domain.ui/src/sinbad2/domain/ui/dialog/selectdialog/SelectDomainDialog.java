@@ -41,7 +41,7 @@ public class SelectDomainDialog extends Dialog {
 			 
 			 String description = domainUIsManager.getDescriptionNewDomainDialog(dialogID);
 			 
-			 button.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.NONE)); //$NON-NLS-1$
+			 button.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.NONE)); //$NON-NLS-1$
 			 button.setText(description);
 			 
 			 button.addSelectionListener(new SelectionAdapter() {

@@ -3,6 +3,7 @@ package sinbad2.resolutionscheme;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
 
 import sinbad2.resolutionphase.ResolutionPhase;
@@ -149,7 +150,7 @@ public class ResolutionScheme {
 
 		ResolutionPhasesManager resolutionPhasesManager = ResolutionPhasesManager
 				.getInstance();
-		resolutionPhasesManager.deactiveCurrentActive();
+		resolutionPhasesManager.deactivateCurrentActive();
 
 		notifyResolutionSchemeStateChange(new ResolutionSchemeStateChangeEvent(
 				EResolutionSchemeStateChanges.DEACTIVATED));
@@ -172,6 +173,19 @@ public class ResolutionScheme {
 		}
 	}
 
-	// TODO hashCode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_id);
+		hcb.append(_implementation);
+		hcb.append(_name);
+		if(_phases != null) {
+			for(ResolutionPhase phase: _phases) {
+				hcb.append(phase);
+			}
+		}
+		hcb.append(_registry);
+		return hcb.toHashCode();
+	}
 
 }

@@ -71,7 +71,7 @@ public class CriteriaDropListener extends ViewerDropAdapter {
 
 	private boolean isMember(Criterion criterion, Criterion maybeMember) {
 		
-		if(criterion.hasSubcriterial()) {
+		if(criterion.hasSubcriteria()) {
 			for(Criterion subcriterion: criterion.getSubcriteria()) {
 				if(subcriterion == maybeMember) {
 					return true;

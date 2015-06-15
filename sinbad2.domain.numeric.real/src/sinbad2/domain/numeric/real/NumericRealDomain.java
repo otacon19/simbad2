@@ -1,6 +1,13 @@
 package sinbad2.domain.numeric.real;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.domain.type.Numeric;
+import sinbad2.resolutionphase.io.XMLRead;
 
 public class NumericRealDomain extends Numeric {
 	
@@ -71,13 +78,25 @@ public static final String ID = "flintstones.domain.numeric.real";
 			return false;
 		}
 		
+		final NumericRealDomain other = (NumericRealDomain) obj;
 		
-		//TODO builder
+		EqualsBuilder eb = new EqualsBuilder();
+		eb.append(_inRange, other._inRange);
+		eb.append(_max, other._max);
+		eb.append(_min, other._min);
 		
-		return false;
+		return eb.isEquals();
 	}
 	
-	//TODO hashCode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(super.hashCode());
+		hcb.append(_inRange);
+		hcb.append(_max);
+		hcb.append(_min);
+		return hcb.toHashCode();
+	}
 	
 	@Override
 	public Object clone() {
@@ -87,6 +106,17 @@ public static final String ID = "flintstones.domain.numeric.real";
 		
 		return result;
 	}
-	
-	
+
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {
+		// TODO Auto-generated method stub
+		
+	}
+		
 }

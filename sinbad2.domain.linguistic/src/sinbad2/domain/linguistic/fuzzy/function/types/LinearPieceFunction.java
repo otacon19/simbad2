@@ -1,6 +1,8 @@
 package sinbad2.domain.linguistic.fuzzy.function.types;
 
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.domain.linguistic.fuzzy.function.IFragmentFunction;
 
 public class LinearPieceFunction implements IFragmentFunction {
@@ -57,6 +59,13 @@ public class LinearPieceFunction implements IFragmentFunction {
 		return false;
 	}
 	
-	//TODO hashCode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_cutOffY);
+		hcb.append(_slope);
+		return hcb.hashCode();
+		
+	}
 
 }

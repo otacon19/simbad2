@@ -1,5 +1,6 @@
 package sinbad2.core.registry;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 public class RegistryExtension implements Cloneable {
@@ -36,6 +37,11 @@ public class RegistryExtension implements Cloneable {
 		
 	}
 	
-	//TODO hashCode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_configuration);
+		return hcb.hashCode();
+	}
 
 }

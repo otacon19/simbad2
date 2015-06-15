@@ -99,7 +99,7 @@ public class CriteriaContentProvider implements ITreeContentProvider, ICriteriaC
 
 	@Override
 	public boolean hasChildren(Object element) {
-		return ((Criterion) element).hasSubcriterial();
+		return ((Criterion) element).hasSubcriteria();
 	}
 	
 	public Object getInput() {

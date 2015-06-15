@@ -3,6 +3,9 @@ package sinbad2.domain.linguistic.fuzzy.label;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class LabelSetLinguisticDomain implements Cloneable {
 
 	protected List<LabelLinguisticDomain> _labels;
@@ -64,6 +67,10 @@ public class LabelSetLinguisticDomain implements Cloneable {
 	
 	public boolean containsLabel(String name) {
 		return (getPos(name) != -1);
+	}
+	
+	public boolean containsLabel(LabelLinguisticDomain label) {
+		return _labels.contains(label);
 	}
 	
 	public int getCardinality() {
@@ -137,12 +144,20 @@ public class LabelSetLinguisticDomain implements Cloneable {
 			return false;
 		}
 		
-		//TODO equalsBuilder
+		final LabelSetLinguisticDomain other = (LabelSetLinguisticDomain) obj;
 		
-		return false;
+		EqualsBuilder eb = new EqualsBuilder();
+		eb.append(_labels, other._labels);
+		
+		return eb.isEquals();
 	}
 	
-	//TODO hashCode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_labels);
+		return hcb.hashCode();
+	}
 	
 	@Override
 	public Object clone() {

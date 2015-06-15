@@ -1,5 +1,8 @@
 package sinbad2.valuation.real;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
@@ -68,12 +71,22 @@ public class RealValuation extends Normalized {
 			return false;
 		}
 		
-		//TODO builder
+		final RealValuation other = (RealValuation) obj;
 		
-		return false;
+		EqualsBuilder eb = new EqualsBuilder();
+		eb.append(_value, other._value);
+		eb.append(_domain, other._domain);
+		
+		return eb.isEquals();
 	}
 	
-	//TODO hashcode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_value);
+	    hcb.append(_domain);
+	    return hcb.toHashCode();
+	}
 	
 	@Override
 	public int compareTo(Valuation other) {

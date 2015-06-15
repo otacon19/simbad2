@@ -4,6 +4,13 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.events.XMLEvent;
+
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import sinbad2.core.validator.Validator;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.alternative.listener.AlternativesChangeEvent;
 import sinbad2.element.alternative.listener.EAlternativesChange;
@@ -16,6 +23,7 @@ import sinbad2.element.expert.Expert;
 import sinbad2.element.expert.listener.EExpertsChange;
 import sinbad2.element.expert.listener.ExpertsChangeEvent;
 import sinbad2.element.expert.listener.IExpertsChangeListener;
+import sinbad2.resolutionphase.io.XMLRead;
 
 public class ProblemElementsSet implements Cloneable {
 	
@@ -55,7 +63,7 @@ public class ProblemElementsSet implements Cloneable {
 	}
 	
 	public void setExperts(List<Expert> experts) {
-		//TODO Clase validator
+		Validator.notNull(experts);
 		
 		_experts = experts;
 		
@@ -63,7 +71,7 @@ public class ProblemElementsSet implements Cloneable {
 	}
 	
 	public void setAlternatives(List<Alternative> alternatives) {
-		//TODO Clase validator
+		Validator.notNull(alternatives);
 		
 		_alternatives = alternatives;
 		
@@ -71,7 +79,7 @@ public class ProblemElementsSet implements Cloneable {
 	}
 	
 	public void setCriteria(List<Criterion> criteria) {
-		//TODO Clase validator
+		Validator.notNull(criteria);
 		
 		_criteria = criteria;
 		
@@ -355,6 +363,148 @@ public class ProblemElementsSet implements Cloneable {
 		}
 	}
 	
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeStartElement("elements"); //$NON-NLS-1$
+
+		writer.writeStartElement("experts"); //$NON-NLS-1$
+		saveExperts(_experts, writer);
+		writer.writeEndElement();
+
+		writer.writeStartElement("alternatives"); //$NON-NLS-1$
+		saveAlternatives(_alternatives, writer);
+		writer.writeEndElement();
+
+		writer.writeStartElement("criteria"); //$NON-NLS-1$
+		saveCriteria(_criteria, writer);
+		writer.writeEndElement();
+
+		writer.writeEndElement();
+	}
+
+	public void read(XMLRead reader) throws XMLStreamException {
+		reader.goToStartElement("elements"); //$NON-NLS-1$
+		readExperts(reader);
+		readAlternatives(reader);
+		readCriteria(reader);
+		reader.goToEndElement("elements"); //$NON-NLS-1$
+	}
+
+	public void readExperts(XMLRead reader) throws XMLStreamException {
+		reader.goToStartElement("experts"); //$NON-NLS-1$
+
+		XMLEvent event;
+		String id;
+		Expert expert = null;
+		Expert parent = null;
+		boolean end = false;
+		while (reader.hasNext() && !end) {
+			event = reader.next();
+
+			if (event.isStartElement()) {
+				if ("expert".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
+					id = reader.getStartElementAttribute("id"); //$NON-NLS-1$
+					expert = new Expert(id);
+					if (parent == null) {
+						_experts.add(expert);
+						parent = expert;
+					} else {
+						parent.addChildren(expert);
+						parent = expert;
+					}
+				}
+			} else if (event.isEndElement()) {
+				if ("expert".equals(reader.getEndElementLocalPart())) { //$NON-NLS-1$
+					parent = expert.getParent();
+					expert = parent;
+				} else if ("experts".equals(reader.getEndElementLocalPart())) { //$NON-NLS-1$
+					end = true;
+					Collections.sort(_experts);
+				}
+			}
+		}
+	}
+
+	public void readAlternatives(XMLRead reader) throws XMLStreamException {
+		reader.goToStartElement("alternatives"); //$NON-NLS-1$
+
+		XMLEvent event;
+		boolean end = false;
+		while (reader.hasNext() && !end) {
+			event = reader.next();
+
+			if (event.isStartElement()) {
+				if ("alternative".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
+					_alternatives.add(new Alternative(reader
+							.getStartElementAttribute("id"))); //$NON-NLS-1$
+				}
+			} else if (event.isEndElement()) {
+				if ("alternatives".equals(reader.getEndElementLocalPart())) { //$NON-NLS-1$
+					end = true;
+					Collections.sort(_alternatives);
+				}
+			}
+		}
+	}
+
+	public void readCriteria(XMLRead reader) throws XMLStreamException {
+		reader.goToStartElement("criteria"); //$NON-NLS-1$
+
+		XMLEvent event;
+		String id;
+		Boolean cost;
+		Criterion criterion = null;
+		Criterion parent = null;
+		boolean end = false;
+		while (reader.hasNext() && !end) {
+			event = reader.next();
+
+			if (event.isStartElement()) {
+				if ("criterion".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
+					id = reader.getStartElementAttribute("id"); //$NON-NLS-1$
+					cost = Boolean.parseBoolean(reader
+							.getStartElementAttribute("cost")); //$NON-NLS-1$
+
+					criterion = new Criterion(id);
+					if (cost != null) {
+						criterion.setCost(cost);
+					}
+
+					if (parent == null) {
+						_criteria.add(criterion);
+						parent = criterion;
+					} else {
+						parent.addSubcriterion(criterion);
+						parent = criterion;
+					}
+				}
+			} else if (event.isEndElement()) {
+				if ("criterion".equals(reader.getEndElementLocalPart())) { //$NON-NLS-1$
+					parent = criterion.getParent();
+					criterion = parent;
+				} else if ("criteria".equals(reader.getEndElementLocalPart())) { //$NON-NLS-1$
+					end = true;
+					Collections.sort(_criteria);
+				}
+			}
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		for (Expert expert : _experts) {
+			hcb.append(expert);
+		}
+		for (Alternative alternative : _alternatives) {
+			hcb.append(alternative);
+		}
+		for (Criterion criterion : _criteria) {
+			hcb.append(criterion);
+		}
+		return hcb.toHashCode();
+	}
+
+	
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		
@@ -394,6 +544,40 @@ public class ProblemElementsSet implements Cloneable {
 		
 		return result;
 		
+	}
+	
+	private void saveExperts(List<Expert> experts, XMLStreamWriter writer)
+			throws XMLStreamException {
+		for (Expert expert : experts) {
+			writer.writeStartElement("expert"); //$NON-NLS-1$
+			writer.writeAttribute("id", expert.getId()); //$NON-NLS-1$
+			if (expert.hasChildrens()) {
+				saveExperts(expert.getChildrens(), writer);
+			}
+			writer.writeEndElement();
+		}
+	}
+
+	private void saveAlternatives(List<Alternative> alternatives,
+			XMLStreamWriter writer) throws XMLStreamException {
+		for (Alternative alternative : alternatives) {
+			writer.writeStartElement("alternative"); //$NON-NLS-1$
+			writer.writeAttribute("id", alternative.getId()); //$NON-NLS-1$
+			writer.writeEndElement();
+		}
+	}
+
+	private void saveCriteria(List<Criterion> criteria, XMLStreamWriter writer)
+			throws XMLStreamException {
+		for (Criterion criterion : criteria) {
+			writer.writeStartElement("criterion"); //$NON-NLS-1$
+			writer.writeAttribute("id", criterion.getId()); //$NON-NLS-1$
+			writer.writeAttribute("cost", Boolean.toString(criterion.getCost())); //$NON-NLS-1$
+			if (criterion.hasSubcriteria()) {
+				saveCriteria(criterion.getSubcriteria(), writer);
+			}
+			writer.writeEndElement();
+		}
 	}
 	
 }

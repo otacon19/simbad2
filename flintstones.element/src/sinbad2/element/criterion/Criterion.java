@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.element.ProblemElement;
 
 public class Criterion extends ProblemElement {
@@ -84,7 +87,7 @@ public class Criterion extends ProblemElement {
 		_subcriteria = subcriteria;
 	}
 	
-	public boolean hasSubcriterial() {
+	public boolean hasSubcriteria() {
 		
 		if(_subcriteria != null) {
 			if(!_subcriteria.isEmpty()) {
@@ -106,9 +109,15 @@ public class Criterion extends ProblemElement {
 			return false;
 		}
 		
-		//TODO builder
+		final Criterion other = (Criterion) obj;
 		
-		return false;
+		EqualsBuilder eb = new EqualsBuilder();
+		eb.append(_parent, other._parent);
+		eb.append(_id, other._id);
+		eb.append(_subcriteria, other._subcriteria);
+		eb.append(_cost, other._cost);
+		
+		return eb.isEquals();
 	}
 	
 	public static Criterion getCriterionByFormatId(List<Criterion> criteria, String formatId) {
@@ -129,7 +138,18 @@ public class Criterion extends ProblemElement {
 		return null;
 	}
 	
-	//TODO hashcode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(getPathId());
+		if(hasSubcriteria()) {
+			for(Criterion criterion: _subcriteria) {
+				hcb.append(criterion);
+			}
+		}
+		hcb.append(getCost());
+		return hcb.toHashCode();
+	}
 	
 	@Override
 	public Object clone() {
@@ -139,7 +159,7 @@ public class Criterion extends ProblemElement {
 		result.setParent(_parent);
 		result.setCost(_cost);
 		
-		if(hasSubcriterial()) {
+		if(hasSubcriteria()) {
 			List<Criterion> subcriteria = new LinkedList<Criterion>();
 			for(Criterion criterion: _subcriteria) {
 				subcriteria.add((Criterion)criterion.clone());

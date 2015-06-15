@@ -1,5 +1,9 @@
 package sinbad2.valuation.real.interval;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
@@ -87,16 +91,29 @@ public class RealInterval extends Normalized {
 			}
 		}
 		
-		//TODO builder
+		final RealInterval other = (RealInterval) obj;
 		
-		return false;
+		EqualsBuilder eb = new EqualsBuilder();
+		eb.append(_max, other._max);
+		eb.append(_min, other._min);
+		eb.append(_domain, other._domain);
+		
+		return eb.isEquals();
 	}
 	
-	//TODO hascode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_max);
+		hcb.append(_min);
+		hcb.append(_domain);
+		return hcb.toHashCode();
+	}
 	
 	@Override
 	public int compareTo(Valuation other) {
-		//Validator
+		Validator.notNull(other);
+		Validator.notIllegalElementType(other, new String[] {Integer.class.toString()});
 		
 		if(_domain.equals(other.getDomain())) {
 			double middle = (_max + _min) / 2l;

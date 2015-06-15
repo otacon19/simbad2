@@ -1,16 +1,19 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Workspace
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.core
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.equinox.registry;visibility:=reexport,
- org.eclipse.core.commands;visibility:=reexport
+ org.eclipse.core.commands;visibility:=reexport,
+ org.apache.commons.lang;bundle-version="2.4.0";visibility:=reexport
 Export-Package: 
  sinbad2.core.registry,
  sinbad2.core.undoable,
  sinbad2.core.undoable.handler,
  sinbad2.core.undoable.listener,
+ sinbad2.core.validator,
  sinbad2.core.workspace,
  sinbad2.core.workspace.listener
+Bundle-ClassPath: .

@@ -69,11 +69,11 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 		gridLayout.numColumns = 2;
 
 		Label lblLabelName = new Label(container, SWT.NONE);
-		lblLabelName.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		lblLabelName.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD));
 		lblLabelName.setText("Label name");
 
 		Label lblPreview = new Label(container, SWT.NONE);
-		lblPreview.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
+		lblPreview.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD)); //$NON-NLS-1$
 		lblPreview.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		lblPreview.setText("Preview");
 
@@ -93,7 +93,7 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 		GridData gd_lblSemantic = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblSemantic.verticalIndent = 10;
 		lblSemantic.setLayoutData(gd_lblSemantic);
-		lblSemantic.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		lblSemantic.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD));
 		lblSemantic.setText("Semantic");
 
 		Button btnTrapezoidal = new Button(container, SWT.RADIO);
@@ -105,7 +105,7 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 		GridData gd_lblValues = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblValues.verticalIndent = 10;
 		lblValues.setLayoutData(gd_lblValues);
-		lblValues.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
+		lblValues.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD)); //$NON-NLS-1$
 		lblValues.setText("Values");
 		new Label(container, SWT.NONE);
 
@@ -246,8 +246,7 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 		_dValueText.addModifyListener(modifyListener);
 	}
 
-	private boolean validateEmptyText(Text text,
-			ControlDecoration controlDecoration) {
+	private boolean validateEmptyText(Text text, ControlDecoration controlDecoration) {
 		if (text.getText().isEmpty()) {
 			return validate(controlDecoration, "Empty value");
 		} else {

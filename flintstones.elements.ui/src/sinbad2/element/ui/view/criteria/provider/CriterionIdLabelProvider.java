@@ -15,7 +15,7 @@ public class CriterionIdLabelProvider extends ColumnLabelProvider {
 	
 	@Override
 	public Image getImage(Object obj) {
-		if(((Criterion) obj).hasSubcriterial()) {
+		if(((Criterion) obj).hasSubcriteria()) {
 			return Images.Criteria;
 		} else {
 			return Images.Criterion;

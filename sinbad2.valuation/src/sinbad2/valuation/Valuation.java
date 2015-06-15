@@ -1,5 +1,7 @@
 package sinbad2.valuation;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.domain.Domain;
 
 public abstract class Valuation implements Cloneable, Comparable<Valuation> {
@@ -63,7 +65,15 @@ public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 		return _domain;
 	}
 	
-	//TODO hashcode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_id);
+		hcb.append(_name);
+		hcb.append(_registry);
+		hcb.append(_domain);
+		return hcb.toHashCode();
+	}
 	
 	//TODO save and read
 	

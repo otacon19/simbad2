@@ -5,9 +5,7 @@ Bundle-SymbolicName: sinbad2.resolutionphase;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
-Require-Bundle: sinbad2.core;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.domain;visibility:=reexport,
- sinbad2.element;visibility:=reexport,
- sinbad2.valuation;bundle-version="1.0.0"
+Require-Bundle: sinbad2.core;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.resolutionphase,
+ sinbad2.resolutionphase.io,
  sinbad2.resolutionphase.state

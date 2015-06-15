@@ -5,16 +5,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.core.workspace.IWorkspaceContent;
+import sinbad2.resolutionphase.IResolutionPhase;
 import sinbad2.resolutionphase.ResolutionPhase;
-import sinbad2.resolutionphase.ResolutionPhaseImplementation;
 import sinbad2.resolutionscheme.state.IResolutionSchemeStateListener;
 
 public abstract class ResolutionSchemeImplementation implements IResolutionSchemeStateListener, IWorkspaceContent {
 
 	protected List<String> _phasesNames;
 	protected Map<String, ResolutionPhase> _phases;
-	protected Map<String, ResolutionPhaseImplementation> _phasesImplementation;
+	protected Map<String, IResolutionPhase> _phasesImplementation;
 	protected ResolutionScheme _resolutionScheme;
 
 	public List<String> getPhasesNames() {
@@ -33,12 +35,11 @@ public abstract class ResolutionSchemeImplementation implements IResolutionSchem
 		_phases = phases;
 	}
 
-	public Map<String, ResolutionPhaseImplementation> getPhasesImplementation() {
+	public Map<String, IResolutionPhase> getPhasesImplementation() {
 		return _phasesImplementation;
 	}
 
-	public void setPhasesImplementation(
-			Map<String, ResolutionPhaseImplementation> phasesImplementation) {
+	public void setPhasesImplementation(Map<String, IResolutionPhase> phasesImplementation) {
 		_phasesImplementation = phasesImplementation;
 	}
 
@@ -51,7 +52,7 @@ public abstract class ResolutionSchemeImplementation implements IResolutionSchem
 		_resolutionScheme = resolutionScheme;
 
 		_phasesNames = new LinkedList<String>();
-		_phasesImplementation = new HashMap<String, ResolutionPhaseImplementation>();
+		_phasesImplementation = new HashMap<String, IResolutionPhase>();
 		_phases = new HashMap<String, ResolutionPhase>();
 
 		String name;
@@ -72,11 +73,11 @@ public abstract class ResolutionSchemeImplementation implements IResolutionSchem
 	public IWorkspaceContent copyStructure() {
 		ResolutionSchemeImplementation result = this.newInstance();
 		List<String> names = new LinkedList<String>();
-		Map<String, ResolutionPhaseImplementation> phasesImplementation = new HashMap<String, ResolutionPhaseImplementation>();
+		Map<String, IResolutionPhase> phasesImplementation = new HashMap<String, IResolutionPhase>();
 
 		for (String name : _phasesNames) {
 			names.add(name);
-			phasesImplementation.put(name, (ResolutionPhaseImplementation)_phasesImplementation.get(name).copyStructure());
+			phasesImplementation.put(name, (IResolutionPhase)_phasesImplementation.get(name).copyStructure());
 		}
 
 		result.setPhasesNames(_phasesNames);
@@ -117,7 +118,14 @@ public abstract class ResolutionSchemeImplementation implements IResolutionSchem
 		}
 	}
 
-	// TODO hashCode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		for(String id: _phasesNames) {
+			hcb.append(_phasesImplementation.get(id));
+		}
+		return hcb.toHashCode();
+	}
 
 	public abstract ResolutionSchemeImplementation newInstance();
 

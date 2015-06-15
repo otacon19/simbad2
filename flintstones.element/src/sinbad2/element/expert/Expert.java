@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.element.ProblemElement;
 
 public class Expert extends ProblemElement {
@@ -86,18 +89,23 @@ public class Expert extends ProblemElement {
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if(this == object) {
+	public boolean equals(Object obj) {
+		if(this == obj) {
 			return true;
 		}
 		
-		if(object == null || object.getClass() != this.getClass()) {
+		if(obj == null || obj.getClass() != this.getClass()) {
 			return false;
 		}
 		
-		//TODO builder
+		final Expert other = (Expert) obj;
 		
-		return false;
+		EqualsBuilder eb = new EqualsBuilder();
+		eb.append(_childrens, other._childrens);
+		eb.append(_id, other._id);
+		eb.append(_parent, other._parent);
+		
+		return eb.isEquals();
 	}
 	
 	public static Expert getExpertByFormatId(List<Expert> experts, String formatId) {
@@ -116,7 +124,17 @@ public class Expert extends ProblemElement {
 		return null;
 	}
 	
-	//TODO hashcode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(getPathId());
+		if(hasChildrens()) {
+			for(Expert expert: _childrens) {
+				hcb.append(expert);
+			}
+		}
+		return hcb.toHashCode();
+	}
 	
 	@Override
 	public Object clone() {

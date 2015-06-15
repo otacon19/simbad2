@@ -1,38 +1,125 @@
 package sinbad2.valuation.linguistic;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
-import sinbad2.valuation.Normalized;
+import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.valuation.Valuation;
 
-public class LinguisticValuation extends Normalized {
-	
-	private FuzzySet _domain;
+public class LinguisticValuation extends Valuation {
 	
 	public static final String ID = "flintstones.valuation.linguistic";
-
-	@Override
-	public int compareTo(Valuation arg0) {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	public LabelLinguisticDomain _label;
+	
+	protected FuzzySet _domain;
+	
+	public LinguisticValuation() {
+		super();
+		
+		_label = new LabelLinguisticDomain();
+	}
+	
+	public void setLabel(int pos) {
+		//TODO validator
+		LabelLinguisticDomain label = _domain.getLabelSet().getLabel(pos);
+		
+		_label = label;
+	}
+	
+	public void setLabel(String name) {
+		//TODO validator
+		LabelLinguisticDomain label = _domain.getLabelSet().getLabel(name);
+		
+		_label = (LabelLinguisticDomain) label;
+	}
+	
+	public void setLabel(LabelLinguisticDomain label) {
+		//TODO validator
+		
+		if(((FuzzySet) _domain).getLabelSet().containsLabel(label)) {
+			_label = (LabelLinguisticDomain) label;
+		} else {
+			throw new IllegalArgumentException("Lable not contains in domain.");
+		}
+	}
+	
+	public LabelLinguisticDomain getLabel() {
+		return _label;
 	}
 
 	@Override
 	public Valuation negateValutation() {
 		LinguisticValuation result = (LinguisticValuation) clone();
 		
-		return null;
+		FuzzySet domain = (FuzzySet) _domain;
+		if(domain.getLabelSet().getCardinality() > 1) {
+			int negPos = (domain.getLabelSet().getCardinality() - 1) - 
+					domain.getLabelSet().getPos(_label);
+			result.setLabel(negPos);
+		}
+		
+		return result;
 	}
-
+	
 	@Override
 	public String changeFormatValuationToString() {
-		// TODO Auto-generated method stub
-		return null;
+		return _label.toString();
 	}
-
+	
+	//TODO unification
+	
 	@Override
-	public Normalized normalize() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toString() {
+		return (_label + "in" + _domain.toString());
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if(this == obj) {
+			return true;
+		}
+		
+		if(obj ==  null || (this.getClass() != obj.getClass())) {
+			return false;
+		}
+		
+		LinguisticValuation other = (LinguisticValuation) obj;
+		EqualsBuilder eb = new EqualsBuilder();
+		eb.append(_domain, other._domain);
+		eb.append(_label, other._label);
+		
+		return eb.isEquals();
+	}
+	
+	@Override
+	public int compareTo(Valuation other) {
+		//TODO validator
+		
+		if(_domain.equals(other.getDomain())) {
+			return _label.compareTo(((LinguisticValuation) other)._label);
+		} else {
+			throw new IllegalArgumentException("Different domains");
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_domain);
+		hcb.append(_label);
+		return hcb.toHashCode();
+	}
+	
+	@Override
+	public Object clone() {
+		Object result = null;
+		
+		result = super.clone();
+		
+		return result;
 	}
 
 }

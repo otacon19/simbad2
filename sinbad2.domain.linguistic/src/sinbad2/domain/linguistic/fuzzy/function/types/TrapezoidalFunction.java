@@ -1,5 +1,7 @@
 package sinbad2.domain.linguistic.fuzzy.function.types;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
@@ -303,7 +305,15 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		return false;
 	}
 	
-	//TODO hashcode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_a);
+		hcb.append(_b);
+		hcb.append(_c);
+		hcb.append(_d);
+		return hcb.hashCode();
+	}
 	
 	@Override
 	public Object clone() {

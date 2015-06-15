@@ -14,7 +14,6 @@ public class ModifyExpertInputValidator implements IInputValidator {
 	private ProblemElementsSet _elementSet;
 	private Expert _parentOfModifyExpert;
 	private List<Expert> _brothers;
-	private List<Expert> _others;
 	private String _id;
 	
 	public ModifyExpertInputValidator() {
@@ -27,12 +26,11 @@ public class ModifyExpertInputValidator implements IInputValidator {
 		_id = id;
 		
 		_brothers = new LinkedList<Expert>();
-		_others = new LinkedList<Expert>();
 		
 		if(_parentOfModifyExpert != null) {
 			_brothers = _parentOfModifyExpert.getChildrens();
 		} else {
-			_others = _elementSet.getExperts();
+			_brothers = _elementSet.getExperts();
 		}
 	}
 	
@@ -53,14 +51,6 @@ public class ModifyExpertInputValidator implements IInputValidator {
 				for(Expert expert: _brothers) {
 					if(newText.equals(expert.getId())) {
 						return Messages.ModifyExpertInputValidator_Duplicated_id;
-					}
-				}
-			} else {
-				if(_others != null) {
-					for(Expert expert: _others) {
-						if(newText.equals(expert.getId())) {
-							return Messages.ModifyExpertInputValidator_Duplicated_id;
-						}
 					}
 				}
 			}

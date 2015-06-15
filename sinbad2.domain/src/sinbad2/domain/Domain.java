@@ -1,5 +1,13 @@
 package sinbad2.domain;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import sinbad2.resolutionphase.io.XMLRead;
+
 public abstract class Domain implements Cloneable, Comparable<Domain> {
 	
 	private String _id;
@@ -46,11 +54,23 @@ public abstract class Domain implements Cloneable, Comparable<Domain> {
 		_registry = registry;
 	}
 	
-	//TODO save, read
+	public abstract void save(XMLStreamWriter writer) throws XMLStreamException;
+	
+	public abstract void read(XMLRead reader) throws XMLStreamException;
 	
 	public abstract double midpoint();
 	
 	public abstract String formatDescriptionDomain();
+	
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_id);
+		hcb.append(_name);
+		hcb.append(_registry);
+		hcb.append(_type);
+		return hcb.toHashCode();
+	}
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -63,9 +83,15 @@ public abstract class Domain implements Cloneable, Comparable<Domain> {
 			return false;
 		}
 		
-		return false;
+		final Domain other = (Domain) obj;
 		
-		//TODO builder
+		EqualsBuilder eb = new EqualsBuilder();
+		eb.append(_id, other._id);
+		eb.append(_name, other._name);
+		eb.append(_registry, other._registry);
+		eb.append(_type, other._type);
+		
+		return eb.isEquals();
 	}
 	
 	@Override

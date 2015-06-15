@@ -59,11 +59,11 @@ public class CriterionTest {
 	public void testHasSubcriterial() {
 		Criterion children = new Criterion("Son");
 
-		assertEquals("return false if there aren't children", false, _tester.hasSubcriterial());
+		assertEquals("return false if there aren't children", false, _tester.hasSubcriteria());
 		
 		_tester.addSubcriterion(children);
 
-		assertEquals("return true if there are children", true, _tester.hasSubcriterial());
+		assertEquals("return true if there are children", true, _tester.hasSubcriteria());
 	}
 
 	@Test

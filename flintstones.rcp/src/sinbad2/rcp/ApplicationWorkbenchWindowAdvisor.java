@@ -35,6 +35,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	public void preWindowOpen() {			
 		IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
 		configurer.setInitialSize(new Point(1024, 700));
+		configurer.setTitle("Flintstones");
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(false);
 		configurer.setShowPerspectiveBar(false);

@@ -1,5 +1,8 @@
 package sinbad2.valuation.integer;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.valuation.Normalized;
@@ -73,19 +76,29 @@ public class IntegerValuation extends Normalized {
 			return false;
 		}
 		
-		//TODO builder
+		final IntegerValuation other = (IntegerValuation) obj;
 		
-		return false;
+		EqualsBuilder eb = new EqualsBuilder();
+		eb.append(_value, other._value);
+		eb.append(_domain, other._domain);
+		
+		return eb.isEquals();
 	}
 	
-	//TODO hashCode
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+		hcb.append(_value);
+		hcb.append(_domain);
+		return hcb.toHashCode();
+	}
 	
 	@Override
 	public int compareTo(Valuation other) {
 		// TODO validator
 		
 		if(_domain.equals(other.getDomain())) {
-			return Long.compare(_value, ((IntegerValuation) other)._value);
+			return Long.valueOf(_value).compareTo(Long.valueOf(((IntegerValuation) other)._value));
 		}
 		
 		return 0;
