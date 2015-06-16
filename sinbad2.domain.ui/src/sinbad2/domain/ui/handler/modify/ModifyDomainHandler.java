@@ -10,6 +10,7 @@ import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import sinbad2.domain.Domain;
@@ -18,6 +19,7 @@ import sinbad2.domain.DomainsManager;
 import sinbad2.domain.operation.ModifyDomainOperation;
 import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.modifyDialog.ModifyDomainDialog;
+import sinbad2.domain.ui.dialog.selectdialog.SelectModifyDomainDialog;
 import sinbad2.domain.valuations.DomainValuationsManager;
 
 public class ModifyDomainHandler extends AbstractHandler {
@@ -38,24 +40,36 @@ public class ModifyDomainHandler extends AbstractHandler {
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		DomainSet domainSet = domainsManager.getActiveDomainSet();
 		DomainValuationsManager domainValuationsManager = DomainValuationsManager.getInstance();
-	
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
-		_oldDomain = (Domain) selection.getFirstElement();
-		_valuationOldDomain = domainValuationsManager.getValuationSupportedForNewDomain(_oldDomain.getId());
+		
+		if(_oldDomain == null) {
+			IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
+			_oldDomain = (Domain) selection.getFirstElement();
+			_valuationOldDomain = domainValuationsManager.getValuationSupportedForNewDomain(_oldDomain.getId());
+		}
 		
 		DomainUIsManager domainUIsManager = DomainUIsManager.getInstance();
 		String valuationID = domainValuationsManager.getValuationSupportedForNewDomain(_oldDomain.getId());
 		
 		List<String> dialogsIds = domainValuationsManager.getValuationModifyDomainDialogs(valuationID);
 		
-		String selected = "";
+		String dialogIDSelected = "";
 		if(dialogsIds.size() == 1) {
-			selected = dialogsIds.get(0);
+			dialogIDSelected = dialogsIds.get(0);
 		} else {
-			//TODO Diálogo para seleccionar varios diálogos de modificación
+			SelectModifyDomainDialog dialog = new SelectModifyDomainDialog(Display.getCurrent().getActiveShell(), dialogsIds);
+			
+			if(dialog.open() == Window.OK) {
+				for(String dialogID: dialogsIds) {
+					String description = domainUIsManager.getDescriptionModifyDomainDialog(dialogID);
+					if(description == dialog.getDescription()) {
+						dialogIDSelected = dialogID;
+					}
+				}
+			}
 		}
-		if(selected != null) {
-			ModifyDomainDialog modifyDomainDialog = domainUIsManager.modifyDomainDialog(_oldDomain, selected);
+
+		if(dialogIDSelected != null && !dialogIDSelected.isEmpty()) {
+			ModifyDomainDialog modifyDomainDialog = domainUIsManager.modifyDomainDialog(_oldDomain, dialogIDSelected);
 			if(modifyDomainDialog.open() == Window.OK) {
 				Domain newDomain = modifyDomainDialog.getNewDomain();
 				

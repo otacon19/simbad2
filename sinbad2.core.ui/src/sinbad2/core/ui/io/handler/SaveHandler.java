@@ -25,10 +25,10 @@ public class SaveHandler extends AbstractHandler {
 		String fn = workspace.getFileName();
 		
 		if(fn != null) {
-			sinbad2.core.io.handler.ReadHandler handler = null;
+			sinbad2.core.io.handler.SaveHandler handler = null;
 			try {
 				try {
-					handler = new sinbad2.core.io.handler.ReadHandler(fn);
+					handler = new sinbad2.core.io.handler.SaveHandler(fn);
 					handler.execute(event);
 					if(!fn.equals(workspace.getFileName())) {
 						workspace.setFileName(fn);

@@ -71,6 +71,12 @@ public class DomainUIsManager {
 		return registry.getElement(ENewDomainDialogElements.description);
 	}
 	
+	public String getDescriptionModifyDomainDialog(String id) {
+		ModifyDomainDialogRegistryExtension registry = _modifyDomainDialogRegisters.get(id);
+		
+		return registry.getElement(EModifyDomainDialogElements.description);
+	}
+	
 	public DomainChart newDomainChart(Domain domain) {
 		DomainChart result = null;
 		

@@ -38,7 +38,7 @@ public final String ID = "flintstones.core.ui.io.save.as";
 				try {
 					handler = new sinbad2.core.io.handler.SaveHandler(fn);
 					handler.execute(event);
-					if(!fn.endsWith(workspace.getFileName())) {
+					if(!fn.equals(workspace.getFileName())) {
 						workspace.setFileName(fn);
 					}
 				} catch(ExecutionException e) {

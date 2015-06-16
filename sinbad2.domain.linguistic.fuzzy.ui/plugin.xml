@@ -27,6 +27,7 @@
    <extension
          point="flintstones.domain.ui.modify.dialog">
       <dialog
+            description="Manually modify dialog"
             domain="flintstones.domain.linguistic"
             id="sinbad2.domain.linguistic.modify"
             implementation="dialog.ModifyLinguisticDomainDialog">

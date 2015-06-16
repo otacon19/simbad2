@@ -15,12 +15,12 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.ui.DomainUIsManager;
 
-public class SelectDomainDialog extends Dialog {
+public class SelectModifyDomainDialog extends Dialog {
 	
 	private String _description;
 	private List<String> _dialogsIDs;
 	
-	public SelectDomainDialog(Shell shell, List<String> dialogsIDs) {
+	public SelectModifyDomainDialog(Shell shell, List<String> dialogsIDs) {
 		super(shell);
 		
 		_dialogsIDs = dialogsIDs;
@@ -39,7 +39,7 @@ public class SelectDomainDialog extends Dialog {
 			 Button button = new Button(container, SWT.RADIO);
 			 button.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 			 
-			 String description = domainUIsManager.getDescriptionNewDomainDialog(dialogID);
+			 String description = domainUIsManager.getDescriptionModifyDomainDialog(dialogID);
 			 
 			 button.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.NONE)); //$NON-NLS-1$
 			 button.setText(description);
@@ -60,5 +60,4 @@ public class SelectDomainDialog extends Dialog {
 		super.configureShell(newShell);
 		newShell.setText("Build mode");
 	}	
-	
 }

@@ -1,6 +1,7 @@
 package sinbad2.domain.ui.view.domains;
 
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -27,6 +28,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.Domain;
+import sinbad2.domain.ui.handler.modify.ModifyDomainHandler;
 import sinbad2.domain.ui.view.domain.DomainView;
 import sinbad2.domain.ui.view.domain.DomainViewManager;
 import sinbad2.domain.ui.view.domains.provider.DomainDescriptionLabelProvider;
@@ -209,9 +211,12 @@ public class DomainsView extends ViewPart {
 			
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
-				//TODO
-				//ModifyDomainHandler modifyDomainHandler = new ModifyDomainHandler(_selectedDomain);
-				//modifyDomainHandler.execute(null);		
+				ModifyDomainHandler modifyDomainHandler = new ModifyDomainHandler(_selectedDomain);
+				try {
+					modifyDomainHandler.execute(null);
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}		
 			}
 		});
 	}

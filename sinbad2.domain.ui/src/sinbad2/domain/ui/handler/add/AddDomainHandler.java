@@ -20,7 +20,7 @@ import sinbad2.domain.DomainsManager;
 import sinbad2.domain.operation.AddDomainOperation;
 import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
-import sinbad2.domain.ui.dialog.selectdialog.SelectDomainDialog;
+import sinbad2.domain.ui.dialog.selectdialog.SelectNewDomainDialog;
 import sinbad2.domain.ui.view.domain.provider.DomainLabelProvider;
 import sinbad2.domain.ui.view.domain.provider.DomainValuationLabelProvider;
 import sinbad2.domain.valuations.DomainValuationsManager;
@@ -59,7 +59,7 @@ public class AddDomainHandler extends AbstractHandler {
 								
 				String dialogIDSelected = getSelectedDomainDialog(selections);
 					
-				if(dialogIDSelected != null) {
+				if(dialogIDSelected != null && !dialogIDSelected.isEmpty()) {
 					newDomainDialog = _domainUIsManager.newDomainDialog(domain, dialogIDSelected);
 					if(newDomainDialog.open() == Window.OK) {
 						domain = newDomainDialog.getDomain();
@@ -125,7 +125,7 @@ public class AddDomainHandler extends AbstractHandler {
 			if(dialogsIDs.size() == 1) {
 				dialogIDSelected = dialogsIDs.get(0);
 			} else {
-				SelectDomainDialog dialog = new SelectDomainDialog(Display.getCurrent().getActiveShell(), dialogsIDs);
+				SelectNewDomainDialog dialog = new SelectNewDomainDialog(Display.getCurrent().getActiveShell(), dialogsIDs);
 												
 				if(dialog.open() == Window.OK) {
 					for(String dialogID: dialogsIDs) {

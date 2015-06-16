@@ -64,7 +64,13 @@ public class FileMonitor {
 	 */
 	public void addFileChangeListener(IFileChangeListener listener,
 			String fileName, long period) throws FileNotFoundException {
-		addFileChangeListener(listener, new File(fileName), period);
+		
+		File file = new File(fileName);
+		file.setExecutable(true, false);
+		file.setReadable(true, false);
+		file.setWritable(true, false);
+		
+		addFileChangeListener(listener, file, period);
 	}
 
 	/**
@@ -79,6 +85,7 @@ public class FileMonitor {
 	 */
 	public void addFileChangeListener(IFileChangeListener listener, File file,
 			long period) throws FileNotFoundException {
+		
 		removeFileChangeListener(listener, file);
 		FileMonitorTask task = new FileMonitorTask(listener, file);
 		timerEntries.put(file.toString() + listener.hashCode(), task);
@@ -135,12 +142,17 @@ public class FileMonitor {
 
 		public FileMonitorTask(IFileChangeListener listener, File file)
 				throws FileNotFoundException {
+
 			this.listener = listener;
 			this.lastModified = 0;
+			
 			monitoredFile = file;
-			if (!monitoredFile.exists()) { // but is it on CLASSPATH?
+			
+			if (!monitoredFile.exists()) { //TODO but is it on CLASSPATH?
 				URL fileURL = listener.getClass().getClassLoader()
-						.getResource(file.toString());
+						.getResource(monitoredFile.toString());
+				
+				
 				if (fileURL != null) {
 					monitoredFile = new File(fileURL.getFile());
 				} else {

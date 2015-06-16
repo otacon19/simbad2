@@ -21,6 +21,7 @@
    <extension
          point="flintstones.domain.ui.modify.dialog">
       <dialog
+            description="Modify integer dialog"
             domain="flintstones.domain.numeric.integer"
             id="sinbad2.domain.numeric.integer.modify"
             implementation="sinbad2.domain.numeric.integer.ui.dialog.ModifyNumericIntegerDomainDialog">
