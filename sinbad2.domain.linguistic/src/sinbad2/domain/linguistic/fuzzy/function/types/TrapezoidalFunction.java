@@ -106,7 +106,6 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 	@Override
 	public NumericRealDomain getCenter() {
-		//TODO revisar
 		NumericRealDomain result = new NumericRealDomain();
 		result.setMinMax(_b, _c);
 		
@@ -115,7 +114,6 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 	@Override
 	public NumericRealDomain getCoverage() {
-		// TODO revisar
 		NumericRealDomain result = new NumericRealDomain();
 		result.setMinMax(_a, _d);
 		

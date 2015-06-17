@@ -53,7 +53,6 @@ public class NumericRealDomainChart extends DomainChart {
 		if(inRange) {
 			_chart.getXYPlot().getRangeAxis().setLabel("Domain");
 		} else {
-			//TODO intentar hacer esto menos chapucero
 			_chart.getXYPlot().getRangeAxis().setLabel(Double.toString(Double.NEGATIVE_INFINITY) + 
 					"                                         " + 
 					Double.toString(Double.POSITIVE_INFINITY));

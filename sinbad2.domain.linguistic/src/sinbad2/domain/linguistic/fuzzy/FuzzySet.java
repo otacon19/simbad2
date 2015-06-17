@@ -352,7 +352,7 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	public boolean isSymmetrical() {
-		//TODO revisar
+	
 		if(_labelSet.getCardinality() == 0) {
 			return false;
 		}
