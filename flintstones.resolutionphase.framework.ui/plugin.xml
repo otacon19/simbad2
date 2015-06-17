@@ -2,6 +2,17 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+         point="flintstones.resolutionphase.ui">
+      <ui
+            id="flintstones.resolutionphase.framework.ui"
+            name="%resolution.phase.ui.name"
+            resolution_phase="flintstones.resolutionphase.framework">
+         <perspective
+               id="flintstones.resolutionphase.framework.perspective">
+         </perspective>
+      </ui>
+   </extension>
+   <extension
          point="org.eclipse.ui.perspectives">
       <perspective
             class="sinbad2.resolutionphase.framework.ui.FrameworkPerspective"
@@ -76,17 +87,6 @@
       </perspectiveExtension>
    </extension>
    <extension
-         point="flintstones.resolutionphase.ui">
-      <ui
-            id="flintstones.resolutionphase.framework.ui"
-            name="%resolution.phase.ui.name"
-            resolution_phase="flintstones.resolutionphase.framework">
-         <perspective
-               id="flintstones.resolutionphase.framework.perspective">
-         </perspective>
-      </ui>
-   </extension>
-   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
@@ -97,6 +97,20 @@
                mnemonic="F">
          </menu>
       </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="sinbad2.resolutionphase.framework.ui.preferences.FrameworkPreferencesPage"
+            id="sinbad2.resolutionphase.framework.preferences.FrameworkPreferencesPage"
+            name="Framework">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="sinbad2.resolutionphase.framework.ui.preferences.PreferenceInitializer">
+      </initializer>
    </extension>
 
 </plugin>

@@ -1,6 +1,10 @@
 package sinbad2.element.ui.view.alternatives;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -10,7 +14,11 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.services.ISourceProviderService;
 
+import sinbad2.element.alternative.Alternative;
+import sinbad2.element.ui.handler.alternative.modify.ModifyAlternativeHandler;
+import sinbad2.element.ui.sourceprovider.ElementSourceProvider;
 import sinbad2.element.ui.view.alternatives.provider.AlternativeIdLabelProvider;
 import sinbad2.element.ui.view.alternatives.provider.AlternativesContentProvider;
 
@@ -51,7 +59,38 @@ public class AlternativesView extends ViewPart {
 	}
 	
 	private void hookDoubleClickListener() {
-		// TODO Auto-generated method stub
+		_tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			ISourceProviderService sourceProviderService = null;
+			ElementSourceProvider elementSourceProvider = null;
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				
+				if(elementSourceProvider == null) {
+					if(sourceProviderService == null) {
+						sourceProviderService = (ISourceProviderService) getSite()
+								.getService(ISourceProviderService.class);
+					}
+					elementSourceProvider = (ElementSourceProvider) sourceProviderService
+							.getSourceProvider(ElementSourceProvider.CAN_BE_MODIFIED_STATE);
+				}
+				
+				if(ElementSourceProvider.ENABLED.equals(elementSourceProvider
+						.getCurrentState().get(ElementSourceProvider.CAN_BE_MODIFIED_STATE))) {
+					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+					Alternative alternative = (Alternative) selection.getFirstElement();
+					
+					ModifyAlternativeHandler modifyAlternativeHandler = new ModifyAlternativeHandler(alternative);
+					try {
+						modifyAlternativeHandler.execute(null);
+					} catch (ExecutionException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		});
 		
 	}
 

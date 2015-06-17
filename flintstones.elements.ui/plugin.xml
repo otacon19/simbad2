@@ -314,6 +314,14 @@
       <handler
             class="sinbad2.element.ui.handler.expert.add.AddExpertHandler"
             commandId="flintstones.element.expert.add">
+         <enabledWhen>
+            <with
+                  variable="flintstones.element.ui.can.be.modified.state">
+               <equals
+                     value="ENABLED">
+               </equals>
+            </with>
+         </enabledWhen>
       </handler>
       <handler
             class="sinbad2.element.ui.handler.expert.modify.ModifyExpertHandler"
@@ -332,6 +340,12 @@
                <reference
                      definitionId="oneElementSelected">
                </reference>
+               <with
+                     variable="flintstones.element.ui.can.be.modified.state">
+                  <equals
+                        value="ENABLED">
+                  </equals>
+               </with>
             </and>
          </enabledWhen>
       </handler>
@@ -353,6 +367,12 @@
                <reference
                      definitionId="oneElementSelected">
                </reference>
+               <with
+                     variable="flintstones.element.ui.can.be.modified.state">
+                  <equals
+                        value="ENABLED">
+                  </equals>
+               </with>
             </and>
          </activeWhen>
       </handler>
@@ -376,12 +396,32 @@
                         definitionId="oneElementSelected">
                   </reference>
                </not>
+               <with
+                     variable="flintstones.ui.brothers.experts.selected.state">
+                  <equals
+                        value="ENABLED">
+                  </equals>
+               </with>
+               <with
+                     variable="flintstones.element.ui.can.be.modified.state">
+                  <equals
+                        value="ENABLED">
+                  </equals>
+               </with>
             </and>
          </activeWhen>
       </handler>
       <handler
             class="sinbad2.element.ui.handler.alternative.add.AddAlternativeHandler"
             commandId="flintstones.element.alternative.add">
+         <enabledWhen>
+            <with
+                  variable="flintstones.element.ui.can.be.modified.state">
+               <equals
+                     value="ENABLED">
+               </equals>
+            </with>
+         </enabledWhen>
       </handler>
       <handler
             class="sinbad2.element.ui.handler.alternative.modify.ModifyAlternativeHandler"
@@ -399,6 +439,12 @@
                <reference
                      definitionId="oneElementSelected">
                </reference>
+               <with
+                     variable="flintstones.element.ui.can.be.modified.state">
+                  <equals
+                        value="ENABLED">
+                  </equals>
+               </with>
             </and>
          </enabledWhen>
       </handler>
@@ -420,6 +466,12 @@
                <reference
                      definitionId="oneElementSelected">
                </reference>
+               <with
+                     variable="flintstones.element.ui.can.be.modified.state">
+                  <equals
+                        value="ENABLED">
+                  </equals>
+               </with>
             </and>
          </activeWhen>
       </handler>
@@ -443,12 +495,26 @@
                         definitionId="oneElementSelected">
                   </reference>
                </not>
+               <with
+                     variable="flintstones.element.ui.can.be.modified.state">
+                  <equals
+                        value="ENABLED">
+                  </equals>
+               </with>
             </and>
          </activeWhen>
       </handler>
       <handler
             class="sinbad2.element.ui.handler.criterion.add.AddCriterionHandler"
             commandId="flintstones.element.criterion.add">
+         <enabledWhen>
+            <with
+                  variable="flintstones.element.ui.can.be.modified.state">
+               <equals
+                     value="ENABLED">
+               </equals>
+            </with>
+         </enabledWhen>
       </handler>
       <handler
             class="sinbad2.element.ui.handler.criterion.modify.ModifyCriterionHandler"
@@ -466,6 +532,12 @@
                <reference
                      definitionId="oneElementSelected">
                </reference>
+               <with
+                     variable="flintstones.element.ui.can.be.modified.state">
+                  <equals
+                        value="ENABLED">
+                  </equals>
+               </with>
             </and>
          </enabledWhen>
       </handler>
@@ -487,6 +559,12 @@
                <reference
                      definitionId="oneElementSelected">
                </reference>
+               <with
+                     variable="flintstones.element.ui.can.be.modified.state">
+                  <equals
+                        value="ENABLED">
+                  </equals>
+               </with>
             </and>
          </activeWhen>
       </handler>
@@ -509,6 +587,18 @@
                   <reference
                         definitionId="oneElementSelected">
                   </reference></not>
+               <with
+                     variable="flintstones.element.ui.can.be.modified.state">
+                  <equals
+                        value="ENABLED">
+                  </equals>
+               </with>
+               <with
+                     variable="flintstones.ui.brothers.criteria.selected.state">
+                  <equals
+                        value="ENABLED">
+                  </equals>
+               </with>
             </and>
          </activeWhen>
       </handler>
@@ -611,6 +701,51 @@
             commandId="flintstones.element.criterion.remove"
             icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/delete_obj.gif">
       </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.services">
+      <sourceProvider
+            provider="sinbad2.element.ui.sourceprovider.ElementSourceProvider">
+         <variable
+               name="flintstones.element.ui.can.be.modified.state"
+               priorityLevel="workbench">
+         </variable>
+      </sourceProvider>
+      <sourceProvider
+            provider="sinbad2.element.ui.sourceprovider.criteria.BrothersCriteriaSelectedSourceProvider">
+         <variable
+               name="flintstones.ui.brothers.criteria.selected.state"
+               priorityLevel="workbench">
+         </variable>
+      </sourceProvider>
+      <sourceProvider
+            provider="sinbad2.element.ui.sourceprovider.experts.BrothersExpertsSelectedSourceProvider">
+         <variable
+               name="flintstones.ui.brothers.experts.selected.state"
+               priorityLevel="workbench">
+         </variable>
+      </sourceProvider>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="sinbad2.element.ui.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="sinbad2.resolutionphase.framework.preferences.FrameworkPreferencesPage"
+            class="sinbad2.element.ui.preferences.experts.ExpertsPreferencePage"
+            id="sinbad2.element.preferences.experts.ExpertsPreferencesPage"
+            name="Experts">
+      </page>
+      <page
+            category="sinbad2.resolutionphase.framework.preferences.FrameworkPreferencesPage"
+            class="sinbad2.element.ui.preferences.criteria.CriteriaPreferencePage"
+            id="sinbad2.element.preferences.criteria.CriteriaPreferencesPage"
+            name="Criteria">
+      </page>
    </extension>
 
 </plugin>

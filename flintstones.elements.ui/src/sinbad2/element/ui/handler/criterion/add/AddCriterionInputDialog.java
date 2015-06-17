@@ -10,6 +10,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import sinbad2.element.criterion.Criterion;
+import sinbad2.element.ui.Activator;
+import sinbad2.element.ui.preferences.PreferenceConstants;
 
 public class AddCriterionInputDialog extends InputDialog {
 	
@@ -26,11 +28,10 @@ public class AddCriterionInputDialog extends InputDialog {
 		
 		_validator = validator;
 		_parent = parent;
-		
-		//TODO cambiar esto con preferencias
-		
-		_isCost = true;
-		_isSubcriterion = false;
+		_isCost = !Activator.getDefault().getPreferenceStore().getBoolean(
+				PreferenceConstants.P_CRITERION_BENEFIT_AS_DEFAULT);
+		_isSubcriterion = Activator.getDefault().getPreferenceStore().getBoolean(
+				PreferenceConstants.P_CRITERION_MEMBER_AS_DEFAULT);
 	}
 	
 	@Override

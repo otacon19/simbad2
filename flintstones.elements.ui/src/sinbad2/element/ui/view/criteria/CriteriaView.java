@@ -67,7 +67,7 @@ public class CriteriaView extends ViewPart {
 		
 		addColumns();
 		hookContextMenu();
-		//hookFocusListener();
+		//TODO hookFocusListener();
 		//TODO hookSelectionChangedListener();
 		hookDoubleClickListener();
 		

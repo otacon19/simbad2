@@ -10,7 +10,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import sinbad2.element.expert.Expert;
+import sinbad2.element.ui.Activator;
 import sinbad2.element.ui.nls.Messages;
+import sinbad2.element.ui.preferences.PreferenceConstants;
 
 
 public class AddExpertInputDialog extends InputDialog {
@@ -26,9 +28,8 @@ public class AddExpertInputDialog extends InputDialog {
 
 		_validator = validator;
 		_parentOfNewExpert = parent;
-		
-		//TODO modificar esto
-		_isMember = true;
+		_isMember = Activator.getDefault().getPreferenceStore().
+				getBoolean(PreferenceConstants.P_EXPERT_MEMBER_AS_DEFAULT);
 	}
 	
 	@Override
