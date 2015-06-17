@@ -1,33 +1,47 @@
 package sinbad2.element.ui.view.experts;
 
+import java.util.List;
+
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextActivation;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.services.ISourceProviderService;
 
 import sinbad2.element.expert.Expert;
 import sinbad2.element.ui.draganddrop.DragListener;
 import sinbad2.element.ui.draganddrop.ExpertsDropListener;
 import sinbad2.element.ui.handler.expert.modify.ModifyExpertHandler;
+import sinbad2.element.ui.sourceprovider.experts.BrothersExpertsSelectedSourceProvider;
 import sinbad2.element.ui.view.experts.provider.ExpertIdLabelProvider;
 import sinbad2.element.ui.view.experts.provider.ExpertsContentProvider;
 
 public class ExpertsView extends ViewPart {
 	
 	public static final String ID = "flintstones.element.ui.view.experts"; //$NON-NLS-1$
+	public static final String CONTEXT_ID = "flintstones.element.ui.view.experts.experts_view";
+	
+	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 	
 	private TreeViewer _treeViewer;
 	
@@ -81,8 +95,8 @@ public class ExpertsView extends ViewPart {
 		
 		addColumns();
 		hookContextMenu();
-		//hookFocusListener();
-		//TODO hookSelectionChangeListener();
+		hookFocusListener();
+		hookSelectionChangeListener();
 		hookDoubleClickListener();
 
 		_treeViewer.setInput(_provider.getInput());
@@ -106,6 +120,60 @@ public class ExpertsView extends ViewPart {
 		_treeViewer.getTree().setMenu(menu);
 		getSite().registerContextMenu(menuManager, _treeViewer);
 		
+	}
+	
+	private void hookFocusListener() {
+		_treeViewer.getControl().addFocusListener(new FocusListener() {
+			
+			private IContextActivation activation = null;
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				_contextService.deactivateContext(activation);
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				activation = _contextService.activateContext(CONTEXT_ID);
+			}
+		});
+	}
+	
+	private void hookSelectionChangeListener() {
+		_treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			private ISourceProviderService sourceProviderService = (ISourceProviderService) getSite().getService(ISourceProviderService.class);
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				BrothersExpertsSelectedSourceProvider sourceProvider = (BrothersExpertsSelectedSourceProvider) sourceProviderService.
+						getSourceProvider(BrothersExpertsSelectedSourceProvider.BROTHERS_EXPERTS_SELECTED);
+				
+				boolean oldState = BrothersExpertsSelectedSourceProvider.ENABLED.equals(sourceProvider.getCurrentState().get(
+						BrothersExpertsSelectedSourceProvider.BROTHERS_EXPERTS_SELECTED));
+				boolean newState = true;
+				
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				
+				@SuppressWarnings("unchecked")
+				List<Expert> experts = selection.toList();
+				
+				if(experts.size() > 1) {
+					Expert parent = experts.get(0).getParent();
+					for(Expert expert: experts) {
+						if(expert.getParent() != parent) {
+							newState = false;
+						}
+					}
+				}
+				
+				if(newState != oldState) {
+					sourceProvider.toogleState();
+				}
+				
+			}
+				
+		});
 	}
 	
 	private void hookDoubleClickListener() {

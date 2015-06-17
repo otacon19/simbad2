@@ -62,7 +62,7 @@ public class ModifyCriterionHandler extends AbstractHandler {
 				doit = false;
 			}
 		} else {
-			doit = true;
+			doit = false;
 		}
 		
 		if(doit) {

@@ -14,7 +14,6 @@ public class TitleUpdater implements IWorkspaceListener {
 	private Workspace _workspace;
 	private String _defaultText;
 	private String _fileName;
-	
 	private Shell _shell;
 	private boolean _fileOpen;
 	private boolean _modifyState;

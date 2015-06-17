@@ -17,7 +17,7 @@ public class ModifyCriterionOperation extends UndoableOperation {
 	
 	private ProblemElementsSet _elementSet;
 	private Criterion _modifyCriterion;
-	private List<Criterion> _subcriteriaOrOthers;
+	private List<Criterion> _brothers;
 	private String _newId;
 	private String _oldId;
 	private boolean _newCost;
@@ -32,20 +32,22 @@ public class ModifyCriterionOperation extends UndoableOperation {
 		_newId = newId;
 		_newCost = newCost;
 		_oldId = _modifyCriterion.getId();
-		_oldCost = modifyCriterion.getCost();
-		
-		_subcriteriaOrOthers = null;
+		_oldCost = _modifyCriterion.getCost();
 		
 		Criterion parent = _modifyCriterion.getParent();
 		if(parent != null) {
-			_subcriteriaOrOthers = parent.getSubcriteria();
+			_brothers = parent.getSubcriteria();
 		} else {
-			_subcriteriaOrOthers = _elementSet.getCriteria();
+			_brothers = _elementSet.getCriteria();
 		}
 	}
 	
 	public ModifyCriterionOperation(String label, Criterion modifyCriterion, String newId, ProblemElementsSet elementSet) {
 		this(label, modifyCriterion, newId, modifyCriterion.getCost(), elementSet);
+	}
+	
+	public ModifyCriterionOperation(String label, Criterion modifyCriterion, Boolean newCost, ProblemElementsSet elementSet) {
+		this(label, modifyCriterion, modifyCriterion.getId(), newCost, elementSet);
 	}
 	
 	@Override
@@ -56,10 +58,12 @@ public class ModifyCriterionOperation extends UndoableOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
+		Criterion oldCriterion = (Criterion) _modifyCriterion.clone();
+
 		_elementSet.modifyCriterion(_modifyCriterion, _newId, _newCost);
 		
-		if(!_newId.equals(_oldId)) {
-			Collections.sort(_subcriteriaOrOthers);
+		if(!_newId.equals(oldCriterion.getId())) {
+			Collections.sort(_brothers);
 			
 		}
 		
@@ -72,7 +76,7 @@ public class ModifyCriterionOperation extends UndoableOperation {
 		_elementSet.modifyCriterion(_modifyCriterion, _oldId, _oldCost);
 		
 		if(!_oldId.equals(_newId)) {
-			Collections.sort(_subcriteriaOrOthers);
+			Collections.sort(_brothers);
 		}
 		
 		return Status.OK_STATUS;

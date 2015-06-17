@@ -54,8 +54,7 @@ public class IntegerInterval extends Normalized {
 	}
 	
 	@Override
-	public Normalized normalize() {
-		//TODO cambios hechos
+	public Normalized normalized() {
 		ValuationsManager valuationsManager = ValuationsManager.getInstance();
 		IntegerInterval result = (IntegerInterval) valuationsManager.copyValuation(ID);
 		
@@ -72,7 +71,7 @@ public class IntegerInterval extends Normalized {
 	}
 	
 	@Override
-	public Valuation negateValutation() {
+	public Normalized negateValutation() {
 		IntegerInterval result = (IntegerInterval) clone();
 		
 		long aux = Math.round(_domain.getMin()) + Math.round(_domain.getMax());
@@ -158,7 +157,6 @@ public class IntegerInterval extends Normalized {
 	}
 	
 	private Normalized normalizeInterval() {
-		//TODO función hecha por mi
 		IntegerInterval result = (IntegerInterval) clone();
 		
 		long min, max, intervalSize;

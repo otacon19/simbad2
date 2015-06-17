@@ -176,7 +176,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		RealInterval normalized;
 		double min, max;
 		
-		normalized = (RealInterval) interval.normalize();
+		normalized = (RealInterval) interval.normalized();
 		min = normalized.getMin();
 		max = normalized.getMax();
 		

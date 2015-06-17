@@ -28,8 +28,8 @@ public class RealValuation extends Normalized {
 	public void setValue(Double value) {
 		Validator.notNull(_domain);
 		
-		if(_domain.getInRange()) {
-			Validator.inRange(value, _domain.getMin(), _domain.getMax());
+		if(((NumericRealDomain)_domain).getInRange()) {
+			Validator.inRange(value, ((NumericRealDomain)_domain).getMin(), ((NumericRealDomain)_domain).getMax());
 			_value = value;
 		} else {
 			_value = value;
@@ -41,15 +41,15 @@ public class RealValuation extends Normalized {
 	}
 	
 	@Override
-	public Normalized normalize() {
+	public Normalized normalized() {
 		RealValuation result = (RealValuation) clone();
 		double min, max, intervalSize;
 		
-		min = _domain.getMin();
-		max = _domain.getMax();
+		min = ((NumericRealDomain)_domain).getMin();
+		max = ((NumericRealDomain)_domain).getMax();
 		intervalSize = max - min;
 		
-		result._domain.setMinMax(0d, 1d);
+		((NumericRealDomain) result._domain).setMinMax(0d, 1d);
 		result._value = (_value - min) / intervalSize;
 		
 		return result;
@@ -57,9 +57,9 @@ public class RealValuation extends Normalized {
 	}
 	
 	@Override
-	public Valuation negateValutation() {
+	public Normalized negateValutation() {
 		RealValuation result = (RealValuation) clone();
-		double aux = _domain.getMin() + _domain.getMax();
+		double aux = ((NumericRealDomain)_domain).getMin() + ((NumericRealDomain)_domain).getMax();
 		
 		result.setValue(aux - _value);
 		

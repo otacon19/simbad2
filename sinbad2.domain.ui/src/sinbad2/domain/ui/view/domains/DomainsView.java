@@ -13,6 +13,8 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -25,6 +27,8 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextActivation;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.Domain;
@@ -40,6 +44,10 @@ import sinbad2.domain.ui.view.domains.provider.DomainsContentProvider;
 public class DomainsView extends ViewPart {
 	
 	public static final String ID = "flintstones.domain.ui.view.domains";
+	public static final String CONTEXT_ID = "flintstones.domain.ui.view.domains.domains_view";
+	
+	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().
+			getService(IContextService.class);
 	
 	private String _perspectiveID;
 	
@@ -75,7 +83,7 @@ public class DomainsView extends ViewPart {
 		
 		addColumns();
 		hookContextMenu();
-		//TODO hookFocusListener();
+		hookFocusListener();
 		hookSelectionChangedListener();
 		hookDoubleClickListener();
 		
@@ -151,6 +159,25 @@ public class DomainsView extends ViewPart {
 		Menu menu = menuManager.createContextMenu(_tableViewer.getTable());
 		_tableViewer.getTable().setMenu(menu);
 		getSite().registerContextMenu(menuManager, _tableViewer);
+	}
+	
+	private void hookFocusListener() {
+		_tableViewer.getControl().addFocusListener(new FocusListener() {
+			
+			private IContextActivation activation = null;
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				_contextService.deactivateContext(activation);
+				
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				activation = _contextService.activateContext(CONTEXT_ID);
+				
+			}
+		});
 	}
 	
 	private void hookSelectionChangedListener() {

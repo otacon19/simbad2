@@ -19,8 +19,7 @@ public class IntegerValuation extends Normalized {
 	public static final String ID = "flintstones.valuation.integer";
 	
 	public long _value;
-	
-	//TODO cambio
+
 	protected NumericIntegerDomain _domain;
 	
 	public IntegerValuation() {
@@ -45,8 +44,7 @@ public class IntegerValuation extends Normalized {
 	}
 	
 	@Override
-	public Normalized normalize() {
-		//TODO cambios
+	public Normalized normalized() {
 		ValuationsManager valuationsManager = ValuationsManager.getInstance();
 		IntegerValuation result = (IntegerValuation) valuationsManager.copyValuation(IntegerValuation.ID);
 		
@@ -143,7 +141,6 @@ public class IntegerValuation extends Normalized {
 		_value = Long.parseLong(reader.getStartElementAttribute("value"));	
 	}
 	
-	//TODO hecha por mi
 	private Normalized normalizeRange() {
 		IntegerValuation result = (IntegerValuation) clone();
 		long min, max, intervalSize;

@@ -30,6 +30,19 @@
       </view>
    </extension>
    <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="flintstones.domain.ui.view.domains.domains_view"
+            name="Domains context"
+            parentId="flintstones.core.ui">
+      </context>
+      <context
+            id="flintstones.domain.ui.view.domain.domain_view"
+            name="Domain context"
+            parentId="flintstones.core.ui">
+      </context>
+   </extension>
+   <extension
          point="org.eclipse.ui.commands">
       <category
             id="flintstones.domains.category"
@@ -210,6 +223,27 @@
             </command>
          </menu>
       </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="flintstones.domain.add"
+            contextId="flintstones.domain.ui.view.domains.domains_view"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+A">
+      </key>
+      <key
+            commandId="flintstones.domain.modify"
+            contextId="flintstones.domain.ui.view.domains.domains_view"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+R">
+      </key>
+      <key
+            commandId="flintstones.domain.remove"
+            contextId="flintstones.domain.ui.view.domains.domains_view"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="DEL">
+      </key>
    </extension>
 
 </plugin>

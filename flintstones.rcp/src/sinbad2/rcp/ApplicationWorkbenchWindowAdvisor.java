@@ -12,6 +12,7 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.contexts.IContextService;
 
 import sinbad2.resolutionphase.ResolutionPhase;
 import sinbad2.resolutionphase.ui.ResolutionPhaseUI;
@@ -65,9 +66,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		MultiplePerspectives perspectiveSwitcher = new MultiplePerspectives(getWindowConfigurer().getWindow(), multiplePerspectives, phasesUI);
 		perspectiveSwitcher.fillSwitcherPerspectives();
 		
-		//TODO context
-		//IContextService contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
-		//contextService.activateContext("flintstones.core.ui");
+		IContextService contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
+		contextService.activateContext("flintstones.core.ui");
 	}
 
 	private CBanner findTopBanner(Shell shell) {

@@ -52,8 +52,7 @@ public class RealInterval extends Normalized {
 	}
 	
 	@Override
-	public Normalized normalize() {
-		//TODO cambios hechos
+	public Normalized normalized() {
 		RealInterval result = (RealInterval) clone();
 		double min, max, intervalSize;
 		
@@ -61,8 +60,8 @@ public class RealInterval extends Normalized {
 		max = _domain.getMax();
 		intervalSize = max - min;
 		
-		max = (_max - min) / intervalSize;
-		min = (_min - min) / intervalSize;
+		max = ((double) (_max - min)) / intervalSize;
+		min = ((double) (_min - min)) / intervalSize;
 		
 		result._domain.setMinMax(0d, 1d);
 		result.setMinMax(min, max);
@@ -71,7 +70,7 @@ public class RealInterval extends Normalized {
 	}
 	
 	@Override
-	public Valuation negateValutation() {
+	public Normalized negateValutation() {
 		RealInterval result = (RealInterval) clone();
 		
 		double aux = _domain.getMin() + _domain.getMax();
