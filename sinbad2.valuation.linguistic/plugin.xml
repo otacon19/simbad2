@@ -16,7 +16,7 @@
       <valuation
             domain="flintstones.domain.linguistic.unbalanced"
             id="flintstones.valuation.linguistic.unbalanced"
-            name="Linguistic unbalanced">
+            name="Unbalanced linguistic">
          <type>
             <normalized
                   implementation="sinbad2.valuation.linguistic.LinguisticValuation">

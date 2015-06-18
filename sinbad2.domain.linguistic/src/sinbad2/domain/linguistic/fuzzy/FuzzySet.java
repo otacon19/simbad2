@@ -260,6 +260,7 @@ public class FuzzySet extends Linguistic {
 		return copy;
 	}
 	
+	
 	public double chi() {
 		double result, valuesSum, sum;
 		int pos;

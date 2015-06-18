@@ -9,5 +9,14 @@
             icon="icons/Letter-L-icon_16.png">
       </domain_ui>
    </extension>
+   <extension
+         point="flintstones.domain.ui.new.dialog">
+      <dialog
+            description="Create unbalanced domain"
+            domain="flintstones.domain.linguistic.unbalanced"
+            id="sinbad2.domain.linguistic.new"
+            implementation="sinbad2.domain.linguistic.unbalanced.ui.dialog.LHDialog">
+      </dialog>
+   </extension>
 
 </plugin>

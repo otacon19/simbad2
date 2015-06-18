@@ -6,8 +6,7 @@ import jfreechart.LinguisticDomainChart;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.fieldassist.FieldDecoration;
-import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -26,10 +25,13 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.unbalanced.Unbalanced;
+import sinbad2.domain.linguistic.unbalanced.ui.dialog.subdialog.SemanticDialog;
 import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
 
 public class LHDialog extends NewDomainDialog {
+	
 	private Composite _container;
 	private FuzzySet _specificDomain;
 	private Label _previewLabel;
@@ -65,7 +67,7 @@ public class LHDialog extends NewDomainDialog {
 	@Override
 	public void setDomain(Domain domain) {
 		super.setDomain(domain);
-		_specificDomain = (FuzzySet) _domain;
+		_specificDomain = (Unbalanced) _domain;
 	}
 
 	@Override
@@ -88,7 +90,7 @@ public class LHDialog extends NewDomainDialog {
 		genericDomainComposite.setLayout(new GridLayout(2, false));
 
 		Label lhInitialGranularityLabel = new Label(genericDomainComposite, SWT.NULL);
-		lhInitialGranularityLabel.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.BOLD));
+		lhInitialGranularityLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.NONE));
 		lhInitialGranularityLabel.setText("Initial granularity of LH");
 		lhInitialGranularityLabel.setLayoutData(new GridData(SWT.LEFT,
 				SWT.CENTER, false, false, 1, 1));
@@ -115,7 +117,7 @@ public class LHDialog extends NewDomainDialog {
 		labelsComposite.setLayout(new GridLayout(4, false));
 
 		Label numberOfLabelsLabel = new Label(labelsComposite, SWT.NULL);
-		numberOfLabelsLabel.setFont(SWTResourceManager.getFont("Cantarell", 8,SWT.BOLD));
+		numberOfLabelsLabel.setFont(SWTResourceManager.getFont("Cantarell", 8,SWT.NONE));
 		numberOfLabelsLabel.setText("Number of labels of unbalancedScale");
 		numberOfLabelsLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,false, false, 3, 1));
 
@@ -130,7 +132,7 @@ public class LHDialog extends NewDomainDialog {
 		_numberOfLabels.setSelection(_cardinality);
 
 		Label slLabel = new Label(labelsComposite, SWT.NULL);
-		slLabel.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.BOLD));
+		slLabel.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE));
 		slLabel.setText("Left side SL");
 		slLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 
@@ -144,7 +146,7 @@ public class LHDialog extends NewDomainDialog {
 		_slSpinner.setSelection(_sl);
 
 		Label slDensity = new Label(labelsComposite, SWT.NULL);
-		slDensity.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.BOLD));
+		slDensity.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE));
 		slDensity.setText("Density SL");
 		slDensity.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 
@@ -157,7 +159,7 @@ public class LHDialog extends NewDomainDialog {
 		_slDensityCombo.setEnabled(false);
 
 		Label srLabel = new Label(labelsComposite, SWT.NULL);
-		srLabel.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.BOLD));
+		srLabel.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE));
 		srLabel.setText("Right side SR");
 		srLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 
@@ -171,7 +173,7 @@ public class LHDialog extends NewDomainDialog {
 		_srSpinner.setSelection(_sr);
 
 		Label srDensity = new Label(labelsComposite, SWT.NULL);
-		srDensity.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.BOLD));
+		srDensity.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE));
 		srDensity.setText("Density SR");
 		srDensity.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 
@@ -237,15 +239,15 @@ public class LHDialog extends NewDomainDialog {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				/*SemanticDialog dialog = new SemanticDialog(_container.getShell(), _labels);
-				if (dialog.open() == SemanticDialog.SAVE) {
+				SemanticDialog dialog = new SemanticDialog(_labels);
+				if (dialog.open() == SemanticDialog.OK) {
 					List<String> auxLabels = dialog.getValues();
 					for (int i = 0; i < auxLabels.size(); i++) {
 						_labels[i] = auxLabels.get(i);
 					}
 					
 					modifyDomainSemantic();
-				}*/
+				}
 
 			}
 		});
@@ -512,10 +514,8 @@ public class LHDialog extends NewDomainDialog {
 			initialDomain = 7;
 		}
 
-		/*_specificDomain = _domainFactory.buildUnbalancedDomain(_labels, _sr, _sl,
-				_slDensityCombo.getSelectionIndex(),
-				_srDensityCombo.getSelectionIndex(), initialDomain);
-		_chart.setDomain(_specificDomain);*/
+		//_specificDomain = _domain.createUnbalancedDomain(_labels, _sr, _sl,_slDensityCombo.getSelectionIndex(),_srDensityCombo.getSelectionIndex(), initialDomain);
+		_chart.setDomain(_specificDomain);
 	}
 
 	private boolean direct(int value) {

@@ -1,9 +1,13 @@
 package sinbad2.domain.linguistic.unbalanced;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 
 public class Unbalanced extends FuzzySet {
 	
@@ -159,6 +163,108 @@ public class Unbalanced extends FuzzySet {
 		return loadStringLabels(result);
 	}
 	
+	public Unbalanced createUnbalancedDomain(String[] labels, int sr, int sl, int sldensity, int srdensity, int initialDomain) {
+		
+		Validator.notNull(labels);
+		Validator.notEmpty(labels);
+		
+		if(Validator.isNegative(sr)) {
+			throw new IllegalArgumentException("Invalid sr");
+		}
+		
+		if(Validator.isNegative(sl)) {
+			throw new IllegalArgumentException("Invalid sl");
+		}
+		
+		if(!Validator.isSameElement(sl + sr + 1, labels.length)) {
+			throw new IllegalArgumentException("Invalid cardinality");
+		}
+		
+		if((labels.length % 2) == 0) {
+			throw new IllegalArgumentException("Pair cardinality");
+		}
+		
+		if(!Validator.inRange(sldensity, 0, 1)) {
+			throw new IllegalArgumentException("Invalid sl density");
+		}
+		
+		if(!Validator.inRange(srdensity, 0, 1)) {
+			throw new IllegalArgumentException("Invalid sr density");
+		}
+		
+		if((initialDomain % 2) == 0) {
+			throw new IllegalArgumentException("Pair initial domain");
+		}
+		
+		if(initialDomain < 3) {
+			throw new IllegalArgumentException("Invalid initial domain");
+		}
+		
+		int aux = (initialDomain - 1) / 2;
+		if((aux > sl) || (aux > sr)) {
+			throw new IllegalArgumentException("Invalid initial domain");
+		}
+		
+		Unbalanced result = new Unbalanced(labels.length);
+		LabelLinguisticDomain leftCenterLabel, rightCenterLabel, centerLabel;
+		
+		result.setSl(sl);
+		result.setSr(sr);
+		result.setSlDensity(sldensity);
+		result.setSrDensity(srdensity);
+		
+		List<Integer> lh = new LinkedList<Integer>();
+		int lab_t, lab_tl, sideCardinality  = ((initialDomain - 1) / 2);
+		boolean directly = false;
+		
+		lh.add(initialDomain);
+		
+		aux = sideCardinality;
+		while(aux < sl) {
+			aux *= 2;
+			lh.add((aux * 2) + 1);
+		}
+		
+		if(aux == sl) {
+			directly = true;
+		}
+		
+		if(directly) {
+			int leftCardinality = (sl * 2) + 1;
+			String leftLabels[] = new String[leftCardinality];
+			
+			for(int i = 0; i < leftCardinality; ++i) {
+				if(i < sl) {
+					leftLabels[i] = labels[i];
+				} else {
+					leftLabels[i] = "dirty label" + i;
+				}
+			}
+			
+			FuzzySet left = createTrapezoidalFunction(leftLabels);
+			for(int i = 0; i < sl; ++i) {
+				result.setLabelInDomain(i, leftCardinality, i);
+				result.addLabel(left.getLabelSet().getLabel(i));
+			}
+			
+			result.setLabelInDomain(sl, leftCardinality, sl);
+			leftCenterLabel = left.getLabelSet().getLabel(sl);
+		} else {
+			LabelLinguisticDomain leftBrid, rightBrid, brid;
+			lab_t = aux - sl;
+			lab_tl = sl - lab_t;
+			int sleCardinality, slcCardinality;
+			String sleLabels[], slcLabels[];
+			FuzzySet sleFuzzySet, slcFuzzySet;
+		}
+		
+		
+		return result;
+
+		
+	}
+
+
 	private String loadStringLh(String result) {
 		StringBuilder lh = new StringBuilder("");
 		
