@@ -51,7 +51,6 @@ public class RealInterval extends Normalized {
 		_max = max;
 	}
 	
-	@Override
 	public Normalized normalized() {
 		RealInterval result = (RealInterval) clone();
 		double min, max, intervalSize;

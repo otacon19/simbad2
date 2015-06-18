@@ -40,7 +40,6 @@ public abstract class Normalized extends Valuation {
 	public Object clone() {
 		return (Normalized) super.clone();
 	}
-	
-	public abstract Normalized normalized();
+
 
 }

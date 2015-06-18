@@ -40,7 +40,6 @@ public class RealValuation extends Normalized {
 		return _value;
 	}
 	
-	@Override
 	public Normalized normalized() {
 		RealValuation result = (RealValuation) clone();
 		double min, max, intervalSize;

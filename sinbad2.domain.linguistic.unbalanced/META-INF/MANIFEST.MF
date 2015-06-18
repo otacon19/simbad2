@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Ui
-Bundle-SymbolicName: sinbad2.domain.linguistic.fuzzy.ui;singleton:=true
+Bundle-Name: Unbalanced
+Bundle-SymbolicName: sinbad2.domain.linguistic.unbalanced;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: sinbad2.domain.ui;bundle-version="1.0.0";visibility:=reexport,
+Require-Bundle: sinbad2.domain,
  sinbad2.domain.linguistic.fuzzy;bundle-version="1.0.0";visibility:=reexport
-Export-Package: jfreechart
+Export-Package: sinbad2.domain.linguistic.unbalanced

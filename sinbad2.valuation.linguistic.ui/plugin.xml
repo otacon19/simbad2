@@ -15,6 +15,15 @@
                dialog="sinbad2.domain.linguistic.modify">
          </modify_domain_dialog>
       </valuation_ui>
+      <valuation_ui
+            valuation="flintstones.valuation.linguistic.unbalanced">
+         <new_domain_dialog
+               dialog="sinbad2.domain.linguistic.newauto">
+         </new_domain_dialog>
+         <modify_domain_dialog
+               dialog="sinbad2.domain.linguistic.modify">
+         </modify_domain_dialog>
+      </valuation_ui>
    </extension>
 
 </plugin>

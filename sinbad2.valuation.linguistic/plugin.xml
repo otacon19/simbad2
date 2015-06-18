@@ -13,6 +13,16 @@
             </normalized>
          </type>
       </valuation>
+      <valuation
+            domain="flintstones.domain.linguistic.unbalanced"
+            id="flintstones.valuation.linguistic.unbalanced"
+            name="Linguistic unbalanced">
+         <type>
+            <normalized
+                  implementation="sinbad2.valuation.linguistic.LinguisticValuation">
+            </normalized>
+         </type>
+      </valuation>
    </extension>
 
 </plugin>

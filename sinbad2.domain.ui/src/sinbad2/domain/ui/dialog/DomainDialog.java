@@ -9,6 +9,7 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
@@ -36,6 +37,15 @@ public class DomainDialog extends Dialog {
 	protected ControlDecoration createNotificationDecorator(Text text) {
 		ControlDecoration controlDecoration = new ControlDecoration(text, SWT.LEFT | SWT.TOP);
 		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+		controlDecoration.setImage(fieldDecoration.getImage());
+		validate(controlDecoration, "");
+		
+		return controlDecoration;
+	}
+	
+	protected ControlDecoration createNotificationDecorator(Button button) {
+		ControlDecoration controlDecoration = new ControlDecoration(button, SWT.LEFT | SWT.TOP);
+		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_WARNING);
 		controlDecoration.setImage(fieldDecoration.getImage());
 		validate(controlDecoration, "");
 		

@@ -26,8 +26,8 @@ public class FuzzySet extends Linguistic {
 	
 	public static final String ID = "flintstones.domain.linguistic";
 	
-	private LabelSetLinguisticDomain _labelSet;
-	private List<Double> _values;
+	protected LabelSetLinguisticDomain _labelSet;
+	protected List<Double> _values;
 	
 	//TODO unbalancedinfo
 	

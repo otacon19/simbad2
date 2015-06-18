@@ -43,7 +43,6 @@ public class IntegerValuation extends Normalized {
 		return _value;
 	}
 	
-	@Override
 	public Normalized normalized() {
 		ValuationsManager valuationsManager = ValuationsManager.getInstance();
 		IntegerValuation result = (IntegerValuation) valuationsManager.copyValuation(IntegerValuation.ID);

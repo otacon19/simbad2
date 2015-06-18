@@ -53,7 +53,6 @@ public class IntegerInterval extends Normalized {
 		_max = max;
 	}
 	
-	@Override
 	public Normalized normalized() {
 		ValuationsManager valuationsManager = ValuationsManager.getInstance();
 		IntegerInterval result = (IntegerInterval) valuationsManager.copyValuation(ID);

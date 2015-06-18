@@ -10,9 +10,10 @@ import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.resolutionphase.io.XMLRead;
+import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 
-public class LinguisticValuation extends Valuation {
+public class LinguisticValuation extends Normalized {
 	
 	public static final String ID = "flintstones.valuation.linguistic";
 	
@@ -139,5 +140,4 @@ public class LinguisticValuation extends Valuation {
 		// TODO Auto-generated method stub
 		
 	}
-
 }
