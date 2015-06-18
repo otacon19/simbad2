@@ -6,7 +6,6 @@ import jfreechart.LinguisticDomainChart;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.fieldassist.ControlDecoration;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -58,8 +57,7 @@ public class LHDialog extends NewDomainDialog {
 	private Combo _slDensityCombo;
 	private String[] _labels;
 	private Button _setSemanticButton;
-	private Button _okButton;
-
+	
 	public LHDialog() {
 		super();
 	}
@@ -227,8 +225,7 @@ public class LHDialog extends NewDomainDialog {
 	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		_okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
-		_okButton.setEnabled(false);
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		_semanticButtonControlDecoration.show();
 		_semanticButtonControlDecoration.show();
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
@@ -514,7 +511,7 @@ public class LHDialog extends NewDomainDialog {
 			initialDomain = 7;
 		}
 
-		//_specificDomain = _domain.createUnbalancedDomain(_labels, _sr, _sl,_slDensityCombo.getSelectionIndex(),_srDensityCombo.getSelectionIndex(), initialDomain);
+		_specificDomain = ((Unbalanced)_domain).createUnbalancedDomain(_labels, _sr, _sl,_slDensityCombo.getSelectionIndex(),_srDensityCombo.getSelectionIndex(), initialDomain);
 		_chart.setDomain(_specificDomain);
 	}
 

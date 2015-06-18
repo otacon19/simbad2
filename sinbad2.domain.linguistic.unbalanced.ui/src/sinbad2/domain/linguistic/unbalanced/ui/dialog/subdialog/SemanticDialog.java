@@ -75,7 +75,7 @@ public class SemanticDialog extends NewDomainDialog {
 			fieldLabel.setText("Label" + " " + (i + 1)); //$NON-NLS-1$
 
 			value = new Text(labelsComposite, SWT.BORDER);
-			gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+			gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
 			gridData.widthHint = 105;
 			value.setLayoutData(gridData);
 			value.setText(_values.get(i));
