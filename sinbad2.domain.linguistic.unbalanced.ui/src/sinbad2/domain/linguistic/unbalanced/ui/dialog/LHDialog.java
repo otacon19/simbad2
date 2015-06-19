@@ -510,7 +510,8 @@ public class LHDialog extends NewDomainDialog {
 		} else {
 			initialDomain = 7;
 		}
-
+		
+		
 		_specificDomain = ((Unbalanced)_domain).createUnbalancedDomain(_labels, _sr, _sl,_slDensityCombo.getSelectionIndex(),_srDensityCombo.getSelectionIndex(), initialDomain);
 		_chart.setDomain(_specificDomain);
 	}

@@ -1,10 +1,14 @@
 package sinbad2.domain.linguistic.fuzzy.label;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
+import sinbad2.resolutionphase.io.XMLRead;
 
 public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguisticDomain> {
 	
@@ -14,7 +18,6 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 	public LabelLinguisticDomain(){}
 	
 	public LabelLinguisticDomain(String name, IMembershipFunction semantic) {
-		
 		Validator.notEmpty(name);
 		Validator.notNull(semantic);
 		
@@ -26,8 +29,17 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 		return _name;
 	}
 	
+	public void setName(String name) {
+		_name = name;
+	}
+	
+	
 	public IMembershipFunction getSemantic() {
 		return _semantic;
+	}
+	
+	public void setSemantic(IMembershipFunction semantic) {
+		_semantic = semantic;
 	}
 	
 	@Override
@@ -54,6 +66,20 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 		
 		return eb.isEquals();
 		
+	}
+	
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeStartElement("label");
+		writer.writeAttribute("name", _name);
+		writer.writeEndElement();
+		writer.writeStartElement("semantic");
+		_semantic.save(writer);
+		writer.writeEndElement();
+	}
+	
+	public void read(XMLRead reader) throws XMLStreamException {
+		_name = reader.getStartElementAttribute("name");
+		_semantic.read(reader);
 	}
 	
 	@Override

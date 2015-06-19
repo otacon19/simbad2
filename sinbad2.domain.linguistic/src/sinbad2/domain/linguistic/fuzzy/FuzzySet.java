@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.events.XMLEvent;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -28,8 +29,6 @@ public class FuzzySet extends Linguistic {
 	
 	protected LabelSetLinguisticDomain _labelSet;
 	protected List<Double> _values;
-	
-	//TODO unbalancedinfo
 	
 	public FuzzySet() {
 		super();
@@ -481,12 +480,42 @@ public class FuzzySet extends Linguistic {
 	
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		// TODO Auto-generated method stub
+		
+		writer.writeStartElement("values");
+		for (int i = 0; i < _values.size(); ++i) {
+			writer.writeStartElement("value"); //$NON-NLS-1$
+			writer.writeAttribute("id", Double.toString(_values.get(i))); //$NON-NLS-1$
+			writer.writeEndElement();
+		}
+		writer.writeEndElement();
+		
+		writer.writeStartElement("labelSet");
+		_labelSet.save(writer);
+		writer.writeEndElement();
+		
 	}
 
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {
-		// TODO Auto-generated method stub
+		reader.goToStartElement("values"); //$NON-NLS-1$
+
+		XMLEvent event;
+		String id;
+		Double value = null;
+		boolean end = false;
+		while (reader.hasNext() && !end) {
+			event = reader.next();
+
+			if (event.isStartElement()) {
+				if ("value".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
+					id = reader.getStartElementAttribute("id"); //$NON-NLS-1$
+					value = new Double(id);
+					_values.add(value);
+				} else {
+					_labelSet.read(reader);
+				}
+			}
+		}
 		
 	}
 	

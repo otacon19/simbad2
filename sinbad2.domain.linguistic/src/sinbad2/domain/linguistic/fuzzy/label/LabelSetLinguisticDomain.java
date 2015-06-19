@@ -3,10 +3,15 @@ package sinbad2.domain.linguistic.fuzzy.label;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.events.XMLEvent;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
+import sinbad2.resolutionphase.io.XMLRead;
 
 public class LabelSetLinguisticDomain implements Cloneable {
 
@@ -121,6 +126,48 @@ public class LabelSetLinguisticDomain implements Cloneable {
 	
 	public int getPos(LabelLinguisticDomain label) {
 		return _labels.indexOf(label);
+	}
+	
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeStartElement("labels");
+		
+		for(LabelLinguisticDomain label: _labels) {
+			writer.writeStartElement(label.getName());
+			writer.writeAttribute("name", label.getName());
+			label.save(writer);
+			writer.writeEndElement();
+		}
+		writer.writeEndElement();
+		
+	}
+	
+	public void read(XMLRead reader) throws XMLStreamException {
+		XMLEvent event;
+		LabelLinguisticDomain label = new LabelLinguisticDomain();
+		String name = null, endtag = null, localPart = null;
+		boolean end = false;
+
+		while (reader.hasNext() && !end) {
+			event = reader.next();
+
+			if (event.isStartElement()) {
+				localPart = reader.getStartElementLocalPart();
+				name = reader.getStartElementAttribute("name"); //$NON-NLS-1$
+				try {
+					label.setName(name);
+					label.read(reader);
+				} catch (Exception e) {
+					throw new XMLStreamException();
+				}
+			} else if (event.isEndElement()) {
+				endtag = reader.getEndElementLocalPart();
+				if (endtag.equals(localPart)) {
+					addLabel(label);
+				} else if (endtag.equals("labels")) { //$NON-NLS-1$
+					end = true;
+				}
+			}
+		}
 	}
 	
 	@Override

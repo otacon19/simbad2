@@ -1,11 +1,15 @@
 package sinbad2.domain.linguistic.fuzzy.function.types;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
+import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.real.interval.RealInterval;
 
 public class TrapezoidalFunction implements IMembershipFunction {
@@ -272,6 +276,24 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		result = Math.max(values[0], Math.max(values[1], Math.max(values[2], Math.max(values[3], values[4]))));
 		
 		return result;
+	}
+	
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeStartElement("trapezoidal");
+		writer.writeAttribute("a",Double.toString(_a));
+		writer.writeAttribute("b",Double.toString(_b));
+		writer.writeAttribute("c",Double.toString(_c));
+		writer.writeAttribute("d",Double.toString(_d));
+		writer.writeEndElement();
+	}
+	
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {
+		_a = Double.parseDouble(reader.getStartElementAttribute("a"));
+		_b = Double.parseDouble(reader.getStartElementAttribute("b"));
+		_c = Double.parseDouble(reader.getStartElementAttribute("c"));
+		_d = Double.parseDouble(reader.getStartElementAttribute("d"));
 	}
 	
 	@Override

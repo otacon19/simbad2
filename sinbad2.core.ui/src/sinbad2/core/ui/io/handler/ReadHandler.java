@@ -39,19 +39,17 @@ public class ReadHandler extends AbstractHandler {
 				} catch(ExecutionException e) {
 					String cause = e.getMessage();
 					String description = null;
+					System.out.println("comprobar");
 					
 					if(IOException.class.getSimpleName().equals(cause)) {
 						description = "File open fail. Check the file and folder permissions";
-					} else if(WorkspaceContentPersistenceException.class.getSimpleName()
-							.equals(cause)) {
+					} else if(WorkspaceContentPersistenceException.class.getSimpleName().equals(cause)) {
 						description = "Invalid Flintstones file";
 					} else {
 						description = "File open fail";
 					}
 					
-					MessageDialog.openError(PlatformUI.getWorkbench().
-							getActiveWorkbenchWindow().getShell(), 
-							"File open fail", description);
+					MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "File open fail", description);
 				}
 			} catch (IllegalArgumentException iae) {
 				MessageDialog.openError(shell, "Invalid file name", "File name is not valid");
