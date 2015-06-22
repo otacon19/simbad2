@@ -39,7 +39,6 @@ public class ReadHandler extends AbstractHandler {
 				} catch(ExecutionException e) {
 					String cause = e.getMessage();
 					String description = null;
-					System.out.println("comprobar");
 					
 					if(IOException.class.getSimpleName().equals(cause)) {
 						description = "File open fail. Check the file and folder permissions";

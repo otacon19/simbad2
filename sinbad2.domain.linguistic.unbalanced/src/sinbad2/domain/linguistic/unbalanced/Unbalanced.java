@@ -563,7 +563,7 @@ public class Unbalanced extends FuzzySet {
 		
 		unbalancedInfo.setLh(lhArray);
 		
-		_labelSet = unbalancedInfo.getLabelSet();
+		//_labelSet = unbalancedInfo.getLabelSet();
 		
 		return unbalancedInfo;
 		

@@ -146,10 +146,11 @@ public class LabelSetLinguisticDomain implements Cloneable {
 		LabelLinguisticDomain label = new LabelLinguisticDomain();
 		String name = null, endtag = null, localPart = null;
 		boolean end = false;
+		
+		reader.goToStartElement("labels");
 
 		while (reader.hasNext() && !end) {
 			event = reader.next();
-
 			if (event.isStartElement()) {
 				localPart = reader.getStartElementLocalPart();
 				name = reader.getStartElementAttribute("name"); //$NON-NLS-1$

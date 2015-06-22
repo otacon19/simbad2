@@ -27,8 +27,8 @@ public class FuzzySet extends Linguistic {
 	
 	public static final String ID = "flintstones.domain.linguistic";
 	
-	protected LabelSetLinguisticDomain _labelSet;
-	protected List<Double> _values;
+	private LabelSetLinguisticDomain _labelSet;
+	private List<Double> _values;
 	
 	public FuzzySet() {
 		super();
@@ -230,13 +230,12 @@ public class FuzzySet extends Linguistic {
 		LabelLinguisticDomain currentLabel;
 		IMembershipFunction semantic;
 		
-		FuzzySet copy = this;
-		copy.clearFuzzySet();
+		clearFuzzySet();
 		
 		if(labels.length == 1) {
 			semantic = new TrapezoidalFunction(new double[] {0, 0, 1, 1});
 			currentLabel = new LabelLinguisticDomain(labels[0], semantic);
-			copy.addLabel(currentLabel);
+			addLabel(currentLabel);
 		} else {
 			int numLabels = labels.length;
 			double lower, central, upper, increment = 1d / (numLabels  - 1), factor = 1e5;
@@ -252,11 +251,11 @@ public class FuzzySet extends Linguistic {
 				
 				semantic = new TrapezoidalFunction(new double[] {lower, central, upper});
 				currentLabel = new LabelLinguisticDomain(labels[i], semantic);
-				copy.addLabel(currentLabel);
+				addLabel(currentLabel);
 			}
 		}
 		
-		return copy;
+		return this;
 	}
 	
 	
@@ -484,7 +483,7 @@ public class FuzzySet extends Linguistic {
 		writer.writeStartElement("values");
 		for (int i = 0; i < _values.size(); ++i) {
 			writer.writeStartElement("value"); //$NON-NLS-1$
-			writer.writeAttribute("id", Double.toString(_values.get(i))); //$NON-NLS-1$
+			writer.writeAttribute("v", Double.toString(_values.get(i))); //$NON-NLS-1$
 			writer.writeEndElement();
 		}
 		writer.writeEndElement();
@@ -500,7 +499,7 @@ public class FuzzySet extends Linguistic {
 		reader.goToStartElement("values"); //$NON-NLS-1$
 
 		XMLEvent event;
-		String id;
+		String v;
 		Double value = null;
 		boolean end = false;
 		while (reader.hasNext() && !end) {
@@ -508,8 +507,8 @@ public class FuzzySet extends Linguistic {
 
 			if (event.isStartElement()) {
 				if ("value".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
-					id = reader.getStartElementAttribute("id"); //$NON-NLS-1$
-					value = new Double(id);
+					v = reader.getStartElementAttribute("v"); //$NON-NLS-1$
+					value = new Double(v);
 					_values.add(value);
 				} else {
 					_labelSet.read(reader);
@@ -540,7 +539,6 @@ public class FuzzySet extends Linguistic {
 		final FuzzySet other = (FuzzySet) obj;
 		
 		EqualsBuilder eb = new EqualsBuilder();
-		eb.append(_labelSet, other._labelSet);
 		eb.append(_values, other._values);
 		
 		return eb.isEquals();

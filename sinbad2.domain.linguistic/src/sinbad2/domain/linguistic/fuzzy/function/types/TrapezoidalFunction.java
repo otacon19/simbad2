@@ -21,7 +21,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	private double _c;
 	private double _d;
 	
-	private TrapezoidalFunction() {
+	public TrapezoidalFunction() {
 		_a = _b = _c = _d = 0d;
 	}
 	
@@ -280,21 +280,20 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeStartElement("trapezoidal");
 		writer.writeAttribute("a",Double.toString(_a));
 		writer.writeAttribute("b",Double.toString(_b));
 		writer.writeAttribute("c",Double.toString(_c));
 		writer.writeAttribute("d",Double.toString(_d));
-		writer.writeEndElement();
 	}
 	
 	@Override
-	public void read(XMLRead reader) throws XMLStreamException {
+	public void read(XMLRead reader) throws XMLStreamException {		
 		_a = Double.parseDouble(reader.getStartElementAttribute("a"));
 		_b = Double.parseDouble(reader.getStartElementAttribute("b"));
 		_c = Double.parseDouble(reader.getStartElementAttribute("c"));
 		_d = Double.parseDouble(reader.getStartElementAttribute("d"));
 	}
+	
 	
 	@Override
 	public String toString() {
@@ -361,4 +360,5 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		
 		return Double.compare(this.midPoint(), other.midPoint());
 	}
+	
 }

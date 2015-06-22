@@ -65,7 +65,6 @@ public static final String ID = "flintstones.domain.numeric.real";
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeAttribute("inRange", Boolean.toString(_inRange));
 		writer.writeAttribute("min", _min.toString());
-		writer.writeAttribute("min", _min.toString());
 		writer.writeAttribute("max", _max.toString());
 	}
 

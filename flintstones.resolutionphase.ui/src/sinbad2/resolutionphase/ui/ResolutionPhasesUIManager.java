@@ -61,7 +61,7 @@ public class ResolutionPhasesUIManager {
 			try {
 				return initializeResolutionPhaseUI(id);
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				e.getStackTrace();
 				
 				return null;
 			}

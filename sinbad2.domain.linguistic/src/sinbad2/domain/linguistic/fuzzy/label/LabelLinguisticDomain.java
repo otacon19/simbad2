@@ -1,5 +1,6 @@
 package sinbad2.domain.linguistic.fuzzy.label;
 
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -72,13 +73,18 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 		writer.writeStartElement("label");
 		writer.writeAttribute("name", _name);
 		writer.writeEndElement();
+		
 		writer.writeStartElement("semantic");
+		writer.writeAttribute("type", _semantic.getClass().getName());
 		_semantic.save(writer);
 		writer.writeEndElement();
 	}
 	
-	public void read(XMLRead reader) throws XMLStreamException {
-		_name = reader.getStartElementAttribute("name");
+	public void read(XMLRead reader) throws XMLStreamException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		reader.goToStartElement("semantic"); //$NON-NLS-1$
+		String type = reader.getStartElementAttribute("type");
+		Class<?> function = Class.forName(type);
+		_semantic = (IMembershipFunction) function.newInstance();
 		_semantic.read(reader);
 	}
 	
