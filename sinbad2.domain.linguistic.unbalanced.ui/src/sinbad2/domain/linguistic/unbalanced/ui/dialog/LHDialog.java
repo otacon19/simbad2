@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.Domain;
@@ -45,6 +46,7 @@ public class LHDialog extends NewDomainDialog {
 	private int _minimumLabels;
 	private int _maximumLabels;
 	private ControlDecoration _semanticButtonControlDecoration;
+	private ControlDecoration _domainNameTextControlDecoration;
 	private ModifyListener _numberOfLabelsModifyListener;
 	private ModifyListener _slModifyListener;
 	private ModifyListener _srModifyListener;
@@ -57,6 +59,7 @@ public class LHDialog extends NewDomainDialog {
 	private Combo _slDensityCombo;
 	private String[] _labels;
 	private Button _setSemanticButton;
+	private Button _okButton;
 	
 	public LHDialog() {
 		super();
@@ -65,7 +68,7 @@ public class LHDialog extends NewDomainDialog {
 	@Override
 	public void setDomain(Domain domain) {
 		super.setDomain(domain);
-		_specificDomain = (Unbalanced) _domain;
+		_specificDomain = (FuzzySet) _domain;
 	}
 
 	@Override
@@ -74,10 +77,32 @@ public class LHDialog extends NewDomainDialog {
 		_container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout(4, false);
 		_container.setLayout(layout);
-
+		
+		Label idLabel = new Label(_container, SWT.NULL);
+		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
+		idLabel.setLayoutData(gridData);
+		idLabel.setText("Domain id");
+		idLabel.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		
+		Text textID = new Text(_container, SWT.BORDER);
+		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
+		gridData.horizontalIndent = 5;
+		textID.setLayoutData(gridData);
+		textID.setText(_id);
+		textID.setFocus();
+		textID.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				_id = ((Text) e.getSource()).getText().trim();
+				//TODO comprobar el id del specificDomain
+				_domain.setId(_id);
+				validate();
+			}
+		});
 
 		_lhFeaturesLabel = new Label(_container, SWT.NONE);
-		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 4, 1);
+		gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 4, 1);
 		gridData.verticalIndent = 10;
 		_lhFeaturesLabel.setLayoutData(gridData);
 		_lhFeaturesLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
@@ -190,6 +215,7 @@ public class LHDialog extends NewDomainDialog {
 		_setSemanticButton.setText("Set semantic");
 
 		_semanticButtonControlDecoration = createNotificationDecorator(_setSemanticButton);
+		_domainNameTextControlDecoration = createNotificationDecorator(textID);
 
 		_previewLabel = new Label(_container, SWT.NONE);
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 4, 1);
@@ -204,7 +230,7 @@ public class LHDialog extends NewDomainDialog {
 		Composite composite = new Composite(_container, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		DomainUIsManager manager = DomainUIsManager.getInstance();
-		_chart = (LinguisticDomainChart) manager.newDomainChart(_domain);
+		_chart = (LinguisticDomainChart) manager.newDomainChart(_specificDomain);
 		_chart.initialize(_specificDomain, composite, 530, 145, SWT.BORDER);
 
 		modifyDomain();
@@ -225,8 +251,8 @@ public class LHDialog extends NewDomainDialog {
 	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
-		_semanticButtonControlDecoration.show();
+		_okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		_domainNameTextControlDecoration.show();
 		_semanticButtonControlDecoration.show();
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
@@ -526,5 +552,25 @@ public class LHDialog extends NewDomainDialog {
 
 		return (value == minimum);
 
+	}
+	
+
+	private void validate() {		
+		boolean validId;
+		String msgId = "";
+		
+		
+		if(!_id.isEmpty()) {
+			if(_ids.contains(_id)) {
+				msgId = "Duplicated id";
+			}
+		} else {
+			msgId = "Empty value";
+		}
+		
+		validId = validate(_domainNameTextControlDecoration, msgId);
+							
+		_okButton.setEnabled(validId);
+				
 	}
 }

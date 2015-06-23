@@ -1,5 +1,8 @@
 package sinbad2.domain.linguistic.fuzzy.function.types;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -318,10 +321,19 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		
 		final TrapezoidalFunction other = (TrapezoidalFunction) obj;
 		
-		if(Math.abs(_a - other._a) < EPSILON) {
-			if(Math.abs(_b - other._b) < EPSILON) {
-				if(Math.abs(_c - other._c) < EPSILON) {
-					if(Math.abs(_d - other._d) < EPSILON) {
+		double aRound = Math.abs(new BigDecimal(_a).setScale(3, RoundingMode.HALF_UP).doubleValue());
+		double bRound = Math.abs(new BigDecimal(_b).setScale(3, RoundingMode.HALF_UP).doubleValue());
+		double cRound = Math.abs(new BigDecimal(_c).setScale(3, RoundingMode.HALF_UP).doubleValue());
+		double dRound = Math.abs(new BigDecimal(_c).setScale(3, RoundingMode.HALF_UP).doubleValue());
+		double aOtherRound = Math.abs(new BigDecimal(other._a).setScale(3, RoundingMode.HALF_UP).doubleValue());
+		double bOtherRound = Math.abs(new BigDecimal(other._b).setScale(3, RoundingMode.HALF_UP).doubleValue());
+		double cOtherRound = Math.abs(new BigDecimal(other._c).setScale(3, RoundingMode.HALF_UP).doubleValue());
+		double dOtherRound = Math.abs(new BigDecimal(other._d).setScale(3, RoundingMode.HALF_UP).doubleValue());
+		
+		if(aRound == aOtherRound) {
+			if(bRound == bOtherRound) {
+				if(cRound == cOtherRound) {
+					if(dRound == dOtherRound) {
 						return true;
 					}
 				}

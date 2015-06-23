@@ -133,7 +133,7 @@ public class LabelSetLinguisticDomain implements Cloneable {
 		
 		for(LabelLinguisticDomain label: _labels) {
 			writer.writeStartElement(label.getName());
-			writer.writeAttribute("name", label.getName());
+			writer.writeAttribute("label", label.getName());
 			label.save(writer);
 			writer.writeEndElement();
 		}
@@ -143,9 +143,10 @@ public class LabelSetLinguisticDomain implements Cloneable {
 	
 	public void read(XMLRead reader) throws XMLStreamException {
 		XMLEvent event;
-		LabelLinguisticDomain label = new LabelLinguisticDomain();
 		String name = null, endtag = null, localPart = null;
 		boolean end = false;
+		
+		LabelLinguisticDomain label = null;
 		
 		reader.goToStartElement("labels");
 
@@ -153,8 +154,10 @@ public class LabelSetLinguisticDomain implements Cloneable {
 			event = reader.next();
 			if (event.isStartElement()) {
 				localPart = reader.getStartElementLocalPart();
-				name = reader.getStartElementAttribute("name"); //$NON-NLS-1$
+				name = reader.getStartElementAttribute("label"); //$NON-NLS-1$
+				System.out.println(name);
 				try {
+					label = new LabelLinguisticDomain();
 					label.setName(name);
 					label.read(reader);
 				} catch (Exception e) {

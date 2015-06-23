@@ -1,6 +1,5 @@
 package sinbad2.domain.linguistic.fuzzy.function.types;
 
-
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
@@ -59,7 +58,6 @@ public class LinearPieceFunction implements IFragmentFunction {
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	

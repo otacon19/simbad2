@@ -27,12 +27,10 @@ public class FragmentFunction {
 		double otherMin = domain.getMin();
 		double otherMax = domain.getMax();
 		
-		//Dominios vacíos
 		if(otherMin == otherMax) {
 			return;
 		}
 		
-		//Cruces
 		double currentMin, currentMax;
 		NumericRealDomain lower, central, upper;
 		IFragmentFunction currentPiece;
@@ -45,7 +43,6 @@ public class FragmentFunction {
 			currentPiece = _pieces.get(currentDomain);
 			
 			switch(Double.compare(currentMin, otherMin)) {
-				//a la izquierda
 				case -1:
 					if(currentMax > otherMin) {
 						switch(Double.compare(currentMax, otherMax)) {
@@ -174,7 +171,6 @@ public class FragmentFunction {
 					break;
 			}
 		}	
-		//No hay cruce
 		_pieces.put(domain, piece);
 	}
 	

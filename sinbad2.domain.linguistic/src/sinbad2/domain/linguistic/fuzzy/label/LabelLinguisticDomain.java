@@ -69,11 +69,7 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 		
 	}
 	
-	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeStartElement("label");
-		writer.writeAttribute("name", _name);
-		writer.writeEndElement();
-		
+	public void save(XMLStreamWriter writer) throws XMLStreamException {		
 		writer.writeStartElement("semantic");
 		writer.writeAttribute("type", _semantic.getClass().getName());
 		_semantic.save(writer);

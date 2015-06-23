@@ -186,26 +186,23 @@ public class DomainSet {
 			writer.writeStartElement(domain.getType());
 			writer.writeAttribute("id", domain.getId());
 			domain.save(writer);
-			
 			writer.writeEndElement();
 		}
 		writer.writeEndElement();
 	}
 	
 	public void read(XMLRead reader) throws XMLStreamException {
-		reader.goToStartElement("domain-set"); //$NON-NLS-1$
-
 		DomainsManager manager = DomainsManager.getInstance();
 
 		XMLEvent event;
-		String extensionId = null;
+		String extensionId = null, endtag = null, id = null;
 		Domain domain = null;
-		String id = null;
-		String endtag = null;
 		boolean end = false;
+		
+		reader.goToStartElement("domain-set"); //$NON-NLS-1$
+		
 		while (reader.hasNext() && !end) {
 			event = reader.next();
-
 			if (event.isStartElement()) {
 				extensionId = reader.getStartElementLocalPart();
 				id = reader.getStartElementAttribute("id"); //$NON-NLS-1$
@@ -226,7 +223,6 @@ public class DomainSet {
 				}
 			}
 		}
-
 	}
 	
 	@Override

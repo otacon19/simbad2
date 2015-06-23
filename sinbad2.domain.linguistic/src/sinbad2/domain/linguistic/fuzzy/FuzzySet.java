@@ -27,8 +27,8 @@ public class FuzzySet extends Linguistic {
 	
 	public static final String ID = "flintstones.domain.linguistic";
 	
-	private LabelSetLinguisticDomain _labelSet;
-	private List<Double> _values;
+	protected LabelSetLinguisticDomain _labelSet;
+	protected List<Double> _values;
 	
 	public FuzzySet() {
 		super();
@@ -496,15 +496,15 @@ public class FuzzySet extends Linguistic {
 
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {
-		reader.goToStartElement("values"); //$NON-NLS-1$
-
 		XMLEvent event;
-		String v;
+		String v, endtag = null;
 		Double value = null;
 		boolean end = false;
+		
+		reader.goToStartElement("values"); //$NON-NLS-1$
+		
 		while (reader.hasNext() && !end) {
 			event = reader.next();
-
 			if (event.isStartElement()) {
 				if ("value".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
 					v = reader.getStartElementAttribute("v"); //$NON-NLS-1$
@@ -512,6 +512,11 @@ public class FuzzySet extends Linguistic {
 					_values.add(value);
 				} else {
 					_labelSet.read(reader);
+				}
+			} else if (event.isEndElement()) {
+				endtag = reader.getEndElementLocalPart();
+				if (endtag.equals("labelSet")) { //$NON-NLS-1$
+					end = true;
 				}
 			}
 		}
