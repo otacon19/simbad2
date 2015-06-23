@@ -501,6 +501,8 @@ public class FuzzySet extends Linguistic {
 		Double value = null;
 		boolean end = false;
 		
+		_values = new LinkedList<Double>();
+		
 		reader.goToStartElement("values"); //$NON-NLS-1$
 		
 		while (reader.hasNext() && !end) {
@@ -511,6 +513,7 @@ public class FuzzySet extends Linguistic {
 					value = new Double(v);
 					_values.add(value);
 				} else {
+					_labelSet = new LabelSetLinguisticDomain();
 					_labelSet.read(reader);
 				}
 			} else if (event.isEndElement()) {

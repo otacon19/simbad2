@@ -14,8 +14,17 @@
       <dialog
             description="Create unbalanced domain"
             domain="flintstones.domain.linguistic.unbalanced"
-            id="sinbad2.domain.linguistic.new"
-            implementation="sinbad2.domain.linguistic.unbalanced.ui.dialog.LHDialog">
+            id="sinbad2.domain.linguistic.newU"
+            implementation="sinbad2.domain.linguistic.unbalanced.ui.dialog.LHDomainDialog">
+      </dialog>
+   </extension>
+   <extension
+         point="flintstones.domain.ui.modify.dialog">
+      <dialog
+            description="Modify unbalanced domain"
+            domain="flintstones.domain.linguistic.unbalanced"
+            id="sinbad2.domain.linguistic.modifyU"
+            implementation="sinbad2.domain.linguistic.unbalanced.ui.dialog.LHModifyDomainDialog">
       </dialog>
    </extension>
 

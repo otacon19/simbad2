@@ -28,9 +28,9 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.domain.linguistic.unbalanced.ui.dialog.subdialog.SemanticDialog;
 import sinbad2.domain.ui.DomainUIsManager;
-import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
+import sinbad2.domain.ui.dialog.modifyDialog.ModifyDomainDialog;
 
-public class LHDialog extends NewDomainDialog {
+public class LHModifyDomainDialog extends ModifyDomainDialog {
 	
 	private Composite _container;
 	private FuzzySet _specificDomain;
@@ -61,14 +61,14 @@ public class LHDialog extends NewDomainDialog {
 	private Button _setSemanticButton;
 	private Button _okButton;
 	
-	public LHDialog() {
+	public LHModifyDomainDialog() {
 		super();
 	}
 	
 	@Override
 	public void setDomain(Domain domain) {
 		super.setDomain(domain);
-		_specificDomain = (FuzzySet) _domain;
+		_specificDomain = (FuzzySet) _newDomain;
 	}
 
 	@Override
@@ -95,8 +95,7 @@ public class LHDialog extends NewDomainDialog {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				_id = ((Text) e.getSource()).getText().trim();
-				//TODO comprobar el id del specificDomain
-				_domain.setId(_id);
+				_newDomain.setId(_id);
 				validate();
 			}
 		});
@@ -225,7 +224,7 @@ public class LHDialog extends NewDomainDialog {
 		_previewLabel.setText("Preview");
 
 		_labels = new String[] { "s0", "s1", "s2" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		_specificDomain = ((FuzzySet) _domain).createTrapezoidalFunction(_labels);
+		_specificDomain = ((FuzzySet) _newDomain).createTrapezoidalFunction(_labels);
 
 		Composite composite = new Composite(_container, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -538,7 +537,7 @@ public class LHDialog extends NewDomainDialog {
 		}
 		
 		
-		_specificDomain = ((Unbalanced)_domain).createUnbalancedDomain(_labels, _sr, _sl,_slDensityCombo.getSelectionIndex(),_srDensityCombo.getSelectionIndex(), initialDomain);
+		_specificDomain = ((Unbalanced)_newDomain).createUnbalancedDomain(_labels, _sr, _sl,_slDensityCombo.getSelectionIndex(),_srDensityCombo.getSelectionIndex(), initialDomain);
 		_chart.setDomain(_specificDomain);
 	}
 
@@ -573,4 +572,5 @@ public class LHDialog extends NewDomainDialog {
 		_okButton.setEnabled(validId);
 				
 	}
+	
 }

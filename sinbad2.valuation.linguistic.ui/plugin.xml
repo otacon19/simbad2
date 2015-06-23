@@ -18,10 +18,10 @@
       <valuation_ui
             valuation="flintstones.valuation.linguistic.unbalanced">
          <new_domain_dialog
-               dialog="sinbad2.domain.linguistic.new">
+               dialog="sinbad2.domain.linguistic.newU">
          </new_domain_dialog>
          <modify_domain_dialog
-               dialog="sinbad2.domain.linguistic.modify">
+               dialog="sinbad2.domain.linguistic.modifyU">
          </modify_domain_dialog>
       </valuation_ui>
    </extension>
