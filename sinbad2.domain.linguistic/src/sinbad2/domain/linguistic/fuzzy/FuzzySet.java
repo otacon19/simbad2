@@ -489,7 +489,7 @@ public class FuzzySet extends Linguistic {
 		writer.writeEndElement();
 		
 		writer.writeStartElement("labelSet");
-		_labelSet.save(writer);
+		_labelSet.save(writer);;
 		writer.writeEndElement();
 		
 	}

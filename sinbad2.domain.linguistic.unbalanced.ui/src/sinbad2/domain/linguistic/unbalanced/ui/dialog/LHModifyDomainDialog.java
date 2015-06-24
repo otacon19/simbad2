@@ -124,12 +124,11 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 		
 		if(((Unbalanced) _newDomain).getLh()[0] == 3) {
 			_lhInitialDomainCombo.select(0);
-			_minimumLabels = 3;
 		} else {
 			_lhInitialDomainCombo.select(1);
-			_minimumLabels = 7;
 		}
 		
+		_minimumLabels = ((Unbalanced) _newDomain).getLh()[0];
 		_maximumLabels = 17;
 
 		_domainLabelsLabel = new Label(_container, SWT.NONE);
@@ -169,6 +168,7 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 		gridData.widthHint = 110;
 		_slSpinner.setLayoutData(gridData);
 		_slSpinner.setMinimum(1);
+		
 		if(_lhInitialDomainCombo.getSelectionIndex() == 0) {
 			_slSpinner.setMaximum(_cardinality - 2);
 		} else {
@@ -226,6 +226,10 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 		_srDensityCombo.select(0);
 		_srDensityCombo.setEnabled(false);
 
+		hookModifyListeners();
+		
+		modifyDensityCombos();
+		
 		_setSemanticButton = new Button(labelsComposite, SWT.NONE);
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 4, 1);
 		gridData.verticalIndent = 5;
@@ -249,9 +253,7 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 		_chart.initialize(_newDomain, composite, 530, 145, SWT.BORDER);
 
 		modifyDomain();
-
-		hookModifyListeners();
-
+		
 		hookSemanticButtonListener();
 		
 		return _container;

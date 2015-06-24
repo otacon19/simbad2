@@ -1,14 +1,20 @@
 package sinbad2.domain.linguistic.unbalanced;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.events.XMLEvent;
+
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
+import sinbad2.resolutionphase.io.XMLRead;
 
 public class Unbalanced extends FuzzySet {
 	
@@ -116,7 +122,9 @@ public class Unbalanced extends FuzzySet {
 		if(!_labels.containsKey(pos)) {
 			_labels.put(pos, new HashMap<Integer, Integer>());
 		}
+		
 		_labels.get(pos).put(domain, label);
+		
 	}
 	
 	public Integer labelPos(int domain, int label) {
@@ -155,8 +163,6 @@ public class Unbalanced extends FuzzySet {
 		
 		return result;
 	}
-	
-	
 	
 	public String getInfo() {
 		String result = "";
@@ -560,6 +566,92 @@ public class Unbalanced extends FuzzySet {
 		
 	}
 
+	@Override
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+	
+		writer.writeStartElement("lh");
+		for (int i = 0; i < _lh.length; ++i) {
+			writer.writeStartElement("lhValue"); //$NON-NLS-1$
+			writer.writeAttribute("l", Integer.toString(_lh[i])); //$NON-NLS-1$
+			writer.writeEndElement();
+		}
+		writer.writeEndElement();
+		
+		writer.writeStartElement("labelsU");
+		for (Integer pos: _labels.keySet()) {
+			Map<Integer, Integer> labels = _labels.get(pos);
+			for(Integer domain: labels.keySet()) {
+				writer.writeStartElement("domain-label"); //$NON-NLS-1$
+				writer.writeAttribute("d", Integer.toString(domain));
+				writer.writeAttribute("la", Integer.toString(labels.get(domain)));
+				writer.writeEndElement();
+			}
+			writer.writeStartElement("labelU");
+			writer.writeAttribute("pos", Integer.toString(pos)); //$NON-NLS-1$
+			writer.writeEndElement();
+		}
+		writer.writeEndElement();
+		
+		writer.writeStartElement("data");
+		writer.writeAttribute("sl", Integer.toString(_sl));
+		writer.writeAttribute("sr", Integer.toString(_sr));
+		writer.writeAttribute("slDensity", Integer.toString(_slDensity));
+		writer.writeAttribute("srDensity", Integer.toString(_srDensity));;
+		writer.writeAttribute("cardinality", Integer.toString(_cardinality));
+		writer.writeEndElement();
+		
+		super.save(writer);
+	}
+	
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {	
+		XMLEvent event;
+		String v, domain, pos, label,  endtag = null;
+		Integer value = null;
+		boolean end = false;
+		ArrayList<Integer> lh = new ArrayList<Integer>();
+		Map<Integer, Integer> data = null;
+		
+		_labels = new HashMap<Integer, Map<Integer,Integer>>();
+		
+		reader.goToStartElement("lh"); //$NON-NLS-1$
+		
+		while (reader.hasNext() && !end) {
+			event = reader.next();
+			if (event.isStartElement()) {
+				if ("lhValue".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
+					v = reader.getStartElementAttribute("l"); //$NON-NLS-1$
+					value = new Integer(v);
+					lh.add(value);
+				} else if("domain-label".equals(reader.getStartElementLocalPart())) {	
+					domain = reader.getStartElementAttribute("d");
+					label = reader.getStartElementAttribute("la");
+					data = new HashMap<Integer, Integer>();
+					data.put(Integer.parseInt(domain), Integer.parseInt(label));
+				} else if("labelU".equals(reader.getStartElementLocalPart())) {
+					pos = reader.getStartElementAttribute("pos");
+					_labels.put(Integer.parseInt(pos), data);	
+				} else if("data".equals(reader.getStartElementLocalPart())) {
+					_sl = Integer.parseInt(reader.getStartElementAttribute("sl"));	
+					_sr = Integer.parseInt(reader.getStartElementAttribute("sr"));
+					_slDensity = Integer.parseInt(reader.getStartElementAttribute("slDensity"));
+					_srDensity = Integer.parseInt(reader.getStartElementAttribute("srDensity"));
+					_cardinality = Integer.parseInt(reader.getStartElementAttribute("cardinality"));
+				}
+			} else if (event.isEndElement()) {
+				endtag = reader.getEndElementLocalPart();
+				if (endtag.equals("data")) { //$NON-NLS-1$
+					_lh = new int[lh.size()] ;
+					for(int i = 0; i < lh.size(); ++i) {
+						_lh[i] = lh.get(i); 
+					}
+					end = true;
+				}
+			}
+		}
+		
+		super.read(reader);
+	}
 
 	private String loadStringLh(String result) {
 		StringBuilder lh = new StringBuilder("");
