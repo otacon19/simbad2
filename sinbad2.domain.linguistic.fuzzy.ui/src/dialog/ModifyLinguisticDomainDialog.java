@@ -207,7 +207,6 @@ public class ModifyLinguisticDomainDialog extends ModifyDomainDialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 		_okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		_okButton.setEnabled(false);
-		_domainNameTextControlDecoration.show();
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 	

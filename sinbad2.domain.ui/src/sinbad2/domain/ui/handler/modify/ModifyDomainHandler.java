@@ -41,12 +41,10 @@ public class ModifyDomainHandler extends AbstractHandler {
 		DomainSet domainSet = domainsManager.getActiveDomainSet();
 		DomainValuationsManager domainValuationsManager = DomainValuationsManager.getInstance();
 		
-		if(_oldDomain == null) {
-			IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
-			_oldDomain = (Domain) selection.getFirstElement();
-			_valuationOldDomain = domainValuationsManager.getValuationSupportedForNewDomain(_oldDomain.getId());
-		}
-		
+		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
+		_oldDomain = (Domain) selection.getFirstElement();
+		_valuationOldDomain = domainValuationsManager.getValuationSupportedForNewDomain(_oldDomain.getId());
+				
 		DomainUIsManager domainUIsManager = DomainUIsManager.getInstance();
 		String valuationID = domainValuationsManager.getValuationSupportedForNewDomain(_oldDomain.getId());
 		

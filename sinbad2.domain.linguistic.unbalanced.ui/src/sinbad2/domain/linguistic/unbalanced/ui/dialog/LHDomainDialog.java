@@ -68,7 +68,7 @@ public class LHDomainDialog extends NewDomainDialog {
 	@Override
 	public void setDomain(Domain domain) {
 		super.setDomain(domain);
-		_specificDomain = (FuzzySet) _domain;
+		_specificDomain = (Unbalanced) _domain;
 	}
 
 	@Override
@@ -246,7 +246,7 @@ public class LHDomainDialog extends NewDomainDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Auto-generated domain");
+		newShell.setText("Create unbalanced domain");
 	}
 	
 	@Override
@@ -408,7 +408,7 @@ public class LHDomainDialog extends NewDomainDialog {
 					}
 
 					_cardinality = cardinality;
-
+					
 					modifyDensityCombos();
 					_srSpinner.addModifyListener(_srModifyListener);
 					_slSpinner.addModifyListener(_slModifyListener);
@@ -536,7 +536,6 @@ public class LHDomainDialog extends NewDomainDialog {
 		} else {
 			initialDomain = 7;
 		}
-		
 		
 		_specificDomain = ((Unbalanced)_domain).createUnbalancedDomain(_labels, _sr, _sl,_slDensityCombo.getSelectionIndex(),_srDensityCombo.getSelectionIndex(), initialDomain);
 		_chart.setDomain(_specificDomain);

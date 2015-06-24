@@ -68,7 +68,7 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 	@Override
 	public void setDomain(Domain domain) {
 		super.setDomain(domain);
-		_specificDomain = (FuzzySet) _newDomain;
+		_specificDomain = (Unbalanced) _newDomain;
 	}
 
 	@Override
@@ -114,24 +114,29 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 		Label lhInitialGranularityLabel = new Label(genericDomainComposite, SWT.NULL);
 		lhInitialGranularityLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.NONE));
 		lhInitialGranularityLabel.setText("Initial granularity of LH");
-		lhInitialGranularityLabel.setLayoutData(new GridData(SWT.LEFT,
-				SWT.CENTER, false, false, 1, 1));
+		lhInitialGranularityLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 
 		_lhInitialDomainCombo = new Combo(genericDomainComposite, SWT.BORDER);
 		gridData = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
 		gridData.widthHint = 60;
 		_lhInitialDomainCombo.setLayoutData(gridData);
 		_lhInitialDomainCombo.setItems(new String[] { "3", "7" }); //$NON-NLS-1$ //$NON-NLS-2$
-		_lhInitialDomainCombo.select(0);
-		_minimumLabels = 3;
+		
+		if(((Unbalanced) _newDomain).getLh()[0] == 3) {
+			_lhInitialDomainCombo.select(0);
+			_minimumLabels = 3;
+		} else {
+			_lhInitialDomainCombo.select(1);
+			_minimumLabels = 7;
+		}
+		
 		_maximumLabels = 17;
 
 		_domainLabelsLabel = new Label(_container, SWT.NONE);
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 4, 1);
 		gridData.verticalIndent = 15;
 		_domainLabelsLabel.setLayoutData(gridData);
-		_domainLabelsLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, //$NON-NLS-1$
-				SWT.BOLD));
+		_domainLabelsLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
 		_domainLabelsLabel.setText("Labels of unbalanced scale");
 
 		Composite labelsComposite = new Composite(_container, SWT.BORDER);
@@ -139,11 +144,11 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 		labelsComposite.setLayout(new GridLayout(4, false));
 
 		Label numberOfLabelsLabel = new Label(labelsComposite, SWT.NULL);
-		numberOfLabelsLabel.setFont(SWTResourceManager.getFont("Cantarell", 8,SWT.NONE));
+		numberOfLabelsLabel.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE));
 		numberOfLabelsLabel.setText("Number of labels of unbalancedScale");
 		numberOfLabelsLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,false, false, 3, 1));
-
-		_cardinality = 3;
+		
+		_cardinality = ((Unbalanced) _newDomain).getCardinality();
 		_numberOfLabels = new Spinner(labelsComposite, SWT.BORDER);
 		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gridData.widthHint = 110;
@@ -158,15 +163,22 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 		slLabel.setText("Left side SL");
 		slLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 
-		_sl = 1;
+		_sl = ((Unbalanced) _newDomain).getSl();
 		_slSpinner = new Spinner(labelsComposite, SWT.BORDER);
 		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gridData.widthHint = 110;
 		_slSpinner.setLayoutData(gridData);
 		_slSpinner.setMinimum(1);
-		_slSpinner.setMaximum(1);
+		if(_lhInitialDomainCombo.getSelectionIndex() == 0) {
+			_slSpinner.setMaximum(_cardinality - 2);
+		} else {
+			if(_numberOfLabels.getSelection() == 7) {
+				_slSpinner.setMaximum(3);
+			}
+			_slSpinner.setMinimum(3);
+		}
 		_slSpinner.setSelection(_sl);
-
+		
 		Label slDensity = new Label(labelsComposite, SWT.NULL);
 		slDensity.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE));
 		slDensity.setText("Density SL");
@@ -185,13 +197,20 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 		srLabel.setText("Right side SR");
 		srLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 
-		_sr = 1;
+		_sr = ((Unbalanced) _newDomain).getSr();
 		_srSpinner = new Spinner(labelsComposite, SWT.BORDER);
 		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gridData.widthHint = 110;
 		_srSpinner.setLayoutData(gridData);
 		_srSpinner.setMinimum(1);
-		_srSpinner.setMaximum(1);
+		if(_lhInitialDomainCombo.getSelectionIndex() == 0) {
+			_srSpinner.setMaximum(_cardinality - 2);
+		} else {
+			if(_numberOfLabels.getSelection() == 7) {
+				_srSpinner.setMaximum(3);
+			}
+			_srSpinner.setMinimum(3);
+		}
 		_srSpinner.setSelection(_sr);
 
 		Label srDensity = new Label(labelsComposite, SWT.NULL);
@@ -222,15 +241,12 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 		_previewLabel.setLayoutData(gridData);
 		_previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
 		_previewLabel.setText("Preview");
-
-		_labels = new String[] { "s0", "s1", "s2" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		_specificDomain = ((FuzzySet) _newDomain).createTrapezoidalFunction(_labels);
-
+		
 		Composite composite = new Composite(_container, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		DomainUIsManager manager = DomainUIsManager.getInstance();
-		_chart = (LinguisticDomainChart) manager.newDomainChart(_specificDomain);
-		_chart.initialize(_specificDomain, composite, 530, 145, SWT.BORDER);
+		_chart = (LinguisticDomainChart) manager.newDomainChart(_newDomain);
+		_chart.initialize(_newDomain, composite, 530, 145, SWT.BORDER);
 
 		modifyDomain();
 
@@ -245,13 +261,12 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Auto-generated domain");
+		newShell.setText("Modify unbalanced domain");
 	}
 	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		_okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
-		_domainNameTextControlDecoration.show();
 		_semanticButtonControlDecoration.show();
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
@@ -305,17 +320,13 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 				}
 
 				if (modify) {
-					_numberOfLabels
-							.removeModifyListener(_numberOfLabelsModifyListener);
+					_numberOfLabels.removeModifyListener(_numberOfLabelsModifyListener);
 					_slSpinner.removeModifyListener(_slModifyListener);
 					_srSpinner.removeModifyListener(_srModifyListener);
-					_slDensityCombo
-							.removeModifyListener(_slDensityComboModifyListener);
-					_srDensityCombo
-							.removeModifyListener(_srDensityComboModifyListener);
+					_slDensityCombo.removeModifyListener(_slDensityComboModifyListener);
+					_srDensityCombo.removeModifyListener(_srDensityComboModifyListener);
 
-					_numberOfLabels.setValues(_cardinality, _minimumLabels,
-							_maximumLabels, 0, 2, 2);
+					_numberOfLabels.setValues(_cardinality, _minimumLabels, _maximumLabels, 0, 2, 2);
 					_slSpinner.setValues(_sl, _sl, _sl, 0, 1, 1);
 					_srSpinner.setValues(_sr, _sr, _sr, 0, 1, 1);
 					_slDensityCombo.setEnabled(false);
@@ -323,14 +334,11 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 					_srDensityCombo.setEnabled(false);
 					_srDensityCombo.select(0);
 
-					_numberOfLabels
-							.addModifyListener(_numberOfLabelsModifyListener);
+					_numberOfLabels.addModifyListener(_numberOfLabelsModifyListener);
 					_slSpinner.addModifyListener(_slModifyListener);
 					_srSpinner.addModifyListener(_srModifyListener);
-					_slDensityCombo
-							.addModifyListener(_slDensityComboModifyListener);
-					_srDensityCombo
-							.addModifyListener(_srDensityComboModifyListener);
+					_slDensityCombo.addModifyListener(_slDensityComboModifyListener);
+					_srDensityCombo.addModifyListener(_srDensityComboModifyListener);
 
 					modifyDomain();
 				}
@@ -517,7 +525,6 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 	}
 
 	private void modifyDomain() {
-
 		_labels = new String[_cardinality];
 
 		for (int i = 0; i < _cardinality; i++) {
@@ -535,8 +542,6 @@ public class LHModifyDomainDialog extends ModifyDomainDialog {
 		} else {
 			initialDomain = 7;
 		}
-		
-		
 		_specificDomain = ((Unbalanced)_newDomain).createUnbalancedDomain(_labels, _sr, _sl,_slDensityCombo.getSelectionIndex(),_srDensityCombo.getSelectionIndex(), initialDomain);
 		_chart.setDomain(_specificDomain);
 	}
