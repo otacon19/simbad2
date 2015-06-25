@@ -76,11 +76,23 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 		writer.writeEndElement();
 	}
 	
-	public void read(XMLRead reader) throws XMLStreamException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public void read(XMLRead reader)  throws XMLStreamException {
 		reader.goToStartElement("semantic"); //$NON-NLS-1$
 		String type = reader.getStartElementAttribute("type");
-		Class<?> function = Class.forName(type);
-		_semantic = (IMembershipFunction) function.newInstance();
+		Class<?> function = null;
+		
+		try {
+			function = Class.forName(type);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+			_semantic = (IMembershipFunction) function.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 		_semantic.read(reader);
 	}
 	

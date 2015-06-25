@@ -129,13 +129,14 @@ public class LinguisticValuation extends Valuation {
 
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		// TODO Auto-generated method stub
-		
+		writer.writeStartElement("label");
+		_label.save(writer);
+		writer.writeEndElement();
 	}
 
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {
-		// TODO Auto-generated method stub
-		
+		_label = new LabelLinguisticDomain();
+		_label.read(reader);
 	}
 }

@@ -84,8 +84,6 @@
 
    <element name="type">
       <complexType>
-         <choice>
-         </choice>
          <attribute name="implementation" type="string" use="required">
             <annotation>
                <documentation>

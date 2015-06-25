@@ -14,6 +14,12 @@
          <modify_domain_dialog
                dialog="sinbad2.domain.linguistic.modify">
          </modify_domain_dialog>
+      </valuation_ui>
+      <valuation_ui
+            valuation="flintstones.valuation.hesitantU">
+         <new_domain_dialog
+               dialog="sinbad2.domain.linguistic.newU">
+         </new_domain_dialog>
          <modify_domain_dialog
                dialog="sinbad2.domain.linguistic.modifyU">
          </modify_domain_dialog>

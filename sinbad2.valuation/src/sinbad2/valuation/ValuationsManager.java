@@ -67,10 +67,10 @@ public class ValuationsManager {
 		ValuationRegistryExtension valuationRegistry = getRegistry(id);
 
 		IConfigurationElement type = valuationRegistry.getConfiguration().getChildren(EValuationElements.type.toString())[0];
-		IConfigurationElement typeSpecific = type.getChildren()[0];
 		
 		try {
-			Valuation valuation = (Valuation) typeSpecific.createExecutableExtension(EValuationElements.implementation.toString());
+			Valuation valuation = (Valuation) type.createExecutableExtension(EValuationElements.implementation.toString());
+			
 			valuation.setId(id);
 			valuation.setName(valuationRegistry.getElement(EValuationElements.name));
 			valuation.setRegistry(valuationRegistry);
