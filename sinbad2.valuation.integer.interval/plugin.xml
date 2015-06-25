@@ -7,10 +7,8 @@
             domain="flintstones.domain.numeric.integer"
             id="flintstones.valuation.integer.interval"
             name="Integer interval">
-         <type>
-            <normalized
-                  implementation="sinbad2.valuation.integer.interval.IntegerInterval">
-            </normalized>
+         <type
+               implementation="sinbad2.valuation.integer.interval.IntegerInterval">
          </type>
       </valuation>
    </extension>

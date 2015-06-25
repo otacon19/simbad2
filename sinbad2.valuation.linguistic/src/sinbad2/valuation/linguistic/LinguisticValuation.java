@@ -10,16 +10,14 @@ import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.resolutionphase.io.XMLRead;
-import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 
-public class LinguisticValuation extends Normalized {
+
+public class LinguisticValuation extends Valuation {
 	
 	public static final String ID = "flintstones.valuation.linguistic";
 	
 	public LabelLinguisticDomain _label;
-	
-	protected FuzzySet _domain;
 	
 	public LinguisticValuation() {
 		super();
@@ -28,14 +26,14 @@ public class LinguisticValuation extends Normalized {
 	}
 	
 	public void setLabel(int pos) {
-		LabelLinguisticDomain label = _domain.getLabelSet().getLabel(pos);
+		LabelLinguisticDomain label = ((FuzzySet) _domain).getLabelSet().getLabel(pos);
 		Validator.notNull(label);
 		
 		_label = label;
 	}
 	
 	public void setLabel(String name) {
-		LabelLinguisticDomain label = _domain.getLabelSet().getLabel(name);
+		LabelLinguisticDomain label = ((FuzzySet) _domain).getLabelSet().getLabel(name);
 		Validator.notNull(label);
 		
 		_label = (LabelLinguisticDomain) label;

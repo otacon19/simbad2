@@ -9,10 +9,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.resolutionphase.io.XMLRead;
-import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 
-public class RealInterval extends Normalized {
+public class RealInterval extends Valuation {
 	
 	public static final String ID = "flintstones.valuation.real.interval";
 
@@ -51,7 +50,7 @@ public class RealInterval extends Normalized {
 		_max = max;
 	}
 	
-	public Normalized normalized() {
+	public Valuation normalized() {
 		RealInterval result = (RealInterval) clone();
 		double min, max, intervalSize;
 		
@@ -69,7 +68,7 @@ public class RealInterval extends Normalized {
 	}
 	
 	@Override
-	public Normalized negateValutation() {
+	public Valuation negateValutation() {
 		RealInterval result = (RealInterval) clone();
 		
 		double aux = _domain.getMin() + _domain.getMax();

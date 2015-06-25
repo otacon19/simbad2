@@ -10,11 +10,10 @@ import sinbad2.core.validator.Validator;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.resolutionphase.io.XMLRead;
-import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
 
-public class IntegerValuation extends Normalized {
+public class IntegerValuation extends Valuation {
 	
 	public static final String ID = "flintstones.valuation.integer";
 	
@@ -43,7 +42,7 @@ public class IntegerValuation extends Normalized {
 		return _value;
 	}
 	
-	public Normalized normalized() {
+	public Valuation normalized() {
 		ValuationsManager valuationsManager = ValuationsManager.getInstance();
 		IntegerValuation result = (IntegerValuation) valuationsManager.copyValuation(IntegerValuation.ID);
 		
@@ -59,7 +58,6 @@ public class IntegerValuation extends Normalized {
 		return result.normalizeRange();
 	}
 	
-	@Override
 	public Valuation negateValutation() {
 		IntegerValuation result = (IntegerValuation) clone();
 		
@@ -140,7 +138,7 @@ public class IntegerValuation extends Normalized {
 		_value = Long.parseLong(reader.getStartElementAttribute("value"));	
 	}
 	
-	private Normalized normalizeRange() {
+	private Valuation normalizeRange() {
 		IntegerValuation result = (IntegerValuation) clone();
 		long min, max, intervalSize;
 		
@@ -153,5 +151,4 @@ public class IntegerValuation extends Normalized {
 		
 		return result;
 	}
-
 }

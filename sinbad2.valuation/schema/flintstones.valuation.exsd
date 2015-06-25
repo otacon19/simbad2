@@ -85,29 +85,17 @@
    <element name="type">
       <complexType>
          <choice>
-            <element ref="normalized"/>
-            <element ref="unnormalized"/>
          </choice>
-      </complexType>
-   </element>
-
-   <element name="normalized">
-      <complexType>
          <attribute name="implementation" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="sinbad2.valuation.Normalized:"/>
+                  <meta.attribute kind="java" basedOn="sinbad2.valuation.Valuation:"/>
                </appinfo>
             </annotation>
          </attribute>
-      </complexType>
-   </element>
-
-   <element name="unnormalized">
-      <complexType>
       </complexType>
    </element>
 

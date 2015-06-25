@@ -7,10 +7,8 @@
             domain="flintstones.domain.numeric.integer"
             id="flintstones.valuation.integer"
             name="Integer">
-         <type>
-            <normalized
-                  implementation="sinbad2.valuation.integer.IntegerValuation">
-            </normalized>
+         <type
+               implementation="sinbad2.valuation.integer.IntegerValuation">
          </type>
       </valuation>
    </extension>

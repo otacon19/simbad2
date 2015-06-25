@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.valuation.ui">
+      <valuation_ui
+            valuation="flintstones.valuation.hesitant">
+         <new_domain_dialog
+               dialog="sinbad2.domain.linguistic.newauto">
+         </new_domain_dialog>
+         <new_domain_dialog
+               dialog="sinbad2.domain.linguistic.newmanual">
+         </new_domain_dialog>
+         <modify_domain_dialog
+               dialog="sinbad2.domain.linguistic.modify">
+         </modify_domain_dialog>
+         <modify_domain_dialog
+               dialog="sinbad2.domain.linguistic.modifyU">
+         </modify_domain_dialog>
+      </valuation_ui>
+   </extension>
+
+</plugin>

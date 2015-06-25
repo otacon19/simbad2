@@ -5,18 +5,18 @@
          point="flintstones.valuation">
       <valuation
             domain="flintstones.domain.linguistic"
-            id="flintstones.valuation.linguistic"
-            name="Linguistic">
+            id="flintstones.valuation.hesitant"
+            name="Hesitant">
          <type
-               implementation="sinbad2.valuation.linguistic.LinguisticValuation">
+               implementation="sinbad2.valuation.hesitant.HesitantValuation">
          </type>
       </valuation>
       <valuation
             domain="flintstones.domain.linguistic.unbalanced"
-            id="flintstones.valuation.linguistic.unbalanced"
-            name="Unbalanced linguistic">
+            id="flintstones.valuation.hesitantU"
+            name="Hesitant">
          <type
-               implementation="sinbad2.valuation.linguistic.LinguisticValuation">
+               implementation="sinbad2.valuation.hesitant.HesitantValuation">
          </type>
       </valuation>
    </extension>

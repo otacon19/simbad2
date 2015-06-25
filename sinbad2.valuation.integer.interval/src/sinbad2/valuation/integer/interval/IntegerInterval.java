@@ -10,11 +10,10 @@ import sinbad2.core.validator.Validator;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.resolutionphase.io.XMLRead;
-import sinbad2.valuation.Normalized;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
 
-public class IntegerInterval extends Normalized {
+public class IntegerInterval extends Valuation {
 
 	public static final String ID = "flintstones.valuation.integer.interval";
 	
@@ -53,7 +52,7 @@ public class IntegerInterval extends Normalized {
 		_max = max;
 	}
 	
-	public Normalized normalized() {
+	public Valuation normalized() {
 		ValuationsManager valuationsManager = ValuationsManager.getInstance();
 		IntegerInterval result = (IntegerInterval) valuationsManager.copyValuation(ID);
 		
@@ -70,7 +69,7 @@ public class IntegerInterval extends Normalized {
 	}
 	
 	@Override
-	public Normalized negateValutation() {
+	public Valuation negateValutation() {
 		IntegerInterval result = (IntegerInterval) clone();
 		
 		long aux = Math.round(_domain.getMin()) + Math.round(_domain.getMax());
@@ -155,7 +154,7 @@ public class IntegerInterval extends Normalized {
 		_max = Long.parseLong(reader.getStartElementAttribute("max"));
 	}
 	
-	private Normalized normalizeInterval() {
+	private Valuation normalizeInterval() {
 		IntegerInterval result = (IntegerInterval) clone();
 		
 		long min, max, intervalSize;

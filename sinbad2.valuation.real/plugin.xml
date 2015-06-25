@@ -7,10 +7,8 @@
             domain="flintstones.domain.numeric.real"
             id="flintstones.valuation.real"
             name="Real">
-         <type>
-            <normalized
-                  implementation="sinbad2.valuation.real.RealValuation">
-            </normalized>
+         <type
+               implementation="sinbad2.valuation.real.RealValuation">
          </type>
       </valuation>
    </extension>
