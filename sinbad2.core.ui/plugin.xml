@@ -8,8 +8,8 @@
             locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
                id="flintstones.menu.file"
-               label="File"
-               mnemonic="A">
+               label="%file.menu.name"
+               mnemonic="%file.menu.mnemonic">
             <command
                   commandId="flintstones.core.io.new"
                   style="push">
@@ -33,14 +33,14 @@
             <command
                   commandId="org.eclipse.ui.file.exit"
                   id="exit"
-                  label="&amp;Exit"
+                  label="%file.command.exit.name"
                   style="push">
             </command>
          </menu>
          <menu
                id="flintstones.menu.edit"
-               label="Edit"
-               mnemonic="E">
+               label="%edit.menu.name"
+               mnemonic="%edit.menu.mnemonic">
             <command
                   commandId="flintstones.core.undo"
                   style="push">
@@ -52,7 +52,7 @@
             <command
                   commandId="org.eclipse.ui.window.preferences"
                   id="preferences"
-                  label="Preferences"
+                  label="%preferences.command.name"
                   style="push">
             </command>
          </menu>
@@ -62,7 +62,7 @@
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
          <toolbar
                id="sinbad2.toolbar.file"
-               label="File">
+               label="%file.toolbar.name">
             <command
                   commandId="flintstones.core.io.new"
                   style="push">
@@ -82,7 +82,7 @@
          </toolbar>
          <toolbar
                id="sinbad2.toolbar.edit"
-               label="Edit">
+               label="%edit.toolbar.name">
             <command
                   commandId="flintstones.core.undo"
                   style="push">
@@ -98,46 +98,46 @@
          point="org.eclipse.ui.commands">
       <category
             id="sinbad2.workspace.commands.category"
-            name="Core commands">
+            name="%category.core.commands">
       </category>
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.io.new"
-            name="&amp;New">
+            name="%command.new.name">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.ui.io.read"
-            name="O&amp;pen">
+            name="%command.open.name">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.ui.io.save"
-            name="&amp;Save">
+            name="%command.save.name">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.ui.io.save.as"
-            name="Sa&amp;ve as...">
+            name="%command.save.as.name">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.ui.io.save.and.close"
-            name="Save &amp;and close">
+            name="%command.save.and.close.name">
       </command>
       <category
             id="sinbad2.ui.category_undo_redo"
-            name="undo_redo">
+            name="%category.undo.redo">
       </category>
       <command
             categoryId="sinbad2.ui.category_undo_redo"
             id="flintstones.core.undo"
-            name="Undo">
+            name="%command.undo.name">
       </command>
       <command
             categoryId="sinbad2.ui.category_undo_redo"
             id="flintstones.core.redo"
-            name="Redo">
+            name="%command..redo.name">
       </command>
    </extension>
    <extension
@@ -269,7 +269,7 @@
          point="org.eclipse.ui.contexts">
       <context
             id="flintstones.core.ui"
-            name="Flintstones ui context"
+            name="%flintstones.ui.context.name"
             parentId="org.eclipse.ui.contexts.window">
       </context>
    </extension>
