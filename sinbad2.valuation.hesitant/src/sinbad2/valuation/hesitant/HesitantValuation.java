@@ -1,7 +1,6 @@
 package sinbad2.valuation.hesitant;
 
 
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.events.XMLEvent;
@@ -25,7 +24,7 @@ public class HesitantValuation extends Valuation {
 	
 	public static final String ID = "flintstones.valuation.hesitant"; //$NON-NLS-1$
 	
-	private HesitantValuation() {
+	public HesitantValuation() {
 		super();
 		_unaryRelation = null;
 		_term = null;

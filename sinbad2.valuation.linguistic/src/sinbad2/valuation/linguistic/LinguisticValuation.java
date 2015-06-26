@@ -13,7 +13,6 @@ import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.linguistic.nls.Messages;
 
-
 public class LinguisticValuation extends Valuation {
 	
 	public static final String ID = "flintstones.valuation.linguistic"; //$NON-NLS-1$

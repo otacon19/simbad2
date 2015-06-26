@@ -5,7 +5,7 @@ public enum EUnaryRelationType {
 	
 	private String _relationType;
 	
-	private EUnaryRelationType(String relationType) {
+	EUnaryRelationType(String relationType) {
 		_relationType = relationType;
 		
 	}
