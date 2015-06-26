@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.ui.Activator;
+import sinbad2.element.ui.nls.Messages;
 import sinbad2.element.ui.preferences.PreferenceConstants;
 
 public class AddCriterionInputDialog extends InputDialog {
@@ -41,7 +42,7 @@ public class AddCriterionInputDialog extends InputDialog {
 		
 		if(_parent != null) {
 			_isSubcriterionButton = new Button(container, SWT.CHECK);
-			_isSubcriterionButton.setText("Is subcriterion of " + _parent.getPathId());
+			_isSubcriterionButton.setText(Messages.AddCriterionInputDialog_Is_subcriterion_of + _parent.getPathId());
 			_isSubcriterionButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -53,7 +54,7 @@ public class AddCriterionInputDialog extends InputDialog {
 		}
 		
 		_isCostButton = new Button(container, SWT.CHECK);
-		_isCostButton.setText("Cost criterion");
+		_isCostButton.setText(Messages.AddCriterionInputDialog_Cost_criterion);
 		_isCostButton.setSelection(_isCost);
 		_isCostButton.addSelectionListener(new SelectionAdapter() {
 			@Override

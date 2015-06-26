@@ -6,6 +6,7 @@ import org.eclipse.jface.dialogs.IInputValidator;
 
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.element.ui.nls.Messages;
 
 public class AddCriterionInputValidator implements IInputValidator {
 	
@@ -41,14 +42,14 @@ public class AddCriterionInputValidator implements IInputValidator {
 		}
 		
 		if(newText.isEmpty()) {
-			return "Empty value not allowed";
-		} else if(newText.contains(":")) {
-			return "Character ':' not allowed";
+			return Messages.AddCriterionInputValidator_Empty_value_not_allowed;
+		} else if(newText.contains(":")) { //$NON-NLS-1$
+			return Messages.AddCriterionInputValidator_Character_colon_not_allowed;
 		} else {
 			if(brothers_or_others != null) {
 				for(Criterion criterion: brothers_or_others) {
 					if(newText.equals(criterion.getId())) {
-						return "Duplicated id";
+						return Messages.AddCriterionInputValidator_Duplicated_id;
 					}
 				}
 			}

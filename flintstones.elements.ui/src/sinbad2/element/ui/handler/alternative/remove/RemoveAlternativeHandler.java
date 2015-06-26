@@ -13,10 +13,11 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.alternative.operation.RemoveAlternativeOperation;
+import sinbad2.element.ui.nls.Messages;
 
 public class RemoveAlternativeHandler extends AbstractHandler {
 	
-	public static final String ID = "flintstones.element.alternative.remove";
+	public static final String ID = "flintstones.element.alternative.remove"; //$NON-NLS-1$
 	
 	
 	public RemoveAlternativeHandler() {}
@@ -30,7 +31,7 @@ public class RemoveAlternativeHandler extends AbstractHandler {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
 		Alternative alternative = (Alternative) selection.getFirstElement();
 		
-		IUndoableOperation operation = new RemoveAlternativeOperation("Remove alternative", elementSet, alternative);
+		IUndoableOperation operation = new RemoveAlternativeOperation(Messages.RemoveAlternativeHandler_Remove_alternative, elementSet, alternative);
 		IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 		
 		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

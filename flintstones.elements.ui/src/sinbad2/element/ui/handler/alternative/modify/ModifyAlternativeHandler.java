@@ -16,6 +16,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.alternative.operation.ModifyAlternativeOperation;
+import sinbad2.element.ui.nls.Messages;
 
 public class ModifyAlternativeHandler extends AbstractHandler {
 	
@@ -47,7 +48,7 @@ public class ModifyAlternativeHandler extends AbstractHandler {
 		String newId = null;
 		
 		InputDialog dialog = new InputDialog(
-				Display.getCurrent().getActiveShell(), "Modify alternative", "Insert alternative", 
+				Display.getCurrent().getActiveShell(), Messages.ModifyAlternativeHandler_Modify_alternative, Messages.ModifyAlternativeHandler_Insert_alternative, 
 				oldId, new ModifyAlternativeInputValidator(elementSet, oldId));
 		
 		if(dialog.open() == Window.OK) {
@@ -60,7 +61,7 @@ public class ModifyAlternativeHandler extends AbstractHandler {
 		}
 		
 		if(doit) {
-			IUndoableOperation operation = new ModifyAlternativeOperation("Modify alternative",elementSet, alternative, newId);
+			IUndoableOperation operation = new ModifyAlternativeOperation(Messages.ModifyAlternativeHandler_Modify_alternative,elementSet, alternative, newId);
 			IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 			
 			operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

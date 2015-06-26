@@ -15,10 +15,11 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.alternative.operation.RemoveMultipleAlternativesOperation;
+import sinbad2.element.ui.nls.Messages;
 
 public class RemoveMultipleAlternativeHandler extends AbstractHandler {
 
-	public static final String ID = "flintstones.element.alternative.remove";
+	public static final String ID = "flintstones.element.alternative.remove"; //$NON-NLS-1$
 	
 	public RemoveMultipleAlternativeHandler() {}
 	
@@ -32,7 +33,7 @@ public class RemoveMultipleAlternativeHandler extends AbstractHandler {
 		@SuppressWarnings("unchecked")
 		List<Alternative> alternatives = selection.toList();
 		
-		IUndoableOperation operation = new RemoveMultipleAlternativesOperation("Remove multiple alternative", elementSet, alternatives);
+		IUndoableOperation operation = new RemoveMultipleAlternativesOperation(Messages.RemoveMultipleAlternativeHandler_Remove_multiple_alternatives, elementSet, alternatives);
 		IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 		
 		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

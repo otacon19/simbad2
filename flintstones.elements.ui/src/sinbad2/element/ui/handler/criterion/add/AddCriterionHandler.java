@@ -15,6 +15,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.criterion.operation.AddCriterionOperation;
+import sinbad2.element.ui.nls.Messages;
 
 public class AddCriterionHandler extends AbstractHandler {
 	
@@ -36,8 +37,8 @@ public class AddCriterionHandler extends AbstractHandler {
 		boolean cost = true;
 		
 		AddCriterionInputDialog dialog = new AddCriterionInputDialog(
-				Display.getCurrent().getActiveShell(), "Add criterion",
-				"Insert criterion id", "", new AddCriterionInputValidator(parent, elementSet), parent);
+				Display.getCurrent().getActiveShell(), Messages.AddCriterionHandler_Add_criterion,
+				Messages.AddCriterionHandler_Insert_criterion_id, "", new AddCriterionInputValidator(parent, elementSet), parent); //$NON-NLS-2$
 		
 		if(dialog.open() == Window.OK) {
 			id = dialog.getValue();
@@ -48,7 +49,7 @@ public class AddCriterionHandler extends AbstractHandler {
 		}
 		
 		if(doit) {
-			IUndoableOperation operation = new AddCriterionOperation("Add criterion", id, cost, parent, elementSet);
+			IUndoableOperation operation = new AddCriterionOperation(Messages.AddCriterionHandler_Add_criterion, id, cost, parent, elementSet);
 			IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 			
 			operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

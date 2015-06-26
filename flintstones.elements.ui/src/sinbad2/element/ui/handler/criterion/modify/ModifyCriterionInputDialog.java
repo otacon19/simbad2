@@ -9,6 +9,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import sinbad2.element.ui.nls.Messages;
+
 public class ModifyCriterionInputDialog extends InputDialog{
 	
 	private boolean _isCost;
@@ -27,7 +29,7 @@ public class ModifyCriterionInputDialog extends InputDialog{
 		
 		container =(Composite) super.createDialogArea(parent);
 		_isCostButton = new Button(container, SWT.CHECK);
-		_isCostButton.setText("Cost criterion");
+		_isCostButton.setText(Messages.ModifyCriterionInputDialog_Cost_criterion);
 		_isCostButton.setSelection(_isCost);
 		_isCostButton.addSelectionListener(new SelectionAdapter() {
 			@Override

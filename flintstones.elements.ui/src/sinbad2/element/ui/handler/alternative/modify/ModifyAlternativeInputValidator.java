@@ -6,6 +6,7 @@ import org.eclipse.jface.dialogs.IInputValidator;
 
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
+import sinbad2.element.ui.nls.Messages;
 
 public class ModifyAlternativeInputValidator implements IInputValidator {
 	
@@ -29,14 +30,14 @@ public class ModifyAlternativeInputValidator implements IInputValidator {
 		if(newText.equals(_oldId)) {
 			return null;
 		} else if(newText.isEmpty()) {
-			return "Empty value not allowed";
-		} else if(newText.contains(":")) {
-			return "Character ':' not allowed";
+			return Messages.ModifyAlternativeInputValidator_Empty_value_not_allowed;
+		} else if(newText.contains(":")) { //$NON-NLS-1$
+			return Messages.ModifyAlternativeInputValidator_Character_colon_not_allowed;
 		} else {
 			List<Alternative> alternatives = _elementSet.getAlternatives();
 			for(Alternative alternative: alternatives) {
 				if(newText.equals(alternative.getId())) {
-					return "Duplicated id";
+					return Messages.ModifyAlternativeInputValidator_Duplicated_id;
 				}
 			}
 		}

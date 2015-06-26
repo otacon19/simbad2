@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Display;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.operation.AddAlternativeOperation;
+import sinbad2.element.ui.nls.Messages;
 
 public class AddAlternativeHandler extends AbstractHandler {
 	
@@ -29,8 +30,8 @@ public class AddAlternativeHandler extends AbstractHandler {
 		String id = null;
 		
 		AddAlternativeInputDialog dialog = new AddAlternativeInputDialog(
-				Display.getCurrent().getActiveShell(), "Add alternative", 
-				"Insert alternative id", "", new AddAlternativeInputValidator(elementSet));
+				Display.getCurrent().getActiveShell(), Messages.AddAlternativeHandler_Add_alternative, 
+				Messages.AddAlternativeHandler_Insert_alternative, "", new AddAlternativeInputValidator(elementSet)); //$NON-NLS-2$ //$NON-NLS-1$
 		
 		if(dialog.open() == Window.OK) {
 			id = dialog.getValue();
@@ -39,7 +40,7 @@ public class AddAlternativeHandler extends AbstractHandler {
 		}
 		
 		if(doit) {
-			IUndoableOperation operation = new AddAlternativeOperation("Add alternative", elementSet, id);
+			IUndoableOperation operation = new AddAlternativeOperation(Messages.AddAlternativeHandler_Add_alternative, elementSet, id);
 			IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 			
 			operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);
