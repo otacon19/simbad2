@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Ui
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.valuation.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: sinbad2.valuation;bundle-version="1.0.0";visibility:=reexport,

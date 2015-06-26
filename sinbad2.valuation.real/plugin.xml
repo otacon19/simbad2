@@ -6,7 +6,7 @@
       <valuation
             domain="flintstones.domain.numeric.real"
             id="flintstones.valuation.real"
-            name="Real">
+            name="%valuation.real">
          <type
                implementation="sinbad2.valuation.real.RealValuation">
          </type>

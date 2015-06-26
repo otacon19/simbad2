@@ -5,7 +5,7 @@
          point="flintstones.domain">
       <domain
             id="flintstones.domain.numeric.real"
-            name="Real numeric">
+            name="%domain.numeric.real">
          <type>
             <numeric
                   implementation="sinbad2.domain.numeric.real.NumericRealDomain">

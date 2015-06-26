@@ -6,7 +6,7 @@
       <valuation
             domain="flintstones.domain.numeric.integer"
             id="flintstones.valuation.integer.interval"
-            name="Integer interval">
+            name="%valuation.integer.interval">
          <type
                implementation="sinbad2.valuation.integer.interval.IntegerInterval">
          </type>

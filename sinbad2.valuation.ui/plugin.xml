@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="flintstones.valuation.ui" name="Valuation ui" schema="schema/flintstones.valuation.ui.exsd"/>
+   <extension-point id="flintstones.valuation.ui" name="%extension-point.valuation.ui" schema="schema/flintstones.valuation.ui.exsd"/>
 
 </plugin>

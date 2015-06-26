@@ -84,7 +84,7 @@ public class MultiplePerspectives implements IWorkspaceListener {
 	private void configureActions() {
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
 		//TODO todo perspectivas?
-		IConfigurationElement[] perspectives = reg.getConfigurationElementsFor("org.eclipse.ui.perspectives");
+		IConfigurationElement[] perspectives = reg.getConfigurationElementsFor("org.eclipse.ui.perspectives"); //$NON-NLS-1$
 		
 		_perspectives = new HashMap<String, IConfigurationElement>();
 		String id;
@@ -92,7 +92,7 @@ public class MultiplePerspectives implements IWorkspaceListener {
 		int counter;
 		
 		for(IConfigurationElement perspective: perspectives) {
-			id = perspective.getAttribute("id");
+			id = perspective.getAttribute("id"); //$NON-NLS-1$
 			counter = 0;
 			find = false;
 			do {
@@ -119,11 +119,11 @@ public class MultiplePerspectives implements IWorkspaceListener {
 			perspective = _perspectives.get(phase.getId());
 			action = _actions.get(phase.getId());			
 			name =  WordUtils.capitalize(phase.getName());
-			iconPath = perspective.getAttribute("icon");
+			iconPath = perspective.getAttribute("icon"); //$NON-NLS-1$
 			imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(perspective.getDeclaringExtension().
 					getContributor().getName(), iconPath);
 			
-			configureActions(action, name, imageDescriptor, "");
+			configureActions(action, name, imageDescriptor, ""); //$NON-NLS-1$
 		}
 		
 	}

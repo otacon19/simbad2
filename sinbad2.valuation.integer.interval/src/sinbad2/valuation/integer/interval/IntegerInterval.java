@@ -12,10 +12,11 @@ import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
+import sinbad2.valuation.integer.interval.nls.Messages;
 
 public class IntegerInterval extends Valuation {
 
-	public static final String ID = "flintstones.valuation.integer.interval";
+	public static final String ID = "flintstones.valuation.integer.interval"; //$NON-NLS-1$
 	
 	public long _min;
 	public long _max;
@@ -80,7 +81,7 @@ public class IntegerInterval extends Valuation {
 	
 	@Override
 	public String toString() {
-		return ("Integer interval[" + _min + "," + _max + "] in" + _domain.toString());
+		return ("Integer interval[" + _min + "," + _max + "] in" + _domain.toString()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	@Override
@@ -123,7 +124,7 @@ public class IntegerInterval extends Valuation {
 			long otherMidle = (((IntegerInterval) other)._max + ((IntegerInterval) other)._min) / 2l;
 			return Long.valueOf(middle).compareTo(Long.valueOf(otherMidle));
 		} else {
-			throw new IllegalArgumentException("Differents domains");
+			throw new IllegalArgumentException(Messages.IntegerInterval_Differents_domains);
 		}
 	}
 	
@@ -139,19 +140,19 @@ public class IntegerInterval extends Valuation {
 
 	@Override
 	public String changeFormatValuationToString() {
-		return "[" + Long.toString(_min) + ", " + Long.toString(_max) + "]";
+		return "[" + Long.toString(_min) + ", " + Long.toString(_max) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeAttribute("min", Long.toString(_min));
-		writer.writeAttribute("max", Long.toString(_max));	
+		writer.writeAttribute("min", Long.toString(_min)); //$NON-NLS-1$
+		writer.writeAttribute("max", Long.toString(_max));	 //$NON-NLS-1$
 	}
 
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {
-		_min = Long.parseLong(reader.getStartElementAttribute("min"));
-		_max = Long.parseLong(reader.getStartElementAttribute("max"));
+		_min = Long.parseLong(reader.getStartElementAttribute("min")); //$NON-NLS-1$
+		_max = Long.parseLong(reader.getStartElementAttribute("max")); //$NON-NLS-1$
 	}
 	
 	private Valuation normalizeInterval() {

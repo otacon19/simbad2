@@ -10,10 +10,11 @@ import sinbad2.core.validator.Validator;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.real.interval.nls.Messages;
 
 public class RealInterval extends Valuation {
 	
-	public static final String ID = "flintstones.valuation.real.interval";
+	public static final String ID = "flintstones.valuation.real.interval"; //$NON-NLS-1$
 
 	public double _min;
 	public double _max;
@@ -79,7 +80,7 @@ public class RealInterval extends Valuation {
 	
 	@Override
 	public String toString() {
-		return ("Real interval[" + _min + "," + _max + "] in" + _domain.toString());
+		return ("Real interval[" + _min + "," + _max + "] in" + _domain.toString()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	@Override
@@ -122,7 +123,7 @@ public class RealInterval extends Valuation {
 			double otherMidle = (((RealInterval) other)._max + ((RealInterval) other)._min) / 2d;
 			return Double.compare(middle, otherMidle);	
 		} else {
-			throw new IllegalArgumentException("Differents domains");
+			throw new IllegalArgumentException(Messages.RealInterval_Differents_domains);
 		}
 	}
 	
@@ -138,19 +139,19 @@ public class RealInterval extends Valuation {
 
 	@Override
 	public String changeFormatValuationToString() {
-		return "[" + Double.toString(_min) + ", " + Double.toString(_max) + "]";
+		return "[" + Double.toString(_min) + ", " + Double.toString(_max) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeAttribute("min", Double.toString(_min));
-		writer.writeAttribute("max", Double.toString(_max));	
+		writer.writeAttribute("min", Double.toString(_min)); //$NON-NLS-1$
+		writer.writeAttribute("max", Double.toString(_max));	 //$NON-NLS-1$
 	}
 
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {
-		_min = Double.parseDouble(reader.getStartElementAttribute("min"));
-		_max = Double.parseDouble(reader.getStartElementAttribute("max"));
+		_min = Double.parseDouble(reader.getStartElementAttribute("min")); //$NON-NLS-1$
+		_max = Double.parseDouble(reader.getStartElementAttribute("max")); //$NON-NLS-1$
 	}
 
 }

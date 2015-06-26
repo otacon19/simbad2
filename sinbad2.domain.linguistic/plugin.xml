@@ -5,7 +5,7 @@
          point="flintstones.domain">
       <domain
             id="flintstones.domain.linguistic"
-            name="Linguistic">
+            name="%domain.linguistic">
          <type>
             <linguistic
                   implementation="sinbad2.domain.linguistic.fuzzy.FuzzySet">

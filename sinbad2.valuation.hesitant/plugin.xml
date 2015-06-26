@@ -6,7 +6,7 @@
       <valuation
             domain="flintstones.domain.linguistic"
             id="flintstones.valuation.hesitant"
-            name="Hesitant">
+            name="%valuation.hesitant">
          <type
                implementation="sinbad2.valuation.hesitant.HesitantValuation">
          </type>
@@ -14,7 +14,7 @@
       <valuation
             domain="flintstones.domain.linguistic.unbalanced"
             id="flintstones.valuation.hesitantU"
-            name="Hesitant">
+            name="%valuation.hesitant.unbalanced">
          <type
                implementation="sinbad2.valuation.hesitant.HesitantValuation">
          </type>

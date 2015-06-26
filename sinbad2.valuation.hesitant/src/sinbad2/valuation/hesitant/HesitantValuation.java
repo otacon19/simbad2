@@ -15,7 +15,7 @@ public class HesitantValuation extends Valuation {
 	private LabelLinguisticDomain _lowerTerm;
 	private LabelLinguisticDomain _label;
 	
-	public static final String ID = "flintstones.valuation.hesitant";
+	public static final String ID = "flintstones.valuation.hesitant"; //$NON-NLS-1$
 
 	@Override
 	public int compareTo(Valuation arg0) {
@@ -38,18 +38,18 @@ public class HesitantValuation extends Valuation {
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
 		
-		writer.writeStartElement("hesitant");
+		writer.writeStartElement("hesitant"); //$NON-NLS-1$
 		
-		writer.writeStartElement("label");
+		writer.writeStartElement("label"); //$NON-NLS-1$
 		_label.save(writer);
 		writer.writeEndElement();
-		writer.writeStartElement("term");
+		writer.writeStartElement("term"); //$NON-NLS-1$
 		_term.save(writer);
 		writer.writeEndElement();
-		writer.writeStartElement("upperTerm");
+		writer.writeStartElement("upperTerm"); //$NON-NLS-1$
 		_upperTerm.save(writer);
 		writer.writeEndElement();
-		writer.writeStartElement("lowerTerm");
+		writer.writeStartElement("lowerTerm"); //$NON-NLS-1$
 		_lowerTerm.save(writer);
 		writer.writeEndElement();
 		
@@ -71,13 +71,13 @@ public class HesitantValuation extends Valuation {
 				if ("label".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
 					_label = new LabelLinguisticDomain();
 					_label.read(reader);
-				} else if("term".equals(reader.getStartElementLocalPart())){
+				} else if("term".equals(reader.getStartElementLocalPart())){ //$NON-NLS-1$
 					_term = new LabelLinguisticDomain();
 					_term.read(reader);
-				} else if("upperTerm".equals(reader.getStartElementLocalPart())){
+				} else if("upperTerm".equals(reader.getStartElementLocalPart())){ //$NON-NLS-1$
 					_upperTerm = new LabelLinguisticDomain();
 					_upperTerm.read(reader);
-				} else if("lowerTerm".equals(reader.getStartElementLocalPart())) {
+				} else if("lowerTerm".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
 					_lowerTerm = new LabelLinguisticDomain();
 					_lowerTerm.read(reader);
 				}

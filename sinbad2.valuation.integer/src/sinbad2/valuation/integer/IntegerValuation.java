@@ -15,7 +15,7 @@ import sinbad2.valuation.ValuationsManager;
 
 public class IntegerValuation extends Valuation {
 	
-	public static final String ID = "flintstones.valuation.integer";
+	public static final String ID = "flintstones.valuation.integer"; //$NON-NLS-1$
 	
 	public long _value;
 
@@ -69,7 +69,7 @@ public class IntegerValuation extends Valuation {
 	
 	@Override
 	public String toString() {
-		return ("Integer(" + _value + ") in" + _domain.toString());
+		return ("Integer(" + _value + ") in" + _domain.toString()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	@Override
@@ -129,13 +129,13 @@ public class IntegerValuation extends Valuation {
 	
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeAttribute("value", Long.toString(_value));
+		writer.writeAttribute("value", Long.toString(_value)); //$NON-NLS-1$
 		
 	}
 
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {
-		_value = Long.parseLong(reader.getStartElementAttribute("value"));	
+		_value = Long.parseLong(reader.getStartElementAttribute("value"));	 //$NON-NLS-1$
 	}
 	
 	private Valuation normalizeRange() {

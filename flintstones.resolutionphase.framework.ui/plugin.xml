@@ -93,8 +93,8 @@
             locationURI="menu:org.eclipse.ui.main.menu?after=flintstones.menu.edit">
          <menu
                id="flintstones.menu.framework"
-               label="Framework"
-               mnemonic="F">
+               label="%menu.framework"
+               mnemonic="%menu.framework.mnemonic">
          </menu>
       </menuContribution>
    </extension>
@@ -103,7 +103,7 @@
       <page
             class="sinbad2.resolutionphase.framework.ui.preferences.FrameworkPreferencesPage"
             id="sinbad2.resolutionphase.framework.preferences.FrameworkPreferencesPage"
-            name="Framework">
+            name="%page.preferences.framework">
       </page>
    </extension>
    <extension

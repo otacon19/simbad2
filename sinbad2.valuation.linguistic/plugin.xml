@@ -6,7 +6,7 @@
       <valuation
             domain="flintstones.domain.linguistic"
             id="flintstones.valuation.linguistic"
-            name="Linguistic">
+            name="%valuation.linguistic">
          <type
                implementation="sinbad2.valuation.linguistic.LinguisticValuation">
          </type>
@@ -14,7 +14,7 @@
       <valuation
             domain="flintstones.domain.linguistic.unbalanced"
             id="flintstones.valuation.linguistic.unbalanced"
-            name="Unbalanced linguistic">
+            name="%valuation.linguistic.unbalanced">
          <type
                implementation="sinbad2.valuation.linguistic.LinguisticValuation">
          </type>

@@ -22,7 +22,7 @@
             class="sinbad2.element.ui.view.alternatives.AlternativesView"
             icon="icons/alternatives.png"
             id="flintstones.element.ui.view.alternatives"
-            name="Alternatives"
+            name="%view.alternatives"
             restorable="false">
       </view>
       <view
@@ -31,7 +31,7 @@
             class="sinbad2.element.ui.view.criteria.CriteriaView"
             icon="icons/criteria.png"
             id="flintstones.element.ui.view.criteria"
-            name="Criteria"
+            name="%view.criteria"
             restorable="true">
       </view>
    </extension>
@@ -39,17 +39,17 @@
          point="org.eclipse.ui.contexts">
       <context
             id="flintstones.element.ui.view.alternatives.alternatives_view"
-            name="Alternatives context"
+            name="%context.alternatives"
             parentId="flintstones.core.ui">
       </context>
       <context
             id="flintstones.element.ui.view.criteria.criteria_view"
-            name="Criteria context"
+            name="%context.criteria"
             parentId="flintstones.core.ui">
       </context>
       <context
             id="flintstones.element.ui.view.experts.experts_view"
-            name="Experts context"
+            name="%context.experts"
             parentId="flintstones.core.ui">
       </context>
    </extension>
@@ -76,41 +76,41 @@
       </command>
       <category
             id="flintstones.element.alternatives.category"
-            name="alternatives">
+            name="%category.command.alternatives">
       </category>
       <command
             categoryId="flintstones.element.alternatives.category"
             id="flintstones.element.alternative.add"
-            name="&amp;Add">
+            name="%command.alternative.add">
       </command>
       <command
             categoryId="flintstones.element.alternatives.category"
             id="flintstones.element.alternative.modify"
-            name="&amp;Modify">
+            name="%command.alternative.modify">
       </command>
       <command
             categoryId="flintstones.element.alternatives.category"
             id="flintstones.element.alternative.remove"
-            name="&amp;Remove">
+            name="%command.alternative.remove">
       </command>
       <category
             id="flintstones.element.criteria.category"
-            name="criteria">
+            name="%category.command.criteria">
       </category>
       <command
             categoryId="flintstones.element.criteria.category"
             id="flintstones.element.criterion.add"
-            name="&amp;Add">
+            name="%command.criterion.add">
       </command>
       <command
             categoryId="flintstones.element.criteria.category"
             id="flintstones.element.criterion.modify"
-            name="&amp;Modify">
+            name="%command.criterion.modify">
       </command>
       <command
             categoryId="flintstones.element.criteria.category"
             id="flintstones.element.criterion.remove"
-            name="&amp;Remove">
+            name="%command.criterion.remove">
       </command>
    </extension>
    <extension
@@ -433,8 +433,8 @@
          <menu
                icon="icons/alternatives.png"
                id="flintstones.menu.alternatives"
-               label="Alternatives"
-               mnemonic="A">
+               label="%menu.alternatives"
+               mnemonic="%menu.alternatives.mnemonic">
             <command
                   commandId="flintstones.element.alternative.add"
                   style="push">
@@ -451,8 +451,8 @@
          <menu
                icon="icons/criteria.png"
                id="flintstones.menu.criteria"
-               label="Criteria"
-               mnemonic="C">
+               label="%menu.criteria"
+               mnemonic="%menu.criteria.mnemonic">
             <command
                   commandId="flintstones.element.criterion.add"
                   style="push">
@@ -756,13 +756,13 @@
             category="sinbad2.resolutionphase.framework.preferences.FrameworkPreferencesPage"
             class="sinbad2.element.ui.preferences.experts.ExpertsPreferencePage"
             id="sinbad2.element.preferences.experts.ExpertsPreferencesPage"
-            name="Experts">
+            name="%page.preferences.experts">
       </page>
       <page
             category="sinbad2.resolutionphase.framework.preferences.FrameworkPreferencesPage"
             class="sinbad2.element.ui.preferences.criteria.CriteriaPreferencePage"
             id="sinbad2.element.preferences.criteria.CriteriaPreferencesPage"
-            name="Criteria">
+            name="%page.preferences.criteria">
       </page>
    </extension>
    <extension

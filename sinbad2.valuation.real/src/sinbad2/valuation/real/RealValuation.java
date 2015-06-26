@@ -13,7 +13,7 @@ import sinbad2.valuation.Valuation;
 
 public class RealValuation extends Valuation {
 	
-	public static final String ID = "flintstones.valuation.real";
+	public static final String ID = "flintstones.valuation.real"; //$NON-NLS-1$
 	
 	public double _value;
 	
@@ -66,7 +66,7 @@ public class RealValuation extends Valuation {
 	
 	@Override
 	public String toString() {
-		return "(Real(" + _value + ") in " + _domain.toString();
+		return "(Real(" + _value + ") in " + _domain.toString(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	@Override
@@ -125,12 +125,12 @@ public class RealValuation extends Valuation {
 
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeAttribute("value", Double.toString(_value));	
+		writer.writeAttribute("value", Double.toString(_value));	 //$NON-NLS-1$
 	}
 
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {
-		_value = Double.parseDouble(reader.getStartElementAttribute("value"));
+		_value = Double.parseDouble(reader.getStartElementAttribute("value")); //$NON-NLS-1$
 	}
 
 }

@@ -11,11 +11,12 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.linguistic.nls.Messages;
 
 
 public class LinguisticValuation extends Valuation {
 	
-	public static final String ID = "flintstones.valuation.linguistic";
+	public static final String ID = "flintstones.valuation.linguistic"; //$NON-NLS-1$
 	
 	public LabelLinguisticDomain _label;
 	
@@ -45,7 +46,7 @@ public class LinguisticValuation extends Valuation {
 		if(((FuzzySet) _domain).getLabelSet().containsLabel(label)) {
 			_label = (LabelLinguisticDomain) label;
 		} else {
-			throw new IllegalArgumentException("Lable not contains in domain.");
+			throw new IllegalArgumentException(Messages.LinguisticValuation_Not_contains_in_domain);
 		}
 	}
 	
@@ -76,7 +77,7 @@ public class LinguisticValuation extends Valuation {
 	
 	@Override
 	public String toString() {
-		return (_label + "in" + _domain.toString());
+		return (_label + "in" + _domain.toString()); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -106,7 +107,7 @@ public class LinguisticValuation extends Valuation {
 		if(_domain.equals(other.getDomain())) {
 			return _label.compareTo(((LinguisticValuation) other)._label);
 		} else {
-			throw new IllegalArgumentException("Different domains");
+			throw new IllegalArgumentException(Messages.LinguisticValuation_Different_domains);
 		}
 	}
 	
@@ -129,7 +130,7 @@ public class LinguisticValuation extends Valuation {
 
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeStartElement("label");
+		writer.writeStartElement("label"); //$NON-NLS-1$
 		_label.save(writer);
 		writer.writeEndElement();
 	}

@@ -13,7 +13,7 @@ import sinbad2.domain.valuations.DomainValuationsManager;
 
 public class ValuationsManager {
 	
-	private final static String EXTENSION_POINT = "flintstones.valuation";
+	private final static String EXTENSION_POINT = "flintstones.valuation"; //$NON-NLS-1$
 	
 	private static ValuationsManager _instance = null;
 	

@@ -62,7 +62,7 @@ public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 		if(_registry.getElement(EValuationElements.domain).equals(domain.getType())) {
 			_domain = domain;
 		} else {
-			throw new IllegalArgumentException(domain.getType() + " expected"); 
+			throw new IllegalArgumentException(domain.getType() + " expected");  //$NON-NLS-1$
 		}
 	}
 	

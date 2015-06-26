@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="flintstones.domain.ui.modify.dialog" name="Modify domain dialog" schema="schema/flintstones.domain.ui.modify.dialog.exsd"/>
-   <extension-point id="flintstones.domain.ui.new.dialog" name="New domain dialog" schema="schema/flintstones.domain.ui.new.dialog.exsd"/>
-   <extension-point id="flintstones.domain.ui" name="Flintstones domain ui" schema="schema/flintstones.domain.ui.exsd"/>
+   <extension-point id="flintstones.domain.ui.modify.dialog" name="%extension-point.modify" schema="schema/flintstones.domain.ui.modify.dialog.exsd"/>
+   <extension-point id="flintstones.domain.ui.new.dialog" name="%extension-point.new" schema="schema/flintstones.domain.ui.new.dialog.exsd"/>
+   <extension-point id="flintstones.domain.ui" name="%extension-point.domain.ui" schema="schema/flintstones.domain.ui.exsd"/>
    <extension
          point="org.eclipse.ui.views">
       <category
             id="flintstones.domain.category"
-            name="Domains">
+            name="%category.domains.views">
       </category>
       <view
             allowMultiple="false"
@@ -16,7 +16,7 @@
             class="sinbad2.domain.ui.view.domain.DomainView"
             icon="icons/domain.png"
             id="flintstones.domain.ui.view.domain"
-            name="Domain"
+            name="%view.domain"
             restorable="true">
       </view>
       <view
@@ -25,7 +25,7 @@
             class="sinbad2.domain.ui.view.domains.DomainsView"
             icon="icons/domains.png"
             id="flintstones.domain.ui.view.domains"
-            name="Domains"
+            name="%view.domains"
             restorable="true">
       </view>
    </extension>
@@ -33,12 +33,12 @@
          point="org.eclipse.ui.contexts">
       <context
             id="flintstones.domain.ui.view.domains.domains_view"
-            name="Domains context"
+            name="%context.domains"
             parentId="flintstones.core.ui">
       </context>
       <context
             id="flintstones.domain.ui.view.domain.domain_view"
-            name="Domain context"
+            name="%context.domain"
             parentId="flintstones.core.ui">
       </context>
    </extension>
@@ -46,22 +46,22 @@
          point="org.eclipse.ui.commands">
       <category
             id="flintstones.domains.category"
-            name="Domains">
+            name="%category.domains.commands">
       </category>
       <command
             categoryId="flintstones.domains.category"
             id="flintstones.domain.add"
-            name="&amp;Add">
+            name="%command.domains.add">
       </command>
       <command
             categoryId="flintstones.domains.category"
             id="flintstones.domain.modify"
-            name="&amp;Modify">
+            name="%command.domains.modify">
       </command>
       <command
             categoryId="flintstones.domains.category"
             id="flintstones.domain.remove"
-            name="&amp;Remove">
+            name="%command.domains.remove">
       </command>
    </extension>
    <extension
@@ -207,8 +207,8 @@
          <menu
                icon="icons/domains.png"
                id="flintstones.menu.domains"
-               label="Domains"
-               mnemonic="D">
+               label="%menu.domains"
+               mnemonic="%menu.domains.mnemonic">
             <command
                   commandId="flintstones.domain.add"
                   style="push">
