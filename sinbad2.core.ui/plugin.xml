@@ -103,27 +103,27 @@
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.io.new"
-            name="%command.new.name">
+            name="%command.new">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.ui.io.read"
-            name="%command.open.name">
+            name="%command.open">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.ui.io.save"
-            name="%command.save.name">
+            name="%command.save">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.ui.io.save.as"
-            name="%command.save.as.name">
+            name="%command.save.as">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.ui.io.save.and.close"
-            name="%command.save.and.close.name">
+            name="%command.save.and.close">
       </command>
       <category
             id="sinbad2.ui.category_undo_redo"
@@ -132,12 +132,12 @@
       <command
             categoryId="sinbad2.ui.category_undo_redo"
             id="flintstones.core.undo"
-            name="%command.undo.name">
+            name="%command.undo">
       </command>
       <command
             categoryId="sinbad2.ui.category_undo_redo"
             id="flintstones.core.redo"
-            name="%command..redo.name">
+            name="%command.redo">
       </command>
    </extension>
    <extension

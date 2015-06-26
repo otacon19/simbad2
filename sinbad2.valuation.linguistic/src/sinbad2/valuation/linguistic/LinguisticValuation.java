@@ -77,7 +77,7 @@ public class LinguisticValuation extends Valuation {
 	
 	@Override
 	public String toString() {
-		return (_label + "in" + _domain.toString()); //$NON-NLS-1$
+		return (_label + " in " + _domain.toString()); //$NON-NLS-1$
 	}
 	
 	@Override
