@@ -7,9 +7,9 @@ import org.eclipse.ui.AbstractSourceProvider;
 import org.eclipse.ui.ISources;
 
 public class BrothersCriteriaSelectedSourceProvider extends AbstractSourceProvider {
-	public final static String BROTHERS_CRITERIA_SELECTED = "flintstones.ui.brothers.criteria.selected.state";
-	public final static String ENABLED = "ENABLED";
-	public final static String DISENABLED = "DISENABLED";
+	public final static String BROTHERS_CRITERIA_SELECTED = "flintstones.ui.brothers.criteria.selected.state"; //$NON-NLS-1$
+	public final static String ENABLED = "ENABLED"; //$NON-NLS-1$
+	public final static String DISENABLED = "DISENABLED"; //$NON-NLS-1$
 	
 	private boolean _brothers_criteria_selected = true;
 	

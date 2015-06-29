@@ -13,10 +13,11 @@ import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.operation.RemoveDomainOperation;
+import sinbad2.domain.ui.nls.Messages;
 
 public class RemoveDomainHandler extends AbstractHandler {
 	
-	public static final String ID = "flintstones.domain.remove";
+	public static final String ID = "flintstones.domain.remove"; //$NON-NLS-1$
 	
 	public RemoveDomainHandler() {}
 	
@@ -28,7 +29,7 @@ public class RemoveDomainHandler extends AbstractHandler {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
 		Domain domain = (Domain) selection.getFirstElement();
 		
-		IUndoableOperation operation = new RemoveDomainOperation("Remove domain", domain, domainSet);
+		IUndoableOperation operation = new RemoveDomainOperation(Messages.RemoveDomainHandler_Remove_domain, domain, domainSet);
 		IOperationHistory operationHistoriy = OperationHistoryFactory.getOperationHistory();
 		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);
 		operationHistoriy.execute(operation, null, null);

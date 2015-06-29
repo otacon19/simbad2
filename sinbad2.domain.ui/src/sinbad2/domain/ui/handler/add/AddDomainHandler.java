@@ -27,7 +27,7 @@ import sinbad2.domain.valuations.DomainValuationsManager;
 
 public class AddDomainHandler extends AbstractHandler {
 	
-	public static final String ID = "flintstones.domain.add";
+	public static final String ID = "flintstones.domain.add"; //$NON-NLS-1$
 	
 	private DomainUIsManager _domainUIsManager;
 	private DomainsManager _domainsManager;
@@ -66,7 +66,7 @@ public class AddDomainHandler extends AbstractHandler {
 						
 						_domainValuationsManager.addSupportedValuationForNewDomain(domain.getId(), ((String[]) selections[1])[0]);
 						
-						IUndoableOperation operation = new AddDomainOperation("Add domain", domain, _domainSet);
+						IUndoableOperation operation = new AddDomainOperation(Messages.AddDomainHandler_Add_domain, domain, _domainSet);
 						IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 						operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);
 						operationHistory.execute(operation, null, null);
@@ -107,11 +107,11 @@ public class AddDomainHandler extends AbstractHandler {
 		ILabelProvider domainValuationLabelProvider = new DomainValuationLabelProvider();
 		TwoPaneElementSelector dialogTwoPanes = new TwoPaneElementSelector(Display.getCurrent().getActiveShell(), domainLabelProvider, domainValuationLabelProvider);
 		
-		dialogTwoPanes.setTitle("New domain");
-		dialogTwoPanes.setMessage("Domain");
+		dialogTwoPanes.setTitle(Messages.AddDomainHandler_New_domain);
+		dialogTwoPanes.setMessage(Messages.AddDomainHandler_Domain);
 		dialogTwoPanes.setElements(input.toArray());
-		dialogTwoPanes.setUpperListLabel("Domains");
-		dialogTwoPanes.setLowerListLabel("To assess valuations");
+		dialogTwoPanes.setUpperListLabel(Messages.AddDomainHandler_Domains);
+		dialogTwoPanes.setLowerListLabel(Messages.AddDomainHandler_To_assess_valuations);
 		dialogTwoPanes.setMultipleSelection(false);
 		
 		return dialogTwoPanes;	

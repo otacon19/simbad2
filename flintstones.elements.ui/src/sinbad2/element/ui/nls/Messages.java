@@ -22,6 +22,14 @@ public class Messages extends NLS {
 	public static String AddExpertInputValidator_Character_colon_not_allowed;
 	public static String AddExpertInputValidator_Duplicated_id;
 	public static String AddExpertInputValidator_Empty_value_not_allowed;
+	public static String CriteriaPreferencePage_Assign_new_criterion_as_subcriterion;
+	public static String CriteriaPreferencePage_Benefit_criterion_as_default;
+	public static String CriteriaPreferencePage_Criteria_preferences;
+	public static String CriteriaView_Cost_benefit;
+	public static String CriteriaView_Criteria;
+	public static String CriterionCostEditingSupport_Modify_criterion;
+	public static String ExpertsPreferencePage_Assign_new_experts_as_members;
+	public static String ExpertsPreferencePage_Experts_preferences;
 	public static String ModifyAlternativeHandler_Insert_alternative;
 	public static String ModifyAlternativeHandler_Modify_alternative;
 	public static String ModifyAlternativeInputValidator_Character_colon_not_allowed;
@@ -40,9 +48,11 @@ public class Messages extends NLS {
 	public static String ModifyExpertInputValidator_Duplicated_id;
 	public static String ModifyExpertInputValidator_Empty_value_not_allowed;
 	public static String RemoveAlternativeHandler_Remove_alternative;
+	public static String RemoveCriterionHandler_Remove_criterion;
 	public static String RemoveExpertHandler_Remove_expert;
 	public static String RemoveExpertsHandler_Remove_multiple_experts;
 	public static String RemoveMultipleAlternativeHandler_Remove_multiple_alternatives;
+	public static String RemoveMultipleCriteriaHandler_Remove_multiple_criteria;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

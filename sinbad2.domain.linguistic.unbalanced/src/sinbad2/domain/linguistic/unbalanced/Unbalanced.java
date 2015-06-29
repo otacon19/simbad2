@@ -14,11 +14,12 @@ import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
+import sinbad2.domain.linguistic.unbalanced.nls.Messages;
 import sinbad2.resolutionphase.io.XMLRead;
 
 public class Unbalanced extends FuzzySet {
 	
-	public static final String ID = "flintstones.domain.linguistic.unbalanced";
+	public static final String ID = "flintstones.domain.linguistic.unbalanced"; //$NON-NLS-1$
 	
 	private int[] _lh;
 	private int _sl;
@@ -33,10 +34,10 @@ public class Unbalanced extends FuzzySet {
 	}
 	
 	public Unbalanced(String info) {
-		String[] parts = info.split(";");
-		String[] lhLevels = parts[0].split(",");
-		String[] format = parts[1].split(",");
-		String[] labels = parts[2].split(",");
+		String[] parts = info.split(";"); //$NON-NLS-1$
+		String[] lhLevels = parts[0].split(","); //$NON-NLS-1$
+		String[] format = parts[1].split(","); //$NON-NLS-1$
+		String[] labels = parts[2].split(","); //$NON-NLS-1$
 		
 		loadLhLevels(lhLevels);
 		loadFormat(format);
@@ -152,12 +153,12 @@ public class Unbalanced extends FuzzySet {
 
 	@Override
 	public String toString() {
-		String result = "";
+		String result = ""; //$NON-NLS-1$
 		
 		for(int label: _labels.keySet()) {
-			result += "Label " + label + "\n";
+			result += "Label " + label + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 			for(int domain: _labels.get(label).keySet()) {
-				result += "\tDomain: " + domain + ":" + _labels.get(label).get(domain) + "\n";
+				result += "\tDomain: " + domain + ":" + _labels.get(label).get(domain) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 		
@@ -165,7 +166,7 @@ public class Unbalanced extends FuzzySet {
 	}
 	
 	public String getInfo() {
-		String result = "";
+		String result = ""; //$NON-NLS-1$
 		
 		result = loadStringLh(result);
 		result = loadStringFormat(result);
@@ -177,40 +178,40 @@ public class Unbalanced extends FuzzySet {
 		Validator.notEmpty(labels);
 		
 		if(Validator.isNegative(sr)) {
-			throw new IllegalArgumentException("Invalid sr");
+			throw new IllegalArgumentException(Messages.Unbalanced_Invalid_sr);
 		}
 		
 		if(Validator.isNegative(sl)) {
-			throw new IllegalArgumentException("Invalid sl");
+			throw new IllegalArgumentException(Messages.Unbalanced_Invalid_sl);
 		}
 		
 		if(!Validator.isSameElement(sl + sr + 1, labels.length)) {
-			throw new IllegalArgumentException("Invalid cardinality");
+			throw new IllegalArgumentException(Messages.Unbalanced_Invalid_cardinality);
 		}
 		
 		if((labels.length % 2) == 0) {
-			throw new IllegalArgumentException("Pair cardinality");
+			throw new IllegalArgumentException(Messages.Unbalanced_Pair_cardinality);
 		}
 		
 		if(!Validator.inRange(sldensity, 0, 1)) {
-			throw new IllegalArgumentException("Invalid sl density");
+			throw new IllegalArgumentException(Messages.Unbalanced_Invalid_sl_density);
 		}
 		
 		if(!Validator.inRange(srdensity, 0, 1)) {
-			throw new IllegalArgumentException("Invalid sr density");
+			throw new IllegalArgumentException(Messages.Unbalanced_Invalid_sr_density);
 		}
 		
 		if((initialDomain % 2) == 0) {
-			throw new IllegalArgumentException("Pair initial domain");
+			throw new IllegalArgumentException(Messages.Unbalanced_Pair_initial_domain);
 		}
 		
 		if(initialDomain < 3) {
-			throw new IllegalArgumentException("Invalid initial domain");
+			throw new IllegalArgumentException(Messages.Unbalanced_Invalid_initial_domain);
 		}
 		
 		int aux = (initialDomain - 1) / 2;
 		if((aux > sl) || (aux > sr)) {
-			throw new IllegalArgumentException("Invalid initial domain");
+			throw new IllegalArgumentException(Messages.Unbalanced_Invalid_initial_domain);
 		}
 		
 		Unbalanced unbalancedInfo = new Unbalanced(labels.length);
@@ -247,7 +248,7 @@ public class Unbalanced extends FuzzySet {
 				if (i < sl) {
 					leftLabels[i] = labels[i];
 				} else {
-					leftLabels[i] = "dirty label " + i;
+					leftLabels[i] = Messages.Unbalanced_Dirty_label + i;
 				}
 			}
 			
@@ -275,7 +276,7 @@ public class Unbalanced extends FuzzySet {
 					if (i < lab_t1) {
 						sleLabels[i] = labels[i];
 					} else {
-						sleLabels[i] = "dirty label " + i;
+						sleLabels[i] = Messages.Unbalanced_Dirty_label + i;
 					}
 				}
 
@@ -297,7 +298,7 @@ public class Unbalanced extends FuzzySet {
 					if ((i >= alreadyUsed) && (i < (lab_t + alreadyUsed))) {
 						slcLabels[i] = labels[lab_t1 + j++];
 					} else {
-						slcLabels[i] = "dirty label " + i;
+						slcLabels[i] = Messages.Unbalanced_Dirty_label + i;
 					}
 				}
 				
@@ -330,7 +331,7 @@ public class Unbalanced extends FuzzySet {
 					if (i < lab_t) {
 						sleLabels[i] = labels[i];
 					} else {
-						sleLabels[i] = "dirty label " + i;
+						sleLabels[i] = Messages.Unbalanced_Dirty_label + i;
 					}
 				}
 				
@@ -352,7 +353,7 @@ public class Unbalanced extends FuzzySet {
 					if ((i >= alreadyUsed) && (i < (lab_t1 + alreadyUsed))) {
 						slcLabels[i] = labels[lab_t + j++];
 					} else {
-						slcLabels[i] = "dirty label " + i;
+						slcLabels[i] = Messages.Unbalanced_Dirty_label + i;
 					}
 				}
 				slcFuzzySet = createTrapezoidalFunction(slcLabels);
@@ -398,7 +399,7 @@ public class Unbalanced extends FuzzySet {
 				if (i >= (rightCardinality - sr)) {
 					rightLabels[i] = labels[labels.length - (rightCardinality - i)];
 				} else {
-					rightLabels[i] = "dirty label " + i;
+					rightLabels[i] = Messages.Unbalanced_Dirty_label + i;
 				}
 			}
 			FuzzySet right = createTrapezoidalFunction(rightLabels);
@@ -435,7 +436,7 @@ public class Unbalanced extends FuzzySet {
 					if ((i > (aux / 2)) && (i <= ((aux / 2) + lab_t))) {
 						srcLabels[i] = labels[sl + 1 + j++];
 					} else {
-						srcLabels[i] = "dirty label " + i;
+						srcLabels[i] = Messages.Unbalanced_Dirty_label + i;
 					}
 				}
 
@@ -466,7 +467,7 @@ public class Unbalanced extends FuzzySet {
 					if (i >= (sreCardinality - lab_t1)) {
 						sreLabels[i] = labels[labels.length - (sreCardinality - i)];
 					} else {
-						sreLabels[i] = "dirty label " + i;
+						sreLabels[i] = Messages.Unbalanced_Dirty_label + i;
 					}
 				}
 
@@ -496,7 +497,7 @@ public class Unbalanced extends FuzzySet {
 					if ((i > aux) && i < (aux + lab_t1)) {
 						srcLabels[i] = labels[sl + 1 + j++];
 					} else {
-						srcLabels[i] = "dirty label " + i;
+						srcLabels[i] = Messages.Unbalanced_Dirty_label + i;
 					}
 				}
 
@@ -526,7 +527,7 @@ public class Unbalanced extends FuzzySet {
 					if (i >= (sreCardinality - lab_t - 1)) {
 						sreLabels[i] = labels[labels.length - (sreCardinality - i)];
 					} else {
-						sreLabels[i] = "dirty label " + i;
+						sreLabels[i] = Messages.Unbalanced_Dirty_label + i;
 					}
 				}
 
@@ -569,7 +570,7 @@ public class Unbalanced extends FuzzySet {
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
 	
-		writer.writeStartElement("lh");
+		writer.writeStartElement("lh"); //$NON-NLS-1$
 		for (int i = 0; i < _lh.length; ++i) {
 			writer.writeStartElement("lhValue"); //$NON-NLS-1$
 			writer.writeAttribute("l", Integer.toString(_lh[i])); //$NON-NLS-1$
@@ -577,27 +578,27 @@ public class Unbalanced extends FuzzySet {
 		}
 		writer.writeEndElement();
 		
-		writer.writeStartElement("labelsU");
+		writer.writeStartElement("labelsU"); //$NON-NLS-1$
 		for (Integer pos: _labels.keySet()) {
 			Map<Integer, Integer> labels = _labels.get(pos);
 			for(Integer domain: labels.keySet()) {
 				writer.writeStartElement("domain-label"); //$NON-NLS-1$
-				writer.writeAttribute("d", Integer.toString(domain));
-				writer.writeAttribute("la", Integer.toString(labels.get(domain)));
+				writer.writeAttribute("d", Integer.toString(domain)); //$NON-NLS-1$
+				writer.writeAttribute("la", Integer.toString(labels.get(domain))); //$NON-NLS-1$
 				writer.writeEndElement();
 			}
-			writer.writeStartElement("labelU");
+			writer.writeStartElement("labelU"); //$NON-NLS-1$
 			writer.writeAttribute("pos", Integer.toString(pos)); //$NON-NLS-1$
 			writer.writeEndElement();
 		}
 		writer.writeEndElement();
 		
-		writer.writeStartElement("data");
-		writer.writeAttribute("sl", Integer.toString(_sl));
-		writer.writeAttribute("sr", Integer.toString(_sr));
-		writer.writeAttribute("slDensity", Integer.toString(_slDensity));
-		writer.writeAttribute("srDensity", Integer.toString(_srDensity));;
-		writer.writeAttribute("cardinality", Integer.toString(_cardinality));
+		writer.writeStartElement("data"); //$NON-NLS-1$
+		writer.writeAttribute("sl", Integer.toString(_sl)); //$NON-NLS-1$
+		writer.writeAttribute("sr", Integer.toString(_sr)); //$NON-NLS-1$
+		writer.writeAttribute("slDensity", Integer.toString(_slDensity)); //$NON-NLS-1$
+		writer.writeAttribute("srDensity", Integer.toString(_srDensity));; //$NON-NLS-1$
+		writer.writeAttribute("cardinality", Integer.toString(_cardinality)); //$NON-NLS-1$
 		writer.writeEndElement();
 		
 		super.save(writer);
@@ -623,20 +624,20 @@ public class Unbalanced extends FuzzySet {
 					v = reader.getStartElementAttribute("l"); //$NON-NLS-1$
 					value = new Integer(v);
 					lh.add(value);
-				} else if("domain-label".equals(reader.getStartElementLocalPart())) {	
-					domain = reader.getStartElementAttribute("d");
-					label = reader.getStartElementAttribute("la");
+				} else if("domain-label".equals(reader.getStartElementLocalPart())) {	 //$NON-NLS-1$
+					domain = reader.getStartElementAttribute("d"); //$NON-NLS-1$
+					label = reader.getStartElementAttribute("la"); //$NON-NLS-1$
 					data = new HashMap<Integer, Integer>();
 					data.put(Integer.parseInt(domain), Integer.parseInt(label));
-				} else if("labelU".equals(reader.getStartElementLocalPart())) {
-					pos = reader.getStartElementAttribute("pos");
+				} else if("labelU".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
+					pos = reader.getStartElementAttribute("pos"); //$NON-NLS-1$
 					_labels.put(Integer.parseInt(pos), data);	
-				} else if("data".equals(reader.getStartElementLocalPart())) {
-					_sl = Integer.parseInt(reader.getStartElementAttribute("sl"));	
-					_sr = Integer.parseInt(reader.getStartElementAttribute("sr"));
-					_slDensity = Integer.parseInt(reader.getStartElementAttribute("slDensity"));
-					_srDensity = Integer.parseInt(reader.getStartElementAttribute("srDensity"));
-					_cardinality = Integer.parseInt(reader.getStartElementAttribute("cardinality"));
+				} else if("data".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
+					_sl = Integer.parseInt(reader.getStartElementAttribute("sl"));	 //$NON-NLS-1$
+					_sr = Integer.parseInt(reader.getStartElementAttribute("sr")); //$NON-NLS-1$
+					_slDensity = Integer.parseInt(reader.getStartElementAttribute("slDensity")); //$NON-NLS-1$
+					_srDensity = Integer.parseInt(reader.getStartElementAttribute("srDensity")); //$NON-NLS-1$
+					_cardinality = Integer.parseInt(reader.getStartElementAttribute("cardinality")); //$NON-NLS-1$
 				}
 			} else if (event.isEndElement()) {
 				endtag = reader.getEndElementLocalPart();
@@ -654,19 +655,19 @@ public class Unbalanced extends FuzzySet {
 	}
 
 	private String loadStringLh(String result) {
-		StringBuilder lh = new StringBuilder("");
+		StringBuilder lh = new StringBuilder(""); //$NON-NLS-1$
 		
 		for(int l: _lh) {
-			lh.append(l + ",");
+			lh.append(l + ","); //$NON-NLS-1$
 		}
-		lh.replace(lh.length() - 1, lh.length(),  "");
+		lh.replace(lh.length() - 1, lh.length(),  ""); //$NON-NLS-1$
 		result += lh.toString();
 		
 		return result;
 	}
 	
 	private String loadStringFormat(String result) {
-		String format = _sl + "," + _slDensity + "," + _sr + "," + _srDensity;
+		String format = _sl + "," + _slDensity + "," + _sr + "," + _srDensity; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		
 		result += format;
 		
@@ -674,15 +675,15 @@ public class Unbalanced extends FuzzySet {
 	}
 	
 	private String loadStringLabels(String result) {
-		StringBuilder labels = new StringBuilder(";");
+		StringBuilder labels = new StringBuilder(";"); //$NON-NLS-1$
 		
 		for(int label: _labels.keySet()) {
 			for(int domain: _labels.get(label).keySet()) {
-				labels.append(domain + ":" + _labels.get(label).get(domain) + "=");
+				labels.append(domain + ":" + _labels.get(label).get(domain) + "="); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			labels.replace(labels.length() - 1, labels.length(), "");
+			labels.replace(labels.length() - 1, labels.length(), ""); //$NON-NLS-1$
 		}
-		labels.replace(labels.length() - 1, labels.length(), "");
+		labels.replace(labels.length() - 1, labels.length(), ""); //$NON-NLS-1$
 		result += labels.toString();
 		
 		return result;
@@ -709,9 +710,9 @@ public class Unbalanced extends FuzzySet {
 		
 		for(int i = 0; i < labels.length; ++i) {
 			_labels.put(i, new HashMap<Integer, Integer>());
-			String[] aux = labels[i].split("=");
+			String[] aux = labels[i].split("="); //$NON-NLS-1$
 			for(String s: aux) {
-				String[] value = s.split(":");
+				String[] value = s.split(":"); //$NON-NLS-1$
 				_labels.get(i).put(Integer.parseInt(value[0]), Integer.parseInt(value[1]));
 			}
 		}

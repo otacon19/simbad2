@@ -2,7 +2,7 @@ package sinbad2.domain.linguistic.unbalanced.ui.dialog;
 
 import java.util.List;
 
-import jfreechart.LinguisticDomainChart;
+
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -25,8 +25,10 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.domain.linguistic.unbalanced.ui.dialog.subdialog.SemanticDialog;
+import sinbad2.domain.linguistic.unbalanced.ui.nls.Messages;
 import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
 
@@ -81,8 +83,8 @@ public class LHDomainDialog extends NewDomainDialog {
 		Label idLabel = new Label(_container, SWT.NULL);
 		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
 		idLabel.setLayoutData(gridData);
-		idLabel.setText("Domain id");
-		idLabel.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		idLabel.setText(Messages.LHDomainDialog_Domain_id);
+		idLabel.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
 		
 		Text textID = new Text(_container, SWT.BORDER);
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
@@ -105,16 +107,16 @@ public class LHDomainDialog extends NewDomainDialog {
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 4, 1);
 		gridData.verticalIndent = 10;
 		_lhFeaturesLabel.setLayoutData(gridData);
-		_lhFeaturesLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
-		_lhFeaturesLabel.setText("LH Features");
+		_lhFeaturesLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		_lhFeaturesLabel.setText(Messages.LHDomainDialog_LH_features);
 
 		Composite genericDomainComposite = new Composite(_container, SWT.BORDER);
 		genericDomainComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,true, false, 4, 1));
 		genericDomainComposite.setLayout(new GridLayout(2, false));
 
 		Label lhInitialGranularityLabel = new Label(genericDomainComposite, SWT.NULL);
-		lhInitialGranularityLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.NONE));
-		lhInitialGranularityLabel.setText("Initial granularity of LH");
+		lhInitialGranularityLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.NONE)); //$NON-NLS-1$
+		lhInitialGranularityLabel.setText(Messages.LHDomainDialog_Initial_granularity_of_LH);
 		lhInitialGranularityLabel.setLayoutData(new GridData(SWT.LEFT,
 				SWT.CENTER, false, false, 1, 1));
 
@@ -133,15 +135,15 @@ public class LHDomainDialog extends NewDomainDialog {
 		_domainLabelsLabel.setLayoutData(gridData);
 		_domainLabelsLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, //$NON-NLS-1$
 				SWT.BOLD));
-		_domainLabelsLabel.setText("Labels of unbalanced scale");
+		_domainLabelsLabel.setText(Messages.LHDomainDialog_Labels_of_unbalanced_scale);
 
 		Composite labelsComposite = new Composite(_container, SWT.BORDER);
 		labelsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 4, 1));
 		labelsComposite.setLayout(new GridLayout(4, false));
 
 		Label numberOfLabelsLabel = new Label(labelsComposite, SWT.NULL);
-		numberOfLabelsLabel.setFont(SWTResourceManager.getFont("Cantarell", 8,SWT.NONE));
-		numberOfLabelsLabel.setText("Number of labels of unbalancedScale");
+		numberOfLabelsLabel.setFont(SWTResourceManager.getFont("Cantarell", 8,SWT.NONE)); //$NON-NLS-1$
+		numberOfLabelsLabel.setText(Messages.LHDomainDialog_Number_of_labels_of_unbalanced_scale);
 		numberOfLabelsLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,false, false, 3, 1));
 
 		_cardinality = 3;
@@ -155,8 +157,8 @@ public class LHDomainDialog extends NewDomainDialog {
 		_numberOfLabels.setSelection(_cardinality);
 
 		Label slLabel = new Label(labelsComposite, SWT.NULL);
-		slLabel.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE));
-		slLabel.setText("Left side SL");
+		slLabel.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE)); //$NON-NLS-1$
+		slLabel.setText(Messages.LHDomainDialog_Left_side_SL);
 		slLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 
 		_sl = 1;
@@ -169,8 +171,8 @@ public class LHDomainDialog extends NewDomainDialog {
 		_slSpinner.setSelection(_sl);
 
 		Label slDensity = new Label(labelsComposite, SWT.NULL);
-		slDensity.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE));
-		slDensity.setText("Density SL");
+		slDensity.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE)); //$NON-NLS-1$
+		slDensity.setText(Messages.LHDomainDialog_Density_SL);
 		slDensity.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 
 		_slDensityCombo = new Combo(labelsComposite, SWT.BORDER);
@@ -182,8 +184,8 @@ public class LHDomainDialog extends NewDomainDialog {
 		_slDensityCombo.setEnabled(false);
 
 		Label srLabel = new Label(labelsComposite, SWT.NULL);
-		srLabel.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE));
-		srLabel.setText("Right side SR");
+		srLabel.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE)); //$NON-NLS-1$
+		srLabel.setText(Messages.LHDomainDialog_Right_side_SR);
 		srLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 
 		_sr = 1;
@@ -196,8 +198,8 @@ public class LHDomainDialog extends NewDomainDialog {
 		_srSpinner.setSelection(_sr);
 
 		Label srDensity = new Label(labelsComposite, SWT.NULL);
-		srDensity.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE));
-		srDensity.setText("Density SR");
+		srDensity.setFont(SWTResourceManager.getFont("Cantarell", 8, SWT.NONE)); //$NON-NLS-1$
+		srDensity.setText(Messages.LHDomainDialog_Density_SR);
 		srDensity.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 
 		_srDensityCombo = new Combo(labelsComposite, SWT.BORDER);
@@ -212,7 +214,7 @@ public class LHDomainDialog extends NewDomainDialog {
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 4, 1);
 		gridData.verticalIndent = 5;
 		_setSemanticButton.setLayoutData(gridData);
-		_setSemanticButton.setText("Set semantic");
+		_setSemanticButton.setText(Messages.LHDomainDialog_Set_semantic);
 
 		_semanticButtonControlDecoration = createNotificationDecorator(_setSemanticButton);
 		_domainNameTextControlDecoration = createNotificationDecorator(textID);
@@ -221,8 +223,8 @@ public class LHDomainDialog extends NewDomainDialog {
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 4, 1);
 		gridData.verticalIndent = 15;
 		_previewLabel.setLayoutData(gridData);
-		_previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
-		_previewLabel.setText("Preview");
+		_previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		_previewLabel.setText(Messages.LHDomainDialog_Preview);
 
 		_labels = new String[] { "s0", "s1", "s2" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		_specificDomain = ((FuzzySet) _domain).createTrapezoidalFunction(_labels);
@@ -246,7 +248,7 @@ public class LHDomainDialog extends NewDomainDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Create unbalanced domain");
+		newShell.setText(Messages.LHDomainDialog_Create_unbalanced_domain);
 	}
 	
 	@Override
@@ -556,15 +558,15 @@ public class LHDomainDialog extends NewDomainDialog {
 
 	private void validate() {		
 		boolean validId;
-		String msgId = "";
+		String msgId = ""; //$NON-NLS-1$
 		
 		
 		if(!_id.isEmpty()) {
 			if(_ids.contains(_id)) {
-				msgId = "Duplicated id";
+				msgId = Messages.LHDomainDialog_Duplicated_id;
 			}
 		} else {
-			msgId = "Empty value";
+			msgId = Messages.LHDomainDialog_Empty_value;
 		}
 		
 		validId = validate(_domainNameTextControlDecoration, msgId);

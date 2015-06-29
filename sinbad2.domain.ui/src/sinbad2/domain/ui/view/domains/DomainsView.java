@@ -33,6 +33,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.ui.handler.modify.ModifyDomainHandler;
+import sinbad2.domain.ui.nls.Messages;
 import sinbad2.domain.ui.view.domain.DomainView;
 import sinbad2.domain.ui.view.domain.DomainViewManager;
 import sinbad2.domain.ui.view.domains.provider.DomainDescriptionLabelProvider;
@@ -43,8 +44,8 @@ import sinbad2.domain.ui.view.domains.provider.DomainsContentProvider;
 
 public class DomainsView extends ViewPart {
 	
-	public static final String ID = "flintstones.domain.ui.view.domains";
-	public static final String CONTEXT_ID = "flintstones.domain.ui.view.domains.domains_view";
+	public static final String ID = "flintstones.domain.ui.view.domains"; //$NON-NLS-1$
+	public static final String CONTEXT_ID = "flintstones.domain.ui.view.domains.domains_view"; //$NON-NLS-1$
 	
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().
 			getService(IContextService.class);
@@ -102,22 +103,22 @@ public class DomainsView extends ViewPart {
 		
 		TableViewerColumn tvc = new TableViewerColumn(_tableViewer, SWT.NONE);
 		tvc.getColumn().setWidth(20);
-		tvc.getColumn().setText("T");
+		tvc.getColumn().setText("T"); //$NON-NLS-1$
 		tvc.setLabelProvider(new DomainTypeLabelProvider());
 		
 		tvc = new TableViewerColumn(_tableViewer, SWT.FULL_SELECTION);
 		tvc.getColumn().setWidth(120);
-		tvc.getColumn().setText("Id");
+		tvc.getColumn().setText("Id"); //$NON-NLS-1$
 		tvc.setLabelProvider(new DomainIdLabelProvider());
 		
 		tvc = new TableViewerColumn(_tableViewer, SWT.NONE);
 		tvc.getColumn().setWidth(150);
-		tvc.getColumn().setText("Description");
+		tvc.getColumn().setText(Messages.DomainsView_Description);
 		tvc.setLabelProvider(new DomainDescriptionLabelProvider());
 		
 		tvc = new TableViewerColumn(_tableViewer, SWT.NONE);
 		tvc.getColumn().setWidth(150);
-		tvc.getColumn().setText("Valuation");
+		tvc.getColumn().setText(Messages.DomainsView_Valuation);
 		tvc.setLabelProvider(new DomainValuationUsedLabelProvider());
 		
 		_tableViewer.getTable().addControlListener(new ControlAdapter() {

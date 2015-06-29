@@ -19,9 +19,9 @@ import sinbad2.domain.ui.jfreechart.DomainChart;
 
 public class DomainUIsManager {
 
-	private final String EXTENSION_POINT = "flintstones.domain.ui";
-	private final String NEW_DOMAIN_DIALOG_EXTENSION_POINT = "flintstones.domain.ui.new.dialog";
-	private final String MODIFY_DOMAIN_DIALOG_EXTENSION_POINT = "flintstones.domain.ui.modify.dialog";
+	private final String EXTENSION_POINT = "flintstones.domain.ui"; //$NON-NLS-1$
+	private final String NEW_DOMAIN_DIALOG_EXTENSION_POINT = "flintstones.domain.ui.new.dialog"; //$NON-NLS-1$
+	private final String MODIFY_DOMAIN_DIALOG_EXTENSION_POINT = "flintstones.domain.ui.modify.dialog"; //$NON-NLS-1$
 	
 	private static DomainUIsManager _instance = null;
 	

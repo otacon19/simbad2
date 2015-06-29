@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.ui.DomainUIsManager;
+import sinbad2.domain.ui.nls.Messages;
 
 public class SelectNewDomainDialog extends Dialog {
 	
@@ -58,7 +59,7 @@ public class SelectNewDomainDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Build mode");
+		newShell.setText(Messages.SelectNewDomainDialog_Build_mode);
 	}	
 	
 }

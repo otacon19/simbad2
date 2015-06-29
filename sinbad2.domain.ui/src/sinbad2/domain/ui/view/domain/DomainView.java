@@ -21,8 +21,8 @@ import sinbad2.domain.ui.jfreechart.DomainChart;
 
 public class DomainView extends ViewPart implements IDisplayDomainChangeListener {
 	
-	public static final String ID = "flintstones.domain.ui.view.domain";
-	public static final String CONTEXT_ID = "flintstones.domain.ui.view.domain.domain_view";
+	public static final String ID = "flintstones.domain.ui.view.domain"; //$NON-NLS-1$
+	public static final String CONTEXT_ID = "flintstones.domain.ui.view.domain.domain_view"; //$NON-NLS-1$
 	
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench()
 			.getService(IContextService.class);

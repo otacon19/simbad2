@@ -23,8 +23,8 @@ public class XMLWriter extends sinbad2.resolutionphase.io.XMLWriter {
 		try {
 			_writer = _factory.createXMLStreamWriter(new FileWriter(_fileName));
 			_writer.writeStartDocument();
-			_writer.writeStartElement("resolution.scheme");
-			_writer.writeAttribute("id", _scheme.getId());
+			_writer.writeStartElement("resolution.scheme"); //$NON-NLS-1$
+			_writer.writeAttribute("id", _scheme.getId()); //$NON-NLS-1$
 			for(ResolutionPhase phase: _scheme.getPhases()) {
 				add(phase);
 			}

@@ -21,6 +21,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import sinbad2.domain.Domain;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.domain.numeric.real.ui.jfreechart.NumericRealDomainChart;
+import sinbad2.domain.numeric.real.ui.nls.Messages;
 import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
 
@@ -71,8 +72,8 @@ public class NewNumericRealDomainDialog extends NewDomainDialog {
 		Label idLabel = new Label(_container, SWT.NULL);
 		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
 		idLabel.setLayoutData(gridData);
-		idLabel.setText("Domain id");
-		idLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
+		idLabel.setText(Messages.NewNumericRealDomainDialog_Domain_id);
+		idLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
 		
 		Text text = new Text(_container, SWT.BORDER);
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
@@ -94,13 +95,13 @@ public class NewNumericRealDomainDialog extends NewDomainDialog {
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
 		gridData.verticalIndent = 15;
 		titleLabel.setLayoutData(gridData);
-		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
-		titleLabel.setText("Limits");
+		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		titleLabel.setText(Messages.NewNumericRealDomainDialog_Limits);
 		
 		_lowerLimitLabel = new Label(_container, SWT.NONE);
 		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		_lowerLimitLabel.setLayoutData(gridData);
-		_lowerLimitLabel.setText("Lower");
+		_lowerLimitLabel.setText(Messages.NewNumericRealDomainDialog_Lower);
 		
 		_lowerLimitSpinner = new Spinner(_container, SWT.BORDER);
 		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -116,13 +117,13 @@ public class NewNumericRealDomainDialog extends NewDomainDialog {
 		_lowerLimitSpinner.setDigits(2);
 		
 		_inRange = new Button(_container, SWT.CHECK);
-		_inRange.setText("Without range");
+		_inRange.setText(Messages.NewNumericRealDomainDialog_Without_range);
 		_inRange.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 2, 2));
 		
 		_upperLimitLabel = new Label(_container, SWT.NONE);
 		gridData = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		_upperLimitLabel.setLayoutData(gridData);
-		_upperLimitLabel.setText("Upper");
+		_upperLimitLabel.setText(Messages.NewNumericRealDomainDialog_Upper);
 		
 		_upperLimitSpinner = new Spinner(_container, SWT.BORDER);
 		gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -147,8 +148,8 @@ public class NewNumericRealDomainDialog extends NewDomainDialog {
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
 		gridData.verticalIndent = 15;
 		previewLabel.setLayoutData(gridData);
-		previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
-		previewLabel.setText("Preview");
+		previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		previewLabel.setText(Messages.NewNumericRealDomainDialog_Preview);
 		
 		Composite composite = new Composite(_container, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 4, 1));
@@ -178,14 +179,14 @@ public class NewNumericRealDomainDialog extends NewDomainDialog {
 					_specificDomain.setMin(_lowerLimit);
 					_specificDomain.setMax(_upperLimit);
 					
-					_lowerLimitLabel.setText("Lower" + " " + Double.toString(Double.NEGATIVE_INFINITY));
-					_upperLimitLabel.setText("Upper" + " -" + Double.toString(Double.POSITIVE_INFINITY));
+					_lowerLimitLabel.setText(Messages.NewNumericRealDomainDialog_Lower + " " + Double.toString(Double.NEGATIVE_INFINITY)); //$NON-NLS-2$
+					_upperLimitLabel.setText(Messages.NewNumericRealDomainDialog_Upper + " -" + Double.toString(Double.POSITIVE_INFINITY)); //$NON-NLS-2$
 					
 					_specificDomain.setInRange(false);
 					
 				} else {
-					_lowerLimitLabel.setText("Lower");
-					_upperLimitLabel.setText("Upper");
+					_lowerLimitLabel.setText(Messages.NewNumericRealDomainDialog_Lower);
+					_upperLimitLabel.setText(Messages.NewNumericRealDomainDialog_Upper);
 					
 					_lowerLimitSpinner.setEnabled(true);
 					_upperLimitSpinner.setEnabled(true);
@@ -248,14 +249,14 @@ public class NewNumericRealDomainDialog extends NewDomainDialog {
 	protected void validate() {
 		boolean validId, validDomain;
 		
-		String message = "";
+		String message = ""; //$NON-NLS-1$
 		
 		if(!_id.isEmpty()) {
 			if(_ids.contains(_id)) {
-				message = "Duplicated id";
+				message = Messages.NewNumericRealDomainDialog_Duplicated_id;
 			}
 		} else {
-			message = "Empty value";
+			message = Messages.NewNumericRealDomainDialog_Empty_value;
 		}
 		
 		validId = validate(_domainNameTextControlDecoration, message);

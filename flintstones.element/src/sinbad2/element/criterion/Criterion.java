@@ -127,8 +127,8 @@ public class Criterion extends ProblemElement {
 		Validator.notNull(criteria);
 		Validator.notNull(formatId);
 		
-		if(formatId.contains(">")) {
-			String parentId = formatId.split(">")[0];
+		if(formatId.contains(">")) { //$NON-NLS-1$
+			String parentId = formatId.split(">")[0]; //$NON-NLS-1$
 			return searchCriterionForPathId(parentId, formatId, criteria);
 		} else {
 			for(Criterion criterion: criteria) {

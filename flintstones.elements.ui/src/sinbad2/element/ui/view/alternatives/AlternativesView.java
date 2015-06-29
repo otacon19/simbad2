@@ -29,8 +29,8 @@ import sinbad2.element.ui.view.alternatives.provider.AlternativesContentProvider
 
 public class AlternativesView extends ViewPart {
 	
-	public static final String ID = "flintstones.element.ui.view.alternatives";
-	public static final String CONTEXT_ID = "flintstones.element.ui.view.alternatives.alternatives_view";
+	public static final String ID = "flintstones.element.ui.view.alternatives"; //$NON-NLS-1$
+	public static final String CONTEXT_ID = "flintstones.element.ui.view.alternatives.alternatives_view"; //$NON-NLS-1$
 	
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 

@@ -14,6 +14,7 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.contexts.IContextService;
 
+import sinbad2.rcp.nls.Messages;
 import sinbad2.resolutionphase.ResolutionPhase;
 import sinbad2.resolutionphase.ui.ResolutionPhaseUI;
 import sinbad2.resolutionscheme.ResolutionScheme;
@@ -36,7 +37,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	public void preWindowOpen() {			
 		IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
 		configurer.setInitialSize(new Point(1024, 700));
-		configurer.setTitle("Flintstones");
+		configurer.setTitle(Messages.ApplicationWorkbenchWindowAdvisor_application_title);
 		configurer.setShowCoolBar(true);
 		configurer.setShowStatusLine(false);
 		configurer.setShowPerspectiveBar(false);
@@ -67,7 +68,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		perspectiveSwitcher.fillSwitcherPerspectives();
 		
 		IContextService contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
-		contextService.activateContext("flintstones.core.ui");
+		contextService.activateContext("flintstones.core.ui"); //$NON-NLS-1$
 	}
 
 	private CBanner findTopBanner(Shell shell) {
@@ -77,13 +78,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		for(Control child: children) {
 			if(child instanceof CBanner) {
 				if(result != null) {
-					throw new IllegalStateException("More than one CBanner");
+					throw new IllegalStateException(Messages.ApplicationWorkbenchWindowAdvisor_More_than_one_cBanner);
 				}
 				result = (CBanner) child;
 			}
 		}
 		if(result == null) {
-			throw new IllegalStateException("No CBanner");
+			throw new IllegalStateException(Messages.ApplicationWorkbenchWindowAdvisor_No_CBanner);
 		}
 		
 		return result;

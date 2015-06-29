@@ -56,8 +56,8 @@ public class XMLRead extends sinbad2.resolutionphase.io.XMLRead {
 		
 		ResolutionSchemeImplementation result = null;
 		
-		goToStartElement("resolution.scheme");
-		String resolutionSchemeId = getStartElementAttribute("id");
+		goToStartElement("resolution.scheme"); //$NON-NLS-1$
+		String resolutionSchemeId = getStartElementAttribute("id"); //$NON-NLS-1$
 		
 		ResolutionSchemesManager rsm = ResolutionSchemesManager.getInstance();
 		ResolutionScheme resolutionScheme = rsm.getResolutionScheme(resolutionSchemeId);
@@ -73,7 +73,7 @@ public class XMLRead extends sinbad2.resolutionphase.io.XMLRead {
 			result.getPhasesImplementation().put(aux._id, aux._iresolutionPhase);
 		}
 		
-		goToEndElement("resolution-scheme");
+		goToEndElement("resolution-scheme"); //$NON-NLS-1$
 		
 		return result;
 		

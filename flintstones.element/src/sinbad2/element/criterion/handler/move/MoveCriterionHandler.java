@@ -11,11 +11,12 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.criterion.operation.MoveCriterionOperation;
+import sinbad2.element.nls.Messages;
 
 
 public class MoveCriterionHandler  extends AbstractHandler {
 	
-	public static final String ID = "flintstones.element.criterion.move";
+	public static final String ID = "flintstones.element.criterion.move"; //$NON-NLS-1$
 	
 	private Criterion _criterion;
 	private Criterion _newParent;
@@ -34,7 +35,7 @@ public class MoveCriterionHandler  extends AbstractHandler {
 		ProblemElementsManager elementManager = ProblemElementsManager.getInstance();
 		ProblemElementsSet elementSet = elementManager.getActiveElementSet();
 		
-		IUndoableOperation operation = new MoveCriterionOperation("Move criterion", _criterion, _newParent, elementSet);
+		IUndoableOperation operation = new MoveCriterionOperation(Messages.MoveCriterionHandler_Move_criterion, _criterion, _newParent, elementSet);
 		IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 		
 		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

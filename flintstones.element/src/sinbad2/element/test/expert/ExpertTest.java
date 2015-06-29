@@ -20,8 +20,8 @@ public class ExpertTest {
 	public void testExpertBefore() {
 		List<Expert> childrens = new LinkedList<Expert>();
 		
-		_tester = new Expert("Son");
-		_parent = new Expert("Parent");
+		_tester = new Expert("Son"); //$NON-NLS-1$
+		_parent = new Expert("Parent"); //$NON-NLS-1$
 		
 		_tester.setChildrens(childrens);
 	}
@@ -31,14 +31,14 @@ public class ExpertTest {
 		_parent.addChildren(_tester);
 		
 		assertThat(_parent.getChildrens().contains(_tester), is(true));
-		assertEquals("Parents must be introduced",_tester.getParent(), _parent);
+		assertEquals("Parents must be introduced",_tester.getParent(), _parent); //$NON-NLS-1$
 	}
 	
 	@Test
 	public void testGetFormatId() {
 		_parent.addChildren(_tester);
 			
-		assertEquals("must return parent_id:expert_id", _tester.getParent().getId() + ">" + _tester.getId(), _tester.getPathId());
+		assertEquals("must return parent_id:expert_id", _tester.getParent().getId() + ">" + _tester.getId(), _tester.getPathId()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Test
@@ -52,20 +52,20 @@ public class ExpertTest {
 
 	@Test
 	public void testHasChildrens() {
-		Expert children = new Expert("Son");
+		Expert children = new Expert("Son"); //$NON-NLS-1$
 
-		assertEquals("return false if there aren't children", false, _tester.hasChildrens());
+		assertEquals("return false if there aren't children", false, _tester.hasChildrens()); //$NON-NLS-1$
 		
 		_tester.addChildren(children);
 
-		assertEquals("return true if there are children", true, _tester.hasChildrens());
+		assertEquals("return true if there are children", true, _tester.hasChildrens()); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testEqualsObject() {
 		
-		assertTrue("return true if there are the same object", _tester.equals(_tester));
-		assertFalse("return false if there are the same object", _tester.equals(_parent));
+		assertTrue("return true if there are the same object", _tester.equals(_tester)); //$NON-NLS-1$
+		assertFalse("return false if there are the same object", _tester.equals(_parent)); //$NON-NLS-1$
 	}
 
 	@Test
@@ -76,8 +76,8 @@ public class ExpertTest {
 		experts.add(_tester);
 		experts.add(_parent);
 		
-		assertEquals("must be the correct expert", _tester, Expert.getExpertByFormatId(
-				experts, _parent.getId() + ">" + _tester.getId()));
+		assertEquals("must be the correct expert", _tester, Expert.getExpertByFormatId( //$NON-NLS-1$
+				experts, _parent.getId() + ">" + _tester.getId())); //$NON-NLS-1$
 		
 	}
 

@@ -8,9 +8,9 @@ import org.eclipse.ui.ISources;
 
 public class ElementSourceProvider extends AbstractSourceProvider {
 	
-	public final static String CAN_BE_MODIFIED_STATE = "flintstones.element.ui.can.be.modified.state";
-	public final static String ENABLED = "ENABLED";
-	public final static String DISENABLED = "DISENABLED";
+	public final static String CAN_BE_MODIFIED_STATE = "flintstones.element.ui.can.be.modified.state"; //$NON-NLS-1$
+	public final static String ENABLED = "ENABLED"; //$NON-NLS-1$
+	public final static String DISENABLED = "DISENABLED"; //$NON-NLS-1$
 	
 	private boolean _canBeModified = true;
 	

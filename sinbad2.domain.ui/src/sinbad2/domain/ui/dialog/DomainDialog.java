@@ -38,7 +38,7 @@ public class DomainDialog extends Dialog {
 		ControlDecoration controlDecoration = new ControlDecoration(text, SWT.LEFT | SWT.TOP);
 		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
 		controlDecoration.setImage(fieldDecoration.getImage());
-		validate(controlDecoration, "");
+		validate(controlDecoration, ""); //$NON-NLS-1$
 		
 		return controlDecoration;
 	}
@@ -47,7 +47,7 @@ public class DomainDialog extends Dialog {
 		ControlDecoration controlDecoration = new ControlDecoration(button, SWT.LEFT | SWT.TOP);
 		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_WARNING);
 		controlDecoration.setImage(fieldDecoration.getImage());
-		validate(controlDecoration, "");
+		validate(controlDecoration, ""); //$NON-NLS-1$
 		
 		return controlDecoration;
 	}

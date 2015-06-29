@@ -18,6 +18,7 @@ import org.jfree.experimental.chart.swt.ChartComposite;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.Domain;
 import sinbad2.domain.numeric.real.NumericRealDomain;
+import sinbad2.domain.numeric.real.ui.nls.Messages;
 import sinbad2.domain.ui.jfreechart.DomainChart;
 
 public class NumericRealDomainChart extends DomainChart {
@@ -51,10 +52,10 @@ public class NumericRealDomainChart extends DomainChart {
 		_chart.getXYPlot().getRangeAxis().setTickLabelsVisible(inRange);
 		
 		if(inRange) {
-			_chart.getXYPlot().getRangeAxis().setLabel("Domain");
+			_chart.getXYPlot().getRangeAxis().setLabel(Messages.NumericRealDomainChart_Domain);
 		} else {
 			_chart.getXYPlot().getRangeAxis().setLabel(Double.toString(Double.NEGATIVE_INFINITY) + 
-					"                                         " + 
+					"                                         " +  //$NON-NLS-1$
 					Double.toString(Double.POSITIVE_INFINITY));
 		}
 		
@@ -94,7 +95,7 @@ public class NumericRealDomainChart extends DomainChart {
 	}
 	
 	private JFreeChart createChart(IntervalXYDataset intervalXYDataset) {
-		JFreeChart result = ChartFactory.createXYBarChart("", "X", false, "", intervalXYDataset, 
+		JFreeChart result = ChartFactory.createXYBarChart("", "X", false, "", intervalXYDataset,  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				PlotOrientation.HORIZONTAL, false, false, false);
 		
 		result.setBackgroundPaint(Color.WHITE);
@@ -125,7 +126,7 @@ public class NumericRealDomainChart extends DomainChart {
 		double[] yStart = new double[] {lowerLimit};
 		double[] yEnd = new double[] {upperLimit};
 		double[][] data = new double[][] {x, xStart, xEnd, y, yStart, yEnd};
-		result.addSeries("Range", data);
+		result.addSeries(Messages.NumericRealDomainChart_Range, data);
 		
 		return result;
 	}

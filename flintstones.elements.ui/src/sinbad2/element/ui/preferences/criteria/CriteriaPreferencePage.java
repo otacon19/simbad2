@@ -6,6 +6,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sinbad2.element.ui.Activator;
+import sinbad2.element.ui.nls.Messages;
 import sinbad2.element.ui.preferences.PreferenceConstants;
 
 public class CriteriaPreferencePage extends FieldEditorPreferencePage implements 
@@ -18,15 +19,15 @@ public class CriteriaPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Criteria preferences");
+		setDescription(Messages.CriteriaPreferencePage_Criteria_preferences);
 	}
 
 	@Override
 	protected void createFieldEditors() {
 		addField(new BooleanFieldEditor(PreferenceConstants.P_CRITERION_MEMBER_AS_DEFAULT, 
-				"Assign new criterion as subcriterion when a criterion is selected", getFieldEditorParent()));
+				Messages.CriteriaPreferencePage_Assign_new_criterion_as_subcriterion, getFieldEditorParent()));
 		addField(new BooleanFieldEditor(PreferenceConstants.P_CRITERION_BENEFIT_AS_DEFAULT,
-				"&Benefit criterion as default", getFieldEditorParent()));
+				Messages.CriteriaPreferencePage_Benefit_criterion_as_default, getFieldEditorParent()));
 		
 	}
 	

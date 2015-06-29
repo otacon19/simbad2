@@ -38,6 +38,7 @@ import sinbad2.element.ui.Images;
 import sinbad2.element.ui.draganddrop.CriteriaDropListener;
 import sinbad2.element.ui.draganddrop.DragListener;
 import sinbad2.element.ui.handler.criterion.modify.ModifyCriterionHandler;
+import sinbad2.element.ui.nls.Messages;
 import sinbad2.element.ui.sourceprovider.criteria.BrothersCriteriaSelectedSourceProvider;
 import sinbad2.element.ui.view.criteria.editing.CriterionCostEditingSupport;
 import sinbad2.element.ui.view.criteria.provider.CriteriaContentProvider;
@@ -47,7 +48,7 @@ import sinbad2.element.ui.view.criteria.provider.CriterionIdLabelProvider;
 public class CriteriaView extends ViewPart {
 	
 	public static final String ID = "flintstones.element.ui.view.criteria"; //$NON-NLS-1$
-	public static final String CONTEXT_ID = "flintstones.element.ui.view.criteria.criteria_view";
+	public static final String CONTEXT_ID = "flintstones.element.ui.view.criteria.criteria_view"; //$NON-NLS-1$
 	
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 	
@@ -95,7 +96,7 @@ public class CriteriaView extends ViewPart {
 		TreeColumn tc = tvc.getColumn();
 		tc.setMoveable(true);
 		tc.setResizable(false);
-		tc.setText("Criteria");
+		tc.setText(Messages.CriteriaView_Criteria);
 		tc.setImage(Images.Criterion);
 		tc.pack();	
 		
@@ -103,7 +104,7 @@ public class CriteriaView extends ViewPart {
 		tvc.setLabelProvider(new CriterionCostLabelProvider());
 		tvc.setEditingSupport(new CriterionCostEditingSupport(_treeViewer));
 		tc = tvc.getColumn();
-		tc.setToolTipText("Cost/Benefit");
+		tc.setToolTipText(Messages.CriteriaView_Cost_benefit);
 		tc.setMoveable(true);
 		tc.setResizable(false);
 		tc.setImage(Images.TypeOfCriterion);

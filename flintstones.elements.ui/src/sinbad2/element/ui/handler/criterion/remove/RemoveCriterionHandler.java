@@ -13,6 +13,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.criterion.operation.RemoveCriterionOperation;
+import sinbad2.element.ui.nls.Messages;
 
 public class RemoveCriterionHandler extends AbstractHandler {
 	
@@ -29,7 +30,7 @@ public class RemoveCriterionHandler extends AbstractHandler {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
 		Criterion criterion = (Criterion) selection.getFirstElement();
 		
-		IUndoableOperation operation = new RemoveCriterionOperation("Remove criterion", criterion, elementSet);
+		IUndoableOperation operation = new RemoveCriterionOperation(Messages.RemoveCriterionHandler_Remove_criterion, criterion, elementSet);
 		IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 		
 		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

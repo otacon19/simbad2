@@ -31,7 +31,7 @@ public class AddAlternativeHandler extends AbstractHandler {
 		
 		AddAlternativeInputDialog dialog = new AddAlternativeInputDialog(
 				Display.getCurrent().getActiveShell(), Messages.AddAlternativeHandler_Add_alternative, 
-				Messages.AddAlternativeHandler_Insert_alternative, "", new AddAlternativeInputValidator(elementSet)); //$NON-NLS-2$ //$NON-NLS-1$
+				Messages.AddAlternativeHandler_Insert_alternative, "", new AddAlternativeInputValidator(elementSet)); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$
 		
 		if(dialog.open() == Window.OK) {
 			id = dialog.getValue();

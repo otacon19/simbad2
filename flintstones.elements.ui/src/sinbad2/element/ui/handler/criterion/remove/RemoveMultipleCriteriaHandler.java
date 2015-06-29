@@ -15,6 +15,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.criterion.operation.RemoveMultipleCriteriaOperation;
+import sinbad2.element.ui.nls.Messages;
 
 public class RemoveMultipleCriteriaHandler extends AbstractHandler {
 	
@@ -32,7 +33,7 @@ public class RemoveMultipleCriteriaHandler extends AbstractHandler {
 		@SuppressWarnings("unchecked")
 		List<Criterion> criteria = selection.toList();
 		
-		IUndoableOperation operation = new RemoveMultipleCriteriaOperation("Remove multiple criteria", criteria, elementSet);
+		IUndoableOperation operation = new RemoveMultipleCriteriaOperation(Messages.RemoveMultipleCriteriaHandler_Remove_multiple_criteria, criteria, elementSet);
 		IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 		
 		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

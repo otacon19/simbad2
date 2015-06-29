@@ -20,11 +20,12 @@ import sinbad2.domain.operation.ModifyDomainOperation;
 import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.modifyDialog.ModifyDomainDialog;
 import sinbad2.domain.ui.dialog.selectdialog.SelectModifyDomainDialog;
+import sinbad2.domain.ui.nls.Messages;
 import sinbad2.domain.valuations.DomainValuationsManager;
 
 public class ModifyDomainHandler extends AbstractHandler {
 	
-	public static final String ID = "flintstones.domain.modify";
+	public static final String ID = "flintstones.domain.modify"; //$NON-NLS-1$
 	
 	private Domain _oldDomain;
 	private String _valuationOldDomain;
@@ -50,7 +51,7 @@ public class ModifyDomainHandler extends AbstractHandler {
 		
 		List<String> dialogsIds = domainValuationsManager.getValuationModifyDomainDialogs(valuationID);
 		
-		String dialogIDSelected = "";
+		String dialogIDSelected = ""; //$NON-NLS-1$
 		if(dialogsIds.size() == 1) {
 			dialogIDSelected = dialogsIds.get(0);
 		} else {
@@ -74,7 +75,7 @@ public class ModifyDomainHandler extends AbstractHandler {
 				domainValuationsManager.removeSupportedValuationForNewDomain(_oldDomain.getId());
 				domainValuationsManager.addSupportedValuationForNewDomain(newDomain.getId(), _valuationOldDomain);
 				
-				IUndoableOperation operation = new ModifyDomainOperation("Modify domain", newDomain, _oldDomain, domainSet);
+				IUndoableOperation operation = new ModifyDomainOperation(Messages.ModifyDomainHandler_Modify_domain, newDomain, _oldDomain, domainSet);
 				IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 				
 				operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

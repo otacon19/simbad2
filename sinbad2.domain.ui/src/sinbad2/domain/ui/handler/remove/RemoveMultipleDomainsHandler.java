@@ -15,10 +15,11 @@ import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.operation.RemoveMultipleDomainsOperation;
+import sinbad2.domain.ui.nls.Messages;
 
 public class RemoveMultipleDomainsHandler extends AbstractHandler {
 	
-	public static final String ID = "flintstones.domain.remove";
+	public static final String ID = "flintstones.domain.remove"; //$NON-NLS-1$
 	
 	public RemoveMultipleDomainsHandler() {}
 	
@@ -31,7 +32,7 @@ public class RemoveMultipleDomainsHandler extends AbstractHandler {
 		@SuppressWarnings("unchecked")
 		List<Domain> domains = selection.toList();
 		
-		IUndoableOperation operation = new RemoveMultipleDomainsOperation("Remove multiple domains", domains, domainSet);
+		IUndoableOperation operation = new RemoveMultipleDomainsOperation(Messages.RemoveMultipleDomainsHandler_Remove_multiple_domains, domains, domainSet);
 		IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);
 		operationHistory.execute(operation, null, null);

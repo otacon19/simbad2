@@ -20,7 +20,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		ResolutionPhasesUIManager resolutionPhasesUIManager = ResolutionPhasesUIManager.getInstance();
 		ResolutionPhaseUI resolutionPhaseUI = resolutionPhasesUIManager.getActiveResolutionPhasesUI();
 		
-		resolutionPhaseUI = resolutionPhasesUIManager.getUI("flintstones.resolutionphase.framework.ui");
+		resolutionPhaseUI = resolutionPhasesUIManager.getUI("flintstones.resolutionphase.framework.ui"); //$NON-NLS-1$
 		
 		if(EResolutionPhaseUIType.perspective == resolutionPhaseUI.getResolutionPhaseUIType()) {
 			return resolutionPhaseUI.getUIId();

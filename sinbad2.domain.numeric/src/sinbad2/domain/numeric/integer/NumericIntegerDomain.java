@@ -7,12 +7,13 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
+import sinbad2.domain.numeric.integer.nls.Messages;
 import sinbad2.domain.type.Numeric;
 import sinbad2.resolutionphase.io.XMLRead;
 
 public class NumericIntegerDomain extends Numeric {
 	
-	public static final String ID = "flintstones.domain.numeric.integer";
+	public static final String ID = "flintstones.domain.numeric.integer"; //$NON-NLS-1$
 	
 	private int _min;
 	private int _max;
@@ -55,7 +56,7 @@ public class NumericIntegerDomain extends Numeric {
 		String prefix = "(I) "; //$NON-NLS-1$
 		
 		if(!_inRange) {
-			return prefix + "without range";
+			return prefix + Messages.NumericIntegerDomain_Without_range;
 		} else {
 			return prefix + toString();
 		}
@@ -63,21 +64,21 @@ public class NumericIntegerDomain extends Numeric {
 	
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeAttribute("inRange", Boolean.toString(_inRange));
-		writer.writeAttribute("min", Integer.toString(_min));
-		writer.writeAttribute("max", Integer.toString(_max));
+		writer.writeAttribute("inRange", Boolean.toString(_inRange)); //$NON-NLS-1$
+		writer.writeAttribute("min", Integer.toString(_min)); //$NON-NLS-1$
+		writer.writeAttribute("max", Integer.toString(_max)); //$NON-NLS-1$
 	}
 
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {
-		_inRange = Boolean.parseBoolean(reader.getStartElementAttribute("inRange"));
-		_min = Integer.parseInt(reader.getStartElementAttribute("min"));
-		_max = Integer.parseInt(reader.getStartElementAttribute("max"));	
+		_inRange = Boolean.parseBoolean(reader.getStartElementAttribute("inRange")); //$NON-NLS-1$
+		_min = Integer.parseInt(reader.getStartElementAttribute("min")); //$NON-NLS-1$
+		_max = Integer.parseInt(reader.getStartElementAttribute("max"));	 //$NON-NLS-1$
 	}
 	
 	@Override
 	public String toString() {
-		return "[" + _min + ", " + _max + "]";
+		return "[" + _min + ", " + _max + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	@Override

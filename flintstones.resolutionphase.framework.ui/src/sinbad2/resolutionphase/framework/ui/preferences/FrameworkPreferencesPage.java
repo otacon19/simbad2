@@ -5,6 +5,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sinbad2.resolutionphase.framework.ui.Activator;
+import sinbad2.resolutionphase.framework.ui.nls.Messages;
 
 public class FrameworkPreferencesPage extends FieldEditorPreferencePage 
 	implements IWorkbenchPreferencePage {
@@ -16,7 +17,7 @@ public class FrameworkPreferencesPage extends FieldEditorPreferencePage
 	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Framework preferences");
+		setDescription(Messages.FrameworkPreferencesPage_description);
 		
 	}
 

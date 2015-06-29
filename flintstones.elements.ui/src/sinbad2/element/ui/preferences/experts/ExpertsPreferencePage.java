@@ -6,6 +6,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sinbad2.element.ui.Activator;
+import sinbad2.element.ui.nls.Messages;
 import sinbad2.element.ui.preferences.PreferenceConstants;
 
 public class ExpertsPreferencePage extends FieldEditorPreferencePage implements 
@@ -18,13 +19,13 @@ public class ExpertsPreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Experts preferences");	
+		setDescription(Messages.ExpertsPreferencePage_Experts_preferences);	
 	}
 
 	@Override
 	protected void createFieldEditors() {
 		addField(new BooleanFieldEditor(PreferenceConstants.P_EXPERT_MEMBER_AS_DEFAULT, 
-				"&Assign new experts as members when an expert is selected", getFieldEditorParent()));	
+				Messages.ExpertsPreferencePage_Assign_new_experts_as_members, getFieldEditorParent()));	
 	}
 
 }

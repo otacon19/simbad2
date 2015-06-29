@@ -14,7 +14,7 @@ public class NewDomainDialog extends DomainDialog {
 	
 	public void setDomain(Domain domain) {
 		_domain = domain;
-		_id = "";
+		_id = ""; //$NON-NLS-1$
 	}
 	
 	public Domain getDomain() {

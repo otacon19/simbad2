@@ -11,10 +11,11 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.expert.Expert;
 import sinbad2.element.expert.operation.MoveExpertOperation;
+import sinbad2.element.nls.Messages;
 
 public class MoveExpertHandler extends AbstractHandler {
 
-	public static final String ID = "flintstones.element.expert.move";
+	public static final String ID = "flintstones.element.expert.move"; //$NON-NLS-1$
 	
 	private Expert _expert;
 	private Expert _newParent;
@@ -33,7 +34,7 @@ public class MoveExpertHandler extends AbstractHandler {
 		ProblemElementsManager elementManager = ProblemElementsManager.getInstance();
 		ProblemElementsSet elementSet = elementManager.getActiveElementSet();
 		
-		IUndoableOperation operation = new MoveExpertOperation("Move expert", _expert, _newParent, elementSet);
+		IUndoableOperation operation = new MoveExpertOperation(Messages.MoveExpertHandler_Move_expert, _expert, _newParent, elementSet);
 		IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 		
 		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

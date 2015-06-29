@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import sinbad2.domain.linguistic.unbalanced.ui.nls.Messages;
 import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
 
 public class SemanticDialog extends NewDomainDialog {
@@ -50,8 +51,8 @@ public class SemanticDialog extends NewDomainDialog {
 
 		Label titleLabel = new Label(container, SWT.CENTER);
 		titleLabel.setLayoutData(new GridData(GridData.FILL, GridData.FILL,true, false, 1, 1));
-		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
-		titleLabel.setText("Semantic for domain");
+		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		titleLabel.setText(Messages.SemanticDialog_Semantic_for_domain);
 
 		ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.H_SCROLL | SWT.V_SCROLL | SWT.CENTER);
 		scrolledComposite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1));
@@ -71,8 +72,8 @@ public class SemanticDialog extends NewDomainDialog {
 		
 		for (int i = 0; i < _values.size(); i++) {
 			fieldLabel = new Label(labelsComposite, SWT.CENTER);
-			fieldLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD));
-			fieldLabel.setText("Label" + " " + (i + 1)); //$NON-NLS-1$
+			fieldLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD)); //$NON-NLS-1$
+			fieldLabel.setText("Label" + " " + (i + 1)); //$NON-NLS-1$ //$NON-NLS-2$
 
 			value = new Text(labelsComposite, SWT.BORDER);
 			gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
@@ -134,19 +135,19 @@ public class SemanticDialog extends NewDomainDialog {
 	private boolean validateEmptyText(Text text, ControlDecoration controlDecoration) {
 		
 		if(text.getText().isEmpty()) {
-			return validate(controlDecoration, "Empty Value");
+			return validate(controlDecoration, Messages.SemanticDialog_Empty_value);
 		} else {
-			return validate(controlDecoration, "");
+			return validate(controlDecoration, ""); //$NON-NLS-1$
 		}
 	}
 	
 	private boolean validateInvalidText(Text text, ControlDecoration controlDecoration) {
 		String textValue = text.getText();
 		
-		if(textValue.contains(":")) {
-			return validate(controlDecoration, "Illegal value");
+		if(textValue.contains(":")) { //$NON-NLS-1$
+			return validate(controlDecoration, Messages.SemanticDialog_Illegal_value);
 		} else {
-			return validate(controlDecoration, "");
+			return validate(controlDecoration, ""); //$NON-NLS-1$
 		}
 	}
 	
@@ -156,12 +157,12 @@ public class SemanticDialog extends NewDomainDialog {
 		for(int i = 0; i < _textValues.size(); ++i) {
 			if(i != index) {
 				if(textValue.equals(_textValues.get(i).getText())) {
-					return validate(controlDecoration, "Duplicate value");
+					return validate(controlDecoration, Messages.SemanticDialog_Duplicated_value);
 				}
 			}
 		}
 		
-		return validate(controlDecoration, "");
+		return validate(controlDecoration, ""); //$NON-NLS-1$
 	}
 	
 	private void validateFields() {

@@ -13,6 +13,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.criterion.operation.ModifyCriterionOperation;
+import sinbad2.element.ui.nls.Messages;
 
 public class CriterionCostEditingSupport extends EditingSupport {
 	
@@ -54,7 +55,7 @@ public class CriterionCostEditingSupport extends EditingSupport {
 		
 		Criterion criterion = (Criterion) element;
 		
-		IUndoableOperation operation = new ModifyCriterionOperation("Modify criterion", criterion, criterion.getId(), newValue, elementSet);
+		IUndoableOperation operation = new ModifyCriterionOperation(Messages.CriterionCostEditingSupport_Modify_criterion, criterion, criterion.getId(), newValue, elementSet);
 		IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 		
 		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);
