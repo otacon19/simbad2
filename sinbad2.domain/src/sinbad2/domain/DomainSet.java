@@ -37,7 +37,7 @@ public class DomainSet {
 		
 		_domains = domains;
 		
-		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.DOMAINS_CHANGES, null, getDomains()));
+		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.DOMAINS_CHANGES, null, getDomains(), false));
 	}
 	
 	public void addDomain(Domain domain) {
@@ -47,7 +47,7 @@ public class DomainSet {
 		
 		Collections.sort(_domains);
 		
-		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.ADD_DOMAIN, null, domain));
+		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.ADD_DOMAIN, null, domain, false));
 		
 	}
 	
@@ -56,7 +56,7 @@ public class DomainSet {
 		
 		_domains.remove(domain);
 		
-		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.REMOVE_DOMAIN, domain, null));
+		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.REMOVE_DOMAIN, domain, null, false));
 	}
 	
 	public void modifyDomain(Domain oldDomain, Domain newDomain) {
@@ -64,7 +64,7 @@ public class DomainSet {
 		removeDomain(oldDomain);
 		addDomain(newDomain);
 		
-		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.MODIFY_DOMAIN, oldDomain, newDomain));
+		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.MODIFY_DOMAIN, oldDomain, newDomain, false));
 	}
 	
 	public void removeMultipleDomains(List<Domain> removeDomains) {
@@ -73,7 +73,7 @@ public class DomainSet {
 			_domains.remove(removeDomain);
 		}
 		
-		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.REMOVE_DOMAINS, removeDomains, null));
+		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.REMOVE_DOMAINS, removeDomains, null, false));
 		
 	}
 	
@@ -83,7 +83,7 @@ public class DomainSet {
 			_domains.add(addDomain);
 		}
 		
-		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.ADD_DOMAINS, null, addDomains));
+		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.ADD_DOMAINS, null, addDomains, false));
 		
 	}
 	
@@ -158,7 +158,7 @@ public class DomainSet {
 		if(_domains.size() > 0) {
 			_domains.clear();
 			
-			notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.DOMAINS_CHANGES, null, getDomains()));
+			notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.DOMAINS_CHANGES, null, getDomains(), false));
 		}
 	}
 	

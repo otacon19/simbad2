@@ -88,7 +88,11 @@ public class NumericIntegerDomain extends Numeric {
 			return true;
 		}
 		
-		if(obj == null || (obj.getClass() != this.getClass()) || !super.equals(obj)) {
+		if(obj == null) {
+			return false;
+		}
+		
+		if((obj.getClass() != this.getClass()) || !super.equals(obj)) {
 			return false;
 		}
 		

@@ -21,6 +21,7 @@ import sinbad2.domain.operation.AddDomainOperation;
 import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
 import sinbad2.domain.ui.dialog.selectdialog.SelectNewDomainDialog;
+import sinbad2.domain.ui.nls.Messages;
 import sinbad2.domain.ui.view.domain.provider.DomainLabelProvider;
 import sinbad2.domain.ui.view.domain.provider.DomainValuationLabelProvider;
 import sinbad2.domain.valuations.DomainValuationsManager;

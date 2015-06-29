@@ -1,21 +1,20 @@
-package sinbad2.element.criterion.listener;
+package sinbad2.resolutionphase.frameworkstructuring.domainassignments.listener;
 
-
-public class CriteriaChangeEvent {
+public class DomainAssignmentsChangeEvent {
 	
-	private ECriteriaChange _change;
+	private EDomainAssignmentsChange _change;
 	private Object _oldValue;
 	private Object _newValue;
 	private boolean _inUndoRedo;
 	
-	private CriteriaChangeEvent() {
+	private DomainAssignmentsChangeEvent() {
 		_change = null;
 		_oldValue = null;
 		_newValue = null;
 		_inUndoRedo = false;
 	}
 	
-	public CriteriaChangeEvent(ECriteriaChange change, Object oldValue, Object newValue, boolean inUndoRedo) {
+	public DomainAssignmentsChangeEvent(EDomainAssignmentsChange change, Object oldValue, Object newValue, boolean inUndoRedo) {
 		this();
 		_change = change;
 		_oldValue = oldValue;
@@ -23,7 +22,7 @@ public class CriteriaChangeEvent {
 		_inUndoRedo = inUndoRedo;
 	}
 	
-	public ECriteriaChange getChange() {
+	public EDomainAssignmentsChange getChange() {
 		return _change;
 	}
 	
@@ -38,5 +37,6 @@ public class CriteriaChangeEvent {
 	public boolean getInUndoRedo() {
 		return _inUndoRedo;
 	}
-
+	
+	
 }

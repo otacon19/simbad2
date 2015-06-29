@@ -88,7 +88,11 @@ public static final String ID = "flintstones.domain.numeric.real"; //$NON-NLS-1$
 			return true;
 		}
 		
-		if(obj == null || (obj.getClass() != this.getClass()) || !super.equals(obj)) {
+		if(obj == null) {
+			return false;
+		}
+		
+		if((obj.getClass() != this.getClass()) || !super.equals(obj)) {
 			return false;
 		}
 		

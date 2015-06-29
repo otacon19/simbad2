@@ -5,6 +5,7 @@ public class DomainSetChangeEvent {
 	private EDomainSetChange _change;
 	private Object _oldValue;
 	private Object _newValue;
+	private boolean _inUndoRedo;
 	
 	private DomainSetChangeEvent() {
 		_change = null;
@@ -12,11 +13,12 @@ public class DomainSetChangeEvent {
 		_newValue = null;
 	}
 	
-	public DomainSetChangeEvent(EDomainSetChange change, Object oldValue, Object newValue) {
+	public DomainSetChangeEvent(EDomainSetChange change, Object oldValue, Object newValue, boolean inUndoRedo) {
 		this();
 		_change = change;
 		_oldValue = oldValue;
 		_newValue = newValue;
+		_inUndoRedo = inUndoRedo;
 	}
 	
 	public EDomainSetChange getChange() {
@@ -29,6 +31,10 @@ public class DomainSetChangeEvent {
 	
 	public Object getNewValue() {
 		return _newValue;
+	}
+	
+	public boolean getInUndoRedo() {
+		return _inUndoRedo;
 	}
 
 }

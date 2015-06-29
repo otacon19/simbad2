@@ -96,7 +96,11 @@ public class Expert extends ProblemElement {
 			return true;
 		}
 		
-		if(obj == null || obj.getClass() != this.getClass()) {
+		if(obj == null) {
+			return false;
+		}
+		
+		if(obj.getClass() != this.getClass()) {
 			return false;
 		}
 		

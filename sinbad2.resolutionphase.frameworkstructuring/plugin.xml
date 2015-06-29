@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.resolutionphase">
+      <resolution_phase
+            id="flintstones.resolutionphase.frameworkstructuring"
+            implementation="sinbad2.resolutionphase.frameworkstructuring.FrameworkStructuring"
+            name="Framework structuring">
+      </resolution_phase>
+   </extension>
+
+</plugin>

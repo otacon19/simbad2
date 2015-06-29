@@ -88,10 +88,14 @@ public class RealInterval extends Valuation {
 		
 		if(this == obj) {
 			return true;
-		} else {
-			if(obj == null || (obj.getClass() != this.getClass())) {
-				return false;
-			}
+		}
+		
+		if(obj == null) {
+			return false;
+		}
+			
+		if(obj.getClass() != this.getClass()) {
+			return false;
 		}
 		
 		final RealInterval other = (RealInterval) obj;

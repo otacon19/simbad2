@@ -68,7 +68,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 		_experts = experts;
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.EXPERTS_CHANGES, null, _experts));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.EXPERTS_CHANGES, null, _experts, false));
 	}
 	
 	public void setAlternatives(List<Alternative> alternatives) {
@@ -76,7 +76,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 		_alternatives = alternatives;
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ALTERNATIVES_CHANGES, null, _alternatives));
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ALTERNATIVES_CHANGES, null, _alternatives, false));
 	}
 	
 	public void setCriteria(List<Criterion> criteria) {
@@ -84,7 +84,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 		_criteria = criteria;
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.CRITERIA_CHANGES, null, _criteria));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.CRITERIA_CHANGES, null, _criteria, false));
 		
 	}
 
@@ -95,7 +95,7 @@ public class ProblemElementsSet implements Cloneable {
 			Collections.sort(_experts);
 		}
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.ADD_EXPERT, null, expert));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.ADD_EXPERT, null, expert, false));
 		
 	}
 	
@@ -104,7 +104,7 @@ public class ProblemElementsSet implements Cloneable {
 		_alternatives.add(alternative);
 		Collections.sort(_alternatives);
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_ALTERNATIVE, null, alternative));
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_ALTERNATIVE, null, alternative, false));
 		
 	}
 	
@@ -115,7 +115,7 @@ public class ProblemElementsSet implements Cloneable {
 			Collections.sort(_criteria);
 		}
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.ADD_CRITERION, null, criterion));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.ADD_CRITERION, null, criterion, false));
 		
 	}
 	
@@ -133,7 +133,7 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		}
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.MOVE_EXPERT, oldParent, moveExpert));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.MOVE_EXPERT, oldParent, moveExpert, false));
 	}
 	
 	public void moveCriterion(Criterion moveCriterion, Criterion newParent, Criterion oldParent) {
@@ -150,7 +150,7 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		}
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.MOVE_CRITERION, oldParent, moveCriterion));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.MOVE_CRITERION, oldParent, moveCriterion, false));
 	}
 	
 	public void addMultipleExperts(List<Expert> insertExperts, Boolean hasParent) {
@@ -164,7 +164,7 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		}
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_MULTIPLE_EXPERTS, null, insertExperts));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_MULTIPLE_EXPERTS, null, insertExperts, false));
 		
 	}
 	
@@ -177,7 +177,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 		Collections.sort(_alternatives);
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_MULTIPLE_ALTERNATIVES, null, insertAlternatives));
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_MULTIPLE_ALTERNATIVES, null, insertAlternatives, false));
 		
 	}
 	
@@ -193,7 +193,7 @@ public class ProblemElementsSet implements Cloneable {
 		}
 		
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.ADD_CRITERIA, null, insertCriteria));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.ADD_CRITERIA, null, insertCriteria, false));
 		
 	}
 	
@@ -204,7 +204,7 @@ public class ProblemElementsSet implements Cloneable {
 			Collections.sort(_experts);
 		}
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_EXPERT, expert, null));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_EXPERT, expert, null, false));
 		
 	}
 	
@@ -213,7 +213,7 @@ public class ProblemElementsSet implements Cloneable {
 		_alternatives.remove(alternative);
 		Collections.sort(_alternatives);
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.REMOVE_ALTERNATIVE, alternative, null));
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.REMOVE_ALTERNATIVE, alternative, null, false));
 		
 	}
 	
@@ -224,7 +224,7 @@ public class ProblemElementsSet implements Cloneable {
 			Collections.sort(_criteria);
 		}
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.REMOVE_CRITERION, criterion, null));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.REMOVE_CRITERION, criterion, null, false));
 	}
 	
 	public void removeMultipleExperts(List<Expert> removeExperts, Boolean hasParent) {
@@ -239,7 +239,7 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		}
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_MULTIPLE_EXPERTS, removeExperts, null));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_MULTIPLE_EXPERTS, removeExperts, null, false));
 		
 	}
 	
@@ -252,7 +252,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 		Collections.sort(_alternatives);
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.REMOVE_MULTIPLE_ALTERNATIVES, removeAlternatives, null));	
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.REMOVE_MULTIPLE_ALTERNATIVES, removeAlternatives, null, false));	
 	
 	}
 	
@@ -268,7 +268,7 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		}
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.REMOVE_CRITERIA, removeCriteria, null));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.REMOVE_CRITERIA, removeCriteria, null, false));
 		
 	}
 	
@@ -277,7 +277,7 @@ public class ProblemElementsSet implements Cloneable {
 		modifyExpert.setId(id);
 		
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.MODIFY_EXPERT, oldExpert, modifyExpert));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.MODIFY_EXPERT, oldExpert, modifyExpert, false));
 		
 	}
 	
@@ -287,7 +287,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 		Collections.sort(_alternatives);
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.MODIFY_ALTERNATIVE, oldAlternative, modifyAlternative));
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.MODIFY_ALTERNATIVE, oldAlternative, modifyAlternative, false));
 		
 	}
 	
@@ -296,7 +296,7 @@ public class ProblemElementsSet implements Cloneable {
 		modifyCriterion.setId(id);
 		modifyCriterion.setCost(newCost);
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.MODIFY_CRITERION, oldCriterion, modifyCriterion));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.MODIFY_CRITERION, oldCriterion, modifyCriterion, false));
 	}
 	
 	public void registerExpertsChangesListener(IExpertsChangeListener listener) {
@@ -350,17 +350,17 @@ public class ProblemElementsSet implements Cloneable {
 	public void clear() {
 		if(!_experts.isEmpty()) {
 			_experts.clear();
-			notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.EXPERTS_CHANGES, null, _experts));
+			notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.EXPERTS_CHANGES, null, _experts, false));
 		}
 		
 		if(!_alternatives.isEmpty()) {
 			_alternatives.clear();
-			notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ALTERNATIVES_CHANGES, null, _alternatives));
+			notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ALTERNATIVES_CHANGES, null, _alternatives, false));
 		}
 		
 		if(!_criteria.isEmpty()) {
 			_criteria.clear();
-			notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.CRITERIA_CHANGES, null, _criteria));
+			notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.CRITERIA_CHANGES, null, _criteria, false));
 		}
 	}
 	
