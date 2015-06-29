@@ -8,7 +8,7 @@ import sinbad2.core.workspace.Workspace;
 
 public class NewHandler extends AbstractHandler {
 	
-	public final static String ID = "flintstones.core.io.new";
+	public final static String ID = "flintstones.core.io.new"; //$NON-NLS-1$
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {

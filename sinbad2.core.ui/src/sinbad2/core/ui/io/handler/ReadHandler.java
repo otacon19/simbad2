@@ -11,14 +11,15 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import sinbad2.core.ui.nls.Messages;
 import sinbad2.core.workspace.WorkspaceContentPersistenceException;
 
 public class ReadHandler extends AbstractHandler {
 	
-	public final String ID = "flintstones.core.ui.io.read";
+	public final String ID = "flintstones.core.ui.io.read"; //$NON-NLS-1$
 	
-	private static final String[] FILTER_NAMES = { "Flintstones files (*.flintstones)" };
-	private static final String[] FILTER_EXTS = { "*.flintstones" };
+	private static final String[] FILTER_NAMES = { "Flintstones files (*.flintstones)" }; //$NON-NLS-1$
+	private static final String[] FILTER_EXTS = { "*.flintstones" }; //$NON-NLS-1$
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -41,17 +42,17 @@ public class ReadHandler extends AbstractHandler {
 					String description = null;
 					
 					if(IOException.class.getSimpleName().equals(cause)) {
-						description = "File open fail. Check the file and folder permissions";
+						description = Messages.ReadHandler_File_open_fail_permissions;
 					} else if(WorkspaceContentPersistenceException.class.getSimpleName().equals(cause)) {
-						description = "Invalid Flintstones file";
+						description = Messages.ReadHandler_Invalid_flintstones_file;
 					} else {
-						description = "File open fail";
+						description = Messages.ReadHandler_File_open_fail;
 					}
 					
-					MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "File open fail", description);
+					MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.ReadHandler_File_open_fail, description);
 				}
 			} catch (IllegalArgumentException iae) {
-				MessageDialog.openError(shell, "Invalid file name", "File name is not valid");
+				MessageDialog.openError(shell, Messages.ReadHandler_Invalid_file_name, Messages.ReadHandler_File_name_not_valid);
 			}
 		}
 		

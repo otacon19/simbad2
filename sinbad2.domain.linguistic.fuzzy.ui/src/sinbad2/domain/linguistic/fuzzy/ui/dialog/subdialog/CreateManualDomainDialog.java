@@ -22,6 +22,7 @@ import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.CreateManualDomainDialogChart;
+import sinbad2.domain.linguistic.fuzzy.ui.nls.Messages;
 import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
 
 public class CreateManualDomainDialog extends NewDomainDialog {
@@ -69,13 +70,13 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 		gridLayout.numColumns = 2;
 
 		Label lblLabelName = new Label(container, SWT.NONE);
-		lblLabelName.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD));
-		lblLabelName.setText("Label name");
+		lblLabelName.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD)); //$NON-NLS-1$
+		lblLabelName.setText(Messages.CreateManualDomainDialog_Label_name);
 
 		Label lblPreview = new Label(container, SWT.NONE);
 		lblPreview.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD)); //$NON-NLS-1$
 		lblPreview.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		lblPreview.setText("Preview");
+		lblPreview.setText(Messages.CreateManualDomainDialog_Preview);
 
 		_nameText = new Text(container, SWT.BORDER);
 		GridData gd_nameText = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -93,20 +94,20 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 		GridData gd_lblSemantic = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblSemantic.verticalIndent = 10;
 		lblSemantic.setLayoutData(gd_lblSemantic);
-		lblSemantic.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD));
-		lblSemantic.setText("Semantic");
+		lblSemantic.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD)); //$NON-NLS-1$
+		lblSemantic.setText(Messages.CreateManualDomainDialog_Semantic);
 
 		Button btnTrapezoidal = new Button(container, SWT.RADIO);
 		btnTrapezoidal.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		btnTrapezoidal.setSelection(true);
-		btnTrapezoidal.setText("Trapezoidal");
+		btnTrapezoidal.setText(Messages.CreateManualDomainDialog_Trapezoidal);
 
 		Label lblValues = new Label(container, SWT.NONE);
 		GridData gd_lblValues = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblValues.verticalIndent = 10;
 		lblValues.setLayoutData(gd_lblValues);
 		lblValues.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD)); //$NON-NLS-1$
-		lblValues.setText("Values");
+		lblValues.setText(Messages.CreateManualDomainDialog_Values);
 		new Label(container, SWT.NONE);
 
 		composite = new Composite(container, SWT.NONE);
@@ -142,7 +143,7 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 		_aValueText.setLayoutData(gd__aValueText);
 		_aValueText.setBounds(0, 0, 100, 31);
 		_aValueTextControlDecoration = createNotificationDecorator(_aValueText);
-		validate(_aValueTextControlDecoration, "Empty value");
+		validate(_aValueTextControlDecoration, Messages.CreateManualDomainDialog_Empty_value);
 
 		_bValueText = new Text(composite, SWT.BORDER);
 		GridData gd__bValueText = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -151,7 +152,7 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 		_bValueText.setLayoutData(gd__bValueText);
 		_bValueText.setBounds(0, 0, 100, 31);
 		_bValueTextControlDecoration = createNotificationDecorator(_bValueText);
-		validate(_bValueTextControlDecoration, "Empty value");
+		validate(_bValueTextControlDecoration, Messages.CreateManualDomainDialog_Empty_value);
 
 		_cValueText = new Text(composite, SWT.BORDER);
 		GridData gd__cValueText = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -160,7 +161,7 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 		_cValueText.setLayoutData(gd__cValueText);
 		_cValueText.setBounds(0, 0, 100, 31);
 		_cValueTextControlDecoration = createNotificationDecorator(_cValueText);
-		validate(_cValueTextControlDecoration, "Empty value");
+		validate(_cValueTextControlDecoration, Messages.CreateManualDomainDialog_Empty_value);
 
 		_dValueText = new Text(composite, SWT.BORDER);
 		GridData gd__dValueText = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
@@ -169,7 +170,7 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 		_dValueText.setLayoutData(gd__dValueText);
 		_dValueText.setBounds(0, 0, 100, 31);
 		_dValueTextControlDecoration = createNotificationDecorator(_dValueText);
-		validate(_dValueTextControlDecoration, "Empty value");
+		validate(_dValueTextControlDecoration, Messages.CreateManualDomainDialog_Empty_value);
 
 		hookNameModifyListener();
 		hookValuesModifyListener();
@@ -248,7 +249,7 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 
 	private boolean validateEmptyText(Text text, ControlDecoration controlDecoration) {
 		if (text.getText().isEmpty()) {
-			return validate(controlDecoration, "Empty value");
+			return validate(controlDecoration, Messages.CreateManualDomainDialog_Empty_value);
 		} else {
 			return validate(controlDecoration, ""); //$NON-NLS-1$
 		}
@@ -262,7 +263,7 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 			if (_currentLabel != null) {
 				if (!name.equals(_currentLabel.getName())) {
 					if (_currentDomain.getLabelSet().containsLabel(name)) {
-						return validate(_nameTextControlDecoration, "Duplicate name");
+						return validate(_nameTextControlDecoration, Messages.CreateManualDomainDialog_Duplicated_name);
 					} else {
 						return validate(_nameTextControlDecoration, ""); //$NON-NLS-1$
 					}
@@ -271,7 +272,7 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 				}
 			} else {
 				if (_currentDomain.getLabelSet().containsLabel(name)) {
-					return validate(_nameTextControlDecoration, "Duplicate name");
+					return validate(_nameTextControlDecoration, Messages.CreateManualDomainDialog_Duplicated_name);
 				} else {
 					return validate(_nameTextControlDecoration, ""); //$NON-NLS-1$
 				}
@@ -290,10 +291,10 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 			if(Double.parseDouble(value) >= 0 && Double.parseDouble(value) <= 1) {
 				return validate(controlDecoration, ""); //$NON-NLS-1$
 			} else {
-				return validate(controlDecoration, "Invalid value"); 
+				return validate(controlDecoration, Messages.CreateManualDomainDialog_Invalid_value); 
 			}
 		} catch (Exception e) {
-			return validate(controlDecoration, "Invalid value");
+			return validate(controlDecoration, Messages.CreateManualDomainDialog_Invalid_value);
 		}
 
 	}
@@ -304,7 +305,7 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 		double yValue = Double.parseDouble(y.getText());
 
 		if (xValue > yValue) {
-			return validate(controlDecoration, "Value lower than the previous");
+			return validate(controlDecoration, Messages.CreateManualDomainDialog_Value_lower_than_the_previous);
 		} else {
 			return validate(controlDecoration, ""); //$NON-NLS-1$
 		}

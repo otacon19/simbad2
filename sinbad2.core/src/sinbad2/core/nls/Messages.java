@@ -15,6 +15,9 @@ public class Messages extends NLS {
 	public static String ParameterValidator_Invalid_size;
 	public static String ParameterValidator_Value_must_be_in_range_1;
 	public static String ParameterValidator_Value_must_be_in_range_2;
+	public static String ReadHandler_Invalid_file_name;
+	public static String SaveAndCloseHandler_Invalid_file_name;
+	public static String SaveHandler_Invalid_file_name;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

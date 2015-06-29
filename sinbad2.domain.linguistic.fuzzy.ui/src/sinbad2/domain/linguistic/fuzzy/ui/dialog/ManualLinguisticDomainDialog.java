@@ -40,6 +40,7 @@ import sinbad2.domain.linguistic.fuzzy.ui.dialog.provider.FuzzySemanticColumnLab
 import sinbad2.domain.linguistic.fuzzy.ui.dialog.provider.FuzzyTableContentProvider;
 import sinbad2.domain.linguistic.fuzzy.ui.dialog.subdialog.CreateManualDomainDialog;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
+import sinbad2.domain.linguistic.fuzzy.ui.nls.Messages;
 import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
 
@@ -87,8 +88,8 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 		Label idLabel = new Label(_container, SWT.NULL);
 		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
 		idLabel.setLayoutData(gridData);
-		idLabel.setText("Domain id");
-		idLabel.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		idLabel.setText(Messages.ManualLinguisticDomainDialog_Domain_id);
+		idLabel.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
 		
 		Text textID = new Text(_container, SWT.BORDER);
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
@@ -120,7 +121,7 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 		gridData.verticalIndent = 15;
 		_labels.setLayoutData(gridData);
 		_labels.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD)); //$NON-NLS-1$
-		_labels.setText("Labels");
+		_labels.setText(Messages.ManualLinguisticDomainDialog_Labels);
 
 		_tableViewerComposite = new Composite(_container, SWT.NONE);
 		GridData gd_tableViewerComposite = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
@@ -152,12 +153,12 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 
 		_tableViewerNameCol = new TableViewerColumn(_tableViewer, SWT.NONE);
 		_tableViewerNameCol.getColumn().setWidth(140);
-		_tableViewerNameCol.getColumn().setText("Name");
+		_tableViewerNameCol.getColumn().setText(Messages.ManualLinguisticDomainDialog_Name);
 		_tableViewerNameCol.setLabelProvider(new FuzzyNameColumnLabelProvider());
 
 		_tableViewerSemanticCol = new TableViewerColumn(_tableViewer, SWT.NONE);
 		_tableViewerSemanticCol.getColumn().setWidth(345);
-		_tableViewerSemanticCol.getColumn().setText("Semantic");
+		_tableViewerSemanticCol.getColumn().setText(Messages.ManualLinguisticDomainDialog_Semantic);
 		_tableViewerSemanticCol.setLabelProvider(new FuzzySemanticColumnLabelProvider());
 
 		hookSelectAction();
@@ -177,9 +178,9 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 		_removeButton.setMode(ActionContributionItem.MODE_FORCE_TEXT);
 
 		_previewLabel = new Label(_container, SWT.NONE);
-		_previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD));
+		_previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD)); //$NON-NLS-1$
 		_previewLabel.setLayoutData(new GridData(SWT.CENTER, SWT.BOTTOM, false, false, 2, 1));
-		_previewLabel.setText("Preview");
+		_previewLabel.setText(Messages.ManualLinguisticDomainDialog_Preview);
 
 		Composite composite = new Composite(_container, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
@@ -200,7 +201,7 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Manually create domain");
+		newShell.setText(Messages.ManualLinguisticDomainDialog_Manually_create_domain);
 	}
 	
 	@Override
@@ -219,9 +220,9 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 	
 	private void configureActions() {
 		
-		configureAction(_add, "Add", "Add label", PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_ADD));
-		configureAction(_modify, "Modify", "Modify label", PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_CLEAR));
-		configureAction(_remove, "Remove", "Remove label", PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+		configureAction(_add, Messages.ManualLinguisticDomainDialog_Add, Messages.ManualLinguisticDomainDialog_Add_label, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_ADD));
+		configureAction(_modify, Messages.ManualLinguisticDomainDialog_Modify, Messages.ManualLinguisticDomainDialog_Modify_label, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_CLEAR));
+		configureAction(_remove, Messages.ManualLinguisticDomainDialog_Remove, Messages.ManualLinguisticDomainDialog_Remove_label, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 	}
 	
 	private void makeActions() {
@@ -294,14 +295,14 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 	
 	private void validate() {		
 		boolean validId;
-		String msgId = "";
+		String msgId = ""; //$NON-NLS-1$
 		
 		if(!_id.isEmpty()) {
 			if(_ids.contains(_id)) {
-				msgId = "Duplicated id";
+				msgId = Messages.ManualLinguisticDomainDialog_Duplicated_id;
 			}
 		} else {
-				msgId = "Empty value";
+				msgId = Messages.ManualLinguisticDomainDialog_Empty_value;
 		}
 		
 		validId = validate(_domainNameTextControlDecoration, msgId);

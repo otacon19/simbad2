@@ -157,7 +157,7 @@ public class FileMonitor {
 					monitoredFile = new File(fileURL.getFile());
 				} else {
 					throw new FileNotFoundException(
-							"File not found" + ": " + file); //$NON-NLS-1$
+							"File not found" + ": " + file); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 			this.lastModified = monitoredFile.lastModified();

@@ -9,12 +9,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import sinbad2.core.ui.nls.Messages;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.core.workspace.WorkspaceContentPersistenceException;
 
 public class SaveHandler extends AbstractHandler {
 
-	public final String ID = "flintstones.core.ui.io.save";
+	public final String ID = "flintstones.core.ui.io.save"; //$NON-NLS-1$
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -38,22 +39,22 @@ public class SaveHandler extends AbstractHandler {
 					String description = null;
 					
 					if(IOException.class.getSimpleName().equals(cause)) {
-						description = "File not saving. Check the file and folder permissions";
+						description = Messages.SaveHandler_File_not_saving_permissions;
 					} else if(WorkspaceContentPersistenceException.class.getSimpleName()
 							.equals(cause)) {
-						description = "File not saving. Something in Flintstones is wrong :(";
+						description = Messages.SaveHandler_File_not_saving_wrong;
 					} else {
-						description = "File not saving";
+						description = Messages.SaveHandler_File_not_saving;
 					}
 					
 					MessageDialog.openError(PlatformUI.getWorkbench().
 							getActiveWorkbenchWindow().getShell(), 
-							"File not saving", description);
+							Messages.SaveHandler_File_not_saving, description);
 				}
 			} catch (IllegalArgumentException iae) {
 				MessageDialog.openError(shell, 
-						"Invalid file name", 
-						"File name is not valid");
+						Messages.SaveHandler_Invalid_file_name, 
+						Messages.SaveHandler_File_name_not_valid);
 			}
 		
 			return null;

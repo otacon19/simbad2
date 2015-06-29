@@ -13,6 +13,7 @@ import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.PlatformUI;
 
 import sinbad2.core.ui.io.handler.SaveHandler;
+import sinbad2.core.ui.nls.Messages;
 import sinbad2.core.ui.shell.TitleUpdater;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.core.workspace.listener.IWorkspaceListener;
@@ -21,9 +22,9 @@ import sinbad2.core.workspace.listener.WorkspaceChangeEvent;
 public class WorkspaceSourceProvider extends AbstractSourceProvider implements
 	IWorkspaceListener {
 	
-	public final static String SAVE_STATE = "flintstones.ui.io.save.state";
-	public final static String ENABLED = "ENABLED";
-	public final static String DISENABLED = "DISENABLED";
+	public final static String SAVE_STATE = "flintstones.ui.io.save.state"; //$NON-NLS-1$
+	public final static String ENABLED = "ENABLED"; //$NON-NLS-1$
+	public final static String DISENABLED = "DISENABLED"; //$NON-NLS-1$
 	
 	private TitleUpdater _shellTitleMessageManager;
 	private Workspace _workspace;
@@ -88,7 +89,7 @@ public class WorkspaceSourceProvider extends AbstractSourceProvider implements
 				if(_changesToSave) {
 					MessageBox messageBox = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 							SWT.ICON_WARNING | SWT.CANCEL | SWT.NO | SWT.YES);
-					messageBox.setMessage("Save current changes?");
+					messageBox.setMessage(Messages.WorkspaceSourceProvider_Save_current_changes);
 					int rc = messageBox.open();
 					boolean doClose;
 					

@@ -10,6 +10,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
+import sinbad2.domain.linguistic.fuzzy.nls.Messages;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.resolutionphase.io.XMLRead;
@@ -203,7 +204,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		if(function instanceof TrapezoidalFunction) {
 			trapezoidalFunction = (TrapezoidalFunction) function;
 		} else {
-			throw new IllegalArgumentException("Invalid element type");
+			throw new IllegalArgumentException(Messages.TrapezoidalFunction_Invalid_element_type);
 		}
 		
 		double values[] = new double[5], result, slopeAB, slopeFunctionAB, slopeCD, 
@@ -283,18 +284,18 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeAttribute("a",Double.toString(_a));
-		writer.writeAttribute("b",Double.toString(_b));
-		writer.writeAttribute("c",Double.toString(_c));
-		writer.writeAttribute("d",Double.toString(_d));
+		writer.writeAttribute("a",Double.toString(_a)); //$NON-NLS-1$
+		writer.writeAttribute("b",Double.toString(_b)); //$NON-NLS-1$
+		writer.writeAttribute("c",Double.toString(_c)); //$NON-NLS-1$
+		writer.writeAttribute("d",Double.toString(_d)); //$NON-NLS-1$
 	}
 	
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {		
-		_a = Double.parseDouble(reader.getStartElementAttribute("a"));
-		_b = Double.parseDouble(reader.getStartElementAttribute("b"));
-		_c = Double.parseDouble(reader.getStartElementAttribute("c"));
-		_d = Double.parseDouble(reader.getStartElementAttribute("d"));
+		_a = Double.parseDouble(reader.getStartElementAttribute("a")); //$NON-NLS-1$
+		_b = Double.parseDouble(reader.getStartElementAttribute("b")); //$NON-NLS-1$
+		_c = Double.parseDouble(reader.getStartElementAttribute("c")); //$NON-NLS-1$
+		_d = Double.parseDouble(reader.getStartElementAttribute("d")); //$NON-NLS-1$
 	}
 	
 	
@@ -302,9 +303,9 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	public String toString() {
 		
 		if(_b == _c) {
-			return ("Trapezoidal(" + _a + ", " + _b + "," + _d + ")");
+			return ("Trapezoidal(" + _a + ", " + _b + "," + _d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else {
-			return ("Trapezoidal(" + _a + ", " + _b + "," + _c + ", " + _d + ")");
+			return ("Trapezoidal(" + _a + ", " + _b + "," + _c + ", " + _d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		}
 	}
 	

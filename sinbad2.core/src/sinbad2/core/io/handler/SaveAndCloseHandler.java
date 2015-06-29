@@ -4,12 +4,13 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
+import sinbad2.core.nls.Messages;
 import sinbad2.core.validator.Validator;
 import sinbad2.core.workspace.Workspace;
 
 public class SaveAndCloseHandler extends AbstractHandler {
 	
-public final static String ID = "flintstones.core.io.save.and.close";
+public final static String ID = "flintstones.core.io.save.and.close"; //$NON-NLS-1$
 	
 	private String _fileName;
 	
@@ -20,8 +21,8 @@ public final static String ID = "flintstones.core.io.save.and.close";
 		Validator.notNull(fileName);
 		_fileName = fileName;
 		
-		if(!fileName.toLowerCase().endsWith(".flintstones")) {
-			throw new IllegalArgumentException("Invalid file name");
+		if(!fileName.toLowerCase().endsWith(".flintstones")) { //$NON-NLS-1$
+			throw new IllegalArgumentException(Messages.SaveAndCloseHandler_Invalid_file_name);
 		}
 	}
 

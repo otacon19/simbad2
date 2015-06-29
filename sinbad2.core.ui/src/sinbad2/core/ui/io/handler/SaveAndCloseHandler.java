@@ -9,7 +9,7 @@ import sinbad2.core.workspace.Workspace;
 
 public class SaveAndCloseHandler extends AbstractHandler {
 	
-	public static final String ID = "flintstones.core.ui.io.save.and.close";
+	public static final String ID = "flintstones.core.ui.io.save.and.close"; //$NON-NLS-1$
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {

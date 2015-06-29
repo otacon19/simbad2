@@ -21,6 +21,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
+import sinbad2.domain.linguistic.fuzzy.ui.nls.Messages;
 import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.newDialog.NewDomainDialog;
 
@@ -59,8 +60,8 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 		Label idLabel = new Label(_container, SWT.NULL);
 		GridData gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
 		idLabel.setLayoutData(gridData);
-		idLabel.setText("Domain id");
-		idLabel.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		idLabel.setText(Messages.AutoGenerateLinguisticDomainDialog_Domain_id);
+		idLabel.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
 		
 		Text textID = new Text(_container, SWT.BORDER);
 		gridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1);
@@ -81,8 +82,8 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 		gridData = new GridData(SWT.LEFT, SWT.CENTER, true, false, 4, 1);
 		gridData.verticalIndent = 15;
 		_insertLabelsLabel.setLayoutData(gridData);
-		_insertLabelsLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.NONE));
-		_insertLabelsLabel.setText("Insert label names with separator ':'");
+		_insertLabelsLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.NONE)); //$NON-NLS-1$
+		_insertLabelsLabel.setText(Messages.AutoGenerateLinguisticDomainDialog_Insert_label_names_with_separator_colon);
 		
 		_labelsText = new Text(_container, SWT.BORDER);
 		GridData gd_labelsText = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -95,7 +96,7 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 			public void modifyText(ModifyEvent e) {
 
 				if(!_labelsText.getText().isEmpty()) {
-					String[] labels = _labelsText.getText().split(":");
+					String[] labels = _labelsText.getText().split(":"); //$NON-NLS-1$
 					_specificDomain = ((FuzzySet) _specificDomain).createTrapezoidalFunction(labels);
 				}
 				
@@ -109,9 +110,9 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 		_domainNameTextControlDecoration = createNotificationDecorator(textID);
 		
 		_previewLabel = new Label(_container, SWT.NONE);
-		_previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD));
+		_previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD)); //$NON-NLS-1$
 		_previewLabel.setLayoutData(new GridData(SWT.CENTER, SWT.BOTTOM, false, false, 1, 1));
-		_previewLabel.setText("Preview");
+		_previewLabel.setText(Messages.AutoGenerateLinguisticDomainDialog_Preview);
 		
 		Composite composite = new Composite(_container, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -130,7 +131,7 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("Auto-generated domain");
+		newShell.setText(Messages.AutoGenerateLinguisticDomainDialog_Auto_generated_domain);
 	}
 	
 	@Override
@@ -144,20 +145,20 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 	
 	private void validate() {		
 		boolean validLabel, validId;
-		String msgLabel = "", msgId = "";
+		String msgLabel = "", msgId = ""; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		if(!_labelsText.getText().isEmpty()) {
-			msgLabel = "";
+			msgLabel = ""; //$NON-NLS-1$
 		} else {
-			msgLabel = "Empty domain";
+			msgLabel = Messages.AutoGenerateLinguisticDomainDialog_Empty_domain;
 		}
 		
 		if(!_id.isEmpty()) {
 			if(_ids.contains(_id)) {
-				msgId = "Duplicated id";
+				msgId = Messages.AutoGenerateLinguisticDomainDialog_Duplicated_id;
 			}
 		} else {
-				msgId = "Empty value";
+				msgId = Messages.AutoGenerateLinguisticDomainDialog_Empty_value;
 		}
 		
 		validLabel = validate(_labelsTextControlDecoration, msgLabel);

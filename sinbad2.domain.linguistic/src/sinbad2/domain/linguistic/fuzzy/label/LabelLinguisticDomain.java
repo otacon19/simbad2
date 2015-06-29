@@ -45,7 +45,7 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 	
 	@Override
 	public String toString() {
-		return(_name + "::" + _semantic.toString());
+		return(_name + "::" + _semantic.toString()); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -70,15 +70,15 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 	}
 	
 	public void save(XMLStreamWriter writer) throws XMLStreamException {		
-		writer.writeStartElement("semantic");
-		writer.writeAttribute("type", _semantic.getClass().getName());
+		writer.writeStartElement("semantic"); //$NON-NLS-1$
+		writer.writeAttribute("type", _semantic.getClass().getName()); //$NON-NLS-1$
 		_semantic.save(writer);
 		writer.writeEndElement();
 	}
 	
 	public void read(XMLRead reader)  throws XMLStreamException {
 		reader.goToStartElement("semantic"); //$NON-NLS-1$
-		String type = reader.getStartElementAttribute("type");
+		String type = reader.getStartElementAttribute("type"); //$NON-NLS-1$
 		Class<?> function = null;
 		
 		try {

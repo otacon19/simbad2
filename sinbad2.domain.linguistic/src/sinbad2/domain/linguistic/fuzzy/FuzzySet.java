@@ -18,6 +18,7 @@ import sinbad2.domain.linguistic.fuzzy.function.types.LinearPieceFunction;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.domain.linguistic.fuzzy.label.LabelSetLinguisticDomain;
+import sinbad2.domain.linguistic.fuzzy.nls.Messages;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.domain.type.Linguistic;
@@ -25,7 +26,7 @@ import sinbad2.resolutionphase.io.XMLRead;
 
 public class FuzzySet extends Linguistic {
 	
-	public static final String ID = "flintstones.domain.linguistic";
+	public static final String ID = "flintstones.domain.linguistic"; //$NON-NLS-1$
 	
 	protected LabelSetLinguisticDomain _labelSet;
 	protected List<Double> _values;
@@ -53,7 +54,7 @@ public class FuzzySet extends Linguistic {
 		Validator.notInvalidSize(values.size(), cardinality, cardinality);
 		for(Double value: values) {
 			Validator.notNull(value);
-			Validator.notInvalidSize(value, 0.0, 1.0, "value");
+			Validator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
 		}
 		
 		_values = values;
@@ -64,7 +65,7 @@ public class FuzzySet extends Linguistic {
 		Validator.notInvalidSize(pos, 0, _labelSet.getCardinality() - 1);
 		
 		Validator.notNull(value);
-		Validator.notInvalidSize(value, 0.0, 1.0, "value");
+		Validator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
 		
 		_values.set(pos, value);
 	}
@@ -72,28 +73,28 @@ public class FuzzySet extends Linguistic {
 	public void setValue(String name, Double value) {
 		Validator.notNull(name);
 		Validator.notNull(value);
-		Validator.notInvalidSize(value, 0.0, 1.0, "value");
+		Validator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
 		
 		int pos = _labelSet.getPos(name);
 		
 		if(pos != -1) {
 			setValue(pos, value);
 		} else {
-			throw new IllegalArgumentException("Inexistent element");
+			throw new IllegalArgumentException(Messages.FuzzySet_Inexistent_element);
 		}
 	}
 	
 	public void setValue(LabelLinguisticDomain label, Double value) {
 		Validator.notNull(label);
 		Validator.notNegative(value);
-		Validator.notInvalidSize(value, 0.0, 1.0, "value");
+		Validator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
 		
 		int pos = _labelSet.getPos(label);
 		
 		if(pos != -1) {
 			setValue(pos, value);
 		} else {
-			throw new IllegalArgumentException("Inexistent element");
+			throw new IllegalArgumentException(Messages.FuzzySet_Inexistent_element);
 		}
 	}
 	
@@ -177,7 +178,7 @@ public class FuzzySet extends Linguistic {
 		_labelSet.addLabel(pos, label);
 		
 		Validator.notNull(value);
-		Validator.notInvalidSize(value, 0.0, 1.0, "value");
+		Validator.notInvalidSize(value, 0.0, 1.0, "value"); //$NON-NLS-1$
 		
 
 		_values.add(pos, value);
@@ -446,15 +447,15 @@ public class FuzzySet extends Linguistic {
 	
 	@Override
 	public String formatDescriptionDomain() {
-		String result = "";
+		String result = ""; //$NON-NLS-1$
 		int cardinality;
 		
 		if((cardinality = _labelSet.getCardinality()) != 0){
-			result += "(";
+			result += "("; //$NON-NLS-1$
 			for(int i = 0; i < cardinality - 1; ++i) {
-				result += _labelSet.getLabels().get(i).getName() + ", ";
+				result += _labelSet.getLabels().get(i).getName() + ", "; //$NON-NLS-1$
 			}
-			result += _labelSet.getLabels().get(cardinality - 1).getName() + ")";
+			result += _labelSet.getLabels().get(cardinality - 1).getName() + ")"; //$NON-NLS-1$
 		}
 		
 		return result.toString();
@@ -462,25 +463,25 @@ public class FuzzySet extends Linguistic {
 	
 	@Override
 	public String toString() {
-		String result = "";
+		String result = ""; //$NON-NLS-1$
 		int cardinality = _labelSet.getCardinality();
 		
 		if(cardinality > 0) {
 			for(int i = 0; i < cardinality; ++i) {
 				if(i > 0) {
-					result += ", ";
+					result += ", "; //$NON-NLS-1$
 				}
-				result += "[" + _labelSet.getLabels().get(i) + ";" + _values.get(i) + "]";
+				result += "[" + _labelSet.getLabels().get(i) + ";" + _values.get(i) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 		
-		return "{" + result + "}";
+		return "{" + result + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
 		
-		writer.writeStartElement("values");
+		writer.writeStartElement("values"); //$NON-NLS-1$
 		for (int i = 0; i < _values.size(); ++i) {
 			writer.writeStartElement("value"); //$NON-NLS-1$
 			writer.writeAttribute("v", Double.toString(_values.get(i))); //$NON-NLS-1$
@@ -488,7 +489,7 @@ public class FuzzySet extends Linguistic {
 		}
 		writer.writeEndElement();
 		
-		writer.writeStartElement("labelSet");
+		writer.writeStartElement("labelSet"); //$NON-NLS-1$
 		_labelSet.save(writer);;
 		writer.writeEndElement();
 		

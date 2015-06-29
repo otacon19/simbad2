@@ -11,6 +11,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
+import sinbad2.domain.linguistic.fuzzy.nls.Messages;
 import sinbad2.resolutionphase.io.XMLRead;
 
 public class LabelSetLinguisticDomain implements Cloneable {
@@ -49,7 +50,7 @@ public class LabelSetLinguisticDomain implements Cloneable {
 		Validator.notInvalidSize(pos, 0, getCardinality());
 		
 		if(containsLabel(label.getName())) {
-			throw new IllegalArgumentException("Duplicate label name");
+			throw new IllegalArgumentException(Messages.LabelSetLinguisticDomain_Duplicated_label_name);
 		}
 		
 		_labels.add(pos, label);
@@ -129,11 +130,11 @@ public class LabelSetLinguisticDomain implements Cloneable {
 	}
 	
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeStartElement("labels");
+		writer.writeStartElement("labels"); //$NON-NLS-1$
 		
 		for(LabelLinguisticDomain label: _labels) {
 			writer.writeStartElement(label.getName());
-			writer.writeAttribute("label", label.getName());
+			writer.writeAttribute("label", label.getName()); //$NON-NLS-1$
 			label.save(writer);
 			writer.writeEndElement();
 		}
@@ -148,7 +149,7 @@ public class LabelSetLinguisticDomain implements Cloneable {
 		
 		LabelLinguisticDomain label = null;
 		
-		reader.goToStartElement("labels");
+		reader.goToStartElement("labels"); //$NON-NLS-1$
 
 		while (reader.hasNext() && !end) {
 			event = reader.next();
@@ -175,19 +176,19 @@ public class LabelSetLinguisticDomain implements Cloneable {
 	
 	@Override
 	public String toString() {
-		String result = "";
+		String result = ""; //$NON-NLS-1$
 		int cardinality = getCardinality();
 		
 		if(cardinality > 0) {
 			for(int pos = 0; pos < cardinality; ++pos) {
 				if(pos > 0) {
-					result += ", ";
+					result += ", "; //$NON-NLS-1$
 				}
 				result += _labels.get(pos);
 			}
 		}
 		
-		return "{" + result + "}";
+		return "{" + result + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 		
 	}
 	

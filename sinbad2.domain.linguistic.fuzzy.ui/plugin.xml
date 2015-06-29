@@ -4,7 +4,7 @@
    <extension
          point="flintstones.domain.ui">
       <domain_ui
-            chart="jfreechart.LinguisticDomainChart"
+            chart="sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart"
             domain="flintstones.domain.linguistic"
             icon="icons/Letter-L-icon_16.png">
       </domain_ui>
@@ -15,13 +15,13 @@
             description="Create auto-generated domain"
             domain="flintstones.domain.linguistic"
             id="sinbad2.domain.linguistic.newauto"
-            implementation="dialog.AutoGenerateLinguisticDomainDialog">
+            implementation="sinbad2.domain.linguistic.fuzzy.ui.dialog.AutoGenerateLinguisticDomainDialog">
       </dialog>
       <dialog
             description="Manually create domain"
             domain="flintstones.domain.linguistic"
             id="sinbad2.domain.linguistic.newmanual"
-            implementation="dialog.ManualLinguisticDomainDialog">
+            implementation="sinbad2.domain.linguistic.fuzzy.ui.dialog.ManualLinguisticDomainDialog">
       </dialog>
    </extension>
    <extension
@@ -30,7 +30,7 @@
             description="Manually modify dialog"
             domain="flintstones.domain.linguistic"
             id="sinbad2.domain.linguistic.modify"
-            implementation="dialog.ModifyLinguisticDomainDialog">
+            implementation="sinbad2.domain.linguistic.fuzzy.ui.dialog.ModifyLinguisticDomainDialog">
       </dialog>
    </extension>
 

@@ -5,6 +5,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import sinbad2.core.ui.nls.Messages;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.core.workspace.listener.IWorkspaceListener;
 import sinbad2.core.workspace.listener.WorkspaceChangeEvent;
@@ -60,7 +61,7 @@ public class TitleUpdater implements IWorkspaceListener {
 					_fileOpen = false;
 					setTitle();
 					
-					MessageDialog.openInformation(_shell, "File removed", "File removed");		
+					MessageDialog.openInformation(_shell, Messages.TitleUpdater_File_removed, Messages.TitleUpdater_File_removed);		
 				}
 			});
 			break;
@@ -79,11 +80,11 @@ public class TitleUpdater implements IWorkspaceListener {
 		}
 		
 		if(_modifyState) {
-			title += "*";
+			title += "*"; //$NON-NLS-1$
 		}
 		
 		if(_fileOpen) {
-			title += _fileName + " - ";
+			title += _fileName + " - "; //$NON-NLS-1$
 		}
 		
 		title += _defaultText;

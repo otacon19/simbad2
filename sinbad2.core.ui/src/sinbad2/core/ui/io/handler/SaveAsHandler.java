@@ -11,15 +11,16 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import sinbad2.core.ui.nls.Messages;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.core.workspace.WorkspaceContentPersistenceException;
 
 public class SaveAsHandler extends AbstractHandler {
 	
-public final String ID = "flintstones.core.ui.io.save.as";
+public final String ID = "flintstones.core.ui.io.save.as"; //$NON-NLS-1$
 	
-	private static final String[] FILTER_NAMES = { "Flintstones files (*.flintstones)" };
-	private static final String[] FILTER_EXTS = { "*.flintstones" };
+	private static final String[] FILTER_NAMES = { "Flintstones files (*.flintstones)" }; //$NON-NLS-1$
+	private static final String[] FILTER_EXTS = { "*.flintstones" }; //$NON-NLS-1$
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -46,20 +47,20 @@ public final String ID = "flintstones.core.ui.io.save.as";
 					String description = null;
 					
 					if(IOException.class.getSimpleName().equals(cause)) {
-						description = "File not saving. Check the file and folder permissions";
+						description = Messages.SaveAsHandler_File_not_saving_permissions;
 					} else if(WorkspaceContentPersistenceException.class.getSimpleName()
 							.equals(cause)) {
-						description = "File not saving. Something in Flintstones is wrong :(";
+						description = Messages.SaveAsHandler_File_not_saving_wrong;
 					} else {
-						description = "File not saving";
+						description = Messages.SaveAsHandler_File_not_saving;
 					}
 					
 					MessageDialog.openError(PlatformUI.getWorkbench().
 							getActiveWorkbenchWindow().getShell(), 
-							"File not saving", description);
+							Messages.SaveAsHandler_File_not_saving, description);
 				}
 			} catch (IllegalArgumentException iae) {
-				MessageDialog.openError(shell, "Invalid file name", "File name is not valid");
+				MessageDialog.openError(shell, Messages.SaveAsHandler_Invalid_file_name, Messages.SaveAsHandler_File_name_not_valid);
 			}
 		}
 		

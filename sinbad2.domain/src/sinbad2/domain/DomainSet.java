@@ -180,11 +180,11 @@ public class DomainSet {
 	}
 	
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeStartElement("domain-set");
+		writer.writeStartElement("domain-set"); //$NON-NLS-1$
 		
 		for(Domain domain: _domains) {
 			writer.writeStartElement(domain.getType());
-			writer.writeAttribute("id", domain.getId());
+			writer.writeAttribute("id", domain.getId()); //$NON-NLS-1$
 			domain.save(writer);
 			writer.writeEndElement();
 		}

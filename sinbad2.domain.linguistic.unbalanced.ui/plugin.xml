@@ -4,7 +4,7 @@
    <extension
          point="flintstones.domain.ui">
       <domain_ui
-            chart="jfreechart.LinguisticDomainChart"
+            chart="sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart"
             domain="flintstones.domain.linguistic.unbalanced"
             icon="icons/Letter-L-icon_16.png">
       </domain_ui>

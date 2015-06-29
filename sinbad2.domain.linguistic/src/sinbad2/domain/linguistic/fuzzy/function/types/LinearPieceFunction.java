@@ -37,7 +37,7 @@ public class LinearPieceFunction implements IFragmentFunction {
 	
 	@Override
 	public String toString() {
-		return (_cutOffY < 0) ? (_slope + "x " + _cutOffY) : (_slope + "x + " + _cutOffY);
+		return (_cutOffY < 0) ? (_slope + "x " + _cutOffY) : (_slope + "x + " + _cutOffY); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	@Override
