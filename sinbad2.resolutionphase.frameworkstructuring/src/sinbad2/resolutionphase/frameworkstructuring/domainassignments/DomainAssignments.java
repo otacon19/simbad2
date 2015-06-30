@@ -96,21 +96,21 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 	}
 	
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeStartElement("domain-assignments");
+		writer.writeStartElement("domain-assignments"); //$NON-NLS-1$
 		
 		for(DomainAssignmentKey key: _assignments.keySet()) {
-			writer.writeStartElement("assignment");
-			writer.writeAttribute("expert", key.getExpert().getPathId());
-			writer.writeAttribute("alternative", key.getAlternative().getPathId());
-			writer.writeAttribute("criterion", key.getCriterion().getPathId());
-			writer.writeAttribute("domain", _assignments.get(key).getId());
+			writer.writeStartElement("assignment"); //$NON-NLS-1$
+			writer.writeAttribute("expert", key.getExpert().getPathId()); //$NON-NLS-1$
+			writer.writeAttribute("alternative", key.getAlternative().getPathId()); //$NON-NLS-1$
+			writer.writeAttribute("criterion", key.getCriterion().getPathId()); //$NON-NLS-1$
+			writer.writeAttribute("domain", _assignments.get(key).getId()); //$NON-NLS-1$
 			writer.writeEndElement();
 		}
 		writer.writeEndElement();
 	}
 	
 	public void read(XMLRead reader, Framework framework) throws XMLStreamException {
-		reader.goToStartElement("domain-assignments");
+		reader.goToStartElement("domain-assignments"); //$NON-NLS-1$
 		
 		ProblemElementsSet elementsSet = framework.getElementSet();
 		DomainSet domainSet = framework.getDomainSet();
@@ -126,27 +126,27 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 		while(reader.hasNext() && !end) {
 			event = reader.next();
 			if(event.isStartElement()) {
-				id = reader.getStartElementAttribute("expert");
+				id = reader.getStartElementAttribute("expert"); //$NON-NLS-1$
 				expert = Expert.getExpertByFormatId(elementsSet.getExperts(), id);
 				
-				id = reader.getStartElementAttribute("alternative");
+				id = reader.getStartElementAttribute("alternative"); //$NON-NLS-1$
 				for(Alternative a: elementsSet.getAlternatives()) {
 					if(id.equals(a.getId())) {
 						alternative = a;
 					}
 				}
 				
-				id = reader.getStartElementAttribute("criterion");
+				id = reader.getStartElementAttribute("criterion"); //$NON-NLS-1$
 				criterion = Criterion.getCriterionByFormatId(elementsSet.getCriteria(), id);
 				
-				id = reader.getStartElementAttribute("domain");
+				id = reader.getStartElementAttribute("domain"); //$NON-NLS-1$
 				domain = domainSet.getDomain(id);
 				
 			} else if(event.isEndElement()) {
 				endtag = reader.getEndElementLocalPart();
-				if(endtag.equals("assignment")) {
+				if(endtag.equals("assignment")) { //$NON-NLS-1$
 					setDomain(expert, alternative, criterion, domain);
-				} else if(endtag.equals("domain-assignments")) {
+				} else if(endtag.equals("domain-assignments")) { //$NON-NLS-1$
 					end = true;
 				}
 			}

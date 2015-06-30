@@ -131,11 +131,12 @@ public class DomainSet {
 		return domainsType;
 	}
 	
-	public List<String> getAllDomainsIds() {
-		List<String> domainsIds = new LinkedList<String>();
+	public String[] getAllDomainsIds() {
+		String[] domainsIds = new String[_domains.size()];
+		int pos = 0;
 		
 		for(Domain domain: _domains) {
-			domainsIds.add(domain.getId());
+			domainsIds[pos++] = domain.getId();
 		}
 		
 		return domainsIds;

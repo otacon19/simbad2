@@ -1,7 +1,6 @@
 package sinbad2.domain.ui.dialog;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -27,7 +26,7 @@ public class DomainDialog extends Dialog {
 		DomainsManager domainManager = DomainsManager.getInstance();
 		DomainSet domainSet = domainManager.getActiveDomainSet();
 		
-		List<String> domainsIds = domainSet.getAllDomainsIds();
+		String[] domainsIds = domainSet.getAllDomainsIds();
 		_ids = new HashSet<String>();
 		for(String id: domainsIds) {
 			_ids.add(id);

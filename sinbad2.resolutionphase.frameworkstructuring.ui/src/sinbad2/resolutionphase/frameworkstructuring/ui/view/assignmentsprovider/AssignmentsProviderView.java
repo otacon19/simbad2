@@ -1,0 +1,373 @@
+package sinbad2.resolutionphase.frameworkstructuring.ui.view.assignmentsprovider;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.part.ViewPart;
+
+import sinbad2.domain.Domain;
+import sinbad2.domain.DomainSet;
+import sinbad2.domain.DomainsManager;
+import sinbad2.domain.listener.DomainSetChangeEvent;
+import sinbad2.domain.listener.IDomainSetChangeListener;
+import sinbad2.domain.listener.IDomainSetListener;
+import sinbad2.element.IProblemElementsSetChangeListener;
+import sinbad2.element.ProblemElementsManager;
+import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.alternative.Alternative;
+import sinbad2.element.alternative.listener.AlternativesChangeEvent;
+import sinbad2.element.alternative.listener.IAlternativesChangeListener;
+import sinbad2.element.criterion.Criterion;
+import sinbad2.element.criterion.listener.CriteriaChangeEvent;
+import sinbad2.element.criterion.listener.ICriteriaChangeListener;
+import sinbad2.element.expert.Expert;
+import sinbad2.element.expert.listener.ExpertsChangeEvent;
+import sinbad2.element.expert.listener.IExpertsChangeListener;
+import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignmentsManager;
+import sinbad2.resolutionphase.frameworkstructuring.domainassignments.operation.ApplyDomainAssignmentsOperation;
+import sinbad2.resolutionphase.frameworkstructuring.ui.Images;
+
+public class AssignmentsProviderView extends ViewPart implements IAlternativesChangeListener, IExpertsChangeListener, ICriteriaChangeListener,
+	IDomainSetChangeListener, IProblemElementsSetChangeListener, IDomainSetListener {
+	
+	public static final String ID = "flintstones.resolutionphase.frameworkstructuring.ui.view.assignmentsprovider"; //$NON-NLS-1$
+
+	private Composite _container;
+	private DomainAssignmentsManager _domainAssignmentsManager;
+	private DomainsManager _domainsManager;
+	private DomainSet _domainSet;
+	private ProblemElementsManager _elementsManager;
+	private ProblemElementsSet _elementSet;
+	private List<Expert> _experts;
+	private List<Alternative> _alternatives;
+	private List<Criterion> _criteria;
+	private String[] _domainValues;
+	private String[] _expertValues;
+	private String[] _alternativeValues;
+	private String[] _criterionValues;
+	private Button _applyButton;
+	private Combo _domainCombo;
+	private Combo _alternativeCombo;
+	private Combo _criterionCombo;
+	private Combo _expertCombo;
+	private Boolean _validElements;
+	private Boolean _validDomains;
+
+	public AssignmentsProviderView() {
+		_domainAssignmentsManager = DomainAssignmentsManager.getInstance();
+
+		_domainsManager = DomainsManager.getInstance();
+		_domainsManager.registerDomainSetChangeListener(this);
+
+		_domainSet = _domainsManager.getActiveDomainSet();
+		_domainSet.registerDomainsListener(this);
+		extractDomainValues();
+
+		_elementsManager = ProblemElementsManager.getInstance();
+		_elementsManager.registerElementsSetChangeListener(this);
+
+		_elementSet = _elementsManager.getActiveElementSet();
+		_experts = _elementSet.getExperts();
+		_elementSet.registerExpertsChangesListener(this);
+		extractExpertValues();
+
+		_alternatives = _elementSet.getAlternatives();
+		_elementSet.registerAlternativesChangesListener(this);
+		extractAlternativeValues();
+
+		_criteria = _elementSet.getCriteria();
+		_elementSet.registerCriteriaChangeListener(this);
+		extractCriterionValues();
+
+		_validElements = null;
+		_validDomains = null;
+	}
+	
+	@Override
+	public void createPartControl(Composite parent) {
+		_container = parent;
+		parent.setLayout(new GridLayout(9, false));
+
+		Label label = new Label(parent, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label.setText("Expert");
+		_expertCombo = new Combo(parent, SWT.NONE);
+		_expertCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+		label = new Label(parent, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label.setText("Criterion");
+		_criterionCombo = new Combo(parent, SWT.NONE);
+		_criterionCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+		label = new Label(parent, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label.setText("Alternative");
+		_alternativeCombo = new Combo(parent, SWT.NONE);
+		_alternativeCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+		label = new Label(parent, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		label.setText("Domain");
+		_domainCombo = new Combo(parent, SWT.NONE);
+		_domainCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+		_applyButton = new Button(parent, SWT.NONE);
+		_applyButton.setText("Apply");
+		_applyButton.setImage(Images.Apply);
+		_applyButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Expert expert = null;
+				Alternative alternative = null;
+				Criterion criterion = null;
+				Domain domain = null;
+
+				int pos = _expertCombo.getSelectionIndex();
+				String item = null;
+				if (pos == 0) {
+					expert = null;
+				} else {
+					item = _expertCombo.getItem(pos);
+					expert = Expert.getExpertByFormatId(_experts, item);
+				}
+
+				pos = _alternativeCombo.getSelectionIndex();
+				item = null;
+				if (pos == 0) {
+					alternative = null;
+				} else {
+					item = _alternativeCombo.getItem(pos);
+					boolean find = false;
+					int counter = 0;
+					int size = _alternatives.size();
+					do {
+						alternative = _alternatives.get(counter++);
+						if (item.equals(alternative.getId())) {
+							find = true;
+						}
+					} while ((!find) && (counter < size));
+				}
+
+				pos = _criterionCombo.getSelectionIndex();
+				item = null;
+				if (pos == 0) {
+					criterion = null;
+				} else {
+					item = _criterionCombo.getItem(pos);
+					criterion = Criterion.getCriterionByFormatId(_criteria, item);
+				}
+
+				pos = _domainCombo.getSelectionIndex();
+				item = _domainCombo.getItem(pos);
+				domain = _domainSet.getDomain(item);
+
+				IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
+				ApplyDomainAssignmentsOperation operation = new ApplyDomainAssignmentsOperation(_domainAssignmentsManager.getActiveDomainAssignments(),
+						expert, alternative, criterion, domain);
+
+				operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);
+				try {
+					operationHistory.execute(operation, null, null);
+				} catch (ExecutionException ee) {
+					ee.printStackTrace();
+				}
+			}
+		});
+
+		computeState(EComboChange.ALL);
+	}
+	
+	@Override
+	public void dispose() {
+		_domainsManager.unregisterDomainSetChangeListener(this);
+		_domainSet.unregisterDomainsListener(this);
+		_elementsManager.unregisterElementsSetChangeListener(this);
+		_elementSet.unregisterExpertsChangeListener(this);
+		_elementSet.unregisterAlternativesChangeListener(this);
+		_elementSet.unregisterCriteriaChangeListener(this);
+	}
+
+	@Override
+	public void notifyDomainSetListener(DomainSetChangeEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyNewProblemElementsSet(ProblemElementsSet elementSet) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyNewDomainSet(DomainSet domainSet) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyCriteriaChange(CriteriaChangeEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyExpertsChange(ExpertsChangeEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyAlternativesChange(AlternativesChangeEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFocus() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private void extractDomainValues() {
+		_domainValues = _domainSet.getAllDomainsIds();
+	}
+
+	private List<String> extractExpertValues(Expert expert) {
+		List<String> result = new LinkedList<String>();
+
+		if (expert.hasChildrens()) {
+			for (Expert e : expert.getChildrens()) {
+				result.addAll(extractExpertValues(e));
+			}
+		}
+
+		result.add(expert.getPathId());
+
+		return result;
+	}
+
+	private void extractExpertValues() {
+		List<String> values = new LinkedList<String>();
+		for (Expert expert : _experts) {
+			values.addAll(extractExpertValues(expert));
+		}
+		Collections.sort(values);
+		values.add(0, "* (all)");
+
+		_expertValues = values.toArray(new String[0]);
+	}
+
+	private void extractAlternativeValues() {
+		List<String> values = new LinkedList<String>();
+		for (Alternative alternative : _alternatives) {
+			values.add(alternative.getPathId());
+		}
+		Collections.sort(values);
+		values.add(0, "* (all)");
+
+		_alternativeValues = values.toArray(new String[0]);
+	}
+
+	private List<String> extractCriterionValues(Criterion criterion) {
+		List<String> result = new LinkedList<String>();
+
+		if (criterion.hasSubcriteria()) {
+			for (Criterion c : criterion.getSubcriteria()) {
+				result.addAll(extractCriterionValues(c));
+			}
+		}
+
+		result.add(criterion.getPathId());
+
+		return result;
+	}
+
+	private void extractCriterionValues() {
+		List<String> values = new LinkedList<String>();
+		for (Criterion criterion : _criteria) {
+			values.addAll(extractCriterionValues(criterion));
+		}
+		Collections.sort(values);
+		values.add(0, "* (all)");
+
+		_criterionValues = values.toArray(new String[0]);
+	}
+	
+	private void computeState(EComboChange change) {
+
+		boolean oldEnabled;
+		if ((_validDomains == null) || (_validElements == null)) {
+			oldEnabled = true;
+		} else {
+			oldEnabled = _validDomains && _validElements;
+		}
+
+		boolean enabled = false;
+
+		boolean testElements = true;
+		boolean testDomains = true;
+		if (EComboChange.DOMAINS.equals(change)) {
+			testElements = false;
+		} else if (EComboChange.ELEMENTS.equals(change)) {
+			testDomains = false;
+		}
+
+		if (testDomains) {
+			_validDomains = _domainValues.length != 0;
+		}
+
+		if (testElements) {
+			_validElements = ((_expertValues.length != 1)
+					&& (_alternativeValues.length != 1) && (_criterionValues.length != 1));
+		}
+
+		if ((_validDomains == null) || (_validElements == null)) {
+			enabled = false;
+		} else {
+			enabled = _validDomains && _validElements;
+		}
+
+		if (enabled != oldEnabled) {
+			for (Control control : _container.getChildren()) {
+				control.setEnabled(enabled);
+			}
+		}
+
+		if (enabled) {
+			_expertCombo.setItems(_expertValues);
+			_alternativeCombo.setItems(_alternativeValues);
+			_criterionCombo.setItems(_criterionValues);
+			_domainCombo.setItems(_domainValues);
+			_expertCombo.select(0);
+			_alternativeCombo.select(0);
+			_criterionCombo.select(0);
+			_domainCombo.select(0);
+
+		} else {
+			_expertCombo.setItems(new String[] {});
+			_alternativeCombo.setItems(new String[] {});
+			_criterionCombo.setItems(new String[] {});
+			_domainCombo.setItems(new String[] {});
+		}
+	}
+
+	
+
+
+}

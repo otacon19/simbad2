@@ -6,7 +6,7 @@
       <resolution_phase
             id="flintstones.resolutionphase.frameworkstructuring"
             implementation="sinbad2.resolutionphase.frameworkstructuring.FrameworkStructuring"
-            name="Framework structuring">
+            name="%resolution_phase.framework_structuring">
       </resolution_phase>
    </extension>
 

@@ -10,6 +10,9 @@
          <phase
                resolution_phase="flintstones.resolutionphase.framework">
          </phase>
+         <phase
+               resolution_phase="flintstones.resolutionphase.frameworkstructuring">
+         </phase>
       </scheme>
    </extension>
 

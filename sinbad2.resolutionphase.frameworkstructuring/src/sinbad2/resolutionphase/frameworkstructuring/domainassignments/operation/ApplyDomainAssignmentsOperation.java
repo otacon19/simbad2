@@ -33,7 +33,7 @@ public class ApplyDomainAssignmentsOperation extends UndoableOperation {
 
 	public ApplyDomainAssignmentsOperation(DomainAssignments domainAssignments, Expert expert, Alternative alternative, Criterion criterion,
 			Domain domain) {
-		super("");
+		super(""); //$NON-NLS-1$
 		
 		_domainAssignments = domainAssignments;
 		_expert = expert;
