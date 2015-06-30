@@ -60,7 +60,7 @@ public class ModifyCriterionOperation extends UndoableOperation {
 		
 		Criterion oldCriterion = (Criterion) _modifyCriterion.clone();
 
-		_elementSet.modifyCriterion(_modifyCriterion, _newId, _newCost);
+		_elementSet.modifyCriterion(_modifyCriterion, _newId, _newCost, _inUndoRedo);
 		
 		if(!_newId.equals(oldCriterion.getId())) {
 			Collections.sort(_brothers);
@@ -73,7 +73,7 @@ public class ModifyCriterionOperation extends UndoableOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.modifyCriterion(_modifyCriterion, _oldId, _oldCost);
+		_elementSet.modifyCriterion(_modifyCriterion, _oldId, _oldCost, _inUndoRedo);
 		
 		if(!_oldId.equals(_newId)) {
 			Collections.sort(_brothers);

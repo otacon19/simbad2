@@ -33,7 +33,7 @@ public class AddAlternativeOperation extends UndoableOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.addAlternative(_addAlternative);
+		_elementSet.addAlternative(_addAlternative, _inUndoRedo);
 		
 		return Status.OK_STATUS;
 	}
@@ -41,7 +41,7 @@ public class AddAlternativeOperation extends UndoableOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.removeAlternative(_addAlternative);
+		_elementSet.removeAlternative(_addAlternative, _inUndoRedo);
 		
 		return Status.OK_STATUS;
 	}

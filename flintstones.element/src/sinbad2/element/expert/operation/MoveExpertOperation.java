@@ -43,7 +43,7 @@ public class MoveExpertOperation extends UndoableOperation {
 	
 	private IStatus move(Expert oldParent, Expert newParent) {
 		
-		_elementSet.moveExpert(_moveExpert, newParent, oldParent);
+		_elementSet.moveExpert(_moveExpert, newParent, oldParent, _inUndoRedo);
 	
 		return Status.OK_STATUS;
 		

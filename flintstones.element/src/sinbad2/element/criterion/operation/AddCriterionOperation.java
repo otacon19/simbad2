@@ -40,11 +40,11 @@ public class AddCriterionOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.addCriterion(_addCriterion, hasParent);
+			_elementSet.addCriterion(_addCriterion, hasParent, _inUndoRedo);
 		} else {
 			hasParent = true;
 			_parent.addSubcriterion(_addCriterion);
-			_elementSet.addCriterion(_addCriterion, hasParent);
+			_elementSet.addCriterion(_addCriterion, hasParent, _inUndoRedo);
 		}
 
 		return Status.OK_STATUS;
@@ -55,12 +55,12 @@ public class AddCriterionOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.removeCriterion(_addCriterion, hasParent);
+			_elementSet.removeCriterion(_addCriterion, hasParent, _inUndoRedo);
 		} else {
 			hasParent = true;
 			_parent.removeSubcriterion(_addCriterion);
 			_addCriterion.setParent(_parent);
-			_elementSet.removeCriterion(_addCriterion, hasParent);
+			_elementSet.removeCriterion(_addCriterion, hasParent, _inUndoRedo);
 		}
 		
 		return Status.OK_STATUS;

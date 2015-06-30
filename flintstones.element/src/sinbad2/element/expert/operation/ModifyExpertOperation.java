@@ -44,7 +44,7 @@ public class ModifyExpertOperation extends UndoableOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.modifyExpert(_modifyExpert, _newId);
+		_elementSet.modifyExpert(_modifyExpert, _newId, _inUndoRedo);
 
 		Collections.sort(_childrensOrOthers);
 		
@@ -55,7 +55,7 @@ public class ModifyExpertOperation extends UndoableOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.modifyExpert(_modifyExpert, _oldId);
+		_elementSet.modifyExpert(_modifyExpert, _oldId, _inUndoRedo);
 		
 		Collections.sort(_childrensOrOthers);
 		

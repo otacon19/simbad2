@@ -43,7 +43,7 @@ public class MoveCriterionOperation extends UndoableOperation {
 	
 	private IStatus move(Criterion oldParent, Criterion newParent) {
 		
-		_elementSet.moveCriterion(_moveCriterion, newParent, oldParent);
+		_elementSet.moveCriterion(_moveCriterion, newParent, oldParent, _inUndoRedo);
 	
 		return Status.OK_STATUS;
 		

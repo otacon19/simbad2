@@ -98,7 +98,6 @@ public class LHDomainDialog extends NewDomainDialog {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				_id = ((Text) e.getSource()).getText().trim();
-				//TODO comprobar el id del specificDomain
 				_domain.setId(_id);
 				validate();
 			}

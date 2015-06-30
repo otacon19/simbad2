@@ -46,7 +46,7 @@ public class ProblemElementsManager {
 	
 	public void notifyProblemElementsSetChange() {
 		for(IProblemElementsSetChangeListener listener: _listeners) {
-			listener.notifyProblemElementsSetChange(_activeElementSet);
+			listener.notifyNewProblemElementsSet(_activeElementSet);
 		}
 	}
 

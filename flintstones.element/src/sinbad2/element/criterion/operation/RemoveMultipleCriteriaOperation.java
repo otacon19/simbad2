@@ -36,10 +36,10 @@ public class RemoveMultipleCriteriaOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.removeMultipleCriteria(_removeCriteria, hasParent);
+			_elementSet.removeMultipleCriteria(_removeCriteria, hasParent, _inUndoRedo);
 		} else {
 			hasParent = true;
-			_elementSet.removeMultipleCriteria(_removeCriteria, hasParent);
+			_elementSet.removeMultipleCriteria(_removeCriteria, hasParent, _inUndoRedo);
 		}
 				
 		return Status.OK_STATUS;
@@ -50,10 +50,10 @@ public class RemoveMultipleCriteriaOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.addMultipleCriteria(_removeCriteria, hasParent);
+			_elementSet.addMultipleCriteria(_removeCriteria, hasParent, _inUndoRedo);
 		} else {
 			hasParent = true;
-			_elementSet.addMultipleCriteria(_removeCriteria, hasParent);
+			_elementSet.addMultipleCriteria(_removeCriteria, hasParent, _inUndoRedo);
 		}
 		
 		return Status.OK_STATUS;

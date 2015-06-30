@@ -88,38 +88,38 @@ public class ProblemElementsSet implements Cloneable {
 		
 	}
 
-	public void addExpert(Expert expert, Boolean hasParent) {
+	public void addExpert(Expert expert, boolean hasParent, boolean inUndoRedo) {
 		
 		if(!hasParent) {
 			_experts.add(expert);
 			Collections.sort(_experts);
 		}
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.ADD_EXPERT, null, expert, false));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.ADD_EXPERT, null, expert, inUndoRedo));
 		
 	}
 	
-	public void addAlternative(Alternative alternative) {
+	public void addAlternative(Alternative alternative, boolean inUndoRedo) {
 		
 		_alternatives.add(alternative);
 		Collections.sort(_alternatives);
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_ALTERNATIVE, null, alternative, false));
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_ALTERNATIVE, null, alternative, inUndoRedo));
 		
 	}
 	
-	public void addCriterion(Criterion criterion, Boolean hasParent) {
+	public void addCriterion(Criterion criterion, boolean hasParent, boolean inUndoRedo) {
 		
 		if(!hasParent) {
 			_criteria.add(criterion);
 			Collections.sort(_criteria);
 		}
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.ADD_CRITERION, null, criterion, false));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.ADD_CRITERION, null, criterion, inUndoRedo));
 		
 	}
 	
-	public void moveExpert(Expert moveExpert, Expert newParent, Expert oldParent) {
+	public void moveExpert(Expert moveExpert, Expert newParent, Expert oldParent, boolean inUndoRedo) {
 		
 		if(oldParent == null) {
 			_experts.remove(moveExpert);
@@ -127,16 +127,16 @@ public class ProblemElementsSet implements Cloneable {
 		} else {
 			oldParent.removeChildren(moveExpert);
 			if(newParent == null) {
-				addExpert(moveExpert, false);
+				addExpert(moveExpert, false, inUndoRedo);
 			} else {
 				newParent.addChildren(moveExpert);
 			}
 		}
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.MOVE_EXPERT, oldParent, moveExpert, false));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.MOVE_EXPERT, oldParent, moveExpert, inUndoRedo));
 	}
 	
-	public void moveCriterion(Criterion moveCriterion, Criterion newParent, Criterion oldParent) {
+	public void moveCriterion(Criterion moveCriterion, Criterion newParent, Criterion oldParent, boolean inUndoRedo) {
 		
 		if(oldParent == null) {
 			_criteria.remove(moveCriterion);
@@ -144,16 +144,16 @@ public class ProblemElementsSet implements Cloneable {
 		} else {
 			oldParent.removeSubcriterion(moveCriterion);
 			if(newParent == null) {
-				addCriterion(moveCriterion, false);
+				addCriterion(moveCriterion, false, inUndoRedo);
 			} else {
 				newParent.addSubcriterion(moveCriterion);
 			}
 		}
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.MOVE_CRITERION, oldParent, moveCriterion, false));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.MOVE_CRITERION, oldParent, moveCriterion, inUndoRedo));
 	}
 	
-	public void addMultipleExperts(List<Expert> insertExperts, Boolean hasParent) {
+	public void addMultipleExperts(List<Expert> insertExperts, boolean hasParent, boolean inUndoRedo) {
 		Expert parent = insertExperts.get(0).getParent();
 		
 		for(Expert expert: insertExperts) {	
@@ -164,11 +164,11 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		}
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_MULTIPLE_EXPERTS, null, insertExperts, false));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_MULTIPLE_EXPERTS, null, insertExperts, inUndoRedo));
 		
 	}
 	
-	public void addMultipleAlternatives(List<Alternative> insertAlternatives) {
+	public void addMultipleAlternatives(List<Alternative> insertAlternatives, boolean inUndoRedo) {
 		
 		for(Alternative alternative: insertAlternatives) {	
 			_alternatives.add(alternative);
@@ -177,11 +177,12 @@ public class ProblemElementsSet implements Cloneable {
 		
 		Collections.sort(_alternatives);
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_MULTIPLE_ALTERNATIVES, null, insertAlternatives, false));
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_MULTIPLE_ALTERNATIVES, null, insertAlternatives, 
+				inUndoRedo));
 		
 	}
 	
-	public void addMultipleCriteria(List<Criterion> insertCriteria, Boolean hasParent) {
+	public void addMultipleCriteria(List<Criterion> insertCriteria, boolean hasParent, boolean inUndoRedo) {
 		Criterion parent = insertCriteria.get(0).getParent();
 		
 		for(Criterion criterion: insertCriteria) {	
@@ -193,41 +194,41 @@ public class ProblemElementsSet implements Cloneable {
 		}
 		
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.ADD_CRITERIA, null, insertCriteria, false));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.ADD_CRITERIA, null, insertCriteria, inUndoRedo));
 		
 	}
 	
-	public void removeExpert(Expert expert, Boolean hasParent) {
+	public void removeExpert(Expert expert, boolean hasParent, boolean inUndoRedo) {
 		
 		if(!hasParent) {
 			_experts.remove(expert);
 			Collections.sort(_experts);
 		}
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_EXPERT, expert, null, false));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_EXPERT, expert, null, inUndoRedo));
 		
 	}
 	
-	public void removeAlternative(Alternative alternative) {
+	public void removeAlternative(Alternative alternative, boolean inUndoRedo) {
 		
 		_alternatives.remove(alternative);
 		Collections.sort(_alternatives);
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.REMOVE_ALTERNATIVE, alternative, null, false));
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.REMOVE_ALTERNATIVE, alternative, null, inUndoRedo));
 		
 	}
 	
-	public void removeCriterion(Criterion criterion, Boolean hasParent) {
+	public void removeCriterion(Criterion criterion, boolean hasParent, boolean inUndoRedo) {
 		
 		if(!hasParent) {
 			_criteria.remove(criterion);
 			Collections.sort(_criteria);
 		}
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.REMOVE_CRITERION, criterion, null, false));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.REMOVE_CRITERION, criterion, null, inUndoRedo));
 	}
 	
-	public void removeMultipleExperts(List<Expert> removeExperts, Boolean hasParent) {
+	public void removeMultipleExperts(List<Expert> removeExperts, boolean hasParent, boolean inUndoRedo) {
 		Expert parent = removeExperts.get(0).getParent();
 		
 		for(Expert expert: removeExperts) {	
@@ -239,11 +240,11 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		}
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_MULTIPLE_EXPERTS, removeExperts, null, false));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_MULTIPLE_EXPERTS, removeExperts, null, inUndoRedo));
 		
 	}
 	
-	public void removeMultipleAlternatives(List<Alternative> removeAlternatives) {
+	public void removeMultipleAlternatives(List<Alternative> removeAlternatives, boolean inUndoRedo) {
 		
 		for(Alternative alternative: removeAlternatives) {
 			_alternatives.remove(alternative);
@@ -252,11 +253,12 @@ public class ProblemElementsSet implements Cloneable {
 		
 		Collections.sort(_alternatives);
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.REMOVE_MULTIPLE_ALTERNATIVES, removeAlternatives, null, false));	
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.REMOVE_MULTIPLE_ALTERNATIVES, removeAlternatives, null,
+				inUndoRedo));	
 	
 	}
 	
-	public void removeMultipleCriteria(List<Criterion> removeCriteria, Boolean hasParent) {
+	public void removeMultipleCriteria(List<Criterion> removeCriteria, boolean hasParent, boolean inUndoRedo) {
 		Criterion parent = removeCriteria.get(0).getParent();
 		
 		for(Criterion criterion: removeCriteria) {
@@ -268,35 +270,36 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		}
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.REMOVE_CRITERIA, removeCriteria, null, false));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.REMOVE_CRITERIA, removeCriteria, null, inUndoRedo));
 		
 	}
 	
-	public void modifyExpert(Expert modifyExpert, String id) {
+	public void modifyExpert(Expert modifyExpert, String id, boolean inUndoRedo) {
 		Expert oldExpert = (Expert) modifyExpert.clone();
 		modifyExpert.setId(id);
 		
 		
-		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.MODIFY_EXPERT, oldExpert, modifyExpert, false));
+		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.MODIFY_EXPERT, oldExpert, modifyExpert, inUndoRedo));
 		
 	}
 	
-	public void modifyAlternative(Alternative modifyAlternative, String id) {
+	public void modifyAlternative(Alternative modifyAlternative, String id, boolean inUndoRedo) {
 		Alternative oldAlternative = (Alternative) modifyAlternative.clone();
 		modifyAlternative.setId(id);
 		
 		Collections.sort(_alternatives);
 		
-		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.MODIFY_ALTERNATIVE, oldAlternative, modifyAlternative, false));
+		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.MODIFY_ALTERNATIVE, oldAlternative, 
+				modifyAlternative, inUndoRedo));
 		
 	}
 	
-	public void modifyCriterion(Criterion modifyCriterion, String id, Boolean newCost) {
+	public void modifyCriterion(Criterion modifyCriterion, String id, boolean newCost, boolean inUndoRedo) {
 		Criterion oldCriterion = (Criterion) modifyCriterion.clone();
 		modifyCriterion.setId(id);
 		modifyCriterion.setCost(newCost);
 		
-		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.MODIFY_CRITERION, oldCriterion, modifyCriterion, false));
+		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.MODIFY_CRITERION, oldCriterion, modifyCriterion, inUndoRedo));
 	}
 	
 	public void registerExpertsChangesListener(IExpertsChangeListener listener) {

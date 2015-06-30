@@ -148,7 +148,7 @@ public class FileMonitor {
 			
 			monitoredFile = file;
 			
-			if (!monitoredFile.exists()) { //TODO but is it on CLASSPATH?
+			if (!monitoredFile.exists()) {
 				URL fileURL = listener.getClass().getClassLoader()
 						.getResource(monitoredFile.toString());
 				

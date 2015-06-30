@@ -125,7 +125,7 @@ public class DomainsContentProvider implements IStructuredContentProvider, IDoma
 	}*/
 	
 	@Override
-	public void notifyDomainSetChangeListener(DomainSet domainSet) {
+	public void notifyNewDomainSet(DomainSet domainSet) {
 		
 		if(_domainSet != domainSet) {
 			_domainSet.unregisterDomainsListener(this);

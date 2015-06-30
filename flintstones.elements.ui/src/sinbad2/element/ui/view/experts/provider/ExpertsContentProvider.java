@@ -185,7 +185,7 @@ public class ExpertsContentProvider implements ITreeContentProvider, IExpertsCha
 	}
 
 	@Override
-	public void notifyProblemElementsSetChange(ProblemElementsSet elementSet) {
+	public void notifyNewProblemElementsSet(ProblemElementsSet elementSet) {
 		if(_elementSet != elementSet) {
 			_elementSet.unregisterExpertsChangeListener(this);
 			_elementSet = elementSet;

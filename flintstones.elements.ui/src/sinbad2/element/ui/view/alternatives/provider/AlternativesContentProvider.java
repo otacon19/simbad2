@@ -117,7 +117,7 @@ public class AlternativesContentProvider implements IStructuredContentProvider,
 	}
 
 	@Override
-	public void notifyProblemElementsSetChange(ProblemElementsSet elementSet) {
+	public void notifyNewProblemElementsSet(ProblemElementsSet elementSet) {
 		
 		if(_elementSet != elementSet) {
 			_elementSet.unregisterAlternativesChangeListener(this);

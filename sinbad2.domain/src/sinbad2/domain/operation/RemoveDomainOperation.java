@@ -30,7 +30,7 @@ public class RemoveDomainOperation extends UndoableOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_domainSet.removeDomain(_removeDomain);
+		_domainSet.removeDomain(_removeDomain, _inUndoRedo);
 		
 		return Status.OK_STATUS;
 		
@@ -39,7 +39,7 @@ public class RemoveDomainOperation extends UndoableOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_domainSet.addDomain(_removeDomain);
+		_domainSet.addDomain(_removeDomain, _inUndoRedo);
 		
 		return Status.OK_STATUS;
 	}

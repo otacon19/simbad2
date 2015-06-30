@@ -30,7 +30,7 @@ public class RemoveAlternativeOperation extends UndoableOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.removeAlternative(_removeAlternative);
+		_elementSet.removeAlternative(_removeAlternative, _inUndoRedo);
 		
 		return Status.OK_STATUS;
 		
@@ -39,7 +39,7 @@ public class RemoveAlternativeOperation extends UndoableOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_elementSet.addAlternative(_removeAlternative);
+		_elementSet.addAlternative(_removeAlternative, _inUndoRedo);
 		
 		return Status.OK_STATUS;
 		

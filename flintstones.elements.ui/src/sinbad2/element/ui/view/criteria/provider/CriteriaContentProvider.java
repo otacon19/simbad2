@@ -183,7 +183,7 @@ public class CriteriaContentProvider implements ITreeContentProvider, ICriteriaC
 	}
 
 	@Override
-	public void notifyProblemElementsSetChange(ProblemElementsSet elementSet) {
+	public void notifyNewProblemElementsSet(ProblemElementsSet elementSet) {
 		
 		if(_elementSet != elementSet) {
 			_elementManager.unregisterElementsSetChangeListener(this);

@@ -40,50 +40,50 @@ public class DomainSet {
 		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.DOMAINS_CHANGES, null, getDomains(), false));
 	}
 	
-	public void addDomain(Domain domain) {
+	public void addDomain(Domain domain, boolean inUndoRedo) {
 		Validator.notNull(domain);
 		
 		_domains.add(domain);
 		
 		Collections.sort(_domains);
 		
-		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.ADD_DOMAIN, null, domain, false));
+		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.ADD_DOMAIN, null, domain, inUndoRedo));
 		
 	}
 	
-	public void removeDomain(Domain domain) {
+	public void removeDomain(Domain domain, boolean inUndoRedo) {
 		Validator.notNull(domain);
 		
 		_domains.remove(domain);
 		
-		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.REMOVE_DOMAIN, domain, null, false));
+		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.REMOVE_DOMAIN, domain, null, inUndoRedo));
 	}
 	
-	public void modifyDomain(Domain oldDomain, Domain newDomain) {
+	public void modifyDomain(Domain oldDomain, Domain newDomain, boolean inUndoRedo) {
 		
-		removeDomain(oldDomain);
-		addDomain(newDomain);
+		removeDomain(oldDomain, inUndoRedo);
+		addDomain(newDomain, inUndoRedo);
 		
-		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.MODIFY_DOMAIN, oldDomain, newDomain, false));
+		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.MODIFY_DOMAIN, oldDomain, newDomain, inUndoRedo));
 	}
 	
-	public void removeMultipleDomains(List<Domain> removeDomains) {
+	public void removeMultipleDomains(List<Domain> removeDomains, boolean inUndoRedo) {
 		
 		for(Domain removeDomain: removeDomains) {
 			_domains.remove(removeDomain);
 		}
 		
-		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.REMOVE_DOMAINS, removeDomains, null, false));
+		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.REMOVE_DOMAINS, removeDomains, null, inUndoRedo));
 		
 	}
 	
-	public void addMultipleDomains(List<Domain> addDomains) {
+	public void addMultipleDomains(List<Domain> addDomains, boolean inUndoRedo) {
 		
 		for(Domain addDomain: addDomains) {
 			_domains.add(addDomain);
 		}
 		
-		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.ADD_DOMAINS, null, addDomains, false));
+		notifyDomainSetChanges(new DomainSetChangeEvent(EDomainSetChange.ADD_DOMAINS, null, addDomains, inUndoRedo));
 		
 	}
 	
@@ -217,7 +217,7 @@ public class DomainSet {
 			} else if (event.isEndElement()) {
 				endtag = reader.getEndElementLocalPart();
 				if (endtag.equals(extensionId)) {
-					addDomain(domain);
+					addDomain(domain, false);
 				} else if (endtag.equals("domain-set")) { //$NON-NLS-1$
 					end = true;
 				}

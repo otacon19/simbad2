@@ -32,7 +32,7 @@ public class ModifyDomainOperation extends UndoableOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_domainSet.modifyDomain(_oldDomain, _newDomain);
+		_domainSet.modifyDomain(_oldDomain, _newDomain, _inUndoRedo);
 		
 		return Status.OK_STATUS;
 		
@@ -41,7 +41,7 @@ public class ModifyDomainOperation extends UndoableOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_domainSet.modifyDomain(_newDomain, _oldDomain);
+		_domainSet.modifyDomain(_newDomain, _oldDomain, _inUndoRedo);
 		
 		return Status.OK_STATUS;
 	}

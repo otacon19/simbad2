@@ -32,7 +32,7 @@ public class RemoveMultipleDomainsOperation extends UndoableOperation {
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_domainSet.removeMultipleDomains(_removeDomains);
+		_domainSet.removeMultipleDomains(_removeDomains, _inUndoRedo);
 		
 		return Status.OK_STATUS;
 	}
@@ -40,7 +40,7 @@ public class RemoveMultipleDomainsOperation extends UndoableOperation {
 	@Override
 	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		
-		_domainSet.addMultipleDomains(_removeDomains);
+		_domainSet.addMultipleDomains(_removeDomains, _inUndoRedo);
 		
 		return Status.OK_STATUS;
 	}

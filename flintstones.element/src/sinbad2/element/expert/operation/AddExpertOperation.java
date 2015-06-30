@@ -31,11 +31,11 @@ public class AddExpertOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.addExpert(_addExpert, hasParent);
+			_elementSet.addExpert(_addExpert, hasParent, _inUndoRedo);
 		} else {
 			hasParent = true;
 			_parent.addChildren(_addExpert);
-			_elementSet.addExpert(_addExpert, hasParent);
+			_elementSet.addExpert(_addExpert, hasParent, _inUndoRedo);
 		}
 
 		return Status.OK_STATUS;
@@ -47,12 +47,12 @@ public class AddExpertOperation extends UndoableOperation {
 		boolean hasParent = false;
 		
 		if(_parent == null) {
-			_elementSet.removeExpert(_addExpert, hasParent);
+			_elementSet.removeExpert(_addExpert, hasParent, _inUndoRedo);
 		} else {
 			hasParent = true;
 			_parent.removeChildren(_addExpert);
 			_addExpert.setParent(_parent);
-			_elementSet.removeExpert(_addExpert, hasParent);
+			_elementSet.removeExpert(_addExpert, hasParent, _inUndoRedo);
 		}
 		
 		return Status.OK_STATUS;
