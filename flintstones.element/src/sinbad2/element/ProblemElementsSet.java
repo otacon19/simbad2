@@ -318,7 +318,7 @@ public class ProblemElementsSet implements Cloneable {
 		_alternativesListener.remove(listener);
 	}
 	
-	public void registerCriteriaChangeListener(ICriteriaChangeListener listener) {
+	public void registerCriteriaChangesListener(ICriteriaChangeListener listener) {
 		_criteriaListener.add(listener);
 	}
 	

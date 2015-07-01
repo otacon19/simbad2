@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.ISizeProvider;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.Domain;
@@ -90,7 +91,7 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 		extractAlternativeValues();
 
 		_criteria = _elementSet.getCriteria();
-		_elementSet.registerCriteriaChangeListener(this);
+		_elementSet.registerCriteriaChangesListener(this);
 		extractCriterionValues();
 
 		_validElements = null;
@@ -203,45 +204,86 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 	}
 
 	@Override
-	public void notifyDomainSetListener(DomainSetChangeEvent event) {
-		// TODO Auto-generated method stub
-		
+	public void setFocus() {
+		// Set the focus
 	}
 
 	@Override
-	public void notifyNewProblemElementsSet(ProblemElementsSet elementSet) {
-		// TODO Auto-generated method stub
-		
+	public void notifyDomainSetListener(DomainSetChangeEvent event) {
+		_domainSet = _domainsManager.getActiveDomainSet();
+		extractDomainValues();
+		computeState(EComboChange.DOMAINS);
 	}
 
 	@Override
 	public void notifyNewDomainSet(DomainSet domainSet) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void notifyCriteriaChange(CriteriaChangeEvent event) {
-		// TODO Auto-generated method stub
-		
+		_domainSet.unregisterDomainsListener(this);
+		_domainSet = domainSet;
+		_domainSet.registerDomainsListener(this);
+		extractDomainValues();
+		computeState(EComboChange.DOMAINS);
 	}
 
 	@Override
 	public void notifyExpertsChange(ExpertsChangeEvent event) {
-		// TODO Auto-generated method stub
-		
+		_experts = _elementSet.getExperts();
+		extractExpertValues();
+		computeState(EComboChange.ELEMENTS);
 	}
 
 	@Override
 	public void notifyAlternativesChange(AlternativesChangeEvent event) {
-		// TODO Auto-generated method stub
-		
+		_alternatives = _elementSet.getAlternatives();
+		extractAlternativeValues();
+		computeState(EComboChange.ELEMENTS);
 	}
 
 	@Override
-	public void setFocus() {
-		// TODO Auto-generated method stub
+	public void notifyCriteriaChange(CriteriaChangeEvent event) {
+		_criteria = _elementSet.getCriteria();
+		extractCriterionValues();
+		computeState(EComboChange.ELEMENTS);
+	}
+
+	@Override
+	public void notifyNewProblemElementsSet(ProblemElementsSet elementSet) {
+		_elementSet.unregisterExpertsChangeListener(this);
+		_elementSet.unregisterAlternativesChangeListener(this);
+		_elementSet.unregisterCriteriaChangeListener(this);
+		_elementSet = elementSet;
+
+		_elementSet.registerExpertsChangesListener(this);
+		_experts = _elementSet.getExperts();
+		extractExpertValues();
+
+		_elementSet.registerAlternativesChangesListener(this);
+		_alternatives = _elementSet.getAlternatives();
+		extractAlternativeValues();
+
+		_elementSet.registerCriteriaChangesListener(this);
+		_criteria = _elementSet.getCriteria();
+		extractCriterionValues();
+
+		computeState(EComboChange.ELEMENTS);
+	}
+
+	@Override
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		
+		if (ISizeProvider.class == adapter) {
+			return new ISizeProvider() {
+				public int getSizeFlags(boolean width) {
+					return SWT.MIN | SWT.MAX | SWT.FILL;
+				}
+
+				public int computePreferredSize(boolean width,
+						int availableParallel, int availablePerpendicular,
+						int preferredResult) {
+					return width ? preferredResult : 43;
+				}
+			};
+		}
+		return super.getAdapter(adapter);
 	}
 	
 	private void extractDomainValues() {
@@ -310,18 +352,16 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 	}
 	
 	private void computeState(EComboChange change) {
-
 		boolean oldEnabled;
+		
 		if ((_validDomains == null) || (_validElements == null)) {
 			oldEnabled = true;
 		} else {
 			oldEnabled = _validDomains && _validElements;
 		}
 
-		boolean enabled = false;
+		boolean enabled = false, testElements = true, testDomains = true;
 
-		boolean testElements = true;
-		boolean testDomains = true;
 		if (EComboChange.DOMAINS.equals(change)) {
 			testElements = false;
 		} else if (EComboChange.ELEMENTS.equals(change)) {
@@ -366,8 +406,5 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 			_domainCombo.setItems(new String[] {});
 		}
 	}
-
-	
-
 
 }

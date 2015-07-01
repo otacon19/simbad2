@@ -36,7 +36,7 @@ public class CriteriaContentProvider implements ITreeContentProvider, ICriteriaC
 		_elementSet = _elementManager.getActiveElementSet();
 		_criteria = _elementSet.getCriteria();
 		
-		_elementSet.registerCriteriaChangeListener(this);
+		_elementSet.registerCriteriaChangesListener(this);
 		_elementManager.registerElementsSetChangeListener(this);
 	}
 	
@@ -189,7 +189,7 @@ public class CriteriaContentProvider implements ITreeContentProvider, ICriteriaC
 			_elementManager.unregisterElementsSetChangeListener(this);
 			_elementSet = elementSet;
 			_criteria = _elementSet.getCriteria();
-			_elementSet.registerCriteriaChangeListener(this);
+			_elementSet.registerCriteriaChangesListener(this);
 			_treeViewer.setInput(_criteria);
 		}
 		

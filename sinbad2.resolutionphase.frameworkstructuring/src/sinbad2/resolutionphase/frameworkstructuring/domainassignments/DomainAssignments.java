@@ -246,7 +246,7 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 			_elementSet = elementSet;
 			_elementSet.registerExpertsChangesListener(this);
 			_elementSet.registerAlternativesChangesListener(this);
-			_elementSet.registerCriteriaChangeListener(this);
+			_elementSet.registerCriteriaChangesListener(this);
 			removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
 		}
 		

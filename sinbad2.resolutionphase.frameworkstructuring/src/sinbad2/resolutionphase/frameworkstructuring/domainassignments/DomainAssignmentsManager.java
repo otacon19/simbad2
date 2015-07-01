@@ -59,7 +59,7 @@ public class DomainAssignmentsManager {
 				elementsManager.registerElementsSetChangeListener(_activeDomainAssignments);
 				elementSet.registerExpertsChangesListener(_activeDomainAssignments);
 				elementSet.registerAlternativesChangesListener(_activeDomainAssignments);
-				elementSet.registerCriteriaChangeListener(_activeDomainAssignments);
+				elementSet.registerCriteriaChangesListener(_activeDomainAssignments);
 				domainsManager.registerDomainSetChangeListener(_activeDomainAssignments);
 				domainSet.registerDomainsListener(_activeDomainAssignments);
 			}
