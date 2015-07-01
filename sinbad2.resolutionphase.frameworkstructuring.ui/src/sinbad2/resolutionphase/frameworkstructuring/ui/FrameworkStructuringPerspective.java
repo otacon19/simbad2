@@ -26,8 +26,11 @@ public class FrameworkStructuringPerspective implements IPerspectiveFactory {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener() {
 			
 			@Override
-			public void perspectiveChanged(IWorkbenchPage page,IPerspectiveDescriptor perspective, String changeId) {
-				
+			public void perspectiveChanged(IWorkbenchPage page,IPerspectiveDescriptor perspective, String changeId) {}
+			
+			@Override
+			public void perspectiveActivated(IWorkbenchPage page,IPerspectiveDescriptor perspective) {
+				System.out.println("entra");
 				if(ID.equals(perspective.getId())) {
 					if(_elementView == null) {
 						for(IViewReference viewReference: page.getViewReferences()) {
@@ -43,12 +46,12 @@ public class FrameworkStructuringPerspective implements IPerspectiveFactory {
 							}
 						}
 					}
+
+					_elementView.setFocus();
+					_elementView.selectFirst();
+					_elementAssignmentsView.setFocus();
 				}
-				
 			}
-			
-			@Override
-			public void perspectiveActivated(IWorkbenchPage page,IPerspectiveDescriptor perspective) {}
 		});
 		
 	}

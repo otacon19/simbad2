@@ -8,9 +8,117 @@
             name="Framework Structuring"
             resolution_phase="flintstones.resolutionphase.frameworkstructuring">
          <perspective
-               id="sinbad2.resolutionphase.frameworkstructuring.ui.perspective1">
+               id="flintstones.resolutionphase.frameworkstructuring.perspective">
          </perspective>
       </ui>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="sinbad2.resolutionphase.frameworkstructuring.ui.FrameworkStructuringPerspective"
+            icon="icons/frameworkstructuring.png"
+            id="flintstones.resolutionphase.frameworkstructuring.perspective"
+            name="Framework Structuring">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="flintstones.resolutionphase.frameworkstructuring.perspective">
+         <view
+               closeable="false"
+               id="flintstones.resolutionphase.frameworkstructuring.ui.view.assignmentsprovider"
+               minimized="false"
+               moveable="false"
+               ratio="0.07"
+               relationship="top"
+               relative="org.eclipse.ui.editorss"
+               showTitle="false"
+               standalone="false"
+               visible="true">
+         </view>
+         <view
+               closeable="false"
+               id="flintstones.element.ui.view.element"
+               minimized="false"
+               moveable="false"
+               ratio="0.25"
+               relationship="left"
+               relative="org.eclipse.ui.editorss"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
+         <view
+               closeable="false"
+               id="flintstones.domain.ui.view.domain.domainindex"
+               minimized="false"
+               moveable="false"
+               ratio="0.5"
+               relationship="bottom"
+               relative="flintstones.element.ui.view.element"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
+         <view
+               closeable="false"
+               id="flintstones.resolutionphase.frameworkstructuring.ui.view.elementassignments"
+               minimized="false"
+               moveable="false"
+               ratio="0.95"
+               relationship="right"
+               relative="org.eclipse.ui.editorss"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.frameworkstructuring.category"
+            name="Framework Structuring">
+      </category>
+      <view
+            category="flintstones.frameworkstructuring.category"
+            class="sinbad2.resolutionphase.frameworkstructuring.ui.view.assignmentsprovider.AssignmentsProviderView"
+            icon="icons/elementassignmentstable.png"
+            id="flintstones.resolutionphase.frameworkstructuring.ui.view.assignmentsprovider"
+            name="Assignments provider"
+            restorable="true">
+      </view>
+      <view
+            category="flintstones.frameworkstructuring.category"
+            class="sinbad2.resolutionphase.frameworkstructuring.ui.view.elementassignments.ElementAssignmentsView"
+            icon="icons/elementassignmentstable.png"
+            id="flintstones.resolutionphase.frameworkstructuring.ui.view.elementassignments"
+            name="Element asignments"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="flintstones.resolutionphase.frameworkstructuring.ui.view.elementassignments.elementassignments_view"
+            name="Element assignments context"
+            parentId="flintstones.core.ui">
+      </context>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="sinbad2.resolutionphase.frameworkstructuring.ui.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="sinbad2.resolutionphase.frameworkstructuring.ui.preferences.FrameworkStructuringPreferencesPage"
+            id="flintstones.resolutionphase.frameworkstructuring.preferences.FrameworkPreferencesPage"
+            name="Framework structuring">
+      </page>
    </extension>
 
 </plugin>

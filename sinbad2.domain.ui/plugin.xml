@@ -28,6 +28,15 @@
             name="%view.domains"
             restorable="true">
       </view>
+      <view
+            allowMultiple="false"
+            category="flintstones.domain.category"
+            class="sinbad2.domain.ui.view.domainindex.DomainIndexView"
+            icon="icons/domains.png"
+            id="flintstones.domain.ui.view.domain.domainindex"
+            name="Domains index"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
@@ -39,6 +48,11 @@
       <context
             id="flintstones.domain.ui.view.domain.domain_view"
             name="%context.domain"
+            parentId="flintstones.core.ui">
+      </context>
+      <context
+            id="flintstones.domain.ui.view.domainindex.domainindex_view"
+            name="Domains index context"
             parentId="flintstones.core.ui">
       </context>
    </extension>

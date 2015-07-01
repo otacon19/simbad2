@@ -10,6 +10,9 @@
          <ui
                id="flintstones.resolutionphase.framework.ui">
          </ui>
+         <ui
+               id="flintstones.resolutionphase.frameworkstructuring.ui">
+         </ui>
       </scheme_ui>
    </extension>
 

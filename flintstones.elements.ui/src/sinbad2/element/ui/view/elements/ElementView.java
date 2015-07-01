@@ -90,8 +90,7 @@ public class ElementView extends ViewPart {
 
 	private void addCombo(Composite parent) {
 		final Combo combo = new Combo(parent, SWT.BORDER);
-		combo.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false,
-				1, 1));
+		combo.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		combo.setItems(_provider.getTypesToString());
 		combo.select(0);
 		_instance.setPartName(_partName + " | " + combo.getItem(0)); //$NON-NLS-1$
@@ -140,9 +139,9 @@ public class ElementView extends ViewPart {
 	}
 
 	public void selectFirst() {
-		
 		if (canSelect()) {
 			_viewer.setSelection(new StructuredSelection(_provider.getElements(_viewer.getInput())[0]));
+
 		}
 	}
 	

@@ -130,7 +130,7 @@ public class MultiplePerspectives implements IWorkspaceListener {
 	
 	private void makeActions() {
 		Action action;
-		
+		//TODO cambiar a comandos
 		for(final ResolutionPhaseUI phase: _phasesUI) {
 			action = new Action() {
 				private final ResolutionPhasesUIManager resolutionPhasesUIManager = ResolutionPhasesUIManager.getInstance();
@@ -148,6 +148,7 @@ public class MultiplePerspectives implements IWorkspaceListener {
 						try {
 							workbench.showPerspective(perspectiveId, workbenchWindow);
 						} catch (WorkbenchException e) {
+							//TODO fallo en la activacion de la fase
 							e.printStackTrace();
 						}
 						
