@@ -34,6 +34,14 @@
             name="%view.criteria"
             restorable="true">
       </view>
+      <view
+            category="flintstones.elements.category"
+            class="sinbad2.element.ui.view.elements.ElementView"
+            icon="icons/element.png"
+            id="flintstones.element.ui.view.element"
+            name="Element"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
@@ -51,6 +59,10 @@
             id="flintstones.element.ui.view.experts.experts_view"
             name="%context.experts"
             parentId="flintstones.core.ui">
+      </context>
+      <context
+            id="flintstones.element.ui.view.element.element_view"
+            name="Element context">
       </context>
    </extension>
    <extension
