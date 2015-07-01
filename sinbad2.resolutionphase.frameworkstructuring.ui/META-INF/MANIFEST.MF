@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ui
-Bundle-SymbolicName: sinbad2.resolutionphase.frameworkstructuring.ui
+Bundle-SymbolicName: sinbad2.resolutionphase.frameworkstructuring.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.resolutionphase.frameworkstructuring.ui.Activator
 Require-Bundle: sinbad2.resolutionphase.ui;bundle-version="1.0.0";visibility:=reexport,

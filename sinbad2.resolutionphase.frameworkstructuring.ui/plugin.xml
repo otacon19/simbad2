@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.resolutionphase.ui">
+      <ui
+            id="flintstones.resolutionphase.frameworkstructuring.ui"
+            name="Framework Structuring"
+            resolution_phase="flintstones.resolutionphase.frameworkstructuring">
+         <perspective
+               id="sinbad2.resolutionphase.frameworkstructuring.ui.perspective1">
+         </perspective>
+      </ui>
+   </extension>
+
+</plugin>
