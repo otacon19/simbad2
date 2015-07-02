@@ -1,3 +1,4 @@
+
 package sinbad2.element.ui.view.elements;
 
 import org.eclipse.jface.action.MenuManager;
@@ -38,7 +39,7 @@ public class ElementView extends ViewPart {
 	private String _partName = null;
 	private ElementView _instance = null;
 
-	private TreeViewer _viewer;
+	private TreeViewer _treeViewer;
 
 	private ElementContentProvider _provider;
 
@@ -56,31 +57,31 @@ public class ElementView extends ViewPart {
 		layout.marginHeight = 0;
 		layout.horizontalSpacing = 0;
 		parent.setLayout(layout);
-		_viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
-		Tree tree = _viewer.getTree();
+		_treeViewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+		Tree tree = _treeViewer.getTree();
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		// Fix for windows
-		_viewer.getTree().addListener(SWT.MeasureItem, new Listener() {
+		_treeViewer.getTree().addListener(SWT.MeasureItem, new Listener() {
 			public void handleEvent(Event event) {
 				event.height = 25;
 			}
 		});
 
-		_provider = new ElementContentProvider(_viewer);
-		_viewer.setContentProvider(_provider);
-
+		_provider = new ElementContentProvider(_treeViewer);
+		_treeViewer.setContentProvider(_provider);
+		 
 		addColumns();
 		addCombo(parent);
 		hookContextMenu();
 		hookFocusListener();
-
-		_viewer.setInput(_provider.getInput());
-		getSite().setSelectionProvider(_viewer);
+		
+		_treeViewer.setInput(_provider.getInput());
+		getSite().setSelectionProvider(_treeViewer);
 	}
 
 	private void addColumns() {
-		TreeViewerColumn tvc = new TreeViewerColumn(_viewer, SWT.NONE);
+		TreeViewerColumn tvc = new TreeViewerColumn(_treeViewer, SWT.NONE);
 		tvc.setLabelProvider(new ElementIdLabelProvider());
 		TreeColumn tc = tvc.getColumn();
 		tc.setMoveable(false);
@@ -94,6 +95,8 @@ public class ElementView extends ViewPart {
 		combo.setItems(_provider.getTypesToString());
 		combo.select(0);
 		_instance.setPartName(_partName + " | " + combo.getItem(0)); //$NON-NLS-1$
+		_provider.setType(_provider.getTypes()[0]);
+		
 		combo.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -107,13 +110,13 @@ public class ElementView extends ViewPart {
 
 	private void hookContextMenu() {
 		MenuManager menuManager = new MenuManager();
-		Menu menu = menuManager.createContextMenu(_viewer.getTree());
-		_viewer.getTree().setMenu(menu);
-		getSite().registerContextMenu(menuManager, _viewer);
+		Menu menu = menuManager.createContextMenu(_treeViewer.getTree());
+		_treeViewer.getTree().setMenu(menu);
+		getSite().registerContextMenu(menuManager, _treeViewer);
 	}
 
 	private void hookFocusListener() {
-		_viewer.getControl().addFocusListener(new FocusListener() {
+		_treeViewer.getControl().addFocusListener(new FocusListener() {
 
 			private IContextActivation activation = null;
 
@@ -131,7 +134,7 @@ public class ElementView extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		_viewer.getControl().setFocus();
+		_treeViewer.getControl().setFocus();
 	}
 
 	public boolean canSelect() {
@@ -139,14 +142,15 @@ public class ElementView extends ViewPart {
 	}
 
 	public void selectFirst() {
+		
 		if (canSelect()) {
-			_viewer.setSelection(new StructuredSelection(_provider.getElements(_viewer.getInput())[0]));
+			_treeViewer.setSelection(new StructuredSelection(_provider.getElements(_treeViewer.getInput())[0]));
 
 		}
 	}
 	
 	public ISelection getSelection() {
-		return _viewer.getSelection();
+		return _treeViewer.getSelection();
 	}
 
 	

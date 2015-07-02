@@ -211,6 +211,7 @@ public class DomainSet {
 					domain = (Domain) manager.copyDomain(extensionId);
 					domain.setId(id);
 					domain.read(reader);
+					
 				} catch (Exception e) {
 					throw new XMLStreamException();
 				}

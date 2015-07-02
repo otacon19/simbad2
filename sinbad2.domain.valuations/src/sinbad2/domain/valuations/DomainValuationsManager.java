@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.events.XMLEvent;
+
+import sinbad2.resolutionphase.io.XMLRead;
+
 public class DomainValuationsManager {
 	
 	private static DomainValuationsManager _instance = null;
@@ -138,6 +144,47 @@ public class DomainValuationsManager {
 	
 	public Map<String, String> getSupportedValuations() {
 		return _supportedValuationsForDomains;
+	}
+	
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeStartElement("domain-valuation"); //$NON-NLS-1$
+		
+		for(String domainID: _supportedValuationsForNewDomains.keySet()) {
+			writer.writeStartElement("domain-id");
+			writer.writeAttribute("id", domainID); //$NON-NLS-1$
+			writer.writeEndElement();
+			writer.writeStartElement("valuation-id");
+			writer.writeAttribute("id", _supportedValuationsForNewDomains.get(domainID)); //$NON-NLS-1$
+			writer.writeEndElement();
+			
+		}
+		writer.writeEndElement();
+	}
+	
+	public void read(XMLRead reader) throws XMLStreamException {
+		XMLEvent event;
+		String endtag = null, idDomain = null, idValuation = null;
+		boolean end = false;
+		
+		reader.goToStartElement("domain-valuation"); //$NON-NLS-1$
+		
+		while (reader.hasNext() && !end) {
+			event = reader.next();
+			if (event.isStartElement()) {
+				if ("domain-id".equals(reader.getStartElementLocalPart())) {
+					idDomain = reader.getStartElementAttribute("id"); //$NON-NLS-1$
+				} else if ("valuation-id".equals(reader.getStartElementLocalPart())) {
+					idValuation = reader.getStartElementAttribute("id");
+				}
+			} else if (event.isEndElement()) {
+				endtag = reader.getEndElementLocalPart();
+				if (endtag.equals("valuation-id")) {
+					_supportedValuationsForNewDomains.put(idDomain, idValuation);
+				} else if (endtag.equals("domain-valuation")) { //$NON-NLS-1$
+					end = true;
+				}
+			}
+		}
 	}
 	
 }

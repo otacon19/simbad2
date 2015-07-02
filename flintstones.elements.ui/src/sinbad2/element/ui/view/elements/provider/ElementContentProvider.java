@@ -55,6 +55,7 @@ public class ElementContentProvider implements ITreeContentProvider, IExpertsCha
 		_alternatives = _elementSet.getAlternatives();
 		_criteria = _elementSet.getCriteria();
 		_type = Expert.class;
+		
 		_elementSet.registerExpertsChangesListener(this);
 		_elementSet.registerAlternativesChangesListener(this);
 		_elementSet.registerCriteriaChangesListener(this);
@@ -192,7 +193,6 @@ public class ElementContentProvider implements ITreeContentProvider, IExpertsCha
 	@Override
 	public void notifyExpertsChange(ExpertsChangeEvent event) {
 		_experts = _elementSet.getExperts();
-		
 		if (Expert.class.equals(_type)) {
 			_viewer.setInput(getInput());
 			packViewer();
@@ -228,6 +228,7 @@ public class ElementContentProvider implements ITreeContentProvider, IExpertsCha
 	
 	@Override
 	public void notifyNewProblemElementsSet(ProblemElementsSet elementSet) {
+		
 		if (_elementSet != elementSet) {
 			_elementSet.unregisterExpertsChangeListener(this);
 			_elementSet.unregisterAlternativesChangeListener(this);

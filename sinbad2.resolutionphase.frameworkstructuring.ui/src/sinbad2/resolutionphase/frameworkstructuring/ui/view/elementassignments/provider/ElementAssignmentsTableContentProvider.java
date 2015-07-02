@@ -175,8 +175,7 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 
 			}
 		};
-		Activator.getDefault().getPreferenceStore()
-				.addPropertyChangeListener(_preferencesListener);
+		Activator.getDefault().getPreferenceStore().addPropertyChangeListener(_preferencesListener);
 	}
 
 	private void computeDomainIndex() {
@@ -512,13 +511,10 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 		switch (_col) {
 			case EXPERT:
 				return _finalExperts.size() + getFixedColumnCount();
-	
 			case ALTERNATIVE:
 				return _finalAlternatives.size() + getFixedColumnCount();
-	
 			case CRITERION:
 				return _finalCriteria.size() + getFixedColumnCount();
-	
 			default:
 				return 0;
 		}
@@ -651,12 +647,10 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 					expert = _finalExperts.get(row);
 					value = expert.getId();
 					break;
-	
 				case ALTERNATIVE:
 					alternative = _finalAlternatives.get(row);
 					value = alternative.getId();
 					break;
-	
 				case CRITERION:
 					criterion = _finalCriteria.get(row);
 					value = criterion.getId();
@@ -670,12 +664,10 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 					expert = _finalExperts.get(col);
 					value += expert.getId();
 					break;
-	
 				case ALTERNATIVE:
 					alternative = _finalAlternatives.get(col);
 					value += alternative.getId();
 					break;
-	
 				case CRITERION:
 					criterion = _finalCriteria.get(col);
 					value += criterion.getId();

@@ -54,8 +54,7 @@ public class Framework implements IResolutionPhase {
 
 		clear();
 		_elementSet.setExperts(framework.getElementSet().getExperts());
-		_elementSet
-				.setAlternatives(framework.getElementSet().getAlternatives());
+		_elementSet.setAlternatives(framework.getElementSet().getAlternatives());
 		_elementSet.setCriteria(framework.getElementSet().getCriteria());
 		_domainSet.setDomains(framework.getDomainSet().getDomains());
 	}
