@@ -8,7 +8,6 @@ import java.util.Map;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.widgets.TableColumn;
 
 import sinbad2.domain.DomainIndex;
 import sinbad2.domain.DomainSet;
@@ -74,8 +73,8 @@ public class DomainIndexContentProvider implements IStructuredContentProvider, I
 
 	private void packViewer() {
 		
-		for (TableColumn column : _viewer.getTable().getColumns()) {
-			column.pack();
+		for (int i = 0; i < _viewer.getTable().getColumns().length - 1 ; ++i) {
+			_viewer.getTable().getColumn(i).pack();
 		}
 	}
 
@@ -92,4 +91,3 @@ public class DomainIndexContentProvider implements IStructuredContentProvider, I
 	}
 	
 }
-

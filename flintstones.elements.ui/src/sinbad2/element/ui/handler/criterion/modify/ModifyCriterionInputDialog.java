@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import sinbad2.element.ui.nls.Messages;
 
-public class ModifyCriterionInputDialog extends InputDialog{
+public class ModifyCriterionInputDialog extends InputDialog {
 	
 	private boolean _isCost;
 	private Button _isCostButton;

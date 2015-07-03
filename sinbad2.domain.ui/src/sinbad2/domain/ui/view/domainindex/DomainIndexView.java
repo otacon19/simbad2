@@ -4,12 +4,18 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
@@ -26,33 +32,33 @@ public class DomainIndexView extends ViewPart {
 
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 
-	private TableViewer _viewer;
+	private TableViewer _tableViewer;
 
 	public void createPartControl(Composite parent) {
-		_viewer = new TableViewer(parent, SWT.BORDER | SWT.HIDE_SELECTION);
-		_viewer.getTable().setHeaderVisible(true);
+		_tableViewer = new TableViewer(parent, SWT.BORDER | SWT.HIDE_SELECTION);
+		_tableViewer.getTable().setHeaderVisible(true);
 
 		// Fix for windows
-		_viewer.getTable().addListener(SWT.MeasureItem, new Listener() {
+		_tableViewer.getTable().addListener(SWT.MeasureItem, new Listener() {
 			public void handleEvent(Event event) {
 				event.height = 25;
 			}
 		});
 
-		DomainIndexContentProvider provider = new DomainIndexContentProvider(_viewer);
-		_viewer.setContentProvider(provider);
+		DomainIndexContentProvider provider = new DomainIndexContentProvider(_tableViewer);
+		_tableViewer.setContentProvider(provider);
 
 		addColumns();
 		hookContextMenu();
 		hookFocusListener();
 
-		_viewer.setInput(provider.getInput());
-		getSite().setSelectionProvider(_viewer);
+		_tableViewer.setInput(provider.getInput());
+		getSite().setSelectionProvider(_tableViewer);
 
 	}
 
 	private void addColumns() {
-		TableViewerColumn tvc = new TableViewerColumn(_viewer, SWT.CENTER);
+		TableViewerColumn tvc = new TableViewerColumn(_tableViewer, SWT.CENTER);
 		tvc.getColumn().setWidth(50);
 		tvc.getColumn().setResizable(false);
 		tvc.getColumn().setMoveable(false);
@@ -60,22 +66,54 @@ public class DomainIndexView extends ViewPart {
 		tvc.setLabelProvider(new DomainIndexIndexLabelProvider());
 		tvc.getColumn().pack();
 
-		tvc = new TableViewerColumn(_viewer, SWT.FULL_SELECTION);
-		tvc.getColumn().setWidth(120);
+		tvc = new TableViewerColumn(_tableViewer, SWT.FULL_SELECTION);
+		tvc.getColumn().setWidth(150);
 		tvc.getColumn().setText("Id");
 		tvc.setLabelProvider(new DomainIndexIdLabelProvider());
-		tvc.getColumn().pack();
+		
+		_tableViewer.getTable().addControlListener(new ControlAdapter() {
+	        
+			public void controlResized(ControlEvent e) {
+	            packAndFillLastColumn();
+	        }
+
+			private void packAndFillLastColumn() {
+				Table table = _tableViewer.getTable();
+			    int columnsWidth = 0;
+			    
+			    for (int i = 0; i < table.getColumnCount() - 1; i++) {
+			        columnsWidth += table.getColumn(i).getWidth();
+			    }
+			    TableColumn lastColumn = table.getColumn(table.getColumnCount() - 1);
+			    lastColumn.pack();
+
+			    Rectangle area = table.getClientArea();
+
+			    Point preferredSize = table.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+			    int width = area.width - 2*table.getBorderWidth();
+
+			    if (preferredSize.y > area.height + table.getHeaderHeight()) {
+			        Point vBarSize = table.getVerticalBar().getSize();
+			        width -= vBarSize.x;
+			    }
+
+			    if(lastColumn.getWidth() < width - columnsWidth) {
+			        lastColumn.setWidth(width - columnsWidth);
+			    }
+				
+			}
+	    });
 	}
 
 	private void hookContextMenu() {
 		MenuManager menuManager = new MenuManager();
-		Menu menu = menuManager.createContextMenu(_viewer.getTable());
-		_viewer.getTable().setMenu(menu);
-		getSite().registerContextMenu(menuManager, _viewer);
+		Menu menu = menuManager.createContextMenu(_tableViewer.getTable());
+		_tableViewer.getTable().setMenu(menu);
+		getSite().registerContextMenu(menuManager, _tableViewer);
 	}
 
 	private void hookFocusListener() {
-		_viewer.getControl().addFocusListener(new FocusListener() {
+		_tableViewer.getControl().addFocusListener(new FocusListener() {
 
 			private IContextActivation activation = null;
 
@@ -93,7 +131,7 @@ public class DomainIndexView extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		_viewer.getControl().setFocus();
+		_tableViewer.getControl().setFocus();
 	}
 
 }
