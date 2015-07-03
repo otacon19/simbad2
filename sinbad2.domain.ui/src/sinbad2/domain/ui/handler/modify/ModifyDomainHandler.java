@@ -21,7 +21,7 @@ import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.modifyDialog.ModifyDomainDialog;
 import sinbad2.domain.ui.dialog.selectdialog.SelectModifyDomainDialog;
 import sinbad2.domain.ui.nls.Messages;
-import sinbad2.domain.valuations.DomainValuationsManager;
+import sinbad2.domain.valuations.DomainsValuationsManager;
 
 public class ModifyDomainHandler extends AbstractHandler {
 	
@@ -40,14 +40,14 @@ public class ModifyDomainHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		DomainSet domainSet = domainsManager.getActiveDomainSet();
-		DomainValuationsManager domainValuationsManager = DomainValuationsManager.getInstance();
+		DomainsValuationsManager domainValuationsManager = DomainsValuationsManager.getInstance();
 		
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
 		_oldDomain = (Domain) selection.getFirstElement();
-		_valuationOldDomain = domainValuationsManager.getValuationSupportedForNewDomain(_oldDomain.getId());
+		_valuationOldDomain = domainValuationsManager.getValuationSupportedForSpecificDomain(_oldDomain.getId());
 				
 		DomainUIsManager domainUIsManager = DomainUIsManager.getInstance();
-		String valuationID = domainValuationsManager.getValuationSupportedForNewDomain(_oldDomain.getId());
+		String valuationID = domainValuationsManager.getValuationSupportedForSpecificDomain(_oldDomain.getId());
 		
 		List<String> dialogsIds = domainValuationsManager.getValuationModifyDomainDialogs(valuationID);
 		
@@ -72,8 +72,8 @@ public class ModifyDomainHandler extends AbstractHandler {
 			if(modifyDomainDialog.open() == Window.OK) {
 				Domain newDomain = modifyDomainDialog.getNewDomain();
 				
-				domainValuationsManager.removeSupportedValuationForNewDomain(_oldDomain.getId());
-				domainValuationsManager.addSupportedValuationForNewDomain(newDomain.getId(), _valuationOldDomain);
+				domainValuationsManager.removeSupportedValuationForSpecificDomain(_oldDomain.getId());
+				domainValuationsManager.addSupportedValuationForSpecificDomain(newDomain.getId(), _valuationOldDomain);
 				
 				IUndoableOperation operation = new ModifyDomainOperation(Messages.ModifyDomainHandler_Modify_domain, newDomain, _oldDomain, domainSet);
 				IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();

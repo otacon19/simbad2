@@ -8,4 +8,5 @@ Export-Package: sinbad2.domain,
  sinbad2.domain.listener,
  sinbad2.domain.operation,
  sinbad2.domain.type
-Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.domain.valuations;bundle-version="1.0.0";visibility:=reexport

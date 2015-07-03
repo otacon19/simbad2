@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
-import sinbad2.domain.valuations.DomainValuationsManager;
+import sinbad2.domain.valuations.DomainsValuationsManager;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
 import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
@@ -54,7 +54,7 @@ public class ValuationUIsManager {
 			
 			if(newDomainDialogs.length > 0) {
 				valuation = valuationsManager.getValuationImplementation(registry.getElement(EValuationUIElements.valuation));
-				DomainValuationsManager dvm = DomainValuationsManager.getInstance();
+				DomainsValuationsManager dvm = DomainsValuationsManager.getInstance();
 				
 				for(IConfigurationElement newDomainDialog: newDomainDialogs) {
 					dvm.addValuationNewDomainDialog(valuation.getId(), newDomainDialog.getAttribute(EValuationUIElements.dialog.toString()));
@@ -65,7 +65,7 @@ public class ValuationUIsManager {
 			
 			if(modifyDomainDialogs.length > 0) {
 				valuation = valuationsManager.getValuationImplementation(registry.getElement(EValuationUIElements.valuation));
-				DomainValuationsManager dvm = DomainValuationsManager.getInstance();
+				DomainsValuationsManager dvm = DomainsValuationsManager.getInstance();
 				
 				for(IConfigurationElement modifyDomainDialog: modifyDomainDialogs) {
 					dvm.addValuationModifyDomainDialog(valuation.getId(), modifyDomainDialog.getAttribute(EValuationUIElements.dialog.toString()));

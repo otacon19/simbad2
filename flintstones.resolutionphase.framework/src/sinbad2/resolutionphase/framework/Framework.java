@@ -10,6 +10,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import sinbad2.core.workspace.WorkspaceContentPersistenceException;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
+import sinbad2.domain.valuations.DomainsValuationsManager;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.resolutionphase.IResolutionPhase;
@@ -24,13 +25,15 @@ public class Framework implements IResolutionPhase {
 
 	private ProblemElementsSet _elementSet;
 	private DomainSet _domainSet;
-
+	
 	private DomainsManager _domainsManager;
 	private ProblemElementsManager _elementsManager;
+	private DomainsValuationsManager _domainsValuationsManager;
 
 	public Framework() {
 		_domainsManager = DomainsManager.getInstance();
 		_elementsManager = ProblemElementsManager.getInstance();
+		_domainsValuationsManager = DomainsValuationsManager.getInstance();
 		_domainSet = new DomainSet();
 		_elementSet = new ProblemElementsSet();
 	}
@@ -75,6 +78,7 @@ public class Framework implements IResolutionPhase {
 		}
 		try {
 			_domainSet.save(streamWriter);
+			_domainsValuationsManager.save(streamWriter);
 		} catch (XMLStreamException e) {
 			throw new WorkspaceContentPersistenceException();
 		}
@@ -86,6 +90,7 @@ public class Framework implements IResolutionPhase {
 		try {
 			_elementSet.read(reader);
 			_domainSet.read(reader);
+			_domainsValuationsManager.read(reader);
 		} catch (XMLStreamException e) {
 			throw new WorkspaceContentPersistenceException();
 		}

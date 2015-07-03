@@ -24,7 +24,7 @@ import sinbad2.domain.ui.dialog.selectdialog.SelectNewDomainDialog;
 import sinbad2.domain.ui.nls.Messages;
 import sinbad2.domain.ui.view.domain.provider.DomainLabelProvider;
 import sinbad2.domain.ui.view.domain.provider.DomainValuationLabelProvider;
-import sinbad2.domain.valuations.DomainValuationsManager;
+import sinbad2.domain.valuations.DomainsValuationsManager;
 
 public class AddDomainHandler extends AbstractHandler {
 	
@@ -33,13 +33,13 @@ public class AddDomainHandler extends AbstractHandler {
 	private DomainUIsManager _domainUIsManager;
 	private DomainsManager _domainsManager;
 	private DomainSet _domainSet;
-	private DomainValuationsManager _domainValuationsManager;	
+	private DomainsValuationsManager _domainValuationsManager;	
 	
 	public AddDomainHandler() {
 		_domainUIsManager = DomainUIsManager.getInstance();
 		_domainsManager = DomainsManager.getInstance();
 		_domainSet = _domainsManager.getActiveDomainSet();
-		_domainValuationsManager = DomainValuationsManager.getInstance();
+		_domainValuationsManager = DomainsValuationsManager.getInstance();
 	}
 	
 	@Override
@@ -65,7 +65,7 @@ public class AddDomainHandler extends AbstractHandler {
 					if(newDomainDialog.open() == Window.OK) {
 						domain = newDomainDialog.getDomain();
 						
-						_domainValuationsManager.addSupportedValuationForNewDomain(domain.getId(), ((String[]) selections[1])[0]);
+						_domainValuationsManager.addSupportedValuationForSpecificDomain(domain.getId(), ((String[]) selections[1])[0]);
 						
 						IUndoableOperation operation = new AddDomainOperation(Messages.AddDomainHandler_Add_domain, domain, _domainSet);
 						IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
@@ -98,9 +98,7 @@ public class AddDomainHandler extends AbstractHandler {
 			}
 		}
 		
-		return fillTwoPanes(input);
-		
-		
+		return fillTwoPanes(input);	
 	}
 	
 	private TwoPaneElementSelector fillTwoPanes(List<Object[]> input) {

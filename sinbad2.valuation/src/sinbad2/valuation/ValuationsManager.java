@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
-import sinbad2.domain.valuations.DomainValuationsManager;
+import sinbad2.domain.valuations.DomainsValuationsManager;
 
 
 public class ValuationsManager {
@@ -76,7 +76,7 @@ public class ValuationsManager {
 			valuation.setRegistry(valuationRegistry);
 			valuation.setDomainExtensionId(valuationRegistry.getElement(EValuationElements.domain));
 
-			DomainValuationsManager domainValuationsManager = DomainValuationsManager.getInstance();
+			DomainsValuationsManager domainValuationsManager = DomainsValuationsManager.getInstance();
 			domainValuationsManager.addValuation(valuation.getId(), valuation.getName());
 			
 			domainValuationsManager.addSupportedValuationForDomain(valuation.getId(), valuation.getDomainExtensionId());
