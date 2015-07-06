@@ -12,28 +12,28 @@ import sinbad2.resolutionphase.frameworkstructuring.domainassignments.listener.I
 
 public class DomainAssignmentsManager {
 	
+
 	private static DomainAssignmentsManager _instance = null;
 	private DomainAssignments _activeDomainAssignments = null;
-	
+
 	private List<IDomainAssignmentsChangeListener> _listeners;
-	
+
 	private DomainAssignmentsManager() {
 		_listeners = new LinkedList<IDomainAssignmentsChangeListener>();
 	}
-	
+
 	public static DomainAssignmentsManager getInstance() {
-		
-		if(_instance == null) {
+		if (_instance == null) {
 			_instance = new DomainAssignmentsManager();
 		}
-		
+
 		return _instance;
 	}
-	
+
 	public DomainAssignments getActiveDomainAssignments() {
 		return _activeDomainAssignments;
 	}
-	
+
 	public void setActiveDomainAssignments(DomainAssignments domainAssignments) {
 		ProblemElementsManager elementsManager = null;
 		ProblemElementsSet elementSet = null;
@@ -68,21 +68,20 @@ public class DomainAssignmentsManager {
 		}
 	}
 
-	public void registerDomainAssignmentsChangeListener(IDomainAssignmentsChangeListener listener) {
+	public void registerDomainAssignmentsChangeListener(
+			IDomainAssignmentsChangeListener listener) {
 		_listeners.add(listener);
 	}
 
-	public void unregisterDomainAssignmentsChangeListener(IDomainAssignmentsChangeListener listener) {
+	public void unregisterDomainAssignmentsChangeListener(
+			IDomainAssignmentsChangeListener listener) {
 		_listeners.remove(listener);
 	}
 
 	public void notifyDomainAssignmentsChange() {
-		
 		for (IDomainAssignmentsChangeListener listener : _listeners) {
 			listener.notifyNewActiveDomainAssignments(_activeDomainAssignments);
 		}
-		
 		Workspace.getWorkspace().updateHashCode();
 	}
-
 }

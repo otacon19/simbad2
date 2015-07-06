@@ -43,6 +43,7 @@ import de.kupzog.ktable.renderers.TextCellRenderer;
 public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel implements IDomainAssignmentsChangeListener, 
 	IExpertsChangeListener, IAlternativesChangeListener, ICriteriaChangeListener {
 
+
 	private ElementAssignmentsTable _table;
 	private DomainIndex _domainIndex;
 	private DomainAssignmentsManager _domainAssignmentsManager;
@@ -66,20 +67,26 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 	private int _fixedRows = -1;
 	private int _fixedCols = -1;
 	private IPropertyChangeListener _preferencesListener;
-	
+
 	private ProblemElement _element;
 
 	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
+
 	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 
-	public ElementAssignmentsTableContentProvider(ElementAssignmentsTable table, ProblemElement element) {
+	/**
+	 * Initialize the base implementation.
+	 */
+	public ElementAssignmentsTableContentProvider(
+			ElementAssignmentsTable table, ProblemElement element) {
 		super(table);
 
 		_table = table;
 		_elementsManager = ProblemElementsManager.getInstance();
 		_elementSet = _elementsManager.getActiveElementSet();
 		_domainAssignmentsManager = DomainAssignmentsManager.getInstance();
-		_domainAssignments = _domainAssignmentsManager.getActiveDomainAssignments();
+		_domainAssignments = _domainAssignmentsManager
+				.getActiveDomainAssignments();
 
 		_element = element;
 		_experts = _elementSet.getExperts();
@@ -96,12 +103,11 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 
 		_domainAssignments.registerDomainAssignmentsChangeListener(this);
 	}
-	
+
 	private void computeOrder() {
-		
 		if (_element instanceof Alternative) {
-			boolean expertsInRows = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.
-					P_ALTERNATIVES_TABLE_EXPERTS_IN_ROWS);
+			boolean expertsInRows = Activator.getDefault().getPreferenceStore().getBoolean(
+							PreferenceConstants.P_ALTERNATIVES_TABLE_EXPERTS_IN_ROWS);
 			if (expertsInRows) {
 				_row = EElement.EXPERT;
 				_col = EElement.CRITERION;
@@ -112,8 +118,8 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			_elementSet.registerExpertsChangesListener(this);
 			_elementSet.registerCriteriaChangesListener(this);
 		} else if (_element instanceof Criterion) {
-			boolean alternativesInRows = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.
-					P_CRITERIA_TABLE_ALTERNATIVES_IN_ROWS);
+			boolean alternativesInRows = Activator.getDefault().getPreferenceStore().getBoolean(
+							PreferenceConstants.P_CRITERIA_TABLE_ALTERNATIVES_IN_ROWS);
 			if (alternativesInRows) {
 				_row = EElement.ALTERNATIVE;
 				_col = EElement.EXPERT;
@@ -124,8 +130,8 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			_elementSet.registerExpertsChangesListener(this);
 			_elementSet.registerAlternativesChangesListener(this);
 		} else {
-			boolean alternativesInRows = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.
-					P_EXPERTS_TABLE_ALTERNATIVES_IN_ROWS);
+			boolean alternativesInRows = Activator.getDefault().getPreferenceStore().getBoolean(
+							PreferenceConstants.P_EXPERTS_TABLE_ALTERNATIVES_IN_ROWS);
 			if (alternativesInRows) {
 				_row = EElement.ALTERNATIVE;
 				_col = EElement.CRITERION;
@@ -137,7 +143,7 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			_elementSet.registerAlternativesChangesListener(this);
 		}
 	}
-	
+
 	@Override
 	public void initialize() {
 		computeDomainIndex();
@@ -146,16 +152,15 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 		extractElements();
 		super.initialize();
 	}
-	
+
 	public void dispose() {
 		_domainAssignments.unregisterDomainAssignmentsChangeListener(this);
 		_elementSet.unregisterExpertsChangeListener(this);
 		_elementSet.unregisterAlternativesChangeListener(this);
 		_elementSet.unregisterCriteriaChangeListener(this);
-		Activator.getDefault().getPreferenceStore().removePropertyChangeListener( _preferencesListener);
+		Activator.getDefault().getPreferenceStore().removePropertyChangeListener(_preferencesListener);
 	}
 
-	
 	private void hookPreferenceListener() {
 
 		final String constant = (_element instanceof Alternative) ? PreferenceConstants.P_ALTERNATIVES_TABLE_EXPERTS_IN_ROWS
@@ -217,7 +222,8 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			}
 		} while (!nextLevelCriteria.isEmpty());
 	}
-	
+
+
 	private void computeFixedValues() {
 
 		if (_row.equals(EElement.EXPERT)) {
@@ -235,8 +241,9 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 		} else {
 			_fixedRows = _criteriaDepth;
 		}
+
 	}
-	
+
 	private List<Expert> extractExperts(Expert expert, int c) {
 
 		List<Expert> result = new LinkedList<Expert>();
@@ -306,10 +313,14 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			_finalCriteria.addAll(extractCriteria(criterion, counter++));
 		}
 
-		Expert expert, eParent;
+		Expert expert;
+		Expert eParent;
 		Alternative alternative;
-		Criterion criterion, cParent;
-		int col, row, elementDepth;
+		Criterion criterion;
+		Criterion cParent;
+		int col;
+		int row;
+		int elementDepth;
 		
 		if (_row.equals(EElement.EXPERT)) {
 			_rowHeaderMatrix = new ProblemElement[_fixedCols][_fixedRows + _finalExperts.size()];
@@ -373,7 +384,8 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 				}
 			}
 		} else if (_col.equals(EElement.ALTERNATIVE)) {
-			_colHeaderMatrix = new ProblemElement[_fixedCols + _finalAlternatives.size()][_fixedRows];
+			_colHeaderMatrix = new ProblemElement[_fixedCols
+					+ _finalAlternatives.size()][_fixedRows];
 			for (int i = 0; i < _finalAlternatives.size(); i++) {
 				alternative = _finalAlternatives.get(i);
 				col = _fixedCols + i;
@@ -382,7 +394,8 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			}
 
 		} else {
-			_colHeaderMatrix = new ProblemElement[_fixedCols + _finalCriteria.size()][_fixedRows];
+			_colHeaderMatrix = new ProblemElement[_fixedCols
+					+ _finalCriteria.size()][_fixedRows];
 			for (int i = 0; i < _finalCriteria.size(); i++) {
 				criterion = _finalCriteria.get(i);
 				col = _fixedCols + i;
@@ -407,12 +420,13 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			}
 		}
 	}
-	
+
 	@Override
 	public Object doGetContentAt(int col, int row) {
 		
 		if ((col < _fixedCols) && (row < _fixedRows)) {
 			return ""; //$NON-NLS-1$
+
 		} else {
 			Object erg = null;
 			Expert expert = null;
@@ -421,38 +435,40 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 
 			try {
 				if (col < _fixedCols) {
-					erg = (getColumnWidth(col) > 80) ? _rowHeaderMatrix[col][row]
-							.getId() : _index.get(_rowHeaderMatrix[col][row]);
+					erg = (getColumnWidth(col) > 80) ? _rowHeaderMatrix[col][row].getId() : _index.get(_rowHeaderMatrix[col][row]);
 
 				} else if (row < _fixedRows) {
-					erg = (getColumnWidth(col) > 80) ? _colHeaderMatrix[col][row]
-							.getId() : _index.get(_colHeaderMatrix[col][row]);
+					erg = (getColumnWidth(col) > 80) ? _colHeaderMatrix[col][row].getId() : _index.get(_colHeaderMatrix[col][row]);
 
 				} else {
 					col = col - _fixedCols;
 					row = row - _fixedRows;
 					switch (_col) {
-						case EXPERT:
-							expert = _finalExperts.get(col);
-							break;
-						case ALTERNATIVE:
-							alternative = _finalAlternatives.get(col);
-							break;
-						case CRITERION:
-							criterion = _finalCriteria.get(col);
-							break;
+					case EXPERT:
+						expert = _finalExperts.get(col);
+						break;
+
+					case ALTERNATIVE:
+						alternative = _finalAlternatives.get(col);
+						break;
+
+					case CRITERION:
+						criterion = _finalCriteria.get(col);
+						break;
 					}
 
 					switch (_row) {
-						case EXPERT:
-							expert = _finalExperts.get(row);
-							break;
-						case ALTERNATIVE:
-							alternative = _finalAlternatives.get(row);
-							break;
-						case CRITERION:
-							criterion = _finalCriteria.get(row);
-							break;
+					case EXPERT:
+						expert = _finalExperts.get(row);
+						break;
+
+					case ALTERNATIVE:
+						alternative = _finalAlternatives.get(row);
+						break;
+
+					case CRITERION:
+						criterion = _finalCriteria.get(row);
+						break;
 					}
 
 					if (expert == null) {
@@ -463,11 +479,10 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 						criterion = (Criterion) _element;
 					}
 
-					erg = _domainAssignments.getDomain(expert, alternative,
-							criterion);
+					erg = _domainAssignments.getDomain(expert, alternative, criterion);
+					
 					if (erg != null) {
-						erg = (getColumnWidth(col) > 80) ? ((Domain) erg)
-								.getId() : _domainIndex.getIndex((Domain) erg);
+						erg = (getColumnWidth(col) > 80) ? ((Domain) erg).getId() : _domainIndex.getIndex((Domain) erg);
 					} else {
 						erg = ""; //$NON-NLS-1$
 					}
@@ -479,44 +494,48 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			return erg;
 		}
 	}
-	
+
 	public KTableCellEditor doGetCellEditor(int col, int row) {
 		return null;
 	}
 
+
 	@Override
-	public void doSetContentAt(int col, int row, Object value) {}
+	public void doSetContentAt(int col, int row, Object value) {
+	}
+
 
 	@Override
 	public int doGetRowCount() {
-		
 		switch (_row) {
-			case EXPERT:
-				return _finalExperts.size() + getFixedRowCount();
-	
-			case ALTERNATIVE:
-				return _finalAlternatives.size() + getFixedRowCount();
-	
-			case CRITERION:
-				return _finalCriteria.size() + getFixedRowCount();
-	
-			default:
-				return 0;
+		case EXPERT:
+			return _finalExperts.size() + getFixedRowCount();
+
+		case ALTERNATIVE:
+			return _finalAlternatives.size() + getFixedRowCount();
+
+		case CRITERION:
+			return _finalCriteria.size() + getFixedRowCount();
+
+		default:
+			return 0;
 		}
 	}
-	
+
 	@Override
 	public int doGetColumnCount() {
-		
 		switch (_col) {
-			case EXPERT:
-				return _finalExperts.size() + getFixedColumnCount();
-			case ALTERNATIVE:
-				return _finalAlternatives.size() + getFixedColumnCount();
-			case CRITERION:
-				return _finalCriteria.size() + getFixedColumnCount();
-			default:
-				return 0;
+		case EXPERT:
+			return _finalExperts.size() + getFixedColumnCount();
+
+		case ALTERNATIVE:
+			return _finalAlternatives.size() + getFixedColumnCount();
+
+		case CRITERION:
+			return _finalCriteria.size() + getFixedColumnCount();
+
+		default:
+			return 0;
 		}
 	}
 
@@ -537,43 +556,48 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 	public int getFixedColumnCount() {
 		return _fixedCols;
 	}
-	
+
 	@Override
 	public int getFixedSelectableRowCount() {
 		return 0;
 	}
-	
+
 	@Override
 	public int getFixedSelectableColumnCount() {
 		return 0;
 	}
-	
+
 	@Override
 	public boolean isColumnResizable(int col) {
 		return false;
 	}
 
 	@Override
+	public int getInitialFirstRowHeight() {
+		return 25;
+	}
+
+	@Override
 	public boolean isRowResizable(int row) {
 		return false;
 	}
-	
+
 	@Override
 	public int getRowHeightMinimum() {
 		return 60;
 	}
-	
+
 	@Override
 	public boolean isFixedCell(int col, int row) {
 		return true;
-	}
-	
+	};
+
 	@Override
 	public boolean isHeaderCell(int col, int row) {
 		return isFixedCell(col, row);
 	}
 
-	
+	@Override
 	public KTableCellRenderer doGetCellRenderer(int col, int row) {
 		if ((col < getFixedColumnCount()) || (row < getFixedRowCount())) {
 			return _fixedRenderer;
@@ -581,9 +605,10 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			return _fixedRenderersInTable;
 		}
 	}
-	
+
 	@Override
 	public Point doBelongsToCell(int col, int row) {
+		
 		if ((col < _fixedCols) || (row < _fixedRows)) {
 			if (col < _fixedCols) {
 				if (col > 0) {
@@ -622,7 +647,7 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 	public int getInitialRowHeight(int arg0) {
 		return 25;
 	}
-	
+
 	@Override
 	public String doGetTooltipAt(int col, int row) {
 		
@@ -633,7 +658,6 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 		} else if (row < _fixedRows) {
 			return _colHeaderMatrix[col][row].getId();
 		} else {
-			
 			String value = null;
 			col = col - _fixedCols;
 			row = row - _fixedRows;
@@ -641,37 +665,40 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			Alternative alternative = null;
 			Criterion criterion = null;
 			Domain domain;
-			
 			switch (_row) {
-				case EXPERT:
-					expert = _finalExperts.get(row);
-					value = expert.getId();
-					break;
-				case ALTERNATIVE:
-					alternative = _finalAlternatives.get(row);
-					value = alternative.getId();
-					break;
-				case CRITERION:
-					criterion = _finalCriteria.get(row);
-					value = criterion.getId();
-					break;
+			case EXPERT:
+				expert = _finalExperts.get(row);
+				value = expert.getId();
+				break;
+
+			case ALTERNATIVE:
+				alternative = _finalAlternatives.get(row);
+				value = alternative.getId();
+				break;
+
+			case CRITERION:
+				criterion = _finalCriteria.get(row);
+				value = criterion.getId();
+				break;
 			}
 
 			value += "/"; //$NON-NLS-1$
 
 			switch (_col) {
-				case EXPERT:
-					expert = _finalExperts.get(col);
-					value += expert.getId();
-					break;
-				case ALTERNATIVE:
-					alternative = _finalAlternatives.get(col);
-					value += alternative.getId();
-					break;
-				case CRITERION:
-					criterion = _finalCriteria.get(col);
-					value += criterion.getId();
-					break;
+			case EXPERT:
+				expert = _finalExperts.get(col);
+				value += expert.getId();
+				break;
+
+			case ALTERNATIVE:
+				alternative = _finalAlternatives.get(col);
+				value += alternative.getId();
+				break;
+
+			case CRITERION:
+				criterion = _finalCriteria.get(col);
+				value += criterion.getId();
+				break;
 			}
 
 			if (_element instanceof Expert) {
@@ -693,6 +720,25 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 
 	}
 
+	@Override
+	public void notifyNewActiveDomainAssignments(DomainAssignments domainAssignments) {
+		
+		if (_domainAssignments != domainAssignments) {
+			_domainAssignments.unregisterDomainAssignmentsChangeListener(this);
+			_domainAssignments = domainAssignments;
+			_domainAssignments.registerDomainAssignmentsChangeListener(this);
+
+			initialize();
+			_table.redraw();
+		}
+
+	}
+
+	@Override
+	public void notifyDomainAssignmentsChange(DomainAssignmentsChangeEvent event) {
+		initialize();
+		_table.redraw();
+	}
 
 	@Override
 	public void notifyCriteriaChange(CriteriaChangeEvent event) {
@@ -715,23 +761,4 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 		_table.redraw();
 	}
 
-	@Override
-	public void notifyNewActiveDomainAssignments(DomainAssignments domainAssignments) {
-		
-		if (_domainAssignments != domainAssignments) {
-			_domainAssignments.unregisterDomainAssignmentsChangeListener(this);
-			_domainAssignments = domainAssignments;
-			_domainAssignments.registerDomainAssignmentsChangeListener(this);
-
-			initialize();
-			_table.redraw();
-		}
-	}
-
-	@Override
-	public void notifyDomainAssignmentsChange(DomainAssignmentsChangeEvent event) {
-		initialize();
-		_table.redraw();
-		
-	}
 }

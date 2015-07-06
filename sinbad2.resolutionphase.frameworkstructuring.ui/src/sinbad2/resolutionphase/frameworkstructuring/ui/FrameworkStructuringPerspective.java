@@ -30,6 +30,7 @@ public class FrameworkStructuringPerspective implements IPerspectiveFactory {
 			
 			@Override
 			public void perspectiveActivated(IWorkbenchPage page,IPerspectiveDescriptor perspective) {
+				
 				if(ID.equals(perspective.getId())) {
 					if(_elementView == null) {
 						for(IViewReference viewReference: page.getViewReferences()) {

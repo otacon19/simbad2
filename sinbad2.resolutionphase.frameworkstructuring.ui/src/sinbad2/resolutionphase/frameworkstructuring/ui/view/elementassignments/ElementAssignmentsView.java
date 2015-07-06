@@ -287,67 +287,72 @@ public class ElementAssignmentsView extends ViewPart implements ISelectionListen
 	
 	private void setModel() {
 		
-		if(_tabFolder != null) {
-			for(TabItem item: _tabFolder.getItems()) {
-				item.getControl().dispose();
+		if (_tabFolder != null) {
+			for (TabItem tabItem : _tabFolder.getItems()) {
+				tabItem.getControl().dispose();
 			}
 			_tabFolder.dispose();
 			_tabFolder = null;
 		}
-		
-		if(_selectedElement != null) {
+		if (_selectedElement != null) {
 			List<ProblemElement> toDisplay = new LinkedList<ProblemElement>();
-			if(_selectedElement instanceof Expert) {
+			if (_selectedElement instanceof Expert) {
 				List<Expert> nextLevelExperts = new LinkedList<Expert>();
 				nextLevelExperts.add((Expert) _selectedElement);
 				do {
 					List<Expert> aux = new LinkedList<Expert>(nextLevelExperts);
 					nextLevelExperts = new LinkedList<Expert>();
-					for(Expert expert: aux) {
-						if(expert.hasChildrens()) {
+					for (Expert expert : aux) {
+						if (expert.hasChildrens()) {
 							nextLevelExperts.addAll(expert.getChildrens());
 						} else {
 							toDisplay.add(expert);
 						}
 					}
-				} while(!nextLevelExperts.isEmpty());
-			} else if(_selectedElement instanceof Alternative) {
+				} while (!nextLevelExperts.isEmpty());
+			} else if (_selectedElement instanceof Alternative) {
 				toDisplay.add(_selectedElement);
-			} else if(_selectedElement instanceof Criterion) {
+
+			} else if (_selectedElement instanceof Criterion) {
 				List<Criterion> nextLevelCriteria = new LinkedList<Criterion>();
 				nextLevelCriteria.add((Criterion) _selectedElement);
 				do {
-					List<Criterion> aux = new LinkedList<Criterion>(nextLevelCriteria);
+					List<Criterion> aux = new LinkedList<Criterion>(
+							nextLevelCriteria);
 					nextLevelCriteria = new LinkedList<Criterion>();
-					for(Criterion criterion: aux) {
-						if(criterion.hasSubcriteria()) {
-							nextLevelCriteria.addAll(criterion.getSubcriteria());
+					for (Criterion criterion : aux) {
+						if (criterion.hasSubcriteria()) {
+							nextLevelCriteria
+									.addAll(criterion.getSubcriteria());
 						} else {
 							toDisplay.add(criterion);
 						}
 					}
-				} while(!nextLevelCriteria.isEmpty());
+				} while (!nextLevelCriteria.isEmpty());
+
 			}
 			_tabFolder = new TabFolder(_container, SWT.BORDER);
-			for(ProblemElement element: toDisplay) {
-				TabItem item = new TabItem(_tabFolder, SWT.NULL);
-				item.setText(element.getPathId());
+			for (ProblemElement element : toDisplay) {
+				TabItem tabItem = new TabItem(_tabFolder, SWT.NULL);
+				tabItem.setText(element.getPathId());
 				ElementAssignmentsTable elementAssignmentsTable = new ElementAssignmentsTable(_tabFolder);
-				item.setControl(elementAssignmentsTable);
+				tabItem.setControl(elementAssignmentsTable);
 				elementAssignmentsTable.setModel(element);
 			}
-			if(_selectedElement instanceof Alternative) {
-				_instance.setPartName(_partName +  " | " + "Alternative");
-			} else if(_selectedElement instanceof Criterion) {
-				_instance.setPartName(_partName +  " | " + "Criterion");
+			if (_selectedElement instanceof Alternative) {
+				_instance.setPartName(_partName + " | " + "Alternative");
+			} else if (_selectedElement instanceof Criterion) {
+				_instance.setPartName(_partName + " | " + "Criterion");
 			} else {
-				_instance.setPartName(_partName +  " | " + "Expert");
+				_instance.setPartName(_partName + " | " + "Expert");
+
 			}
 		} else {
 			_instance.setPartName(_partName);
 			forceSelection();
 		}
 	}
+
 	
 	private void forceSelection() {
 		

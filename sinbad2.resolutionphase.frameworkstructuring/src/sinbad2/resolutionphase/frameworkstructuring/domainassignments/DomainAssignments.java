@@ -55,23 +55,23 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 	
 	public DomainAssignments() {
 		_assignments = new HashMap<DomainAssignmentKey, Domain>();
-		
+		_listeners = new LinkedList<IDomainAssignmentsChangeListener>();
+
 		_elementsManager = ProblemElementsManager.getInstance();
 		_elementSet = _elementsManager.getActiveElementSet();
 		_domainsManager = DomainsManager.getInstance();
 		_domainSet = _domainsManager.getActiveDomainSet();
-		
-		_listeners = new LinkedList<IDomainAssignmentsChangeListener>();
+
 	}
-	
+
 	public void setAssignments(Map<DomainAssignmentKey, Domain> assignments) {
 		_assignments = assignments;
 	}
-	
+
 	public Map<DomainAssignmentKey, Domain> getAssignments() {
 		return _assignments;
 	}
-	
+
 	public void setDomain(Expert expert, Alternative alternative, Criterion criterion, Domain domain) {
 		_assignments.put(new DomainAssignmentKey(expert, alternative, criterion), domain);
 	}
@@ -84,21 +84,21 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 	}
 	
 	public Domain getDomain(Expert expert, Alternative alternative, Criterion criterion) {
-		return _assignments.get(new DomainAssignmentKey(expert, alternative, criterion));
+		return _assignments.get(_assignments.keySet());
 	}
-	
+
 	public void removeDomain(Expert expert, Alternative alternative, Criterion criterion) {
 		_assignments.remove(new DomainAssignmentKey(expert, alternative, criterion));
 	}
-	
+
 	public void clear() {
 		_assignments.clear();
 	}
-	
+
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeStartElement("domain-assignments"); //$NON-NLS-1$
-		
-		for(DomainAssignmentKey key: _assignments.keySet()) {
+
+		for (DomainAssignmentKey key : _assignments.keySet()) {
 			writer.writeStartElement("assignment"); //$NON-NLS-1$
 			writer.writeAttribute("expert", key.getExpert().getPathId()); //$NON-NLS-1$
 			writer.writeAttribute("alternative", key.getAlternative().getPathId()); //$NON-NLS-1$
@@ -106,140 +106,113 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 			writer.writeAttribute("domain", _assignments.get(key).getId()); //$NON-NLS-1$
 			writer.writeEndElement();
 		}
+
 		writer.writeEndElement();
 	}
-	
-	public void read(XMLRead reader, Framework framework) throws XMLStreamException {
+
+	public void read(XMLRead reader, Framework framework)
+			throws XMLStreamException {
 		reader.goToStartElement("domain-assignments"); //$NON-NLS-1$
-		
-		ProblemElementsSet elementsSet = framework.getElementSet();
+
+		ProblemElementsSet elementSet = framework.getElementSet();
 		DomainSet domainSet = framework.getDomainSet();
-		
+
 		XMLEvent event;
-		String endtag, id;
+		String endtag;
+		String id;
 		Expert expert = null;
 		Alternative alternative = null;
 		Criterion criterion = null;
 		Domain domain = null;
-		
 		boolean end = false;
-		while(reader.hasNext() && !end) {
+		while (reader.hasNext() && !end) {
 			event = reader.next();
-			if(event.isStartElement()) {
+
+			if (event.isStartElement()) {
 				id = reader.getStartElementAttribute("expert"); //$NON-NLS-1$
-				expert = Expert.getExpertByFormatId(elementsSet.getExperts(), id);
-				
+				expert = Expert.getExpertByFormatId(elementSet.getExperts(),id);
+
+				id = reader.getStartElementAttribute("criterion"); //$NON-NLS-1$
+				criterion = Criterion.getCriterionByFormatId(elementSet.getCriteria(), id);
+
 				id = reader.getStartElementAttribute("alternative"); //$NON-NLS-1$
-				for(Alternative a: elementsSet.getAlternatives()) {
-					if(id.equals(a.getId())) {
+				for (Alternative a : elementSet.getAlternatives()) {
+					if (id.equals(a.getId())) {
 						alternative = a;
 					}
 				}
-				
-				id = reader.getStartElementAttribute("criterion"); //$NON-NLS-1$
-				criterion = Criterion.getCriterionByFormatId(elementsSet.getCriteria(), id);
-				
+
 				id = reader.getStartElementAttribute("domain"); //$NON-NLS-1$
 				domain = domainSet.getDomain(id);
-				
-			} else if(event.isEndElement()) {
+
+			} else if (event.isEndElement()) {
 				endtag = reader.getEndElementLocalPart();
-				if(endtag.equals("assignment")) { //$NON-NLS-1$
+				if (endtag.equals("assignment")) { //$NON-NLS-1$
 					setDomain(expert, alternative, criterion, domain);
-				} else if(endtag.equals("domain-assignments")) { //$NON-NLS-1$
+				} else if (endtag.equals("domain-assignments")) { //$NON-NLS-1$
 					end = true;
 				}
 			}
 		}
 	}
-	
+
 	@Override
-	public Object clone()  {
+	public Object clone() {
+
 		DomainAssignments result = null;
-		
+
 		try {
 			result = (DomainAssignments) super.clone();
-			for(DomainAssignmentKey key: _assignments.keySet()) {
-				result._assignments.put(new DomainAssignmentKey(key.getExpert(), key.getAlternative(), key.getCriterion()), 
+			for (DomainAssignmentKey key : _assignments.keySet()) {
+				result._assignments.put(
+						new DomainAssignmentKey(key.getExpert(), key
+								.getAlternative(), key.getCriterion()),
 						_assignments.get(key));
 			}
-		} catch(Exception e) {
-			e.printStackTrace();
+		} catch (Exception e) {
 		}
-		
+
 		return result;
+
 	}
-	
+
 	@Override
 	public int hashCode() {
+
 		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
-		
-		List<DomainAssignmentKey> keys = new LinkedList<DomainAssignmentKey>(_assignments.keySet());
+
+		List<DomainAssignmentKey> keys = new LinkedList<DomainAssignmentKey>(
+				_assignments.keySet());
 		Collections.sort(keys);
-		
-		for(DomainAssignmentKey key: keys) {
+		for (DomainAssignmentKey key : keys) {
 			hcb.append(key);
 			hcb.append(_assignments.get(key));
 		}
-		
+
 		return hcb.hashCode();
 	}
-	
-	public void registerDomainAssignmentsChangeListener(IDomainAssignmentsChangeListener listener) {
+
+	public void registerDomainAssignmentsChangeListener(
+			IDomainAssignmentsChangeListener listener) {
 		_listeners.add(listener);
 	}
-	
-	public void unregisterDomainAssignmentsChangeListener(IDomainAssignmentsChangeListener listener) {
+
+	public void unregisterDomainAssignmentsChangeListener(
+			IDomainAssignmentsChangeListener listener) {
 		_listeners.remove(listener);
 	}
-	
+
 	public void notifyDomainAssignmentsChange(DomainAssignmentsChangeEvent event) {
-		
-		for(IDomainAssignmentsChangeListener listener: _listeners) {
+		for (IDomainAssignmentsChangeListener listener : _listeners) {
 			listener.notifyDomainAssignmentsChange(event);
 		}
-		
 		Workspace.getWorkspace().updateHashCode();
-	}
-	
-	@Override
-	public void notifyDomainSetListener(DomainSetChangeEvent event) {
-		
-		if(!event.getInUndoRedo()) {
-			EDomainSetChange change = event.getChange();
-			switch(change) {
-				case REMOVE_DOMAIN:
-					removeDomainAssignmentsOperation(ERemoveDomainAssignments.DOMAIN, event.getOldValue());
-					break;
-				case REMOVE_DOMAINS:
-					removeDomainAssignmentsOperation(ERemoveDomainAssignments.DOMAINS, event.getOldValue());
-					break;
-				case DOMAINS_CHANGES:
-					removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
-					break;
-					
-				default: break;
-			}
-		}
-		
-	}
-
-	@Override
-	public void notifyNewDomainSet(DomainSet domainSet) {
-
-		if(_domainSet != domainSet) {
-			_domainSet.unregisterDomainsListener(this);
-			_domainSet = domainSet;
-			_domainSet.registerDomainsListener(this);
-			removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
-		}
-		
 	}
 
 	@Override
 	public void notifyNewProblemElementsSet(ProblemElementsSet elementSet) {
 		
-		if(_elementSet != elementSet) {
+		if (_elementSet != elementSet) {
 			_elementSet.unregisterExpertsChangeListener(this);
 			_elementSet.unregisterAlternativesChangeListener(this);
 			_elementSet.unregisterCriteriaChangeListener(this);
@@ -247,114 +220,136 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 			_elementSet.registerExpertsChangesListener(this);
 			_elementSet.registerAlternativesChangesListener(this);
 			_elementSet.registerCriteriaChangesListener(this);
+			
 			removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
 		}
-		
 	}
 
 	@Override
 	public void notifyCriteriaChange(CriteriaChangeEvent event) {
-		
-		if(!event.getInUndoRedo()) {
+		if (!event.getInUndoRedo()) {
 			ECriteriaChange change = event.getChange();
-			switch(change) {
-				case REMOVE_CRITERION:
-					removeDomainAssignmentsOperation(ERemoveDomainAssignments.CRITERION, event.getOldValue());
-					break;
-				case REMOVE_CRITERIA:
-					removeDomainAssignmentsOperation(ERemoveDomainAssignments.CRITERIA, event.getOldValue());
-					break;
-				case CRITERIA_CHANGES:
-					removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
-					break;
-				case ADD_CRITERION:
-					Criterion criterion = (Criterion) event.getNewValue();
-					if(criterion.getParent() != null) {
-						removeDomainAssignmentsOperation(ERemoveDomainAssignments.CRITERION, criterion.getParent());
-					}
-					break;
-				case ADD_CRITERIA:
-					@SuppressWarnings("unchecked")
-					Criterion criterion2 = ((List<Criterion>) event.getNewValue()).get(0);
-					if(criterion2.getParent() != null) {
-						removeDomainAssignmentsOperation(ERemoveDomainAssignments.CRITERION, criterion2.getParent());
-					}
-					break;
-				case MOVE_CRITERION:
-					Criterion criterion3 = (Criterion) event.getOldValue();
-					if(criterion3 != null) {
-						removeDomainAssignmentsOperation(ERemoveDomainAssignments.CRITERION, criterion3);
-					}
-					break;
-					
-					default: break;
+
+			if (ECriteriaChange.REMOVE_CRITERION.equals(change)) {
+				removeDomainAssignmentsOperation(ERemoveDomainAssignments.CRITERION, event.getOldValue());
+
+			} else if (ECriteriaChange.REMOVE_CRITERIA.equals(change)) {
+				removeDomainAssignmentsOperation(ERemoveDomainAssignments.CRITERIA, event.getOldValue());
+
+			} else if (ECriteriaChange.CRITERIA_CHANGES.equals(change)) {
+				removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
+
+			} else if (ECriteriaChange.ADD_CRITERION.equals(change)) {
+				Criterion criterion = (Criterion) event.getNewValue();
+				if (criterion.getParent() != null) {
+					removeDomainAssignmentsOperation(ERemoveDomainAssignments.CRITERION,criterion.getParent());
+				}
+
+			} else if (ECriteriaChange.ADD_CRITERIA.equals(change)) {
+				@SuppressWarnings("unchecked")
+				Criterion criterion = ((List<Criterion>) event.getNewValue()).get(0);
+				if (criterion.getParent() != null) {
+					removeDomainAssignmentsOperation(ERemoveDomainAssignments.CRITERION,criterion.getParent());
+				}
+			} else if (ECriteriaChange.MOVE_CRITERION.equals(change)) {
+				Criterion criterion = (Criterion) event.getOldValue();
+				if (criterion != null) {
+					removeDomainAssignmentsOperation(ERemoveDomainAssignments.CRITERION, criterion);
+				}
 			}
 		}
+
 	}
 
 	@Override
 	public void notifyAlternativesChange(AlternativesChangeEvent event) {
-		
-		if(!event.getInUndoRedo()) {
+
+		if (!event.getInUndoRedo()) {
 			EAlternativesChange change = event.getChange();
-			switch(change) {
-				case REMOVE_ALTERNATIVE:
-					removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALTERNATIVE, event.getOldValue());
-					break;
-				case REMOVE_MULTIPLE_ALTERNATIVES:
-					removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALTERNATIVES, event.getOldValue());
-					break;
-				case ALTERNATIVES_CHANGES:
-					removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
-					break;
-					
-				default: break;
+
+			if (EAlternativesChange.REMOVE_ALTERNATIVE.equals(change)) {
+				removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALTERNATIVE, event.getOldValue());
+
+			} else if (EAlternativesChange.REMOVE_MULTIPLE_ALTERNATIVES.equals(change)) {
+				removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALTERNATIVES, event.getOldValue());
+
+			} else if (EAlternativesChange.ALTERNATIVES_CHANGES.equals(change)) {
+				removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
 			}
 		}
-		
+
 	}
 
 	@Override
 	public void notifyExpertsChange(ExpertsChangeEvent event) {
-		
-		if(!event.getInUndoRedo()) {
+
+		if (!event.getInUndoRedo()) {
+
 			EExpertsChange change = event.getChange();
-			switch(change) {
-				case REMOVE_EXPERT:
-					removeDomainAssignmentsOperation(ERemoveDomainAssignments.EXPERT, event.getOldValue());
-					break;
-				case REMOVE_MULTIPLE_EXPERTS:
-					removeDomainAssignmentsOperation(ERemoveDomainAssignments.EXPERTS, event.getOldValue());
-					break;
-				case EXPERTS_CHANGES:
-					removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
-					break;
-				case ADD_EXPERT:
-					Expert expert = (Expert) event.getNewValue();
-					if(expert.getParent() != null) {
-						removeDomainAssignmentsOperation(ERemoveDomainAssignments.EXPERT, expert.getParent());
-					}
-					break;
-				case ADD_MULTIPLE_EXPERTS:
-					@SuppressWarnings("unchecked")
-					Expert expert2 = ((List<Expert>) event.getNewValue()).get(0);
-					if(expert2.getParent() != null) {
-						removeDomainAssignmentsOperation(ERemoveDomainAssignments.EXPERT, expert2.getParent());
-					}
-					break;
-				case MOVE_EXPERT:
-					Expert expert3 = (Expert) event.getOldValue();
-					if(expert3 != null) {
-						removeDomainAssignmentsOperation(ERemoveDomainAssignments.EXPERT, expert3);
-					}
-					break;
-					
-					default: break;
+
+			if (EExpertsChange.REMOVE_EXPERT.equals(change)) {
+				removeDomainAssignmentsOperation(ERemoveDomainAssignments.EXPERT, event.getOldValue());
+
+			} else if (EExpertsChange.REMOVE_MULTIPLE_EXPERTS.equals(change)) {
+				removeDomainAssignmentsOperation(ERemoveDomainAssignments.EXPERTS, event.getOldValue());
+
+			} else if (EExpertsChange.EXPERTS_CHANGES.equals(change)) {
+				removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
+
+			} else if (EExpertsChange.ADD_EXPERT.equals(change)) {
+				Expert expert = (Expert) event.getNewValue();
+				if (expert.getParent() != null) {
+					removeDomainAssignmentsOperation(ERemoveDomainAssignments.EXPERT, expert.getParent());
+				}
+
+			} else if (EExpertsChange.ADD_MULTIPLE_EXPERTS.equals(change)) {
+				@SuppressWarnings("unchecked")
+				Expert expert = ((List<Expert>) event.getNewValue()).get(0);
+				if (expert.getParent() != null) {
+					removeDomainAssignmentsOperation(ERemoveDomainAssignments.EXPERT, expert.getParent());
+				}
+
+			} else if (EExpertsChange.MOVE_EXPERT.equals(change)) {
+				Expert expert = (Expert) event.getOldValue();
+				if (expert != null) {
+					removeDomainAssignmentsOperation(ERemoveDomainAssignments.EXPERT, expert);
+				}
 			}
 		}
-		
+
 	}
-	
+
+	@Override
+	public void notifyDomainSetListener(DomainSetChangeEvent event) {
+
+		if (!event.getInUndoRedo()) {
+			EDomainSetChange change = event.getChange();
+
+			if (EDomainSetChange.REMOVE_DOMAIN.equals(change)) {
+				removeDomainAssignmentsOperation(ERemoveDomainAssignments.DOMAIN, event.getOldValue());
+
+			} else if (EDomainSetChange.REMOVE_DOMAINS.equals(change)) {
+				removeDomainAssignmentsOperation(ERemoveDomainAssignments.DOMAINS, event.getOldValue());
+
+			} else if (EDomainSetChange.DOMAINS_CHANGES.equals(change)) {
+				removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
+			}
+		}
+	}
+
+	@Override
+	public void notifyNewDomainSet(DomainSet domainSet) {
+		
+		if (_domainSet != domainSet) {
+			_domainSet.unregisterDomainsListener(this);
+			_domainSet = domainSet;
+			domainSet.registerDomainsListener(this);
+			
+			removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
+		}
+
+	}
+
 	private void removeDomainAssignmentsOperation(ERemoveDomainAssignments all, Object object) {
 		//TODO
 		
