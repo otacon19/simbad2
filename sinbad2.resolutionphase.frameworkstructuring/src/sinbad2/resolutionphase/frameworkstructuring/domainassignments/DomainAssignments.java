@@ -73,7 +73,7 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 	}
 
 	public void setDomain(Expert expert, Alternative alternative, Criterion criterion, Domain domain) {
-		_assignments.put(new DomainAssignmentKey(expert, alternative, criterion), domain);
+		_assignments.put(new DomainAssignmentKey(expert, alternative, criterion), domain);		
 	}
 	
 	public void setDomain(Map<DomainAssignmentKey, Domain> oldDomainAssignment, Map<DomainAssignmentKey, Domain> newDomainAssignment,
@@ -84,7 +84,7 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 	}
 	
 	public Domain getDomain(Expert expert, Alternative alternative, Criterion criterion) {
-		return _assignments.get(_assignments.keySet());
+		return _assignments.get( new DomainAssignmentKey(expert, alternative, criterion));
 	}
 
 	public void removeDomain(Expert expert, Alternative alternative, Criterion criterion) {

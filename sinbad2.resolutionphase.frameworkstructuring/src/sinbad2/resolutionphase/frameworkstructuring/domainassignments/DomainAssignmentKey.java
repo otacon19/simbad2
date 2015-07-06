@@ -69,7 +69,7 @@ public class DomainAssignmentKey implements Cloneable, Comparable<DomainAssignme
 		hcb.append(_expert);
 		hcb.append(_alternative);
 		hcb.append(_criterion);
-		return hcb.hashCode();
+		return hcb.toHashCode();
 	}
 
 	public Object clone() {
@@ -79,14 +79,12 @@ public class DomainAssignmentKey implements Cloneable, Comparable<DomainAssignme
 		try {
 			result = (DomainAssignmentKey) super.clone();
 		} catch (Exception e) {
-			// No debe fallar
+			e.printStackTrace();
 		}
 
 		result._expert = (_expert != null) ? (Expert) _expert.clone() : null;
-		result._alternative = (_alternative != null) ? (Alternative) _alternative
-				.clone() : null;
-		result._criterion = (_criterion != null) ? (Criterion) _criterion
-				.clone() : null;
+		result._alternative = (_alternative != null) ? (Alternative) _alternative.clone() : null;
+		result._criterion = (_criterion != null) ? (Criterion) _criterion.clone() : null;
 
 		return result;
 	}
@@ -97,8 +95,7 @@ public class DomainAssignmentKey implements Cloneable, Comparable<DomainAssignme
 
 		result += (_expert != null) ? _expert.getPathId() : "null"; //$NON-NLS-1$
 		result += ":"; //$NON-NLS-1$
-		result += (_alternative != null) ? _alternative.getPathId()
-				: "null"; //$NON-NLS-1$
+		result += (_alternative != null) ? _alternative.getPathId() : "null"; //$NON-NLS-1$
 		result += ":"; //$NON-NLS-1$
 		result += (_criterion != null) ? _criterion.getPathId() : "null"; //$NON-NLS-1$
 
