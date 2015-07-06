@@ -9,5 +9,4 @@ Export-Package: sinbad2.domain.linguistic.fuzzy,
  sinbad2.domain.linguistic.fuzzy.label,
  sinbad2.domain.linguistic.fuzzy.semantic
 Require-Bundle: sinbad2.domain;bundle-version="1.0.0",
- sinbad2.domain.numeric.real;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.valuation.real.interval;bundle-version="1.0.0";visibility:=reexport

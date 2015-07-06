@@ -5,8 +5,8 @@ Bundle-SymbolicName: sinbad2.domain.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.domain;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.core.ui;bundle-version="1.0.0";visibility:=reexport,
- jfreechart;bundle-version="1.0.0";visibility:=reexport
+ jfreechart;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.core.ui;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.domain.ui,
  sinbad2.domain.ui.dialog,
  sinbad2.domain.ui.dialog.modifyDialog,
