@@ -15,10 +15,11 @@ public class TitleUpdater implements IWorkspaceListener {
 	private Workspace _workspace;
 	private String _defaultText;
 	private String _fileName;
+
 	private Shell _shell;
 	private boolean _fileOpen;
 	private boolean _modifyState;
-	
+
 	public TitleUpdater() {
 		_fileOpen = false;
 		_modifyState = false;
@@ -31,7 +32,6 @@ public class TitleUpdater implements IWorkspaceListener {
 
 	@Override
 	public void notifyWorkspaceChange(WorkspaceChangeEvent event) {
-		
 		switch (event.getWorkspaceChange()) {
 		case NEW_FILE:
 			_fileName = (String) event.getNewValue();
@@ -39,57 +39,61 @@ public class TitleUpdater implements IWorkspaceListener {
 			_modifyState = false;
 			setTitle();
 			break;
+
 		case HASH_CODE_SAVED:
 			_modifyState = false;
 			setTitle();
 			break;
+
 		case HASH_CODE_MODIFIED:
-			long hasCode = (Long) event.getNewValue();
+			long hashCode = (Long) event.getNewValue();
 			boolean oldModifyState = _modifyState;
-			_modifyState = (_workspace.getSavedHashCode() != hasCode);
-			if(_modifyState != oldModifyState) {
+			_modifyState = (_workspace.getSavedHashCode() != hashCode);
+			if (_modifyState != oldModifyState) {
 				setTitle();
 			}
 			break;
+
 		case FILE_REMOVED:
 			_shell.getDisplay().asyncExec(new Runnable() {
-				
 				@Override
 				public void run() {
 					_modifyState = true;
 					_fileName = null;
 					_fileOpen = false;
 					setTitle();
-					
-					MessageDialog.openInformation(_shell, Messages.TitleUpdater_File_removed, Messages.TitleUpdater_File_removed);		
+
+					MessageDialog.openInformation(_shell, Messages.TitleUpdater_File_removed, Messages.TitleUpdater_File_removed);	
 				}
 			});
 			break;
+
 		default:
 			break;
 		}
-		
-	}
-	
-	private void setTitle() {
-		String title = new String();
-		
-		if(_shell == null) {
-			_shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			_defaultText = _shell.getText();
-		}
-		
-		if(_modifyState) {
-			title += "*"; //$NON-NLS-1$
-		}
-		
-		if(_fileOpen) {
-			title += _fileName + " - "; //$NON-NLS-1$
-		}
-		
-		title += _defaultText;
-		
-		_shell.setText(title);
 	}
 
+	private void setTitle() {
+
+		String title = new String();
+
+		if (_shell == null) {
+			_shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getShell();
+			_defaultText = _shell.getText();
+		}
+
+		if (_modifyState) {
+			title += "*"; //$NON-NLS-1$
+		}
+
+		if (_fileOpen) {
+			title += _fileName + " - "; //$NON-NLS-1$
+		}
+
+		title += _defaultText;
+
+		_shell.setText(title);
+	}
+	
 }

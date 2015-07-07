@@ -101,8 +101,7 @@ public abstract class ResolutionSchemeImplementation implements IResolutionSchem
 	public void copyData(IWorkspaceContent content) {
 		ResolutionSchemeImplementation rsi = (ResolutionSchemeImplementation) content;
 		for (String name : _phasesNames) {
-			_phasesImplementation.get(name).copyData(
-					rsi.getPhasesImplementation().get(name));
+			_phasesImplementation.get(name).copyData(rsi.getPhasesImplementation().get(name));
 		}
 	}
 	

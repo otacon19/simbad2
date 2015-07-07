@@ -51,6 +51,15 @@ public class DomainSet {
 		
 	}
 	
+	public void readDomain(Domain domain) {
+		Validator.notNull(domain);
+		
+		_domains.add(domain);
+		
+		Collections.sort(_domains);
+		
+	}
+	
 	public void removeDomain(Domain domain, boolean inUndoRedo) {
 		Validator.notNull(domain);
 		
@@ -176,8 +185,10 @@ public class DomainSet {
 		for(IDomainSetListener listener: _listeners) {
 			listener.notifyDomainSetListener(event);
 		}
-		
+
+	
 		Workspace.getWorkspace().updateHashCode();
+	
 	}
 	
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
@@ -219,7 +230,7 @@ public class DomainSet {
 			} else if (event.isEndElement()) {
 				endtag = reader.getEndElementLocalPart();
 				if (endtag.equals(extensionId)) {
-					addDomain(domain, false);
+					readDomain(domain);
 				} else if (endtag.equals("domain-set")) { //$NON-NLS-1$
 					end = true;
 				}
