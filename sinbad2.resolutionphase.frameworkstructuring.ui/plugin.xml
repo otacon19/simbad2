@@ -5,7 +5,7 @@
          point="flintstones.resolutionphase.ui">
       <ui
             id="flintstones.resolutionphase.frameworkstructuring.ui"
-            name="Framework Structuring"
+            name="%ui.framework.structuring"
             resolution_phase="flintstones.resolutionphase.frameworkstructuring">
          <perspective
                id="flintstones.resolutionphase.frameworkstructuring.perspective">
@@ -18,7 +18,7 @@
             class="sinbad2.resolutionphase.frameworkstructuring.ui.FrameworkStructuringPerspective"
             icon="icons/frameworkstructuring.png"
             id="flintstones.resolutionphase.frameworkstructuring.perspective"
-            name="Framework Structuring">
+            name="%perspective.framework.structuring">
       </perspective>
    </extension>
    <extension
@@ -79,14 +79,14 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.frameworkstructuring.category"
-            name="Framework Structuring">
+            name="%category.framework.structuring">
       </category>
       <view
             category="flintstones.frameworkstructuring.category"
             class="sinbad2.resolutionphase.frameworkstructuring.ui.view.assignmentsprovider.AssignmentsProviderView"
             icon="icons/elementassignmentstable.png"
             id="flintstones.resolutionphase.frameworkstructuring.ui.view.assignmentsprovider"
-            name="Assignments provider"
+            name="%view.assignments.provider"
             restorable="true">
       </view>
       <view
@@ -94,7 +94,7 @@
             class="sinbad2.resolutionphase.frameworkstructuring.ui.view.elementassignments.ElementAssignmentsView"
             icon="icons/elementassignmentstable.png"
             id="flintstones.resolutionphase.frameworkstructuring.ui.view.elementassignments"
-            name="Element asignments"
+            name="%view.element.assignments"
             restorable="true">
       </view>
    </extension>
@@ -102,7 +102,7 @@
          point="org.eclipse.ui.contexts">
       <context
             id="flintstones.resolutionphase.frameworkstructuring.ui.view.elementassignments.elementassignments_view"
-            name="Element assignments context"
+            name="%context.assignments.context"
             parentId="flintstones.core.ui">
       </context>
    </extension>
@@ -117,7 +117,7 @@
       <page
             class="sinbad2.resolutionphase.frameworkstructuring.ui.preferences.FrameworkStructuringPreferencesPage"
             id="flintstones.resolutionphase.frameworkstructuring.preferences.FrameworkPreferencesPage"
-            name="Framework structuring">
+            name="%page.framework.structuring">
       </page>
    </extension>
 

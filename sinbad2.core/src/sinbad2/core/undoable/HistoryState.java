@@ -41,14 +41,12 @@ public class HistoryState implements IOperationHistoryListener {
 	}
 
 	public void cleanHistory() {
-		_operationHistory.dispose(IOperationHistory.GLOBAL_UNDO_CONTEXT, true,
-				true, true);
+		_operationHistory.dispose(IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, true);
 	}
 
 	public void refreshHistory() {
-
-		boolean newCanRedo = _operationHistory
-				.canRedo(IOperationHistory.GLOBAL_UNDO_CONTEXT);
+		boolean newCanRedo = _operationHistory.canRedo(IOperationHistory.GLOBAL_UNDO_CONTEXT);
+		
 		if (newCanRedo != _canRedo) {
 			_canRedo = newCanRedo;
 			if (_canRedo) {
@@ -58,8 +56,7 @@ public class HistoryState implements IOperationHistoryListener {
 			}
 		}
 
-		boolean newCanUndo = _operationHistory
-				.canUndo(IOperationHistory.GLOBAL_UNDO_CONTEXT);
+		boolean newCanUndo = _operationHistory.canUndo(IOperationHistory.GLOBAL_UNDO_CONTEXT);
 		if (newCanUndo != _canUndo) {
 			_canUndo = newCanUndo;
 			if (_canUndo) {
@@ -71,7 +68,9 @@ public class HistoryState implements IOperationHistoryListener {
 	}
 
 	public void registerUndoableListener(IUndoableListener listener) {
+		
 		_listeners.add(listener);
+		
 		if (_canUndo) {
 			listener.notifyUndoHistoryChange(EUndoHistoryChange.UNDO_ENABLED);
 		} else {

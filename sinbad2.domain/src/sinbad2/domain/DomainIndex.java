@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class DomainIndex {
 	
-	private final String PREFIX = "D";
+	private final String PREFIX = "D"; //$NON-NLS-1$
 	private Map<String, String> _idIndex;
 	private Map<String, Domain> _domainIndex;
 	

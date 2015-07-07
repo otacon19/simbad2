@@ -26,12 +26,10 @@ public class CompositeUndoableOperation extends AbstractOperation implements IOp
 	}
 	
 	@Override
-	public IStatus execute(IProgressMonitor monitor, IAdaptable info)
-			throws ExecutionException {
+	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 
 		if (!_redo) {
-			IUndoableOperation[] history = _operationHistory
-					.getUndoHistory(IOperationHistory.GLOBAL_UNDO_CONTEXT);
+			IUndoableOperation[] history = _operationHistory.getUndoHistory(IOperationHistory.GLOBAL_UNDO_CONTEXT);
 			int pos = history.length - 1;
 			boolean find = false;
 			do {
@@ -54,8 +52,8 @@ public class CompositeUndoableOperation extends AbstractOperation implements IOp
 	}
 
 	@Override
-	public IStatus redo(IProgressMonitor monitor, IAdaptable info)
-			throws ExecutionException {
+	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+		
 		if (_redo) {
 			_operationHistory.addOperationHistoryListener(this);
 		}
@@ -63,8 +61,8 @@ public class CompositeUndoableOperation extends AbstractOperation implements IOp
 	}
 
 	@Override
-	public IStatus undo(IProgressMonitor monitor, IAdaptable info)
-			throws ExecutionException {
+	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+		
 		if (!_redo) {
 			_operationHistory.addOperationHistoryListener(this);
 		}
@@ -75,8 +73,7 @@ public class CompositeUndoableOperation extends AbstractOperation implements IOp
 	public void historyNotification(OperationHistoryEvent event) {
 
 		try {
-
-			if (event.getEventType() == OperationHistoryEvent.UNDONE) {
+			if(event.getEventType() == OperationHistoryEvent.UNDONE) {
 				_operationHistory.removeOperationHistoryListener(this);
 				if (!_redo) {
 					for (int i = 0; i < _iterations; i++) {
@@ -84,31 +81,30 @@ public class CompositeUndoableOperation extends AbstractOperation implements IOp
 					}
 				}
 
-			} else if (event.getEventType() == OperationHistoryEvent.REDONE) {
-				if (_redo) {
+			} else if(event.getEventType() == OperationHistoryEvent.REDONE) {
+				if(_redo) {
 					_operationHistory.removeOperationHistoryListener(this);
 					IUndoableOperation operation = null;
 					boolean exit = false;
 					do {
-						if (_operationHistory.canRedo(IOperationHistory.GLOBAL_UNDO_CONTEXT)) {
-							operation = _operationHistory
-									.getRedoOperation(IOperationHistory.GLOBAL_UNDO_CONTEXT);
+						if(_operationHistory.canRedo(IOperationHistory.GLOBAL_UNDO_CONTEXT)) {
+							operation = _operationHistory.getRedoOperation(IOperationHistory.GLOBAL_UNDO_CONTEXT);
 						} else {
 							exit = true;
 							operation = null;
 						}
 
-						if (!exit) {
+						if(!exit) {
 							if (operation instanceof CompositeUndoableOperation) {
 								exit = true;
 							}
 						}
 
-						if (operation != null) {
-							_operationHistory.redo(IOperationHistory.GLOBAL_UNDO_CONTEXT,null, null);
+						if(operation != null) {
+							_operationHistory.redo(IOperationHistory.GLOBAL_UNDO_CONTEXT, null, null);
 						}
 
-					} while (!exit);
+					} while(!exit);
 				}
 			}
 

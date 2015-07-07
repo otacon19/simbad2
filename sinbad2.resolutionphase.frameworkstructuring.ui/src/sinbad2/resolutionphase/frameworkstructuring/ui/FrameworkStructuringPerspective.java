@@ -13,7 +13,7 @@ import sinbad2.resolutionphase.frameworkstructuring.ui.view.elementassignments.E
 
 public class FrameworkStructuringPerspective implements IPerspectiveFactory {
 	
-	public static final String ID = "flintstones.resolutionphase.frameworkstructuring.perspective";
+	public static final String ID = "flintstones.resolutionphase.frameworkstructuring.perspective"; //$NON-NLS-1$
 	
 	private ElementView _elementView;
 	private ElementAssignmentsView _elementAssignmentsView = null;

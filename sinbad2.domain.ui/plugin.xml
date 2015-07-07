@@ -34,7 +34,7 @@
             class="sinbad2.domain.ui.view.domainindex.DomainIndexView"
             icon="icons/domains.png"
             id="flintstones.domain.ui.view.domain.domainindex"
-            name="Domains index"
+            name="%view.domains.index"
             restorable="true">
       </view>
    </extension>
@@ -52,7 +52,7 @@
       </context>
       <context
             id="flintstones.domain.ui.view.domainindex.domainindex_view"
-            name="Domains index context"
+            name="%context.domains.index"
             parentId="flintstones.core.ui">
       </context>
    </extension>

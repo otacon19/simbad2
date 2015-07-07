@@ -22,8 +22,7 @@ public class UndoOperationHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		_operationHistory.undo(IOperationHistory.GLOBAL_UNDO_CONTEXT, null,
-				null);
+		_operationHistory.undo(IOperationHistory.GLOBAL_UNDO_CONTEXT, null, null);
 		_historyState.refreshHistory();
 		return null;
 	}

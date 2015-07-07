@@ -27,8 +27,8 @@ public abstract class UndoableOperation extends AbstractOperation implements IOp
 	@Override
 	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		IStatus result;
-
 		boolean isComposite = false;
+		
 		if (_composite == false) {
 			addCompositeUndoableOperation(true);
 			isComposite = true;
@@ -48,20 +48,20 @@ public abstract class UndoableOperation extends AbstractOperation implements IOp
 
 	private void addCompositeUndoableOperation(boolean redo) {
 		IUndoableOperation operation = new CompositeUndoableOperation(redo);
-		IOperationHistory operationHistory = OperationHistoryFactory
-				.getOperationHistory();
+		IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
 
 		operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);
 		try {
 			operationHistory.execute(operation, null, null);
 		} catch (ExecutionException e) {
-			// Nothing to do
+			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void historyNotification(OperationHistoryEvent event) {
-		if (event.getEventType() == OperationHistoryEvent.OPERATION_ADDED) {
+		
+		if(event.getEventType() == OperationHistoryEvent.OPERATION_ADDED) {
 			_operationHistory.removeOperationHistoryListener(this);
 			addCompositeUndoableOperation(false);
 		}

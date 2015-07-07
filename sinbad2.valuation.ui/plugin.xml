@@ -2,5 +2,28 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="flintstones.valuation.ui" name="%extension-point.valuation.ui" schema="schema/flintstones.valuation.ui.exsd"/>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.valuation.category"
+            name="Valuation">
+      </category>
+      <view
+            category="flintstones.valuation.category"
+            class="sinbad2.valuation.ui.view.ValuationPanelView"
+            icon="icons/valuation-panel.png"
+            id="flintstones.valuation.ui.view.valuationpanel"
+            name="Valuation panel"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="flintstones.valuation.ui.view.valuationpanelview_valuationpanelview"
+            name="Valuation panel view context"
+            parentId="flintstones.core.ui">
+      </context>
+   </extension>
 
 </plugin>

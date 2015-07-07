@@ -9,6 +9,7 @@ public class Messages extends NLS {
 	public static String AddDomainHandler_Domains;
 	public static String AddDomainHandler_New_domain;
 	public static String AddDomainHandler_To_assess_valuations;
+	public static String DomainIndexView_Index;
 	public static String DomainsView_Description;
 	public static String DomainsView_Valuation;
 	public static String ModifyDomainHandler_Modify_domain;

@@ -53,30 +53,30 @@ public class UndoableSourceProvider extends AbstractSourceProvider implements
 		boolean oldRedo = redo;
 
 		switch (undoHistoryChange) {
-		case UNDO_ENABLED:
-			undo = true;
-			break;
-		case UNDO_DISENABLED:
-			undo = false;
-			break;
-		case REDO_ENABLED:
-			redo = true;
-			break;
-		case REDO_DISENABLED:
-			redo = false;
-			break;
+			case UNDO_ENABLED:
+				undo = true;
+				break;
+			case UNDO_DISENABLED:
+				undo = false;
+				break;
+			case REDO_ENABLED:
+				redo = true;
+				break;
+			case REDO_DISENABLED:
+				redo = false;
+				break;
 		}
 
-		if (undo != oldUndo) {
-			if (undo) {
+		if(undo != oldUndo) {
+			if(undo) {
 				fireSourceChanged(ISources.WORKBENCH, UNDO_STATE, ENABLED);
 			} else {
 				fireSourceChanged(ISources.WORKBENCH, UNDO_STATE, DISENABLED);
 			}
 		}
 
-		if (redo != oldRedo) {
-			if (redo) {
+		if(redo != oldRedo) {
+			if(redo) {
 				fireSourceChanged(ISources.WORKBENCH, REDO_STATE, ENABLED);
 			} else {
 				fireSourceChanged(ISources.WORKBENCH, REDO_STATE, DISENABLED);

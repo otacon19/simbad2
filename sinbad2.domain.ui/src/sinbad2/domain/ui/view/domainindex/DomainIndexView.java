@@ -21,6 +21,7 @@ import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.domain.ui.nls.Messages;
 import sinbad2.domain.ui.view.domainindex.provider.DomainIndexContentProvider;
 import sinbad2.domain.ui.view.domainindex.provider.DomainIndexIdLabelProvider;
 import sinbad2.domain.ui.view.domainindex.provider.DomainIndexIndexLabelProvider;
@@ -62,13 +63,13 @@ public class DomainIndexView extends ViewPart {
 		tvc.getColumn().setWidth(50);
 		tvc.getColumn().setResizable(false);
 		tvc.getColumn().setMoveable(false);
-		tvc.getColumn().setText("Index");
+		tvc.getColumn().setText(Messages.DomainIndexView_Index);
 		tvc.setLabelProvider(new DomainIndexIndexLabelProvider());
 		tvc.getColumn().pack();
 
 		tvc = new TableViewerColumn(_tableViewer, SWT.FULL_SELECTION);
 		tvc.getColumn().setWidth(150);
-		tvc.getColumn().setText("Id");
+		tvc.getColumn().setText("Id"); //$NON-NLS-1$
 		tvc.setLabelProvider(new DomainIndexIdLabelProvider());
 		
 		_tableViewer.getTable().addControlListener(new ControlAdapter() {

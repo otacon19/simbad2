@@ -39,7 +39,7 @@
             class="sinbad2.element.ui.view.elements.ElementView"
             icon="icons/element.png"
             id="flintstones.element.ui.view.element"
-            name="Element"
+            name="%view.element"
             restorable="true">
       </view>
    </extension>
@@ -62,7 +62,7 @@
       </context>
       <context
             id="flintstones.element.ui.view.element.element_view"
-            name="Element context">
+            name="%context.element">
       </context>
    </extension>
    <extension

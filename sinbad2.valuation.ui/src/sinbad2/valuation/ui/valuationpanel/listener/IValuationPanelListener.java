@@ -1,5 +1,7 @@
 package sinbad2.valuation.ui.valuationpanel.listener;
 
-public class IValuationPanelListener {
-
+public interface IValuationPanelListener {
+	
+	public void notifyValuationPanelChange(ValuationPanelEvent event);
+	
 }

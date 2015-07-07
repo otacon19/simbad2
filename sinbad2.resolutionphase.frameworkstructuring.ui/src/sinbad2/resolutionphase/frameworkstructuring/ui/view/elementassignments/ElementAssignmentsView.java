@@ -33,6 +33,7 @@ import sinbad2.element.expert.Expert;
 import sinbad2.element.expert.listener.ExpertsChangeEvent;
 import sinbad2.element.expert.listener.IExpertsChangeListener;
 import sinbad2.element.ui.view.elements.ElementView;
+import sinbad2.resolutionphase.frameworkstructuring.ui.nls.Messages;
 
 public class ElementAssignmentsView extends ViewPart implements ISelectionListener, IExpertsChangeListener, ICriteriaChangeListener, 
 	IAlternativesChangeListener{
@@ -340,11 +341,11 @@ public class ElementAssignmentsView extends ViewPart implements ISelectionListen
 				elementAssignmentsTable.setModel(element);
 			}
 			if (_selectedElement instanceof Alternative) {
-				_instance.setPartName(_partName + " | " + "Alternative");
+				_instance.setPartName(_partName + " | " + Messages.ElementAssignmentsView_Alternative); //$NON-NLS-1$
 			} else if (_selectedElement instanceof Criterion) {
-				_instance.setPartName(_partName + " | " + "Criterion");
+				_instance.setPartName(_partName + " | " + Messages.ElementAssignmentsView_Criterion); //$NON-NLS-1$
 			} else {
-				_instance.setPartName(_partName + " | " + "Expert");
+				_instance.setPartName(_partName + " | " + Messages.ElementAssignmentsView_Expert); //$NON-NLS-1$
 
 			}
 		} else {

@@ -41,6 +41,7 @@ import sinbad2.element.expert.listener.IExpertsChangeListener;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignmentsManager;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.operation.ApplyDomainAssignmentsOperation;
 import sinbad2.resolutionphase.frameworkstructuring.ui.Images;
+import sinbad2.resolutionphase.frameworkstructuring.ui.nls.Messages;
 
 public class AssignmentsProviderView extends ViewPart implements IAlternativesChangeListener, IExpertsChangeListener, ICriteriaChangeListener,
 	IDomainSetChangeListener, IProblemElementsSetChangeListener, IDomainSetListener {
@@ -105,30 +106,30 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 
 		Label label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		label.setText("Expert");
+		label.setText(Messages.AssignmentsProviderView_Expert);
 		_expertCombo = new Combo(parent, SWT.NONE);
 		_expertCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		label.setText("Criterion");
+		label.setText(Messages.AssignmentsProviderView_Criterion);
 		_criterionCombo = new Combo(parent, SWT.NONE);
 		_criterionCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		label.setText("Alternative");
+		label.setText(Messages.AssignmentsProviderView_Alternative);
 		_alternativeCombo = new Combo(parent, SWT.NONE);
 		_alternativeCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		label = new Label(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		label.setText("Domain");
+		label.setText(Messages.AssignmentsProviderView_Domain);
 		_domainCombo = new Combo(parent, SWT.NONE);
 		_domainCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		_applyButton = new Button(parent, SWT.NONE);
-		_applyButton.setText("Apply");
+		_applyButton.setText(Messages.AssignmentsProviderView_Apply);
 		_applyButton.setImage(Images.Apply);
 		_applyButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -310,7 +311,7 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 			values.addAll(extractExpertValues(expert));
 		}
 		Collections.sort(values);
-		values.add(0, "* (all)");
+		values.add(0, Messages.AssignmentsProviderView_All);
 
 		_expertValues = values.toArray(new String[0]);
 	}
@@ -321,7 +322,7 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 			values.add(alternative.getPathId());
 		}
 		Collections.sort(values);
-		values.add(0, "* (all)");
+		values.add(0, Messages.AssignmentsProviderView_All);
 
 		_alternativeValues = values.toArray(new String[0]);
 	}
@@ -346,7 +347,7 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 			values.addAll(extractCriterionValues(criterion));
 		}
 		Collections.sort(values);
-		values.add(0, "* (all)");
+		values.add(0, Messages.AssignmentsProviderView_All);
 
 		_criterionValues = values.toArray(new String[0]);
 	}
