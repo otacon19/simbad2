@@ -20,7 +20,6 @@ import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.listener.DomainSetChangeEvent;
 import sinbad2.domain.listener.EDomainSetChange;
-import sinbad2.domain.listener.IDomainSetChangeListener;
 import sinbad2.domain.listener.IDomainSetListener;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -39,8 +38,11 @@ import sinbad2.valuation.ValuationsManager;
 import sinbad2.valuation.valuationset.listener.EValuationSetChange;
 import sinbad2.valuation.valuationset.listener.IValuationSetChangeListener;
 import sinbad2.valuation.valuationset.listener.ValuationSetChangeEvent;
+import sinbad2.valuation.valuationset.operation.ERemoveValuation;
+import sinbad2.valuation.valuationset.operation.RemoveValuationOperation;
+import sinbad2.valuation.valuationset.operation.RemoveValuationOperationProvider;
 
-public class ValuationSet implements IDomainSetChangeListener, IDomainSetListener, IDomainAssignmentsChangeListener {
+public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChangeListener {
 	private DomainAssignmentsManager _domainAssignmentsManager;
 	private DomainAssignments _domainAssignments;
 
@@ -71,8 +73,22 @@ public class ValuationSet implements IDomainSetChangeListener, IDomainSetListene
 	public Valuation getValuation(Expert expert, Alternative alternative, Criterion criterion) {
 		return _valuations.get(new ValuationKey(expert, alternative, criterion));
 	}
+	
+	public void modifySeveralValuations(Map<ValuationKey, Valuation> oldValuations, Map<ValuationKey, Valuation> newValuations, boolean inUndoRedo) {
+		
+		notifyValuationSetChange(new ValuationSetChangeEvent(EValuationSetChange.MODIFY_SEVERAL_VALUATIONS, oldValuations, newValuations,
+				inUndoRedo));
+		
+	}
+	
+	public void modifyValuation(Valuation oldValuations, Valuation newValuations, boolean inUndoRedo) {
+		
+		notifyValuationSetChange(new ValuationSetChangeEvent(EValuationSetChange.MODIFY_VALUATION, oldValuations, newValuations,
+				inUndoRedo));
+		
+	}
 
-	public void rmValuation(Expert expert, Alternative alternative, Criterion criterion) {
+	public void removeValuation(Expert expert, Alternative alternative, Criterion criterion) {
 		_valuations.remove(new ValuationKey(expert, alternative, criterion));
 	}
 
@@ -236,9 +252,7 @@ public class ValuationSet implements IDomainSetChangeListener, IDomainSetListene
 
 	}
 	
-	@Override
-	public void notifyNewActiveDomainSet(DomainSet domainSet) {}
-
+	//TODO eliminada newNotifyDomainSet()
 	
 	@Override
 	public void notifyNewActiveDomainAssignments(DomainAssignments domainAssignments) {
