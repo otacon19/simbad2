@@ -114,7 +114,7 @@ public class Expert extends ProblemElement {
 		return eb.isEquals();
 	}
 	
-	public static Expert getExpertByFormatId(List<Expert> experts, String formatId) {
+	public static Expert getExpertByCanonicalId(List<Expert> experts, String formatId) {
 		Validator.notNull(experts);
 		Validator.notNull(formatId);
 		
@@ -166,7 +166,7 @@ public class Expert extends ProblemElement {
 		
 		for(Expert expert: experts) {
 			if(expert.getId().equals(parentId)) {
-				return getExpertByFormatId(expert.getChildrens(), formatId.substring(parentId.length() + 1));
+				return getExpertByCanonicalId(expert.getChildrens(), formatId.substring(parentId.length() + 1));
 			}
 		}
 		

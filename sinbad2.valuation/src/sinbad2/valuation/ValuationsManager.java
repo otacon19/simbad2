@@ -46,6 +46,7 @@ public class ValuationsManager {
 	}
 	
 	public Valuation getValuationImplementation(String id) {
+		
 		if(_valuations.containsKey(id)) {
 			return _valuations.get(id);
 		} else {

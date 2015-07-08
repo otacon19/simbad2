@@ -80,7 +80,7 @@ public class CriterionTest {
 		criteria.add(_tester);
 		criteria.add(_criterion);
 		
-		assertEquals("must be the correct criterion", _tester, Criterion.getCriterionByFormatId( //$NON-NLS-1$
+		assertEquals("must be the correct criterion", _tester, Criterion.getCriterionByCanonicalId( //$NON-NLS-1$
 				criteria, _criterion.getId() + ">" + _tester.getId())); //$NON-NLS-1$
 	}
 

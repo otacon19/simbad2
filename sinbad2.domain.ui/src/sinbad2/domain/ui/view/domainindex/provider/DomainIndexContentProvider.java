@@ -79,7 +79,7 @@ public class DomainIndexContentProvider implements IStructuredContentProvider, I
 	}
 
 	@Override
-	public void notifyNewDomainSet(DomainSet domainSet) {
+	public void notifyNewActiveDomainSet(DomainSet domainSet) {
 		
 		if (_domainSet != domainSet) {
 			_domainSet.unregisterDomainsListener(this);

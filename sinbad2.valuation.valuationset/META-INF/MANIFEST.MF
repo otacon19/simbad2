@@ -4,3 +4,6 @@ Bundle-Name: Valuationset
 Bundle-SymbolicName: sinbad2.valuation.valuationset
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: sinbad2.core;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.valuation;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.resolutionphase.frameworkstructuring;bundle-version="1.0.0";visibility:=reexport

@@ -4,6 +4,6 @@ import sinbad2.domain.DomainSet;
 
 public interface IDomainSetChangeListener {
 	
-	public void notifyNewDomainSet(DomainSet domainSet);
+	public void notifyNewActiveDomainSet(DomainSet domainSet);
 	
 }

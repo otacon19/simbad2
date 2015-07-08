@@ -145,7 +145,7 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 					expert = null;
 				} else {
 					item = _expertCombo.getItem(pos);
-					expert = Expert.getExpertByFormatId(_experts, item);
+					expert = Expert.getExpertByCanonicalId(_experts, item);
 				}
 
 				pos = _alternativeCombo.getSelectionIndex();
@@ -171,7 +171,7 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 					criterion = null;
 				} else {
 					item = _criterionCombo.getItem(pos);
-					criterion = Criterion.getCriterionByFormatId(_criteria, item);
+					criterion = Criterion.getCriterionByCanonicalId(_criteria, item);
 				}
 
 				pos = _domainCombo.getSelectionIndex();
@@ -217,7 +217,7 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 	}
 
 	@Override
-	public void notifyNewDomainSet(DomainSet domainSet) {
+	public void notifyNewActiveDomainSet(DomainSet domainSet) {
 		_domainSet.unregisterDomainsListener(this);
 		_domainSet = domainSet;
 		_domainSet.registerDomainsListener(this);

@@ -126,7 +126,7 @@ public class Criterion extends ProblemElement {
 		return eb.isEquals();
 	}
 	
-	public static Criterion getCriterionByFormatId(List<Criterion> criteria, String formatId) {
+	public static Criterion getCriterionByCanonicalId(List<Criterion> criteria, String formatId) {
 		
 		Validator.notNull(criteria);
 		Validator.notNull(formatId);
@@ -181,7 +181,7 @@ public class Criterion extends ProblemElement {
 		
 		for(Criterion criterion: criteria) {
 			if(criterion.getId().equals(parentId)) {
-				return getCriterionByFormatId(criterion.getSubcriteria(), formatId.substring(parentId.length() + 1));
+				return getCriterionByCanonicalId(criterion.getSubcriteria(), formatId.substring(parentId.length() + 1));
 			}
 		}
 		

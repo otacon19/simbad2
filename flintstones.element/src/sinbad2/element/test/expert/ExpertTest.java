@@ -76,7 +76,7 @@ public class ExpertTest {
 		experts.add(_tester);
 		experts.add(_parent);
 		
-		assertEquals("must be the correct expert", _tester, Expert.getExpertByFormatId( //$NON-NLS-1$
+		assertEquals("must be the correct expert", _tester, Expert.getExpertByCanonicalId( //$NON-NLS-1$
 				experts, _parent.getId() + ">" + _tester.getId())); //$NON-NLS-1$
 		
 	}

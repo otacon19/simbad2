@@ -13,7 +13,7 @@ import sinbad2.element.expert.Expert;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignmentKey;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignments;
 
-public class RemoveDomainAssigmentsOperationProvider {
+public class RemoveDomainAssignmentsOperationProvider {
 	
 	private DomainAssignments _domainAssignments;
 	private Set<Expert> _experts;
@@ -25,50 +25,50 @@ public class RemoveDomainAssigmentsOperationProvider {
 	private Map<DomainAssignmentKey, Domain> _oldDomainAssignments;
 	private Map<DomainAssignmentKey, Domain> _newDomainAssignments;
 
-	private RemoveDomainAssigmentsOperationProvider() {
+	private RemoveDomainAssignmentsOperationProvider() {
 		_oldDomainAssignments = new HashMap<DomainAssignmentKey, Domain>();
 		_newDomainAssignments = new HashMap<DomainAssignmentKey, Domain>();
 	}
 
 	@SuppressWarnings("unchecked")
-	public RemoveDomainAssigmentsOperationProvider(DomainAssignments domainAssignments, ERemoveDomainAssignments type, Object object) {
+	public RemoveDomainAssignmentsOperationProvider(DomainAssignments domainAssignments, ERemoveDomainAssignments type, Object object) {
 		this();
 
 		_domainAssignments = domainAssignments;
 		_type = type;
 
 		switch (_type) {
-		case EXPERT:
-			_experts = new HashSet<Expert>();
-			_experts.add((Expert) object);
-			break;
-		case EXPERTS:
-			_experts = new HashSet<Expert>((Collection<? extends Expert>) object);
-			break;
-		case ALTERNATIVE:
-			_alternatives = new HashSet<Alternative>();
-			_alternatives.add((Alternative) object);
-			break;
-		case ALTERNATIVES:
-			_alternatives = new HashSet<Alternative>((Collection<? extends Alternative>) object);
-			break;
-		case CRITERION:
-			_criteria = new HashSet<Criterion>();
-			_criteria.add((Criterion) object);
-			break;
-		case CRITERIA:
-			_criteria = new HashSet<Criterion>((Collection<? extends Criterion>) object);
-			break;
-		case DOMAIN:
-			_domains = new HashSet<Domain>();
-			_domains.add((Domain) object);
-			break;
-		case DOMAINS:
-			_domains = new HashSet<Domain>((Collection<? extends Domain>) object);
-			break;
-
-		default:
-			break;
+			case EXPERT:
+				_experts = new HashSet<Expert>();
+				_experts.add((Expert) object);
+				break;
+			case EXPERTS:
+				_experts = new HashSet<Expert>((Collection<? extends Expert>) object);
+				break;
+			case ALTERNATIVE:
+				_alternatives = new HashSet<Alternative>();
+				_alternatives.add((Alternative) object);
+				break;
+			case ALTERNATIVES:
+				_alternatives = new HashSet<Alternative>((Collection<? extends Alternative>) object);
+				break;
+			case CRITERION:
+				_criteria = new HashSet<Criterion>();
+				_criteria.add((Criterion) object);
+				break;
+			case CRITERIA:
+				_criteria = new HashSet<Criterion>((Collection<? extends Criterion>) object);
+				break;
+			case DOMAIN:
+				_domains = new HashSet<Domain>();
+				_domains.add((Domain) object);
+				break;
+			case DOMAINS:
+				_domains = new HashSet<Domain>((Collection<? extends Domain>) object);
+				break;
+	
+			default:
+				break;
 		}
 	}
 

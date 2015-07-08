@@ -35,8 +35,7 @@ public class RemoveDomainAssignmentsOperation extends UndoableOperation {
 	}
 
 	@Override
-	public IStatus executeOperation(IProgressMonitor monitor, IAdaptable info)
-			throws ExecutionException {
+	public IStatus executeOperation(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		return redo(monitor, info);
 
 	}

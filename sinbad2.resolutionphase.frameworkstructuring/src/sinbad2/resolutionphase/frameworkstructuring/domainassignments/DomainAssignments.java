@@ -11,6 +11,9 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.events.XMLEvent;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 
 import sinbad2.core.workspace.Workspace;
 import sinbad2.domain.Domain;
@@ -40,6 +43,8 @@ import sinbad2.resolutionphase.frameworkstructuring.domainassignments.listener.D
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.listener.EDomainAssignmentsChange;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.listener.IDomainAssignmentsChangeListener;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.operation.ERemoveDomainAssignments;
+import sinbad2.resolutionphase.frameworkstructuring.domainassignments.operation.RemoveDomainAssignmentsOperation;
+import sinbad2.resolutionphase.frameworkstructuring.domainassignments.operation.RemoveDomainAssignmentsOperationProvider;
 import sinbad2.resolutionphase.io.XMLRead;
 
 public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAlternativesChangeListener, ICriteriaChangeListener, 
@@ -130,10 +135,10 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 
 			if (event.isStartElement()) {
 				id = reader.getStartElementAttribute("expert"); //$NON-NLS-1$
-				expert = Expert.getExpertByFormatId(elementSet.getExperts(),id);
+				expert = Expert.getExpertByCanonicalId(elementSet.getExperts(),id);
 
 				id = reader.getStartElementAttribute("criterion"); //$NON-NLS-1$
-				criterion = Criterion.getCriterionByFormatId(elementSet.getCriteria(), id);
+				criterion = Criterion.getCriterionByCanonicalId(elementSet.getCriteria(), id);
 
 				id = reader.getStartElementAttribute("alternative"); //$NON-NLS-1$
 				for (Alternative a : elementSet.getAlternatives()) {
@@ -338,7 +343,7 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 	}
 
 	@Override
-	public void notifyNewDomainSet(DomainSet domainSet) {
+	public void notifyNewActiveDomainSet(DomainSet domainSet) {
 		
 		if (_domainSet != domainSet) {
 			_domainSet.unregisterDomainsListener(this);
@@ -350,8 +355,19 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 
 	}
 
-	private void removeDomainAssignmentsOperation(ERemoveDomainAssignments all, Object object) {
-		//TODO
+	private void removeDomainAssignmentsOperation(ERemoveDomainAssignments type, Object value) {
+		Map<DomainAssignmentKey, Domain> newAssignments = new RemoveDomainAssignmentsOperationProvider(this, type, value).test();
+		
+		if(newAssignments != null) {
+			RemoveDomainAssignmentsOperation operation = new RemoveDomainAssignmentsOperation(this, newAssignments);
+			IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
+			operation.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);
+			try {
+				operationHistory.execute(operation, null, null);
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
 		
 	}
 

@@ -103,7 +103,7 @@ public class DomainsManager {
 	public void notifyDomainSetChangeListener() {
 		
 		for(IDomainSetChangeListener listener: _listeners) {
-			listener.notifyNewDomainSet(_activeDomainSet);
+			listener.notifyNewActiveDomainSet(_activeDomainSet);
 		}
 	}
 	
