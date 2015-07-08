@@ -327,7 +327,7 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			for (int i = 0; i < _finalExperts.size(); i++) {
 				expert = _finalExperts.get(i);
 				row = _fixedRows + i;
-				elementDepth = expert.getPathId().split(">").length - 1; //$NON-NLS-1$
+				elementDepth = expert.getCanonicalId().split(">").length - 1; //$NON-NLS-1$
 				col = elementDepth;
 				eParent = expert;
 				while (eParent.getParent() != null) {
@@ -352,7 +352,7 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			for (int i = 0; i < _finalCriteria.size(); i++) {
 				criterion = _finalCriteria.get(i);
 				row = _fixedRows + i;
-				elementDepth = criterion.getPathId().split(">").length - 1; //$NON-NLS-1$
+				elementDepth = criterion.getCanonicalId().split(">").length - 1; //$NON-NLS-1$
 				col = elementDepth;
 				cParent = criterion;
 				while (cParent.getParent() != null) {
@@ -371,7 +371,7 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			for (int i = 0; i < _finalExperts.size(); i++) {
 				expert = _finalExperts.get(i);
 				col = _fixedCols + i;
-				elementDepth = expert.getPathId().split(">").length - 1; //$NON-NLS-1$
+				elementDepth = expert.getCanonicalId().split(">").length - 1; //$NON-NLS-1$
 				row = elementDepth;
 				eParent = expert;
 				while (eParent.getParent() != null) {
@@ -399,7 +399,7 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			for (int i = 0; i < _finalCriteria.size(); i++) {
 				criterion = _finalCriteria.get(i);
 				col = _fixedCols + i;
-				elementDepth = criterion.getPathId().split(">").length - 1; //$NON-NLS-1$
+				elementDepth = criterion.getCanonicalId().split(">").length - 1; //$NON-NLS-1$
 				row = elementDepth;
 				cParent = criterion;
 				while (cParent.getParent() != null) {

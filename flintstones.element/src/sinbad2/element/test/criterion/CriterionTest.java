@@ -34,7 +34,7 @@ public class CriterionTest {
 	public void testGetFormatId() {
 		_criterion.addSubcriterion(_tester);
 		
-		assertEquals("must return parent_id:criterion_id", _tester.getParent().getId() + ">" + _tester.getId(), _tester.getPathId()); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("must return parent_id:criterion_id", _tester.getParent().getId() + ">" + _tester.getId(), _tester.getCanonicalId()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Test

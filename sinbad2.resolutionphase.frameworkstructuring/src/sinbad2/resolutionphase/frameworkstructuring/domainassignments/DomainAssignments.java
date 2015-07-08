@@ -105,9 +105,9 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 
 		for (DomainAssignmentKey key : _assignments.keySet()) {
 			writer.writeStartElement("assignment"); //$NON-NLS-1$
-			writer.writeAttribute("expert", key.getExpert().getPathId()); //$NON-NLS-1$
-			writer.writeAttribute("alternative", key.getAlternative().getPathId()); //$NON-NLS-1$
-			writer.writeAttribute("criterion", key.getCriterion().getPathId()); //$NON-NLS-1$
+			writer.writeAttribute("expert", key.getExpert().getCanonicalId()); //$NON-NLS-1$
+			writer.writeAttribute("alternative", key.getAlternative().getCanonicalId()); //$NON-NLS-1$
+			writer.writeAttribute("criterion", key.getCriterion().getCanonicalId()); //$NON-NLS-1$
 			writer.writeAttribute("domain", _assignments.get(key).getId()); //$NON-NLS-1$
 			writer.writeEndElement();
 		}
@@ -356,7 +356,7 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 	}
 
 	private void removeDomainAssignmentsOperation(ERemoveDomainAssignments type, Object value) {
-		Map<DomainAssignmentKey, Domain> newAssignments = new RemoveDomainAssignmentsOperationProvider(this, type, value).test();
+		Map<DomainAssignmentKey, Domain> newAssignments = new RemoveDomainAssignmentsOperationProvider(this, type, value).check();
 		
 		if(newAssignments != null) {
 			RemoveDomainAssignmentsOperation operation = new RemoveDomainAssignmentsOperation(this, newAssignments);

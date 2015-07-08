@@ -16,7 +16,7 @@ public class Alternative extends ProblemElement {
 	}
 	
 	@Override
-	public String getPathId() {
+	public String getCanonicalId() {
 		return _id;
 	}
 	

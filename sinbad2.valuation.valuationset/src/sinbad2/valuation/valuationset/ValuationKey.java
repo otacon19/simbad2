@@ -92,11 +92,11 @@ public class ValuationKey implements Cloneable, Comparable<ValuationKey> {
 	public String toString() {
 		String result = null;
 
-		result += (_expert != null) ? _expert.getPathId() : "null"; //$NON-NLS-1$
+		result += (_expert != null) ? _expert.getCanonicalId() : "null"; //$NON-NLS-1$
 		result += ":"; //$NON-NLS-1$
-		result += (_alternative != null) ? _alternative.getPathId() : "null"; //$NON-NLS-1$
+		result += (_alternative != null) ? _alternative.getCanonicalId() : "null"; //$NON-NLS-1$
 		result += ":"; //$NON-NLS-1$
-		result += (_criterion != null) ? _criterion.getPathId() : "null"; //$NON-NLS-1$
+		result += (_criterion != null) ? _criterion.getCanonicalId() : "null"; //$NON-NLS-1$
 
 		return result;
 	}

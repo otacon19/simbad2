@@ -38,7 +38,7 @@ public class ExpertTest {
 	public void testGetFormatId() {
 		_parent.addChildren(_tester);
 			
-		assertEquals("must return parent_id:expert_id", _tester.getParent().getId() + ">" + _tester.getId(), _tester.getPathId()); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("must return parent_id:expert_id", _tester.getParent().getId() + ">" + _tester.getId(), _tester.getCanonicalId()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Test

@@ -300,7 +300,7 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 			}
 		}
 
-		result.add(expert.getPathId());
+		result.add(expert.getCanonicalId());
 
 		return result;
 	}
@@ -319,7 +319,7 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 	private void extractAlternativeValues() {
 		List<String> values = new LinkedList<String>();
 		for (Alternative alternative : _alternatives) {
-			values.add(alternative.getPathId());
+			values.add(alternative.getCanonicalId());
 		}
 		Collections.sort(values);
 		values.add(0, Messages.AssignmentsProviderView_All);
@@ -336,7 +336,7 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 			}
 		}
 
-		result.add(criterion.getPathId());
+		result.add(criterion.getCanonicalId());
 
 		return result;
 	}

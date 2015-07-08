@@ -76,7 +76,7 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 	
 	public void modifySeveralValuations(Map<ValuationKey, Valuation> oldValuations, Map<ValuationKey, Valuation> newValuations, boolean inUndoRedo) {
 		
-		notifyValuationSetChange(new ValuationSetChangeEvent(EValuationSetChange.MODIFY_SEVERAL_VALUATIONS, oldValuations, newValuations,
+		notifyValuationSetChange(new ValuationSetChangeEvent(EValuationSetChange.MODIFY_MULTIPLE_VALUATIONS, oldValuations, newValuations,
 				inUndoRedo));
 		
 	}
@@ -110,9 +110,9 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 			valuation = _valuations.get(key);
 			writer.writeStartElement(valuation.getId()); //$NON-NLS-1$
 			writer.writeAttribute("domain-id", valuation.getDomain().getId()); //$NON-NLS-1$
-			writer.writeAttribute("expert", key.getExpert().getPathId()); //$NON-NLS-1$
-			writer.writeAttribute("alternative", key.getAlternative().getPathId()); //$NON-NLS-1$
-			writer.writeAttribute("criterion", key.getCriterion().getPathId()); //$NON-NLS-1$
+			writer.writeAttribute("expert", key.getExpert().getCanonicalId()); //$NON-NLS-1$
+			writer.writeAttribute("alternative", key.getAlternative().getCanonicalId()); //$NON-NLS-1$
+			writer.writeAttribute("criterion", key.getCriterion().getCanonicalId()); //$NON-NLS-1$
 			
 			valuation.save(writer);
 			writer.writeEndElement();
@@ -291,7 +291,7 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 	}
 
 	public void removeValuationsOperation(ERemoveValuation type, Object value) {
-		Map<ValuationKey, Valuation> newValuations = new RemoveValuationOperationProvider(this, type, value).test();
+		Map<ValuationKey, Valuation> newValuations = new RemoveValuationOperationProvider(this, type, value).check();
 		
 		if (newValuations != null) {
 			RemoveValuationOperation operation = new RemoveValuationOperation(this, newValuations);

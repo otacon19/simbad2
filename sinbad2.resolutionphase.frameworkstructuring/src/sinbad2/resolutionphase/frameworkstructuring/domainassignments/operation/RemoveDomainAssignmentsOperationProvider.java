@@ -72,7 +72,7 @@ public class RemoveDomainAssignmentsOperationProvider {
 		}
 	}
 
-	public Map<DomainAssignmentKey, Domain> test() {
+	public Map<DomainAssignmentKey, Domain> check() {
 
 		_oldDomainAssignments = _domainAssignments.getAssignments();
 		switch (_type) {

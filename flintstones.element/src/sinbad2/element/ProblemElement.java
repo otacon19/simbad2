@@ -18,11 +18,11 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 		return _id;
 	}
 
-	public abstract String getPathId();
+	public abstract String getCanonicalId();
 	
 	@Override
 	public String toString() {
-		return getPathId();
+		return getCanonicalId();
 	}
 
 	public void setId(String id) {
@@ -33,7 +33,7 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 	public int compareTo(ProblemElement other) {
 		Validator.notNull(other);
 		
-		return getPathId().compareTo(other.getPathId());
+		return getCanonicalId().compareTo(other.getCanonicalId());
 	}
 
 	@Override

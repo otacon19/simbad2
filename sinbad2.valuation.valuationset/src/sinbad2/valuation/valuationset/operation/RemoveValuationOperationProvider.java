@@ -47,7 +47,7 @@ public class RemoveValuationOperationProvider {
 		}
 	}
 
-	public Map<ValuationKey, Valuation> test() {
+	public Map<ValuationKey, Valuation> check() {
 		_oldValuations = _valuationSet.getValuations();
 		
 		switch (_type) {

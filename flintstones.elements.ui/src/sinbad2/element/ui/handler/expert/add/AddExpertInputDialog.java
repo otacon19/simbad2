@@ -40,7 +40,7 @@ public class AddExpertInputDialog extends InputDialog {
 		
 		if(_parentOfNewExpert != null) {
 			_isMemberButton = new Button(container, SWT.CHECK);
-			_isMemberButton.setText(Messages.AddExpertInputDialog_Is_member_of + " " + _parentOfNewExpert.getPathId()); //$NON-NLS-1$
+			_isMemberButton.setText(Messages.AddExpertInputDialog_Is_member_of + " " + _parentOfNewExpert.getCanonicalId()); //$NON-NLS-1$
 			_isMemberButton.setSelection(_isMember);
 			_isMemberButton.addSelectionListener(new SelectionAdapter() {
 				@Override

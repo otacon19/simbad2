@@ -42,7 +42,7 @@ public class AddCriterionInputDialog extends InputDialog {
 		
 		if(_parent != null) {
 			_isSubcriterionButton = new Button(container, SWT.CHECK);
-			_isSubcriterionButton.setText(Messages.AddCriterionInputDialog_Is_subcriterion_of + _parent.getPathId());
+			_isSubcriterionButton.setText(Messages.AddCriterionInputDialog_Is_subcriterion_of + _parent.getCanonicalId());
 			_isSubcriterionButton.setSelection(true);
 			_isSubcriterionButton.addSelectionListener(new SelectionAdapter() {
 				@Override

@@ -335,7 +335,7 @@ public class ElementAssignmentsView extends ViewPart implements ISelectionListen
 			_tabFolder = new TabFolder(_container, SWT.BORDER);
 			for (ProblemElement element : toDisplay) {
 				TabItem tabItem = new TabItem(_tabFolder, SWT.NULL);
-				tabItem.setText(element.getPathId());
+				tabItem.setText(element.getCanonicalId());
 				ElementAssignmentsTable elementAssignmentsTable = new ElementAssignmentsTable(_tabFolder);
 				tabItem.setControl(elementAssignmentsTable);
 				elementAssignmentsTable.setModel(element);

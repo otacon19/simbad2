@@ -29,11 +29,11 @@ public class Criterion extends ProblemElement {
 	}
 	
 	@Override
-	public String getPathId() {
+	public String getCanonicalId() {
 		String result = null;
 		
 		if(_parent != null) {
-			result = _parent.getPathId() + ">" + _id; //$NON-NLS-1$
+			result = _parent.getCanonicalId() + ">" + _id; //$NON-NLS-1$
 		} else {
 			result = _id;
 		}
@@ -148,7 +148,7 @@ public class Criterion extends ProblemElement {
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
-		hcb.append(getPathId());
+		hcb.append(getCanonicalId());
 		if(hasSubcriteria()) {
 			for(Criterion criterion: _subcriteria) {
 				hcb.append(criterion);
