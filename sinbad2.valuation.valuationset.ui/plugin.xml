@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.valuationset.category"
+            name="Valuation set">
+      </category>
+      <view
+            category="flintstones.valuationset.category"
+            class="sinbad2.valuation.valuationset.ui.view.ElementValuationsView"
+            icon="icons/elementvaluations.png"
+            id="flintstones.valuation.valuationset.ui.view.elementvaluations"
+            name="Element valuations"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="flitstones.valuation.valuationset.ui.view.elementvaluations.elementvaluations_view"
+            name="Context element valuations"
+            parentId="flintstones.core.ui">
+      </context>
+   </extension>
+
+</plugin>
