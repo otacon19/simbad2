@@ -11,6 +11,8 @@
          <modify_domain_dialog
                dialog="sinbad2.domain.numeric.integer.modify">
          </modify_domain_dialog>
+         <valuation_panel
+               panel="sinbad2.valuation.integer.ui.ValuationPanelInteger"></valuation_panel>
       </valuation_ui>
    </extension>
 

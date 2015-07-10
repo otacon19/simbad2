@@ -85,6 +85,8 @@
       <plugin id="sinbad2.resolutionphase.framework.ui"/>
       <plugin id="sinbad2.resolutionphase.frameworkstructuring"/>
       <plugin id="sinbad2.resolutionphase.frameworkstructuring.ui"/>
+      <plugin id="sinbad2.resolutionphase.gathering"/>
+      <plugin id="sinbad2.resolutionphase.gathering.ui"/>
       <plugin id="sinbad2.resolutionphase.ui"/>
       <plugin id="sinbad2.resolutionscheme"/>
       <plugin id="sinbad2.resolutionscheme.dm"/>

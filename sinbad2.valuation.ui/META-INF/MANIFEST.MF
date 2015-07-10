@@ -7,5 +7,6 @@ Require-Bundle: sinbad2.valuation;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.domain.ui;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: sinbad2.valuation.ui,
+ sinbad2.valuation.ui.valuationpanel,
  sinbad2.valuation.ui.valuationpanel.listener,
  sinbad2.valuation.ui.view

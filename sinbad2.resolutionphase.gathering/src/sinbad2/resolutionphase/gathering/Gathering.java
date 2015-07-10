@@ -1,3 +1,4 @@
+
 package sinbad2.resolutionphase.gathering;
 
 import java.util.Map;
@@ -13,6 +14,7 @@ import sinbad2.resolutionphase.framework.Framework;
 import sinbad2.resolutionphase.frameworkstructuring.FrameworkStructuring;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.resolutionphase.io.XMLWriter;
+import sinbad2.resolutionphase.state.EResolutionPhaseStateChange;
 import sinbad2.resolutionphase.state.ResolutionPhaseStateChangeEvent;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -86,26 +88,35 @@ public class Gathering implements IResolutionPhase {
 	
 	@Override
 	public IResolutionPhase clone() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public void notifyResolutionPhaseStateChange(ResolutionPhaseStateChangeEvent event) {
-		// TODO Auto-generated method stub
+		Gathering result = null;
 		
+		try {
+			result = (Gathering) super.clone();
+			result._valuationSet = (ValuationSet) _valuationSet.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 	
 	@Override
 	public void activate() {
-		// TODO Auto-generated method stub
-		
+		_valuationSetManager.setActiveValuationSet(_valuationSet);
 	}
-
+	
 	@Override
 	public boolean validate() {
-		// TODO Auto-generated method stub
-		return false;
+		return !_valuationSet.getValuations().isEmpty();
+	}
+	
+	@Override
+	public void notifyResolutionPhaseStateChange(ResolutionPhaseStateChangeEvent event) {
+
+		if(event.getChange().equals(EResolutionPhaseStateChange.ACTIVATED)) {
+			activate();
+		}
+		
 	}
 
 }

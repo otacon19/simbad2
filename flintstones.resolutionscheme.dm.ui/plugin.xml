@@ -13,6 +13,9 @@
          <ui
                id="flintstones.resolutionphase.frameworkstructuring.ui">
          </ui>
+         <ui
+               id="flintstones.resolutionphase.gathering.ui">
+         </ui>
       </scheme_ui>
    </extension>
 

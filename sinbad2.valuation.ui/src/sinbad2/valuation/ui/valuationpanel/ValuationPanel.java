@@ -60,7 +60,7 @@ public abstract class ValuationPanel {
 
 	public void initialize(Composite parent, Domain domain, Valuation valuation) {
 		_container = new Composite(parent, SWT.NONE);
-
+		
 		_parent = parent;
 		GridLayout layout = new GridLayout(19, true);
 		layout.horizontalSpacing = 0;

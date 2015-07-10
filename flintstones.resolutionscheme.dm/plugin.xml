@@ -13,6 +13,9 @@
          <phase
                resolution_phase="flintstones.resolutionphase.frameworkstructuring">
          </phase>
+         <phase
+               resolution_phase="flintstones.resolutionphase.gathering">
+         </phase>
       </scheme>
    </extension>
 

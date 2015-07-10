@@ -122,7 +122,6 @@ public class ValuationUIsManager {
 				}
 			}
 		}
-		
 		return result;
 	}
 		
