@@ -121,6 +121,8 @@ public abstract class ValuationPanel {
 
 	public abstract Object getSelection();
 	
+	//public abstract Object getIntervalSelection();
+	
 	public abstract boolean differentValue();
 	
 	protected abstract void initControls();

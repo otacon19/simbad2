@@ -2,10 +2,12 @@ package sinbad2.domain.numeric.integer.ui.jfreechart;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.util.LinkedList;
 
 import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
@@ -25,6 +27,7 @@ public class NumericIntegerDomainChart extends DomainChart {
 	
 	private NumericIntegerDomain _domain;
 	private ValueMarker _numMarker; 
+	private IntervalMarker _intervalMarker; 
 
 	public NumericIntegerDomainChart() {
 		super();
@@ -32,6 +35,7 @@ public class NumericIntegerDomainChart extends DomainChart {
 		_chart = null;
 		_chartComposite = null;
 		_numMarker = null;
+		_intervalMarker = null;
 	}
 	
 	@Override
@@ -78,11 +82,21 @@ public class NumericIntegerDomainChart extends DomainChart {
 			_chart.getXYPlot().removeRangeMarker(_numMarker);
 		}
 		
-		_numMarker = new ValueMarker((Integer) selection);
-		_numMarker.setPaint(Color.RED);
-		_numMarker.setStroke(new BasicStroke(4));
-		_chart.getXYPlot().addRangeMarker(_numMarker);
+		if(_intervalMarker != null) {
+			_chart.getXYPlot().removeRangeMarker(_intervalMarker);
+		}
 		
+		if(selection instanceof LinkedList<?>) {
+			_intervalMarker = new IntervalMarker((Integer)((LinkedList<?>) selection).getFirst(), (Integer)((LinkedList<?>) selection).getLast());
+			_intervalMarker.setAlpha(0.5f);
+			_intervalMarker.setPaint(Color.RED);
+			_chart.getXYPlot().addRangeMarker(_intervalMarker);
+		} else {	
+			_numMarker = new ValueMarker((Integer) selection);
+			_numMarker.setPaint(Color.RED);
+			_numMarker.setStroke(new BasicStroke(4));
+			_chart.getXYPlot().addRangeMarker(_numMarker);
+		}
 	}
 
 	@Override

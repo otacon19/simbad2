@@ -69,7 +69,8 @@ public class ValuationPanelInteger extends ValuationPanel {
 	}
 	
 	public boolean differentValue() {
-		if (_valuation == null) {
+		
+		if(_valuation == null) {
 			return true;
 		} else {
 			return ((int) ((IntegerValuation) _valuation).getValue() != _value);
@@ -101,5 +102,10 @@ public class ValuationPanelInteger extends ValuationPanel {
 		valueSpinner.setSelection((int) _value);
 		selectionChange();
 	}
+
+	/*@Override
+	public Object getIntervalSelection() {
+		return null;
+	}*/
 
 }
