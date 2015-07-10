@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Ui
+Bundle-SymbolicName: sinbad2.resolutionphase.gathering.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sinbad2.resolutionphase.gathering.ui.Activator
+Require-Bundle: sinbad2.resolutionphase.ui;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.resolutionphase.gathering;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.valuation.valuationset.ui;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.valuation.ui;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.element.ui;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
