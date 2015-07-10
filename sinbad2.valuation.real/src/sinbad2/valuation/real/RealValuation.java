@@ -17,7 +17,6 @@ public class RealValuation extends Valuation {
 	
 	public double _value;
 	
-	protected NumericRealDomain _domain;
 	
 	public RealValuation() {
 		super();

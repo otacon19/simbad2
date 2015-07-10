@@ -18,8 +18,7 @@ public class IntegerValuation extends Valuation {
 	public static final String ID = "flintstones.valuation.integer"; //$NON-NLS-1$
 	
 	public long _value;
-
-	protected NumericIntegerDomain _domain;
+	
 	
 	public IntegerValuation() {
 		super();
@@ -49,8 +48,8 @@ public class IntegerValuation extends Valuation {
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		NumericIntegerDomain domain = (NumericIntegerDomain) domainsManager.copyDomain(NumericIntegerDomain.ID);
 
-		domain.setMinMax(_domain.getMin(), _domain.getMax());
-		domain.setInRange(_domain.getInRange());
+		domain.setMinMax(((NumericIntegerDomain)_domain).getMin(), ((NumericIntegerDomain) _domain).getMax());
+		domain.setInRange(((NumericIntegerDomain)_domain).getInRange());
 		
 		result.setDomain(domain);
 		result.setValue(_value);
@@ -61,7 +60,7 @@ public class IntegerValuation extends Valuation {
 	public Valuation negateValutation() {
 		IntegerValuation result = (IntegerValuation) clone();
 		
-		long aux = Math.round(_domain.getMin()) + Math.round(_domain.getMax());
+		long aux = Math.round(((NumericIntegerDomain) _domain).getMin()) + Math.round(((NumericIntegerDomain) _domain).getMax());
 		result.setValue(aux - _value);
 		
 		return result;
@@ -146,11 +145,11 @@ public class IntegerValuation extends Valuation {
 		IntegerValuation result = (IntegerValuation) clone();
 		long min, max, intervalSize;
 		
-		min = Math.round(_domain.getMin());
-		max = Math.round(_domain.getMax());
+		min = Math.round(((NumericIntegerDomain) _domain).getMin());
+		max = Math.round(((NumericIntegerDomain)_domain).getMax());
 		intervalSize = max - min;
 		
-		result._domain.setMinMax(0, 1);
+		((NumericIntegerDomain) result. _domain).setMinMax(0, 1);
 		result._value = (_value - min) / intervalSize;
 		
 		return result;

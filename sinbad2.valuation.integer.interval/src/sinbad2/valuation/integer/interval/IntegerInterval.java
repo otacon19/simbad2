@@ -21,8 +21,6 @@ public class IntegerInterval extends Valuation {
 	public long _min;
 	public long _max;
 	
-	protected NumericIntegerDomain _domain;
-	
 	public IntegerInterval() {
 		super();
 		_min = 0;
@@ -60,8 +58,8 @@ public class IntegerInterval extends Valuation {
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		NumericIntegerDomain domain = (NumericIntegerDomain) domainsManager.copyDomain(NumericIntegerDomain.ID);
 		
-		domain.setMinMax(_domain.getMin(), _domain.getMax());
-		domain.setInRange(_domain.getInRange());
+		domain.setMinMax(((NumericIntegerDomain) _domain).getMin(), ((NumericIntegerDomain) _domain).getMax());
+		domain.setInRange(((NumericIntegerDomain) _domain).getInRange());
 		
 		result.setDomain(domain);
 		result.setMinMax(_min, _max);
@@ -73,7 +71,7 @@ public class IntegerInterval extends Valuation {
 	public Valuation negateValutation() {
 		IntegerInterval result = (IntegerInterval) clone();
 		
-		long aux = Math.round(_domain.getMin()) + Math.round(_domain.getMax());
+		long aux = Math.round(((NumericIntegerDomain) _domain).getMin()) + Math.round(((NumericIntegerDomain) _domain).getMax());
 		result.setMinMax(aux - _max, aux - _min);
 		
 		return result;
@@ -164,14 +162,14 @@ public class IntegerInterval extends Valuation {
 		
 		long min, max, intervalSize;
 		
-		min = Math.round(_domain.getMin());
-		max = Math.round(_domain.getMax());
+		min = Math.round(((NumericIntegerDomain) _domain).getMin());
+		max = Math.round(((NumericIntegerDomain) _domain).getMax());
 		intervalSize = max - min;
 		
 		max = ((long) (_max - min) / intervalSize);
 		min = ((long) (_min - min) / intervalSize);
 		
-		result._domain.setMinMax(0, 1);
+		((NumericIntegerDomain) result._domain).setMinMax(0, 1);
 		
 		result._min = min;
 		result._max = max;

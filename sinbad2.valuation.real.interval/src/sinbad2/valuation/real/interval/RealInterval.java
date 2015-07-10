@@ -19,7 +19,6 @@ public class RealInterval extends Valuation {
 	public double _min;
 	public double _max;
 	
-	protected NumericRealDomain _domain;
 	
 	public RealInterval() {
 		super();
@@ -55,14 +54,14 @@ public class RealInterval extends Valuation {
 		RealInterval result = (RealInterval) clone();
 		double min, max, intervalSize;
 		
-		min = _domain.getMin();
-		max = _domain.getMax();
+		min = ((NumericRealDomain) _domain).getMin();
+		max = ((NumericRealDomain) _domain).getMax();
 		intervalSize = max - min;
 		
 		max = ((double) (_max - min)) / intervalSize;
 		min = ((double) (_min - min)) / intervalSize;
 		
-		result._domain.setMinMax(0d, 1d);
+		((NumericRealDomain) result._domain).setMinMax(0d, 1d);
 		result.setMinMax(min, max);
 		
 		return result;
@@ -72,7 +71,7 @@ public class RealInterval extends Valuation {
 	public Valuation negateValutation() {
 		RealInterval result = (RealInterval) clone();
 		
-		double aux = _domain.getMin() + _domain.getMax();
+		double aux = ((NumericRealDomain) _domain).getMin() + ((NumericRealDomain) _domain).getMax();
 		result.setMinMax(aux - _max, aux - _min);
 		
 		return result;
