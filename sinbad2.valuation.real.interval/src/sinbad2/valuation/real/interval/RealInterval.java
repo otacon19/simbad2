@@ -26,7 +26,7 @@ public class RealInterval extends Valuation {
 		_max = 0;
 	}
 	
-	public void setMin(Long min) {
+	public void setMin(Double min) {
 		_min = min;
 	}
 	
@@ -34,7 +34,7 @@ public class RealInterval extends Valuation {
 		return _min;
 	}
 	
-	public void setMax(Long max) {
+	public void setMax(Double max) {
 		_max = max;
 	}
 	

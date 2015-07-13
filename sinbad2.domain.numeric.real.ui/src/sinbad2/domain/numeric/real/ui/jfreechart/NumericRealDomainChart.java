@@ -2,10 +2,12 @@ package sinbad2.domain.numeric.real.ui.jfreechart;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.util.LinkedList;
 
 import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
@@ -24,6 +26,7 @@ import sinbad2.domain.ui.jfreechart.DomainChart;
 public class NumericRealDomainChart extends DomainChart {
 	private NumericRealDomain _domain;
 	private ValueMarker _numMarker; 
+	private IntervalMarker _intervalMarker; 
 
 	public NumericRealDomainChart() {
 		super();
@@ -31,6 +34,7 @@ public class NumericRealDomainChart extends DomainChart {
 		_chart = null;
 		_chartComposite = null;
 		_numMarker = null;
+		_intervalMarker = null;
 	}
 	
 	@Override
@@ -73,15 +77,26 @@ public class NumericRealDomainChart extends DomainChart {
 
 	@Override
 	public void setSelection(Object selection) {
-		
+
 		if(_numMarker != null) {
 			_chart.getXYPlot().removeRangeMarker(_numMarker);
 		}
 		
-		_numMarker = new ValueMarker((Integer) selection);
-		_numMarker.setPaint(Color.RED);
-		_numMarker.setStroke(new BasicStroke(4));
-		_chart.getXYPlot().addRangeMarker(_numMarker);
+		if(_intervalMarker != null) {
+			_chart.getXYPlot().removeRangeMarker(_intervalMarker);
+		}
+		
+		if(selection instanceof LinkedList<?>) {
+			_intervalMarker = new IntervalMarker((Double)((LinkedList<?>) selection).getFirst(), (Double)((LinkedList<?>) selection).getLast());
+			_intervalMarker.setAlpha(0.5f);
+			_intervalMarker.setPaint(Color.RED);
+			_chart.getXYPlot().addRangeMarker(_intervalMarker);
+		} else {	
+			_numMarker = new ValueMarker((Double) selection);
+			_numMarker.setPaint(Color.RED);
+			_numMarker.setStroke(new BasicStroke(4));
+			_chart.getXYPlot().addRangeMarker(_numMarker);
+		}
 		
 	}
 

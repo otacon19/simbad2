@@ -32,24 +32,22 @@ import sinbad2.valuation.ui.valuationpanel.listener.ValuationPanelEvent;
 public abstract class ValuationPanel {
 
 	protected ValuationsManager _valuationsManager;
-	
-	@SuppressWarnings("unused")
-	private Composite _parent;
-	private Composite _container;
-
 	protected Composite _valuationPart;
-
-	private Composite _domainPart;
-	private DomainChart _chart;
-
-	private Composite _buttonsPart;
+	
 	protected Button _removeButton;
 	protected Button _valuateButton;
 
 	protected Valuation _valuation;
 	protected Domain _domain;
+	
+	private Composite _container;
+	private Composite _buttonsPart;
+	private Composite _domainPart;
+	
+	private DomainChart _chart;
 
 	private List<IValuationPanelListener> _listeners;
+	
 
 	public ValuationPanel() {
 		_chart = null;
@@ -61,7 +59,6 @@ public abstract class ValuationPanel {
 	public void initialize(Composite parent, Domain domain, Valuation valuation) {
 		_container = new Composite(parent, SWT.NONE);
 		
-		_parent = parent;
 		GridLayout layout = new GridLayout(19, true);
 		layout.horizontalSpacing = 0;
 		layout.marginBottom = 0;

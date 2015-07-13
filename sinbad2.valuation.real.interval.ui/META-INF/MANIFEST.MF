@@ -5,4 +5,5 @@ Bundle-SymbolicName: sinbad2.valuation.real.interval.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.valuation.ui;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.valuation.real.interval;bundle-version="1.0.0";visibility:=reexport
+ sinbad2.valuation.real.interval;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.domain.numeric.real.ui;bundle-version="1.0.0";visibility:=reexport

@@ -566,7 +566,7 @@ public class ElementValuationsView extends ViewPart implements ISelectionListene
 				}
 				break;
 			case NEW_VALUATION:
-				NewValuationOperation nvo = new NewValuationOperation(_valuationSet, _selectedKey.getExpert(),_selectedKey.getAlternative(), _selectedKey.getCriterion(),
+				NewValuationOperation nvo = new NewValuationOperation(_valuationSet, _selectedKey.getExpert(), _selectedKey.getAlternative(), _selectedKey.getCriterion(),
 						newValuation);
 	
 				nvo.addContext(IOperationHistory.GLOBAL_UNDO_CONTEXT);

@@ -1,4 +1,4 @@
-package sinbad2.valuation.integer.interval.ui;
+package sinbad2.valuation.real.interval.ui;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,19 +13,19 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 
-import sinbad2.domain.numeric.integer.NumericIntegerDomain;
+import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.integer.interval.IntegerInterval;
+import sinbad2.valuation.real.interval.RealInterval;
 import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
 
-public class ValuationPanelIntegerInterval extends ValuationPanel  {
+public class ValuationPanelRealInterval extends ValuationPanel {
 	
 	private Spinner _valueSpinnerMin;
 	private Spinner _valueSpinnerMax;
 	private Label _intervalLowerLabel;
 	private Label _intervalUpperLabel;
-	private int _valueMax;
-	private int _valueMin;
+	private double _valueMax;
+	private double _valueMin;
 
 	protected void createControls() {
 		_valuationPart.setLayout(new GridLayout(5, true));
@@ -50,19 +50,21 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 		_valueSpinnerMax.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationPart, SWT.NONE);
 		
-		_valueMin = ((NumericIntegerDomain) _domain).getMin();
-		_valueMax = ((NumericIntegerDomain) _domain).getMax();
-		int value = (_valueMax / 2);
+		_valueMin = ((NumericRealDomain) _domain).getMin();
+		_valueMax = ((NumericRealDomain) _domain).getMax();
+		int value = ((int)_valueMax / 2);
 		
-		_valueSpinnerMin.setMinimum((int) _valueMin);
-		_valueSpinnerMin.setMaximum(value);
-		_valueSpinnerMax.setMinimum(value);
-		_valueSpinnerMax.setMaximum((int) _valueMax);
+		_valueSpinnerMin.setDigits(2);
+		_valueSpinnerMin.setMinimum((int) (_valueMin * 100d));
+		_valueSpinnerMin.setMaximum((int) (value * 100d));
+		_valueSpinnerMax.setDigits(2);
+		_valueSpinnerMax.setMinimum((int) (value * 100d));
+		_valueSpinnerMax.setMaximum((int) (_valueMax * 100d));
 
 		_valueSpinnerMin.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				_valueMin = _valueSpinnerMin.getSelection();
+				_valueMin = _valueSpinnerMin.getSelection() / 100d;
 				selectionChange();
 			}
 		});
@@ -70,7 +72,7 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 		_valueSpinnerMax.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				_valueMax = _valueSpinnerMax.getSelection();
+				_valueMax = _valueSpinnerMax.getSelection() / 100d;
 				selectionChange();
 			}
 		});	
@@ -91,7 +93,7 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 		if(_valuation == null) {
 			return true;
 		} else {
-			if((((IntegerInterval) _valuation).getMin() !=_valueMin) || ((int) ((IntegerInterval) _valuation).getMax() !=_valueMax)) {
+			if(((double) ((RealInterval) _valuation).getMin() != _valueMin) || ((double) ((RealInterval) _valuation).getMax() != _valueMax)) {
 				return true;
 			} else {
 				return false;
@@ -102,17 +104,17 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 	@Override
 	public Valuation getNewValuation() {
 		
-		IntegerInterval result = null;
+		RealInterval result = null;
 		
 		if (_valuation == null) {
-			result = (IntegerInterval) _valuationsManager.copyValuation(IntegerInterval.ID);
+			result = (RealInterval) _valuationsManager.copyValuation(RealInterval.ID);
 			result.setDomain(_domain);
 		} else {
-			result = (IntegerInterval) _valuation.clone();
+			result = (RealInterval) _valuation.clone();
 		}
 		
-		result.setMin((long) _valueMin);
-		result.setMax((long) _valueMax);
+		result.setMin((double) _valueMin);
+		result.setMax((double) _valueMax);
 		
 		return result;
 	}
@@ -120,13 +122,13 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 	protected void initControls() {
 		
 		if(_valuation != null) {
-			_valueMin = (int) ((IntegerInterval) _valuation).getMin();
-			_valueMax = (int) ((IntegerInterval) _valuation).getMax();
-			_valueSpinnerMin.setSelection(_valueMin);
-			_valueSpinnerMax.setSelection(_valueMax);
+			_valueMin = ((RealInterval) _valuation).getMin();
+			_valueMax = ((RealInterval) _valuation).getMax();
+			_valueSpinnerMin.setSelection((int) (_valueMin * 100d));
+			_valueSpinnerMax.setSelection((int) (_valueMax * 100d));
 		} else {
-			_valueSpinnerMin.setSelection(_valueMax / 2);
-			_valueSpinnerMax.setSelection(_valueMax / 2);
+			_valueSpinnerMin.setSelection((int) ((_valueMax / 2) * 100d));
+			_valueSpinnerMax.setSelection((int) ((_valueMax / 2) * 100d));
 		}
 		
 		selectionChange();
@@ -134,11 +136,12 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 	
 	@Override
 	public Object getSelection() {
-		List<Integer> minMax = new LinkedList<Integer>();
+		List<Double> minMax = new LinkedList<Double>();
 		minMax.add(_valueMin);
 		minMax.add(_valueMax);
 		
 		return minMax;
 	}
+
 
 }

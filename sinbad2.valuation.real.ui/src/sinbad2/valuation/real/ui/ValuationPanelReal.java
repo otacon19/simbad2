@@ -1,4 +1,4 @@
-package sinbad2.valuation.integer.ui;
+package sinbad2.valuation.real.ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -10,15 +10,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 
-import sinbad2.domain.numeric.integer.NumericIntegerDomain;
+import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.integer.IntegerValuation;
+import sinbad2.valuation.real.RealValuation;
 import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
 
-public class ValuationPanelInteger extends ValuationPanel {
-
-	private Spinner valueSpinner;
-	private int _value;
+public class ValuationPanelReal extends ValuationPanel  {
+	private Spinner _valueSpinner;
+	private double _value;
 
 	protected void createControls() {
 		_valuationPart.setLayout(new GridLayout(5, true));
@@ -33,30 +32,31 @@ public class ValuationPanelInteger extends ValuationPanel {
 		new Label(_valuationPart, SWT.NONE);
 		
 		new Label(_valuationPart, SWT.NONE);
-		valueSpinner = new Spinner(_valuationPart, SWT.BORDER);
-		valueSpinner.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
-		valueSpinner.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		_valueSpinner = new Spinner(_valuationPart, SWT.BORDER);
+		_valueSpinner.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
+		_valueSpinner.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationPart, SWT.NONE);
 		label = new Label(_valuationPart, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
-		int min = ((NumericIntegerDomain) _domain).getMin();
-		int max = ((NumericIntegerDomain) _domain).getMax();
+		double min = (double) ((NumericRealDomain) _domain).getMin();
+		double max = (double) ((NumericRealDomain) _domain).getMax();
 		_value = ((max + min) / 2);
 
 		if (_valuation != null) {
-			_value = (int) ((IntegerValuation) _valuation).getValue();
+			_value = (double) (((RealValuation) _valuation).getValue());
 		}
+		
+		_valueSpinner.setDigits(2);
+		_valueSpinner.setMinimum((int) (min * 100d));
+		_valueSpinner.setMaximum((int) (max * 100d));
+		_valueSpinner.setSelection((int) (_value * 100d));
 
-		valueSpinner.setMinimum((int) min);
-		valueSpinner.setMaximum((int) max);
-		valueSpinner.setSelection((int) _value);
-
-		valueSpinner.addModifyListener(new ModifyListener() {
+		_valueSpinner.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				_value = valueSpinner.getSelection();
+				_value = _valueSpinner.getSelection() / 100d;
 				selectionChange();
 			}
 		});
@@ -73,23 +73,23 @@ public class ValuationPanelInteger extends ValuationPanel {
 		if(_valuation == null) {
 			return true;
 		} else {
-			return ((int) ((IntegerValuation) _valuation).getValue() != _value);
+			return ((int) ((RealValuation) _valuation).getValue() != _value);
 		}
 	}
 
 	@Override
 	public Valuation getNewValuation() {
 		
-		IntegerValuation result = null;
+		RealValuation result = null;
 		
 		if (_valuation == null) {
-			result = (IntegerValuation) _valuationsManager.copyValuation(IntegerValuation.ID);
+			result = (RealValuation) _valuationsManager.copyValuation(RealValuation.ID);
 			result.setDomain(_domain);
 		} else {
-			result = (IntegerValuation) _valuation.clone();
+			result = (RealValuation) _valuation.clone();
 		}
 		
-		result.setValue((long) _value);
+		result.setValue((double) _value);
 		
 		return result;
 	}
@@ -97,9 +97,9 @@ public class ValuationPanelInteger extends ValuationPanel {
 	protected void initControls() {
 		
 		if(_valuation != null) {
-			_value = (int) ((IntegerValuation) _valuation).getValue();
+			_value = (Double) ((RealValuation) _valuation).getValue();
 		}
-		valueSpinner.setSelection((int) _value);
+		_valueSpinner.setSelection((int) (_value * 100d));
 		selectionChange();
 	}
 
