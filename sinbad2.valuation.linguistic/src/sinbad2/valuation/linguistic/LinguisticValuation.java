@@ -69,7 +69,7 @@ public class LinguisticValuation extends Valuation {
 	
 	@Override
 	public String changeFormatValuationToString() {
-		return _label.toString();
+		return _label.getName();
 	}
 	
 	//TODO unification

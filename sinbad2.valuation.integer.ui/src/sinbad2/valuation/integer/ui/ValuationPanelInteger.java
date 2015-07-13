@@ -17,7 +17,7 @@ import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
 
 public class ValuationPanelInteger extends ValuationPanel {
 
-	private Spinner valueSpinner;
+	private Spinner _valueSpinner;
 	private int _value;
 
 	protected void createControls() {
@@ -33,9 +33,9 @@ public class ValuationPanelInteger extends ValuationPanel {
 		new Label(_valuationPart, SWT.NONE);
 		
 		new Label(_valuationPart, SWT.NONE);
-		valueSpinner = new Spinner(_valuationPart, SWT.BORDER);
-		valueSpinner.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
-		valueSpinner.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		_valueSpinner = new Spinner(_valuationPart, SWT.BORDER);
+		_valueSpinner.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
+		_valueSpinner.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationPart, SWT.NONE);
 		label = new Label(_valuationPart, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
@@ -49,14 +49,14 @@ public class ValuationPanelInteger extends ValuationPanel {
 			_value = (int) ((IntegerValuation) _valuation).getValue();
 		}
 
-		valueSpinner.setMinimum((int) min);
-		valueSpinner.setMaximum((int) max);
-		valueSpinner.setSelection((int) _value);
+		_valueSpinner.setMinimum((int) min);
+		_valueSpinner.setMaximum((int) max);
+		_valueSpinner.setSelection((int) _value);
 
-		valueSpinner.addModifyListener(new ModifyListener() {
+		_valueSpinner.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				_value = valueSpinner.getSelection();
+				_value = _valueSpinner.getSelection();
 				selectionChange();
 			}
 		});
@@ -99,7 +99,7 @@ public class ValuationPanelInteger extends ValuationPanel {
 		if(_valuation != null) {
 			_value = (int) ((IntegerValuation) _valuation).getValue();
 		}
-		valueSpinner.setSelection((int) _value);
+		_valueSpinner.setSelection((int) _value);
 		selectionChange();
 	}
 
