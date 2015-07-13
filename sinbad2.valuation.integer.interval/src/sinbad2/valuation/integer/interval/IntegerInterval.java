@@ -79,7 +79,7 @@ public class IntegerInterval extends Valuation {
 	
 	@Override
 	public String toString() {
-		return ("Integer interval[" + _min + "," + _max + "] in" + _domain.toString()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return ("Integer interval[" + _min + "," + _max + "] in " + _domain.toString()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	@Override

@@ -35,37 +35,33 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 		_valuationPart.setLayout(new GridLayout(5, true));
 
 		_intervalLowerLabel = new Label(_valuationPart, SWT.NONE);
-		GridData gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 3, 1);
+		GridData gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 5, 1);
 		_intervalLowerLabel.setLayoutData(gd);
 		_intervalLowerLabel.setText("Lower limit");
 		_intervalLowerLabel.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
-		new Label(_valuationPart, SWT.NONE);
 		_valueSpinnerMin = new Spinner(_valuationPart, SWT.BORDER);
-		_valueSpinnerMin.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
+		_valueSpinnerMin.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 5, 1));
 		_valueSpinnerMin.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		_intervalUpperLabel = new Label(_valuationPart, SWT.NONE);
 		_intervalUpperLabel.setLayoutData(gd);
 		_intervalUpperLabel.setText("Upper limit");
 		_intervalUpperLabel.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
-		new Label(_valuationPart, SWT.NONE);
 		
 		_valueSpinnerMax = new Spinner(_valuationPart, SWT.BORDER);
-		_valueSpinnerMax.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
+		_valueSpinnerMax.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 5, 1));
 		_valueSpinnerMax.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationPart, SWT.NONE);
 		
 		_valueMin = ((NumericIntegerDomain) _domain).getMin();
 		_valueMax = ((NumericIntegerDomain) _domain).getMax();
-		int value = ((_valueMax + _valueMin) / 2);
+		int value = (_valueMax / 2);
 		
 		_valueSpinnerMin.setMinimum((int) _valueMin);
 		_valueSpinnerMin.setMaximum(value);
-		_valueSpinnerMin.setSelection((int) value);
 		_valueSpinnerMax.setMinimum(value);
 		_valueSpinnerMax.setMaximum((int) _valueMax);
-		_valueSpinnerMax.setSelection((int) value);
 
 		_valueSpinnerMin.addModifyListener(new ModifyListener() {
 			@Override
@@ -84,8 +80,7 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 		});
 		
 		_applicableCheckBox = new Button(_valuationPart, SWT.CHECK);
-		gd = new GridData(SWT.CENTER, SWT.CENTER, false, true, 2, 1);
-		_applicableCheckBox.setLayoutData(gd);
+		_applicableCheckBox.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 5, 1));
 		_applicableCheckBox.setText("Not applicable");
 		
 		_applicableCheckBox.addSelectionListener(new SelectionAdapter() {
@@ -98,6 +93,8 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 				_valueSpinnerMin.setEnabled(!selection);
 				_valueSpinnerMax.setEnabled(!selection);	
 			}
+			
+			
 		});
 		
 
@@ -148,9 +145,13 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 		if(_valuation != null) {
 			_valueMin = (int) ((IntegerInterval) _valuation).getMin();
 			_valueMax = (int) ((IntegerInterval) _valuation).getMax();
+			_valueSpinnerMin.setSelection(_valueMin);
+			_valueSpinnerMax.setSelection(_valueMax);
+		} else {
+			_valueSpinnerMin.setSelection(_valueMax / 2);
+			_valueSpinnerMax.setSelection(_valueMax / 2);
 		}
-		_valueSpinnerMin.setSelection((int) _valueMin);
-		_valueSpinnerMax.setSelection((int) _valueMax);
+		
 		selectionChange();
 	}
 	

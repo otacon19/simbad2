@@ -74,9 +74,7 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 
 	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 
-	/**
-	 * Initialize the base implementation.
-	 */
+	
 	public ElementAssignmentsTableContentProvider(
 			ElementAssignmentsTable table, ProblemElement element) {
 		super(table);
