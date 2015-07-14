@@ -1,7 +1,9 @@
 package sinbad2.valutation.hesitant.ui;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -46,6 +48,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 	private ModifyListener _hesitantEvaluationCombo2ModifyListener;
 	
 	private List<Integer> _selectIndexes;
+	private Map<String, List<Integer>> _binaryIndexes;
 	
 	protected void createControls() {		
 		GridLayout layout = new GridLayout(4, false);
@@ -83,6 +86,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 		_binaryRelationshipButton.setText("Binary");
 		
 		_selectIndexes = new LinkedList<Integer>();
+		_binaryIndexes = new HashMap<String, List<Integer>>();
 		
 		initControls();
 		
@@ -98,6 +102,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 				}
 				
 				checkHesitantValues(false, false, false, true, false);
+				selectionChange();
 			}
 		});
 		
@@ -105,6 +110,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				
 				if(!_hesitantRelationshipComposite.getEnabled()) {
 					_hesitantRelationshipComposite.setEnabled(true);
 					_unaryRelationshipButton.setEnabled(true);
@@ -114,7 +120,9 @@ public class ValuationPanelHesitant extends ValuationPanel {
 					} else {
 						checkHesitantValues(false, true, false, true, false);
 					}
-				};				
+				}
+				
+				selectionChange();
 			}
 		});
 		
@@ -130,6 +138,8 @@ public class ValuationPanelHesitant extends ValuationPanel {
 						checkHesitantValues(false, false, false, true, false);
 					}
 				}
+				
+				selectionChange();
 			}
 		});
 		
@@ -145,12 +155,18 @@ public class ValuationPanelHesitant extends ValuationPanel {
 						checkHesitantValues(false, false, false, true, false);
 					}
 				}
+				selectionChange();
 			}
 		});
 	}
 
 	public Object getSelection() {
-		return _hesitantEvaluationCombo1.getSelectionIndex();
+		
+		if(!(_selectIndexes.size() > 0)) {
+			return _hesitantEvaluationCombo2.getSelectionIndex();
+		} else {
+			return _selectIndexes;
+		}
 	}
 	
 	public boolean differentValue() {
@@ -174,7 +190,11 @@ public class ValuationPanelHesitant extends ValuationPanel {
 			result = (HesitantValuation) _valuation.clone();
 		}
 		
-		result.setLabel(_label);
+		if(_binaryIndexes.containsKey("Binary")) {
+			result.setBinaryRelation(_binaryIndexes.get("Binary").get(0), _binaryIndexes.get("Binary").get(1));
+		} else {
+			result.setLabel(_label);
+		}
 		
 		return result;
 	}
@@ -186,6 +206,9 @@ public class ValuationPanelHesitant extends ValuationPanel {
 	}
 	
 	private void checkHesitantValues(boolean between, boolean hesitantCombo1, boolean and, boolean hesitantCombo2, boolean first) {
+		
+		_binaryIndexes.clear();
+		_selectIndexes.clear();
 		
 		int fields = 0;
 		
@@ -229,6 +252,13 @@ public class ValuationPanelHesitant extends ValuationPanel {
 			}
 			_hesitantEvaluationCombo1 = new Combo(_hesitantValueComposite, SWT.BORDER);
 			_hesitantEvaluationCombo1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			_hesitantEvaluationCombo1.addSelectionListener(new SelectionAdapter() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					selectionChange();
+				}
+			});
 		}
 		
 		if(and) {
@@ -246,6 +276,13 @@ public class ValuationPanelHesitant extends ValuationPanel {
 			}
 			_hesitantEvaluationCombo2 = new Combo(_hesitantValueComposite, SWT.BORDER);
 			_hesitantEvaluationCombo2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			_hesitantEvaluationCombo2.addSelectionListener(new SelectionAdapter() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					selectionChange();
+				}
+			});
 		}
 		
 		String[] items = new String[((FuzzySet) _domain).getLabelSet().getCardinality()];
@@ -389,6 +426,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 								}
 								_selectIndexes.add(pos1);
 								_selectIndexes.add(pos2);
+								_binaryIndexes.put("Binary", _selectIndexes);
 								
 								_hesitantEvaluationCombo1.removeModifyListener(_hesitantEvaluationCombo1ModifyListener);
 								_hesitantEvaluationCombo2.removeModifyListener(_hesitantEvaluationCombo2ModifyListener);
@@ -494,6 +532,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 						
 						_selectIndexes.add(pos1);
 						_selectIndexes.add(pos2);
+						_binaryIndexes.put("Binary", _selectIndexes);
 						
 						_hesitantEvaluationCombo1.removeModifyListener(_hesitantEvaluationCombo1ModifyListener);
 						_hesitantEvaluationCombo2.removeModifyListener(_hesitantEvaluationCombo2ModifyListener);

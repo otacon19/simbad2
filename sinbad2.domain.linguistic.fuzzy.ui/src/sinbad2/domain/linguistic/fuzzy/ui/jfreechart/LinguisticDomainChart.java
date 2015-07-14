@@ -2,6 +2,7 @@ package sinbad2.domain.linguistic.fuzzy.ui.jfreechart;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.util.LinkedList;
 
 import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.ChartFactory;
@@ -55,16 +56,41 @@ public class LinguisticDomainChart extends DomainChart {
 		setBasicRenderer(_chart.getXYPlot());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setSelection(Object selection) {
 		XYPlot xyplot = (XYPlot) _chart.getPlot();
 		XYItemRenderer renderer = xyplot.getRenderer(0);
 		
-		for(int i = 0; i < xyplot.getSeriesCount(); ++i) {
-			if( i != (Integer) selection) {
-				renderer.setSeriesStroke(i, new BasicStroke(1));
+		if(!(selection instanceof LinkedList<?>)) {
+		
+			for(int i = 0; i < xyplot.getSeriesCount(); ++i) {
+				if( i != (Integer) selection) {
+					renderer.setSeriesStroke(i, new BasicStroke(1));
+				} else {
+					renderer.setSeriesStroke(i, new BasicStroke(3));
+				}
+			}
+		} else {
+			if(((LinkedList<Integer>) selection).size() > 1) { 
+				int lower = ((LinkedList<Integer>) selection).get(0);
+				int upper = ((LinkedList<Integer>) selection).get(1);
+				for(int i = 0; i < xyplot.getSeriesCount(); ++i) {
+					if ((lower <= i) && (i <= upper)) {
+						renderer.setSeriesStroke(i, new BasicStroke(3));
+					} else {
+						renderer.setSeriesStroke(i, new BasicStroke(1));
+					}	
+				}
 			} else {
-				renderer.setSeriesStroke(i, new BasicStroke(3));
+				int value = ((LinkedList<Integer>) selection).get(0);
+				for(int i = 0; i < xyplot.getSeriesCount(); ++i) {
+					if( i != value) {
+						renderer.setSeriesStroke(i, new BasicStroke(1));
+					} else {
+						renderer.setSeriesStroke(i, new BasicStroke(3));
+					}
+				}
 			}
 		}
 		
