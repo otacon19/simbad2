@@ -162,11 +162,11 @@ public class ValuationPanelHesitant extends ValuationPanel {
 
 	public Object getSelection() {
 		
-		if(!(_selectIndexes.size() > 0)) {
-			return _hesitantEvaluationCombo2.getSelectionIndex();
-		} else {
-			return _selectIndexes;
-		}
+		if(_selectIndexes.size() == 0) {
+			_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
+		}	
+		
+		return _selectIndexes;
 	}
 	
 	public boolean differentValue() {
@@ -215,8 +215,10 @@ public class ValuationPanelHesitant extends ValuationPanel {
 	
 	private void checkHesitantValues(boolean between, boolean hesitantCombo1, boolean and, boolean hesitantCombo2, boolean first) {
 		
-		_binaryIndexes.clear();
-		_selectIndexes.clear();
+		if(_valuation == null) {
+			_selectIndexes.clear();
+			_binaryIndexes.clear();
+		}
 		
 		int fields = 0;
 		
@@ -407,6 +409,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 						boolean binary = false;
 						
 						_selectIndexes.clear();
+						_binaryIndexes.clear();
 						
 						if(_andLabel != null) {
 							if(!_andLabel.isDisposed()) {
@@ -483,6 +486,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 						}
 						
 						_selectIndexes.clear();
+						_binaryIndexes.clear();
 						
 						if(!binary) {
 							String value = _hesitantEvaluationCombo1.getItems()[_hesitantEvaluationCombo1.getSelectionIndex()];
@@ -513,6 +517,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 			public void modifyText(ModifyEvent e) {
 				
 				_selectIndexes.clear();
+				_binaryIndexes.clear();
 				
 				boolean binary = false;
 				if(_andLabel != null) {
@@ -596,6 +601,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 							unary = true;
 							
 							_selectIndexes.clear();
+							_binaryIndexes.clear();
 							
 							String value = _hesitantEvaluationCombo1.getItems()[_hesitantEvaluationCombo1.getSelectionIndex()];
 							if (EUnaryRelationType.GreaterThan.toString().equals(value)) {
@@ -616,6 +622,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 					
 					if (!unary) {
 						_selectIndexes.clear();
+						_binaryIndexes.clear();
 						_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
 						_label = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getItem(_selectIndexes.get(0)));
 					}
@@ -673,8 +680,6 @@ public class ValuationPanelHesitant extends ValuationPanel {
 	
 	private void modifyHesitantSelection() {
 		
-		_selectIndexes.clear();
-		
 		if((_hesitantEvaluationCombo1 != null) && (!_hesitantEvaluationCombo1.isDisposed())) {
 			if((_andLabel != null) && (!_andLabel.isDisposed())) {
 				String items1[] = _hesitantEvaluationCombo1.getItems();
@@ -699,7 +704,10 @@ public class ValuationPanelHesitant extends ValuationPanel {
 					pos2 -= i + 1;
 				}
 				_selectIndexes.add(pos1);
+				_lowerTerm = ((FuzzySet) _domain).getLabelSet().getLabel(pos1);
 				_selectIndexes.add(pos2);
+				_upperTerm = ((FuzzySet) _domain).getLabelSet().getLabel(pos2);
+				_binaryIndexes.put("Binary", _selectIndexes);
 			} else {
 				String value = _hesitantEvaluationCombo1.getItems()[_hesitantEvaluationCombo1.getSelectionIndex()];
 				if (EUnaryRelationType.GreaterThan.toString().equals(value)) {

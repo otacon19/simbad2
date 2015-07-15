@@ -239,7 +239,6 @@ public class HesitantValuation extends Valuation {
 	
 	@Override
 	public String toString() {
-		
 		if(isPrimary()) {
 			return (_label + " in " + _domain.toString());
 		} else if(isUnary()) {
@@ -308,7 +307,20 @@ public class HesitantValuation extends Valuation {
 
 	@Override
 	public String changeFormatValuationToString() {
-		return _label.toString();
+		
+		if(isPrimary()) {
+			return _label.getName();
+		} else {
+			if(isUnary()) {
+				String aux = getUnaryRelation().getRelationType();
+				aux = aux.toLowerCase();
+				aux = aux.substring(0, 1).toUpperCase() + aux.substring(1);
+				return aux + " " + getTerm().getName();
+			} else {
+				return "Between" + " " + getLowerTerm().getName() + " " + "and" + " " + getUpperTerm().getName();
+			}
+		}
+		
 	}
 	
 	@Override
@@ -415,5 +427,5 @@ public class HesitantValuation extends Valuation {
 		_lowerTerm = null;
 		_upperTerm = null;
 	}
-
+	
 }
