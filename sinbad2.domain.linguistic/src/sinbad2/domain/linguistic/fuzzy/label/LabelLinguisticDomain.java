@@ -45,7 +45,7 @@ public class LabelLinguisticDomain implements Cloneable, Comparable<LabelLinguis
 	
 	@Override
 	public String toString() {
-		return(_name + "::" + _semantic.toString()); //$NON-NLS-1$
+		return _name;
 	}
 	
 	@Override
