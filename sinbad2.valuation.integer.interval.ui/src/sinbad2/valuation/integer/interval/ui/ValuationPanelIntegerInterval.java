@@ -28,41 +28,53 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 	private int _valueMin;
 
 	protected void createControls() {
-		_valuationPart.setLayout(new GridLayout(5, true));
+		_valuationPart.setLayout(new GridLayout(1, true));
 
 		_intervalLowerLabel = new Label(_valuationPart, SWT.NONE);
-		GridData gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 5, 1);
-		_intervalLowerLabel.setLayoutData(gd);
+		_intervalLowerLabel.setLayoutData(new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 1, 1));
 		_intervalLowerLabel.setText("Lower limit");
-		_intervalLowerLabel.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
+		_intervalLowerLabel.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_valueSpinnerMin = new Spinner(_valuationPart, SWT.BORDER);
-		_valueSpinnerMin.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 5, 1));
+		_valueSpinnerMin.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
 		_valueSpinnerMin.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		_intervalUpperLabel = new Label(_valuationPart, SWT.NONE);
-		_intervalUpperLabel.setLayoutData(gd);
+		_intervalUpperLabel.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
 		_intervalUpperLabel.setText("Upper limit");
 		_intervalUpperLabel.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		_valueSpinnerMax = new Spinner(_valuationPart, SWT.BORDER);
-		_valueSpinnerMax.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 5, 1));
+		_valueSpinnerMax.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
 		_valueSpinnerMax.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationPart, SWT.NONE);
 		
-		_valueMin = ((NumericIntegerDomain) _domain).getMin();
-		_valueMax = ((NumericIntegerDomain) _domain).getMax();
-		int value = (_valueMax / 2);
+		if(((NumericIntegerDomain) _domain).getInRange()) {
+			_valueMin = ((NumericIntegerDomain) _domain).getMin();
+			_valueMax = ((NumericIntegerDomain) _domain).getMax();
+			
+			int value = (_valueMax / 2);
+			
+			_valueSpinnerMin.setMinimum((int) _valueMin);
+			_valueSpinnerMin.setMaximum(value);
+			_valueSpinnerMax.setMinimum(value);
+			_valueSpinnerMax.setMaximum((int) _valueMax);
+		} else {
+			_valueMin = 0;
+			_valueMax = 0;
+			
+			_valueSpinnerMin.setMinimum(Integer.MIN_VALUE);
+			_valueSpinnerMin.setMaximum(Integer.MAX_VALUE);
+			_valueSpinnerMax.setMinimum(Integer.MIN_VALUE);
+			_valueSpinnerMax.setMaximum(Integer.MAX_VALUE);
+		}
 		
-		_valueSpinnerMin.setMinimum((int) _valueMin);
-		_valueSpinnerMin.setMaximum(value);
-		_valueSpinnerMax.setMinimum(value);
-		_valueSpinnerMax.setMaximum((int) _valueMax);
-
 		_valueSpinnerMin.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				_valueMin = _valueSpinnerMin.getSelection();
+				_valueSpinnerMin.setMaximum(_valueMax);
+				_valueSpinnerMax.setMinimum(_valueMin);
 				selectionChange();
 			}
 		});
@@ -71,6 +83,8 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				_valueMax = _valueSpinnerMax.getSelection();
+				_valueSpinnerMax.setMinimum(_valueMin);
+				_valueSpinnerMin.setMaximum(_valueMax);
 				selectionChange();
 			}
 		});	
