@@ -1,9 +1,7 @@
 package sinbad2.valutation.hesitant.ui;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -35,7 +33,10 @@ public class ValuationPanelHesitant extends ValuationPanel {
 	
 	private LabelLinguisticDomain _lowerTerm;
 	private LabelLinguisticDomain _upperTerm;
+	private LabelLinguisticDomain _term;
 	private LabelLinguisticDomain _label;
+	
+	private EUnaryRelationType _unaryRelation;
 	
 	private Combo _hesitantEvaluationCombo1;
 	private Combo _hesitantEvaluationCombo2;
@@ -50,7 +51,9 @@ public class ValuationPanelHesitant extends ValuationPanel {
 	private ModifyListener _hesitantEvaluationCombo2ModifyListener;
 	
 	private List<Integer> _selectIndexes;
-	private Map<String, List<Integer>> _binaryIndexes;
+	private Pair<EUnaryRelationType, LabelLinguisticDomain> _unaryIndexes; 
+	private List<Integer> _binaryIndexes;
+	
 	
 	protected void createControls() {		
 		GridLayout layout = new GridLayout(4, false);
@@ -72,7 +75,6 @@ public class ValuationPanelHesitant extends ValuationPanel {
 		
 		_primaryButton = new Button(hesitantButtonsComposite, SWT.RADIO);
 		_primaryButton.setText("Primary");
-		_primaryButton.setSelection(true);
 		
 		_compositeButton = new Button(hesitantButtonsComposite, SWT.RADIO);
 		_compositeButton.setText("Composite");
@@ -88,7 +90,8 @@ public class ValuationPanelHesitant extends ValuationPanel {
 		_binaryRelationshipButton.setText("Binary");
 		
 		_selectIndexes = new LinkedList<Integer>();
-		_binaryIndexes = new HashMap<String, List<Integer>>();
+		_binaryIndexes = new LinkedList<Integer>();
+		_unaryIndexes = new Pair<EUnaryRelationType, LabelLinguisticDomain>();
 		
 		initControls();
 		
@@ -163,8 +166,12 @@ public class ValuationPanelHesitant extends ValuationPanel {
 	public Object getSelection() {
 		
 		if(_selectIndexes.size() == 0) {
-			_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
-		}	
+			if( _valuation != null) {
+				modifyHesitantSelection();
+			} else { 
+				_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
+			}
+		}
 		
 		return _selectIndexes;
 	}
@@ -174,12 +181,32 @@ public class ValuationPanelHesitant extends ValuationPanel {
 		if(_valuation == null) {
 			return true;
 		} else {
-			if(_lowerTerm != null || _upperTerm != null) {
+			EUnaryRelationType unaryRelation = ((HesitantValuation) _valuation).getUnaryRelation();
+			LabelLinguisticDomain term =  ((HesitantValuation) _valuation).getTerm();
+	
+			if(unaryRelation != null && term != null) {
+				if(_unaryRelation == null && _term == null) {
+					return true;
+				} else {
+					return (_unaryRelation.toString().equals(unaryRelation.toString()) && (_term.getName().equals(term.getName())));
+				}
+			} else {
 				LabelLinguisticDomain lower = ((HesitantValuation) _valuation).getLowerTerm();
 				LabelLinguisticDomain upper = ((HesitantValuation) _valuation).getUpperTerm();
-				return ((_lowerTerm == lower) && (_upperTerm == upper));
-			} else {
-				return ((HesitantValuation) _valuation).getLabel().getName().equals(_label);
+				
+				if(lower != null && upper != null) {
+					if(_lowerTerm == null && _upperTerm == null) {
+						return true;
+					} else {
+						return !(lower.getName().equals(_lowerTerm.getName())) && (upper.getName().equals(_upperTerm.getName()));
+					}
+				} else {
+					if(_label == null) {
+						return true;
+					} else {
+						return !((HesitantValuation) _valuation).getLabel().getName().equals(_label.getName());
+					}
+				}
 			}
 		}
 	}
@@ -197,11 +224,15 @@ public class ValuationPanelHesitant extends ValuationPanel {
 			result = (HesitantValuation) _valuation.clone();
 		}
 		
-		if(_binaryIndexes.containsKey("Binary")) {
-			result.setBinaryRelation(_binaryIndexes.get("Binary").get(0), _binaryIndexes.get("Binary").get(1));
+		if(!_unaryIndexes.isEmpty()) {
+			result.setUnaryRelation(_unaryIndexes.getLeft(), _unaryIndexes.getRight());
 		} else {
-			_label = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getItem(_hesitantEvaluationCombo2.getSelectionIndex()));
-			result.setLabel(_label);
+			if(!_binaryIndexes.isEmpty()) {
+				result.setBinaryRelation(_binaryIndexes.get(0), _binaryIndexes.get(1));
+			} else {
+				_label = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getItem(_hesitantEvaluationCombo2.getSelectionIndex()));
+				result.setLabel(_label);
+			}
 		}
 		
 		return result;
@@ -218,6 +249,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 		if(_valuation == null) {
 			_selectIndexes.clear();
 			_binaryIndexes.clear();
+			_unaryIndexes.clear();
 		}
 		
 		int fields = 0;
@@ -409,7 +441,6 @@ public class ValuationPanelHesitant extends ValuationPanel {
 						boolean binary = false;
 						
 						_selectIndexes.clear();
-						_binaryIndexes.clear();
 						
 						if(_andLabel != null) {
 							if(!_andLabel.isDisposed()) {
@@ -437,9 +468,11 @@ public class ValuationPanelHesitant extends ValuationPanel {
 								}
 								_selectIndexes.add(pos1);
 								_selectIndexes.add(pos2);
+								_binaryIndexes.add(pos1);
+								_binaryIndexes.add(pos2);
 								_lowerTerm = ((FuzzySet) _domain).getLabelSet().getLabel(pos1);
 								_upperTerm = ((FuzzySet) _domain).getLabelSet().getLabel(pos2);
-								_binaryIndexes.put("Binary", _selectIndexes);
+								
 								
 								_hesitantEvaluationCombo1.removeModifyListener(_hesitantEvaluationCombo1ModifyListener);
 								_hesitantEvaluationCombo2.removeModifyListener(_hesitantEvaluationCombo2ModifyListener);
@@ -485,23 +518,32 @@ public class ValuationPanelHesitant extends ValuationPanel {
 							}
 						}
 						
-						_selectIndexes.clear();
-						_binaryIndexes.clear();
-						
 						if(!binary) {
 							String value = _hesitantEvaluationCombo1.getItems()[_hesitantEvaluationCombo1.getSelectionIndex()];
 							if (EUnaryRelationType.GreaterThan.toString().equals(value)) {
 								_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex() + 1);
 								_selectIndexes.add(((FuzzySet) _domain).getLabelSet().getCardinality() - 1);
+								_unaryRelation = EUnaryRelationType.GreaterThan;
+								_term = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getSelectionIndex());
+								_unaryIndexes.add(_unaryRelation, _term);
 							} else if(EUnaryRelationType.LowerThan.toString().equals(value)) {
 								_selectIndexes.add(0);
 								_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex() - 1);
+								_unaryRelation = EUnaryRelationType.LowerThan;
+								_term = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getSelectionIndex());
+								_unaryIndexes.add(_unaryRelation, _term);
 							} else if(EUnaryRelationType.AtLeast.toString().equals(value)) {
 								_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
 								_selectIndexes.add(((FuzzySet) _domain).getLabelSet().getCardinality() - 1);
+								_unaryRelation = EUnaryRelationType.AtLeast;
+								_term = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getSelectionIndex());
+								_unaryIndexes.add(_unaryRelation, _term);
 							} else if(EUnaryRelationType.AtMost.toString().equals(value)) {
 								_selectIndexes.add(0);
 								_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
+								_unaryRelation = EUnaryRelationType.AtMost;
+								_term = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getSelectionIndex());
+								_unaryIndexes.add(_unaryRelation, _term);
 							}
 						}	
 					}
@@ -517,7 +559,6 @@ public class ValuationPanelHesitant extends ValuationPanel {
 			public void modifyText(ModifyEvent e) {
 				
 				_selectIndexes.clear();
-				_binaryIndexes.clear();
 				
 				boolean binary = false;
 				if(_andLabel != null) {
@@ -547,9 +588,10 @@ public class ValuationPanelHesitant extends ValuationPanel {
 						
 						_selectIndexes.add(pos1);
 						_selectIndexes.add(pos2);
+						_binaryIndexes.add(pos1);
+						_binaryIndexes.add(pos2);
 						_lowerTerm = ((FuzzySet) _domain).getLabelSet().getLabel(pos1);
 						_upperTerm = ((FuzzySet) _domain).getLabelSet().getLabel(pos2);
-						_binaryIndexes.put("Binary", _selectIndexes);
 						
 						_hesitantEvaluationCombo1.removeModifyListener(_hesitantEvaluationCombo1ModifyListener);
 						_hesitantEvaluationCombo2.removeModifyListener(_hesitantEvaluationCombo2ModifyListener);
@@ -600,29 +642,36 @@ public class ValuationPanelHesitant extends ValuationPanel {
 						if (!_hesitantEvaluationCombo1.isDisposed()) {
 							unary = true;
 							
-							_selectIndexes.clear();
-							_binaryIndexes.clear();
-							
 							String value = _hesitantEvaluationCombo1.getItems()[_hesitantEvaluationCombo1.getSelectionIndex()];
 							if (EUnaryRelationType.GreaterThan.toString().equals(value)) {
 								_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex() + 1);
 								_selectIndexes.add(((FuzzySet) _domain).getLabelSet().getCardinality() - 1);
+								_unaryRelation = EUnaryRelationType.GreaterThan;
+								_term = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getSelectionIndex());
+								_unaryIndexes.add(_unaryRelation, _term);
 							} else if(EUnaryRelationType.LowerThan.toString().equals(value)) {
 								_selectIndexes.add(0);
 								_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex() - 1);
+								_unaryRelation = EUnaryRelationType.LowerThan;
+								_term = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getSelectionIndex());
+								_unaryIndexes.add(_unaryRelation, _term);
 							} else if(EUnaryRelationType.AtLeast.toString().equals(value)) {
 								_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
 								_selectIndexes.add(((FuzzySet) _domain).getLabelSet().getCardinality() - 1);
+								_unaryRelation = EUnaryRelationType.AtLeast;
+								_term = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getSelectionIndex());
+								_unaryIndexes.add(_unaryRelation, _term);
 							} else if(EUnaryRelationType.AtMost.toString().equals(value)) {
 								_selectIndexes.add(0);
 								_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
+								_unaryRelation = EUnaryRelationType.AtMost;
+								_term = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getSelectionIndex());
+								_unaryIndexes.add(_unaryRelation, _term);
 							}
 						}
 					}
 					
 					if (!unary) {
-						_selectIndexes.clear();
-						_binaryIndexes.clear();
 						_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
 						_label = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getItem(_selectIndexes.get(0)));
 					}
@@ -643,6 +692,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 			_hesitantRelationshipComposite.setEnabled(false);
 			_unaryRelationshipButton.setSelection(true);
 			_unaryRelationshipButton.setEnabled(false);
+			_binaryRelationshipButton.setSelection(false);
 			_binaryRelationshipButton.setEnabled(false);
 			_primaryButton.setSelection(true);
 			_compositeButton.setSelection(false);
@@ -680,6 +730,8 @@ public class ValuationPanelHesitant extends ValuationPanel {
 	
 	private void modifyHesitantSelection() {
 		
+		_selectIndexes.clear();
+		
 		if((_hesitantEvaluationCombo1 != null) && (!_hesitantEvaluationCombo1.isDisposed())) {
 			if((_andLabel != null) && (!_andLabel.isDisposed())) {
 				String items1[] = _hesitantEvaluationCombo1.getItems();
@@ -703,25 +755,30 @@ public class ValuationPanelHesitant extends ValuationPanel {
 				if(find) {
 					pos2 -= i + 1;
 				}
+				
 				_selectIndexes.add(pos1);
-				_lowerTerm = ((FuzzySet) _domain).getLabelSet().getLabel(pos1);
 				_selectIndexes.add(pos2);
+
+				_lowerTerm = ((FuzzySet) _domain).getLabelSet().getLabel(pos1);
 				_upperTerm = ((FuzzySet) _domain).getLabelSet().getLabel(pos2);
-				_binaryIndexes.put("Binary", _selectIndexes);
 			} else {
 				String value = _hesitantEvaluationCombo1.getItems()[_hesitantEvaluationCombo1.getSelectionIndex()];
 				if (EUnaryRelationType.GreaterThan.toString().equals(value)) {
 					_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex() + 1);
 					_selectIndexes.add(((FuzzySet) _domain).getLabelSet().getCardinality() - 1);
+					System.out.println("Greater than");
 				} else if(EUnaryRelationType.LowerThan.toString().equals(value)) {
 					_selectIndexes.add(0);
 					_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex() - 1);
+					System.out.println("Lower than");
 				} else if(EUnaryRelationType.AtLeast.toString().equals(value)) {
 					_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
 					_selectIndexes.add(((FuzzySet) _domain).getLabelSet().getCardinality() - 1);
+					System.out.println("At least than");
 				} else if(EUnaryRelationType.AtMost.toString().equals(value)) {
 					_selectIndexes.add(0);
 					_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
+					System.out.println("At most " + _selectIndexes);
 				}
 			}
 		} else {

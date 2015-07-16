@@ -62,8 +62,10 @@ public class LinguisticDomainChart extends DomainChart {
 		XYPlot xyplot = (XYPlot) _chart.getPlot();
 		XYItemRenderer renderer = xyplot.getRenderer(0);
 		
-		if(!(selection instanceof LinkedList<?>)) {
+		//System.out.println(selection);
+		//System.out.println("-------");
 		
+		if(!(selection instanceof LinkedList<?>)) {
 			for(int i = 0; i < xyplot.getSeriesCount(); ++i) {
 				if( i != (Integer) selection) {
 					renderer.setSeriesStroke(i, new BasicStroke(1));
