@@ -31,6 +31,7 @@ public class ValuationPanelLinguistic extends ValuationPanel {
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
 		label.setText("Linguistic evaluation");
+		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 
 		Label value = new Label(_valuationPart, SWT.NONE);
 		value = new Label(_valuationPart, SWT.NONE);
@@ -51,12 +52,14 @@ public class ValuationPanelLinguistic extends ValuationPanel {
 		
 		new Label(_valuationPart, SWT.NONE);
 		_labelCombo = new Combo(_valuationPart, SWT.BORDER);
-		_labelCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
+		_labelCombo.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, false, 3, 1));
 		_labelCombo.setItems(labels);
+		_labelCombo.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		new Label(_valuationPart, SWT.NONE);
 		value = new Label(_valuationPart, SWT.NONE);
 		value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 
 		if (_valuation != null) {
 			_label = ((LinguisticValuation) _valuation).getLabel();

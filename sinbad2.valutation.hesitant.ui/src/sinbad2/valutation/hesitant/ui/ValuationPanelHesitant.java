@@ -62,7 +62,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 		
 		Label label = new Label(_valuationPart, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
-		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
+		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
 		label.setText("Hesitant evaluation");

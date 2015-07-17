@@ -26,15 +26,16 @@ public class ValuationPanelInteger extends ValuationPanel {
 		
 		Label label = new Label(_valuationPart, SWT.NONE);
 		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
-		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1);
+		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 5, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
 		label.setText("Integer evaluation");
+		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		Label value = new Label(_valuationPart, SWT.NONE);
 		value = new Label(_valuationPart, SWT.NONE);
-		gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 3, 1);
-		gd.verticalIndent = -100;
+		gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, false, 3, 1);
+		gd.verticalIndent = 15;
 		value.setLayoutData(gd);
 		value.setText("Value");
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));

@@ -3,8 +3,10 @@ package sinbad2.valuation.real.ui;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -27,6 +29,7 @@ public class ValuationPanelReal extends ValuationPanel  {
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
 		label.setText("Real evaluation");
+		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		Label value = new Label(_valuationPart, SWT.NONE);
 		value = new Label(_valuationPart, SWT.NONE);
@@ -34,6 +37,7 @@ public class ValuationPanelReal extends ValuationPanel  {
 		gd.verticalIndent = 15;
 		value.setLayoutData(gd);
 		value.setText("Value");
+		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationPart, SWT.NONE);
 		
 		new Label(_valuationPart, SWT.NONE);
@@ -43,6 +47,7 @@ public class ValuationPanelReal extends ValuationPanel  {
 		new Label(_valuationPart, SWT.NONE);
 		value = new Label(_valuationPart, SWT.NONE);
 		value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		double min = (double) ((NumericRealDomain) _domain).getMin();
 		double max = (double) ((NumericRealDomain) _domain).getMax();
