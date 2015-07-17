@@ -3,12 +3,11 @@ package sinbad2.valuation.real.ui;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.valuation.Valuation;
@@ -21,24 +20,29 @@ public class ValuationPanelReal extends ValuationPanel  {
 
 	protected void createControls() {
 		_valuationPart.setLayout(new GridLayout(5, true));
-
+		
 		Label label = new Label(_valuationPart, SWT.NONE);
-		label = new Label(_valuationPart, SWT.NONE);
-		GridData gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 3, 1);
-		gd.verticalIndent = -100;
+		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 5, 1);
+		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Value");
-		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		label.setText("Real evaluation");
+		
+		Label value = new Label(_valuationPart, SWT.NONE);
+		value = new Label(_valuationPart, SWT.NONE);
+		gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, false, 3, 1);
+		gd.verticalIndent = 15;
+		value.setLayoutData(gd);
+		value.setText("Value");
 		new Label(_valuationPart, SWT.NONE);
 		
 		new Label(_valuationPart, SWT.NONE);
 		_valueSpinner = new Spinner(_valuationPart, SWT.BORDER);
 		_valueSpinner.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
-		_valueSpinner.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		
 		new Label(_valuationPart, SWT.NONE);
-		label = new Label(_valuationPart, SWT.NONE);
-		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		value = new Label(_valuationPart, SWT.NONE);
+		value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 		
 		double min = (double) ((NumericRealDomain) _domain).getMin();
 		double max = (double) ((NumericRealDomain) _domain).getMax();

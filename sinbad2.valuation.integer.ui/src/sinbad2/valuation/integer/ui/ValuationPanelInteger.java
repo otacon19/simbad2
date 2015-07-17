@@ -9,6 +9,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.valuation.Valuation;
@@ -22,14 +23,21 @@ public class ValuationPanelInteger extends ValuationPanel {
 
 	protected void createControls() {
 		_valuationPart.setLayout(new GridLayout(5, true));
-
+		
 		Label label = new Label(_valuationPart, SWT.NONE);
-		label = new Label(_valuationPart, SWT.NONE);
-		GridData gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 3, 1);
-		gd.verticalIndent = -100;
+		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1);
+		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Value");
-		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		label.setText("Integer evaluation");
+		
+		Label value = new Label(_valuationPart, SWT.NONE);
+		value = new Label(_valuationPart, SWT.NONE);
+		gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 3, 1);
+		gd.verticalIndent = -100;
+		value.setLayoutData(gd);
+		value.setText("Value");
+		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationPart, SWT.NONE);
 		
 		new Label(_valuationPart, SWT.NONE);
@@ -37,9 +45,9 @@ public class ValuationPanelInteger extends ValuationPanel {
 		_valueSpinner.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
 		_valueSpinner.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationPart, SWT.NONE);
-		label = new Label(_valuationPart, SWT.NONE);
-		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		value = new Label(_valuationPart, SWT.NONE);
+		value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		int min = ((NumericIntegerDomain) _domain).getMin();
 		int max = ((NumericIntegerDomain) _domain).getMax();

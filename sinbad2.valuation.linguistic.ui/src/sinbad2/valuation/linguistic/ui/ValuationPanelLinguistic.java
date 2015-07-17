@@ -9,6 +9,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
@@ -23,14 +24,21 @@ public class ValuationPanelLinguistic extends ValuationPanel {
 
 	protected void createControls() {
 		_valuationPart.setLayout(new GridLayout(5, true));
-
+		
 		Label label = new Label(_valuationPart, SWT.NONE);
-		label = new Label(_valuationPart, SWT.NONE);
-		GridData gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 3, 1);
-		gd.verticalIndent = -100;
+		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 5, 1);
+		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Value");
-		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		label.setText("Linguistic evaluation");
+
+		Label value = new Label(_valuationPart, SWT.NONE);
+		value = new Label(_valuationPart, SWT.NONE);
+		gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, false, 3, 1);
+		gd.verticalIndent = 15;
+		value.setLayoutData(gd);
+		value.setText("Value");
+		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationPart, SWT.NONE);
 		
 		String[] labels = new String[((FuzzySet) _domain).getLabelSet().getCardinality()];
@@ -44,13 +52,11 @@ public class ValuationPanelLinguistic extends ValuationPanel {
 		new Label(_valuationPart, SWT.NONE);
 		_labelCombo = new Combo(_valuationPart, SWT.BORDER);
 		_labelCombo.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
-		_labelCombo.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		_labelCombo.setItems(labels);
 		
 		new Label(_valuationPart, SWT.NONE);
-		label = new Label(_valuationPart, SWT.NONE);
-		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		value = new Label(_valuationPart, SWT.NONE);
+		value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 
 		if (_valuation != null) {
 			_label = ((LinguisticValuation) _valuation).getLabel();
