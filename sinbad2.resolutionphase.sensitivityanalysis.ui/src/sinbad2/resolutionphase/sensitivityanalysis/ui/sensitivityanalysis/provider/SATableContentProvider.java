@@ -185,7 +185,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		} else if(row < getFixedRowCount()) {
 			return _criteria[col - 1];
 		} else {
-			return _alternatives[_pairs[row - 1][0]] + "-" + _alternatives[_pairs[row - 1][0]] + "/" + _criteria[col - 1]; //$NON-NLS-1$ //$NON-NLS-2$
+			return _alternatives[_pairs[row - 1][0]] + "-" + _alternatives[_pairs[row - 1][1]] + "/" + _criteria[col - 1]; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

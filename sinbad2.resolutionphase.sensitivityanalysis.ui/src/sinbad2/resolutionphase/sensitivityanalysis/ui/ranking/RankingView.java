@@ -36,9 +36,9 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 
 		_rankingViewer.setContentProvider(new RankingContentProvider());
 
-		addColumn("Ranking", 0, 15); //$NON-NLS-1$
-		addColumn("Alternative", 1, 100); //$NON-NLS-1$
-		addColumn("Value", 2, 45); //$NON-NLS-1$
+		addColumn("Ranking", 0); //$NON-NLS-1$
+		addColumn("Alternative", 1); //$NON-NLS-1$
+		addColumn("Value", 2); //$NON-NLS-1$
 
 		RankingViewManager.getInstance().registerDisplayRankingChangeListener(this);
 		hookFocusListener();
@@ -50,7 +50,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		super.dispose();
 	}
 
-	private void addColumn(String text, final int pos, int size) {
+	private void addColumn(String text, final int pos) {
 		TableViewerColumn tvc = new TableViewerColumn(_rankingViewer, SWT.NONE);
 		tvc.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -62,7 +62,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		tc.setText(text);
 		tc.setResizable(true);
 		tc.setMoveable(true);
-		tc.setWidth(size);
+		tc.pack();
 	}
 
 	private void hookFocusListener() {

@@ -62,7 +62,7 @@
                relationship="left"
                relative="org.eclipse.ui.editorss"
                showTitle="true"
-               standalone="true"
+               standalone="false"
                visible="true">
          </view>
          <view

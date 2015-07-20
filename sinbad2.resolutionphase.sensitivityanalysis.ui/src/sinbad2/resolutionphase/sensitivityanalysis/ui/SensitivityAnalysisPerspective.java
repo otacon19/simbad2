@@ -40,7 +40,7 @@ public class SensitivityAnalysisPerspective implements IPerspectiveFactory {
 					DomainsManager manager = DomainsManager.getInstance();
 					NumericRealDomain domain = (NumericRealDomain) manager.copyDomain(NumericRealDomain.ID);
 					domain.setMinMax(0d, 1d);
-					dvm.addSupportedValuationForDomain(RealValuation.ID, domain.getId());
+					//dvm.addSupportedValuationForDomain(RealValuation.ID, domain.getId());
 					MockModel model = new MockModel();
 					SensitivityAnalysis sa = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 					sa.setModel(model);

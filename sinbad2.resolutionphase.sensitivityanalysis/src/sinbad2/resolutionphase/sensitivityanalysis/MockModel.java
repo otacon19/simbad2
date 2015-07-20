@@ -109,7 +109,7 @@ public class MockModel {
 		for(int alternative = 0; alternative < _numberOfAlternatives; alternative++) {
 			_alternativesFinalPreferences[alternative] = 0;
 			for(int criterion = 0; criterion < _numberOfCriteria; criterion++) {
-				_alternativesFinalPreferences[alternative] += _dm[alternative][criterion] * _w[criterion];
+				_alternativesFinalPreferences[alternative] += _dm[criterion][alternative] * _w[criterion];
 			}
 		}
 		computeRanking();
@@ -130,7 +130,7 @@ public class MockModel {
 			for(int j = (i + 1); j < _numberOfAlternatives; j++) {
 				for(int k = 0; k < _numberOfCriteria; k++) {
 					_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = (_alternativesFinalPreferences[j] - _alternativesFinalPreferences[i])
-							/ (_dm[j][k] - _dm[i][k]);
+							/ (_dm[k][j] - _dm[k][i]);
 
 					if(_minimumAbsoluteChangeInCriteriaWeights[i][j][k] > _w[k]) {
 						_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;

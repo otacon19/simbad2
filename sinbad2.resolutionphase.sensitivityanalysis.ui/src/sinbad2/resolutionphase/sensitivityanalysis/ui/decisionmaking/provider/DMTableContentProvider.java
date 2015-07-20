@@ -47,9 +47,9 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 
 			try {
 				if (col == 0) {
-					erg = "A" + row; //$NON-NLS-1$
+					erg = "C" + row; //$NON-NLS-1$
 				} else if (row == 0) {
-					erg = "C" + col; //$NON-NLS-1$
+					erg = "A" + col; //$NON-NLS-1$
 				} else {
 					erg = _values[row - 1][col - 1];
 				}
@@ -70,7 +70,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 
 	@Override
 	public int doGetRowCount() {
-		return _alternatives.length + getFixedRowCount();
+		return _criteria.length + getFixedRowCount();
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 
 	@Override
 	public int doGetColumnCount() {
-		return _criteria.length + getFixedColumnCount();
+		return _alternatives.length + getFixedColumnCount();
 	}
 
 	@Override
@@ -159,11 +159,11 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		if((col == 0) && (row == 0)) {
 			return "";
 		} else if(col < getFixedColumnCount()) {
-			return _alternatives[row - 1];
+			return _criteria[row - 1];
 		} else if(row < getFixedRowCount()) {
-			return _criteria[col - 1];
+			return _alternatives[col - 1];
 		} else {
-			return _alternatives[row - 1] + "/" + _criteria[col - 1]; //$NON-NLS-1$
+			return _criteria[row - 1] + "/" + _alternatives[col - 1]; //$NON-NLS-1$
 		}
 	}
 
