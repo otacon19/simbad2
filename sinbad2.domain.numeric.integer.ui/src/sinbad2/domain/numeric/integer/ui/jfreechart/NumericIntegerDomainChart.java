@@ -73,7 +73,7 @@ public class NumericIntegerDomainChart extends DomainChart {
 					"                                           " +  //$NON-NLS-1$
 					Double.toString(Double.POSITIVE_INFINITY));
 		}
-		
+			
 	}
 	
 	@Override
@@ -95,7 +95,7 @@ public class NumericIntegerDomainChart extends DomainChart {
 		if(_intervalMarker != null) {
 			_chart.getXYPlot().removeRangeMarker(_intervalMarker);
 		}
-		
+
 		if(selection instanceof LinkedList<?>) {
 			_intervalMarker = new IntervalMarker((Integer)((LinkedList<?>) selection).getFirst(), (Integer)((LinkedList<?>) selection).getLast());
 			_intervalMarker.setAlpha(0.5f);

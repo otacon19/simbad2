@@ -25,42 +25,42 @@ public class GatheringPerspective implements IPerspectiveFactory {
 
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener() {
 
-					@Override
-					public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+			@Override
+			public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
 
-						if (ID.equals(perspective
-								.getId())) {
-							if (_elementView == null) {
-								for (IViewReference viewReference : page.getViewReferences()) {
-									if (ElementView.ID.equals(viewReference
-											.getId())) {
-										_elementView = (ElementView) viewReference
-												.getView(false);
-									}
-								}
+				if (ID.equals(perspective
+						.getId())) {
+					if (_elementView == null) {
+						for (IViewReference viewReference : page.getViewReferences()) {
+							if (ElementView.ID.equals(viewReference
+									.getId())) {
+								_elementView = (ElementView) viewReference
+										.getView(false);
 							}
-							
-							if (_elementValuationsView == null) {
-								for (IViewReference viewReference : page
-										.getViewReferences()) {
-									if (ElementValuationsView.ID.equals(viewReference
-											.getId())) {
-										_elementValuationsView = (ElementValuationsView) viewReference
-												.getView(false);
-									}
-								}
+						}
+					}
+					
+					if (_elementValuationsView == null) {
+						for (IViewReference viewReference : page
+								.getViewReferences()) {
+							if (ElementValuationsView.ID.equals(viewReference
+									.getId())) {
+								_elementValuationsView = (ElementValuationsView) viewReference
+										.getView(false);
 							}
-
-							_elementView.setFocus();
-							_elementView.selectFirst();
-							_elementValuationsView.setFocus();
 						}
 					}
 
-					@Override
-					public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {}
+					_elementView.setFocus();
+					_elementView.selectFirst();
+					_elementValuationsView.setFocus();
+				}
+			}
 
-				});
+			@Override
+			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {}
+
+		});
 	}
 
 }

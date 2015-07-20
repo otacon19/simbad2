@@ -249,5 +249,8 @@ public class DomainsView extends ViewPart {
 		});
 	}
 	
+	public Domain getSelectedDomain() {
+		return _selectedDomain;
+	}
 
 }

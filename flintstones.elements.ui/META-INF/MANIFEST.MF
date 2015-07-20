@@ -9,6 +9,7 @@ Require-Bundle: sinbad2.element;bundle-version="1.0.0";visibility:=reexport,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Export-Package: sinbad2.element.ui.view.elements,
+Export-Package: sinbad2.element.ui.sourceprovider,
+ sinbad2.element.ui.view.elements,
  sinbad2.element.ui.view.experts,
  sinbad2.element.ui.view.experts.provider
