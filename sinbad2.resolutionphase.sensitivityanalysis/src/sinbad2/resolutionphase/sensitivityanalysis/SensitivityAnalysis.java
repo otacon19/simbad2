@@ -19,6 +19,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis";
 	
+	private MockModel _model = null;
 	public List<ISensitivityAnalysisChangeListener> _listeners;
 	
 	public SensitivityAnalysis() {
@@ -73,6 +74,20 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	@Override
 	public boolean validate() {
 		return false;
+	}
+	
+	public void setModel(MockModel model) {
+		_model = model;
+		notifySensitivityAnalysisChange();
+	}
+	
+	public MockModel getModel() {
+		
+		if(_model == null) {
+			_model = new MockModel();
+		}
+		
+		return _model;
 	}
 	
 	@Override

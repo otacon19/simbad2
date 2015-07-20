@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.resolutionphase.ui">
+      <ui
+            id="flintstones.resolutionphase.sensitivityanalysis.ui"
+            name="Sensitivity analysis"
+            resolution_phase="flintstones.resolutionphase.sensitivityanalysis">
+         <perspective
+               id="flintstones.resolutionphase.sensitivityanalysis.perspective">
+         </perspective>
+      </ui>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="sinbad2.resolutionphase.sensitivityanalysis.ui.SensitivityAnalysisPerspective"
+            icon="icons/sensitivityanalysis.png"
+            id="flintstones.resolutionphase.sensitivityanalysis.perspective"
+            name="Sensitivity analysis">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.resolutionphase.sensitivityanalysis.views.category"
+            name="Sensitivity analysis">
+      </category>
+      <view
+            category="flintstones.resolutionphase.sensitivityanalysis.views.category"
+            class="sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView"
+            id="flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking"
+            name="Decision making"
+            restorable="true">
+      </view>
+      <view
+            category="flintstones.resolutionphase.sensitivityanalysis.views.category"
+            class="sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView"
+            id="flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking"
+            name="Ranking"
+            restorable="true">
+      </view>
+      <view
+            category="flintstones.resolutionphase.sensitivityanalysis.views.category"
+            class="sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SensitivityAnalysisView"
+            id="flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis"
+            name="Sensitivity analysis"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="flintstones.resolutionphase.sensitivityanalysis.perspective">
+         <view
+               closeable="false"
+               id="flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking"
+               minimized="false"
+               moveable="false"
+               ratio="0.35"
+               relationship="left"
+               relative="org.eclipse.ui.editorss"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
+         <view
+               closeable="false"
+               id="flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking"
+               minimized="false"
+               moveable="false"
+               ratio="0.33"
+               relationship="bottom"
+               relative="flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
+         <view
+               closeable="false"
+               id="flintstones.domain.ui.view.domain"
+               minimized="false"
+               moveable="false"
+               ratio="0.5"
+               relationship="bottom"
+               relative="flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
+         <view
+               closeable="false"
+               id="flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis"
+               minimized="false"
+               moveable="false"
+               ratio="0.65"
+               relationship="right"
+               relative="org.eclipse.ui.editorss"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking.decisionmaking_view"
+            name="Decision making context"
+            parentId="flintstones.core.ui">
+      </context>
+      <context
+            id="flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking.ranking_view"
+            name="Ranking context"
+            parentId="flintstones.core.ui">
+      </context>
+      <context
+            id="flintstones.resolutionphase.sensitivityanalysis.ui.views.domain.domain_view"
+            name="Domain context"
+            parentId="flintstones.core.ui">
+      </context>
+      <context
+            id="flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis.sensitivityanalysis_view"
+            name="Sensitivity analysis context"
+            parentId="flintstones.core.ui">
+      </context>
+   </extension>
+
+</plugin>

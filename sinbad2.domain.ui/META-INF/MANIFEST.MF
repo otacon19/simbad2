@@ -11,4 +11,5 @@ Export-Package: sinbad2.domain.ui,
  sinbad2.domain.ui.dialog,
  sinbad2.domain.ui.dialog.modifyDialog,
  sinbad2.domain.ui.dialog.newDialog,
- sinbad2.domain.ui.jfreechart
+ sinbad2.domain.ui.jfreechart,
+ sinbad2.domain.ui.view.domain
