@@ -20,7 +20,6 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	private Double[][][] _values;
 
 	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
-
 	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 
 	public SATableContentProvider(KTable table, String[] alternatives, String[] criteria, Double[][][] values) {

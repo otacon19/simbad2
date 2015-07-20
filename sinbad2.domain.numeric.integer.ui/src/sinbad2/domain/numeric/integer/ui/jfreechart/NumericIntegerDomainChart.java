@@ -2,7 +2,10 @@ package sinbad2.domain.numeric.integer.ui.jfreechart;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.ChartFactory;
@@ -16,6 +19,8 @@ import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.xy.DefaultIntervalXYDataset;
 import org.jfree.data.xy.IntervalXYDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
+import org.jfree.ui.Layer;
+import org.jfree.ui.RectangleInsets;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.Domain;
@@ -26,8 +31,13 @@ import sinbad2.domain.ui.jfreechart.DomainChart;
 public class NumericIntegerDomainChart extends DomainChart {
 	
 	private NumericIntegerDomain _domain;
+	
+	public static final Color[] colors = {Color.RED, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.LIGHT_GRAY, Color.ORANGE, Color.ORANGE,
+			Color.MAGENTA, Color.PINK, Color.WHITE, Color.YELLOW};
+	
 	private ValueMarker _numMarker; 
 	private IntervalMarker _intervalMarker; 
+	private ValueMarker[] _alternativesMarkers;
 
 	public NumericIntegerDomainChart() {
 		super();
@@ -145,4 +155,79 @@ public class NumericIntegerDomainChart extends DomainChart {
 		return result;
 	}
 
+	@Override
+	public void displayRanking(Object ranking) {
+		
+		if(ranking != null) {
+			String[] alternatives = (String[]) ((Object[]) ranking)[0];
+			int[] pos = (int[]) ((Object[]) ranking)[1];
+			displayAlternatives(alternatives, pos, colors);
+		}
+		
+	}
+	
+	public void displayAlternatives(String[] alternatives, int[] pos, Color[] colors) {
+		
+		if(_numMarker != null) {
+			_chart.getXYPlot().removeRangeMarker(_numMarker);
+		}
+		if(_alternativesMarkers != null) {
+			for (ValueMarker marker : _alternativesMarkers) {
+				_chart.getXYPlot().removeRangeMarker(marker);
+			}
+		}
+
+		_alternativesMarkers = null;
+
+		class MyItem implements Comparable<MyItem> {
+			public String alternative;
+			public Double pos;
+			public Color color;
+
+			public MyItem(String alternative, double pos, Color color) {
+				this.alternative = alternative;
+				this.pos = pos;
+				this.color = color;
+			}
+
+			@Override
+			public int compareTo(MyItem other) {
+				return Double.compare(this.pos, other.pos);
+			}
+		}
+
+		List<MyItem> items = null;
+		if((alternatives != null) && (pos != null) && (colors != null)) {
+			items = new LinkedList<MyItem>();
+			for(int i = 0; i < pos.length; i++) {
+				if (alternatives[i] != null) {
+					items.add(new MyItem(alternatives[i], pos[i], colors[i]));
+				}
+			}
+
+			Collections.sort(items);
+		}
+
+		if(items != null) {
+			int size = items.size();
+			if (size > 0) {
+				int height = (int) (_chartComposite.getSize().y * 0.75f);
+				int offset = height / size;
+				_alternativesMarkers = new ValueMarker[size];
+				MyItem item;
+				for (int i = 0; i < size; i++) {
+					item = items.get(i);
+					_alternativesMarkers[i] = new ValueMarker(item.pos);
+					_alternativesMarkers[i].setPaint(item.color);
+					_alternativesMarkers[i].setStroke(new BasicStroke(3));
+					_alternativesMarkers[i].setLabel(item.alternative);
+					_alternativesMarkers[i].setLabelFont(new Font("TimesRoman", Font.BOLD, 20));
+					_alternativesMarkers[i].setLabelPaint(item.color);
+					_alternativesMarkers[i].setLabelOffset(new RectangleInsets(offset + (offset * i), 15, 0, 0));
+					_chart.getXYPlot().addRangeMarker(0, _alternativesMarkers[i], Layer.FOREGROUND);
+				}
+			}
+		}
+	}
+	
 }

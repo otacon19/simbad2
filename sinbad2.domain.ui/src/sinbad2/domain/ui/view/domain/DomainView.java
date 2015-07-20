@@ -24,13 +24,12 @@ public class DomainView extends ViewPart implements IDisplayDomainChangeListener
 	public static final String ID = "flintstones.domain.ui.view.domain"; //$NON-NLS-1$
 	public static final String CONTEXT_ID = "flintstones.domain.ui.view.domain.domain_view"; //$NON-NLS-1$
 	
-	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench()
-			.getService(IContextService.class);
+	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 	
 	private Composite _container;
 	private DomainChart _chart = null;
 	private Domain _domain = null;
-	//TODO ranking?
+	private Object _ranking = null;
 	
 	@Override
 	public void createPartControl(Composite parent) {
@@ -63,7 +62,9 @@ public class DomainView extends ViewPart implements IDisplayDomainChangeListener
 			DomainUIsManager manager = DomainUIsManager.getInstance();
 			_chart = manager.newDomainChart(_domain);
 			_chart.initialize(_domain, _container, size.x, size.y, SWT.NONE);
-			//TODO ranking?
+			if(_ranking != null) {
+				_chart.displayRanking(_ranking);
+			}
 			_container.layout();
 		}
 		
@@ -103,6 +104,7 @@ public class DomainView extends ViewPart implements IDisplayDomainChangeListener
 	@Override
 	public void displayDomainChangeListener(Domain domain, Object ranking) {
 		_domain = domain;
+		_ranking = ranking;
 		
 		refreshDomainChart();
 		

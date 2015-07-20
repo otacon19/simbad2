@@ -18,60 +18,65 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	private String[] _alternatives;
 	private String[] _criteria;
 	private double[][] _values;
-	
-	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
-	private final FixedCellRenderer _fixedRendersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 
-	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria, double[][] values) {
+	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
+	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
+
+	
+	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria,
+			double[][] values) {
 		super(table);
-		
+
 		_alternatives = alternatives;
 		_criteria = criteria;
 		_values = values;
-		
-		initalize();
-		
+		initialize();
+
 		_fixedRenderer.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
-		_fixedRendersInTable.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
-		_fixedRendersInTable.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		_fixedRenderersInTable.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
+		_fixedRenderersInTable.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 	}
 
-	private void initalize() {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	@Override
 	public Object doGetContentAt(int col, int row) {
 		
 		if((col == 0) && (row == 0)) {
-			return "";
+			return ""; //$NON-NLS-1$
 		} else {
 			Object erg;
-			
+
 			try {
-				if(col == 0) {
-					erg = "A" + row;
-				} else if(row == 0) {
-					erg = "C" + col;
+				if (col == 0) {
+					erg = "A" + row; //$NON-NLS-1$
+				} else if (row == 0) {
+					erg = "C" + col; //$NON-NLS-1$
 				} else {
 					erg = _values[row - 1][col - 1];
 				}
 			} catch(Exception e) {
 				erg = null;
 			}
-			
+
 			return erg;
 		}
 	}
-	
-	@Override
+
 	public KTableCellEditor doGetCellEditor(int col, int row) {
 		return null;
 	}
 
 	@Override
-	public void doSetContentAt(int col, int row, Object value) {	}
+	public void doSetContentAt(int col, int row, Object value) {}
+
+	@Override
+	public int doGetRowCount() {
+		return _alternatives.length + getFixedRowCount();
+	}
+
+	@Override
+	public int getFixedHeaderRowCount() {
+		return 1;
+	}
 
 	@Override
 	public int doGetColumnCount() {
@@ -79,23 +84,8 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	}
 
 	@Override
-	public int doGetRowCount() {
-		return _alternatives.length + getFixedRowCount();
-	}
-	
-	@Override
-	public int getFixedHeaderRowCount() {
-		return 1;
-	}
-	
-	@Override
 	public int getFixedHeaderColumnCount() {
 		return 1;
-	}
-
-	@Override
-	public int getFixedSelectableColumnCount() {
-		return 0;
 	}
 
 	@Override
@@ -104,61 +94,65 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	}
 
 	@Override
-	public int getInitialFirstRowHeight() {
-		return 25;
-	}
-	
-	@Override
-	public int getRowHeightMinimum() {
-		return 60;
+	public int getFixedSelectableColumnCount() {
+		return 0;
 	}
 
 	@Override
-	public boolean isColumnResizable(int column) {
+	public boolean isColumnResizable(int col) {
 		return false;
+	}
+
+	@Override
+	public int getInitialFirstRowHeight() {
+		return 25;
 	}
 
 	@Override
 	public boolean isRowResizable(int row) {
 		return false;
 	}
-	
+
+	@Override
+	public int getRowHeightMinimum() {
+		return 60;
+	}
+
 	@Override
 	public boolean isFixedCell(int col, int row) {
 		return true;
-	}
-	
+	};
+
 	@Override
 	public boolean isHeaderCell(int col, int row) {
 		return isFixedCell(col, row);
 	}
-	
+
 	@Override
 	public KTableCellRenderer doGetCellRenderer(int col, int row) {
 		
 		if((col < getFixedColumnCount()) || (row < getFixedRowCount())) {
 			return _fixedRenderer;
 		} else {
-			return _fixedRendersInTable;
+			return _fixedRenderersInTable;
 		}
 	}
-	
+
 	@Override
 	public Point doBelongsToCell(int col, int row) {
 		return null;
 	}
 
-
 	@Override
-	public int getInitialColumnWidth(int col) {
+	public int getInitialColumnWidth(int column) {
 		return 60;
 	}
 
 	@Override
-	public int getInitialRowHeight(int row) {
+	public int getInitialRowHeight(int arg0) {
 		return 25;
 	}
-	
+
 	@Override
 	public String doGetTooltipAt(int col, int row) {
 		
@@ -169,8 +163,9 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		} else if(row < getFixedRowCount()) {
 			return _criteria[col - 1];
 		} else {
-			return _alternatives[row - 1] + "/" + _criteria[col - 1];
+			return _alternatives[row - 1] + "/" + _criteria[col - 1]; //$NON-NLS-1$
 		}
 	}
+
 
 }

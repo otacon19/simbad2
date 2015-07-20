@@ -24,7 +24,7 @@ public class MockModel {
 	public Double[][][] _minimumPercentChangeInCriteriaWeights;
 	public List<Integer> _absoluteTop = null;
 	public List<Integer> _absoluteAny = null;
-
+	
 	private void initialize() {
 		ProblemElementsManager em = ProblemElementsManager.getInstance();
 		ProblemElementsSet es = em.getActiveElementSet();

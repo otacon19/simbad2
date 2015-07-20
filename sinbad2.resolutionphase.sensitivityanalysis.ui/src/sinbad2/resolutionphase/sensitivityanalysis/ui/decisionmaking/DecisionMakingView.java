@@ -23,7 +23,8 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 	private Composite _container;
 	private MockModel _model;
 
-	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
+	private static final IContextService _contextService = (IContextService) PlatformUI
+			.getWorkbench().getService(IContextService.class);
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -37,14 +38,13 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 	private void initDMTable() {
 		disposeDMTable();
 		_model = _sensitivityAnalysis.getModel();
-		
+
 		_dmTable = new DMTable(_container);
 		_dmTable.setModel(_model._alternatives, _model._criteria, _model._dm);
 	}
 
 	private void disposeDMTable() {
-		
-		if(_dmTable != null) {
+		if (_dmTable != null) {
 			if (!_dmTable.isDisposed()) {
 				_dmTable.dispose();
 			}
