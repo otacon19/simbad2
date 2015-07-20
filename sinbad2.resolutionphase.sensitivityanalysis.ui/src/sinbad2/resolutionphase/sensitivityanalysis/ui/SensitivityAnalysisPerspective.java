@@ -37,7 +37,6 @@ public class SensitivityAnalysisPerspective implements IPerspectiveFactory {
 				boolean sensitivityAnalysisActivated = ID.equals(perspective.getId());
 
 				if (sensitivityAnalysisActivated) {
-					
 					DomainsManager manager = DomainsManager.getInstance();
 					NumericRealDomain domain = (NumericRealDomain) manager.copyDomain(NumericRealDomain.ID);
 					domain.setMinMax(0d, 1d);
@@ -55,7 +54,6 @@ public class SensitivityAnalysisPerspective implements IPerspectiveFactory {
 			@Override
 			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {}
 		});
-
 	}
 
 }
