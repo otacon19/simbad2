@@ -11,11 +11,9 @@ import sinbad2.core.workspace.Workspace;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.domain.ui.view.domain.DomainViewManager;
-import sinbad2.domain.valuations.DomainsValuationsManager;
 import sinbad2.resolutionphase.sensitivityanalysis.MockModel;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingViewManager;
-import sinbad2.valuation.real.RealValuation;
 
 public class SensitivityAnalysisPerspective implements IPerspectiveFactory {
 	
@@ -29,7 +27,6 @@ public class SensitivityAnalysisPerspective implements IPerspectiveFactory {
 
 			DomainViewManager domainViewManager = DomainViewManager.getInstance();
 			RankingViewManager rankingViewManager = RankingViewManager.getInstance();
-			DomainsValuationsManager dvm = DomainsValuationsManager.getInstance();
 
 			@Override
 			public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
@@ -40,7 +37,6 @@ public class SensitivityAnalysisPerspective implements IPerspectiveFactory {
 					DomainsManager manager = DomainsManager.getInstance();
 					NumericRealDomain domain = (NumericRealDomain) manager.copyDomain(NumericRealDomain.ID);
 					domain.setMinMax(0d, 1d);
-					//dvm.addSupportedValuationForDomain(RealValuation.ID, domain.getId());
 					MockModel model = new MockModel();
 					SensitivityAnalysis sa = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 					sa.setModel(model);
