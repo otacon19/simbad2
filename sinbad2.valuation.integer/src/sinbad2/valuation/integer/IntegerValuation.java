@@ -19,7 +19,6 @@ public class IntegerValuation extends Valuation {
 	
 	public long _value;
 	
-	
 	public IntegerValuation() {
 		super();
 		_value = 0;
