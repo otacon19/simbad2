@@ -64,6 +64,11 @@
       <plugin id="org.eclipse.ui"/>
       <plugin id="org.eclipse.ui.cocoa" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench"/>
+      <plugin id="sinbad2.aggregationoperator"/>
+      <plugin id="sinbad2.aggregationoperator.arithmetic"/>
+      <plugin id="sinbad2.aggregationoperator.max"/>
+      <plugin id="sinbad2.aggregationoperator.median"/>
+      <plugin id="sinbad2.aggregationoperator.min"/>
       <plugin id="sinbad2.core"/>
       <plugin id="sinbad2.core.ui"/>
       <plugin id="sinbad2.domain"/>
