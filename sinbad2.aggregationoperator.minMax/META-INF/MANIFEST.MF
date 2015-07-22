@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MinMax
+Bundle-SymbolicName: sinbad2.aggregationoperator.minMax
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: sinbad2.aggregationoperator;bundle-version="1.0.0",
+ sinbad2.valuation.hesitant
