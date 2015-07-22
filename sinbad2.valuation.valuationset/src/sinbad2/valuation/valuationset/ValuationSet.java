@@ -43,6 +43,7 @@ import sinbad2.valuation.valuationset.operation.RemoveValuationOperation;
 import sinbad2.valuation.valuationset.operation.RemoveValuationOperationProvider;
 
 public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChangeListener {
+	
 	private DomainAssignmentsManager _domainAssignmentsManager;
 	private DomainAssignments _domainAssignments;
 

@@ -2,7 +2,6 @@ package sinbad2.resolutionphase.rating.ui.view;
 
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -27,7 +26,7 @@ public class RatingView extends ViewPart {
 	private Label _methodName;
 	private Label _stepValue;
 	
-	private CTabFolder _tabFolder;
+	//private CTabFolder _tabFolder;
 	
 	private Composite _parent;
 	
