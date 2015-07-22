@@ -1,4 +1,4 @@
-package sinbad2.aggregationoperator.minMax.valuation;
+package sinbad2.aggregationoperator.maxMin.valuation;
 
 import java.util.Collections;
 import java.util.LinkedList;
