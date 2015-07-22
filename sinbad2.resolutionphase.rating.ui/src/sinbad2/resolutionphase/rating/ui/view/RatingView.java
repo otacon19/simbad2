@@ -114,7 +114,14 @@ public class RatingView extends ViewPart {
 		_methodName.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false, 1, 1));
 		_methodName.setText("Unselected");
 		
+		Label step = new Label(_ratingEditorFooter, SWT.NONE);
+		step.setLayoutData(new GridData(SWT.RIGHT, SWT.LEFT, true, false, 1, 1));
+		step.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		step.setText("Step: ");
 		
+		_stepValue = new Label(_ratingEditorFooter, SWT.NONE);
+		_stepValue.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, false, false, 1, 1));
+		_stepValue.setText("(0/0)");
 	}
 	
 	private void getPreviousStep() {
@@ -128,14 +135,13 @@ public class RatingView extends ViewPart {
 	}
 	
 	private void resetRating(boolean reset) {
-		
+		// TODO Auto-generated method stub
 	}
 
 	private void createMethodSelectionStep() {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 	@Override
 	public void setFocus() {

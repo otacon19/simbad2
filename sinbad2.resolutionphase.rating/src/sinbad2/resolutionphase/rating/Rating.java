@@ -11,6 +11,8 @@ import sinbad2.resolutionphase.state.ResolutionPhaseStateChangeEvent;
 
 public class Rating implements IResolutionPhase {
 
+	public static final String ID = "flintstones.resolutionphase.rating";
+	
 	@Override
 	public void clear() {
 		// TODO Auto-generated method stub

@@ -67,6 +67,7 @@
       <plugin id="sinbad2.aggregationoperator"/>
       <plugin id="sinbad2.aggregationoperator.arithmetic"/>
       <plugin id="sinbad2.aggregationoperator.max"/>
+      <plugin id="sinbad2.aggregationoperator.maxMin"/>
       <plugin id="sinbad2.aggregationoperator.median"/>
       <plugin id="sinbad2.aggregationoperator.min"/>
       <plugin id="sinbad2.core"/>
@@ -92,6 +93,8 @@
       <plugin id="sinbad2.resolutionphase.frameworkstructuring.ui"/>
       <plugin id="sinbad2.resolutionphase.gathering"/>
       <plugin id="sinbad2.resolutionphase.gathering.ui"/>
+      <plugin id="sinbad2.resolutionphase.rating"/>
+      <plugin id="sinbad2.resolutionphase.rating.ui"/>
       <plugin id="sinbad2.resolutionphase.sensitivityanalysis"/>
       <plugin id="sinbad2.resolutionphase.sensitivityanalysis.ui"/>
       <plugin id="sinbad2.resolutionphase.ui"/>

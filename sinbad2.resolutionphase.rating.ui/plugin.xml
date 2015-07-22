@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.resolutionphase.ui">
+      <ui
+            id="flintstones.resolutionphase.rating.ui"
+            name="Rating"
+            resolution_phase="flintstones.resolutionphase.rating">
+         <perspective
+               id="flintstones.resolutionphase.rating.perspective">
+         </perspective>
+      </ui>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="sinbad2.resolutionphase.rating.ui.RatingPerspective"
+            icon="icons/rating.png"
+            id="flintstones.resolutionphase.rating.perspective"
+            name="Rating">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="flintstones.resolutionphase.rating.perspective">
+         <view
+               closeable="false"
+               id="flintstones.resolutionphase.rating.ui.view"
+               minimized="false"
+               moveable="false"
+               ratio="1"
+               relationship="stack"
+               relative="org.eclipse.ui.editorss"
+               showTitle="true"
+               standalone="true"
+               visible="true">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.rating.category"
+            name="Rating">
+      </category>
+      <view
+            category="flintstones.rating.category"
+            class="sinbad2.resolutionphase.rating.ui.view.RatingView"
+            id="flintstones.resolutionphase.rating.ui.view"
+            name="Rating"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>

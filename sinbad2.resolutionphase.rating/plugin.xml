@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.resolutionphase">
+      <resolution_phase
+            id="flintstones.resolutionphase.rating"
+            implementation="sinbad2.resolutionphase.rating.Rating"
+            name="Rating">
+      </resolution_phase>
+   </extension>
+
+</plugin>
