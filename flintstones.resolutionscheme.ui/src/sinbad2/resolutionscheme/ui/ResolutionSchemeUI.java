@@ -19,7 +19,7 @@ public class ResolutionSchemeUI {
 	private String _id;
 	private String _name;
 	private ResolutionScheme _resolutionScheme;
-	private ResolutionSchemeUIRegistry _registry;
+	private ResolutionSchemeUIRegistryExtension _registry;
 	
 	private List<IResolutionSchemeUIStateListener> _listeners;
 	
@@ -35,7 +35,7 @@ public class ResolutionSchemeUI {
 		_listeners = new LinkedList<IResolutionSchemeUIStateListener>();
 	}
 	
-	public ResolutionSchemeUI(String id, String name, ResolutionScheme resolutionScheme, ResolutionSchemeUIRegistry registry) {
+	public ResolutionSchemeUI(String id, String name, ResolutionScheme resolutionScheme, ResolutionSchemeUIRegistryExtension registry) {
 		this();
 		setId(id);
 		setName(name);
@@ -74,11 +74,11 @@ public class ResolutionSchemeUI {
 		_resolutionScheme = resolutionScheme;
 	}
 
-	public ResolutionSchemeUIRegistry getRegistry() {
+	public ResolutionSchemeUIRegistryExtension getRegistry() {
 		return _registry;
 	}
 
-	public void setRegistry(ResolutionSchemeUIRegistry registry) {
+	public void setRegistry(ResolutionSchemeUIRegistryExtension registry) {
 		_registry = registry;
 	}
 	

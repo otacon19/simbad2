@@ -58,12 +58,12 @@ public class PhasesMethodManager {
 		return _registers.get(id);
 	}
 
-	public void setImplementationResolutionPhase(
+	public void setImplementationPhaseMethod(
 			IPhaseMethod implementation, String resolutionPhaseId) {
 		_implementationsPhasesMethod.put(implementation, resolutionPhaseId);
 	}
 
-	public PhaseMethod getImplementationResolutionPhase(
+	public PhaseMethod getImplementationPhaseMethod(
 			IPhaseMethod implementation) {
 		PhaseMethod result = null;
 
@@ -76,7 +76,7 @@ public class PhasesMethodManager {
 		return result;
 	}
 
-	public PhaseMethod getResolutionPhase(String id) {
+	public PhaseMethod getPhaseMethod(String id) {
 
 		if (_phasesMethod.containsKey(id)) {
 			return _phasesMethod.get(id);
@@ -84,16 +84,16 @@ public class PhasesMethodManager {
 		} else {
 			try {
 
-				PhaseMethodRegistryExtension resolutionPhaseRegistry = getRegistry(id);
+				PhaseMethodRegistryExtension phaseMethodRegistry = getRegistry(id);
 
-				PhaseMethod resolutionPhase = new PhaseMethod();
-				resolutionPhase.setId(id);
-				resolutionPhase.setName(resolutionPhaseRegistry.getAttribute(EPhaseMethodElements.name));
-				resolutionPhase.setRegistryExtension(resolutionPhaseRegistry);
+				PhaseMethod phaseMethod = new PhaseMethod();
+				phaseMethod.setId(id);
+				phaseMethod.setName(phaseMethodRegistry.getAttribute(EPhaseMethodElements.name));
+				phaseMethod.setRegistryExtension(phaseMethodRegistry);
 
-				_phasesMethod.put(id, resolutionPhase);
+				_phasesMethod.put(id, phaseMethod);
 
-				return resolutionPhase;
+				return phaseMethod;
 
 			} catch (Exception e) {
 				return null;
@@ -102,7 +102,7 @@ public class PhasesMethodManager {
 
 	}
 
-	public PhaseMethod getActiveResolutionPhase() {
+	public PhaseMethod getActivePhaseMethod() {
 		return _activePhaseMethod;
 	}
 
@@ -126,7 +126,7 @@ public class PhasesMethodManager {
 		}
 
 		if (needActivate) {
-			_activePhaseMethod = getResolutionPhase(id);
+			_activePhaseMethod = getPhaseMethod(id);
 			if (_activePhaseMethod != null) {
 				_activePhaseMethod.activate();
 			}

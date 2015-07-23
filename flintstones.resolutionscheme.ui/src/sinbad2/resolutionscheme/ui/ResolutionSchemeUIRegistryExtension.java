@@ -10,9 +10,9 @@ import sinbad2.resolutionphase.ui.EResolutionPhaseUIElements;
 import sinbad2.resolutionphase.ui.ResolutionPhaseUIRegistryExtension;
 import sinbad2.resolutionphase.ui.ResolutionPhasesUIManager;
 
-public class ResolutionSchemeUIRegistry extends RegistryExtension {
+public class ResolutionSchemeUIRegistryExtension extends RegistryExtension {
 
-	public ResolutionSchemeUIRegistry(IConfigurationElement element) {
+	public ResolutionSchemeUIRegistryExtension(IConfigurationElement element) {
 		super(element);
 	}
 	

@@ -67,7 +67,7 @@ public class Method {
 			PhasesMethodManager resolutionPhasesManager = PhasesMethodManager
 					.getInstance();
 			for (String phase : phases) {
-				_phases.add(resolutionPhasesManager.getResolutionPhase(phase));
+				_phases.add(resolutionPhasesManager.getPhaseMethod(phase));
 			}
 		}
 

@@ -1,4 +1,5 @@
 package sinbad2.resolutionphase.ui;
+
 import java.util.HashMap;
 import java.util.Map;
 

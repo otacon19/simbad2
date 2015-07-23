@@ -15,12 +15,12 @@ public class ResolutionSchemesUIManager {
 	
 	private ResolutionSchemeUI _activeResolutionSchemeUI;
 	
-	private Map<String, ResolutionSchemeUIRegistry> _registers;
+	private Map<String, ResolutionSchemeUIRegistryExtension> _registers;
 	private Map<String, ResolutionSchemeUI> _resolutionSchemesUIs;
 	
 	private ResolutionSchemesUIManager() {
 		_activeResolutionSchemeUI = null;
-		_registers = new HashMap<String, ResolutionSchemeUIRegistry>();
+		_registers = new HashMap<String, ResolutionSchemeUIRegistryExtension>();
 		_resolutionSchemesUIs = new HashMap<String, ResolutionSchemeUI>();
 		loadRegistersExtension();
 	}
@@ -37,9 +37,9 @@ public class ResolutionSchemesUIManager {
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
 		
-		ResolutionSchemeUIRegistry registry;
+		ResolutionSchemeUIRegistryExtension registry;
 		for(IConfigurationElement extension: extensions) {
-			registry = new ResolutionSchemeUIRegistry(extension);
+			registry = new ResolutionSchemeUIRegistryExtension(extension);
 			_registers.put(registry.getElement(EResolutionSchemeUIElements.id), registry);
 		}
 	}
@@ -48,7 +48,7 @@ public class ResolutionSchemesUIManager {
 		return _registers.keySet().toArray(new String[0]);
 	}
 	
-	public ResolutionSchemeUIRegistry getRegistry(String id) {
+	public ResolutionSchemeUIRegistryExtension getRegistry(String id) {
 		return _registers.get(id);
 	}
 	
@@ -98,7 +98,7 @@ public class ResolutionSchemesUIManager {
 	}
 	
 	private ResolutionSchemeUI initializeResolutionSchemeUI(String id) {
-		ResolutionSchemeUIRegistry resolutionSchemeUIRegistry = getRegistry(id);
+		ResolutionSchemeUIRegistryExtension resolutionSchemeUIRegistry = getRegistry(id);
 		
 		ResolutionSchemeUI resolutionSchemeUI = new ResolutionSchemeUI();
 		resolutionSchemeUI.setId(id);
