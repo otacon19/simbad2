@@ -6,11 +6,13 @@ import java.util.List;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
 
+import sinbad2.method.state.EMethodStateChanges;
 import sinbad2.method.state.IMethodStateListener;
+import sinbad2.method.state.MethodStateChangeEvent;
 import sinbad2.phasemethod.PhaseMethod;
+import sinbad2.phasemethod.PhasesMethodManager;
 
-
-public abstract class Method {
+public class Method {
 	
 	private String _id;
 	private String _name;
@@ -20,19 +22,19 @@ public abstract class Method {
 
 	private List<IMethodStateListener> _listeners;
 
-	public ResolutionScheme() {
+	public Method() {
 		_id = null;
 		_name = null;
 		_phases = null;
 		_implementation = null;
 		_registry = null;
 
-		_listeners = new LinkedList<IResolutionSchemeStateListener>();
+		_listeners = new LinkedList<IMethodStateListener>();
 
 	}
 
-	public ResolutionScheme(String id, String name, ResolutionSchemeImplementation implementation, 
-			List<ResolutionPhase> phases, ResolutionSchemeRegistryExtension registry) {
+	public Method(String id, String name, MethodImplementation implementation, 
+			List<PhaseMethod> phases, MethodRegistryExtension registry) {
 		this();
 		setId(id);
 		setName(name);
@@ -57,12 +59,12 @@ public abstract class Method {
 		_name = name;
 	}
 
-	public List<ResolutionPhase> getPhases() {
+	public List<PhaseMethod> getPhases() {
 		if (_phases == null) {
-			_phases = new LinkedList<ResolutionPhase>();
-			String[] phases = _registry.getPhasesID();
+			_phases = new LinkedList<PhaseMethod>();
+			String[] phases = _registry.getPhasesMethodId();
 
-			ResolutionPhasesManager resolutionPhasesManager = ResolutionPhasesManager
+			PhasesMethodManager resolutionPhasesManager = PhasesMethodManager
 					.getInstance();
 			for (String phase : phases) {
 				_phases.add(resolutionPhasesManager.getResolutionPhase(phase));
@@ -72,26 +74,26 @@ public abstract class Method {
 		return _phases;
 	}
 
-	public void setPhases(List<ResolutionPhase> phases) {
+	public void setPhases(List<PhaseMethod> phases) {
 		_phases = phases;
 	}
 
-	public ResolutionSchemeImplementation getImplementation() {
+	public MethodImplementation getImplementation() {
 		
 		if (_implementation == null) {
 			try {
-				_implementation = (ResolutionSchemeImplementation) _registry
+				_implementation = (MethodImplementation) _registry
 						.getConfiguration().createExecutableExtension(
-								EResolutionSchemeElements.implementation
+								EMethodElements.implementation
 										.toString());
 
-				_implementation.setResolutionScheme(this);
+				_implementation.setMethod(this);
 
-				ResolutionSchemesManager rsm = ResolutionSchemesManager
+				MethodsManager rsm = MethodsManager
 						.getInstance();
-				rsm.setImplementationResolutionScheme(_implementation, _id);
+				rsm.setImplementationMethod(_implementation, _id);
 				
-				registerResolutionSchemeStateListener(_implementation);
+				registerMethodStateListener(_implementation);
 			} catch (CoreException e) {
 				return null;
 			}
@@ -100,31 +102,31 @@ public abstract class Method {
 		return _implementation;
 	}
 
-	public void setImplementation(ResolutionSchemeImplementation implementation) {
+	public void setImplementation(MethodImplementation implementation) {
 		
 		if (implementation != _implementation) {
-			unregisterResolutionSchemeStateListener(_implementation);
-			registerResolutionSchemeStateListener(implementation);
+			unregisterMethodStateListener(_implementation);
+			registerMethodStateListener(implementation);
 			
-			ResolutionSchemesManager rsm = ResolutionSchemesManager.getInstance();
-			rsm.setImplementationResolutionScheme(implementation, _id);
+			MethodsManager rsm = MethodsManager.getInstance();
+			rsm.setImplementationMethod(implementation, _id);
 
 			_implementation = implementation;
 		}
 	}
 
-	public ResolutionSchemeRegistryExtension getregistry() {
+	public MethodRegistryExtension getregistry() {
 		return _registry;
 	}
 
-	public void setRegistry(ResolutionSchemeRegistryExtension registry) {
+	public void setRegistry(MethodRegistryExtension registry) {
 		_registry = registry;
 
 	}
 
-	public void addResolutionPhase(ResolutionPhase resolutionPhase) {
+	public void addResolutionPhase(PhaseMethod resolutionPhase) {
 		if (_phases == null) {
-			_phases = new LinkedList<ResolutionPhase>();
+			_phases = new LinkedList<PhaseMethod>();
 		}
 
 		_phases.add(resolutionPhase);
@@ -132,42 +134,42 @@ public abstract class Method {
 
 	public void activate() {
 
-		for (ResolutionPhase phase : getPhases()) {
+		for (PhaseMethod phase : getPhases()) {
 			phase.containerActivate();
 		}
 
-		notifyResolutionSchemeStateChange(new ResolutionSchemeStateChangeEvent(
-				EResolutionSchemeStateChanges.ACTIVATED));
+		notifyMethodStateChange(new MethodStateChangeEvent(
+				EMethodStateChanges.ACTIVATED));
 	}
 
 	public void deactivate() {
 
-		for (ResolutionPhase phase : getPhases()) {
+		for (PhaseMethod phase : getPhases()) {
 			phase.containerDeactivate();
 		}
 
-		ResolutionPhasesManager resolutionPhasesManager = ResolutionPhasesManager
+		PhasesMethodManager resolutionPhasesManager = PhasesMethodManager
 				.getInstance();
 		resolutionPhasesManager.deactivateCurrentActive();
 
-		notifyResolutionSchemeStateChange(new ResolutionSchemeStateChangeEvent(
-				EResolutionSchemeStateChanges.DEACTIVATED));
+		notifyMethodStateChange(new MethodStateChangeEvent(
+				EMethodStateChanges.DEACTIVATED));
 	}
 
-	public void registerResolutionSchemeStateListener(
-			IResolutionSchemeStateListener listener) {
+	public void registerMethodStateListener(
+			IMethodStateListener listener) {
 		_listeners.add(listener);
 	}
 
-	public void unregisterResolutionSchemeStateListener(
-			IResolutionSchemeStateListener listener) {
+	public void unregisterMethodStateListener(
+			IMethodStateListener listener) {
 		_listeners.remove(listener);
 	}
 
-	public void notifyResolutionSchemeStateChange(
-			ResolutionSchemeStateChangeEvent event) {
-		for (IResolutionSchemeStateListener listener : _listeners) {
-			listener.notifyResolutionSchemeStateChange(event);
+	public void notifyMethodStateChange(
+			MethodStateChangeEvent event) {
+		for (IMethodStateListener listener : _listeners) {
+			listener.notifyMethodStateChange(event);
 		}
 	}
 
@@ -178,7 +180,7 @@ public abstract class Method {
 		hcb.append(_implementation);
 		hcb.append(_name);
 		if(_phases != null) {
-			for(ResolutionPhase phase: _phases) {
+			for(PhaseMethod phase: _phases) {
 				hcb.append(phase);
 			}
 		}

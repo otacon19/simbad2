@@ -18,6 +18,7 @@
       </annotation>
       <complexType>
          <choice>
+            <element ref="method"/>
          </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -48,6 +49,9 @@
 
    <element name="method">
       <complexType>
+         <choice minOccurs="1" maxOccurs="unbounded">
+            <element ref="phasemethod"/>
+         </choice>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
@@ -62,11 +66,14 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="implementation" type="string">
+         <attribute name="implementation" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="sinbad2.method.MethodImplementation:"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -74,11 +81,14 @@
 
    <element name="phasemethod">
       <complexType>
-         <attribute name="phase" type="string">
+         <attribute name="phase" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier" basedOn="flintstones.phasemethod/@id"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
