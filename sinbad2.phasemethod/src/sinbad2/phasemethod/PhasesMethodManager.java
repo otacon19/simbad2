@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.Platform;
 
 
 public class PhasesMethodManager {
-	private final String EXTENSION_POINT = "flintstones.methodphase"; //$NON-NLS-1$
+	private final String EXTENSION_POINT = "flintstones.phasemethod"; //$NON-NLS-1$
 
 	private static PhasesMethodManager _instance = null;
 
