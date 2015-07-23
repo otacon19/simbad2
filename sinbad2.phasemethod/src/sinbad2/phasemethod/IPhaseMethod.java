@@ -1,7 +1,6 @@
 package sinbad2.phasemethod;
 
-import sinbad2.phasemethod.state.IPhaseMethodStateListener;
-
+import sinbad2.phasemethod.listener.IPhaseMethodStateListener;
 
 public interface IPhaseMethod extends IPhaseMethodStateListener {
 
@@ -11,10 +10,10 @@ public interface IPhaseMethod extends IPhaseMethodStateListener {
 
 	public IPhaseMethod copyStructure();
 
-	public void copyData(IPhaseMethod iMethodPhase);
+	public void copyData(IPhaseMethod iResolutionPhase);
 
 	public void activate();
 
 	public boolean validate();
-	
+
 }

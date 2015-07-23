@@ -1,4 +1,4 @@
-package sinbad2.phasemethod.state;
+package sinbad2.phasemethod.listener;
 
 
 public interface IPhaseMethodStateListener {

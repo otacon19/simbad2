@@ -6,9 +6,9 @@ import java.util.List;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
 
-import sinbad2.phasemethod.state.EPhaseMethodStateChange;
-import sinbad2.phasemethod.state.IPhaseMethodStateListener;
-import sinbad2.phasemethod.state.PhaseMethodStateChangeEvent;
+import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
+import sinbad2.phasemethod.listener.IPhaseMethodStateListener;
+import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 
 public class PhaseMethod {
 	

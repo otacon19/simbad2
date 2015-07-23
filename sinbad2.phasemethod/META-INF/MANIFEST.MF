@@ -5,3 +5,5 @@ Bundle-SymbolicName: sinbad2.phasemethod;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.core;bundle-version="1.0.0";visibility:=reexport
+Export-Package: sinbad2.phasemethod,
+ sinbad2.phasemethod.listener
