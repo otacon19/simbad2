@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Max
-Bundle-SymbolicName: sinbad2.aggregationoperator.max
+Bundle-SymbolicName: sinbad2.aggregationoperator.max;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.aggregationoperator;bundle-version="1.0.0",

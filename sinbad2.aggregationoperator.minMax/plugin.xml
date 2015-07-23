@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.aggregationoperator">
+      <aggregation_operator
+            id="flintstones.aggregationoperator.maxMin"
+            name="MaxMin">
+         <unweighted
+               implementation="sinbad2.aggregationoperator.maxMin.MaxMin">
+            <supported_types
+                  type="Hesitant">
+            </supported_types>
+         </unweighted>
+      </aggregation_operator>
+   </extension>
+
+</plugin>

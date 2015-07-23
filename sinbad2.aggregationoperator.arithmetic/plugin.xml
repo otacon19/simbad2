@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.aggregationoperator">
+      <aggregation_operator
+            id="flintstones.aggregationoperator.arithmetic"
+            name="Arithmetic">
+         <unweighted
+               implementation="sinbad2.aggregationoperator.arithmetic.Arithmetic">
+            <supported_types
+                  type="TwoTuple">
+            </supported_types>
+            <supported_types
+                  type="Numeric">
+            </supported_types>
+         </unweighted>
+      </aggregation_operator>
+   </extension>
+
+</plugin>

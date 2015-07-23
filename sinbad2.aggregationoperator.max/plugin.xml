@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.aggregationoperator">
+      <aggregation_operator
+            id="flintstones.aggregationoperator.max"
+            name="Max">
+         <unweighted
+               implementation="sinbad2.aggregationoperator.max.Max">
+            <supported_types
+                  type="TwoTuple">
+            </supported_types>
+            <supported_types
+                  type="Numeric">
+            </supported_types>
+            <supported_types
+                  type="Interval">
+            </supported_types>
+         </unweighted>
+      </aggregation_operator>
+   </extension>
+
+</plugin>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.aggregationoperator">
+      <aggregation_operator
+            id="flintstones.aggregationoperator.median"
+            name="Median">
+         <unweighted
+               implementation="sinbad2.aggregationoperator.median.Median">
+            <supported_types
+                  type="TwoTuple">
+            </supported_types>
+            <supported_types
+                  type="Numeric">
+            </supported_types>
+            <supported_types
+                  type="Interval">
+            </supported_types>
+         </unweighted>
+      </aggregation_operator>
+   </extension>
+
+</plugin>
