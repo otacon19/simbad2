@@ -85,6 +85,7 @@
       <plugin id="sinbad2.domain.valuations"/>
       <plugin id="sinbad2.element"/>
       <plugin id="sinbad2.element.ui"/>
+      <plugin id="sinbad2.method"/>
       <plugin id="sinbad2.rcp"/>
       <plugin id="sinbad2.resolutionphase"/>
       <plugin id="sinbad2.resolutionphase.framework"/>
