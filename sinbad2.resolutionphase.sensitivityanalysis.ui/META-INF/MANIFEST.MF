@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.resolutionphase.sensitivityanalysis.ui.Activator
 Require-Bundle: sinbad2.resolutionphase.ui;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.resolutionphase.sensitivityanalysis;bundle-version="1.0.0";visibility:=reexport,
- ktable;bundle-version="1.0.0",
+ de.kupzog.ktable.KTable;bundle-version="1.0.0",
  sinbad2.domain.ui,
  sinbad2.domain.numeric.real,
  sinbad2.valuation.real
