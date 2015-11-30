@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Analysis
+Bundle-SymbolicName: sinbad2.resolutionphase.analysis;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: Sinbad
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.resolutionphase,
+ sinbad2.method
