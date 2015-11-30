@@ -30,7 +30,6 @@ public class Method {
 		_registry = null;
 
 		_listeners = new LinkedList<IMethodStateListener>();
-
 	}
 
 	public Method(String id, String name, MethodImplementation implementation, 

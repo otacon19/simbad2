@@ -52,6 +52,4 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 		
 	}
 
-	
-
 }

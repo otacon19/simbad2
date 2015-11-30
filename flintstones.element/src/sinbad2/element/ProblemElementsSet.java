@@ -193,7 +193,6 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		}
 		
-		
 		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.ADD_CRITERIA, null, insertCriteria, inUndoRedo));
 		
 	}

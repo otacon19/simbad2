@@ -17,7 +17,6 @@ public class ProblemElementsManager {
 	}
 	
 	public static ProblemElementsManager getInstance() {
-		
 		if(_instance == null) {
 			_instance = new ProblemElementsManager();
 		}
