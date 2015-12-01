@@ -16,7 +16,7 @@ public class MethodSelectorView extends ViewPart {
 	
 	public static final String ID = "flintstones.resolutionphase.analysis.ui.view.methodselector"; //$NON-NLS-1$
 	public static final String CONTEXT_ID = "flintstones.resolutionphase.analysis.ui.view.methodselector.methodselector_view"; //$NON-NLS-1$
-
+	
 	private Composite _container;
 	
 	@Override

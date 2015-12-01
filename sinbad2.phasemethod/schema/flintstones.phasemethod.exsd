@@ -17,7 +17,8 @@
          </appinfo>
       </annotation>
       <complexType>
-         <choice minOccurs="0" maxOccurs="unbounded">
+         <choice>
+            <element ref="phase"/>
          </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
