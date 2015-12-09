@@ -10,7 +10,7 @@ public interface IPhaseMethod extends IPhaseMethodStateListener {
 
 	public IPhaseMethod copyStructure();
 
-	public void copyData(IPhaseMethod iResolutionPhase);
+	public void copyData(IPhaseMethod iPhaseMethod);
 
 	public void activate();
 
