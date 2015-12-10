@@ -59,8 +59,7 @@ public class LinguisticValuation extends Valuation {
 		
 		FuzzySet domain = (FuzzySet) _domain;
 		if(domain.getLabelSet().getCardinality() > 1) {
-			int negPos = (domain.getLabelSet().getCardinality() - 1) - 
-					domain.getLabelSet().getPos(_label);
+			int negPos = (domain.getLabelSet().getCardinality() - 1) -  domain.getLabelSet().getPos(_label);
 			result.setLabel(negPos);
 		}
 		

@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: TwoTuples
-Bundle-SymbolicName: sinbad2.linguisticmodel.twoTuples
-Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: sinbad2.domain.linguistic.fuzzy
