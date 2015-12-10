@@ -4,4 +4,5 @@ Bundle-Name: TwoTuple
 Bundle-SymbolicName: sinbad2.valuation.twoTuple
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: sinbad2.valuation.linguistic
+Require-Bundle: sinbad2.valuation.linguistic;visibility:=reexport
+Export-Package: sinbad2.valuation.twoTuple

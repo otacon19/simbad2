@@ -4,21 +4,20 @@ import java.util.List;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
-import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.linguistic.LinguisticValuation;
+import sinbad2.valuation.twoTuple.TwoTuple;
 
-public class TwoTuplesOperator {
+public class TwoTupleOperator {
 
-	private TwoTuplesOperator() {}
+	private TwoTupleOperator() {}
 	
 	public static Valuation aggregate(List<Valuation> valuations) {
-		LinguisticValuation result = null;
+		TwoTuple result = null;
 		double beta = 0;
 		FuzzySet domain = null;
 		
 		for(Valuation valuation: valuations) {
-			Validator.notIllegalElementType(valuation, new String[] {LinguisticValuation.class.toString()});
+			Validator.notIllegalElementType(valuation, new String[] {TwoTuple.class.toString()});
 			
 			if(domain == null) {
 				domain = (FuzzySet) valuation.getDomain();
@@ -26,15 +25,14 @@ public class TwoTuplesOperator {
 				throw new IllegalArgumentException("Invalid domain");
 			}
 			
-			LabelLinguisticDomain label = ((LinguisticValuation) valuation).getLabel();
-			beta += domain.getLabelSet().getPos(label);	
+			beta += ((TwoTuple) valuation).calculateInverseDelta();
 		}
 		
-		beta /= domain.getLabelSet().getCardinality();
+		beta /= valuations.size();
 		
 		if(domain != null) {
-			result = (LinguisticValuation) valuations.get(0).clone();
-			//Asignar resultado
+			result = (TwoTuple) valuations.get(0).clone();
+			result.calculateDelta(beta);
 		}
 		
 		return result;
