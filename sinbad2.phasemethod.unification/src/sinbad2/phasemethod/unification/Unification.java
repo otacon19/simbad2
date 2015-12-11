@@ -3,6 +3,7 @@ package sinbad2.phasemethod.unification;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.phasemethod.IPhaseMethod;
+import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 
 public class Unification implements IPhaseMethod {
@@ -42,26 +43,38 @@ public class Unification implements IPhaseMethod {
 	
 	@Override
 	public void notifyPhaseMethodStateChange(PhaseMethodStateChangeEvent event) {
-		// TODO Auto-generated method stub
-		
+		if (event.getChange().equals(EPhaseMethodStateChange.ACTIVATED)) {
+			activate();
+		}
 	}
 
 	@Override
 	public IPhaseMethod clone() {
-		// TODO Auto-generated method stub
-		return null;
+		Unification result = null;
+		
+		try {
+			result = (Unification) super.clone();
+			result._domainSet = (DomainSet) _domainSet.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 
 	@Override
 	public void activate() {
-		// TODO Auto-generated method stub
-		
+		_domainsManager.setActiveDomainSet(_domainSet);
 	}
 
 	@Override
 	public boolean validate() {
-		// TODO Auto-generated method stub
-		return false;
+		
+		if (_domainSet.getDomains().isEmpty()) {
+			return false;
+		}
+
+		return true;
 	}
 
 }
