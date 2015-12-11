@@ -9,8 +9,8 @@ import sinbad2.aggregationoperator.arithmetic.valuation.TwoTupleOperator;
 import sinbad2.core.validator.Validator;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.integer.IntegerValuation;
-import sinbad2.valuation.linguistic.LinguisticValuation;
 import sinbad2.valuation.real.RealValuation;
+import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class Arithmetic extends UnweightedAggregationOperator {
 
@@ -18,14 +18,13 @@ public class Arithmetic extends UnweightedAggregationOperator {
 	public Valuation aggregate(List<Valuation> valuations) {
 		Validator.notNull(valuations);
 		
-		//TODO TwoTuples
 		if(valuations.size() > 0) {
 			for(Valuation valuation: valuations) {
 				if(valuation instanceof IntegerValuation) {
 					IntegerOperator.aggregate(valuations);
 				} else if(valuation instanceof RealValuation) {
 					RealOperator.aggregate(valuations);
-				} else if(valuation instanceof LinguisticValuation) {
+				} else if(valuation instanceof TwoTuple) {
 					TwoTupleOperator.aggregate(valuations);
 				} else {
 					throw new IllegalArgumentException("Not supported type");
