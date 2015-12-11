@@ -25,8 +25,7 @@ public class MaxMin extends UnweightedAggregationOperator {
 			}
 		}
 		
-		return null;
-			
+		return null;	
 	}
 		
 }
