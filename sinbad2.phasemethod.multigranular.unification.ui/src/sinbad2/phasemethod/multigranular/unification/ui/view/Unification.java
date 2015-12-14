@@ -5,6 +5,8 @@ import org.eclipse.ui.part.ViewPart;
 
 public class Unification extends ViewPart {
 
+	public static final String ID = "flintstones.phasemethod.multigranular.unification.ui.view.unification";
+	
 	@Override
 	public void createPartControl(Composite parent) {
 		// TODO Auto-generated method stub

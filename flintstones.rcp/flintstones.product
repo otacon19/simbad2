@@ -73,8 +73,6 @@
       <plugin id="sinbad2.core"/>
       <plugin id="sinbad2.core.ui"/>
       <plugin id="sinbad2.domain"/>
-      <plugin id="sinbad2.domain.linguistic.fuzzy"/>
-      <plugin id="sinbad2.domain.linguistic.fuzzy.ui"/>
       <plugin id="sinbad2.domain.linguistic.fuzzyset"/>
       <plugin id="sinbad2.domain.linguistic.fuzzyset.ui"/>
       <plugin id="sinbad2.domain.linguistic.unbalanced"/>
@@ -94,8 +92,6 @@
       <plugin id="sinbad2.phasemethod.ui"/>
       <plugin id="sinbad2.rcp"/>
       <plugin id="sinbad2.resolutionphase"/>
-      <plugin id="sinbad2.resolutionphase.analysis"/>
-      <plugin id="sinbad2.resolutionphase.analysis.ui"/>
       <plugin id="sinbad2.resolutionphase.framework"/>
       <plugin id="sinbad2.resolutionphase.framework.ui"/>
       <plugin id="sinbad2.resolutionphase.frameworkstructuring"/>

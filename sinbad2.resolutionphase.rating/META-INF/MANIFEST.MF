@@ -4,4 +4,5 @@ Bundle-Name: Rating
 Bundle-SymbolicName: sinbad2.resolutionphase.rating;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.method;bundle-version="1.0.0"

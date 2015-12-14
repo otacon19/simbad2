@@ -5,15 +5,35 @@
          point="flintstones.phasemethod.ui">
       <ui
             id="flintstones.phasemethod.multigranular.unification.ui"
-            implementation="sinbad2.phasemethod.multigranular.unification.ui"
-            name="Unification">
+            name="Unification"
+            phasemethod="flintstones.phasemethod.unification">
          <view
-               id="sinbad2.phasemethod.multigranular.unification.ui.view1">
+               id="flintstones.phasemethod.multigranular.unification.ui.view.selectblts">
          </view>
          <view
-               id="sinbad2.phasemethod.multigranular.unification.ui.view2">
+               id="flintstones.phasemethod.multigranular.unification.ui.view.unification">
          </view>
       </ui>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.phasemethod.multigranular.unification.ui.category"
+            name="Unification">
+      </category>
+      <view
+            class="sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS"
+            id="flintstones.phasemethod.multigranular.unification.ui.view.selectblts"
+            name="Select BLTS"
+            restorable="true">
+      </view>
+      <view
+            category="flintstones.phasemethod.multigranular.unification.ui.category"
+            class="sinbad2.phasemethod.multigranular.unification.ui.view.Unification"
+            id="flintstones.phasemethod.multigranular.unification.ui.view.unification"
+            name="Unification"
+            restorable="true">
+      </view>
    </extension>
 
 </plugin>
