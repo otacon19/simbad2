@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.phasemethod.ui">
+      <ui
+            id="flintstones.phasemethod.multigranular.unification.ui"
+            implementation="sinbad2.phasemethod.multigranular.unification.ui"
+            name="Unification">
+         <view
+               id="sinbad2.phasemethod.multigranular.unification.ui.view1">
+         </view>
+         <view
+               id="sinbad2.phasemethod.multigranular.unification.ui.view2">
+         </view>
+      </ui>
+   </extension>
+
+</plugin>

@@ -23,8 +23,7 @@
 
    <plugins>
       <plugin id="com.ibm.icu"/>
-      <plugin id="jfreechart"/>
-      <plugin id="ktable"/>
+      <plugin id="de.kupzog.ktable.KTable"/>
       <plugin id="org.apache.commons.lang"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
@@ -64,8 +63,9 @@
       <plugin id="org.eclipse.ui"/>
       <plugin id="org.eclipse.ui.cocoa" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench"/>
+      <plugin id="org.jfree.chart.JFreeChart"/>
       <plugin id="sinbad2.aggregationoperator"/>
-      <plugin id="sinbad2.aggregationoperator.arithmetic"/>
+      <plugin id="sinbad2.aggregationoperator.arithmeticMean"/>
       <plugin id="sinbad2.aggregationoperator.max"/>
       <plugin id="sinbad2.aggregationoperator.maxMin"/>
       <plugin id="sinbad2.aggregationoperator.median"/>
@@ -75,6 +75,8 @@
       <plugin id="sinbad2.domain"/>
       <plugin id="sinbad2.domain.linguistic.fuzzy"/>
       <plugin id="sinbad2.domain.linguistic.fuzzy.ui"/>
+      <plugin id="sinbad2.domain.linguistic.fuzzyset"/>
+      <plugin id="sinbad2.domain.linguistic.fuzzyset.ui"/>
       <plugin id="sinbad2.domain.linguistic.unbalanced"/>
       <plugin id="sinbad2.domain.linguistic.unbalanced.ui"/>
       <plugin id="sinbad2.domain.numeric.integer"/>
@@ -86,8 +88,14 @@
       <plugin id="sinbad2.element"/>
       <plugin id="sinbad2.element.ui"/>
       <plugin id="sinbad2.method"/>
+      <plugin id="sinbad2.phasemethod"/>
+      <plugin id="sinbad2.phasemethod.multigranular.unification"/>
+      <plugin id="sinbad2.phasemethod.multigranular.unification.ui"/>
+      <plugin id="sinbad2.phasemethod.ui"/>
       <plugin id="sinbad2.rcp"/>
       <plugin id="sinbad2.resolutionphase"/>
+      <plugin id="sinbad2.resolutionphase.analysis"/>
+      <plugin id="sinbad2.resolutionphase.analysis.ui"/>
       <plugin id="sinbad2.resolutionphase.framework"/>
       <plugin id="sinbad2.resolutionphase.framework.ui"/>
       <plugin id="sinbad2.resolutionphase.frameworkstructuring"/>
@@ -115,6 +123,7 @@
       <plugin id="sinbad2.valuation.real.interval"/>
       <plugin id="sinbad2.valuation.real.interval.ui"/>
       <plugin id="sinbad2.valuation.real.ui"/>
+      <plugin id="sinbad2.valuation.twoTuple"/>
       <plugin id="sinbad2.valuation.ui"/>
       <plugin id="sinbad2.valuation.valuationset"/>
       <plugin id="sinbad2.valuation.valuationset.ui"/>

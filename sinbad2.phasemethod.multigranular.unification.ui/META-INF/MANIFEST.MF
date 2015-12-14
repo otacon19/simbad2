@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Multigranular unification ui
+Bundle-SymbolicName: sinbad2.phasemethod.multigranular.unification.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sinbad2.phasemethod.multigranular.unification.ui.Activator
+Require-Bundle: sinbad2.phasemethod.ui,
+ sinbad2.phasemethod.multigranular.unification;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
