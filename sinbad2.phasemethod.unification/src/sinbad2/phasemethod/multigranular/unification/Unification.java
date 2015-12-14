@@ -1,4 +1,4 @@
-package sinbad2.phasemethod.unification;
+package sinbad2.phasemethod.multigranular.unification;
 
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
