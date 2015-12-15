@@ -31,9 +31,9 @@
                minimized="false"
                moveable="false"
                ratio="1"
-               relationship="stack"
+               relationship="top"
                relative="org.eclipse.ui.editorss"
-               showTitle="true"
+               showTitle="false"
                standalone="true"
                visible="true">
          </view>
