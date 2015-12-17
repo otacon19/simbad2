@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 
@@ -28,6 +29,8 @@ public class RatingView extends ViewPart {
 	private Composite _ratingEditorFooter;
 	private Composite _ratingEditorContainer;
 	private Composite _buttonsBar;
+	private Text _descriptionText;
+	private Text _stepsText;
 	private Button _backButton;
 	private Button _nextButton;
 	private Button _resetButton;
@@ -165,7 +168,7 @@ public class RatingView extends ViewPart {
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
 		composite.setLayoutData(gridData);
 
-		GridLayout layout = new GridLayout(1, true);
+		GridLayout layout = new GridLayout(2, true);
 		layout.horizontalSpacing = 15;
 		composite.setLayout(layout);
 		
@@ -173,10 +176,12 @@ public class RatingView extends ViewPart {
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_methodsCategoriesBar.setLayoutData(gridData);
 		
-		_tabFolder.getItem(0).setControl(composite);
-		
 		String[] methods = {"Multigranular", "LH", "ELH"};
 		createCategoryBar("Heterogeneous", 0,  methods);
+		
+		createInfoPanels(composite);
+		
+		_tabFolder.getItem(0).setControl(composite);
 	}
 	
 	private void createCategoryBar(String categoryName, int pos, String[] methods) {
@@ -203,7 +208,6 @@ public class RatingView extends ViewPart {
 	}
 	
 	private void createMethod(Composite parent, final String methodName) {
-
 		final CLabel label = new CLabel(parent, SWT.LEFT);
 
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -219,6 +223,36 @@ public class RatingView extends ViewPart {
 		label.pack();
 	}
 	
+	private void createInfoPanels(Composite composite) {
+		Composite compositePanels = new Composite(composite, SWT.NONE);
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gridData.verticalIndent = -5;
+		compositePanels.setLayoutData(gridData);
+
+		GridLayout layout = new GridLayout(1, true);
+		layout.horizontalSpacing = 15;
+		compositePanels.setLayout(layout);
+
+		Label descriptionLabel = new Label(compositePanels, SWT.NONE);
+		descriptionLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		descriptionLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		descriptionLabel.setText("Method description");
+
+		_descriptionText = new Text(compositePanels, SWT.BORDER | SWT.READ_ONLY| SWT.MULTI | SWT.WRAP);
+		gridData  = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gridData.verticalIndent = 0;
+		gridData.heightHint = 120;
+		_descriptionText.setLayoutData(gridData);
+
+		Label stepsLabel = new Label(compositePanels, SWT.NONE);
+		stepsLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		stepsLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		stepsLabel.setText("Method phases");
+
+		_stepsText = new Text(compositePanels, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI);
+		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		_stepsText.setLayoutData(gridData);
+	}
 	
 	@Override
 	public void setFocus() {
