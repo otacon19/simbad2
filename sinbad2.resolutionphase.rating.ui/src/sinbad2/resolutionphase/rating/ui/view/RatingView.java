@@ -165,19 +165,36 @@ public class RatingView extends ViewPart {
 
 	private void createContent() {
 		Composite composite = new Composite(_tabFolder, SWT.NONE);
-		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		composite.setLayoutData(gridData);
 
 		GridLayout layout = new GridLayout(2, true);
 		layout.horizontalSpacing = 15;
 		composite.setLayout(layout);
 		
-		_methodsCategoriesBar = new ExpandBar(composite, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		Composite compositeLeft = new Composite(composite, SWT.NONE);
+		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		compositeLeft.setLayoutData(gridData);
+		
+		layout = new GridLayout(1, true);
+		layout.horizontalSpacing = 15;
+		compositeLeft.setLayout(layout);
+		
+		Label methodsLabel = new Label(compositeLeft, SWT.NONE);
+		methodsLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		methodsLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		methodsLabel.setText("Method selection");
+		
+		_methodsCategoriesBar = new ExpandBar(compositeLeft, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_methodsCategoriesBar.setLayoutData(gridData);
 		
 		String[] methods = {"Multigranular", "LH", "ELH"};
 		createCategoryBar("Heterogeneous", 0,  methods);
+		
+		Button showAlgorithmButton = new Button(compositeLeft, SWT.NONE);
+		showAlgorithmButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		showAlgorithmButton.setText("Show algorithm");
 		
 		createInfoPanels(composite);
 		
@@ -226,7 +243,7 @@ public class RatingView extends ViewPart {
 	private void createInfoPanels(Composite composite) {
 		Composite compositePanels = new Composite(composite, SWT.NONE);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gridData.verticalIndent = -5;
+		gridData.verticalIndent = 2;
 		compositePanels.setLayoutData(gridData);
 
 		GridLayout layout = new GridLayout(1, true);
