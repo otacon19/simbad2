@@ -37,8 +37,7 @@ public class MethodsManager {
 
 	private void loadRegistersExtension() {
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
-		IConfigurationElement[] extensions = reg
-				.getConfigurationElementsFor(EXTENSION_POINT);
+		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
 
 		MethodRegistryExtension registry;
 		for (IConfigurationElement extension : extensions) {
@@ -119,6 +118,8 @@ public class MethodsManager {
 		Method method = new Method();
 		method.setId(id);
 		method.setName(methodRegistry.getElement(EMethodElements.name));
+		method.setCategory(methodRegistry.getElement(EMethodElements.category));
+		method.setDescription(methodRegistry.getElement(EMethodElements.description));
 		method.setRegistry(methodRegistry);
 
 		_methods.put(id, method);

@@ -44,8 +44,7 @@ public class ResolutionPhasesManager {
 		ResolutionPhaseRegistryExtension registry;
 		for (IConfigurationElement extension : extensions) {
 			registry = new ResolutionPhaseRegistryExtension(extension);
-			_registers.put(registry.getAttribute(EResolutionPhaseElements.id),
-					registry);
+			_registers.put(registry.getAttribute(EResolutionPhaseElements.id), registry);
 		}
 
 	}
@@ -58,8 +57,7 @@ public class ResolutionPhasesManager {
 		return _registers.get(id);
 	}
 
-	public void setImplementationResolutionPhase(
-			IResolutionPhase implementation, String resolutionPhaseId) {
+	public void setImplementationResolutionPhase(IResolutionPhase implementation, String resolutionPhaseId) {
 		_implementationsResolutionPhases.put(implementation, resolutionPhaseId);
 	}
 

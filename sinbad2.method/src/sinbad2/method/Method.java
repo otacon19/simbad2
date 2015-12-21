@@ -16,6 +16,8 @@ public class Method {
 	
 	private String _id;
 	private String _name;
+	private String _category;
+	private String _description;
 	private List<PhaseMethod> _phases;
 	private MethodImplementation _implementation;
 	private MethodRegistryExtension _registry;
@@ -25,6 +27,8 @@ public class Method {
 	public Method() {
 		_id = null;
 		_name = null;
+		_category = null;
+		_description = null;
 		_phases = null;
 		_implementation = null;
 		_registry = null;
@@ -57,7 +61,23 @@ public class Method {
 	public void setName(String name) {
 		_name = name;
 	}
+	
+	public String getCategory() {
+		return _category;
+	}
 
+	public void setCategory(String category) {
+		_category = category;
+	}
+	
+	public String getDescription() {
+		return _description;
+	}
+	
+	public void setDescription(String description) {
+		_description = description;
+	}
+	
 	public List<PhaseMethod> getPhases() {
 		if (_phases == null) {
 			_phases = new LinkedList<PhaseMethod>();

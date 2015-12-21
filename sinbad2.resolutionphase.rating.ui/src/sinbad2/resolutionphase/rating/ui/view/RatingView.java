@@ -1,5 +1,9 @@
 package sinbad2.resolutionphase.rating.ui.view;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -21,6 +25,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import sinbad2.method.Method;
+import sinbad2.method.MethodsManager;
 import sinbad2.resolutionphase.rating.ui.Images;
 
 public class RatingView extends ViewPart {
@@ -45,11 +51,15 @@ public class RatingView extends ViewPart {
 	private ExpandBar _methodsCategoriesBar; 
 	
 	private Composite _parent;
+	
+	private MethodsManager _methodsManager;
 
 	public RatingView() {}
 
 	@Override
-	public void createPartControl(Composite parent) {		
+	public void createPartControl(Composite parent) {	
+		_methodsManager = MethodsManager.getInstance();
+		
 		_parent = parent;
 		createRatingEditorPanel();
 		createMethodSelectionStep();
@@ -192,8 +202,28 @@ public class RatingView extends ViewPart {
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_methodsCategoriesBar.setLayoutData(gridData);
 		
-		String[] methods = {"Fussion approach for managing multi-granular linguistic information", "Linguistic Hierachies", "Extended Linguistic Hierachies"};
-		createCategoryBar("Multi-granular framework", 0,  methods);
+		String[] ids = _methodsManager.getIdsRegisters();
+		
+		Map<String, List<Method>> categoriesMethods = new HashMap<String, List<Method>>();
+		List<Method> methods = new LinkedList<Method>();
+		
+		for(String id: ids) {
+			methods.clear();
+			Method method = _methodsManager.getMethod(id);
+			String category = method.getCategory();
+			
+			if(categoriesMethods.get(category) != null) {
+				methods = categoriesMethods.get(category);
+			}
+			methods.add(method);
+			categoriesMethods.put(category, methods);
+		}
+
+		int cont = 0;
+		for(String key: categoriesMethods.keySet()) {
+			createCategoryBar(key, cont,  categoriesMethods.get(key));
+			cont++;
+		}
 		
 		Button showAlgorithmButton = new Button(compositeLeft, SWT.NONE);
 		showAlgorithmButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
@@ -204,7 +234,7 @@ public class RatingView extends ViewPart {
 		_tabFolder.getItem(0).setControl(composite);
 	}
 	
-	private void createCategoryBar(String categoryName, int pos, String[] methods) {
+	private void createCategoryBar(String categoryName, int pos, List<Method> methods) {
 		Composite composite = new Composite(_methodsCategoriesBar, SWT.NONE);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		composite.setLayoutData(gridData);
@@ -216,8 +246,8 @@ public class RatingView extends ViewPart {
 		layout.verticalSpacing = 0;
 		composite.setLayout(layout);
 
-		for (int i = 0; i < methods.length; i++) {
-			createMethod(composite, methods[i]);
+		for (int i = 0; i < methods.size(); i++) {
+			createMethod(composite, methods.get(i));
 		}
 
 		ExpandItem categoryItem = new ExpandItem(_methodsCategoriesBar, SWT.NONE, pos);
@@ -227,7 +257,7 @@ public class RatingView extends ViewPart {
 		categoryItem.setImage(Images.category);
 	}
 	
-	private void createMethod(Composite parent, final String methodName) {
+	private void createMethod(Composite parent, final Method method) {
 		final CLabel label = new CLabel(parent, SWT.LEFT);
 
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -235,7 +265,7 @@ public class RatingView extends ViewPart {
 		label.setLayoutData(gridData);
 
 		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL)); //$NON-NLS-1$
-		label.setText(methodName);
+		label.setText(method.getName());
 
 		label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 		label.setImage(Images.signed_yes);
@@ -251,6 +281,8 @@ public class RatingView extends ViewPart {
 				_methodSelected.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
 				_methodName.setText(_methodSelected.getText());
 				_methodName.getParent().layout();
+				
+				_descriptionText.setText(method.getDescription());
 			}
 		});
 	
