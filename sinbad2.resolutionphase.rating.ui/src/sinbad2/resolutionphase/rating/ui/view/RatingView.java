@@ -5,6 +5,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -36,17 +38,18 @@ public class RatingView extends ViewPart {
 	private Button _resetButton;
 	private Label _methodName;
 	private Label _stepValue;
+	private CLabel _methodSelected;
 	
 	private CTabFolder _tabFolder;
 	
-	private Composite _parent;
-	
 	private ExpandBar _methodsCategoriesBar; 
+	
+	private Composite _parent;
 
 	public RatingView() {}
 
 	@Override
-	public void createPartControl(Composite parent) {
+	public void createPartControl(Composite parent) {		
 		_parent = parent;
 		createRatingEditorPanel();
 		createMethodSelectionStep();
@@ -124,7 +127,7 @@ public class RatingView extends ViewPart {
 		method.setText("Method: ");
 		
 		_methodName = new Label(_ratingEditorFooter, SWT.NONE);
-		_methodName.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false, 1, 1));
+		_methodName.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, false, false, 1, 1));
 		_methodName.setText("Unselected");
 		
 		Label step = new Label(_ratingEditorFooter, SWT.NONE);
@@ -189,8 +192,8 @@ public class RatingView extends ViewPart {
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_methodsCategoriesBar.setLayoutData(gridData);
 		
-		String[] methods = {"Multigranular", "LH", "ELH"};
-		createCategoryBar("Heterogeneous", 0,  methods);
+		String[] methods = {"Fussion approach for managing multi-granular linguistic information", "Linguistic Hierachies", "Extended Linguistic Hierachies"};
+		createCategoryBar("Multi-granular framework", 0,  methods);
 		
 		Button showAlgorithmButton = new Button(compositeLeft, SWT.NONE);
 		showAlgorithmButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
@@ -231,11 +234,25 @@ public class RatingView extends ViewPart {
 		gridData.horizontalIndent = 15;
 		label.setLayoutData(gridData);
 
-		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL)); //$NON-NLS-1$
 		label.setText(methodName);
 
 		label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 		label.setImage(Images.signed_yes);
+		
+		label.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				CLabel labelSelected = (CLabel) e.getSource();
+				if(_methodSelected != null && _methodSelected != labelSelected) {
+					_methodSelected.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL));
+				}
+				_methodSelected = labelSelected;
+				_methodSelected.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
+				_methodName.setText(_methodSelected.getText());
+				_methodName.getParent().layout();
+			}
+		});
 	
 		label.pack();
 	}

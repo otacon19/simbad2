@@ -76,6 +76,25 @@
                </appinfo>
             </annotation>
          </attribute>
+         <attribute name="category" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="Unbalanced linguistic framework">
+                  </enumeration>
+                  <enumeration value="Heterogeneous framework">
+                  </enumeration>
+                  <enumeration value="Multi-granular framework">
+                  </enumeration>
+                  <enumeration value="Linguistic framework">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
          <attribute name="description" type="string">
             <annotation>
                <documentation>
