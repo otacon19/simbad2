@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method">
+      <method
+            category="Multi-granular framework"
+            description="F. Herrera, E. Herrera-Viedma, L. Martínez, A Fusion Approach for Managing Multi-Granularity Linguistic Term Sets in Decision Making. Fuzzy Sets and Systems, vol. 114, issue 1, pp. 43-58, 2000."
+            id="flintstones.method.multigranular"
+            implementation="sinbad2.method.multigranular.Multigranular"
+            name="Fusion approach for managing multi-granular linguistic information">
+         <phasemethod
+               phase="flintstones.phasemethod.unification">
+         </phasemethod>
+      </method>
+   </extension>
+
+</plugin>
