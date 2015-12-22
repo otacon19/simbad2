@@ -59,23 +59,6 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="name" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="implementation" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn="sinbad2.method.MethodImplementation:"/>
-               </appinfo>
-            </annotation>
-         </attribute>
          <attribute name="category" use="required">
             <annotation>
                <documentation>
@@ -100,6 +83,23 @@
                <documentation>
                   
                </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="implementation" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="sinbad2.method.MethodImplementation:"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>

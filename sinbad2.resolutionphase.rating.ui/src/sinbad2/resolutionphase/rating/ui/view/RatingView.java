@@ -283,6 +283,8 @@ public class RatingView extends ViewPart {
 				_methodName.getParent().layout();
 				
 				_descriptionText.setText(method.getDescription());
+				System.out.println(method.getPhases().size());
+				_methodsManager.activate(method.getId());
 			}
 		});
 	
