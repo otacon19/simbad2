@@ -1,6 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Method ui
-Bundle-SymbolicName: sinbad2.method.ui
+Bundle-SymbolicName: sinbad2.method.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.method;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.phasemethod.ui;bundle-version="1.0.0";visibility:=reexport
+Import-Package: sinbad2.resolutionscheme.ui
