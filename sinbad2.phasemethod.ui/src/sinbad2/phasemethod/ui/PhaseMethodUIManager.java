@@ -105,7 +105,7 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 		PhaseMethodUI phaseMethodUI = new PhaseMethodUI();
 		phaseMethodUI.setId(id);
 		phaseMethodUI.setName(phaseMethodUIRegistry.getElement(EPhaseMethodUIElements.name));
-		phaseMethodUI.setPhaseMethodId(phaseMethodUIRegistry.getElement(EPhaseMethodUIElements.phase));
+		phaseMethodUI.setPhaseMethodId(phaseMethodUIRegistry.getElement(EPhaseMethodUIElements.phasemethod));
 		
 		phaseMethodUI.setRegistry(phaseMethodUIRegistry);
 		phaseMethodUI.getPhaseMethod().registerPhaseMethodStateListener(phaseMethodUI);

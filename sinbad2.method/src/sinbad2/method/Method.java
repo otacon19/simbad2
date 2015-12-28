@@ -83,9 +83,9 @@ public class Method {
 			_phases = new LinkedList<PhaseMethod>();
 			String[] phases = _registry.getPhasesMethodId();
 
-			PhasesMethodManager resolutionPhasesManager = PhasesMethodManager.getInstance();
+			PhasesMethodManager phasesMethodManager = PhasesMethodManager.getInstance();
 			for (String phase : phases) {
-				_phases.add(resolutionPhasesManager.getPhaseMethod(phase));
+				_phases.add(phasesMethodManager.getPhaseMethod(phase));
 			}
 		}
 

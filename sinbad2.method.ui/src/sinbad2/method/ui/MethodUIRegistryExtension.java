@@ -42,7 +42,7 @@ public class MethodUIRegistryExtension extends RegistryExtension {
 				for(int i = 0; i < uis.length; ++i) {
 					phaseMethodUIID = uis[i].getAttribute(EMethodUIElements.id.toString());
 					phaseMethodUIRegistry = phasesUIManager.getRegistry(phaseMethodUIID);
-					phaseMethodID = phaseMethodUIRegistry.getElement(EPhaseMethodUIElements.phase);
+					phaseMethodID = phaseMethodUIRegistry.getElement(EPhaseMethodUIElements.phasemethod);
 					result.put(phaseMethodID, phaseMethodUIID);
 				}
 			}

@@ -26,7 +26,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.method.Method;
-import sinbad2.method.MethodsManager;
+import sinbad2.method.ui.MethodUI;
+import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.resolutionphase.rating.ui.Images;
 
 public class RatingView extends ViewPart {
@@ -51,14 +52,14 @@ public class RatingView extends ViewPart {
 	private ExpandBar _methodsCategoriesBar; 
 	
 	private Composite _parent;
-	
-	private MethodsManager _methodsManager;
+
+	private MethodsUIManager _methodsUIManager;
 
 	public RatingView() {}
 
 	@Override
 	public void createPartControl(Composite parent) {	
-		_methodsManager = MethodsManager.getInstance();
+		_methodsUIManager = MethodsUIManager.getInstance();
 		
 		_parent = parent;
 		createRatingEditorPanel();
@@ -202,14 +203,15 @@ public class RatingView extends ViewPart {
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_methodsCategoriesBar.setLayoutData(gridData);
 		
-		String[] ids = _methodsManager.getIdsRegisters();
+		String[] ids = _methodsUIManager.getIdsRegisters();
 		
 		Map<String, List<Method>> categoriesMethods = new HashMap<String, List<Method>>();
 		List<Method> methods = new LinkedList<Method>();
 		
 		for(String id: ids) {
 			methods.clear();
-			Method method = _methodsManager.getMethod(id);
+			MethodUI methodUI = _methodsUIManager.getUI(id);
+			Method method = methodUI.getMethod();
 			String category = method.getCategory();
 			
 			if(categoriesMethods.get(category) != null) {
@@ -285,7 +287,9 @@ public class RatingView extends ViewPart {
 				_descriptionText.setText(method.getDescription());
 				_stepValue.setText("0/" + method.getPhases().size());
 				
-				_methodsManager.activate(method.getId());
+				_methodsUIManager.activate(method.getId() + ".ui");
+				MethodUI methodUI = _methodsUIManager.getActivateMethodUI();
+				System.out.println(methodUI.getPhasesUI().size());
 			}
 		});
 	

@@ -66,7 +66,7 @@ private final String EXTENSION_POINT = "flintstones.method.ui"; //$NON-NLS-1$
 		}
 	}
 	
-	public MethodUI getActivateResolutionSchemeUI() {
+	public MethodUI getActivateMethodUI() {
 		return _activeMethodUI;
 	}
 	
@@ -99,12 +99,12 @@ private final String EXTENSION_POINT = "flintstones.method.ui"; //$NON-NLS-1$
 	}
 	
 	private MethodUI initializeMethodUI(String id) {
-		MethodUIRegistryExtension resolutionSchemeUIRegistry = getRegistry(id);
+		MethodUIRegistryExtension methodUIRegistry = getRegistry(id);
 		
 		MethodUI methodUI = new MethodUI();
 		methodUI.setId(id);
-		methodUI.setName(resolutionSchemeUIRegistry.getElement(EMethodUIElements.name));
-		methodUI.setRegistry(resolutionSchemeUIRegistry);
+		methodUI.setName(methodUIRegistry.getElement(EMethodUIElements.name));
+		methodUI.setRegistry(methodUIRegistry);
 		
 		_methodsUIs.put(id, methodUI);
 		

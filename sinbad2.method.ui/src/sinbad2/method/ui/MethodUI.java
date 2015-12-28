@@ -63,8 +63,8 @@ public class MethodUI {
 		
 		if(_method == null) {
 			MethodsManager methodsManager = MethodsManager.getInstance();
-			String resolutionSchemeID = _registry.getElement(EMethodUIElements.method);
-			_method = methodsManager.getMethod(resolutionSchemeID);
+			String methodID = _registry.getElement(EMethodUIElements.method);
+			_method = methodsManager.getMethod(methodID);
 		}
 		
 		return _method;
@@ -106,6 +106,18 @@ public class MethodUI {
 	
 	public PhaseMethodUI getPhaseMethodUI(PhaseMethod phaseMethod) {
 		return getPhaseMethodUI(phaseMethod.getId());
+	}
+	
+	public Map<String, PhaseMethodUI> getPhasesMethodUI() {
+		return _phasesMethodUI;
+	}
+	
+	public List<PhaseMethodUI> getPhasesUI() {
+		List<PhaseMethodUI> phasesMethodUI = new LinkedList<PhaseMethodUI>();
+		for(String key: _phasesMethodUI.keySet()) {
+			phasesMethodUI.add(_phasesMethodUI.get(key));
+		}
+		return phasesMethodUI;
 	}
 	
 	public void activate() {

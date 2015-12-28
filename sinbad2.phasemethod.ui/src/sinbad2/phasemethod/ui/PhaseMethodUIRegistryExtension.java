@@ -21,4 +21,20 @@ public class PhaseMethodUIRegistryExtension extends RegistryExtension {
 	
 	}
 	
+	public String getViews(EPhaseMethodUIElements type) {
+		
+		String result = null;
+		
+		switch (type) {
+			case view:
+				IConfigurationElement uiConfiguration = _configuration.getChildren(EPhaseMethodUIElements.view.toString())[0];
+				
+				result = uiConfiguration.getAttribute(EPhaseMethodUIElements.id.toString());
+		default:
+			break;
+		}
+		
+		return result;
+	}
+	
 }
