@@ -36,10 +36,13 @@ public class RatingView extends ViewPart {
 	
 	public static final String ID = "flintstones.resolutionphase.rating.ui.view";
 	
+	private int _numStep;
+	
 	private Composite _ratingEditorPanel;
 	private Composite _ratingEditorFooter;
 	private Composite _ratingEditorContainer;
 	private Composite _buttonsBar;
+	private Composite _parent;
 	private Text _descriptionText;
 	private Text _stepsText;
 	private Button _backButton;
@@ -50,10 +53,7 @@ public class RatingView extends ViewPart {
 	private CLabel _methodSelected;
 	
 	private CTabFolder _tabFolder;
-	
 	private ExpandBar _methodsCategoriesBar; 
-	
-	private Composite _parent;
 
 	private MethodsUIManager _methodsUIManager;
 
@@ -61,6 +61,7 @@ public class RatingView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {	
+		_numStep = 0;
 		_methodsUIManager = MethodsUIManager.getInstance();
 		
 		_parent = parent;
@@ -154,12 +155,14 @@ public class RatingView extends ViewPart {
 	}
 	
 	private void getPreviousStep() {
-		// TODO Auto-generated method stub
+		_numStep--;
+		_tabFolder.setSelection(_numStep);
 		
 	}
 	
 	private void getNextStep() {
-		// TODO Auto-generated method stub
+		_numStep++;
+		_tabFolder.setSelection(_numStep);
 		
 	}
 	
@@ -289,16 +292,18 @@ public class RatingView extends ViewPart {
 				_descriptionText.setText(method.getDescription());
 				
 				_methodsUIManager.activate(method.getId() + ".ui");
+				MethodUI methodUI = _methodsUIManager.getActivateMethodUI();
+				_stepsText.setText(methodUI.getPhasesFormat());
 				
-				loadSteps();
+				calculateNumSteps(methodUI);
+				loadFirstStep(methodUI);
 			}
 		});
 	
 		label.pack();
 	}
 	
-	private void loadSteps() {
-		MethodUI methodUI = _methodsUIManager.getActivateMethodUI();
+	private void calculateNumSteps(MethodUI methodUI) {
 		List<PhaseMethodUI> phasesMethodUI = methodUI.getPhasesUI();
 		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
 		
@@ -307,9 +312,17 @@ public class RatingView extends ViewPart {
 			numSteps += phasesMethodUIManager.getSteps(phase.getId()).size();
 		}
 		_stepValue.setText("0/" + numSteps);
+	}
+	
+	private void loadFirstStep(MethodUI methodUI) {
+		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
+		List<PhaseMethodUI> phasesMethodUI = methodUI.getPhasesUI();
 		
 		ViewPart step = phasesMethodUIManager.getStep(phasesMethodUI.get(0).getId(), 0);
 		CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, 1);
+		Composite composite = new Composite(_tabFolder, SWT.NONE);
+		step.createPartControl(composite);
+		item.setText(step.getPartName());
 	}
 	
 	private void createInfoPanels(Composite composite) {

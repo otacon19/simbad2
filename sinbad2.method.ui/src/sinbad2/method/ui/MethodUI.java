@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.ui.part.ViewPart;
+
 import sinbad2.method.Method;
 import sinbad2.method.MethodsManager;
 import sinbad2.method.ui.state.EMethodUIStateChanges;
@@ -74,6 +76,23 @@ public class MethodUI {
 		_method = method;
 	}
 
+	public String getPhasesFormat() {
+		PhaseMethodUIManager phaseMethodUIManager = PhaseMethodUIManager.getInstance();
+		String result = "";
+		
+		List<PhaseMethodUI> phasesMethod = getPhasesUI();
+		for(PhaseMethodUI phaseMethod: phasesMethod) {
+			result += phaseMethod.getName();
+			List<ViewPart> steps = phaseMethodUIManager.getSteps(phaseMethod.getId());
+			for(ViewPart step: steps) {
+				result += "\n" + "\t" + "-" + step.getPartName();
+			}
+		}
+		
+		return result;
+	}
+	
+	
 	public MethodUIRegistryExtension getRegistry() {
 		return _registry;
 	}
