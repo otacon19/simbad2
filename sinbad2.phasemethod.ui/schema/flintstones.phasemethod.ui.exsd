@@ -84,7 +84,7 @@
 
    <element name="view">
       <complexType>
-         <attribute name="id" type="string" use="required">
+         <attribute name="step" type="string" use="required">
             <annotation>
                <documentation>
                   

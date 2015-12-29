@@ -3,6 +3,10 @@ package sinbad2.phasemethod.ui;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+
 import sinbad2.phasemethod.PhaseMethod;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.listener.IPhaseMethodStateListener;
@@ -19,6 +23,7 @@ public class PhaseMethodUI implements IPhaseMethodStateListener {
 	private PhaseMethod _phaseMethod;
 	private String _uiId;
 	private Object _ui;
+	private String[] _viewsIDs;
 	
 	private PhaseMethodUIRegistryExtension _registry;
 	
@@ -32,6 +37,7 @@ public class PhaseMethodUI implements IPhaseMethodStateListener {
 		_phaseMethod = null;
 		_uiId = null;
 		_ui = null;
+		_viewsIDs = null;
 		_registry = null;
 		
 		_listeners = new LinkedList<IPhaseMethodUIStateListener>();
@@ -75,6 +81,23 @@ public class PhaseMethodUI implements IPhaseMethodStateListener {
 		_phaseMethodId = phaseMethodId;
 	}
 
+	public IViewPart getView(int step) {
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		IViewPart view = page.findView(getViewsIDs()[step]);
+		return view;
+	}
+	
+	public String[] getViewsIDs() {
+		if(_viewsIDs == null) {
+			_viewsIDs = _registry.getViewsID();
+		}
+		return _viewsIDs;
+	}
+
+	public void setViewsIDs(String[] viewsIDs) {
+		_viewsIDs = viewsIDs;
+	}
+	
 	public PhaseMethod getPhaseMethod() {
 		if(_phaseMethod == null) {
 			PhasesMethodManager phasesMethodManager = PhasesMethodManager.getInstance();

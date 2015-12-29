@@ -28,6 +28,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import sinbad2.method.Method;
 import sinbad2.method.ui.MethodUI;
 import sinbad2.method.ui.MethodsUIManager;
+import sinbad2.phasemethod.ui.PhaseMethodUI;
 import sinbad2.resolutionphase.rating.ui.Images;
 
 public class RatingView extends ViewPart {
@@ -285,15 +286,26 @@ public class RatingView extends ViewPart {
 				_methodName.getParent().layout();
 				
 				_descriptionText.setText(method.getDescription());
-				_stepValue.setText("0/" + method.getPhases().size());
 				
 				_methodsUIManager.activate(method.getId() + ".ui");
-				MethodUI methodUI = _methodsUIManager.getActivateMethodUI();
-				System.out.println(methodUI.getPhasesUI().size());
+				
+				loadViews();
 			}
 		});
 	
 		label.pack();
+	}
+	
+	private void loadViews() {
+		MethodUI methodUI = _methodsUIManager.getActivateMethodUI();
+		List<PhaseMethodUI> phasesMethodUI = methodUI.getPhasesUI();
+		
+		int numSteps = 0;
+		for(PhaseMethodUI phase: phasesMethodUI) {
+			numSteps += phase.getViewsIDs().length;
+			System.out.println(phase.getView(0));
+		}
+		_stepValue.setText("0/" + numSteps);
 	}
 	
 	private void createInfoPanels(Composite composite) {
