@@ -8,10 +8,10 @@
             name="Unification"
             phasemethod="flintstones.phasemethod.unification">
          <view
-               step="flintstones.phasemethod.multigranular.unification.ui.view.selectblts">
+               step="sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS">
          </view>
          <view
-               step="flintstones.phasemethod.multigranular.unification.ui.view.unification">
+               step="sinbad2.phasemethod.multigranular.unification.ui.view.Unification">
          </view>
       </ui>
    </extension>

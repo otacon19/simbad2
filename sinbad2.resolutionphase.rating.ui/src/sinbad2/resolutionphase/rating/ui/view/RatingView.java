@@ -29,6 +29,7 @@ import sinbad2.method.Method;
 import sinbad2.method.ui.MethodUI;
 import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.ui.PhaseMethodUI;
+import sinbad2.phasemethod.ui.PhaseMethodUIManager;
 import sinbad2.resolutionphase.rating.ui.Images;
 
 public class RatingView extends ViewPart {
@@ -289,23 +290,26 @@ public class RatingView extends ViewPart {
 				
 				_methodsUIManager.activate(method.getId() + ".ui");
 				
-				loadViews();
+				loadSteps();
 			}
 		});
 	
 		label.pack();
 	}
 	
-	private void loadViews() {
+	private void loadSteps() {
 		MethodUI methodUI = _methodsUIManager.getActivateMethodUI();
 		List<PhaseMethodUI> phasesMethodUI = methodUI.getPhasesUI();
+		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
 		
 		int numSteps = 0;
 		for(PhaseMethodUI phase: phasesMethodUI) {
-			numSteps += phase.getViewsIDs().length;
-			System.out.println(phase.getView(0));
+			numSteps += phasesMethodUIManager.getSteps(phase.getId()).size();
 		}
 		_stepValue.setText("0/" + numSteps);
+		
+		ViewPart step = phasesMethodUIManager.getStep(phasesMethodUI.get(0).getId(), 0);
+		CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, 1);
 	}
 	
 	private void createInfoPanels(Composite composite) {

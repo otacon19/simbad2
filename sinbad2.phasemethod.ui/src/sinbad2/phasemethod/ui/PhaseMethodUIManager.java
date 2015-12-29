@@ -1,11 +1,15 @@
 package sinbad2.phasemethod.ui;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.ui.part.ViewPart;
 
 
 public class PhaseMethodUIManager {
@@ -18,11 +22,13 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 	
 	private Map<String, PhaseMethodUIRegistryExtension> _registers;
 	private Map<String, PhaseMethodUI> _phasesMethodsUIs;
+	private Map<String, List<ViewPart>> _phasesSteps;
 	
 	private PhaseMethodUIManager() {
 		_activeResolutionPhaseUI = null;
 		_registers = new HashMap<String, PhaseMethodUIRegistryExtension>();
 		_phasesMethodsUIs = new HashMap<String, PhaseMethodUI>();
+		_phasesSteps = new HashMap<String, List<ViewPart>>();
 		loadRegistersExtension();
 	}
 	
@@ -69,6 +75,14 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 		}
 	}
 	
+	public List<ViewPart> getSteps(String id) {
+		return _phasesSteps.get(id);
+	}
+	
+	public ViewPart getStep(String id, int numStep) {
+		return _phasesSteps.get(id).get(numStep);
+	}
+	
 	public PhaseMethodUI getActiveResolutionPhasesUI() {
 		return _activeResolutionPhaseUI;
 	}
@@ -110,8 +124,19 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 		phaseMethodUI.setRegistry(phaseMethodUIRegistry);
 		phaseMethodUI.getPhaseMethod().registerPhaseMethodStateListener(phaseMethodUI);
 
-		
 		_phasesMethodsUIs.put(id, phaseMethodUI);
+		
+		IConfigurationElement[] views = phaseMethodUIRegistry.getConfiguration().getChildren(EPhaseMethodUIElements.view.toString());
+		try {
+			List<ViewPart> steps = new LinkedList<ViewPart>();
+			for(IConfigurationElement view: views) {
+				ViewPart step = (ViewPart) view.createExecutableExtension(EPhaseMethodUIElements.step.toString());
+				steps.add(step);
+			}
+			_phasesSteps.put(id, steps);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 		
 		return phaseMethodUI;
 	}
