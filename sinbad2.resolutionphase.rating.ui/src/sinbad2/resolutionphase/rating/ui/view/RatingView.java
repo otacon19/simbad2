@@ -155,9 +155,10 @@ public class RatingView extends ViewPart {
 	}
 	
 	private void getPreviousStep() {
-		_numStep--;
-		_tabFolder.setSelection(_numStep);
-		
+		if(_numStep != 0) {
+			_numStep--;
+			_tabFolder.setSelection(_numStep);
+		}
 	}
 	
 	private void getNextStep() {
@@ -292,11 +293,12 @@ public class RatingView extends ViewPart {
 				_descriptionText.setText(method.getDescription());
 				
 				_methodsUIManager.activate(method.getId() + ".ui");
-				MethodUI methodUI = _methodsUIManager.getActivateMethodUI();
-				_stepsText.setText(methodUI.getPhasesFormat());
 				
+				MethodUI methodUI = _methodsUIManager.getActivateMethodUI();
 				calculateNumSteps(methodUI);
 				loadFirstStep(methodUI);
+				
+				_stepsText.setText(methodUI.getPhasesFormat());
 			}
 		});
 	
@@ -320,9 +322,12 @@ public class RatingView extends ViewPart {
 		
 		ViewPart step = phasesMethodUIManager.getStep(phasesMethodUI.get(0).getId(), 0);
 		CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, 1);
-		Composite composite = new Composite(_tabFolder, SWT.NONE);
-		step.createPartControl(composite);
 		item.setText(step.getPartName());
+		
+		Composite parent = new Composite(_tabFolder, SWT.NONE);
+		
+		step.createPartControl(parent);
+		item.setControl(parent);
 	}
 	
 	private void createInfoPanels(Composite composite) {

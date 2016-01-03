@@ -12,7 +12,7 @@ public abstract class DomainChart {
 	protected JFreeChart _chart;
 	protected ChartComposite _chartComposite;
 	
-	public ChartComposite getCharComposite() {
+	public ChartComposite getChartComposite() {
 		return _chartComposite;
 	}
 	

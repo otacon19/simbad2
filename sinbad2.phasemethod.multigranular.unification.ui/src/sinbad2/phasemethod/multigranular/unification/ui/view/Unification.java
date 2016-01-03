@@ -12,6 +12,11 @@ public class Unification extends ViewPart {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public String getPartName() {
+		return "Unification";
+	}
 
 	@Override
 	public void setFocus() {
