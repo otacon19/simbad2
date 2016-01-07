@@ -301,9 +301,8 @@ public class FuzzySet extends Linguistic {
 		
 		pieces = fragmentFunction.getPieces();
 		if(pieces.size() == 1) {
-			NumericRealDomain domain = new NumericRealDomain();
-			domain.setMinMax(0d, 1d);
-			LinearPieceFunction piece = (LinearPieceFunction) pieces.get(domain);
+			Object[] values = pieces.values().toArray();
+			LinearPieceFunction piece = (LinearPieceFunction) values[0];
 			if(piece != null) {
 				if((piece.getSlope() == 0) && (piece.getCutOffY() == 1)) {
 					return true;
@@ -341,7 +340,6 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	public boolean isTOR() {
-		
 		if(isFuzzy()) {
 			if(isOdd()) {
 				return isTriangular();
@@ -358,11 +356,11 @@ public class FuzzySet extends Linguistic {
 		}
 		
 		double midPoint = midpoint();
-		
+
 		if(midPoint != -1){
 			LabelLinguisticDomain label1, label2;
 			int centralPos = _labelSet.getCardinality() / 2;
-		
+
 			for(int i = 0; i < centralPos; ++i) {
 				label1 = _labelSet.getLabels().get(i);
 				label2 = _labelSet.getLabels().get((_labelSet.getCardinality() - 1) - i);
@@ -370,11 +368,34 @@ public class FuzzySet extends Linguistic {
 					return false;
 				}
 			}
-			
 			return true;
 		} else {
 			return false;
 		}
+	}
+	
+	@Override
+	public double midpoint() {
+		LabelLinguisticDomain label1, label2;
+		int centralPos = _labelSet.getCardinality() / 2;
+		double midPoint;
+		
+		if(isOdd()) {
+			label1 = _labelSet.getLabels().get(centralPos);
+			IMembershipFunction semantic = label1.getSemantic();
+			if(!semantic.isSymmetrical()) {
+				return -1;
+			} else {
+				midPoint = semantic.centroid();
+			}
+		} else {
+			label1 = _labelSet.getLabels().get(centralPos - 1);
+			label2 = _labelSet.getLabels().get(centralPos);
+			
+			midPoint = (label2.getSemantic().centroid() + label1.getSemantic().centroid()) / 2d;
+		}
+		
+		return midPoint;
 	}
 	
 	public boolean isUniform() {
@@ -410,7 +431,6 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	public boolean isBLTS() {
-		
 		if(isTOR()) {
 			if(isSymmetrical()) {
 				return isUniform();
@@ -418,31 +438,6 @@ public class FuzzySet extends Linguistic {
 		}
 		
 		return false;
-	}
-	
-	@Override
-	public double midpoint() {
-		LabelLinguisticDomain label1, label2;
-		int centralPos = _labelSet.getCardinality() / 2;
-		double midPoint;
-		
-		if(isOdd()) {
-			label1 = _labelSet.getLabels().get(centralPos);
-			IMembershipFunction semantic = label1.getSemantic();
-			if(!semantic.isSymmetrical()) {
-				return -1;
-			} else {
-				midPoint = semantic.midPoint();
-			}
-		} else {
-			label1 = _labelSet.getLabels().get(centralPos - 1);
-			label2 = _labelSet.getLabels().get(centralPos);
-			
-			midPoint = (label2.getSemantic().midPoint() + 
-					label1.getSemantic().midPoint()) / 2d;
-		}
-		
-		return midPoint;
 	}
 	
 	@Override

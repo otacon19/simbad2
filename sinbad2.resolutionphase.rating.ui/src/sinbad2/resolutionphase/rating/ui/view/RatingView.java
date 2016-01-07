@@ -274,9 +274,14 @@ public class RatingView extends ViewPart {
 
 		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL)); //$NON-NLS-1$
 		label.setText(method.getName());
-
-		label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
-		label.setImage(Images.signed_yes);
+		
+		if(method.getImplementation().isAvailable()) {
+			label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
+			label.setImage(Images.signed_yes);
+		} else {
+			label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED));
+			label.setImage(Images.signed_no);
+		}
 		
 		label.addMouseListener(new MouseAdapter() {
 			@Override

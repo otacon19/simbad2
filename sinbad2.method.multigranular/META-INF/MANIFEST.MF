@@ -5,4 +5,5 @@ Bundle-SymbolicName: sinbad2.method.multigranular;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.method,
- sinbad2.phasemethod.multigranular.unification;bundle-version="1.0.0"
+ sinbad2.phasemethod.multigranular.unification;bundle-version="1.0.0",
+ sinbad2.domain.linguistic.fuzzyset

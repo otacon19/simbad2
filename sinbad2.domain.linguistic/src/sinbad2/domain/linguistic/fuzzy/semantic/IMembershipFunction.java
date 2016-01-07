@@ -22,7 +22,7 @@ public interface IMembershipFunction extends Cloneable, Comparable<IMembershipFu
 	
 	public double getMembershipValue(double x);
 	
-	public double midPoint();
+	public double centroid();
 	
 	public double maxMin(RealInterval interval);
 	

@@ -96,7 +96,6 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	@Override
 	public boolean isSymmetrical(IMembershipFunction other, double center) {
 		double displacement = (center - _d) * 2;
-		
 		TrapezoidalFunction clone = (TrapezoidalFunction) clone();
 		
 		clone._a = _d;
@@ -145,32 +144,27 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		return result;
 	}
 	
+	public boolean isTriangular() {
+		return (_b == _c);
+	}
+	
+	@Override
 	public double centroid() {
 		double centroidLeft, centroidCenter, centroidRight, areaLeft, areaCenter, areaRight,
-			areaSum, result;
-		
+		areaSum, result;
+	
 		centroidLeft = (_a + ( 2 * _b)) / 3.;
 		centroidCenter = (_b + _c) / 2.;
 		centroidRight = ((2 * _c) + _d) / 3.;
 		
 		areaLeft = (_b - _a) / 2.;
 		areaCenter = (_c - _b);
-		areaRight = (_d - _c) / 2;
+		areaRight = (_d - _c) / 2.;
 		areaSum = areaLeft + areaCenter + areaRight;
 		
-		result = ((centroidLeft * areaLeft) + (centroidCenter + areaCenter)
-				+ (centroidRight + areaRight)) / areaSum;
+		result = ((centroidLeft * areaLeft) + (centroidCenter * areaCenter) + (centroidRight * areaRight)) / areaSum;
 		
 		return result;
-	}
-	
-	public boolean isTriangular() {
-		return (_b == _c);
-	}
-	
-	@Override
-	public double midPoint() {
-		return centroid();
 	}
 	
 
@@ -329,7 +323,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		double aRound = Math.abs(new BigDecimal(_a).setScale(3, RoundingMode.HALF_UP).doubleValue());
 		double bRound = Math.abs(new BigDecimal(_b).setScale(3, RoundingMode.HALF_UP).doubleValue());
 		double cRound = Math.abs(new BigDecimal(_c).setScale(3, RoundingMode.HALF_UP).doubleValue());
-		double dRound = Math.abs(new BigDecimal(_c).setScale(3, RoundingMode.HALF_UP).doubleValue());
+		double dRound = Math.abs(new BigDecimal(_d).setScale(3, RoundingMode.HALF_UP).doubleValue());
 		double aOtherRound = Math.abs(new BigDecimal(other._a).setScale(3, RoundingMode.HALF_UP).doubleValue());
 		double bOtherRound = Math.abs(new BigDecimal(other._b).setScale(3, RoundingMode.HALF_UP).doubleValue());
 		double cOtherRound = Math.abs(new BigDecimal(other._c).setScale(3, RoundingMode.HALF_UP).doubleValue());
@@ -375,7 +369,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	public int compareTo(IMembershipFunction other) {
 		Validator.notNull(other);
 		
-		return Double.compare(this.midPoint(), other.midPoint());
+		return Double.compare(this.centroid(), other.centroid());
 	}
 	
 }
