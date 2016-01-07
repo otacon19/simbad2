@@ -1,7 +1,14 @@
 package sinbad2.phasemethod.multigranular.unification.ui.view;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -15,6 +22,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.domain.Domain;
+import sinbad2.domain.DomainSet;
+import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 
@@ -33,9 +43,18 @@ public class SelectBLTS extends ViewPart {
 	
 	private ControlAdapter _controlListener;
 	
+	private List<Domain> _domainsBLTS;
+	private DomainSet _domainSet;
+	private Domain _domainBLTS;
+	
 	@Override
 	public void createPartControl(Composite parent) {
 		_parent = parent;
+		
+		_domainsBLTS = new LinkedList<Domain>();
+		_domainBLTS = null;
+		DomainsManager domainsManager = DomainsManager.getInstance();
+		_domainSet = domainsManager.getActiveDomainSet();
 		
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_parent.setLayoutData(gridData);
@@ -61,33 +80,42 @@ public class SelectBLTS extends ViewPart {
 		layout.horizontalSpacing = 0;
 		_validDomainsPanel.setLayout(layout);
 
-		_validDomainsViewer = new TableViewer(_validDomainsPanel, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		_validDomainsViewer = new TableViewer(_validDomainsPanel, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_validDomainsViewer.getTable().setLayoutData(gridData);
 		_validDomainsViewer.getTable().setHeaderVisible(true);
 		_validDomainsViewer.setContentProvider(new IStructuredContentProvider() {
 
 			@Override
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			}
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
 
 			@Override
-			public void dispose() {
-			}
+			public void dispose() {}
 			
+			@SuppressWarnings("unchecked")
 			@Override
 			public Object[] getElements(Object inputElement) {
-				return (Object[][]) inputElement;
+				return ((List<Domain>) inputElement).toArray();
 			}
 		});
 
+		_validDomainsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				ISelection selection = _validDomainsViewer.getSelection();
+				_domainBLTS = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
+				refreshChart();
+			}
+		});
+		
 		TableViewerColumn col = new TableViewerColumn(_validDomainsViewer, SWT.NONE);
 		col.getColumn().setWidth(100);
 		col.getColumn().setText("Name");
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return (String) ((Object[]) element)[0];
+				return ((FuzzySet) element).getId();
 			}
 		});
 
@@ -97,13 +125,30 @@ public class SelectBLTS extends ViewPart {
 		descriptionColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return ((FuzzySet) ((Object[]) element)[1]).formatDescriptionDomain();
+				return ((FuzzySet) element).formatDescriptionDomain();
 			}
 		});
 
 		_createNewButton = new Button(_validDomainsPanel, SWT.PUSH);
 		_createNewButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		_createNewButton.setText("Create new");	
+		
+		loadDomains();
+		
+		descriptionColumn.getColumn().pack();
+	}
+	
+	private void loadDomains() {
+		List<Domain> domains = _domainSet.getDomains();
+		for(Domain d: domains) {
+			if(d instanceof FuzzySet) {
+				if(((FuzzySet) d).isBLTS()) {
+					_domainsBLTS.add(d);
+				}
+			}
+		}
+		
+		_validDomainsViewer.setInput(_domainsBLTS);
 	}
 
 	private void createSelectedDomainPanel() {
@@ -118,7 +163,7 @@ public class SelectBLTS extends ViewPart {
 		removeChart();
 		_chart = new LinguisticDomainChart();
 		Point size = _selectedDomainPanel.getSize();
-		_chart.initialize(null, _selectedDomainPanel, size.x, size.y, SWT.BORDER);
+		_chart.initialize(_domainBLTS, _selectedDomainPanel, size.x, size.y, SWT.BORDER);
 		
 		if (_controlListener == null) {
 			_controlListener = new ControlAdapter() {
