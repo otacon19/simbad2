@@ -103,6 +103,7 @@ public class RatingView extends ViewPart {
 		GridData gd_backbutton = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		_backButton.setLayoutData(gd_backbutton);
 		_backButton.setText("< Back");
+		_backButton.setEnabled(false);
 		_backButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -113,6 +114,7 @@ public class RatingView extends ViewPart {
 		_nextButton = new Button(_buttonsBar, SWT.PUSH);
 		_nextButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		_nextButton.setText("Next >");
+		_nextButton.setEnabled(false);
 		_nextButton.addSelectionListener(new SelectionAdapter() { 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -158,13 +160,24 @@ public class RatingView extends ViewPart {
 		if(_numStep != 0) {
 			_numStep--;
 			_tabFolder.setSelection(_numStep);
+			_nextButton.setEnabled(true);
+		}
+		
+		if(_numStep == 0) {
+			_backButton.setEnabled(false);
 		}
 	}
 	
 	private void getNextStep() {
-		_numStep++;
-		_tabFolder.setSelection(_numStep);
+		if((_numStep + 1) < _tabFolder.getItemCount()) {
+			_numStep++;
+			_tabFolder.setSelection(_numStep);
+			_backButton.setEnabled(true);
+		}
 		
+		if(_numStep + 1 == _tabFolder.getItemCount()) {
+			_nextButton.setEnabled(false);
+		}
 	}
 	
 	private void resetRating(boolean reset) {
@@ -181,6 +194,17 @@ public class RatingView extends ViewPart {
 		
 		CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, 0);
 	    item.setText("Method selection");
+	    
+	    _tabFolder.addSelectionListener(new SelectionAdapter() {
+	    	@Override
+	    	public void widgetSelected(SelectionEvent e) {
+	    		if(_tabFolder.getSelectionIndex() < _numStep) {
+	    			getPreviousStep();
+	    		} else if(_tabFolder.getSelectionIndex() > _numStep) {
+	    			getNextStep();
+	    		}
+	    	}
+		});
 	}
 
 	private void createContent() {
@@ -333,6 +357,8 @@ public class RatingView extends ViewPart {
 		
 		step.createPartControl(parent);
 		item.setControl(parent);
+		
+		_nextButton.setEnabled(true);
 	}
 	
 	private void createInfoPanels(Composite composite) {
