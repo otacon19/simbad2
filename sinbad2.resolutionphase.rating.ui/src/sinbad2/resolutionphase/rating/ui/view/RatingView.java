@@ -166,6 +166,18 @@ public class RatingView extends ViewPart {
 		if(_numStep == 0) {
 			_backButton.setEnabled(false);
 		}
+		modifyStep(0);
+	}
+	
+	private void modifyStep(int state) {
+		String currentStep = _stepValue.getText().substring(_stepValue.getText().indexOf("(") + 1, _stepValue.getText().indexOf("/"));
+		String totalSteps = _stepValue.getText().substring(_stepValue.getText().indexOf("/") + 1, _stepValue.getText().indexOf(")"));
+		int currentStepNum = Integer.parseInt(currentStep);
+		if(state == 0) {
+			_stepValue.setText("(" + Integer.toString(currentStepNum - 1) + "/" + totalSteps +")");
+		} else {
+			_stepValue.setText("(" + Integer.toString(currentStepNum + 1) + "/" + totalSteps +")");
+		}
 	}
 	
 	private void getNextStep() {
@@ -178,6 +190,7 @@ public class RatingView extends ViewPart {
 		if(_numStep + 1 == _tabFolder.getItemCount()) {
 			_nextButton.setEnabled(false);
 		}
+		modifyStep(1);
 	}
 	
 	private void resetRating(boolean reset) {
@@ -342,7 +355,7 @@ public class RatingView extends ViewPart {
 		for(PhaseMethodUI phase: phasesMethodUI) {
 			numSteps += phasesMethodUIManager.getSteps(phase.getId()).size();
 		}
-		_stepValue.setText("0/" + numSteps);
+		_stepValue.setText("(0/" + numSteps + ")");
 	}
 	
 	private void loadFirstStep(MethodUI methodUI) {

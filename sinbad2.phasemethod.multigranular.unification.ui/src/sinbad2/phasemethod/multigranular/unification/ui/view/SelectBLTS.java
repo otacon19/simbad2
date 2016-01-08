@@ -15,6 +15,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -27,6 +29,7 @@ import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
+import sinbad2.phasemethod.multigranular.unification.ui.dialog.NewBLTSDomainDialog;
 
 public class SelectBLTS extends ViewPart {
 	
@@ -119,7 +122,7 @@ public class SelectBLTS extends ViewPart {
 			}
 		});
 
-		TableViewerColumn descriptionColumn = new TableViewerColumn(_validDomainsViewer, SWT.NONE);
+		final TableViewerColumn descriptionColumn = new TableViewerColumn(_validDomainsViewer, SWT.NONE);
 		descriptionColumn.getColumn().setWidth(100);
 		descriptionColumn.getColumn().setText("Description");
 		descriptionColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -132,6 +135,28 @@ public class SelectBLTS extends ViewPart {
 		_createNewButton = new Button(_validDomainsPanel, SWT.PUSH);
 		_createNewButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		_createNewButton.setText("Create new");	
+		_createNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				NewBLTSDomainDialog dialog = new NewBLTSDomainDialog(_parent.getShell());
+				
+				if ( dialog.open() != null) {
+					FuzzySet fuzzySet = dialog.getDomain();
+
+					int count = 1;
+					for(Domain domain: _domainsBLTS) {
+						if(domain.getId().contains("generate")) {
+							count++;
+						}
+					}
+					fuzzySet.setId("generate_" + count);
+					_domainsBLTS.add(fuzzySet);
+					
+					_validDomainsViewer.refresh();
+					descriptionColumn.getColumn().pack();
+				}
+			}
+		});
 		
 		loadDomains();
 		

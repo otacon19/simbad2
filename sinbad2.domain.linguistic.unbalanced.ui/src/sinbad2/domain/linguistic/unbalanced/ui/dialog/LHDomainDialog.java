@@ -227,7 +227,7 @@ public class LHDomainDialog extends NewDomainDialog {
 		_previewLabel.setText(Messages.LHDomainDialog_Preview);
 
 		_labels = new String[] { "s0", "s1", "s2" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		_specificDomain = ((FuzzySet) _domain).createTrapezoidalFunction(_labels);
+		((FuzzySet) _specificDomain).createTrapezoidalFunction(_labels);
 
 		Composite composite = new Composite(_container, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));

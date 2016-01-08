@@ -252,7 +252,8 @@ public class Unbalanced extends FuzzySet {
 				}
 			}
 			
-			FuzzySet left = createTrapezoidalFunction(leftLabels);
+			FuzzySet left = new FuzzySet();
+			left.createTrapezoidalFunction(leftLabels);
 			for (int i = 0; i < sl; i++) {
 				unbalancedInfo.setLabelInDomain(i, leftCardinality, i);
 				unbalancedInfo.addLabel(left.getLabelSet().getLabel(i));
@@ -266,7 +267,7 @@ public class Unbalanced extends FuzzySet {
 			lab_t1 = sl - lab_t;
 			int sleCardinality, slcCardinality;
 			String sleLabels[], slcLabels[];
-			FuzzySet sleFuzzySet, slcFuzzySet;
+			FuzzySet sleFuzzySet = new FuzzySet(), slcFuzzySet = new FuzzySet();;
 
 			if (sldensity == 0) {
 				sleCardinality = (aux * 2) + 1;
@@ -280,7 +281,7 @@ public class Unbalanced extends FuzzySet {
 					}
 				}
 
-				sleFuzzySet = createTrapezoidalFunction(sleLabels);
+				sleFuzzySet.createTrapezoidalFunction(sleLabels);
 				for (int i = 0; i < lab_t1; i++) {
 					unbalancedInfo.setLabelInDomain(i, sleCardinality, i);
 					unbalancedInfo.addLabel(sleFuzzySet.getLabelSet().getLabel(i));
@@ -303,7 +304,7 @@ public class Unbalanced extends FuzzySet {
 				}
 				
 					
-				slcFuzzySet = createTrapezoidalFunction(slcLabels);
+				slcFuzzySet.createTrapezoidalFunction(slcLabels);
 				for (int i = (alreadyUsed + 1); i < (lab_t + alreadyUsed); i++) {
 					unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, slcCardinality, i);
 					unbalancedInfo.addLabel(slcFuzzySet.getLabelSet().getLabel(i));
@@ -335,7 +336,7 @@ public class Unbalanced extends FuzzySet {
 					}
 				}
 				
-				sleFuzzySet = createTrapezoidalFunction(sleLabels);
+				sleFuzzySet.createTrapezoidalFunction(sleLabels);
 				for (int i = 0; i < lab_t; i++) {
 					unbalancedInfo.setLabelInDomain(i, sleCardinality, i);
 					unbalancedInfo.addLabel(sleFuzzySet.getLabelSet().getLabel(i));
@@ -356,7 +357,7 @@ public class Unbalanced extends FuzzySet {
 						slcLabels[i] = Messages.Unbalanced_Dirty_label + i;
 					}
 				}
-				slcFuzzySet = createTrapezoidalFunction(slcLabels);
+				slcFuzzySet.createTrapezoidalFunction(slcLabels);
 				for (int i = (alreadyUsed + 1); i < (lab_t1 + alreadyUsed); i++) {
 					unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, slcCardinality, i);
 					unbalancedInfo.addLabel(slcFuzzySet.getLabelSet().getLabel(i));
@@ -402,7 +403,8 @@ public class Unbalanced extends FuzzySet {
 					rightLabels[i] = Messages.Unbalanced_Dirty_label + i;
 				}
 			}
-			FuzzySet right = createTrapezoidalFunction(rightLabels);
+			FuzzySet right = new FuzzySet();;
+			right.createTrapezoidalFunction(rightLabels);
 			for (int i = (rightCardinality - sr); i < rightCardinality; i++) {
 				unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, rightCardinality, i);
 				unbalancedInfo.addLabel(right.getLabelSet().getLabel(i));
@@ -425,7 +427,7 @@ public class Unbalanced extends FuzzySet {
 			lab_t1 = sr - lab_t;
 			int sreCardinality, srcCardinality;
 			String sreLabels[], srcLabels[];
-			FuzzySet sreFuzzySet, srcFuzzySet;
+			FuzzySet sreFuzzySet = new FuzzySet(), srcFuzzySet = new FuzzySet();
 
 			if (srdensity == 0) {
 				srcCardinality = aux + 1;
@@ -440,7 +442,7 @@ public class Unbalanced extends FuzzySet {
 					}
 				}
 
-				srcFuzzySet = createTrapezoidalFunction(srcLabels);
+				srcFuzzySet.createTrapezoidalFunction(srcLabels);
 				for (int i = ((aux / 2) + 1); i < ((aux / 2) + lab_t); i++) {
 					unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, srcCardinality, i);
 					unbalancedInfo.addLabel(srcFuzzySet.getLabelSet().getLabel(i));
@@ -471,7 +473,7 @@ public class Unbalanced extends FuzzySet {
 					}
 				}
 
-				sreFuzzySet = createTrapezoidalFunction(sreLabels);
+				sreFuzzySet.createTrapezoidalFunction(sreLabels);
 				for (int i = (sreCardinality - lab_t1); i < sreCardinality; i++) {
 					unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, sreCardinality, i);
 					unbalancedInfo.addLabel(sreFuzzySet.getLabelSet().getLabel(i));
@@ -501,7 +503,7 @@ public class Unbalanced extends FuzzySet {
 					}
 				}
 
-				srcFuzzySet = createTrapezoidalFunction(srcLabels);
+				srcFuzzySet.createTrapezoidalFunction(srcLabels);
 				for (int i = (aux + 1); i < (aux + lab_t1); i++) {
 					unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, srcCardinality, i);
 					unbalancedInfo.addLabel(srcFuzzySet.getLabelSet().getLabel(i));
@@ -531,7 +533,7 @@ public class Unbalanced extends FuzzySet {
 					}
 				}
 
-				sreFuzzySet = createTrapezoidalFunction(sreLabels);
+				sreFuzzySet.createTrapezoidalFunction(sreLabels);
 
 				for (int i = (sreCardinality - lab_t); i < sreCardinality; i++) {
 					unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, sreCardinality, i);

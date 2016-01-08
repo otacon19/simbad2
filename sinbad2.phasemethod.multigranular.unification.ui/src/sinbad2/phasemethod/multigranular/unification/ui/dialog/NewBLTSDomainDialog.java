@@ -49,6 +49,8 @@ public class NewBLTSDomainDialog extends Dialog {
 	
 
 	public Integer open() {
+		_domainBLTS = new FuzzySet();
+		
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
 		shell.setText("New BLTS domain");
@@ -120,7 +122,7 @@ public class NewBLTSDomainDialog extends Dialog {
 		_previewLabel.setText("Preview");
 	
 		_labels = new String[] { "s0", "s1", "s2" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		_domainBLTS = _domainBLTS.createTrapezoidalFunction(_labels);
+		_domainBLTS.createTrapezoidalFunction(_labels);
 	
 		Composite chartComposite = new Composite(shell, SWT.NONE);
 		chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -196,8 +198,11 @@ public class NewBLTSDomainDialog extends Dialog {
 	}
 	
 	private void modifyDomainSemantic() {
-		_domainBLTS = _domainBLTS.createTrapezoidalFunction(_labels);
+		_domainBLTS.createTrapezoidalFunction(_labels);
 		_fuzzySetChart.setDomain(_domainBLTS);
 	}
-
+	
+	public FuzzySet getDomain() {
+		return _domainBLTS;
+	}
 }

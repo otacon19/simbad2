@@ -227,7 +227,7 @@ public class FuzzySet extends Linguistic {
 		_values = values;
 	}
 	
-	public FuzzySet createTrapezoidalFunction(String[] labels) {
+	public void createTrapezoidalFunction(String[] labels) {
 		LabelLinguisticDomain currentLabel;
 		IMembershipFunction semantic;
 		
@@ -255,8 +255,6 @@ public class FuzzySet extends Linguistic {
 				addLabel(currentLabel);
 			}
 		}
-		
-		return this;
 	}
 	
 	

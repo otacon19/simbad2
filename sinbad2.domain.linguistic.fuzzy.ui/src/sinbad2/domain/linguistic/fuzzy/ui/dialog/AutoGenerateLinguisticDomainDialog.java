@@ -97,7 +97,7 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 
 				if(!_labelsText.getText().isEmpty()) {
 					String[] labels = _labelsText.getText().split(":"); //$NON-NLS-1$
-					_specificDomain = ((FuzzySet) _specificDomain).createTrapezoidalFunction(labels);
+					((FuzzySet) _specificDomain).createTrapezoidalFunction(labels);
 				}
 				
 				validate();
