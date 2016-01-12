@@ -5,6 +5,7 @@ Bundle-SymbolicName: sinbad2.domain.linguistic.fuzzyset;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: sinbad2.domain.linguistic.fuzzy,
+ sinbad2.domain.linguistic.fuzzy.function,
  sinbad2.domain.linguistic.fuzzy.function.types,
  sinbad2.domain.linguistic.fuzzy.label,
  sinbad2.domain.linguistic.fuzzy.semantic

@@ -45,24 +45,40 @@ public class RatingView extends ViewPart {
 	private Composite _parent;
 	private Text _descriptionText;
 	private Text _stepsText;
-	private Button _backButton;
-	private Button _nextButton;
-	private Button _resetButton;
 	private Label _methodName;
 	private Label _stepValue;
 	private CLabel _methodSelected;
 	
-	private CTabFolder _tabFolder;
+	private static Button _backButton;
+	private static Button _nextButton;
+	private static Button _resetButton;
+	
+	private static CTabFolder _tabFolder;
 	private ExpandBar _methodsCategoriesBar; 
 
 	private MethodsUIManager _methodsUIManager;
+	
+	private static MethodUI _methodUISelected;
+	private static RatingView _instance;
 
 	public RatingView() {}
+
+	public static RatingView getInstance() {
+		if(_instance == null) {
+			_instance = new RatingView();
+		}
+		return _instance;
+	}
+	
+	public void disabledNextStep() {
+		_nextButton.setEnabled(false);
+	}
 
 	@Override
 	public void createPartControl(Composite parent) {	
 		_numStep = 0;
 		_methodsUIManager = MethodsUIManager.getInstance();
+		_methodUISelected = null;
 		
 		_parent = parent;
 		createRatingEditorPanel();
@@ -159,7 +175,7 @@ public class RatingView extends ViewPart {
 	private void getPreviousStep() {
 		if(_numStep != 0) {
 			_numStep--;
-			_tabFolder.setSelection(_numStep);
+			activateStep(_numStep);
 			_nextButton.setEnabled(true);
 		}
 		
@@ -183,7 +199,7 @@ public class RatingView extends ViewPart {
 	private void getNextStep() {
 		if((_numStep + 1) < _tabFolder.getItemCount()) {
 			_numStep++;
-			_tabFolder.setSelection(_numStep);
+			activateStep(_numStep);
 			_backButton.setEnabled(true);
 		}
 		
@@ -336,19 +352,19 @@ public class RatingView extends ViewPart {
 				
 				_methodsUIManager.activate(method.getId() + ".ui");
 				
-				MethodUI methodUI = _methodsUIManager.getActivateMethodUI();
-				calculateNumSteps(methodUI);
-				loadFirstStep(methodUI);
+				_methodUISelected = _methodsUIManager.getActivateMethodUI();
+				calculateNumSteps();
+				loadNextStep();
 				
-				_stepsText.setText(methodUI.getPhasesFormat());
+				_stepsText.setText(_methodUISelected.getPhasesFormat());
 			}
 		});
 	
 		label.pack();
 	}
 	
-	private void calculateNumSteps(MethodUI methodUI) {
-		List<PhaseMethodUI> phasesMethodUI = methodUI.getPhasesUI();
+	private void calculateNumSteps() {
+		List<PhaseMethodUI> phasesMethodUI = _methodUISelected.getPhasesUI();
 		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
 		
 		int numSteps = 0;
@@ -358,12 +374,20 @@ public class RatingView extends ViewPart {
 		_stepValue.setText("(0/" + numSteps + ")");
 	}
 	
-	private void loadFirstStep(MethodUI methodUI) {
+	public void loadNextStep() {
 		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
-		List<PhaseMethodUI> phasesMethodUI = methodUI.getPhasesUI();
+		List<PhaseMethodUI> phasesMethodUI = _methodUISelected.getPhasesUI();
 		
-		ViewPart step = phasesMethodUIManager.getStep(phasesMethodUI.get(0).getId(), 0);
-		CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, 1);
+		int numPhase = 0, numSteps = 0;
+		for(PhaseMethodUI phaseMethodUI: phasesMethodUI) {
+			if(_tabFolder.getSelectionIndex() == phasesMethodUIManager.getSteps(phaseMethodUI.getId()).size()) {
+				numPhase++;
+				numSteps += phasesMethodUIManager.getSteps(phaseMethodUI.getId()).size();
+			}
+		}
+		
+		ViewPart step = phasesMethodUIManager.getStep(phasesMethodUI.get(numPhase).getId(), Math.abs(numSteps - _tabFolder.getSelectionIndex()));
+		CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, _tabFolder.getSelectionIndex() + 1);
 		item.setText(step.getPartName());
 		
 		Composite parent = new Composite(_tabFolder, SWT.NONE);
@@ -403,6 +427,10 @@ public class RatingView extends ViewPart {
 		_stepsText = new Text(compositePanels, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_stepsText.setLayoutData(gridData);
+	}
+	
+	private void activateStep(int numStep) {
+		_tabFolder.setSelection(numStep);
 	}
 	
 	@Override

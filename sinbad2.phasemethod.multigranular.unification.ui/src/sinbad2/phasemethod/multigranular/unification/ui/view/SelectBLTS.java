@@ -30,6 +30,7 @@ import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.phasemethod.multigranular.unification.ui.dialog.NewBLTSDomainDialog;
+import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
 public class SelectBLTS extends ViewPart {
 	
@@ -48,14 +49,19 @@ public class SelectBLTS extends ViewPart {
 	
 	private List<Domain> _domainsBLTS;
 	private DomainSet _domainSet;
-	private Domain _domainBLTS;
+	private Domain _selectedBLTSDomain;
+	
+	private RatingView _ratingView;
 	
 	@Override
 	public void createPartControl(Composite parent) {
+		_ratingView = RatingView.getInstance();
+		_ratingView.disabledNextStep();
+		
 		_parent = parent;
 		
 		_domainsBLTS = new LinkedList<Domain>();
-		_domainBLTS = null;
+		_selectedBLTSDomain = null;
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		_domainSet = domainsManager.getActiveDomainSet();
 		
@@ -107,7 +113,8 @@ public class SelectBLTS extends ViewPart {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = _validDomainsViewer.getSelection();
-				_domainBLTS = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
+				_selectedBLTSDomain = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
+				_ratingView.loadNextStep();
 				refreshChart();
 			}
 		});
@@ -188,7 +195,7 @@ public class SelectBLTS extends ViewPart {
 		removeChart();
 		_chart = new LinguisticDomainChart();
 		Point size = _selectedDomainPanel.getSize();
-		_chart.initialize(_domainBLTS, _selectedDomainPanel, size.x, size.y, SWT.BORDER);
+		_chart.initialize(_selectedBLTSDomain, _selectedDomainPanel, size.x, size.y, SWT.BORDER);
 		
 		if (_controlListener == null) {
 			_controlListener = new ControlAdapter() {
