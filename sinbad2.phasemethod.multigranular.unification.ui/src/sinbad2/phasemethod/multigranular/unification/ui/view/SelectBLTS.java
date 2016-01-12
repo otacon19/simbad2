@@ -69,7 +69,7 @@ public class SelectBLTS extends ViewPart {
 		_parent.setLayoutData(gridData);
 		GridLayout layout = new GridLayout(14, true);
 		layout.horizontalSpacing = 15;
-		parent.setLayout(layout);
+		_parent.setLayout(layout);
 		
 		createValidDomainsPanel();
 		createSelectedDomainPanel();
