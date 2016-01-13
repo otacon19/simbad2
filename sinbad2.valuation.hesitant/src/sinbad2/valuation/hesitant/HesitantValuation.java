@@ -16,13 +16,14 @@ import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 
 public class HesitantValuation extends Valuation {
+	
+	public static final String ID = "flintstones.valuation.hesitant"; //$NON-NLS-1$
+	
 	private EUnaryRelationType _unaryRelation;
 	private LabelLinguisticDomain _term;
 	private LabelLinguisticDomain _upperTerm;
 	private LabelLinguisticDomain _lowerTerm;
 	private LabelLinguisticDomain _label;
-	
-	public static final String ID = "flintstones.valuation.hesitant"; //$NON-NLS-1$
 	
 	public HesitantValuation() {
 		super();
