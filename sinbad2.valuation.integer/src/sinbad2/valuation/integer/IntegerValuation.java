@@ -132,7 +132,6 @@ public class IntegerValuation extends Valuation {
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeAttribute("value", Long.toString(_value)); //$NON-NLS-1$
-		
 	}
 
 	@Override

@@ -132,14 +132,24 @@ public class LinguisticValuation extends Valuation {
 
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeStartElement("label"); //$NON-NLS-1$
+		writer.writeStartElement("labelvaluation"); //$NON-NLS-1$
+		
+		writer.writeStartElement(_label.getName());
+		writer.writeAttribute("label", _label.getName()); //$NON-NLS-1$
 		_label.save(writer);
+		writer.writeEndElement();
+		
 		writer.writeEndElement();
 	}
 
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {
+		reader.goToStartElement("labelvaluation"); //$NON-NLS-1$
+		reader.next();
+		String name = reader.getStartElementAttribute("label"); //$NON-NLS-1$
 		_label = new LabelLinguisticDomain();
+		_label.setName(name);
 		_label.read(reader);
 	}
+	
 }
