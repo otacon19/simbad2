@@ -29,8 +29,6 @@ import sinbad2.domain.ui.jfreechart.DomainChart;
 public class CreateManualDomainDialogChart extends DomainChart {
 	
 	private LabelLinguisticDomain _label;
-	private JFreeChart _chart;
-	private ChartComposite _chartComposite;
 	
 	public static final Color[] colors = {Color.RED, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.LIGHT_GRAY, Color.ORANGE, Color.ORANGE,
 		Color.MAGENTA, Color.PINK, Color.WHITE, Color.YELLOW};

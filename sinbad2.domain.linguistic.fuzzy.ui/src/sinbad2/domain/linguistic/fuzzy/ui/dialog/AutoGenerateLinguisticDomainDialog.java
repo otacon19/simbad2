@@ -130,8 +130,8 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 		Composite composite = new Composite(_container, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		DomainUIsManager manager = DomainUIsManager.getInstance();
-		_chart = (LinguisticDomainChart) manager.newDomainChart(_domain);
-		_chart.initialize(_specificDomain, composite, 510, 195, SWT.BORDER);
+		_chart = (LinguisticDomainChart) manager.newDomainChart(_specificDomain);
+		_chart.initialize(new FuzzySet(), composite, 510, 195, SWT.BORDER);
 		
 		return _container;
 	}

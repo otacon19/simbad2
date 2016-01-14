@@ -57,7 +57,6 @@ public class LinguisticDomainChart extends DomainChart {
 
 	@Override
 	public void refreshChart() {
-
 		if(_chart == null) {
 			_chart = createChart(createDataset());
 		} else {
@@ -124,7 +123,7 @@ public class LinguisticDomainChart extends DomainChart {
 	private XYSeriesCollection createDataset() {
 		
 		_dataset = new XYSeriesCollection();
-
+		
 		if(_domain != null) {
 			if(((FuzzySet) _domain).getLabelSet().getCardinality() > 0 ) {
 				XYSeries series;
@@ -241,5 +240,4 @@ public class LinguisticDomainChart extends DomainChart {
 			}
 		}
 	}
-
 }
