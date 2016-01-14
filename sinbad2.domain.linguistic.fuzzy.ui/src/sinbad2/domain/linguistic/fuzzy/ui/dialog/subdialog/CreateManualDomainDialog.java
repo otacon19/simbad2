@@ -12,9 +12,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
@@ -207,6 +209,16 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 			public void modifyText(ModifyEvent e) {
 				_name = _nameText.getText();
 				setLabel();
+			}
+		});
+		
+		_nameText.addListener(SWT.Verify, new Listener() {
+			public void handleEvent(Event e) {
+				String text = _nameText.getText();
+				if(e.character == ' ' && text.isEmpty()) {
+					e.doit = false;
+					return;
+				}
 			}
 		});
 	}
