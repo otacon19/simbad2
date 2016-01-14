@@ -19,7 +19,6 @@ public class FrameworkStructuringPreferencesPage extends FieldEditorPreferencePa
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription(Messages.FrameworkStructuringPreferencesPage_Framework_structuring_preferences);	
-		
 	}
 
 	@Override
