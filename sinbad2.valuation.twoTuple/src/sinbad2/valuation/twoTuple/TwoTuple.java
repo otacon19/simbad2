@@ -98,7 +98,7 @@ public class TwoTuple extends LinguisticValuation {
 	
 	@Override
 	public String toString() {
-		return("[" + _label + ", " + _alpha + " in" + _domain);
+		return ("[" + _label + ", " + _alpha + "]" + " in " + _domain);
 	}
 	
 	@Override

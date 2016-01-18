@@ -214,8 +214,7 @@ public class CreateManualDomainDialog extends NewDomainDialog {
 		
 		_nameText.addListener(SWT.Verify, new Listener() {
 			public void handleEvent(Event e) {
-				String text = _nameText.getText();
-				if(e.character == ' ' && text.isEmpty()) {
+				if(e.character == ' ') {
 					e.doit = false;
 					return;
 				}

@@ -218,7 +218,6 @@ public class ModifyLinguisticDomainDialog extends ModifyDomainDialog {
 	}
 	
 	private void configureActions() {
-		
 		configureAction(_add, Messages.ModifyLinguisticDomainDialog_Add, Messages.ModifyLinguisticDomainDialog_Add_label, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_ADD));
 		configureAction(_modify, Messages.ModifyLinguisticDomainDialog_Modify, Messages.ModifyLinguisticDomainDialog_Modify_label, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_CLEAR));
 		configureAction(_remove, Messages.ModifyLinguisticDomainDialog_Remove, Messages.ModifyLinguisticDomainDialog_Remove_label, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));

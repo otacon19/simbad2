@@ -517,7 +517,6 @@ public class FuzzySet extends Linguistic {
 				}
 			}
 		}
-		
 	}
 	
 	@Override

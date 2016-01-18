@@ -23,6 +23,7 @@ import sinbad2.phasemethod.multigranular.unification.ui.view.provider.DomainColu
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.EvaluationColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.ExpertColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.TreeViewerContentProvider;
+import sinbad2.phasemethod.multigranular.unification.ui.view.provider.UnifiedEvaluationColumnLabelProvider;
 
 public class Unification extends ViewPart {
 	
@@ -43,8 +44,8 @@ public class Unification extends ViewPart {
 	private TreeColumn _treeDomainColumn;
 	private TreeViewerColumn _treeViewerEvaluationColumn;
 	private TreeColumn _treeEvaluationColumn;
-	//private TreeViewerColumn _treeViewerUnifiedEvaluationColumn;
-	//private TreeColumn _treeUnifiedEvaluationColumn;
+	private TreeViewerColumn _treeViewerUnifiedEvaluationColumn;
+	private TreeColumn _treeUnifiedEvaluationColumn;
 	
 	private Button _saveButton;
 	
@@ -119,13 +120,13 @@ public class Unification extends ViewPart {
 			}
 		});
 
-		/*_treeViewerUnifiedEvaluationColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
+		_treeViewerUnifiedEvaluationColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
 		_treeUnifiedEvaluationColumn = _treeViewerUnifiedEvaluationColumn.getColumn();
 		_treeUnifiedEvaluationColumn.setWidth(125);
 		_treeUnifiedEvaluationColumn.setText("Unified");
 		_treeUnifiedEvaluationColumn.setImage(Images.Valuation);
-		_treeUnifiedEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 5));
-		_treeViewerUnifiedEvaluationColumn.setLabelProvider(new UnifiedEvaluationColumnLabelProvider());*/
+		//_treeUnifiedEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 5));
+		_treeViewerUnifiedEvaluationColumn.setLabelProvider(new UnifiedEvaluationColumnLabelProvider());
 
 		_treeViewerExpertColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
 		_treeExpertColumn = _treeViewerExpertColumn.getColumn();
@@ -196,7 +197,7 @@ public class Unification extends ViewPart {
 		_treeCriterionColumn.pack();
 		_treeDomainColumn.pack();
 		_treeEvaluationColumn.pack();
-		//_treeUnifiedEvaluationColumn.pack();
+		_treeUnifiedEvaluationColumn.pack();
 	}
 	
 	@Override

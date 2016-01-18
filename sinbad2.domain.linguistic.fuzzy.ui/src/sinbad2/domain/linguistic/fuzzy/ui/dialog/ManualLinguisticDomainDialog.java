@@ -219,7 +219,6 @@ public class ManualLinguisticDomainDialog extends NewDomainDialog {
 	}
 	
 	private void configureActions() {
-		
 		configureAction(_add, Messages.ManualLinguisticDomainDialog_Add, Messages.ManualLinguisticDomainDialog_Add_label, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_ADD));
 		configureAction(_modify, Messages.ManualLinguisticDomainDialog_Modify, Messages.ManualLinguisticDomainDialog_Modify_label, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_CLEAR));
 		configureAction(_remove, Messages.ManualLinguisticDomainDialog_Remove, Messages.ManualLinguisticDomainDialog_Remove_label, PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));

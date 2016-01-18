@@ -109,12 +109,9 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 		
 		_labelsText.addListener(SWT.Verify, new Listener() {
 			public void handleEvent(Event e) {
-				String text = _labelsText.getText();
 				if(e.character == ' ') {
-					if(text.endsWith(":")) {
-						e.doit = false;
-						return;
-					}
+					e.doit = false;
+					return;
 				}
 			}
 		});

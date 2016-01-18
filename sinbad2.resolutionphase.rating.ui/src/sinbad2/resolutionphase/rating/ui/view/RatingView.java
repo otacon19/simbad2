@@ -387,15 +387,25 @@ public class RatingView extends ViewPart {
 		}
 		
 		ViewPart step = phasesMethodUIManager.getStep(phasesMethodUI.get(numPhase).getId(), Math.abs(numSteps - _tabFolder.getSelectionIndex()));
-		CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, _tabFolder.getSelectionIndex() + 1);
-		item.setText(step.getPartName());
+		boolean loaded = false;
+		for(CTabItem tabItem: _tabFolder.getItems()) {
+			if(tabItem.getText().equals(step.getPartName())) {
+				loaded = true;
+				break;
+			}
+		}
 		
-		Composite parent = new Composite(_tabFolder, SWT.NONE);
-		
-		step.createPartControl(parent);
-		item.setControl(parent);
-		
-		_nextButton.setEnabled(true);
+		if(!loaded) {
+			CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, _tabFolder.getSelectionIndex() + 1);
+			item.setText(step.getPartName());
+			
+			Composite parent = new Composite(_tabFolder, SWT.NONE);
+			
+			step.createPartControl(parent);
+			item.setControl(parent);
+			
+			_nextButton.setEnabled(true);
+		}
 	}
 	
 	private void createInfoPanels(Composite composite) {

@@ -9,6 +9,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
+import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.linguistic.nls.Messages;
@@ -71,7 +72,27 @@ public class LinguisticValuation extends Valuation {
 		return _label.getName();
 	}
 	
-	//TODO unification
+	public FuzzySet unification(FuzzySet fuzzySet) {
+		Validator.notNull(fuzzySet);
+
+		if(!fuzzySet.isBLTS()) {
+			throw new IllegalArgumentException("Not BLTS fuzzy set.");
+		}
+
+		int cardinality;
+		IMembershipFunction function;
+		FuzzySet result;
+
+		result = (FuzzySet) ((FuzzySet) fuzzySet).clone();
+		cardinality = ((FuzzySet) fuzzySet).getLabelSet().getCardinality();
+
+		for(int i = 0; i < cardinality; i++) {
+			function = result.getLabelSet().getLabel(i).getSemantic();
+			result.setValue(i, function.maxMin(_label.getSemantic()));
+		}
+
+		return result;
+	}
 	
 	@Override
 	public String toString() {

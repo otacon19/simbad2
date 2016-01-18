@@ -59,9 +59,8 @@ public class PhaseMethod {
 			unregisterPhaseMethodStateListener(_implementation);
 			registerPhaseMethodStateListener(implementation);
 
-			//TODO añadir al método la fase
-			/*ResolutionPhasesManager rpm = ResolutionPhasesManager.getInstance();
-			rpm.setImplementationResolutionPhase(implementation, _id);*/
+			PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+			pmm.setImplementationPhaseMethod(implementation, _id);
 
 			_implementation = implementation;
 		}
@@ -76,11 +75,8 @@ public class PhaseMethod {
 								EPhaseMethodElements.implementation
 										.toString());
 				
-				//TODO obtener la implementacion de la fase01
-				/*
-				ResolutionPhasesManager rpm = ResolutionPhasesManager
-						.getInstance();
-				rpm.setImplementationResolutionPhase(_implementation, _id);*/
+				PhasesMethodManager ppm = PhasesMethodManager.getInstance();
+				ppm.setImplementationPhaseMethod(_implementation, _id);
 
 				registerPhaseMethodStateListener(_implementation);
 

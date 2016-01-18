@@ -11,8 +11,9 @@ Require-Bundle: sinbad2.phasemethod.ui,
  sinbad2.valuation.integer,
  sinbad2.valuation.real,
  sinbad2.valuation.hesitant,
- sinbad2.valuation.linguistic,
  sinbad2.valuation.integer.interval,
- sinbad2.valuation.valuationset
+ sinbad2.valuation.valuationset,
+ sinbad2.valuation.twoTuple;bundle-version="1.0.0",
+ sinbad2.valuation.unifiedValuation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

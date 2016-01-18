@@ -150,7 +150,7 @@ public class LabelSetLinguisticDomain implements Cloneable {
 		LabelLinguisticDomain label = null;
 		
 		reader.goToStartElement("labels"); //$NON-NLS-1$
-
+		
 		while (reader.hasNext() && !end) {
 			event = reader.next();
 			if (event.isStartElement()) {
