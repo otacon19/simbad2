@@ -94,7 +94,29 @@ public class TwoTuple extends LinguisticValuation {
 		return result;
 	}
 	
-	//TODO transform
+	public TwoTuple transform(FuzzySet fuzzySet) {
+
+		TwoTuple result = null;
+		
+		Validator.notNull(fuzzySet);
+		
+		if (!fuzzySet.isBLTS()) {
+			throw new IllegalArgumentException("Not BLTS fuzzy set.");
+		}
+		
+		int thisCardinality = ((FuzzySet)_domain).getLabelSet().getCardinality();
+		int otherCardinality = fuzzySet.getLabelSet().getCardinality();
+		
+		double numerator = calculateInverseDelta() * ((double) (otherCardinality - 1));
+		double denominator = (double) (thisCardinality - 1);
+		
+		double beta = numerator / denominator;
+		
+		result = new TwoTuple(fuzzySet);
+		result.calculateDelta(beta);
+		
+		return result;
+	}
 	
 	@Override
 	public String toString() {

@@ -5,4 +5,9 @@ Bundle-SymbolicName: sinbad2.phasemethod.multigranular.unification;singleton:=tr
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Sinbad2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: sinbad2.phasemethod
+Require-Bundle: sinbad2.phasemethod,
+ sinbad2.valuation.valuationset,
+ sinbad2.domain.linguistic.fuzzyset,
+ sinbad2.valuation.twoTuple,
+ sinbad2.valuation.unifiedValuation
+Export-Package: sinbad2.phasemethod.multigranular.unification

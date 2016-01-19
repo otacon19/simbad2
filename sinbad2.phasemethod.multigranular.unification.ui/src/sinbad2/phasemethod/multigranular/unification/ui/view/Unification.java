@@ -5,6 +5,8 @@ import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -16,7 +18,10 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.phasemethod.multigranular.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.unification.ui.Images;
+import sinbad2.phasemethod.multigranular.unification.ui.comparator.UnificationTreeViewerComparator;
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.AlternativeColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.CriterionColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.DomainColumnLabelProvider;
@@ -82,7 +87,7 @@ public class Unification extends ViewPart {
 		container.setLayout(gl_container);
 
 		_treeViewer = new TreeViewer(container, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		//TODO _treeViewer.setComparator(new UnificationViewerComparator());
+		_treeViewer.setComparator(new UnificationTreeViewerComparator());
 		_tree = _treeViewer.getTree();
 		_tree.setHeaderVisible(true);
 		_tree.setLinesVisible(true);
@@ -125,7 +130,7 @@ public class Unification extends ViewPart {
 		_treeUnifiedEvaluationColumn.setWidth(125);
 		_treeUnifiedEvaluationColumn.setText("Unified");
 		_treeUnifiedEvaluationColumn.setImage(Images.Valuation);
-		//_treeUnifiedEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 5));
+		_treeUnifiedEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 5));
 		_treeViewerUnifiedEvaluationColumn.setLabelProvider(new UnifiedEvaluationColumnLabelProvider());
 
 		_treeViewerExpertColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
@@ -133,7 +138,7 @@ public class Unification extends ViewPart {
 		_treeExpertColumn.setWidth(125);
 		_treeExpertColumn.setText("Expert");
 		_treeExpertColumn.setImage(Images.GroupOfExperts);
-		//_treeExpertColumn.addSelectionListener(getSelectionAdapter(_treeExpertColumn, 0));
+		_treeExpertColumn.addSelectionListener(getSelectionAdapter(_treeExpertColumn, 0));
 		_treeViewerExpertColumn.setLabelProvider(new ExpertColumnLabelProvider());
 
 		_treeViewerAlternativeColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
@@ -141,7 +146,7 @@ public class Unification extends ViewPart {
 		_treeAlternativeColumn.setWidth(125);
 		_treeAlternativeColumn.setText("Alternative");
 		_treeAlternativeColumn.setImage(Images.Alternative);
-		//_treeAlternativeColumn.addSelectionListener(getSelectionAdapter(_treeAlternativeColumn, 1));
+		_treeAlternativeColumn.addSelectionListener(getSelectionAdapter(_treeAlternativeColumn, 1));
 		_treeViewerAlternativeColumn.setLabelProvider(new AlternativeColumnLabelProvider());
 
 		_treeViewerCriterionColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
@@ -149,7 +154,7 @@ public class Unification extends ViewPart {
 		_treeCriterionColumn.setWidth(125);
 		_treeCriterionColumn.setText("Criterion");
 		_treeCriterionColumn.setImage(Images.Criteria);
-		//_treeCriterionColumn.addSelectionListener(getSelectionAdapter(_treeCriterionColumn, 2));
+		_treeCriterionColumn.addSelectionListener(getSelectionAdapter(_treeCriterionColumn, 2));
 		_treeViewerCriterionColumn.setLabelProvider(new CriterionColumnLabelProvider());
 
 		_treeViewerDomainColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
@@ -157,7 +162,7 @@ public class Unification extends ViewPart {
 		_treeDomainColumn.setWidth(125);
 		_treeDomainColumn.setText("Source domain");
 		_treeDomainColumn.setImage(Images.Domain);
-		//_treeDomainColumn.addSelectionListener(getSelectionAdapter(_treeDomainColumn, 3));
+		_treeDomainColumn.addSelectionListener(getSelectionAdapter(_treeDomainColumn, 3));
 		_treeViewerDomainColumn.setLabelProvider(new DomainColumnLabelProvider());
 
 		_treeViewerEvaluationColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
@@ -165,13 +170,28 @@ public class Unification extends ViewPart {
 		_treeEvaluationColumn.setWidth(125);
 		_treeEvaluationColumn.setText("Evaluation");
 		_treeEvaluationColumn.setImage(Images.Valuation);
-		//_treeEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 4));
+		_treeEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 4));
 		_treeViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 		
-		TreeViewerContentProvider provider = new TreeViewerContentProvider();
+		TreeViewerContentProvider provider = new TreeViewerContentProvider(UnificationPhase.unification(((FuzzySet)SelectBLTS.getBLTSDomain())));
 		_treeViewer.setContentProvider(provider);
 		_treeViewer.setInput(provider.getInput());
 		compactTable();
+	}
+	
+	private SelectionAdapter getSelectionAdapter(final TreeColumn column, final int index) {
+		SelectionAdapter selectionAdapter = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				UnificationTreeViewerComparator comparator = (UnificationTreeViewerComparator) _treeViewer.getComparator();
+				comparator.setColumn(index);
+				int dir = comparator.getDirection();
+				_treeViewer.getTree().setSortDirection(dir);
+				_treeViewer.getTree().setSortColumn(column);
+				_treeViewer.refresh();
+			}
+		};
+		return selectionAdapter;
 	}
 	
 	private void createButtons() {

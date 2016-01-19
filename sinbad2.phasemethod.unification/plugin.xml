@@ -5,7 +5,7 @@
          point="flintstones.phasemethod">
       <phase
             id="flintstones.phasemethod.unification"
-            implementation="sinbad2.phasemethod.multigranular.unification.Unification"
+            implementation="sinbad2.phasemethod.multigranular.unification.UnificationPhase"
             name="Unification">
       </phase>
    </extension>

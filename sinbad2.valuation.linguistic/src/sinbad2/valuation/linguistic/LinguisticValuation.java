@@ -93,7 +93,7 @@ public class LinguisticValuation extends Valuation {
 
 		return result;
 	}
-	
+
 	@Override
 	public String toString() {
 		return (_label + " in " + _domain.toString()); //$NON-NLS-1$

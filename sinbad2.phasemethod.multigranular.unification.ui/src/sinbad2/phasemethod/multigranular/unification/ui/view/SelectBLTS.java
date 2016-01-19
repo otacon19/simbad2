@@ -49,7 +49,7 @@ public class SelectBLTS extends ViewPart {
 	
 	private List<Domain> _domainsBLTS;
 	private DomainSet _domainSet;
-	private Domain _selectedBLTSDomain;
+	private static Domain _selectedBLTSDomain;
 	
 	private RatingView _ratingView;
 	
@@ -214,6 +214,10 @@ public class SelectBLTS extends ViewPart {
 		}
 	}
 
+	public static Domain getBLTSDomain() {
+		return _selectedBLTSDomain;
+	}
+	
 	@Override
 	public String getPartName() {
 		return "Select BLTS";

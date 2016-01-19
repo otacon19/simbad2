@@ -21,19 +21,20 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 	private ValuationSet _valutationSet;
 	private Map<ValuationKey, Valuation> _valuations;
 	private Object[][] _information;
-	private Object[][] _unifiedEvaluations;
+	private Map<ValuationKey, Valuation> _unifiedEvaluations;
 	
 	public TreeViewerContentProvider() {
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = valuationSetManager.getActiveValuationSet();
 	}
 	
-	public TreeViewerContentProvider(Object[][] unifiedEvaluations) {
+	public TreeViewerContentProvider(Map<ValuationKey, Valuation> unifiedEvaluations) {
 		this();
 		
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = valuationSetManager.getActiveValuationSet();
 		_unifiedEvaluations = unifiedEvaluations;
+		System.out.println(unifiedEvaluations);
 	}
 	
 	@Override
@@ -65,15 +66,11 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 			criterion = vk.getCriterion();
 			domain = v.getDomain();
 		
-			int pos = 0;
-			boolean find = false;
-			Object[] unified;
 			unifiedValuation = null;
-			while ((pos < _unifiedEvaluations.length) && (!find)) {
-				unified = _unifiedEvaluations[pos++];
-				if ((unified[0].equals(vk.getExpert())) && (unified[1].equals(vk.getAlternative())) && (unified[2].equals(vk.getCriterion()))) {
-					unifiedValuation = (Valuation) unified[3];
-					find = true;
+			 for(ValuationKey vku: _unifiedEvaluations.keySet()) {
+				if ((vku.getExpert().equals(vk.getExpert())) && (vku.getAlternative().equals(vk.getAlternative())) && (vku.getCriterion().equals(vk.getCriterion()))) {
+					unifiedValuation = (Valuation) _unifiedEvaluations.get(vku);
+					break;
 				}
 			}
 			

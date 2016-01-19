@@ -124,6 +124,7 @@
       <plugin id="sinbad2.valuation.real.ui"/>
       <plugin id="sinbad2.valuation.twoTuple"/>
       <plugin id="sinbad2.valuation.ui"/>
+      <plugin id="sinbad2.valuation.unifiedValuation"/>
       <plugin id="sinbad2.valuation.valuationset"/>
       <plugin id="sinbad2.valuation.valuationset.ui"/>
       <plugin id="sinbad2.valutation.hesitant.ui"/>
