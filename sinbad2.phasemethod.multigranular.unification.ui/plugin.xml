@@ -6,7 +6,7 @@
       <ui
             id="flintstones.phasemethod.multigranular.unification.ui"
             name="Unification"
-            phasemethod="flintstones.phasemethod.unification">
+            phasemethod="flintstones.phasemethod.multigranular.unification">
          <view
                step="sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS">
          </view>
