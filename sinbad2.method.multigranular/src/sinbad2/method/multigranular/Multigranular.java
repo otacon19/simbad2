@@ -27,10 +27,7 @@ public class Multigranular extends MethodImplementation {
 	}
 
 	@Override
-	public void notifyMethodStateChange(MethodStateChangeEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void notifyMethodStateChange(MethodStateChangeEvent event) {}
 
 	@Override
 	public boolean isAvailable() {

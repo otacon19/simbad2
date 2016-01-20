@@ -36,9 +36,9 @@ public class Method {
 		_listeners = new LinkedList<IMethodStateListener>();
 	}
 
-	public Method(String id, String name, MethodImplementation implementation, 
-			List<PhaseMethod> phases, MethodRegistryExtension registry) {
+	public Method(String id, String name, MethodImplementation implementation, List<PhaseMethod> phases, MethodRegistryExtension registry) {
 		this();
+		
 		setId(id);
 		setName(name);
 		setImplementation(implementation);
@@ -100,15 +100,11 @@ public class Method {
 		
 		if (_implementation == null) {
 			try {
-				_implementation = (MethodImplementation) _registry
-						.getConfiguration().createExecutableExtension(
-								EMethodElements.implementation
-										.toString());
+				_implementation = (MethodImplementation) _registry.getConfiguration().createExecutableExtension(EMethodElements.implementation.toString());
 
 				_implementation.setMethod(this);
 
-				MethodsManager rsm = MethodsManager
-						.getInstance();
+				MethodsManager rsm = MethodsManager.getInstance();
 				rsm.setImplementationMethod(_implementation, _id);
 				
 				registerMethodStateListener(_implementation);
@@ -166,26 +162,21 @@ public class Method {
 			phase.containerDeactivate();
 		}
 
-		PhasesMethodManager resolutionPhasesManager = PhasesMethodManager
-				.getInstance();
+		PhasesMethodManager resolutionPhasesManager = PhasesMethodManager.getInstance();
 		resolutionPhasesManager.deactivateCurrentActive();
 
-		notifyMethodStateChange(new MethodStateChangeEvent(
-				EMethodStateChanges.DEACTIVATED));
+		notifyMethodStateChange(new MethodStateChangeEvent(EMethodStateChanges.DEACTIVATED));
 	}
 
-	public void registerMethodStateListener(
-			IMethodStateListener listener) {
+	public void registerMethodStateListener(IMethodStateListener listener) {
 		_listeners.add(listener);
 	}
 
-	public void unregisterMethodStateListener(
-			IMethodStateListener listener) {
+	public void unregisterMethodStateListener(IMethodStateListener listener) {
 		_listeners.remove(listener);
 	}
 
-	public void notifyMethodStateChange(
-			MethodStateChangeEvent event) {
+	public void notifyMethodStateChange(MethodStateChangeEvent event) {
 		for (IMethodStateListener listener : _listeners) {
 			listener.notifyMethodStateChange(event);
 		}

@@ -105,21 +105,16 @@ public abstract class MethodImplementation implements IMethodStateListener, IWor
 	}
 	
 	@Override
-	public IWorkspaceContent read(String fileName) throws IOException,
-			WorkspaceContentPersistenceException {
-		MethodImplementation result = null;
+	public IWorkspaceContent read(String fileName) throws IOException, WorkspaceContentPersistenceException {
 		//TODO
-		/*sinbad2.resolutionscheme.io.XMLRead xmlRead = 
-				new sinbad2.resolutionscheme.io.XMLRead(fileName);
-		result = xmlRead.read();*/
+		
+		MethodImplementation result = null;
 		return result;
 	}
 	
 	@Override
-	public void save(String fileName) throws IOException,
-			WorkspaceContentPersistenceException {
+	public void save(String fileName) throws IOException, WorkspaceContentPersistenceException {
 		//TODO
-		//new XMLWriter(_method, fileName).save();
 	}
 	
 	@Override
@@ -131,7 +126,6 @@ public abstract class MethodImplementation implements IMethodStateListener, IWor
 
 	@Override
 	public void activate() {
-		
 		for (String name : _phasesNames) {
 			_phasesImplementation.get(name).activate();
 		}
