@@ -70,10 +70,10 @@ public class TwoTuple extends LinguisticValuation {
 		alpha = Math.round(alpha);
 		alpha /= 100000;
 		
-		/*if(alpha == 0.5) {
+		if(alpha == 0.5) {
 			labelIndex++;
 			alpha = -0.5;
-		}*/
+		}
 		
 		setAlpha(alpha);
 	}

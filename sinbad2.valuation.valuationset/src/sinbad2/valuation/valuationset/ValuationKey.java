@@ -90,7 +90,7 @@ public class ValuationKey implements Cloneable, Comparable<ValuationKey> {
 
 	@Override
 	public String toString() {
-		String result = null;
+		String result = "";
 
 		result += (_expert != null) ? _expert.getCanonicalId() : "null"; //$NON-NLS-1$
 		result += ":"; //$NON-NLS-1$

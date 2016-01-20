@@ -108,7 +108,9 @@ public abstract class Domain implements Cloneable, Comparable<Domain> {
 			e.printStackTrace();
 		}
 		
-		result._registry = (DomainRegistryExtension) _registry.clone();
+		if(_registry != null) {
+			result._registry = (DomainRegistryExtension) _registry.clone();
+		}
 		
 		return result;
 	}

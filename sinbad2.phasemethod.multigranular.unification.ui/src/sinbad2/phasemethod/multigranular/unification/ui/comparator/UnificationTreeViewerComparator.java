@@ -4,8 +4,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 
-import sinbad2.domain.Domain;
-import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.EvaluationColumnLabelProvider;
 
 public class UnificationTreeViewerComparator extends ViewerComparator {
@@ -14,7 +12,6 @@ public class UnificationTreeViewerComparator extends ViewerComparator {
 	private static final int DESCENDING = SWT.DOWN;
 	private static final int ASCENDING = SWT.UP;
 	private int direction = ASCENDING;
-	private Domain _domain = null;
 
 	public UnificationTreeViewerComparator() {
 		_propertyIndex = 0;
@@ -23,10 +20,6 @@ public class UnificationTreeViewerComparator extends ViewerComparator {
 
 	public int getDirection() {
 		return direction;
-	}
-
-	public void setDomain(Domain domain) {
-		_domain = domain;
 	}
 
 	public void setColumn(int column) {
@@ -102,24 +95,7 @@ public class UnificationTreeViewerComparator extends ViewerComparator {
 			}
 
 		} else {
-			String evaluation1 = (String) e1;
-			String evaluation2 = (String) e2;
-			if (_domain != null) {
-				if (_domain instanceof FuzzySet) {
-					if (evaluation1.contains("/")) {
-						evaluation1 = evaluation1.substring(0,
-								evaluation1.lastIndexOf("/"));
-					}
-					if (evaluation2.contains("/")) {
-						evaluation2 = evaluation2.substring(0,
-								evaluation2.lastIndexOf("/"));
-					}
-					int pos1 = ((FuzzySet) _domain).getLabelSet().getPos(evaluation1);
-					int pos2 = ((FuzzySet) _domain).getLabelSet().getPos(evaluation2);
-					return pos1 - pos2;
-				}
-			}
-			result = evaluation1.compareTo(evaluation2);
+			result = 0;
 		}
 
 		return result;

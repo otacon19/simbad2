@@ -58,8 +58,10 @@ public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 	
 	public void setDomain(Domain domain) {
 		Validator.notNull(domain);
-		
-		if(_registry.getElement(EValuationElements.domain).equals(domain.getType())) {
+
+		if(_registry == null) {
+			_domain = domain;
+		} else if(_registry.getElement(EValuationElements.domain).equals(domain.getType())) {
 			_domain = domain;
 		} else {
 			throw new IllegalArgumentException(domain.getType() + " expected");  //$NON-NLS-1$
@@ -90,7 +92,9 @@ public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 			return null;
 		}
 		
-		result._registry = (ValuationRegistryExtension) _registry.clone();
+		if(_registry != null) {
+			result._registry = (ValuationRegistryExtension) _registry.clone();
+		}
 		
 		if(_domain != null) {
 			result._domain = (Domain) _domain.clone();

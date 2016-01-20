@@ -90,7 +90,6 @@ public class LinguisticValuation extends Valuation {
 			function = result.getLabelSet().getLabel(i).getSemantic();
 			result.setValue(i, function.maxMin(_label.getSemantic()));
 		}
-
 		return result;
 	}
 

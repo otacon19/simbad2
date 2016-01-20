@@ -10,7 +10,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
-import sinbad2.domain.linguistic.fuzzy.nls.Messages;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.resolutionphase.io.XMLRead;
@@ -188,89 +187,101 @@ public class TrapezoidalFunction implements IMembershipFunction {
 			return getMembershipValue(min);
 		}
 	}
-
+	
 	@Override
 	public double maxMin(IMembershipFunction function) {
-		TrapezoidalFunction trapezoidalFunction;
-		
+
+		TrapezoidalFunction tmf;
+
 		Validator.notNull(function);
-		
-		if(function instanceof TrapezoidalFunction) {
-			trapezoidalFunction = (TrapezoidalFunction) function;
+		if (function instanceof TrapezoidalFunction) {
+			tmf = (TrapezoidalFunction) function;
 		} else {
-			throw new IllegalArgumentException(Messages.TrapezoidalFunction_Invalid_element_type);
+			throw new IllegalArgumentException("Invalid element type.");
 		}
-		
-		double values[] = new double[5], result, slopeAB, slopeFunctionAB, slopeCD, 
-				slopeFunctionCD;
-		
+
+		double values[] = new double[5];
+		double result;
+		double slopeThisAB, slopeFunctionAB, slopeThisCD, slopeFunctionCD;
+
 		RealInterval interval = new RealInterval();
 		NumericRealDomain domain = new NumericRealDomain();
 		domain.setMinMax(0d, 1d);
 		
 		interval.setDomain(domain);
-		interval.setMinMax(trapezoidalFunction._b, trapezoidalFunction._c);
+		interval.setMinMax(tmf._b, tmf._c);
 		
 		values[0] = maxMin(interval);
 		
-		if(values[0] == 1) {
+		if (values[0] == 1) {
 			return 1d;
 		}
-		
-		if(_b == _a) {
-			values[1] = values[2] = trapezoidalFunction.getMembershipValue(_a);
+
+		// Calcular la intersección entre las rectas:
+		// (a,0),(b,1) y (funcion.a,0),(funcion.b,1)
+		// (a,0),(b,1) y (funcion.c,1),(funcion.d,0)
+		// (c,1),(d,0) y (funcion.a,0),(funcion.b,1)
+		// (c,1),(d,0) y (funcion.c,1),(funcion.d,0)
+
+		if (_b == _a) {
+			values[1] = values[2] = tmf.getMembershipValue(_a);
 		} else {
-			slopeAB = 1d / (_b - _a);
-			
-			if(trapezoidalFunction._a == trapezoidalFunction._b) {
-				values[1] = getMembershipValue(trapezoidalFunction._a);
+			slopeThisAB = 1d / (_b - _a);
+
+			if (tmf._a == tmf._b) {
+				values[1] = getMembershipValue(tmf._a);
 			} else {
-				slopeFunctionAB = 1d / (trapezoidalFunction._b - trapezoidalFunction._a);
-				if(slopeAB == slopeFunctionAB) {
+				slopeFunctionAB = 1d / (tmf._b - tmf._a);
+
+				if (slopeThisAB == slopeFunctionAB) {
 					values[1] = 0d;
+
 				} else {
-					values[1] = slopeFunctionAB * slopeAB * (_a - trapezoidalFunction._a) / (slopeAB - slopeFunctionAB);
+					values[1] = slopeFunctionAB * slopeThisAB * (_a - tmf._a) / (slopeThisAB - slopeFunctionAB);
 				}
 			}
-			
-			if(trapezoidalFunction._c == trapezoidalFunction._d) {
-				values[2] = getMembershipValue(trapezoidalFunction._c);
+
+			if (tmf._c == tmf._d) {
+				values[2] = getMembershipValue(tmf._c);
 			} else {
-				slopeFunctionCD = 1d / (trapezoidalFunction._c - trapezoidalFunction._d);
-				values[2] = slopeFunctionCD * slopeAB * (_a - trapezoidalFunction._a) / (slopeAB - slopeFunctionCD);
+				slopeFunctionCD = 1d / (tmf._c - tmf._d);
+				values[2] = slopeFunctionCD * slopeThisAB * (_a - tmf._d) / (slopeThisAB - slopeFunctionCD);
 			}
 		}
-		
-		if(_c == _d) {
-			values[3] = values[4] = trapezoidalFunction.getMembershipValue(_c);
+
+		if (_c == _d) {
+			values[3] = values[4] = tmf.getMembershipValue(_c);
 		} else {
-			slopeCD = 1d / (_c - _d);
-			
-			if(trapezoidalFunction._a == trapezoidalFunction._b) {
-				values[3] = getMembershipValue(trapezoidalFunction._a);
+			slopeThisCD = 1d / (_c - _d);
+
+			if (tmf._a == tmf._b) {
+				values[3] = getMembershipValue(tmf._a);
 			} else {
-				slopeFunctionAB = 1d / (trapezoidalFunction._b - trapezoidalFunction._a);
-				values[3] = slopeFunctionAB * slopeCD * (_d - trapezoidalFunction._a) / (slopeCD - slopeFunctionAB);
+				slopeFunctionAB = 1d / (tmf._b - tmf._a);
+				values[3] = slopeFunctionAB * slopeThisCD * (_d - tmf._a) / (slopeThisCD - slopeFunctionAB);
 			}
-			
-			if(trapezoidalFunction._c == trapezoidalFunction._d) {
-				values[4] = getMembershipValue(trapezoidalFunction._c);
+
+			if (tmf._c == tmf._d) {
+				values[4] = getMembershipValue(tmf._c);
+
 			} else {
-				slopeFunctionCD = 1d / (trapezoidalFunction._c - trapezoidalFunction. _d);
-				if(slopeCD == slopeFunctionCD) {
+				slopeFunctionCD = 1d / (tmf._c - tmf._d);
+
+				if (slopeThisCD == slopeFunctionCD) {
 					values[4] = 0d;
+
 				} else {
-					values[4] = slopeFunctionCD * slopeCD * (_d - trapezoidalFunction._d) / (slopeCD - slopeFunctionCD);
+					values[4] = slopeFunctionCD * slopeThisCD * (_d - tmf._d) / (slopeThisCD - slopeFunctionCD);
 				}
 			}
 		}
-		
-		for(int i = 0; i < values.length; ++i) {
-			if(values[i] > 1) {
+
+		for (int i = 1; i < values.length; i++) {
+			if (values[i] > 1) {
 				values[i] = 0d;
 			}
 		}
-		
+
 		result = Math.max(values[0], Math.max(values[1], Math.max(values[2], Math.max(values[3], values[4]))));
 		
 		return result;

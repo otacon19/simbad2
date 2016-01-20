@@ -1,6 +1,6 @@
 package sinbad2.phasemethod.multigranular.unification;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import sinbad2.domain.DomainSet;
@@ -95,7 +95,7 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	public static Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
-		Map<ValuationKey, Valuation> result = new HashMap<ValuationKey, Valuation>();
+		Map<ValuationKey, Valuation> result = new LinkedHashMap<ValuationKey, Valuation>();
 
 		if (unifiedDomain != null) {
 			Criterion criterion;
@@ -104,20 +104,20 @@ public class UnificationPhase implements IPhaseMethod {
 			Boolean isCost;
 
 			Map<ValuationKey, Valuation> valuations = _valutationSet.getValuations();
-			for (ValuationKey vk : valuations.keySet()) {
+			for(ValuationKey vk : valuations.keySet()) {
 				criterion = vk.getCriterion();
 				valuation = valuations.get(vk);
 				isCost = criterion.getCost();
 
-				if (valuation instanceof UnifiedValuation) {
+				if(valuation instanceof UnifiedValuation) {
 					Valuation auxValuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
-					if (isCost) {
+					if(isCost) {
 						auxValuation = auxValuation.negateValutation();
 					}
 					fuzzySet = ((TwoTuple) auxValuation).unification(unifiedDomain);
 					valuation = new UnifiedValuation(fuzzySet);
-				} else {
-					if (valuation instanceof LinguisticValuation) {
+				} else if(valuation instanceof LinguisticValuation) {
+					if(isCost) {
 						valuation = valuation.negateValutation();
 					}
 					fuzzySet = ((LinguisticValuation) valuation).unification(unifiedDomain);
@@ -128,5 +128,4 @@ public class UnificationPhase implements IPhaseMethod {
 		}
 		return result;
 	}
-
 }

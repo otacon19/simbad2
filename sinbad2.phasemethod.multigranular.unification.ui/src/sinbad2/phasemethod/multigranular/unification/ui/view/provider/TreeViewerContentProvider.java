@@ -34,7 +34,6 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = valuationSetManager.getActiveValuationSet();
 		_unifiedEvaluations = unifiedEvaluations;
-		System.out.println(unifiedEvaluations);
 	}
 	
 	@Override
@@ -88,7 +87,6 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 	
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		
 		if (parentElement instanceof Object[]) {
 			Valuation valuation = (Valuation) ((Object[]) parentElement)[5];
 			if (valuation instanceof UnifiedValuation) {
@@ -103,7 +101,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 						measure = measure.substring(0, 5);
 					}
 					result[i] = labelName + "/" + measure; //$NON-NLS-1$
-				}
+				}		
 				return result;
 			} else {
 				return null;

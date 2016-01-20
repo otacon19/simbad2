@@ -173,7 +173,7 @@ public class Unification extends ViewPart {
 		_treeEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 4));
 		_treeViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 		
-		TreeViewerContentProvider provider = new TreeViewerContentProvider(UnificationPhase.unification(((FuzzySet)SelectBLTS.getBLTSDomain())));
+		TreeViewerContentProvider provider = new TreeViewerContentProvider(UnificationPhase.unification(((FuzzySet) SelectBLTS.getBLTSDomain())));
 		_treeViewer.setContentProvider(provider);
 		_treeViewer.setInput(provider.getInput());
 		compactTable();

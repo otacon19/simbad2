@@ -46,7 +46,6 @@ public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 				return "Not evaluate";
 			}
 		} else {
-			System.out.println("null");
 			return null;
 		}
 	}
