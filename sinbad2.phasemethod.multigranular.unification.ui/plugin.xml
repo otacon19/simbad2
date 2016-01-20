@@ -22,6 +22,7 @@
             name="Unification">
       </category>
       <view
+            category="flintstones.phasemethod.multigranular.unification.ui.category"
             class="sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS"
             id="flintstones.phasemethod.multigranular.unification.ui.view.selectblts"
             name="Select BLTS"
