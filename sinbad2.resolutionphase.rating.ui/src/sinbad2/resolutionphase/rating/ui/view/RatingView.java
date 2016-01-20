@@ -380,12 +380,11 @@ public class RatingView extends ViewPart {
 		
 		int numPhase = 0, numSteps = 0;
 		for(PhaseMethodUI phaseMethodUI: phasesMethodUI) {
-			if(_tabFolder.getSelectionIndex() == phasesMethodUIManager.getSteps(phaseMethodUI.getId()).size()) {
+			if(_tabFolder.getSelectionIndex() == phasesMethodUIManager.getSteps(phaseMethodUI.getId()).size() + 1) {
 				numPhase++;
 				numSteps += phasesMethodUIManager.getSteps(phaseMethodUI.getId()).size();
 			}
 		}
-		
 		ViewPart step = phasesMethodUIManager.getStep(phasesMethodUI.get(numPhase).getId(), Math.abs(numSteps - _tabFolder.getSelectionIndex()));
 		boolean loaded = false;
 		for(CTabItem tabItem: _tabFolder.getItems()) {

@@ -1,6 +1,6 @@
 package sinbad2.method.ui;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -30,7 +30,7 @@ public class MethodUIRegistryExtension extends RegistryExtension {
 
 	public Map<String, String> getPhasesMethodUIsIDs() {
 		
-		Map<String, String> result = new HashMap<String, String>();
+		Map<String, String> result = new LinkedHashMap<String, String>();
 		
 		if(_configuration != null) {
 			IConfigurationElement[] uis = _configuration.getChildren(EMethodUIElements.ui.toString());

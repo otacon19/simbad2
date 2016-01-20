@@ -10,7 +10,10 @@
             implementation="sinbad2.method.multigranular.Multigranular"
             name="Fusion approach for managing multi-granular linguistic information">
          <phasemethod
-               phase="flintstones.phasemethod.unification">
+               phase="flintstones.phasemethod.multigranular.unification">
+         </phasemethod>
+         <phasemethod
+               phase="flintstones.phasemethod.multigranular.aggregation">
          </phasemethod>
       </method>
    </extension>

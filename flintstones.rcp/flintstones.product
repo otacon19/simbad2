@@ -91,6 +91,7 @@
       <plugin id="sinbad2.method.ui"/>
       <plugin id="sinbad2.phasemethod"/>
       <plugin id="sinbad2.phasemethod.multigranular.aggregation"/>
+      <plugin id="sinbad2.phasemethod.multigranular.aggregation.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.unification"/>
       <plugin id="sinbad2.phasemethod.multigranular.unification.ui"/>
       <plugin id="sinbad2.phasemethod.ui"/>

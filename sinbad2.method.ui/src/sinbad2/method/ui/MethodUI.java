@@ -1,6 +1,6 @@
 package sinbad2.method.ui;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -81,11 +81,12 @@ public class MethodUI {
 		String result = "";
 		
 		List<PhaseMethodUI> phasesMethod = getPhasesUI();
+
 		for(PhaseMethodUI phaseMethod: phasesMethod) {
-			result += phaseMethod.getName();
+			result += phaseMethod.getName() + '\n';
 			List<ViewPart> steps = phaseMethodUIManager.getSteps(phaseMethod.getId());
 			for(ViewPart step: steps) {
-				result += "\n" + "\t" + "-" + step.getPartName();
+				result += "\t" + "-" + step.getPartName() + '\n';
 			}
 		}
 		
@@ -107,7 +108,7 @@ public class MethodUI {
 			phasesMethodUIIndex = _registry.getPhasesMethodUIsIDs();
 			
 			PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
-			_phasesMethodUI = new HashMap<String, PhaseMethodUI>();
+			_phasesMethodUI = new LinkedHashMap<String, PhaseMethodUI>();
 			for(String key: phasesMethodUIIndex.keySet()) {
 				_phasesMethodUI.put(key, phasesMethodUIManager.getUI(phasesMethodUIIndex.get(key)));
 			}
