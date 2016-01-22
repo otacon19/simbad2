@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
@@ -22,11 +23,12 @@ public class UnificationPhase implements IPhaseMethod {
 
 	private ValuationSetManager _valuationSetManager;
 	private static ValuationSet _valutationSet;
-
+	private static Map<Alternative, Valuation> _valuationsResult;
 	
 	public UnificationPhase() {
 		_valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = _valuationSetManager.getActiveValuationSet();
+		_valuationsResult = new LinkedHashMap<Alternative, Valuation>();
 	}
 
 	public ValuationSet getValuationSet() {
@@ -117,8 +119,13 @@ public class UnificationPhase implements IPhaseMethod {
 					valuation = new UnifiedValuation(fuzzySet);
 				}
 				result.put(vk, valuation);
+				_valuationsResult.put(vk.getAlternative(), valuation);
 			}
 		}
 		return result;
+	}
+	
+	public static Map<Alternative, Valuation> getValuationsResult() {
+		return _valuationsResult;
 	}
 }

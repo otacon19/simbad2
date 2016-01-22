@@ -6,10 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.multigranular.unification.ui.Activator
 Require-Bundle: sinbad2.phasemethod.ui,
  sinbad2.phasemethod.multigranular.unification;bundle-version="1.0.0",
- sinbad2.domain.linguistic.fuzzyset.ui;bundle-version="1.0.0",
- sinbad2.resolutionphase.rating.ui,
- sinbad2.valuation.valuationset,
- sinbad2.valuation.unifiedValuation,
- sinbad2.valuation.twoTuple;bundle-version="1.0.0"
+ sinbad2.domain.linguistic.fuzzyset.ui,
+ sinbad2.resolutionphase.rating.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

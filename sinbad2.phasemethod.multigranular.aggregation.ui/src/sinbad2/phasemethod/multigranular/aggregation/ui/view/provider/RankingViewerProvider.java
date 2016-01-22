@@ -1,0 +1,81 @@
+package sinbad2.phasemethod.multigranular.aggregation.ui.view.provider;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.element.alternative.Alternative;
+import sinbad2.phasemethod.multigranular.unification.UnificationPhase;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.twoTuple.TwoTuple;
+import sinbad2.valuation.unifiedValuation.UnifiedValuation;
+
+public class RankingViewerProvider implements IStructuredContentProvider {
+	
+	private class MyComparator implements Comparator<Object[]> {
+		@Override
+		public int compare(Object[] o1, Object[] o2) {
+			return Double.compare((Double) o1[0], (Double) o2[0]);
+		}
+	}
+
+	@Override
+	public void dispose() {}
+
+	@Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+
+	@Override
+	public Object[] getElements(Object inputElement) {
+		Map<Alternative, Valuation> valuationsResult = UnificationPhase.getValuationsResult() ;
+		int size = valuationsResult.size();
+		Object[][] input = new Object[size][2];
+		int pos = 0;
+		for (Alternative alternative : valuationsResult.keySet()) {
+			input[pos][0] = alternative.getId();
+			input[pos][1] = valuationsResult.get(alternative);
+			pos++;
+		}
+
+		List<Object[]> result = new LinkedList<Object[]>();
+
+		String alternativeName;
+		Valuation valuation;
+		Object[] listEntry;
+		for (int i = 0; i < size; i++) {
+			alternativeName = (String) input[i][0];
+			valuation = (Valuation) input[i][1];
+			if (valuation != null) {
+				if (valuation instanceof UnifiedValuation) {
+					((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
+				}
+				listEntry = new Object[] {((TwoTuple) valuation).calculateInverseDelta(), alternativeName,valuation };
+			} else {
+				listEntry = new Object[] { 0d, alternativeName, null };
+			}
+			result.add(listEntry);
+		}
+
+		Collections.sort(result, new MyComparator());
+		Collections.reverse(result);
+		int ranking = 0;
+		double previous = -1;
+		for (Object[] element : result) {
+			if ((Double) element[0] == previous) {
+				element[0] = ranking;
+			} else {
+				ranking++;
+				previous = (Double) element[0];
+				element[0] = ranking;
+			}
+		}
+		return result.toArray(new Object[0][0]);
+	}
+	
+}
