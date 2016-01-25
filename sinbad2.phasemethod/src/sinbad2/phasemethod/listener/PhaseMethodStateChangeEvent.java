@@ -1,6 +1,5 @@
 package sinbad2.phasemethod.listener;
 
-
 public class PhaseMethodStateChangeEvent {
 	
 	private EPhaseMethodStateChange _change;

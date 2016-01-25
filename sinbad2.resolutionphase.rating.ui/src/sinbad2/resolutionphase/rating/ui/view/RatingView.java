@@ -31,12 +31,14 @@ import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.ui.PhaseMethodUI;
 import sinbad2.phasemethod.ui.PhaseMethodUIManager;
 import sinbad2.resolutionphase.rating.ui.Images;
+import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 
 public class RatingView extends ViewPart {
 	
 	public static final String ID = "flintstones.resolutionphase.rating.ui.view";
 	
 	private int _numStep;
+	private int _numPhase;
 	
 	private Composite _ratingEditorPanel;
 	private Composite _ratingEditorFooter;
@@ -60,8 +62,12 @@ public class RatingView extends ViewPart {
 	
 	private static MethodUI _methodUISelected;
 	private static RatingView _instance;
+	
+	private List<IStepStateListener> _listeners;
 
-	public RatingView() {}
+	public RatingView() {
+		_listeners = new LinkedList<IStepStateListener>();
+	}
 
 	public static RatingView getInstance() {
 		if(_instance == null) {
@@ -76,7 +82,9 @@ public class RatingView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {	
+		_numPhase = 0;
 		_numStep = 0;
+		
 		_methodsUIManager = MethodsUIManager.getInstance();
 		_methodUISelected = null;
 		
@@ -207,8 +215,10 @@ public class RatingView extends ViewPart {
 			_nextButton.setEnabled(false);
 		}
 		modifyStep(1);
+		
+		notifyNewStep();
 	}
-	
+
 	private void resetRating(boolean reset) {
 		// TODO Auto-generated method stub
 	}
@@ -376,16 +386,25 @@ public class RatingView extends ViewPart {
 	
 	public void loadNextStep() {
 		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
+		PhaseMethodUI currentPhaseMethod = phasesMethodUIManager.getActiveResolutionPhasesUI();
 		List<PhaseMethodUI> phasesMethodUI = _methodUISelected.getPhasesUI();
 		
-		int numPhase = 0, numSteps = 0;
-		for(PhaseMethodUI phaseMethodUI: phasesMethodUI) {
-			if(_tabFolder.getSelectionIndex() == phasesMethodUIManager.getSteps(phaseMethodUI.getId()).size() + 1) {
-				numPhase++;
-				numSteps += phasesMethodUIManager.getSteps(phaseMethodUI.getId()).size();
-			}
+		ViewPart step = null;
+		if(currentPhaseMethod == null) {
+			currentPhaseMethod = phasesMethodUI.get(_numPhase);
+			phasesMethodUIManager.activate(currentPhaseMethod.getId());
+			step = phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
+		} else if(phasesMethodUIManager.getSteps(currentPhaseMethod.getId()).size() == _tabFolder.getItemCount() - 1) {
+			_numPhase++;
+			currentPhaseMethod = phasesMethodUI.get(_numPhase);
+			phasesMethodUIManager.activate(currentPhaseMethod.getId());	
+			step = phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
+		} else {
+			step = phasesMethodUIManager.getNextStep();	
 		}
-		ViewPart step = phasesMethodUIManager.getStep(phasesMethodUI.get(numPhase).getId(), Math.abs(numSteps - _tabFolder.getSelectionIndex()));
+		
+		phasesMethodUIManager.activateStep(step);
+		
 		boolean loaded = false;
 		for(CTabItem tabItem: _tabFolder.getItems()) {
 			if(tabItem.getText().equals(step.getPartName())) {
@@ -393,11 +412,11 @@ public class RatingView extends ViewPart {
 				break;
 			}
 		}
-		
+
 		if(!loaded) {
-			CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, _tabFolder.getSelectionIndex() + 1);
+			CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, _tabFolder.getItemCount());
 			item.setText(step.getPartName());
-			
+
 			Composite parent = new Composite(_tabFolder, SWT.NONE);
 			
 			step.createPartControl(parent);
@@ -445,6 +464,24 @@ public class RatingView extends ViewPart {
 	@Override
 	public void setFocus() {
 		_tabFolder.setSelection(0);
+	}
+	
+	public void registerStepChangeListener(IStepStateListener listener) {
+		_listeners.add(listener);
+	}
+	
+	public void unregisterStepChangeListener(IStepStateListener listener) {
+		_listeners.remove(listener);
+	}
+	
+	private List<IStepStateListener> getStepListeners() {
+		return _listeners;
+	}
+	
+	private void notifyNewStep() {
+		for(IStepStateListener listener: _instance.getStepListeners()) {
+			listener.notifStepStateChange();
+		}
 	}
 	
 }

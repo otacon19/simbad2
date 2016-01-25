@@ -18,17 +18,21 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 	
 	private static PhaseMethodUIManager _instance = null;
 	
-	private PhaseMethodUI _activeResolutionPhaseUI;
+	private PhaseMethodUI _activePhaseMethodUI;
+	private ViewPart _activeStep;
 	
 	private Map<String, PhaseMethodUIRegistryExtension> _registers;
 	private Map<String, PhaseMethodUI> _phasesMethodsUIs;
 	private Map<String, List<ViewPart>> _phasesSteps;
 	
 	private PhaseMethodUIManager() {
-		_activeResolutionPhaseUI = null;
+		_activePhaseMethodUI = null;
+		_activeStep = null;
+		
 		_registers = new HashMap<String, PhaseMethodUIRegistryExtension>();
 		_phasesMethodsUIs = new HashMap<String, PhaseMethodUI>();
 		_phasesSteps = new HashMap<String, List<ViewPart>>();
+		
 		loadRegistersExtension();
 	}
 	
@@ -84,21 +88,21 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 	}
 	
 	public PhaseMethodUI getActiveResolutionPhasesUI() {
-		return _activeResolutionPhaseUI;
+		return _activePhaseMethodUI;
 	}
 	
 	public void deactiveCurrentActive() {
-		if(_activeResolutionPhaseUI != null) {
-			_activeResolutionPhaseUI.deactivate();
-			_activeResolutionPhaseUI = null;
+		if(_activePhaseMethodUI != null) {
+			_activePhaseMethodUI.deactivate();
+			_activePhaseMethodUI = null;
 		}
 	}
 	
 	public void activate(String id) {
 		boolean needActivate = true;
 		
-		if(_activeResolutionPhaseUI != null) {
-			if(!_activeResolutionPhaseUI.getId().equals(id)) {
+		if(_activePhaseMethodUI != null) {
+			if(!_activePhaseMethodUI.getId().equals(id)) {
 				deactiveCurrentActive();
 			} else {
 				needActivate = false;
@@ -106,11 +110,21 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 		}
 		
 		if(needActivate) {
-			_activeResolutionPhaseUI = getUI(id);
-			if(_activeResolutionPhaseUI != null) {
-				_activeResolutionPhaseUI.activate();
+			_activePhaseMethodUI = getUI(id);
+			if(_activePhaseMethodUI != null) {
+				_activePhaseMethodUI.activate();
 			}
 		}
+	}
+	
+	public void activateStep(ViewPart step) {
+		_activeStep = step;
+	}
+	
+	public ViewPart getNextStep() {
+		int currentStep = _phasesSteps.get(_activePhaseMethodUI.getId()).indexOf(_activeStep);
+		
+		return _phasesSteps.get(_activePhaseMethodUI.getId()).get(currentStep + 1);
 	}
 	
 	private PhaseMethodUI initializeResolutionPhaseUI(String id) {

@@ -173,8 +173,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			id = id.substring(4);
 		}
 		id = id.toLowerCase();
-		AggregationOperator operator = _aggregationOperatorsManager
-				.getAggregationOperator(id);
+		AggregationOperator operator = _aggregationOperatorsManager.getAggregationOperator(id);
 
 		_abort = false;
 		_assignAll = false;

@@ -17,8 +17,6 @@ public class PhaseMethodUI implements IPhaseMethodStateListener {
 	private String _name;
 	private String _phaseMethodId;
 	private PhaseMethod _phaseMethod;
-	private String _uiId;
-	private Object _ui;
 	
 	private PhaseMethodUIRegistryExtension _registry;
 	
@@ -30,8 +28,6 @@ public class PhaseMethodUI implements IPhaseMethodStateListener {
 		_name = null;
 		_phaseMethodId = null;
 		_phaseMethod = null;
-		_uiId = null;
-		_ui = null;
 		_registry = null;
 		
 		_listeners = new LinkedList<IPhaseMethodUIStateListener>();
@@ -45,8 +41,6 @@ public class PhaseMethodUI implements IPhaseMethodStateListener {
 		setName(name);
 		setPhaseMethodId(phaseMethodId);
 		setPhaseMethod(phaseMethod);
-		setUiId(uiId);
-		setUi(ui);
 		setRegistry(registry);
 		
 	}
@@ -86,22 +80,6 @@ public class PhaseMethodUI implements IPhaseMethodStateListener {
 
 	public void setPhaseMethod(PhaseMethod phaseMethod) {
 		_phaseMethod = phaseMethod;
-	}
-
-	public String getUIId() {
-		return _uiId;
-	}
-
-	public void setUiId(String uiId) {
-		_uiId = uiId;
-	}
-
-	public Object getUi() {
-		return _ui;
-	}
-
-	public void setUi(Object ui) {
-		_ui = ui;
 	}
 
 	public PhaseMethodUIRegistryExtension getRegistry() {

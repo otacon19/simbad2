@@ -8,8 +8,11 @@ import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -27,6 +30,9 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import sinbad2.domain.Domain;
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.phasemethod.multigranular.aggregation.AggregationPhase;
@@ -42,6 +48,9 @@ import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.Evaluation
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.OperatorColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.RankingViewerProvider;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.twoTuple.TwoTuple;
+import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class AggregationProcess extends ViewPart implements AggregationProcessListener {
 	
@@ -77,6 +86,10 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	private TreeViewerColumn _treeViewerCriterionOperatorColumn;
 	private TreeColumn _treeCriterionOperatorColumn;
 	
+	private ControlAdapter _controlListener;
+	
+	private FuzzySetChart _chart;
+	
 	private AggregationPhase _aggregationPhase;
 	
 	public abstract class CenterImageLabelProvider extends OwnerDrawLabelProvider {
@@ -111,14 +124,18 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		
 		_parent = parent;
 		
-		GridLayout layout = (GridLayout) _parent.getLayout();
+		GridLayout layout = new GridLayout();
 		layout.marginLeft = 20;
 		layout.marginRight = 15;
 		layout.marginBottom = 15;
 		layout.marginTop = 20;
+		_parent.setLayout(layout);
+		
+		GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true, 14, 1);
+		_parent.setLayoutData(gridData);
 		
 		_resultsPanel = new Composite(_parent, SWT.NONE);
-		GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true, 8, 1);
+		gridData = new GridData(GridData.FILL, GridData.FILL, true, true, 8, 1);
 		_resultsPanel.setLayoutData(gridData);
 		layout = new GridLayout(1, false);
 		layout.marginTop = 0;
@@ -502,8 +519,16 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_rankingEvaluationColumn.setWidth(100);
 		_rankingEvaluationColumn.setText("Evaluation");
 		_rankingViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
+		
+		compactTable();
 	}
 	
+	private void compactTable() {
+		_rankingRankingColumn.pack();
+		_rankingAlternativeColumn.pack();
+		_rankingEvaluationColumn.pack();	
+	}
+
 	private void createChartView() {
 		Composite chartViewParent = new Composite(_resultsPanel, SWT.NONE);
 		GridLayout layout = new GridLayout(1, false);
@@ -520,6 +545,71 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 
 		_chartView = new Composite(chartViewParent, SWT.NONE);
 		_chartView.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		setChart(null);
+	}
+	
+	private void setChart(Domain domain) {
+		removeOldChart();
+		
+		boolean exit = false;
+		if (domain instanceof FuzzySet) {
+			_chart = new FuzzySetChart((FuzzySet) domain, _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
+		} else {
+			exit = true;
+		}
+
+		if (!exit) {
+			if (_controlListener == null) {
+				_controlListener = new ControlAdapter() {
+					@Override
+					public void controlResized(ControlEvent e) {
+						setChart(getDomain());
+					}
+				};
+				_chartView.addControlListener(_controlListener);
+			}
+			if (_aggregationResult != null) {
+				Map<ProblemElement, Valuation> results = _aggregationResult.getResult();
+				int size = results.size();
+				if (size > 0) {
+					String[] alternatives = new String[size];
+					int[] pos = new int[size];
+					double[] measures = new double[size], alpha = new double[size];
+					Color[] colors = new Color[size];
+					Valuation valuation = null, aux;
+					int i = 0;
+
+					for (ProblemElement alternative : results.keySet()) {
+						alternatives[i] = alternative.getId();
+						aux = results.get(alternative);
+						if (aux instanceof UnifiedValuation) {
+							valuation = ((UnifiedValuation) aux).disunification((FuzzySet) aux.getDomain());
+						} else {
+							valuation = aux;
+						}
+
+						if (valuation instanceof TwoTuple) {
+							pos[i] = ((FuzzySet) domain).getPos(((TwoTuple) valuation).getLabel());
+							alpha[i] = ((TwoTuple) valuation).getAlpha();
+							i++;
+						} else {
+							alternatives[i] = null;
+						}
+					}
+					if (_chart instanceof FuzzySetChart) {
+						((FuzzySetChart) _chart).displayAlternatives(alternatives, pos, alpha);
+					}
+				}
+			}
+		}
+	}
+	
+	private void removeOldChart() {
+		if (_chart != null) {
+			_chart.getChartComposite().dispose();
+			_chartView.layout();
+		}
 	}
 	
 	@Override

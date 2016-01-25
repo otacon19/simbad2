@@ -7,4 +7,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.resolutionphase.ui;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.resolutionphase.rating;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.method.ui;bundle-version="1.0.0"
-Export-Package: sinbad2.resolutionphase.rating.ui.view
+Export-Package: sinbad2.resolutionphase.rating.ui.listener,
+ sinbad2.resolutionphase.rating.ui.view

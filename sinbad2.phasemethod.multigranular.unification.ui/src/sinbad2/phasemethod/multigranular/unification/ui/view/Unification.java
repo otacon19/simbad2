@@ -29,11 +29,14 @@ import sinbad2.phasemethod.multigranular.unification.ui.view.provider.Evaluation
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.ExpertColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.TreeViewerContentProvider;
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.UnifiedEvaluationColumnLabelProvider;
+import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
-public class Unification extends ViewPart {
+public class Unification extends ViewPart implements IStepStateListener {
 	
 	public static final String ID = "flintstones.phasemethod.multigranular.unification.ui.view.unification";
+	
+	private static boolean _loaded;
 	
 	private Composite _parent;
 	
@@ -59,6 +62,11 @@ public class Unification extends ViewPart {
 	
 	@Override
 	public void createPartControl(Composite parent) {
+		_ratingView = RatingView.getInstance();
+		_ratingView.registerStepChangeListener(this);
+		
+		_loaded = false;
+		
 		_parent = parent;
 		
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -74,13 +82,9 @@ public class Unification extends ViewPart {
 		createEvaluationsTable();
 		createButtons();
 		compactTable();
-		
-		_ratingView = RatingView.getInstance();
-		_ratingView.loadNextStep();
 	}
 	
 	private void createEvaluationsTable() {
-
 		Composite container = new Composite(_parent, SWT.NONE);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gridData.verticalIndent = 0;
@@ -130,7 +134,7 @@ public class Unification extends ViewPart {
 				});
 			}
 		});
-
+		
 		_treeViewerUnifiedEvaluationColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
 		_treeUnifiedEvaluationColumn = _treeViewerUnifiedEvaluationColumn.getColumn();
 		_treeUnifiedEvaluationColumn.setWidth(125);
@@ -230,10 +234,19 @@ public class Unification extends ViewPart {
 	public String getPartName() {
 		return "Unification";
 	}
-
+	
 	@Override
 	public void setFocus() {
 		_treeViewer.getControl().setFocus();
 	}
 
+	@Override
+	public void notifStepStateChange() {
+		if(!_loaded) {
+			_ratingView.loadNextStep();
+			_loaded = true;
+		}
+	}
+	
+	
 }
