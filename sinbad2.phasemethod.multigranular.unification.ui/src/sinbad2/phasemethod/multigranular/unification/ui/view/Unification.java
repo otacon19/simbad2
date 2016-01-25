@@ -29,6 +29,7 @@ import sinbad2.phasemethod.multigranular.unification.ui.view.provider.Evaluation
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.ExpertColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.TreeViewerContentProvider;
 import sinbad2.phasemethod.multigranular.unification.ui.view.provider.UnifiedEvaluationColumnLabelProvider;
+import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
 public class Unification extends ViewPart {
 	
@@ -54,6 +55,8 @@ public class Unification extends ViewPart {
 	
 	private Button _saveButton;
 	
+	private RatingView _ratingView;
+	
 	@Override
 	public void createPartControl(Composite parent) {
 		_parent = parent;
@@ -71,6 +74,9 @@ public class Unification extends ViewPart {
 		createEvaluationsTable();
 		createButtons();
 		compactTable();
+		
+		_ratingView = RatingView.getInstance();
+		_ratingView.loadNextStep();
 	}
 	
 	private void createEvaluationsTable() {
