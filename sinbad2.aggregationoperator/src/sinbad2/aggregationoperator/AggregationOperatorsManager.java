@@ -28,18 +28,19 @@ public class AggregationOperatorsManager {
 	private void loadRegisters() {
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
-		
+
 		AggregationOperator aggregationOperator = null;
 		IConfigurationElement[] supportedTypesConfiguration;
 		Set<EAggregationOperatorType> supportedTypes;
 		IConfigurationElement[] implementation = null;
 		for(IConfigurationElement extension: extensions) {
-			implementation = extension.getChildren(EAggregationOperatorElements.unweigthed.toString());
+			implementation = extension.getChildren(EAggregationOperatorElements.unweighted.toString());
 			if(implementation.length == 0) {
 				implementation = extension.getChildren(EAggregationOperatorElements.weighted.toString());
 			}
 			
 			try {
+
 				aggregationOperator = (AggregationOperator) implementation[0].createExecutableExtension(EAggregationOperatorElements.implementation.toString());
 				aggregationOperator.setId(extension.getAttribute(EAggregationOperatorElements.id.toString()));
 				aggregationOperator.setName(extension.getAttribute(EAggregationOperatorElements.name.toString()));

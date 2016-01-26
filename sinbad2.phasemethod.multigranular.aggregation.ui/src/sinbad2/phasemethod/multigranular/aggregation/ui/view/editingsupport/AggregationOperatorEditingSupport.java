@@ -1,5 +1,7 @@
 package sinbad2.phasemethod.multigranular.aggregation.ui.view.editingsupport;
 
+import java.util.Set;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -43,6 +45,9 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	protected CellEditor getCellEditor(Object element) {
 		if (_aggregationOperatorsIds == null) {
 
+			AggregationOperator operator = (AggregationOperator) element;
+			Set<EAggregationOperatorType> types = operator.getTypes();
+			
 			EAggregationOperatorType operatorType = null;
 				
 			_aggregationOperatorsIds = _aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);

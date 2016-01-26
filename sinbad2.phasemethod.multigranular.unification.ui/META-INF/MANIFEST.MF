@@ -5,8 +5,9 @@ Bundle-SymbolicName: sinbad2.phasemethod.multigranular.unification.ui;singleton:
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.multigranular.unification.ui.Activator
 Require-Bundle: sinbad2.phasemethod.ui,
- sinbad2.phasemethod.multigranular.unification;bundle-version="1.0.0",
+ sinbad2.phasemethod.multigranular.unification;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.domain.linguistic.fuzzyset.ui,
  sinbad2.resolutionphase.rating.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Export-Package: sinbad2.phasemethod.multigranular.unification.ui.view

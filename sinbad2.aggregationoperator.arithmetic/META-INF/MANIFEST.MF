@@ -7,4 +7,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.aggregationoperator;bundle-version="1.0.0",
  sinbad2.valuation.integer,
  sinbad2.valuation.real,
- sinbad2.valuation.twoTuple;bundle-version="1.0.0"
+ sinbad2.valuation.twoTuple;bundle-version="1.0.0",
+ sinbad2.valuation.unifiedValuation

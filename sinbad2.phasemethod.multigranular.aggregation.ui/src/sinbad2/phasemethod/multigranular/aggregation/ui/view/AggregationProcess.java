@@ -1,5 +1,7 @@
 package sinbad2.phasemethod.multigranular.aggregation.ui.view;
 
+import java.util.Map;
+
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -12,7 +14,6 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -35,10 +36,12 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.alternative.Alternative;
 import sinbad2.phasemethod.multigranular.aggregation.AggregationPhase;
 import sinbad2.phasemethod.multigranular.aggregation.listener.AggregationProcessListener;
 import sinbad2.phasemethod.multigranular.aggregation.listener.AggregationProcessStateChangeEvent;
 import sinbad2.phasemethod.multigranular.aggregation.ui.Images;
+import sinbad2.phasemethod.multigranular.aggregation.ui.jfreechart.FuzzySetAggregationChart;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.editingsupport.AggregationOperatorEditingSupport;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.AggregationCriterionViewerContentProvider;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.AggregationExpertViewerContentProvider;
@@ -48,11 +51,15 @@ import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.Evaluation
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.OperatorColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.RankingViewerProvider;
+import sinbad2.phasemethod.multigranular.unification.UnificationPhase;
+import sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class AggregationProcess extends ViewPart implements AggregationProcessListener {
+	public AggregationProcess() {
+	}
 	
 	public static final String ID = "flintstones.phasemethod.multigranular.aggregation.ui.view.aggregationprocess";
 
@@ -88,9 +95,11 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	
 	private ControlAdapter _controlListener;
 	
-	private FuzzySetChart _chart;
+	private FuzzySetAggregationChart _chart;
 	
 	private AggregationPhase _aggregationPhase;
+	
+	private Map<Alternative, Valuation> _aggregationResult;
 	
 	public abstract class CenterImageLabelProvider extends OwnerDrawLabelProvider {
 
@@ -268,7 +277,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_treeExpertOperatorColumn.setText("Operator");
 			_treeExpertOperatorColumn.setImage(Images.AggregationOperator);
 
-			//_treeViewerExpertOperatorColumn.setEditingSupport(new AggregationOperatorEditingSupport(_aggregationPhase, _expertsViewer, AggregationPhase.EXPERTS));
+			_treeViewerExpertOperatorColumn.setEditingSupport(new AggregationOperatorEditingSupport(_aggregationPhase, _expertsViewer, AggregationPhase.EXPERTS));
 			_treeViewerExpertOperatorColumn.setLabelProvider(new OperatorColumnLabelProvider(_aggregationPhase, AggregationPhase.EXPERTS));
 
 			_expertsViewer.setInput(_aggregationPhase);
@@ -375,7 +384,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_treeCriterionOperatorColumn.setText("Operator");
 			_treeCriterionOperatorColumn.setImage(Images.AggregationOperator);
 
-			//_treeViewerCriterionOperatorColumn.setEditingSupport(new AggregationOperatorEditingSupport(_aggregationPhase, _criteriaViewer, AggregationPhase.CRITERIA));
+			_treeViewerCriterionOperatorColumn.setEditingSupport(new AggregationOperatorEditingSupport(_aggregationPhase, _criteriaViewer, AggregationPhase.CRITERIA));
 			_treeViewerCriterionOperatorColumn.setLabelProvider(new OperatorColumnLabelProvider(_aggregationPhase, AggregationPhase.CRITERIA));
 			
 			_criteriaViewer.setInput(_aggregationPhase);
@@ -519,16 +528,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_rankingEvaluationColumn.setWidth(100);
 		_rankingEvaluationColumn.setText("Evaluation");
 		_rankingViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
-		
-		compactTable();
 	}
 	
-	private void compactTable() {
-		_rankingRankingColumn.pack();
-		_rankingAlternativeColumn.pack();
-		_rankingEvaluationColumn.pack();	
-	}
-
 	private void createChartView() {
 		Composite chartViewParent = new Composite(_resultsPanel, SWT.NONE);
 		GridLayout layout = new GridLayout(1, false);
@@ -554,7 +555,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		
 		boolean exit = false;
 		if (domain instanceof FuzzySet) {
-			_chart = new FuzzySetChart((FuzzySet) domain, _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
+			_chart.initialize((FuzzySet) domain, _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
 		} else {
 			exit = true;
 		}
@@ -569,46 +570,50 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 				};
 				_chartView.addControlListener(_controlListener);
 			}
-			if (_aggregationResult != null) {
-				Map<ProblemElement, Valuation> results = _aggregationResult.getResult();
-				int size = results.size();
-				if (size > 0) {
-					String[] alternatives = new String[size];
-					int[] pos = new int[size];
-					double[] measures = new double[size], alpha = new double[size];
-					Color[] colors = new Color[size];
-					Valuation valuation = null, aux;
-					int i = 0;
 
-					for (ProblemElement alternative : results.keySet()) {
-						alternatives[i] = alternative.getId();
-						aux = results.get(alternative);
-						if (aux instanceof UnifiedValuation) {
-							valuation = ((UnifiedValuation) aux).disunification((FuzzySet) aux.getDomain());
-						} else {
-							valuation = aux;
-						}
+			_aggregationResult = UnificationPhase.getValuationsResult();
+			int size = _aggregationResult.size();
+			if (size > 0) {
+				String[] alternatives = new String[size];
+				int[] pos = new int[size];
+				double[] alpha = new double[size];
+				Valuation valuation = null, aux;
+				int i = 0;
 
-						if (valuation instanceof TwoTuple) {
-							pos[i] = ((FuzzySet) domain).getPos(((TwoTuple) valuation).getLabel());
-							alpha[i] = ((TwoTuple) valuation).getAlpha();
-							i++;
-						} else {
-							alternatives[i] = null;
-						}
+				for (ProblemElement alternative : _aggregationResult.keySet()) {
+					alternatives[i] = alternative.getId();
+					aux = _aggregationResult.get(alternative);
+					if (aux instanceof UnifiedValuation) {
+						valuation = ((UnifiedValuation) aux).disunification((FuzzySet) aux.getDomain());
+					} else {
+						valuation = aux;
 					}
-					if (_chart instanceof FuzzySetChart) {
-						((FuzzySetChart) _chart).displayAlternatives(alternatives, pos, alpha);
+
+					if (valuation instanceof TwoTuple) {
+						pos[i] = ((FuzzySet) domain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
+						alpha[i] = ((TwoTuple) valuation).getAlpha();
+						i++;
+					} else {
+						alternatives[i] = null;
 					}
+				}
+				if (_chart instanceof FuzzySetAggregationChart) {
+					((FuzzySetAggregationChart) _chart).displayAlternatives(alternatives, pos, alpha);
 				}
 			}
 		}
+	}
+	
+	private Domain getDomain() {
+		return SelectBLTS.getBLTSDomain() ;
 	}
 	
 	private void removeOldChart() {
 		if (_chart != null) {
 			_chart.getChartComposite().dispose();
 			_chartView.layout();
+		} else {
+			_chart = new FuzzySetAggregationChart();
 		}
 	}
 	
@@ -630,8 +635,15 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	}
 	
 	private void testAggregationProcess() {
-		// TODO Auto-generated method stub
+		refreshView();
 		
+	}
+	
+	private void refreshView() {
+		if (_rankingViewer != null) {
+			_rankingViewer.setInput(_aggregationResult);
+			setChart(getDomain());
+		}
 	}
 
 	@Override

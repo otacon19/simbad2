@@ -5,7 +5,8 @@ Bundle-SymbolicName: sinbad2.phasemethod.multigranular.aggregation.ui;singleton:
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.multigranular.aggregation.ui.Activator
 Require-Bundle: sinbad2.phasemethod.ui,
+ sinbad2.domain.ui,
  sinbad2.phasemethod.multigranular.aggregation;bundle-version="1.0.0",
- sinbad2.phasemethod.multigranular.unification
+ sinbad2.phasemethod.multigranular.unification.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
