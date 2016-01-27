@@ -1,7 +1,5 @@
 package sinbad2.phasemethod.multigranular.aggregation.ui.view.editingsupport;
 
-import java.util.Set;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -14,6 +12,7 @@ import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.AggregationOperatorsManager;
 import sinbad2.aggregationoperator.EAggregationOperatorType;
 import sinbad2.element.ProblemElement;
+import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.multigranular.aggregation.AggregationPhase;
 
 public class AggregationOperatorEditingSupport extends EditingSupport {
@@ -21,7 +20,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	private CellEditor _cellEditor;
 	
 	private AggregationPhase _aggregationPhase;
-	private String[] _aggregationOperatorsIds;
+	private String[] _aggregationOperatorsNames;
 	private String _type;
 	private boolean _abort;
 	private boolean _assignAll;
@@ -30,46 +29,42 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	
 	private final TreeViewer _viewer;
 
-	public AggregationOperatorEditingSupport(AggregationPhase aggregationPhase, TreeViewer _expertsViewer, String type) {
-		super(_expertsViewer);
+	public AggregationOperatorEditingSupport(AggregationPhase aggregationPhase, TreeViewer viewer, String type) {
+		super(viewer);
 
 		_type = type;
-		_aggregationOperatorsIds = null;
+		_aggregationOperatorsNames = null;
 		_aggregationPhase = aggregationPhase;
 		_aggregationOperatorsManager = AggregationOperatorsManager.getInstance();
 
-		_viewer = _expertsViewer;
+		_viewer = viewer;
 	}
 
 	@Override
 	protected CellEditor getCellEditor(Object element) {
-		if (_aggregationOperatorsIds == null) {
-
-			AggregationOperator operator = (AggregationOperator) element;
-			Set<EAggregationOperatorType> types = operator.getTypes();
+		
+		if(_aggregationOperatorsNames == null) {
+			MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();	
+			EAggregationOperatorType operatorType = methodsUIManager.getActivateMethodUI().getMethod().getAggregationTypeSupported();
+		
+			String[] aggregationOperatorsIds = _aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
+			_aggregationOperatorsNames = new String[aggregationOperatorsIds.length];
 			
-			EAggregationOperatorType operatorType = null;
-				
-			_aggregationOperatorsIds = _aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
-	
-			for (int i = 0; i < _aggregationOperatorsIds.length; i++) {
-				_aggregationOperatorsIds[i] = _aggregationOperatorsIds[i].substring(0, 1).toUpperCase() + _aggregationOperatorsIds[i].substring(1);
+			for (int i = 0; i < aggregationOperatorsIds.length; i++) {
+				_aggregationOperatorsNames[i] = _aggregationOperatorsManager.getAggregationOperator(aggregationOperatorsIds[i]).getName();
 			}
 		}
 
-		_cellEditor = new ComboBoxCellEditor(_viewer.getTree(), _aggregationOperatorsIds);
+		_cellEditor = new ComboBoxCellEditor(_viewer.getTree(), _aggregationOperatorsNames);
 		
 		return _cellEditor;
 	}
 
 	@Override
 	protected boolean canEdit(Object element) {
-		if(element instanceof ProblemElement) {
-			if (AggregationPhase.EXPERTS.equals(_type) || AggregationPhase.CRITERIA.equals(_type)) {
-				return true;
-			}
+		if (AggregationPhase.EXPERTS.equals(_type) || AggregationPhase.CRITERIA.equals(_type)) {
+			return true;
 		}
-		
 		return false;
 	}
 
@@ -121,7 +116,6 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	}
 
 	private ProblemElement[] setOperator(ProblemElement element, AggregationOperator aggregationOperator) {
-
 		ProblemElement[] result = new ProblemElement[] {};
 
 		AggregationOperator operator = null;
@@ -156,7 +150,6 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
-
 		if ((element == null) || (value == null)) {
 			return;
 		}
@@ -173,7 +166,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			pe = (ProblemElement) element;
 		}
 
-		String id = _aggregationOperatorsIds[newValue];
+		String id = _aggregationOperatorsNames[newValue];
 		if (id.startsWith("(W) ")) { //$NON-NLS-1$
 			id = id.substring(4);
 		}

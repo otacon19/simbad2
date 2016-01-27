@@ -1,12 +1,15 @@
 package sinbad2.method;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
+import sinbad2.aggregationoperator.EAggregationOperatorType;
 
 public class MethodsManager {
 	
@@ -42,8 +45,13 @@ public class MethodsManager {
 		MethodRegistryExtension registry;
 		for (IConfigurationElement extension : extensions) {
 			registry = new MethodRegistryExtension(extension);
-			_registers.put(registry.getElement(EMethodElements.id),
-					registry);
+			_registers.put(registry.getElement(EMethodElements.id), registry);
+		}
+		
+		IConfigurationElement[] supportedTypesConfiguration = extensions[0].getChildren(EMethodElements.aggregation_supported.toString());
+		Set<EAggregationOperatorType> supportedTypes = new HashSet<EAggregationOperatorType>();
+		for(IConfigurationElement type: supportedTypesConfiguration) {
+			supportedTypes.add(EAggregationOperatorType.valueOf(type.getAttribute(EMethodElements.type.toString())));
 		}
 	}
 
@@ -120,6 +128,14 @@ public class MethodsManager {
 		method.setName(methodRegistry.getElement(EMethodElements.name));
 		method.setCategory(methodRegistry.getElement(EMethodElements.category));
 		method.setDescription(methodRegistry.getElement(EMethodElements.description));
+		
+		IExtensionRegistry reg = Platform.getExtensionRegistry();
+		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
+		
+		IConfigurationElement[] supportedTypesConfiguration = extensions[0].getChildren(EMethodElements.aggregation_supported.toString());
+		EAggregationOperatorType supportedType = EAggregationOperatorType.valueOf(supportedTypesConfiguration[0].getAttribute(EMethodElements.type.toString()));
+		method.setAggregationTypeSupported(supportedType);
+		
 		method.setRegistry(methodRegistry);
 
 		_methods.put(id, method);

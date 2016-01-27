@@ -10,10 +10,12 @@ import java.util.List;
 import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.annotations.XYTextAnnotation;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.experimental.chart.swt.ChartComposite;
@@ -237,6 +239,68 @@ public class LinguisticDomainChart extends DomainChart {
 					_alternativesMarkers[i].setLabelOffset(new RectangleInsets(offset + (offset * i), 15, 0, 0));
 					_chart.getXYPlot().addRangeMarker(0, _alternativesMarkers[i], Layer.FOREGROUND);
 				}
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void displayAlternatives(String[] alternatives, int[] pos, double[] alpha) {
+		int size = alternatives.length;
+		int cardinality = ((FuzzySet) _domain).getLabelSet().getCardinality();
+		XYSeries series, alternativeSeries;
+		double[] centers = new double[size];
+		double x, y, factor;
+
+		List<XYDataItem> dataItems;
+
+		for(int i = 0; i < size; i++) {
+			if(alternatives[i] != null) {
+				series = _dataset.getSeries(pos[i]);
+				alternativeSeries = new XYSeries(alternatives[i]);
+
+				dataItems = (List<XYDataItem>) series.getItems();
+				if(alpha[i] >= 0) {
+					factor = (dataItems.get(3).getX().doubleValue() - dataItems.get(2).getX().doubleValue()) * alpha[i];
+				} else {
+					factor = (dataItems.get(1).getX().doubleValue() - dataItems.get(0).getX().doubleValue()) * alpha[i];
+				}
+				XYDataItem item;
+				for(int itemPos = 0; itemPos < dataItems.size(); itemPos++) {
+					item = dataItems.get(itemPos);
+					x = item.getXValue();
+					y = item.getYValue();
+					if(itemPos == 0) {
+						if(x == dataItems.get(1).getX().doubleValue()) {
+							x -= dataItems.get(3).getX().doubleValue() - dataItems.get(2).getX().doubleValue();
+						}
+					} else if (itemPos == 1) {
+						centers[i] = x + factor;
+					} else if(itemPos == 3) {
+						if(x == dataItems.get(2).getX().doubleValue()) {
+							x += dataItems.get(1).getX().doubleValue() - dataItems.get(0).getX().doubleValue();
+						}
+					}
+					alternativeSeries.add(x + factor, y);
+
+				}
+				_dataset.addSeries(alternativeSeries);
+			}
+		}
+
+		_chart.getXYPlot().setDataset(_dataset);
+		XYPlot xyplot = (XYPlot) _chart.getPlot();
+		XYItemRenderer renderer = xyplot.getRenderer(0);
+		XYTextAnnotation annotation;
+		for (int i = 0; i < xyplot.getSeriesCount(); i++) {
+			if (i >= cardinality) {
+				renderer.setSeriesStroke(i, new BasicStroke(3));
+				renderer.setSeriesPaint(i, colorForEachLabel(pos[i - cardinality]));
+				annotation = new XYTextAnnotation(alternatives[i - cardinality], centers[i - cardinality], 1.05);
+				annotation.setFont(new Font("SansSerif", Font.PLAIN, 10)); //$NON-NLS-1$
+				xyplot.addAnnotation(annotation);
+			} else {
+				renderer.setSeriesStroke(i, new BasicStroke(1));
+				renderer.setSeriesPaint(i, colorForEachLabel(i));
 			}
 		}
 	}

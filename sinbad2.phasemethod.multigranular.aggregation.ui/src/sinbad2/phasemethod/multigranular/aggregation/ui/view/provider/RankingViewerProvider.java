@@ -46,16 +46,16 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 		List<Object[]> result = new LinkedList<Object[]>();
 
 		String alternativeName;
-		Valuation valuation;
+		Valuation valuation, twoTuple = null;;
 		Object[] listEntry;
 		for (int i = 0; i < size; i++) {
 			alternativeName = (String) input[i][0];
 			valuation = (Valuation) input[i][1];
 			if (valuation != null) {
 				if (valuation instanceof UnifiedValuation) {
-					((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
+					twoTuple = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
 				}
-				listEntry = new Object[] {((TwoTuple) valuation).calculateInverseDelta(), alternativeName,valuation };
+				listEntry = new Object[] {((TwoTuple) twoTuple).calculateInverseDelta(), alternativeName, valuation };
 			} else {
 				listEntry = new Object[] { 0d, alternativeName, null };
 			}

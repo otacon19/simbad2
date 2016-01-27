@@ -29,6 +29,7 @@ public class OperatorColumnLabelProvider extends ColumnLabelProvider {
 		} else {
 			operator = _aggregationPhase.getCriterionOperator(problemElement);			
 		}
+		
 		if (operator == null) {
 			return "Unassigned";
 		} else {

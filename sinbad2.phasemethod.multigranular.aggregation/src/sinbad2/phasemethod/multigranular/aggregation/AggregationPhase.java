@@ -42,6 +42,8 @@ public class AggregationPhase implements IPhaseMethod {
 		_expertsOperators = new HashMap<ProblemElement, AggregationOperator>();
 		_criteriaOperators = new HashMap<ProblemElement, AggregationOperator>();
 		
+		_listeners = new LinkedList<AggregationProcessListener>();
+		
 		_aggregateBy = "CRITERIA";
 		
 		initialization();
@@ -57,30 +59,13 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	private void initialization() {
 
-		createElement(null, EXPERTS);
 		for (Expert expert : _elementsSet.getExperts()) {
-			if (expert.hasChildrens()) {
-				createElement(expert, EXPERTS);
-				for (Expert children : expert.getChildrens()) {
-					if (children.hasChildrens()) {
-						createElement(children, EXPERTS);
-					}
-				}
-			}
+			createElement(expert, EXPERTS);
 		}
 
-		createElement(null, CRITERIA);
 		for (Criterion criterion : _elementsSet.getCriteria()) {
-			if (criterion.hasSubcriteria()) {
-				createElement(criterion, CRITERIA);
-				for (Criterion subcriterion : criterion.getSubcriteria()) {
-					if (subcriterion.hasSubcriteria()) {
-						createElement(subcriterion, CRITERIA);
-					}
-				}
-			}
+			createElement(criterion, CRITERIA);
 		}
-
 	}
 	
 	private void createElement(ProblemElement element, String elementType) {
@@ -185,8 +170,6 @@ public class AggregationPhase implements IPhaseMethod {
 
 	@Override
 	public void clear() {
-		_elementsSet.clear();
-		
 		_criteriaOperators.clear();
 		_expertsOperators.clear();
 		_aggregateBy = "CRITERIA";
@@ -194,7 +177,7 @@ public class AggregationPhase implements IPhaseMethod {
 
 	public void addAggregationProcessListener(AggregationProcessListener listener) {
 		_listeners.add(listener);
-		listener.aggregationProcessChange(new AggregationProcessStateChangeEvent(EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
+		listener.notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
 	}
 	
 	public void removeAggregationProcessListener(AggregationProcessListener listener) {
@@ -210,7 +193,7 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	private void notifyAggregationProcessChange(AggregationProcessStateChangeEvent event) {
 		for (AggregationProcessListener listener : _listeners) {
-			listener.aggregationProcessChange(event);
+			listener.notifyAggregationProcessChange(event);
 		}
 	}
 

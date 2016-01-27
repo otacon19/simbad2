@@ -15,6 +15,9 @@
          <phasemethod
                phase="flintstones.phasemethod.multigranular.aggregation">
          </phasemethod>
+         <aggregation_supported
+               type="TwoTuple">
+         </aggregation_supported>
       </method>
    </extension>
 

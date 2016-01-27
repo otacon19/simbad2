@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
 
+import sinbad2.aggregationoperator.EAggregationOperatorType;
 import sinbad2.method.state.EMethodStateChanges;
 import sinbad2.method.state.IMethodStateListener;
 import sinbad2.method.state.MethodStateChangeEvent;
@@ -20,6 +21,8 @@ public class Method {
 	private String _description;
 	private List<PhaseMethod> _phases;
 	private MethodImplementation _implementation;
+	private EAggregationOperatorType _typeSupported;
+	
 	private MethodRegistryExtension _registry;
 
 	private List<IMethodStateListener> _listeners;
@@ -31,6 +34,8 @@ public class Method {
 		_description = null;
 		_phases = null;
 		_implementation = null;
+		_typeSupported = null;
+		
 		_registry = null;
 
 		_listeners = new LinkedList<IMethodStateListener>();
@@ -78,6 +83,14 @@ public class Method {
 		_description = description;
 	}
 	
+	public EAggregationOperatorType getAggregationTypeSupported() {
+		return _typeSupported;
+	}
+	
+	public void setAggregationTypeSupported(EAggregationOperatorType typeSupported) {
+		_typeSupported = typeSupported;
+	}
+	
 	public List<PhaseMethod> getPhases() {
 		if (_phases == null) {
 			_phases = new LinkedList<PhaseMethod>();
@@ -91,7 +104,7 @@ public class Method {
 
 		return _phases;
 	}
-
+	
 	public void setPhases(List<PhaseMethod> phases) {
 		_phases = phases;
 	}

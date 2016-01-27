@@ -33,6 +33,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
@@ -41,7 +42,6 @@ import sinbad2.phasemethod.multigranular.aggregation.AggregationPhase;
 import sinbad2.phasemethod.multigranular.aggregation.listener.AggregationProcessListener;
 import sinbad2.phasemethod.multigranular.aggregation.listener.AggregationProcessStateChangeEvent;
 import sinbad2.phasemethod.multigranular.aggregation.ui.Images;
-import sinbad2.phasemethod.multigranular.aggregation.ui.jfreechart.FuzzySetAggregationChart;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.editingsupport.AggregationOperatorEditingSupport;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.AggregationCriterionViewerContentProvider;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.AggregationExpertViewerContentProvider;
@@ -95,7 +95,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	
 	private ControlAdapter _controlListener;
 	
-	private FuzzySetAggregationChart _chart;
+	private LinguisticDomainChart _chart;
 	
 	private AggregationPhase _aggregationPhase;
 	
@@ -133,33 +133,21 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		
 		_parent = parent;
 		
-		GridLayout layout = new GridLayout();
+		GridLayout layout = new GridLayout(14, true);
+		layout.verticalSpacing = 20;
+		layout.horizontalSpacing = 15;
 		layout.marginLeft = 20;
 		layout.marginRight = 15;
-		layout.marginBottom = 15;
-		layout.marginTop = 20;
-		_parent.setLayout(layout);
-		
-		GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true, 14, 1);
-		_parent.setLayoutData(gridData);
-		
-		_resultsPanel = new Composite(_parent, SWT.NONE);
-		gridData = new GridData(GridData.FILL, GridData.FILL, true, true, 8, 1);
-		_resultsPanel.setLayoutData(gridData);
-		layout = new GridLayout(1, false);
-		layout.marginTop = 0;
-		layout.marginBottom = 0;
-		layout.marginLeft = 0;
-		layout.marginRight = 0;
-		layout.verticalSpacing = 0;
 		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		layout.horizontalSpacing = 0;
-		_resultsPanel.setLayout(layout);
+		layout.marginTop = 20;
+		layout.marginBottom = 15;
+		_parent.setLayout(layout);
 
 		createOperatorsSelectors();
-		createRankingView();
-		createChartView();	
+		createViews();
+		
+		_aggregationPhase.addAggregationProcessListener(this);
+		_aggregationPhase.clear();
 	}
 	
 	private void createOperatorsSelectors() {
@@ -273,7 +261,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			*/
 			_treeViewerExpertOperatorColumn = new TreeViewerColumn(_expertsViewer, SWT.NONE);
 			_treeExpertOperatorColumn = _treeViewerExpertOperatorColumn.getColumn();
-			_treeExpertOperatorColumn.setWidth(70);
+			_treeExpertOperatorColumn.setWidth(120);
 			_treeExpertOperatorColumn.setText("Operator");
 			_treeExpertOperatorColumn.setImage(Images.AggregationOperator);
 
@@ -380,7 +368,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			
 			_treeViewerCriterionOperatorColumn = new TreeViewerColumn(_criteriaViewer, SWT.NONE);
 			_treeCriterionOperatorColumn = _treeViewerCriterionOperatorColumn.getColumn();
-			_treeCriterionOperatorColumn.setWidth(70);
+			_treeCriterionOperatorColumn.setWidth(120);
 			_treeCriterionOperatorColumn.setText("Operator");
 			_treeCriterionOperatorColumn.setImage(Images.AggregationOperator);
 
@@ -487,6 +475,25 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			});
 		}
 	}
+	
+	private void createViews() {
+		_resultsPanel = new Composite(_parent, SWT.NONE);
+		GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true, 8, 1);
+		_resultsPanel.setLayoutData(gridData);
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginTop = 0;
+		layout.marginBottom = 0;
+		layout.marginLeft = 0;
+		layout.marginRight = 0;
+		layout.verticalSpacing = 0;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		layout.horizontalSpacing = 0;
+		_resultsPanel.setLayout(layout);
+		
+		createRankingView();
+		createChartView();	
+	}
 
 	private void createRankingView() {
 		Composite rankingView = new Composite(_resultsPanel, SWT.NONE);
@@ -552,10 +559,10 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	
 	private void setChart(Domain domain) {
 		removeOldChart();
-		
 		boolean exit = false;
 		if (domain instanceof FuzzySet) {
-			_chart.initialize((FuzzySet) domain, _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
+			_chart = new LinguisticDomainChart();
+			_chart.initialize(domain, _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
 		} else {
 			exit = true;
 		}
@@ -597,8 +604,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 						alternatives[i] = null;
 					}
 				}
-				if (_chart instanceof FuzzySetAggregationChart) {
-					((FuzzySetAggregationChart) _chart).displayAlternatives(alternatives, pos, alpha);
+				if (_chart instanceof LinguisticDomainChart) {
+					((LinguisticDomainChart) _chart).displayAlternatives(alternatives, pos, alpha);
 				}
 			}
 		}
@@ -612,13 +619,11 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		if (_chart != null) {
 			_chart.getChartComposite().dispose();
 			_chartView.layout();
-		} else {
-			_chart = new FuzzySetAggregationChart();
 		}
 	}
 	
 	@Override
-	public void aggregationProcessChange(AggregationProcessStateChangeEvent event) {
+	public void notifyAggregationProcessChange(AggregationProcessStateChangeEvent event) {
 		if (_expertsViewer != null) {
 			_expertsViewer.refresh();
 			_treeExpertColumn.pack();

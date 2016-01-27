@@ -51,6 +51,7 @@
       <complexType>
          <choice minOccurs="1" maxOccurs="unbounded">
             <element ref="phasemethod"/>
+            <element ref="aggregation_supported"/>
          </choice>
          <attribute name="id" type="string" use="required">
             <annotation>
@@ -116,6 +117,32 @@
                   <meta.attribute kind="identifier" basedOn="flintstones.phasemethod/phase/@id"/>
                </appinfo>
             </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="aggregation_supported">
+      <complexType>
+         <attribute name="type" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="TwoTuple">
+                  </enumeration>
+                  <enumeration value="Hesitant">
+                  </enumeration>
+                  <enumeration value="Linguistic">
+                  </enumeration>
+                  <enumeration value="Numeric">
+                  </enumeration>
+                  <enumeration value="Interval">
+                  </enumeration>
+               </restriction>
+            </simpleType>
          </attribute>
       </complexType>
    </element>
