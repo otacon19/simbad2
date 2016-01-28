@@ -190,7 +190,6 @@ public class AggregationPhase implements IPhaseMethod {
 				if (criterionValuations.size() > 1) {
 					operator = getExpertOperator(expertParent);
 					if (operator instanceof UnweightedAggregationOperator) {
-						System.out.println("Aggregate 1: " + ((UnweightedAggregationOperator) operator).aggregate(criterionValuations));
 						alternativeValuations.add(((UnweightedAggregationOperator) operator).aggregate(criterionValuations));
 					}
 				} else {
@@ -202,8 +201,7 @@ public class AggregationPhase implements IPhaseMethod {
 		if (alternativeValuations.size() > 1) {
 			operator = getCriterionOperator(criterionParent);
 			if(operator instanceof UnweightedAggregationOperator) { //Operador no ponderado
-				Valuation v = ((UnweightedAggregationOperator) operator).aggregate(alternativeValuations);
-				return v;
+				return ((UnweightedAggregationOperator) operator).aggregate(alternativeValuations);
 			} else {
 				return null;
 			}

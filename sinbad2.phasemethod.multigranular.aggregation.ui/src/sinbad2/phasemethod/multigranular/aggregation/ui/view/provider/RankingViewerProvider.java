@@ -10,13 +10,14 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
-import sinbad2.element.alternative.Alternative;
-import sinbad2.phasemethod.multigranular.unification.UnificationPhase;
+import sinbad2.element.ProblemElement;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class RankingViewerProvider implements IStructuredContentProvider {
+	
+	private Map<ProblemElement, Valuation> _results;
 	
 	private class MyComparator implements Comparator<Object[]> {
 		@Override
@@ -24,58 +25,62 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 			return Double.compare((Double) o1[0], (Double) o2[0]);
 		}
 	}
-
+	
 	@Override
 	public void dispose() {}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		_results = (Map<ProblemElement, Valuation>) newInput;
+	}
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		Map<Alternative, Valuation> valuationsResult = UnificationPhase.getAlternativesValuations() ;
-		int size = valuationsResult.size();
+		int size = _results.size();
 		Object[][] input = new Object[size][2];
 		int pos = 0;
-		for (Alternative alternative : valuationsResult.keySet()) {
+		for(ProblemElement alternative : _results.keySet()) {
 			input[pos][0] = alternative.getId();
-			input[pos][1] = valuationsResult.get(alternative);
+			input[pos][1] = _results.get(alternative);
 			pos++;
 		}
-
+		
 		List<Object[]> result = new LinkedList<Object[]>();
-
-		String alternativeName;
-		Valuation valuation, twoTuple = null;;
-		Object[] listEntry;
-		for (int i = 0; i < size; i++) {
-			alternativeName = (String) input[i][0];
-			valuation = (Valuation) input[i][1];
-			if (valuation != null) {
-				if (valuation instanceof UnifiedValuation) {
-					twoTuple = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
+		if(input[0][1] != null) {
+			String alternativeName;
+			Valuation valuation;
+			TwoTuple twoTuple = null;
+			Object[] listEntry;
+			for (int i = 0; i < size; i++) {
+				alternativeName = (String) input[i][0];
+				valuation = (Valuation) input[i][1];
+				if (valuation != null) {
+					if (valuation instanceof UnifiedValuation) {
+						twoTuple = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
+					}
+					listEntry = new Object[] {((TwoTuple) twoTuple).calculateInverseDelta(), alternativeName, twoTuple };
+				} else {
+					listEntry = new Object[] { 0d, alternativeName, null };
 				}
-				listEntry = new Object[] {((TwoTuple) twoTuple).calculateInverseDelta(), alternativeName, valuation };
-			} else {
-				listEntry = new Object[] { 0d, alternativeName, null };
+				result.add(listEntry);
 			}
-			result.add(listEntry);
-		}
-
-		Collections.sort(result, new MyComparator());
-		Collections.reverse(result);
-		int ranking = 0;
-		double previous = -1;
-		for (Object[] element : result) {
-			if ((Double) element[0] == previous) {
-				element[0] = ranking;
-			} else {
-				ranking++;
-				previous = (Double) element[0];
-				element[0] = ranking;
+	
+			Collections.sort(result, new MyComparator());
+			Collections.reverse(result);
+			
+			int ranking = 0;
+			double previous = -1;
+			for (Object[] element : result) {
+				if ((Double) element[0] == previous) {
+					element[0] = ranking;
+				} else {
+					ranking++;
+					previous = (Double) element[0];
+					element[0] = ranking;
+				}
 			}
 		}
 		return result.toArray(new Object[0][0]);
 	}
-	
 }
