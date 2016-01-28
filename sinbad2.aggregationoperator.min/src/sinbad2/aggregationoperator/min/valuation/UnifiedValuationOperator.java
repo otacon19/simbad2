@@ -48,8 +48,7 @@ public class UnifiedValuationOperator {
 			result = values.get(0);
 			result = (Valuation) result.clone();
 		}
-		System.out.println("La valoración es :" + result);
-		
+
 		return result;
 	}
 }

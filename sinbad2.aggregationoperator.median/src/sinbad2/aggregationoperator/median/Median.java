@@ -27,17 +27,17 @@ public class Median extends UnweightedAggregationOperator {
 		if(valuations.size() > 0) {
 			for(Valuation valuation: valuations) {
 				if(valuation instanceof IntegerValuation) {
-					IntegerOperator.aggregate(valuations);
+					return IntegerOperator.aggregate(valuations);
 				} else if(valuation instanceof RealValuation) {
-					RealOperator.aggregate(valuations);
+					return RealOperator.aggregate(valuations);
 				} else if(valuation instanceof IntegerInterval){
-					IntervalIntegerOperator.aggregate(valuations);
+					return IntervalIntegerOperator.aggregate(valuations);
 				} else if(valuation instanceof RealInterval) {
-					IntervalRealOperator.aggregate(valuations);
+					return IntervalRealOperator.aggregate(valuations);
 				} else if(valuation instanceof TwoTuple) {
-					TwoTupleOperator.aggregate(valuations);
+					return TwoTupleOperator.aggregate(valuations);
 				}  else if(valuation instanceof UnifiedValuation) {
-					UnifiedValuationOperator.aggregate(valuations);
+					return UnifiedValuationOperator.aggregate(valuations);
 				} else {
 					throw new IllegalArgumentException("Not supported type");
 				}

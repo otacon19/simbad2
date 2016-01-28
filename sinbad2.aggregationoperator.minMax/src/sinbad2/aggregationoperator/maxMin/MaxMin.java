@@ -18,7 +18,7 @@ public class MaxMin extends UnweightedAggregationOperator {
 		if(valuations.size() > 0) {
 			for(Valuation valuation: valuations) {
 				if(valuation instanceof HesitantValuation) {
-					HesitantOperator.aggregate(valuations);
+					return HesitantOperator.aggregate(valuations);
 				} else {
 					throw new IllegalArgumentException("Not supported type");
 				}
