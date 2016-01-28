@@ -5,6 +5,7 @@ Bundle-SymbolicName: sinbad2.phasemethod.multigranular.aggregation;singleton:=tr
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0",
+ sinbad2.phasemethod.multigranular.unification;bundle-version="1.0.0",
  sinbad2.valuation;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.valuation.unifiedValuation;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.valuation.twoTuple;bundle-version="1.0.0";visibility:=reexport,

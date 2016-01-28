@@ -8,9 +8,9 @@ public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 
 	@Override
 	public String getText(Object element) {
-
 		if (((Object[]) element)[2] != null) {
 			if (((Object[]) element)[2] instanceof TwoTuple) {
+				System.out.println("2-tuplas");
 				TwoTuple valuation = (TwoTuple) ((Object[]) element)[2];
 				String labelName = valuation.getLabel().getName();
 				String alpha = Double.toString(valuation.getAlpha());

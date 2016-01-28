@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import sinbad2.aggregationoperator.AggregationOperator;
+import sinbad2.aggregationoperator.UnweightedAggregationOperator;
 import sinbad2.core.validator.Validator;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
@@ -18,6 +20,9 @@ import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.phasemethod.multigranular.aggregation.listener.AggregationProcessListener;
 import sinbad2.phasemethod.multigranular.aggregation.listener.AggregationProcessStateChangeEvent;
 import sinbad2.phasemethod.multigranular.aggregation.listener.EAggregationProcessStateChange;
+import sinbad2.phasemethod.multigranular.unification.UnificationPhase;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.valuationset.ValuationKey;
 
 public class AggregationPhase implements IPhaseMethod {
 
@@ -27,99 +32,79 @@ public class AggregationPhase implements IPhaseMethod {
 
 	private ProblemElementsManager _elementsManager;
 	private ProblemElementsSet _elementsSet;
-	
+
 	private Map<ProblemElement, AggregationOperator> _expertsOperators;
 	private Map<ProblemElement, AggregationOperator> _criteriaOperators;
-	
+
 	private String _aggregateBy;
-	
+
 	private List<AggregationProcessListener> _listeners;
-	
+
 	public AggregationPhase() {
 		_elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = _elementsManager.getActiveElementSet();
-		
+
 		_expertsOperators = new HashMap<ProblemElement, AggregationOperator>();
 		_criteriaOperators = new HashMap<ProblemElement, AggregationOperator>();
-		
+
 		_listeners = new LinkedList<AggregationProcessListener>();
-		
+
 		_aggregateBy = "CRITERIA";
-		
-		initialization();
 	}
-	
+
 	public ProblemElementsSet getElementSet() {
 		return _elementsSet;
 	}
-	
+
 	public String getAggregateBy() {
 		return _aggregateBy;
 	}
-	
-	private void initialization() {
 
-		for (Expert expert : _elementsSet.getExperts()) {
-			createElement(expert, EXPERTS);
-		}
-
-		for (Criterion criterion : _elementsSet.getCriteria()) {
-			createElement(criterion, CRITERIA);
-		}
-	}
-	
-	private void createElement(ProblemElement element, String elementType) {
-		if (elementType.equals(CRITERIA)) {
-			_criteriaOperators.put(element, null);
-		} else {
-			_expertsOperators.put(element, null);
-		}
-	}
-	
 	public void aggregateBy(String elementType) {
 		Validator.notNull(elementType);
 
 		if (elementType.equals(CRITERIA) || elementType.equals(EXPERTS)) {
 			_aggregateBy = elementType;
-			notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
+			notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(
+					EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
 		} else {
 			throw new IllegalArgumentException("Illegal element type.");
 		}
 	}
-	
+
 	private ProblemElement[] setOperator(ProblemElement element, AggregationOperator operator, Map<ProblemElement, AggregationOperator> operators) {
 		operators.put(element, operator);
-
+		
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		if(element instanceof Expert) {
-			if(((Expert) element).hasChildrens()) {
-				for(Expert children: ((Expert) element).getChildrens()) {
+		if (element instanceof Expert) {
+			if (((Expert) element).hasChildrens()) {
+				for (Expert children : ((Expert) element).getChildrens()) {
 					result.add(children);
 				}
 			}
-			
-		} else if(element instanceof Criterion) {
-			if(((Criterion) element).hasSubcriteria()) {
-				for(Criterion subcriterion: ((Criterion) element).getSubcriteria()) {
+
+		} else if (element instanceof Criterion) {
+			if (((Criterion) element).hasSubcriteria()) {
+				for (Criterion subcriterion : ((Criterion) element).getSubcriteria()) {
 					result.add(subcriterion);
 				}
 			}
-			
+
 		}
 
 		notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
-		
+
 		return result.toArray(new ProblemElement[0]);
 	}
 
 	public ProblemElement[] setExpertOperator(ProblemElement expert, AggregationOperator operator) {
 		return setOperator(expert, operator, _expertsOperators);
 	}
-	
+
 	public ProblemElement[] setCriterionOperator(ProblemElement criterion, AggregationOperator operator) {
 		return setOperator(criterion, operator, _criteriaOperators);
 	}
-	
+
 	public AggregationOperator getExpertOperator(ProblemElement expert) {
 		return _expertsOperators.get(expert);
 	}
@@ -127,10 +112,10 @@ public class AggregationPhase implements IPhaseMethod {
 	public AggregationOperator getCriterionOperator(ProblemElement criterion) {
 		return _criteriaOperators.get(criterion);
 	}
-	
+
 	public boolean isValid() {
 		AggregationOperator operator;
-		
+
 		if (_elementsSet.getExperts().size() > 1) {
 			for (ProblemElement element : _expertsOperators.keySet()) {
 				operator = _expertsOperators.get(element);
@@ -139,7 +124,7 @@ public class AggregationPhase implements IPhaseMethod {
 				}
 			}
 		}
-		
+
 		if (_elementsSet.getCriteria().size() > 1) {
 			for (ProblemElement element : _criteriaOperators.keySet()) {
 				operator = _criteriaOperators.get(element);
@@ -151,7 +136,133 @@ public class AggregationPhase implements IPhaseMethod {
 
 		return true;
 	}
+
+	public Map<ProblemElement, Valuation> aggregateAlternatives() {
+		Map<ProblemElement, Valuation> results = new HashMap<ProblemElement, Valuation>();
+		
+		for (ProblemElement alternative : _elementsSet.getAlternatives()) {
+			if (CRITERIA.equals(getAggregateBy())) {
+				results.put(alternative, aggregateAlternativeByCriteria(alternative));
+			} else {
+				results.put(alternative, aggregateAlternativeByExperts(alternative));
+			}
+		}
+
+		return results;
+	}
 	
+	private Valuation aggregateAlternativeByCriteria(ProblemElement alternative) {
+		return aggregateElementByCriteria(null, alternative, null);
+	}
+
+	private Valuation aggregateAlternativeByExperts(ProblemElement alternative) {
+		return aggregateElementByExperts(null, alternative, null);
+	}
+	
+	private Valuation aggregateElementByCriteria(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent) {
+		AggregationOperator operator;
+		List<Valuation> alternativeValuations, criterionValuations;
+		Map<ValuationKey, Valuation> valuationsResult = UnificationPhase.getValuationsResult();
+
+		List<Criterion> criteria = _elementsSet.getCriteriaSubcriteria((Criterion) criterionParent);
+		if (criteria.size() == 0) {
+			criteria.add((Criterion) criterionParent);
+		}
+		List<Expert> experts = _elementsSet.getExpertChildren((Expert) expertParent);
+		if (experts.size() == 0) {
+			experts.add((Expert) expertParent);
+		}
+
+		alternativeValuations = new LinkedList<Valuation>();
+		for (ProblemElement criterion : criteria) {
+			if(((Criterion) criterion).hasSubcriteria()) {
+				alternativeValuations.add(aggregateElementByCriteria(expertParent, alternative, criterion));
+			} else {
+				criterionValuations = new LinkedList<Valuation>();
+				for (ProblemElement expert : experts) {
+					if (((Expert) expert).hasChildrens()) {
+						criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion));
+					} else {
+						criterionValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
+					}
+				}
+
+				if (criterionValuations.size() > 1) {
+					operator = getExpertOperator(expertParent);
+					if (operator instanceof UnweightedAggregationOperator) {
+						alternativeValuations.add(((UnweightedAggregationOperator) operator).aggregate(criterionValuations));
+					}
+				} else {
+					alternativeValuations.add(criterionValuations.get(0));
+				}
+			}
+		}
+
+		if (alternativeValuations.size() > 1) {
+			operator = getCriterionOperator(criterionParent);
+			if(operator != null) { //Operador no ponderado
+				Valuation v = ((UnweightedAggregationOperator) operator).aggregate(alternativeValuations);
+				System.out.println("V " + v);
+				return v;
+			} else {
+				return null;
+			}
+		} else {
+			return alternativeValuations.get(0);
+		}
+	}
+	
+	private Valuation aggregateElementByExperts(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent) {
+		AggregationOperator operator;
+		List<Valuation> alternativeValuations, expertValuations;
+		Map<ValuationKey, Valuation> valuationsResult = UnificationPhase.getValuationsResult();
+
+		List<Criterion> criteria = _elementsSet.getCriteriaSubcriteria((Criterion) criterionParent);
+		if (criteria.size() == 0) {
+			criteria.add((Criterion) criterionParent);
+		}
+		List<Expert> experts = _elementsSet.getExpertChildren((Expert) expertParent);
+		if (experts.size() == 0) {
+			experts.add((Expert) expertParent);
+		}
+
+		alternativeValuations = new LinkedList<Valuation>();
+		for (ProblemElement expert : experts) {
+			if (((Expert) expert).hasChildrens()) {
+				alternativeValuations.add(aggregateElementByExperts(expert, alternative, criterionParent));
+			} else {
+				expertValuations = new LinkedList<Valuation>();
+				for (ProblemElement criterion : criteria) {
+					if (((Criterion) criterion).hasSubcriteria()) {
+						expertValuations.add(aggregateElementByCriteria(expert, alternative, criterion));
+					} else {
+						expertValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
+					}
+				}
+
+				if (expertValuations.size() > 1) {
+					operator = getCriterionOperator(criterionParent);
+					if (operator instanceof UnweightedAggregationOperator) {
+						alternativeValuations.add(((UnweightedAggregationOperator) operator).aggregate(expertValuations));
+					} 
+				} else {
+					alternativeValuations.add(expertValuations.get(0));
+				}
+			}
+		}
+
+		if (alternativeValuations.size() > 1) {
+			operator = getExpertOperator(expertParent);
+			if (operator instanceof UnweightedAggregationOperator) {
+				return ((UnweightedAggregationOperator) operator).aggregate(alternativeValuations);
+			} else {
+				return null;
+			}
+		} else {
+			return alternativeValuations.get(0);
+		}
+	}
+
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new AggregationPhase();
@@ -160,9 +271,9 @@ public class AggregationPhase implements IPhaseMethod {
 	@Override
 	public void copyData(IPhaseMethod iMethodPhase) {
 		AggregationPhase aggregationPhase = (AggregationPhase) iMethodPhase;
-		
+
 		clear();
-		
+
 		_elementsSet.setExperts(aggregationPhase.getElementSet().getExperts());
 		_elementsSet.setAlternatives(aggregationPhase.getElementSet().getAlternatives());
 		_elementsSet.setCriteria(aggregationPhase.getElementSet().getCriteria());
@@ -177,20 +288,21 @@ public class AggregationPhase implements IPhaseMethod {
 
 	public void addAggregationProcessListener(AggregationProcessListener listener) {
 		_listeners.add(listener);
-		listener.notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
+		listener.notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(
+				EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
 	}
-	
+
 	public void removeAggregationProcessListener(AggregationProcessListener listener) {
 		_listeners.remove(listener);
 	}
-	
+
 	@Override
 	public void notifyPhaseMethodStateChange(PhaseMethodStateChangeEvent event) {
 		if (event.getChange().equals(EPhaseMethodStateChange.ACTIVATED)) {
 			activate();
 		}
 	}
-	
+
 	private void notifyAggregationProcessChange(AggregationProcessStateChangeEvent event) {
 		for (AggregationProcessListener listener : _listeners) {
 			listener.notifyAggregationProcessChange(event);

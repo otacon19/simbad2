@@ -21,6 +21,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	
 	private AggregationPhase _aggregationPhase;
 	private String[] _aggregationOperatorsNames;
+	private String[] _aggregationOperatorsIds;
 	private String _type;
 	private boolean _abort;
 	private boolean _assignAll;
@@ -47,11 +48,11 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();	
 			EAggregationOperatorType operatorType = methodsUIManager.getActivateMethodUI().getMethod().getAggregationTypeSupported();
 		
-			String[] aggregationOperatorsIds = _aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
-			_aggregationOperatorsNames = new String[aggregationOperatorsIds.length];
+			_aggregationOperatorsIds = _aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
+			_aggregationOperatorsNames = new String[_aggregationOperatorsIds.length];
 			
-			for (int i = 0; i < aggregationOperatorsIds.length; i++) {
-				_aggregationOperatorsNames[i] = _aggregationOperatorsManager.getAggregationOperator(aggregationOperatorsIds[i]).getName();
+			for (int i = 0; i < _aggregationOperatorsIds.length; i++) {
+				_aggregationOperatorsNames[i] = _aggregationOperatorsManager.getAggregationOperator(_aggregationOperatorsIds[i]).getName();
 			}
 		}
 
@@ -166,13 +167,13 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			pe = (ProblemElement) element;
 		}
 
-		String id = _aggregationOperatorsNames[newValue];
+		String id = _aggregationOperatorsIds[newValue];
 		if (id.startsWith("(W) ")) { //$NON-NLS-1$
 			id = id.substring(4);
 		}
 		id = id.toLowerCase();
 		AggregationOperator operator = _aggregationOperatorsManager.getAggregationOperator(id);
-
+		
 		_abort = false;
 		_assignAll = false;
 		for (ProblemElement son : setOperator(pe, operator)) {

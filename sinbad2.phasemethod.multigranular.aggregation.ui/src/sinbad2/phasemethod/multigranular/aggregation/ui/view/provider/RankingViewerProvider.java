@@ -33,7 +33,7 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		Map<Alternative, Valuation> valuationsResult = UnificationPhase.getValuationsResult() ;
+		Map<Alternative, Valuation> valuationsResult = UnificationPhase.getAlternativesValuations() ;
 		int size = valuationsResult.size();
 		Object[][] input = new Object[size][2];
 		int pos = 0;

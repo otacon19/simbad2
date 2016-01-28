@@ -37,7 +37,6 @@ import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
-import sinbad2.element.alternative.Alternative;
 import sinbad2.phasemethod.multigranular.aggregation.AggregationPhase;
 import sinbad2.phasemethod.multigranular.aggregation.listener.AggregationProcessListener;
 import sinbad2.phasemethod.multigranular.aggregation.listener.AggregationProcessStateChangeEvent;
@@ -51,15 +50,12 @@ import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.Evaluation
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.OperatorColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.RankingViewerProvider;
-import sinbad2.phasemethod.multigranular.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class AggregationProcess extends ViewPart implements AggregationProcessListener {
-	public AggregationProcess() {
-	}
 	
 	public static final String ID = "flintstones.phasemethod.multigranular.aggregation.ui.view.aggregationprocess";
 
@@ -99,7 +95,9 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	
 	private AggregationPhase _aggregationPhase;
 	
-	private Map<Alternative, Valuation> _aggregationResult;
+	private Map<ProblemElement, Valuation> _aggregationResult;
+	
+	public AggregationProcess() {}
 	
 	public abstract class CenterImageLabelProvider extends OwnerDrawLabelProvider {
 
@@ -130,6 +128,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	@Override
 	public void createPartControl(Composite parent) {
 		_aggregationPhase = new AggregationPhase();
+		_aggregationResult = null;
 		
 		_parent = parent;
 		
@@ -577,35 +576,35 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 				};
 				_chartView.addControlListener(_controlListener);
 			}
-
-			_aggregationResult = UnificationPhase.getValuationsResult();
-			int size = _aggregationResult.size();
-			if (size > 0) {
-				String[] alternatives = new String[size];
-				int[] pos = new int[size];
-				double[] alpha = new double[size];
-				Valuation valuation = null, aux;
-				int i = 0;
-
-				for (ProblemElement alternative : _aggregationResult.keySet()) {
-					alternatives[i] = alternative.getId();
-					aux = _aggregationResult.get(alternative);
-					if (aux instanceof UnifiedValuation) {
-						valuation = ((UnifiedValuation) aux).disunification((FuzzySet) aux.getDomain());
-					} else {
-						valuation = aux;
+			if(_aggregationResult != null) {
+				int size = _aggregationResult.size();
+				if (size > 0) {
+					String[] alternatives = new String[size];
+					int[] pos = new int[size];
+					double[] alpha = new double[size];
+					Valuation valuation = null, aux;
+					int i = 0;
+	
+					for (ProblemElement alternative : _aggregationResult.keySet()) {
+						alternatives[i] = alternative.getId();
+						aux = _aggregationResult.get(alternative);
+						if (aux instanceof UnifiedValuation) {
+							valuation = ((UnifiedValuation) aux).disunification((FuzzySet) aux.getDomain());
+						} else {
+							valuation = aux;
+						}
+	
+						if (valuation instanceof TwoTuple) {
+							pos[i] = ((FuzzySet) domain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
+							alpha[i] = ((TwoTuple) valuation).getAlpha();
+							i++;
+						} else {
+							alternatives[i] = null;
+						}
 					}
-
-					if (valuation instanceof TwoTuple) {
-						pos[i] = ((FuzzySet) domain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
-						alpha[i] = ((TwoTuple) valuation).getAlpha();
-						i++;
-					} else {
-						alternatives[i] = null;
+					if (_chart instanceof LinguisticDomainChart) {
+						((LinguisticDomainChart) _chart).displayAlternatives(alternatives, pos, alpha);
 					}
-				}
-				if (_chart instanceof LinguisticDomainChart) {
-					((LinguisticDomainChart) _chart).displayAlternatives(alternatives, pos, alpha);
 				}
 			}
 		}
@@ -640,8 +639,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	}
 	
 	private void testAggregationProcess() {
-		refreshView();
-		
+		_aggregationResult = _aggregationPhase.aggregateAlternatives();
+		refreshView();	
 	}
 	
 	private void refreshView() {

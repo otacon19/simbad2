@@ -23,12 +23,16 @@ public class UnificationPhase implements IPhaseMethod {
 
 	private ValuationSetManager _valuationSetManager;
 	private static ValuationSet _valutationSet;
-	private static Map<Alternative, Valuation> _valuationsResult;
+	
+	private static Map<ValuationKey, Valuation> _valuationsResult;
+	private static Map<Alternative, Valuation> _alternativesValuations;
 	
 	public UnificationPhase() {
 		_valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = _valuationSetManager.getActiveValuationSet();
-		_valuationsResult = new LinkedHashMap<Alternative, Valuation>();
+		
+		_valuationsResult = new LinkedHashMap<ValuationKey, Valuation>();
+		_alternativesValuations = new LinkedHashMap<Alternative, Valuation>();
 	}
 
 	public ValuationSet getValuationSet() {
@@ -90,8 +94,6 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	public static Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
-		Map<ValuationKey, Valuation> result = new LinkedHashMap<ValuationKey, Valuation>();
-
 		if (unifiedDomain != null) {
 			Criterion criterion;
 			Valuation valuation;
@@ -118,14 +120,18 @@ public class UnificationPhase implements IPhaseMethod {
 					fuzzySet = ((LinguisticValuation) valuation).unification(unifiedDomain);
 					valuation = new UnifiedValuation(fuzzySet);
 				}
-				result.put(vk, valuation);
-				_valuationsResult.put(vk.getAlternative(), valuation);
+				_valuationsResult.put(vk, valuation);
+				_alternativesValuations.put(vk.getAlternative(), valuation);
 			}
 		}
-		return result;
+		return _valuationsResult;
 	}
 	
-	public static Map<Alternative, Valuation> getValuationsResult() {
+	public static Map<Alternative, Valuation> getAlternativesValuations() {
+		return _alternativesValuations;
+	}
+	
+	public static Map<ValuationKey, Valuation> getValuationsResult() {
 		return _valuationsResult;
 	}
 }

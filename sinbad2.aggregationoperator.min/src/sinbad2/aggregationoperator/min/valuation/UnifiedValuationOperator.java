@@ -14,7 +14,6 @@ public class UnifiedValuationOperator {
 	private UnifiedValuationOperator() {};
 
 	public static Valuation aggregate(List<Valuation> valuations) {
-
 		Valuation result = null;
 		List<Valuation> values = new LinkedList<Valuation>();
 		FuzzySet domain = (FuzzySet) valuations.get(0).getDomain().clone();
@@ -49,9 +48,8 @@ public class UnifiedValuationOperator {
 			result = values.get(0);
 			result = (Valuation) result.clone();
 		}
-
+		System.out.println("La valoración es :" + result);
+		
 		return result;
-
 	}
-	
 }

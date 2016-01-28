@@ -33,10 +33,9 @@ public class OperatorColumnLabelProvider extends ColumnLabelProvider {
 		if (operator == null) {
 			return "Unassigned";
 		} else {
-			String id = operator.getId();
-			id = id.substring(0, 1).toUpperCase() + id.substring(1);
+			String name = operator.getName();
 			
-			return id;							
+			return name;							
 		}
 	}
 }
