@@ -1,7 +1,9 @@
 package sinbad2.method;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
@@ -21,7 +23,7 @@ public class Method {
 	private String _description;
 	private List<PhaseMethod> _phases;
 	private MethodImplementation _implementation;
-	private EAggregationOperatorType _typeSupported;
+	private Set<EAggregationOperatorType> _typesSupported;
 	
 	private MethodRegistryExtension _registry;
 
@@ -34,7 +36,7 @@ public class Method {
 		_description = null;
 		_phases = null;
 		_implementation = null;
-		_typeSupported = null;
+		_typesSupported = new HashSet<EAggregationOperatorType>();
 		
 		_registry = null;
 
@@ -83,12 +85,12 @@ public class Method {
 		_description = description;
 	}
 	
-	public EAggregationOperatorType getAggregationTypeSupported() {
-		return _typeSupported;
+	public Set<EAggregationOperatorType> getAggregationTypesSupported() {
+		return _typesSupported;
 	}
 	
-	public void setAggregationTypeSupported(EAggregationOperatorType typeSupported) {
-		_typeSupported = typeSupported;
+	public void setAggregationTypeSupported(Set<EAggregationOperatorType> typesSupported) {
+		_typesSupported = typesSupported;
 	}
 	
 	public List<PhaseMethod> getPhases() {

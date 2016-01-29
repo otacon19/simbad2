@@ -54,14 +54,12 @@ public class RatingView extends ViewPart {
 	private static Button _backButton;
 	private static Button _nextButton;
 	private static Button _resetButton;
-	
 	private static CTabFolder _tabFolder;
+	private static RatingView _instance;
+	
 	private ExpandBar _methodsCategoriesBar; 
 
-	private MethodsUIManager _methodsUIManager;
-	
-	private static MethodUI _methodUISelected;
-	private static RatingView _instance;
+	private MethodUI _methodUISelected;
 	
 	private List<IStepStateListener> _listeners;
 
@@ -85,7 +83,6 @@ public class RatingView extends ViewPart {
 		_numPhase = 0;
 		_numStep = 0;
 		
-		_methodsUIManager = MethodsUIManager.getInstance();
 		_methodUISelected = null;
 		
 		_parent = parent;
@@ -272,14 +269,15 @@ public class RatingView extends ViewPart {
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_methodsCategoriesBar.setLayoutData(gridData);
 		
-		String[] ids = _methodsUIManager.getIdsRegisters();
+		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
+		String[] ids = methodsUIManager.getIdsRegisters();
 		
 		Map<String, List<Method>> categoriesMethods = new HashMap<String, List<Method>>();
 		List<Method> methods = new LinkedList<Method>();
 		
 		for(String id: ids) {
 			methods.clear();
-			MethodUI methodUI = _methodsUIManager.getUI(id);
+			MethodUI methodUI = methodsUIManager.getUI(id);
 			Method method = methodUI.getMethod();
 			String category = method.getCategory();
 			
@@ -360,13 +358,22 @@ public class RatingView extends ViewPart {
 				
 				_descriptionText.setText(method.getDescription());
 				
-				_methodsUIManager.activate(method.getId() + ".ui");
-				
-				_methodUISelected = _methodsUIManager.getActivateMethodUI();
-				calculateNumSteps();
-				loadNextStep();
-				
-				_stepsText.setText(_methodUISelected.getPhasesFormat());
+				MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
+				MethodUI currentMethod = methodsUIManager.getActivateMethodUI();
+				if(currentMethod == null) {
+					methodsUIManager.activate(method.getId() + ".ui");
+					_methodUISelected = methodsUIManager.getActivateMethodUI();
+					calculateNumSteps();
+					loadNextStep();
+					_stepsText.setText(_methodUISelected.getPhasesFormat());
+				} else if(!currentMethod.equals(_methodUISelected)) {
+					methodsUIManager.activate(method.getId() + ".ui");
+					_methodUISelected = currentMethod;
+					clearTabFolder();
+					calculateNumSteps();
+					loadNextStep();
+					_stepsText.setText(_methodUISelected.getPhasesFormat());
+				}
 			}
 		});
 	
@@ -387,7 +394,8 @@ public class RatingView extends ViewPart {
 	public void loadNextStep() {
 		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
 		PhaseMethodUI currentPhaseMethod = phasesMethodUIManager.getActiveResolutionPhasesUI();
-		List<PhaseMethodUI> phasesMethodUI = _methodUISelected.getPhasesUI();
+		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
+		List<PhaseMethodUI> phasesMethodUI = methodsUIManager.getActivateMethodUI().getPhasesUI();
 		
 		ViewPart step = null;
 		if(currentPhaseMethod == null) {
@@ -423,6 +431,12 @@ public class RatingView extends ViewPart {
 			item.setControl(parent);
 			
 			_nextButton.setEnabled(true);
+		}
+	}
+	
+	private void clearTabFolder() {
+		for(CTabItem ti: _tabFolder.getItems()) {
+			ti.dispose();
 		}
 	}
 	

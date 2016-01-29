@@ -25,7 +25,7 @@ import sinbad2.valuation.Valuation;
 import sinbad2.valuation.valuationset.ValuationKey;
 
 public class AggregationPhase implements IPhaseMethod {
-
+	
 	public static final String ID = "flintstones.phasemethod.multigranular.aggregation";
 	public static final String CRITERIA = "CRITERIA";
 	public static final String EXPERTS = "EXPERTS";

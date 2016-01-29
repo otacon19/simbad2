@@ -1,5 +1,8 @@
 package sinbad2.phasemethod.multigranular.aggregation.ui.view.editingsupport;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -21,7 +24,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	
 	private AggregationPhase _aggregationPhase;
 	private String[] _aggregationOperatorsNames;
-	private String[] _aggregationOperatorsIds;
+	private Set<String> _aggregationOperatorsIds;
 	private String _type;
 	private boolean _abort;
 	private boolean _assignAll;
@@ -34,7 +37,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 		super(viewer);
 
 		_type = type;
-		_aggregationOperatorsNames = null;
+		_aggregationOperatorsIds = null;
 		_aggregationPhase = aggregationPhase;
 		_aggregationOperatorsManager = AggregationOperatorsManager.getInstance();
 
@@ -44,18 +47,25 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	@Override
 	protected CellEditor getCellEditor(Object element) {
 		
-		if(_aggregationOperatorsNames == null) {
+		if(_aggregationOperatorsIds == null) {
+			_aggregationOperatorsIds = new HashSet<String>();
 			MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();	
-			EAggregationOperatorType operatorType = methodsUIManager.getActivateMethodUI().getMethod().getAggregationTypeSupported();
-		
-			_aggregationOperatorsIds = _aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
-			_aggregationOperatorsNames = new String[_aggregationOperatorsIds.length];
+			Set<EAggregationOperatorType> operatorsTypes = methodsUIManager.getActivateMethodUI().getMethod().getAggregationTypesSupported();
+	
+			String[] operatorsIds;
+			for(EAggregationOperatorType operatorType: operatorsTypes) {
+				operatorsIds = _aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
+				for(String operator: operatorsIds) {
+					_aggregationOperatorsIds.add(operator);
+				}
+			}
 			
-			for (int i = 0; i < _aggregationOperatorsIds.length; i++) {
-				_aggregationOperatorsNames[i] = _aggregationOperatorsManager.getAggregationOperator(_aggregationOperatorsIds[i]).getName();
+			_aggregationOperatorsNames = new String[_aggregationOperatorsIds.size()];
+			for(int i = 0; i < _aggregationOperatorsIds.size(); i++) {
+				_aggregationOperatorsNames[i] = _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName();
 			}
 		}
-
+		
 		_cellEditor = new ComboBoxCellEditor(_viewer.getTree(), _aggregationOperatorsNames);
 		
 		return _cellEditor;
@@ -167,7 +177,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			pe = (ProblemElement) element;
 		}
 
-		String id = _aggregationOperatorsIds[newValue];
+		String id = (String) _aggregationOperatorsIds.toArray()[newValue];
 		if (id.startsWith("(W) ")) { //$NON-NLS-1$
 			id = id.substring(4);
 		}

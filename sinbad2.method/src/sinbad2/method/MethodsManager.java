@@ -133,8 +133,13 @@ public class MethodsManager {
 		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
 		
 		IConfigurationElement[] supportedTypesConfiguration = extensions[0].getChildren(EMethodElements.aggregation_supported.toString());
-		EAggregationOperatorType supportedType = EAggregationOperatorType.valueOf(supportedTypesConfiguration[0].getAttribute(EMethodElements.type.toString()));
-		method.setAggregationTypeSupported(supportedType);
+		Set<EAggregationOperatorType> types = new HashSet<EAggregationOperatorType>();
+		for(int i = 0; i < supportedTypesConfiguration.length; ++i) {
+			EAggregationOperatorType supportedType = EAggregationOperatorType.valueOf(supportedTypesConfiguration[i].getAttribute(EMethodElements.type.toString()));
+			types.add(supportedType);
+		}
+			
+		method.setAggregationTypeSupported(types);
 		
 		method.setRegistry(methodRegistry);
 
