@@ -33,6 +33,7 @@ public class AggregationOperatorsManager {
 		IConfigurationElement[] supportedTypesConfiguration;
 		Set<EAggregationOperatorType> supportedTypes;
 		IConfigurationElement[] implementation = null;
+		
 		for(IConfigurationElement extension: extensions) {
 			implementation = extension.getChildren(EAggregationOperatorElements.unweighted.toString());
 			if(implementation.length == 0) {
