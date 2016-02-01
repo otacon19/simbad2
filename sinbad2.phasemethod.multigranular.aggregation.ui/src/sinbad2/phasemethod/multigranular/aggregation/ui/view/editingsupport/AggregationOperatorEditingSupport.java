@@ -19,9 +19,14 @@ import sinbad2.aggregationoperator.AggregationOperatorsManager;
 import sinbad2.aggregationoperator.EAggregationOperatorType;
 import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.element.ProblemElement;
+import sinbad2.element.ProblemElementsManager;
+import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.criterion.Criterion;
+import sinbad2.element.expert.Expert;
 import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.multigranular.aggregation.AggregationPhase;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.dialog.QuantifiersDialog;
+import sinbad2.phasemethod.multigranular.aggregation.ui.view.dialog.WeightsDialog;
 
 public class AggregationOperatorEditingSupport extends EditingSupport {
 
@@ -39,6 +44,42 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	private AggregationOperatorsManager _aggregationOperatorsManager;
 	
 	private final TreeViewer _viewer;
+	
+	private static ProblemElement[] getLeafElements(ProblemElement root) {
+		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+
+		List<ProblemElement> result = new LinkedList<ProblemElement>();
+		if (root instanceof Expert) {
+			List<Expert> childrens = elementsSet.getExpertChildren((Expert) root);
+			for (Expert children : childrens) {
+				if (!children.hasChildrens()) {
+					result.add(children);
+				} else {
+					ProblemElement[] subchildrens = getLeafElements(children);
+					for (ProblemElement subchildren : subchildrens) {
+						result.add(subchildren);
+					}
+				}
+			}
+
+		} else {
+			List<Criterion> subcriteria = elementsSet.getCriteriaSubcriteria((Criterion) root);
+			for (Criterion subcriterion : subcriteria) {
+				if (!subcriterion.hasSubcriteria()) {
+					result.add(subcriterion);
+				} else {
+					ProblemElement[] sub2criteria = getLeafElements(subcriterion);
+					for (ProblemElement sub2criterion : sub2criteria) {
+						result.add(sub2criterion);
+					}
+				}
+			}
+
+		}
+
+		return result.toArray(new ProblemElement[0]);
+	}
 
 	public AggregationOperatorEditingSupport(AggregationPhase aggregationPhase, TreeViewer viewer, String type) {
 		super(viewer);
@@ -166,7 +207,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				elementId = element.getId();
 			}
 
-			if (aggregationOperator.getName().equals("owa")) { //$NON-NLS-1$
+			if (aggregationOperator.getName().equals("Owa")) { //$NON-NLS-1$
 				if (_weights == null) {
 					QuantifiersDialog dialog = new QuantifiersDialog(Display.getCurrent().getActiveShell(), null, null, QuantifiersDialog.SIMPLE, elementType, elementId);
 
@@ -188,12 +229,19 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			} else {
 				_weights = null;
 				_mapWeights = null;
-				if (aggregationOperator.getName().equals("weighted mean")) { //$NON-NLS-1$
+				if (aggregationOperator.getName().equals("Weighted mean")) { //$NON-NLS-1$
 					ProblemElement nullElement = null;
-					ProblemElement[] secondary = getLeafElements(_otherElementManager, nullElement);
+					ProblemElement[] secondary = getLeafElements(nullElement);
 					
-					WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), _elementManager.getElementSons(element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
-
+					WeightsDialog dialog = null;
+					ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+					ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+					if(element instanceof Expert) {
+						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), (ProblemElement[]) elementsSet.getExpertChildren((Expert) element).toArray(), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+					} else {
+						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), (ProblemElement[]) elementsSet.getCriteriaSubcriteria((Criterion) element).toArray(), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+					}
+						
 					int exitValue = dialog.open();
 					if (exitValue == WeightsDialog.SAVE) {
 						_mapWeights = dialog.getWeights();
