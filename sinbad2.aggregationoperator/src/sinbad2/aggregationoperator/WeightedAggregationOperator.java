@@ -140,7 +140,6 @@ public abstract class WeightedAggregationOperator extends AggregationOperator {
 	}
 
 	public static double[] getQuantificationParams(QuantificationType type) {
-
 		switch (type) {
 		case most:
 			return new double[] { 0.3, 0.8 };

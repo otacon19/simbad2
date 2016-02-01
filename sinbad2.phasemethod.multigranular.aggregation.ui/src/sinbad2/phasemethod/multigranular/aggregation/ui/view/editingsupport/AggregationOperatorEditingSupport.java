@@ -1,6 +1,9 @@
 package sinbad2.phasemethod.multigranular.aggregation.ui.view.editingsupport;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -14,9 +17,11 @@ import org.eclipse.swt.widgets.Display;
 import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.AggregationOperatorsManager;
 import sinbad2.aggregationoperator.EAggregationOperatorType;
+import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.element.ProblemElement;
 import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.multigranular.aggregation.AggregationPhase;
+import sinbad2.phasemethod.multigranular.aggregation.ui.view.dialog.QuantifiersDialog;
 
 public class AggregationOperatorEditingSupport extends EditingSupport {
 
@@ -25,6 +30,8 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	private AggregationPhase _aggregationPhase;
 	private String[] _aggregationOperatorsNames;
 	private Set<String> _aggregationOperatorsIds;
+	private List<Double> _weights;
+	private Map<String, List<Double>> _mapWeights;
 	private String _type;
 	private boolean _abort;
 	private boolean _assignAll;
@@ -61,8 +68,14 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			}
 			
 			_aggregationOperatorsNames = new String[_aggregationOperatorsIds.size()];
+			AggregationOperator operator;
 			for(int i = 0; i < _aggregationOperatorsIds.size(); i++) {
-				_aggregationOperatorsNames[i] = _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName();
+				operator = _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]);
+				if (operator instanceof WeightedAggregationOperator) {
+					_aggregationOperatorsNames[i] = "(W) " + _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName();
+				} else {
+					_aggregationOperatorsNames[i] = _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName();
+				}
 			}
 		}
 		
@@ -131,11 +144,84 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 
 		AggregationOperator operator = null;
 		operator = aggregationOperator;
+		
+		if (aggregationOperator instanceof WeightedAggregationOperator) {
+
+			String elementType;
+			String elementId;
+
+			if (AggregationPhase.EXPERTS.equals(_type)) {
+				elementType = "Expert";
+			} else {
+				elementType = "Criterion";
+			}
+
+			if (element == null) {
+				if (AggregationPhase.EXPERTS.equals(_type)) {
+					elementId = "All experts";
+				} else {
+					elementId = "All criteria";
+				}
+			} else {
+				elementId = element.getId();
+			}
+
+			if (aggregationOperator.getName().equals("owa")) { //$NON-NLS-1$
+				if (_weights == null) {
+					QuantifiersDialog dialog = new QuantifiersDialog(Display.getCurrent().getActiveShell(), null, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+
+					int exitValue = dialog.open();
+					if (exitValue == QuantifiersDialog.SAVE) {
+						_mapWeights = null;
+						_weights = new LinkedList<Double>();
+						_weights.add(dialog.getAlpha());
+						_weights.add(dialog.getBeta());
+						operator = aggregationOperator;
+					} else if (exitValue == QuantifiersDialog.CANCEL_ALL) {
+						_weights = null;
+						_mapWeights = null;
+						_abort = true;
+					}
+				} else {
+					operator = aggregationOperator;
+				}
+			} else {
+				_weights = null;
+				_mapWeights = null;
+				if (aggregationOperator.getName().equals("weighted mean")) { //$NON-NLS-1$
+					ProblemElement nullElement = null;
+					ProblemElement[] secondary = getLeafElements(_otherElementManager, nullElement);
+					
+					WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), _elementManager.getElementSons(element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+
+					int exitValue = dialog.open();
+					if (exitValue == WeightsDialog.SAVE) {
+						_mapWeights = dialog.getWeights();
+						_weights = null;
+						operator = aggregationOperator;
+					} else if (exitValue == QuantifiersDialog.CANCEL_ALL) {
+						_mapWeights = null;
+						_weights = null;
+						_abort = true;
+					}
+				}
+			}
+		} else {
+			operator = aggregationOperator;
+		}
 
 		if (AggregationPhase.EXPERTS.equals(_type)) {
-			result = _aggregationPhase.setExpertOperator(element, operator);
+			if (_mapWeights != null) {
+				result = _aggregationPhase.setExpertOperator(element, operator, _mapWeights);
+			} else {
+				result = _aggregationPhase.setExpertOperator(element, operator, _weights);
+			}
 		} else {
-			result = _aggregationPhase.setCriterionOperator(element, operator);
+			if (_mapWeights != null) {
+				result = _aggregationPhase.setCriterionOperator(element, operator, _mapWeights);
+			} else {
+				result = _aggregationPhase.setCriterionOperator(element, operator, _weights);
+			}
 		}
 
 		if (result.length > 0) {
@@ -178,9 +264,6 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 		}
 
 		String id = (String) _aggregationOperatorsIds.toArray()[newValue];
-		if (id.startsWith("(W) ")) { //$NON-NLS-1$
-			id = id.substring(4);
-		}
 		id = id.toLowerCase();
 		AggregationOperator operator = _aggregationOperatorsManager.getAggregationOperator(id);
 		

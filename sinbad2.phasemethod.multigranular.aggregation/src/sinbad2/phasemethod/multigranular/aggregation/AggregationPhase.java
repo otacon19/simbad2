@@ -7,6 +7,7 @@ import java.util.Map;
 
 import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
+import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.core.validator.Validator;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
@@ -34,7 +35,10 @@ public class AggregationPhase implements IPhaseMethod {
 	private ProblemElementsSet _elementsSet;
 
 	private Map<ProblemElement, AggregationOperator> _expertsOperators;
+	private Map<ProblemElement, Object> _expertsOperatorsWeights;
+	
 	private Map<ProblemElement, AggregationOperator> _criteriaOperators;
+	private Map<ProblemElement, Object> _criteriaOperatorsWeights;
 
 	private String _aggregateBy;
 
@@ -46,6 +50,8 @@ public class AggregationPhase implements IPhaseMethod {
 
 		_expertsOperators = new HashMap<ProblemElement, AggregationOperator>();
 		_criteriaOperators = new HashMap<ProblemElement, AggregationOperator>();
+		_expertsOperatorsWeights = new HashMap<ProblemElement, Object>();
+		_criteriaOperatorsWeights = new HashMap<ProblemElement, Object>();
 
 		_listeners = new LinkedList<AggregationProcessListener>();
 
@@ -72,24 +78,26 @@ public class AggregationPhase implements IPhaseMethod {
 		}
 	}
 
-	private ProblemElement[] setOperator(ProblemElement element, AggregationOperator operator, Map<ProblemElement, AggregationOperator> operators) {
+	private ProblemElement[] setOperator(ProblemElement element, AggregationOperator operator, Object weights, Map<ProblemElement, Object> weightsMap, Map<ProblemElement, AggregationOperator> operators) {
 		operators.put(element, operator);
+		weightsMap.put(element, weights);
 		
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		if (element instanceof Expert) {
-			if (((Expert) element).hasChildrens()) {
-				for (Expert children : ((Expert) element).getChildrens()) {
+		if(element instanceof Expert) {
+			List<Expert> childrens = _elementsSet.getExpertChildren((Expert) element);
+			for(Expert children : childrens) {
+				if(children.hasChildrens()) {
 					result.add(children);
 				}
 			}
 
 		} else if (element instanceof Criterion) {
-			if (((Criterion) element).hasSubcriteria()) {
-				for (Criterion subcriterion : ((Criterion) element).getSubcriteria()) {
+			List<Criterion> subcriteria = _elementsSet.getCriteriaSubcriteria((Criterion) element);
+			for(Criterion subcriterion : subcriteria) {
+				if(subcriterion.hasSubcriteria()) {
 					result.add(subcriterion);
 				}
 			}
-
 		}
 
 		notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
@@ -97,30 +105,44 @@ public class AggregationPhase implements IPhaseMethod {
 		return result.toArray(new ProblemElement[0]);
 	}
 
-	public ProblemElement[] setExpertOperator(ProblemElement expert, AggregationOperator operator) {
-		return setOperator(expert, operator, _expertsOperators);
+	public ProblemElement[] setExpertOperator(ProblemElement expert, AggregationOperator operator, Object weights) {
+		return setOperator(expert, operator, weights, _expertsOperatorsWeights, _expertsOperators);
 	}
 
-	public ProblemElement[] setCriterionOperator(ProblemElement criterion, AggregationOperator operator) {
-		return setOperator(criterion, operator, _criteriaOperators);
+	public ProblemElement[] setCriterionOperator(ProblemElement criterion, AggregationOperator operator, Object weights) {
+		return setOperator(criterion, operator, weights, _criteriaOperatorsWeights, _criteriaOperators);
 	}
 
 	public AggregationOperator getExpertOperator(ProblemElement expert) {
 		return _expertsOperators.get(expert);
 	}
 
+	public Object getExpertOperatorWeights(ProblemElement expert) {
+		return _expertsOperatorsWeights.get(expert);
+	}
+	
 	public AggregationOperator getCriterionOperator(ProblemElement criterion) {
 		return _criteriaOperators.get(criterion);
+	}
+	
+	public Object getCriterionOperatorWeights(ProblemElement criterion) {
+		return _criteriaOperatorsWeights.get(criterion);
 	}
 
 	public boolean isValid() {
 		AggregationOperator operator;
+		Object weights;
 
 		if (_elementsSet.getExperts().size() > 1) {
 			for (ProblemElement element : _expertsOperators.keySet()) {
 				operator = _expertsOperators.get(element);
 				if (operator == null) {
 					return false;
+				} else if (operator instanceof WeightedAggregationOperator) {
+					weights = _expertsOperatorsWeights.get(element);
+					if (weights == null) {
+						return false;
+					}
 				}
 			}
 		}
@@ -130,6 +152,11 @@ public class AggregationPhase implements IPhaseMethod {
 				operator = _criteriaOperators.get(element);
 				if (operator == null) {
 					return false;
+				} else if (operator instanceof WeightedAggregationOperator) {
+					weights = _criteriaOperatorsWeights.get(element);
+					if (weights == null) {
+						return false;
+					}
 				}
 			}
 		}
