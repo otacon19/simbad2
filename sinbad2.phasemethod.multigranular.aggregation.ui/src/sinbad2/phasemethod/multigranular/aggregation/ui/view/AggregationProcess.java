@@ -238,7 +238,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_treeViewerExpertOperatorWeightsColumn = new TreeViewerColumn(_expertsViewer, SWT.NONE);
 			_treeExpertOperatorWeightsColumn = _treeViewerExpertOperatorWeightsColumn.getColumn();
 			_treeExpertOperatorWeightsColumn.setAlignment(SWT.CENTER);
-			_treeExpertOperatorWeightsColumn.setWidth(25);
+			_treeExpertOperatorWeightsColumn.setWidth(45);
 			_treeExpertOperatorWeightsColumn.setText(""); //$NON-NLS-1$
 			_treeExpertOperatorWeightsColumn.setImage(Images.Edit);
 			_treeViewerExpertOperatorWeightsColumn.setEditingSupport(new OperatorWeightsEditingSupport(_expertsViewer, 	AggregationPhase.EXPERTS, _aggregationPhase));
@@ -344,7 +344,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_treeViewerCriterionOperatorWeightsColumn = new TreeViewerColumn(_criteriaViewer, SWT.NONE);
 			_treeCriterionOperatorWeightsColumn = _treeViewerCriterionOperatorWeightsColumn.getColumn();
 			_treeCriterionOperatorWeightsColumn.setAlignment(SWT.CENTER);
-			_treeCriterionOperatorWeightsColumn.setWidth(25);
+			_treeCriterionOperatorWeightsColumn.setWidth(45);
 			_treeCriterionOperatorWeightsColumn.setText(""); //$NON-NLS-1$
 			_treeCriterionOperatorWeightsColumn.setImage(Images.Edit);
 			_treeViewerCriterionOperatorWeightsColumn.setEditingSupport(new OperatorWeightsEditingSupport(_criteriaViewer, AggregationPhase.CRITERIA, _aggregationPhase));

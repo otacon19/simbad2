@@ -186,10 +186,13 @@ public class AggregationPhase implements IPhaseMethod {
 		return aggregateElementByExperts(null, alternative, null);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Valuation aggregateElementByCriteria(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent) {
 		AggregationOperator operator;
 		List<Valuation> alternativeValuations, criterionValuations;
 		Map<ValuationKey, Valuation> valuationsResult = UnificationPhase.getValuationsResult();
+		List<Double> weights;
+		Object aux;
 
 		List<Criterion> criteria = _elementsSet.getCriteriaSubcriteria((Criterion) criterionParent);
 		if (criteria.size() == 0) {
@@ -227,8 +230,18 @@ public class AggregationPhase implements IPhaseMethod {
 
 		if (alternativeValuations.size() > 1) {
 			operator = getCriterionOperator(criterionParent);
-			if(operator instanceof UnweightedAggregationOperator) { //Operador no ponderado
+			if(operator instanceof UnweightedAggregationOperator) {
 				return ((UnweightedAggregationOperator) operator).aggregate(alternativeValuations);
+			} else if(operator instanceof WeightedAggregationOperator){
+				aux = getCriterionOperatorWeights(criterionParent);
+				if (aux instanceof List<?>) {
+					weights = (List<Double>) aux;
+				} else if (aux instanceof Map<?, ?>) {
+					weights = ((Map<ProblemElement, List<Double>>) aux).get(null);
+				} else {
+					weights = null;
+				}
+				return ((WeightedAggregationOperator) operator).aggregate(alternativeValuations, weights);
 			} else {
 				return null;
 			}
@@ -237,10 +250,13 @@ public class AggregationPhase implements IPhaseMethod {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Valuation aggregateElementByExperts(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent) {
 		AggregationOperator operator;
 		List<Valuation> alternativeValuations, expertValuations;
 		Map<ValuationKey, Valuation> valuationsResult = UnificationPhase.getValuationsResult();
+		List<Double> weights;
+		Object aux;
 
 		List<Criterion> criteria = _elementsSet.getCriteriaSubcriteria((Criterion) criterionParent);
 		if (criteria.size() == 0) {
@@ -280,6 +296,16 @@ public class AggregationPhase implements IPhaseMethod {
 			operator = getExpertOperator(expertParent);
 			if (operator instanceof UnweightedAggregationOperator) {
 				return ((UnweightedAggregationOperator) operator).aggregate(alternativeValuations);
+			} else if(operator instanceof WeightedAggregationOperator) {
+				aux = getExpertOperatorWeights(expertParent);
+				if (aux instanceof List<?>) {
+					weights = (List<Double>) aux;
+				} else if (aux instanceof Map<?, ?>) {
+					weights = ((Map<ProblemElement, List<Double>>) aux).get(null);
+				} else {
+					weights = null;
+				}
+				return ((WeightedAggregationOperator) operator).aggregate(alternativeValuations, weights);
 			} else {
 				return null;
 			}

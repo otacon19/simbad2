@@ -40,10 +40,10 @@ public class AggregationOperatorsManager {
 			}
 			
 			try {
-
 				aggregationOperator = (AggregationOperator) implementation[0].createExecutableExtension(EAggregationOperatorElements.implementation.toString());
 				aggregationOperator.setId(extension.getAttribute(EAggregationOperatorElements.id.toString()));
 				aggregationOperator.setName(extension.getAttribute(EAggregationOperatorElements.name.toString()));
+				//System.out.println(extension.getAttribute(EAggregationOperatorElements.name.toString()));
 				supportedTypesConfiguration = implementation[0].getChildren(EAggregationOperatorElements.supported_types.toString());
 				supportedTypes = new HashSet<EAggregationOperatorType>();
 				for(IConfigurationElement type: supportedTypesConfiguration) {
