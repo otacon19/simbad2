@@ -53,7 +53,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 	private int _type;
 	private String _title;
 	private Map<String, List<Double>> _weights;
-	private ProblemElement[] _primary;
+	private List<ProblemElement> _primary;
 	private ProblemElement[] _secondary;
 	private int _rows;
 	private int _cols;
@@ -151,7 +151,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 				_weights = new HashMap<String, List<Double>>();
 
 				auxWeights = new LinkedList<Double>();
-				for (int i = 0; i < _primary.length; i++) {
+				for (int i = 0; i < _primary.size(); i++) {
 					auxWeights.add(new Double(0));
 				}
 				_weights.put(null, auxWeights);
@@ -258,11 +258,12 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 		}
 	}
 
-	public WeightsDialog(Shell parentShell, ProblemElement[] primary, ProblemElement[] secondary, int type, String elementType, String elementId) {
+	public WeightsDialog(Shell parentShell, List<ProblemElement> primary, ProblemElement[] secondary, int type, String elementType, String elementId) {
 		super(parentShell);
+		
 		_primary = primary;
 		_secondary = secondary;
-		_cols = _primary.length;
+		_cols = _primary.size();
 		_rows = _secondary.length;
 		_sumGeneral = 0;
 		_sums = new double[_rows];
@@ -272,7 +273,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 
 	}
 
-	public WeightsDialog(Shell parentShell, ProblemElement[] primary, ProblemElement[] secondary, Map<String, List<Double>> weights, int type, String elementType, String elementId) {
+	public WeightsDialog(Shell parentShell, List<ProblemElement> primary, ProblemElement[] secondary, Map<String, List<Double>> weights, int type, String elementType, String elementId) {
 		this(parentShell, primary, secondary, type, elementType, elementId);
 
 		if(weights == null) {
@@ -527,7 +528,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 		for(int i = 0; i < _cols; i++) {
 			col = new TableViewerColumn(viewer, SWT.CENTER);
 			col.getColumn().setWidth(70);
-			col.getColumn().setText(_primary[i].getId());
+			col.getColumn().setText(_primary.get(i).getId());
 			createColumnLabelProvider(col, i + 1);
 			col.setEditingSupport(new WeightEditingSupport(viewer, input, i + 1));
 		}

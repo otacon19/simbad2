@@ -33,7 +33,7 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		if (root instanceof Expert) {
+		if (root instanceof Expert || root == null) {
 			List<Expert> childrens = elementsSet.getExpertChildren((Expert) root);
 			for (Expert children : childrens) {
 				if (!children.hasChildrens()) {
@@ -47,7 +47,7 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 			}
 
 		} else {
-			List<Criterion> subcriteria = elementsSet.getCriteriaSubcriteria((Criterion) root);
+			List<Criterion> subcriteria = elementsSet.getCriterionSubcriteria((Criterion) root);
 			for (Criterion subcriterion : subcriteria) {
 				if (!subcriterion.hasSubcriteria()) {
 					result.add(subcriterion);
@@ -152,9 +152,9 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 
 		if (problemElement == null) {
 			if (AggregationPhase.EXPERTS.equals(_type)) {
-				elementId = "All experts";
+				elementId = "all experts";
 			} else {
-				elementId = "All criteria";
+				elementId = "all criteria";
 			}
 		} else {
 			elementId = problemElement.getId();
@@ -180,13 +180,14 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 
 			ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 			ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
-			WeightsDialog dialog = null;
-			if(problemElement instanceof Expert) {
-				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), (ProblemElement[]) elementsSet.getExpertChildren((Expert) problemElement).toArray(), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
+			
+			WeightsDialog dialog; 
+			if(elementType.equals("Expert")) {
+				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getElementExpertChildren((Expert) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
 			} else {
-				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), (ProblemElement[]) elementsSet.getCriteriaSubcriteria((Criterion) problemElement).toArray(), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
+				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getElementCriterionSubcriteria((Criterion) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
 			}
-
+			
 			if(dialog.open() == QuantifiersDialog.SAVE) {
 				mapWeights = dialog.getWeights();
 				if (AggregationPhase.EXPERTS.equals(_type)) {

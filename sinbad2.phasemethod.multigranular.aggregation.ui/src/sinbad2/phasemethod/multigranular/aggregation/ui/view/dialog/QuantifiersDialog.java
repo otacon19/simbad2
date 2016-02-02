@@ -125,9 +125,7 @@ public class QuantifiersDialog extends Dialog {
 
 		if (selectionIndex != -1) {
 			result = true;
-			double[] values = WeightedAggregationOperator
-					.getQuantificationParams(QuantificationType
-							.valueOf(_quantifiersCombo.getItem(selectionIndex)));
+			double[] values = WeightedAggregationOperator.getQuantificationParams(QuantificationType.valueOf(_quantifiersCombo.getItem(selectionIndex)));
 			_alpha = values[0];
 			_beta = values[1];
 		}

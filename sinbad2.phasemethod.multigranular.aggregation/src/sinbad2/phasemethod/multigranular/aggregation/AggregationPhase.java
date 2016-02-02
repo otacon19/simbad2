@@ -92,7 +92,7 @@ public class AggregationPhase implements IPhaseMethod {
 			}
 
 		} else if (element instanceof Criterion) {
-			List<Criterion> subcriteria = _elementsSet.getCriteriaSubcriteria((Criterion) element);
+			List<Criterion> subcriteria = _elementsSet.getCriterionSubcriteria((Criterion) element);
 			for(Criterion subcriterion : subcriteria) {
 				if(subcriterion.hasSubcriteria()) {
 					result.add(subcriterion);
@@ -194,7 +194,7 @@ public class AggregationPhase implements IPhaseMethod {
 		List<Double> weights;
 		Object aux;
 
-		List<Criterion> criteria = _elementsSet.getCriteriaSubcriteria((Criterion) criterionParent);
+		List<Criterion> criteria = _elementsSet.getCriterionSubcriteria((Criterion) criterionParent);
 		if (criteria.size() == 0) {
 			criteria.add((Criterion) criterionParent);
 		}
@@ -227,7 +227,7 @@ public class AggregationPhase implements IPhaseMethod {
 				}
 			}
 		}
-
+		
 		if (alternativeValuations.size() > 1) {
 			operator = getCriterionOperator(criterionParent);
 			if(operator instanceof UnweightedAggregationOperator) {
@@ -258,7 +258,7 @@ public class AggregationPhase implements IPhaseMethod {
 		List<Double> weights;
 		Object aux;
 
-		List<Criterion> criteria = _elementsSet.getCriteriaSubcriteria((Criterion) criterionParent);
+		List<Criterion> criteria = _elementsSet.getCriterionSubcriteria((Criterion) criterionParent);
 		if (criteria.size() == 0) {
 			criteria.add((Criterion) criterionParent);
 		}

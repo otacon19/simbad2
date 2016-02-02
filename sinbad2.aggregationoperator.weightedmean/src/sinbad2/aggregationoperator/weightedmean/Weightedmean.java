@@ -22,7 +22,7 @@ public class Weightedmean extends WeightedAggregationOperator {
 		
 		Validator.notNull(valuations);
 		Validator.notNull(weights);
-
+		
 		int valuationsSize = valuations.size();
 		int weightsSize = weights.size();
 
