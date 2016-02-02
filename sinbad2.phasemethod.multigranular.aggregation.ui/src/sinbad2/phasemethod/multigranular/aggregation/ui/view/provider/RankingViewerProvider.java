@@ -58,6 +58,8 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 				if (valuation != null) {
 					if (valuation instanceof UnifiedValuation) {
 						twoTuple = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
+					} else {
+						twoTuple = (TwoTuple) valuation;
 					}
 					listEntry = new Object[] {((TwoTuple) twoTuple).calculateInverseDelta(), alternativeName, twoTuple };
 				} else {

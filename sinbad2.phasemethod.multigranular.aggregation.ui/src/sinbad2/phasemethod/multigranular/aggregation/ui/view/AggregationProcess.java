@@ -53,6 +53,7 @@ import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.Evaluation
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.OperatorColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.RankingViewerProvider;
+import sinbad2.phasemethod.multigranular.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
@@ -645,6 +646,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	}
 	
 	private void testAggregationProcess() {
+		UnificationPhase.unifiedEvaluationToTwoTuple((FuzzySet) getDomain());
 		_aggregationResult = _aggregationPhase.aggregateAlternatives();
 		
 		refreshView();	

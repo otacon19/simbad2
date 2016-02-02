@@ -1,5 +1,6 @@
 package sinbad2.phasemethod.multigranular.unification;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,15 +25,16 @@ public class UnificationPhase implements IPhaseMethod {
 	private ValuationSetManager _valuationSetManager;
 	private static ValuationSet _valutationSet;
 	
-	private static Map<ValuationKey, Valuation> _valuationsResult;
-	private static Map<Alternative, Valuation> _alternativesValuations;
+	private static Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
+	private static Map<ValuationKey, Valuation> _twoTupleEvaluationsResult;
+	private static Map<Alternative, Valuation> _twoTupleEvaluationsAlternatives;
 	
 	public UnificationPhase() {
 		_valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = _valuationSetManager.getActiveValuationSet();
 		
-		_valuationsResult = new LinkedHashMap<ValuationKey, Valuation>();
-		_alternativesValuations = new LinkedHashMap<Alternative, Valuation>();
+		_twoTupleEvaluationsResult = new LinkedHashMap<ValuationKey, Valuation>();
+		_twoTupleEvaluationsAlternatives = new LinkedHashMap<Alternative, Valuation>();
 	}
 
 	public ValuationSet getValuationSet() {
@@ -94,6 +96,8 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	public static Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
+		_unifiedEvaluationsResult = new HashMap<ValuationKey, Valuation>();
+		
 		if (unifiedDomain != null) {
 			Criterion criterion;
 			Valuation valuation;
@@ -120,18 +124,38 @@ public class UnificationPhase implements IPhaseMethod {
 					fuzzySet = ((LinguisticValuation) valuation).unification(unifiedDomain);
 					valuation = new UnifiedValuation(fuzzySet);
 				}
-				_valuationsResult.put(vk, valuation);
-				_alternativesValuations.put(vk.getAlternative(), valuation);
+				_unifiedEvaluationsResult.put(vk, valuation);
 			}
 		}
-		return _valuationsResult;
+		return _unifiedEvaluationsResult;
+	}
+	
+	public static Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple(FuzzySet unifiedDomain) {
+		
+		if(unifiedDomain != null) {
+		
+			Valuation valuation;
+
+			for(ValuationKey key : _unifiedEvaluationsResult.keySet()) {
+				valuation = _unifiedEvaluationsResult.get(key);
+				if(valuation instanceof UnifiedValuation) {
+					valuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
+				} else if(!(valuation instanceof TwoTuple)) {
+					valuation = null;
+				}
+				_twoTupleEvaluationsResult.put(key, valuation);
+				_twoTupleEvaluationsAlternatives.put(key.getAlternative(), valuation);
+			}
+		}
+
+		return _twoTupleEvaluationsResult;
 	}
 	
 	public static Map<Alternative, Valuation> getAlternativesValuations() {
-		return _alternativesValuations;
+		return _twoTupleEvaluationsAlternatives;
 	}
 	
 	public static Map<ValuationKey, Valuation> getValuationsResult() {
-		return _valuationsResult;
+		return _twoTupleEvaluationsResult;
 	}
 }
