@@ -240,6 +240,7 @@ public class AggregationPhase implements IPhaseMethod {
 					weights = ((Map<ProblemElement, List<Double>>) aux).get(null);
 				} else {
 					weights = null;
+					return null;
 				}
 				return ((WeightedAggregationOperator) operator).aggregate(alternativeValuations, weights);
 			} else {

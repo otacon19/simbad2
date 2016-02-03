@@ -244,11 +244,11 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 					}
 						
 					int exitValue = dialog.open();
-					if (exitValue == WeightsDialog.SAVE) {
+					if(exitValue == WeightsDialog.SAVE) {
 						_mapWeights = dialog.getWeights();
 						_weights = null;
 						operator = aggregationOperator;
-					} else if (exitValue == QuantifiersDialog.CANCEL_ALL) {
+					} else if(exitValue == QuantifiersDialog.CANCEL_ALL) {
 						_mapWeights = null;
 						_weights = null;
 						_abort = true;
