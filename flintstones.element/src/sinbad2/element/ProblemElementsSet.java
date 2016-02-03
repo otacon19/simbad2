@@ -96,11 +96,21 @@ public class ProblemElementsSet implements Cloneable {
 		return _alternatives;
 	}
 	
+	public List<ProblemElement> getElementAlternatives() {
+		List<ProblemElement> result = new LinkedList<ProblemElement>();
+		
+		for (Alternative alternative : _alternatives) {
+			result.add(alternative);
+		}
+		
+		return result;
+	}
+	
 	public List<Criterion> getCriteria() {
 		return _criteria;
 	}
 	
-	public List<Criterion> getCriterionSubcriteria(Criterion parent) {
+	public List<Criterion> getCriterionSubcriteria(ProblemElement parent) {
 		List<Criterion> result = new LinkedList<Criterion>();
 		
 		Criterion auxParent;
@@ -136,6 +146,15 @@ public class ProblemElementsSet implements Cloneable {
 		}
 		
 		Collections.sort(result);
+		
+		return result;
+	}
+	
+	public List<ProblemElement> getAllElements() {
+		List<ProblemElement> result = new LinkedList<ProblemElement>();
+		result.addAll(_experts);
+		result.addAll(_criteria);
+		result.addAll(_alternatives);
 		
 		return result;
 	}

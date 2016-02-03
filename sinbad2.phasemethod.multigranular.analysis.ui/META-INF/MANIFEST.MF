@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Multigranular fusion analysis ui
+Bundle-SymbolicName: sinbad2.phasemethod.multigranular.analysis.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sinbad2.phasemethod.multigranular.analysis.ui.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ sinbad2.phasemethod.ui,
+ sinbad2.valuation.twoTuple,
+ sinbad2.valuation.unifiedValuation,
+ sinbad2.phasemethod.multigranular.unification.ui,
+ sinbad2.domain.linguistic.fuzzyset.ui,
+ sinbad2.phasemethod.multigranular.aggregation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
