@@ -25,6 +25,7 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.multigranular.aggregation.AggregationPhase;
+import sinbad2.phasemethod.multigranular.aggregation.ui.view.AggregationProcess;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.dialog.QuantifiersDialog;
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.dialog.WeightsDialog;
 
@@ -44,6 +45,8 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	private AggregationOperatorsManager _aggregationOperatorsManager;
 	
 	private final TreeViewer _viewer;
+	
+	private AggregationProcess _aggregationProcess;
 	
 	private static ProblemElement[] getLeafElements(ProblemElement root) {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
@@ -81,12 +84,13 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 		return result.toArray(new ProblemElement[0]);
 	}
 
-	public AggregationOperatorEditingSupport(AggregationPhase aggregationPhase, TreeViewer viewer, String type) {
+	public AggregationOperatorEditingSupport(AggregationPhase aggregationPhase, AggregationProcess aggregationProcess, TreeViewer viewer, String type) {
 		super(viewer);
 
 		_type = type;
 		_aggregationOperatorsIds = null;
 		_aggregationPhase = aggregationPhase;
+		_aggregationProcess = aggregationProcess;
 		_aggregationOperatorsManager = AggregationOperatorsManager.getInstance();
 
 		_viewer = viewer;
@@ -121,7 +125,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 		}
 		
 		_cellEditor = new ComboBoxCellEditor(_viewer.getTree(), _aggregationOperatorsNames);
-		
+
 		return _cellEditor;
 	}
 
@@ -296,6 +300,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
+	
 		if ((element == null) || (value == null)) {
 			return;
 		}
@@ -327,7 +332,8 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				}
 			}
 		}
-
+		_aggregationProcess.completed(true);
+		_aggregationProcess.notifyStepStateChange();
 	}
 }
 

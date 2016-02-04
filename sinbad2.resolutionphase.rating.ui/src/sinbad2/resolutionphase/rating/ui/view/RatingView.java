@@ -50,7 +50,7 @@ public class RatingView extends ViewPart {
 	private Label _methodName;
 	private Label _stepValue;
 	private CLabel _methodSelected;
-	
+
 	private static Button _backButton;
 	private static Button _nextButton;
 	private static Button _resetButton;
@@ -61,7 +61,7 @@ public class RatingView extends ViewPart {
 
 	private MethodUI _methodUISelected;
 	
-	private List<IStepStateListener> _listeners;
+	private static List<IStepStateListener> _listeners;
 
 	public RatingView() {
 		_listeners = new LinkedList<IStepStateListener>();
@@ -212,8 +212,6 @@ public class RatingView extends ViewPart {
 			_nextButton.setEnabled(false);
 		}
 		modifyStep(1);
-		
-		notifyNewStep();
 	}
 
 	private void resetRating(boolean reset) {
@@ -230,6 +228,7 @@ public class RatingView extends ViewPart {
 		
 		CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, 0);
 	    item.setText("Method selection");
+	    item.setShowClose(false);
 	    
 	    _tabFolder.addSelectionListener(new SelectionAdapter() {
 	    	@Override
@@ -397,18 +396,20 @@ public class RatingView extends ViewPart {
 		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
 		List<PhaseMethodUI> phasesMethodUI = methodsUIManager.getActivateMethodUI().getPhasesUI();
 		
-		ViewPart step = null;
+		ViewPart step;
 		if(currentPhaseMethod == null) {
 			currentPhaseMethod = phasesMethodUI.get(_numPhase);
 			phasesMethodUIManager.activate(currentPhaseMethod.getId());
 			step = phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
-		} else if(phasesMethodUIManager.getSteps(currentPhaseMethod.getId()).size() == _tabFolder.getItemCount() - 1) {
-			_numPhase++;
-			currentPhaseMethod = phasesMethodUI.get(_numPhase);
-			phasesMethodUIManager.activate(currentPhaseMethod.getId());	
-			step = phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
 		} else {
-			step = phasesMethodUIManager.getNextStep();	
+			if(phasesMethodUIManager.getNextStep() == null) {
+				_numPhase++;
+				currentPhaseMethod = phasesMethodUI.get(_numPhase);
+				phasesMethodUIManager.activate(currentPhaseMethod.getId());	
+				step = phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
+			} else {
+				step = phasesMethodUIManager.getNextStep();	
+			}
 		}
 		
 		phasesMethodUIManager.activateStep(step);
@@ -424,11 +425,12 @@ public class RatingView extends ViewPart {
 		if(!loaded) {
 			CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, _tabFolder.getItemCount());
 			item.setText(step.getPartName());
+			item.setShowClose(false);
 
 			Composite parent = new Composite(_tabFolder, SWT.NONE);
-			
 			step.createPartControl(parent);
 			item.setControl(parent);
+			item.setData(step);
 			
 			_nextButton.setEnabled(true);
 		}
@@ -438,6 +440,7 @@ public class RatingView extends ViewPart {
 		for(CTabItem ti: _tabFolder.getItems()) {
 			ti.dispose();
 		}
+		_listeners.clear();
 	}
 	
 	private void createInfoPanels(Composite composite) {
@@ -473,6 +476,7 @@ public class RatingView extends ViewPart {
 	
 	private void activateStep(int numStep) {
 		_tabFolder.setSelection(numStep);
+		notifyNewStep();
 	}
 	
 	@Override
@@ -487,14 +491,15 @@ public class RatingView extends ViewPart {
 	public void unregisterStepChangeListener(IStepStateListener listener) {
 		_listeners.remove(listener);
 	}
-	
-	private List<IStepStateListener> getStepListeners() {
-		return _listeners;
-	}
-	
+
 	private void notifyNewStep() {
-		for(IStepStateListener listener: _instance.getStepListeners()) {
-			listener.notifStepStateChange();
+		CTabItem item = _tabFolder.getSelection();
+		List<IStepStateListener> auxListeners = new LinkedList<IStepStateListener>();
+		auxListeners.addAll(_listeners);
+		for(IStepStateListener listener: auxListeners) {
+			if(listener.equals(item.getData())) {
+				listener.notifyStepStateChange();
+			}
 		}
 	}
 	

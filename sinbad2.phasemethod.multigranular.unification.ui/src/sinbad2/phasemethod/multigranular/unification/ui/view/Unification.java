@@ -36,7 +36,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 	
 	public static final String ID = "flintstones.phasemethod.multigranular.unification.ui.view.unification";
 	
-	private static boolean _loaded;
+	private static boolean _completed;
 	
 	private Composite _parent;
 	
@@ -65,7 +65,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 		_ratingView = RatingView.getInstance();
 		_ratingView.registerStepChangeListener(this);
 		
-		_loaded = false;
+		_completed = true;
 		
 		_parent = parent;
 		
@@ -241,12 +241,9 @@ public class Unification extends ViewPart implements IStepStateListener {
 	}
 
 	@Override
-	public void notifStepStateChange() {
-		if(!_loaded) {
+	public void notifyStepStateChange() {
+		if(_completed) {
 			_ratingView.loadNextStep();
-			_loaded = true;
 		}
 	}
-	
-	
 }

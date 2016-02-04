@@ -30,9 +30,10 @@ import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.phasemethod.multigranular.unification.ui.dialog.NewBLTSDomainDialog;
+import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
-public class SelectBLTS extends ViewPart {
+public class SelectBLTS extends ViewPart implements IStepStateListener {
 	
 	public static final String ID = "flintstones.phasemethod.multigranular.unification.ui.view.selectblts";
 	
@@ -49,14 +50,19 @@ public class SelectBLTS extends ViewPart {
 	
 	private List<Domain> _domainsBLTS;
 	private DomainSet _domainSet;
+	
 	private static Domain _selectedBLTSDomain;
+	private static boolean _completed;
 	
 	private RatingView _ratingView;
 	
 	@Override
 	public void createPartControl(Composite parent) {
 		_ratingView = RatingView.getInstance();
+		_ratingView.registerStepChangeListener(this);
 		_ratingView.disabledNextStep();
+		
+		_completed = false;
 		
 		_parent = parent;
 		
@@ -114,7 +120,8 @@ public class SelectBLTS extends ViewPart {
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = _validDomainsViewer.getSelection();
 				_selectedBLTSDomain = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
-				_ratingView.loadNextStep();
+				_completed = true;
+				notifyStepStateChange();
 				refreshChart();
 			}
 		});
@@ -227,5 +234,11 @@ public class SelectBLTS extends ViewPart {
 	public void setFocus() {
 		_validDomainsViewer.getControl().setFocus();
 	}
-	
+
+	@Override
+	public void notifyStepStateChange() {
+		if(_completed) {
+			_ratingView.loadNextStep();
+		}	
+	}
 }

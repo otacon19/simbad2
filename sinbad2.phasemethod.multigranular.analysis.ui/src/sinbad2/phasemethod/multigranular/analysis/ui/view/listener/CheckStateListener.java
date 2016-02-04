@@ -26,11 +26,12 @@ public class CheckStateListener implements ICheckStateListener {
 		super();
 	}
 
-	public CheckStateListener(CheckboxTreeViewer treeViewer, ProblemElementsSet elementsSet) {
+	public CheckStateListener(CheckboxTreeViewer treeViewer, ProblemElementsSet elementsSet, Analysis analysis) {
 		this();
 
 		_treeViewer = treeViewer;
 		_elementsSet = elementsSet;
+		_analysis = analysis;
 	}
 
 	private void checkSon(ProblemElement element, boolean checked) {
@@ -144,13 +145,26 @@ public class CheckStateListener implements ICheckStateListener {
 		_analysis.refreshRanking();
 	}
 
-	public void checkAll() {
+	public void checkAll(String type) {
 		_treeViewer.removeCheckStateListener(this);
 		
-		for (ProblemElement element : _elementsSet.getAllElements()) {
-			_treeViewer.setGrayChecked(element, false);
-			_treeViewer.setChecked(element, true);
+		if(type.equals("EXPERTS")) {
+			for (ProblemElement element : _elementsSet.getExperts()) {
+				_treeViewer.setGrayChecked(element, false);
+				_treeViewer.setChecked(element, true);
+			}
+		} else if(type.equals("ALTERNATIVES")) {
+			for (ProblemElement element : _elementsSet.getAlternatives()) {
+				_treeViewer.setGrayChecked(element, false);
+				_treeViewer.setChecked(element, true);
+			}
+		} else {
+			for (ProblemElement element : _elementsSet.getCriteria()) {
+				_treeViewer.setGrayChecked(element, false);
+				_treeViewer.setChecked(element, true);
+			}
 		}
+		
 		_treeViewer.addCheckStateListener(this);
 		_analysis.refreshRanking();
 	}

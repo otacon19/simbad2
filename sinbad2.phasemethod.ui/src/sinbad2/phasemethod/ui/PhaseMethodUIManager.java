@@ -122,10 +122,16 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 	}
 	
 	public ViewPart getNextStep() {
-		int currentStep = _phasesSteps.get(_activePhaseMethodUI.getId()).indexOf(_activeStep);
+		List<ViewPart> steps = _phasesSteps.get(_activePhaseMethodUI.getId());
+		int currentStep = steps.indexOf(_activeStep);
 		
-		return _phasesSteps.get(_activePhaseMethodUI.getId()).get(currentStep + 1);
+		if(currentStep + 1 >= steps.size()) {
+			return null;
+		}
+		
+		return steps.get(currentStep + 1);
 	}
+	
 	
 	private PhaseMethodUI initializeResolutionPhaseUI(String id) {
 		PhaseMethodUIRegistryExtension phaseMethodUIRegistry = getRegistry(id);
@@ -147,7 +153,9 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 				ViewPart step = (ViewPart) view.createExecutableExtension(EPhaseMethodUIElements.step.toString());
 				steps.add(step);
 			}
+			
 			_phasesSteps.put(id, steps);
+			
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

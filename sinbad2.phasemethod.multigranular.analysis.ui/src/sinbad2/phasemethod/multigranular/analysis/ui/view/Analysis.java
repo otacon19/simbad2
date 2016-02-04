@@ -81,7 +81,7 @@ public class Analysis extends ViewPart {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
 		
-		_aggregationPhase = new AggregationPhase();
+		_aggregationPhase = AggregationPhase;
 		_aggregationResult = null;
 		
 		_parent = parent;
@@ -99,10 +99,10 @@ public class Analysis extends ViewPart {
 		createFiltersPart();
 		createResultsPart();
 		hookFilters();	
+		activate();
 	}
 
 	private void createFiltersPart() {
-
 		_filtersPanel = new Composite(_parent, SWT.NONE);
 		_filtersPanel.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 6, 1));
 		GridLayout layout = new GridLayout(1, false);
@@ -323,13 +323,13 @@ public class Analysis extends ViewPart {
 	}
 	
 	private void hookFilters() {
-		_expertsCheckStateListener = new CheckStateListener(_expertsCheckboxTreeViewer, _elementsSet);
+		_expertsCheckStateListener = new CheckStateListener(_expertsCheckboxTreeViewer, _elementsSet, this);
 		_expertsCheckboxTreeViewer.addCheckStateListener(_expertsCheckStateListener);
 
-		_alternativesCheckStateListener = new CheckStateListener(_alternativesCheckboxTreeViewer, _elementsSet);
+		_alternativesCheckStateListener = new CheckStateListener(_alternativesCheckboxTreeViewer, _elementsSet, this);
 		_alternativesCheckboxTreeViewer.addCheckStateListener(_alternativesCheckStateListener);
 
-		_criteriaCheckStateListener = new CheckStateListener(_criteriaCheckboxTreeViewer, _elementsSet);
+		_criteriaCheckStateListener = new CheckStateListener(_criteriaCheckboxTreeViewer, _elementsSet, this);
 		_criteriaCheckboxTreeViewer.addCheckStateListener(_criteriaCheckStateListener);
 	}
 	
@@ -361,5 +361,15 @@ public class Analysis extends ViewPart {
 	@Override
 	public String getPartName() {
 		return "Analysis";
+	}
+	
+	public void activate() {
+		_expertsCheckboxTreeViewer.setInput(_elementsSet.getExperts());
+		_alternativesCheckboxTreeViewer.setInput(_elementsSet.getAlternatives());
+		_criteriaCheckboxTreeViewer.setInput(_elementsSet.getCriteria());
+
+		_expertsCheckStateListener.checkAll("EXPERTS");
+		_alternativesCheckStateListener.checkAll("ALTERNATIVES");
+		_criteriaCheckStateListener.checkAll("CRITERIA");
 	}
 }

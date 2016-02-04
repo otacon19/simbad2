@@ -150,15 +150,6 @@ public class ProblemElementsSet implements Cloneable {
 		return result;
 	}
 	
-	public List<ProblemElement> getAllElements() {
-		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		result.addAll(_experts);
-		result.addAll(_criteria);
-		result.addAll(_alternatives);
-		
-		return result;
-	}
-	
 	public void setExperts(List<Expert> experts) {
 		Validator.notNull(experts);
 		

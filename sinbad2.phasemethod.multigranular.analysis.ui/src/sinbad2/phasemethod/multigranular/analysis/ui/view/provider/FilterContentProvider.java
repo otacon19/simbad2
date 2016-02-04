@@ -1,8 +1,11 @@
 package sinbad2.phasemethod.multigranular.analysis.ui.view.provider;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
@@ -25,9 +28,11 @@ public class FilterContentProvider implements ITreeContentProvider {
 	@Override
 	public Object[] getElements(Object parent) {
 		
-		if(parent instanceof Expert) {
+		List<?> data = (List<?>) parent;
+		
+		if(data.get(0) instanceof Expert) {
 			return _elementsSet.getExpertChildren(null).toArray();
-		} else if(parent instanceof Criterion) {
+		} else if(data.get(0) instanceof Criterion) {
 			return _elementsSet.getCriterionSubcriteria(null).toArray();
 		} else {
 			return _elementsSet.getAlternatives().toArray();
@@ -38,13 +43,13 @@ public class FilterContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 		
 		if(parentElement instanceof Expert) {
-			return _elementsSet.getExpertChildren(null).toArray();
+			return _elementsSet.getExpertChildren((ProblemElement) parentElement).toArray();
 		} else if(parentElement instanceof Criterion) {
-			return _elementsSet.getCriterionSubcriteria(null).toArray();
+			return _elementsSet.getCriterionSubcriteria((ProblemElement) parentElement).toArray();
 		} else if(parentElement instanceof Alternative){
 			return _elementsSet.getAlternatives().toArray();
 		}
-		return null;
+		return new Object[0];
 	}
 
 	@Override

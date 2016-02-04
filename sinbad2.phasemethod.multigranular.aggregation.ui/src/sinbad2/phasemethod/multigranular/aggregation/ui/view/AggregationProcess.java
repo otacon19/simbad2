@@ -57,12 +57,13 @@ import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.RankingCol
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.RankingViewerProvider;
 import sinbad2.phasemethod.multigranular.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS;
+import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
-public class AggregationProcess extends ViewPart implements AggregationProcessListener {
+public class AggregationProcess extends ViewPart implements AggregationProcessListener, IStepStateListener {
 	
 	public static final String ID = "flintstones.phasemethod.multigranular.aggregation.ui.view.aggregationprocess";
 
@@ -102,12 +103,14 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	
 	private LinguisticDomainChart _chart;
 	
+	private static boolean _completed;
+	
 	private AggregationPhase _aggregationPhase;
 	private Map<ProblemElement, Valuation> _aggregationResult;
 	
-	private ProblemElementsSet _elementsSet;
-	
 	private RatingView _ratingView;
+	
+	private ProblemElementsSet _elementsSet;
 	
 	public AggregationProcess() {}
 	
@@ -138,11 +141,14 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	}
 	
 	@Override
-	public void createPartControl(Composite parent) {
+	public void createPartControl(Composite parent) {		
 		_ratingView = RatingView.getInstance();
+		_ratingView.registerStepChangeListener(this);
 		
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
+		
+		_completed = false;
 		
 		_aggregationPhase = new AggregationPhase();
 		_aggregationResult = null;
@@ -279,7 +285,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_treeExpertOperatorColumn.setText("Operator");
 			_treeExpertOperatorColumn.setImage(Images.AggregationOperator);
 
-			_treeViewerExpertOperatorColumn.setEditingSupport(new AggregationOperatorEditingSupport(_aggregationPhase, _expertsViewer, AggregationPhase.EXPERTS));
+			_treeViewerExpertOperatorColumn.setEditingSupport(new AggregationOperatorEditingSupport(_aggregationPhase, this, _expertsViewer, AggregationPhase.EXPERTS));
 			_treeViewerExpertOperatorColumn.setLabelProvider(new OperatorColumnLabelProvider(_aggregationPhase, AggregationPhase.EXPERTS));
 
 			_expertsViewer.setInput(_aggregationPhase);
@@ -385,7 +391,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_treeCriterionOperatorColumn.setText("Operator");
 			_treeCriterionOperatorColumn.setImage(Images.AggregationOperator);
 
-			_treeViewerCriterionOperatorColumn.setEditingSupport(new AggregationOperatorEditingSupport(_aggregationPhase, _criteriaViewer, AggregationPhase.CRITERIA));
+			_treeViewerCriterionOperatorColumn.setEditingSupport(new AggregationOperatorEditingSupport(_aggregationPhase, this, _criteriaViewer, AggregationPhase.CRITERIA));
 			_treeViewerCriterionOperatorColumn.setLabelProvider(new OperatorColumnLabelProvider(_aggregationPhase, AggregationPhase.CRITERIA));
 			
 			_criteriaViewer.setInput(_aggregationPhase);
@@ -673,7 +679,6 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_rankingViewer.setInput(_aggregationResult);
 			setChart(getDomain());
 		}
-		_ratingView.loadNextStep();
 	}
 
 	@Override
@@ -684,5 +689,16 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	@Override
 	public String getPartName() {
 		return "Aggregation process";
+	}
+
+	public void completed(boolean state) {
+		_completed = state;
+	}
+	
+	@Override
+	public void notifyStepStateChange() {
+		if(_completed) {
+			_ratingView.loadNextStep();
+		}
 	}
 }
