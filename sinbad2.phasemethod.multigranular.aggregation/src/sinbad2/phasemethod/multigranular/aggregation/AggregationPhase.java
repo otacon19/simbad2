@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
@@ -164,54 +165,54 @@ public class AggregationPhase implements IPhaseMethod {
 		return true;
 	}
 
-	public Map<ProblemElement, Valuation> aggregateAlternatives() {
+	public Map<ProblemElement, Valuation> aggregateAlternatives(Set<ProblemElement> experts, Set<ProblemElement> alternatives, Set<ProblemElement> criteria) {
 		Map<ProblemElement, Valuation> results = new HashMap<ProblemElement, Valuation>();
 		
-		for (ProblemElement alternative : _elementsSet.getAlternatives()) {
+		for (ProblemElement alternative : alternatives) {
 			if (CRITERIA.equals(getAggregateBy())) {
-				results.put(alternative, aggregateAlternativeByCriteria(alternative));
+				results.put(alternative, aggregateAlternativeByCriteria(alternative, experts, criteria));
 			} else {
-				results.put(alternative, aggregateAlternativeByExperts(alternative));
+				results.put(alternative, aggregateAlternativeByExperts(alternative, experts, criteria));
 			}
 		}
 
 		return results;
 	}
 	
-	private Valuation aggregateAlternativeByCriteria(ProblemElement alternative) {
-		return aggregateElementByCriteria(null, alternative, null);
+	private Valuation aggregateAlternativeByCriteria(ProblemElement alternative, Set<ProblemElement> experts, Set<ProblemElement> criteria) {
+		return aggregateElementByCriteria(null, alternative, null, experts, criteria);
 	}
 
-	private Valuation aggregateAlternativeByExperts(ProblemElement alternative) {
-		return aggregateElementByExperts(null, alternative, null);
+	private Valuation aggregateAlternativeByExperts(ProblemElement alternative, Set<ProblemElement> experts, Set<ProblemElement> criteria) {
+		return aggregateElementByExperts(null, alternative, null, experts, criteria);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Valuation aggregateElementByCriteria(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent) {
+	private Valuation aggregateElementByCriteria(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent, Set<ProblemElement> experts, Set<ProblemElement> criteria) {
 		AggregationOperator operator;
 		List<Valuation> alternativeValuations, criterionValuations;
 		Map<ValuationKey, Valuation> valuationsResult = UnificationPhase.getValuationsResult();
 		List<Double> weights;
 		Object aux;
 
-		List<Criterion> criteria = _elementsSet.getCriterionSubcriteria((Criterion) criterionParent);
-		if (criteria.size() == 0) {
-			criteria.add((Criterion) criterionParent);
+		List<Criterion> criteria1 = _elementsSet.getCriterionSubcriteria((Criterion) criterionParent);
+		if (criteria1.size() == 0) {
+			criteria1.add((Criterion) criterionParent);
 		}
-		List<Expert> experts = _elementsSet.getExpertChildren((Expert) expertParent);
-		if (experts.size() == 0) {
-			experts.add((Expert) expertParent);
+		List<Expert> experts1 = _elementsSet.getExpertChildren((Expert) expertParent);
+		if (experts1.size() == 0) {
+			experts1.add((Expert) expertParent);
 		}
 
 		alternativeValuations = new LinkedList<Valuation>();
-		for (ProblemElement criterion : criteria) {
-			if(((Criterion) criterion).hasSubcriteria()) {
-				alternativeValuations.add(aggregateElementByCriteria(expertParent, alternative, criterion));
+		for (ProblemElement criterion : criteria1) {
+			if(((Criterion) criterion).hasSubcriteria() && criteria.contains(criterion)) {
+				alternativeValuations.add(aggregateElementByCriteria(expertParent, alternative, criterion, experts, criteria));
 			} else {
 				criterionValuations = new LinkedList<Valuation>();
-				for (ProblemElement expert : experts) {
-					if (((Expert) expert).hasChildrens()) {
-						criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion));
+				for (ProblemElement expert : experts1) {
+					if (((Expert) expert).hasChildrens() && experts.contains(expert)) {
+						criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion, experts, criteria));
 					} else {
 						criterionValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
 					}
@@ -252,31 +253,31 @@ public class AggregationPhase implements IPhaseMethod {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Valuation aggregateElementByExperts(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent) {
+	private Valuation aggregateElementByExperts(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent, Set<ProblemElement> experts, Set<ProblemElement> criteria) {
 		AggregationOperator operator;
 		List<Valuation> alternativeValuations, expertValuations;
 		Map<ValuationKey, Valuation> valuationsResult = UnificationPhase.getValuationsResult();
 		List<Double> weights;
 		Object aux;
 
-		List<Criterion> criteria = _elementsSet.getCriterionSubcriteria((Criterion) criterionParent);
-		if (criteria.size() == 0) {
-			criteria.add((Criterion) criterionParent);
+		List<Criterion> criteria1 = _elementsSet.getCriterionSubcriteria((Criterion) criterionParent);
+		if (criteria1.size() == 0) {
+			criteria1.add((Criterion) criterionParent);
 		}
-		List<Expert> experts = _elementsSet.getExpertChildren((Expert) expertParent);
-		if (experts.size() == 0) {
-			experts.add((Expert) expertParent);
+		List<Expert> experts1 = _elementsSet.getExpertChildren((Expert) expertParent);
+		if (experts1.size() == 0) {
+			experts1.add((Expert) expertParent);
 		}
 
 		alternativeValuations = new LinkedList<Valuation>();
-		for (ProblemElement expert : experts) {
-			if (((Expert) expert).hasChildrens()) {
-				alternativeValuations.add(aggregateElementByExperts(expert, alternative, criterionParent));
+		for (ProblemElement expert : experts1) {
+			if (((Expert) expert).hasChildrens() && experts.contains(expert)) {
+				alternativeValuations.add(aggregateElementByExperts(expert, alternative, criterionParent, experts, criteria));
 			} else {
 				expertValuations = new LinkedList<Valuation>();
-				for (ProblemElement criterion : criteria) {
-					if (((Criterion) criterion).hasSubcriteria()) {
-						expertValuations.add(aggregateElementByCriteria(expert, alternative, criterion));
+				for (ProblemElement criterion : criteria1) {
+					if (((Criterion) criterion).hasSubcriteria() && criteria.contains(criterion)) {
+						expertValuations.add(aggregateElementByCriteria(expert, alternative, criterion, experts, criteria));
 					} else {
 						expertValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
 					}

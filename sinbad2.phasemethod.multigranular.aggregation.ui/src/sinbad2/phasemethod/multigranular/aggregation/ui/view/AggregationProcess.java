@@ -1,6 +1,8 @@
 package sinbad2.phasemethod.multigranular.aggregation.ui.view;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
@@ -55,6 +57,7 @@ import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.RankingCol
 import sinbad2.phasemethod.multigranular.aggregation.ui.view.provider.RankingViewerProvider;
 import sinbad2.phasemethod.multigranular.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS;
+import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
@@ -100,8 +103,11 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	private LinguisticDomainChart _chart;
 	
 	private AggregationPhase _aggregationPhase;
-	
 	private Map<ProblemElement, Valuation> _aggregationResult;
+	
+	private ProblemElementsSet _elementsSet;
+	
+	private RatingView _ratingView;
 	
 	public AggregationProcess() {}
 	
@@ -133,6 +139,11 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	
 	@Override
 	public void createPartControl(Composite parent) {
+		_ratingView = RatingView.getInstance();
+		
+		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+		_elementsSet = elementsManager.getActiveElementSet();
+		
 		_aggregationPhase = new AggregationPhase();
 		_aggregationResult = null;
 		
@@ -170,10 +181,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_operatorsPanel.setLayout(layout);
 
 		GridData gridData;
-		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
-		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
-		boolean multiExperts = elementsSet.getExperts().size() > 1;
-		boolean multiCriteria = elementsSet.getCriteria().size() > 1;
+		boolean multiExperts = _elementsSet.getExperts().size() > 1;
+		boolean multiCriteria = _elementsSet.getCriteria().size() > 1;
 		if (multiExperts) {
 			_expertsComposite = new Composite(_operatorsPanel, SWT.NONE);
 			if (multiCriteria) {
@@ -195,7 +204,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_expertsComposite.setLayout(layout);
 
 			_expertsViewer = new TreeViewer(_expertsComposite, SWT.BORDER | SWT.FULL_SELECTION);
-			_expertsViewer.setContentProvider(new AggregationExpertViewerContentProvider(elementsSet.getExperts()));
+			_expertsViewer.setContentProvider(new AggregationExpertViewerContentProvider(_elementsSet.getExperts()));
 			_expertsTree = _expertsViewer.getTree();
 			_expertsTree.setHeaderVisible(true);
 			_expertsTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true, 1, 1));
@@ -303,7 +312,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_criteriaComposite.setLayout(layout);
 
 			_criteriaViewer = new TreeViewer(_criteriaComposite, SWT.BORDER | SWT.FULL_SELECTION);
-			_criteriaViewer.setContentProvider(new AggregationCriterionViewerContentProvider(elementsSet.getCriteria()));
+			_criteriaViewer.setContentProvider(new AggregationCriterionViewerContentProvider(_elementsSet.getCriteria()));
 			_criteriaTree = _criteriaViewer.getTree();
 			_criteriaTree.setHeaderVisible(true);
 			_criteriaTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -647,7 +656,14 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	
 	private void testAggregationProcess() {
 		UnificationPhase.unifiedEvaluationToTwoTuple((FuzzySet) getDomain());
-		_aggregationResult = _aggregationPhase.aggregateAlternatives();
+		
+		Set<ProblemElement> experts = new HashSet<ProblemElement>();
+		experts.addAll(_elementsSet.getExperts());
+		Set<ProblemElement> alternatives = new HashSet<ProblemElement>();
+		alternatives.addAll(_elementsSet.getAlternatives());
+		Set<ProblemElement> criteria = new HashSet<ProblemElement>();
+		criteria.addAll(_elementsSet.getCriteria());
+		_aggregationResult = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 		
 		refreshView();	
 	}
@@ -657,6 +673,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_rankingViewer.setInput(_aggregationResult);
 			setChart(getDomain());
 		}
+		_ratingView.loadNextStep();
 	}
 
 	@Override

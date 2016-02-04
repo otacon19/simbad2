@@ -1,6 +1,8 @@
 package sinbad2.phasemethod.multigranular.analysis.ui.view;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.TableViewer;
@@ -332,20 +334,20 @@ public class Analysis extends ViewPart {
 	}
 	
 	public void refreshRanking() {
-		ProblemElement[] experts = getCheckedElements(_expertsCheckboxTreeViewer);
-		ProblemElement[] alternatives = getCheckedElements(_alternativesCheckboxTreeViewer);
-		ProblemElement[] criteria = getCheckedElements(_criteriaCheckboxTreeViewer);
+		Set<ProblemElement> experts = getCheckedElements(_expertsCheckboxTreeViewer);
+		Set<ProblemElement> alternatives = getCheckedElements(_alternativesCheckboxTreeViewer);
+		Set<ProblemElement> criteria = getCheckedElements(_criteriaCheckboxTreeViewer);
 
-		_aggregationResult = (ProblemResult) _viewPart.getMethod().step(Method.Filter, new Object[] { experts, alternatives, criteria });
+		_aggregationResult = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 		_rankingViewer.setInput(_aggregationResult);
 		setChart(getDomain());
 	}
 	
-	private ProblemElement[] getCheckedElements(CheckboxTreeViewer tree) {
+	private Set<ProblemElement> getCheckedElements(CheckboxTreeViewer tree) {
 		Object[] checkedElements = tree.getCheckedElements();
-		ProblemElement[] result = new ProblemElement[checkedElements.length];
+		Set<ProblemElement> result = new HashSet<ProblemElement>();
 		for (int i = 0; i < checkedElements.length; i++) {
-			result[i] = (ProblemElement) checkedElements[i];
+			result.add((ProblemElement) checkedElements[i]);
 		}
 
 		return result;
