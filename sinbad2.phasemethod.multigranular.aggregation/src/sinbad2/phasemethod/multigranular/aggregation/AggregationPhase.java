@@ -44,8 +44,12 @@ public class AggregationPhase implements IPhaseMethod {
 	private String _aggregateBy;
 
 	private List<AggregationProcessListener> _listeners;
+	
+	private UnificationPhase _unificationPhase;
+	
+	private static AggregationPhase _instance = null;
 
-	public AggregationPhase() {
+	private AggregationPhase() {
 		_elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = _elementsManager.getActiveElementSet();
 
@@ -57,6 +61,15 @@ public class AggregationPhase implements IPhaseMethod {
 		_listeners = new LinkedList<AggregationProcessListener>();
 
 		_aggregateBy = "CRITERIA";
+		
+		_unificationPhase = UnificationPhase.getInstance();
+	}
+	
+	public static AggregationPhase getInstance() {
+		if(_instance == null) {
+			_instance = new AggregationPhase();
+		}
+		return _instance;
 	}
 
 	public ProblemElementsSet getElementSet() {
@@ -191,7 +204,7 @@ public class AggregationPhase implements IPhaseMethod {
 	private Valuation aggregateElementByCriteria(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent, Set<ProblemElement> experts, Set<ProblemElement> criteria) {
 		AggregationOperator operator;
 		List<Valuation> alternativeValuations, criterionValuations;
-		Map<ValuationKey, Valuation> valuationsResult = UnificationPhase.getValuationsResult();
+		Map<ValuationKey, Valuation> valuationsResult = _unificationPhase.getValuationsResult();
 		List<Double> weights;
 		Object aux;
 
@@ -206,25 +219,29 @@ public class AggregationPhase implements IPhaseMethod {
 
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement criterion : criteria1) {
-			if(((Criterion) criterion).hasSubcriteria() && criteria.contains(criterion)) {
-				alternativeValuations.add(aggregateElementByCriteria(expertParent, alternative, criterion, experts, criteria));
-			} else {
-				criterionValuations = new LinkedList<Valuation>();
-				for (ProblemElement expert : experts1) {
-					if (((Expert) expert).hasChildrens() && experts.contains(expert)) {
-						criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion, experts, criteria));
-					} else {
-						criterionValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
-					}
-				}
-				
-				if (criterionValuations.size() > 1) {
-					operator = getExpertOperator(expertParent);
-					if (operator instanceof UnweightedAggregationOperator) {
-						alternativeValuations.add(((UnweightedAggregationOperator) operator).aggregate(criterionValuations));
-					}
+			if(criteria.contains(criterion)) {
+				if(((Criterion) criterion).hasSubcriteria()) {
+					alternativeValuations.add(aggregateElementByCriteria(expertParent, alternative, criterion, experts, criteria));
 				} else {
-					alternativeValuations.add(criterionValuations.get(0));
+					criterionValuations = new LinkedList<Valuation>();
+					for (ProblemElement expert : experts1) {
+						if(experts.contains(expert)) {
+							if (((Expert) expert).hasChildrens()) {
+								criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion, experts, criteria));
+							} else {
+								criterionValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
+							}
+						}
+					}
+					
+					if (criterionValuations.size() > 1) {
+						operator = getExpertOperator(expertParent);
+						if (operator instanceof UnweightedAggregationOperator) {
+							alternativeValuations.add(((UnweightedAggregationOperator) operator).aggregate(criterionValuations));
+						}
+					} else if(criterionValuations.size() == 1){
+						alternativeValuations.add(criterionValuations.get(0));
+					}
 				}
 			}
 		}
@@ -247,8 +264,10 @@ public class AggregationPhase implements IPhaseMethod {
 			} else {
 				return null;
 			}
-		} else {
+		} else if(alternativeValuations.size() == 1 ){
 			return alternativeValuations.get(0);
+		} else {
+			return null;
 		}
 	}
 	
@@ -256,7 +275,7 @@ public class AggregationPhase implements IPhaseMethod {
 	private Valuation aggregateElementByExperts(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent, Set<ProblemElement> experts, Set<ProblemElement> criteria) {
 		AggregationOperator operator;
 		List<Valuation> alternativeValuations, expertValuations;
-		Map<ValuationKey, Valuation> valuationsResult = UnificationPhase.getValuationsResult();
+		Map<ValuationKey, Valuation> valuationsResult = _unificationPhase.getValuationsResult();
 		List<Double> weights;
 		Object aux;
 
@@ -271,25 +290,29 @@ public class AggregationPhase implements IPhaseMethod {
 
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement expert : experts1) {
-			if (((Expert) expert).hasChildrens() && experts.contains(expert)) {
-				alternativeValuations.add(aggregateElementByExperts(expert, alternative, criterionParent, experts, criteria));
-			} else {
-				expertValuations = new LinkedList<Valuation>();
-				for (ProblemElement criterion : criteria1) {
-					if (((Criterion) criterion).hasSubcriteria() && criteria.contains(criterion)) {
-						expertValuations.add(aggregateElementByCriteria(expert, alternative, criterion, experts, criteria));
-					} else {
-						expertValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
-					}
-				}
-
-				if (expertValuations.size() > 1) {
-					operator = getCriterionOperator(criterionParent);
-					if (operator instanceof UnweightedAggregationOperator) {
-						alternativeValuations.add(((UnweightedAggregationOperator) operator).aggregate(expertValuations));
-					} 
+			if(experts.contains(expert)) {
+				if (((Expert) expert).hasChildrens()) {
+					alternativeValuations.add(aggregateElementByExperts(expert, alternative, criterionParent, experts, criteria));
 				} else {
-					alternativeValuations.add(expertValuations.get(0));
+					expertValuations = new LinkedList<Valuation>();
+					for (ProblemElement criterion : criteria1) {
+						if(criteria.contains(criterion)) {
+							if (((Criterion) criterion).hasSubcriteria()) {
+								expertValuations.add(aggregateElementByCriteria(expert, alternative, criterion, experts, criteria));
+							} else {
+								expertValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
+							}
+						}
+					}
+	
+					if (expertValuations.size() > 1) {
+						operator = getCriterionOperator(criterionParent);
+						if (operator instanceof UnweightedAggregationOperator) {
+							alternativeValuations.add(((UnweightedAggregationOperator) operator).aggregate(expertValuations));
+						} 
+					} else if(expertValuations.size() == 1){
+						alternativeValuations.add(expertValuations.get(0));
+					}
 				}
 			}
 		}
@@ -311,8 +334,10 @@ public class AggregationPhase implements IPhaseMethod {
 			} else {
 				return null;
 			}
-		} else {
+		} else if(alternativeValuations.size() == 0){
 			return alternativeValuations.get(0);
+		} else {
+			return null;
 		}
 	}
 

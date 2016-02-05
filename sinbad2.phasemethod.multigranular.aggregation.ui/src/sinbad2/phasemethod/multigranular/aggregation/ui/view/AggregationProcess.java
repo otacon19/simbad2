@@ -108,6 +108,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	private AggregationPhase _aggregationPhase;
 	private Map<ProblemElement, Valuation> _aggregationResult;
 	
+	private UnificationPhase _unificationPhase;
+	
 	private RatingView _ratingView;
 	
 	private ProblemElementsSet _elementsSet;
@@ -145,12 +147,14 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_ratingView = RatingView.getInstance();
 		_ratingView.registerStepChangeListener(this);
 		
+		_unificationPhase = UnificationPhase.getInstance();
+		
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
 		
 		_completed = false;
 		
-		_aggregationPhase = new AggregationPhase();
+		_aggregationPhase = AggregationPhase.getInstance();
 		_aggregationResult = null;
 		
 		_parent = parent;
@@ -661,7 +665,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	}
 	
 	private void testAggregationProcess() {
-		UnificationPhase.unifiedEvaluationToTwoTuple((FuzzySet) getDomain());
+		_unificationPhase.unifiedEvaluationToTwoTuple((FuzzySet) getDomain());
 		
 		Set<ProblemElement> experts = new HashSet<ProblemElement>();
 		experts.addAll(_elementsSet.getExperts());

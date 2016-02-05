@@ -81,7 +81,7 @@ public class Analysis extends ViewPart {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
 		
-		_aggregationPhase = AggregationPhase;
+		_aggregationPhase = AggregationPhase.getInstance();
 		_aggregationResult = null;
 		
 		_parent = parent;

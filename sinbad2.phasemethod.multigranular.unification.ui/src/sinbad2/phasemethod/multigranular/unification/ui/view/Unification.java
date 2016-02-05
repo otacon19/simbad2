@@ -60,10 +60,14 @@ public class Unification extends ViewPart implements IStepStateListener {
 	
 	private RatingView _ratingView;
 	
+	private UnificationPhase _unificacionPhase;
+	
 	@Override
 	public void createPartControl(Composite parent) {
 		_ratingView = RatingView.getInstance();
 		_ratingView.registerStepChangeListener(this);
+		
+		_unificacionPhase = UnificationPhase.getInstance();
 		
 		_completed = true;
 		
@@ -183,7 +187,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 		_treeEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 4));
 		_treeViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 		
-		TreeViewerContentProvider provider = new TreeViewerContentProvider(UnificationPhase.unification(((FuzzySet) SelectBLTS.getBLTSDomain())));
+		TreeViewerContentProvider provider = new TreeViewerContentProvider(_unificacionPhase.unification(((FuzzySet) SelectBLTS.getBLTSDomain())));
 		_treeViewer.setContentProvider(provider);
 		_treeViewer.setInput(provider.getInput());
 		compactTable();

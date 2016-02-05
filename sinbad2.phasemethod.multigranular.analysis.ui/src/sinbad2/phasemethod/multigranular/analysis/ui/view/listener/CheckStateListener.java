@@ -1,5 +1,6 @@
 package sinbad2.phasemethod.multigranular.analysis.ui.view.listener;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -36,16 +37,18 @@ public class CheckStateListener implements ICheckStateListener {
 
 	private void checkSon(ProblemElement element, boolean checked) {
 		if(element instanceof Expert) {
-			for (ProblemElement son : _elementsSet.getExpertChildren(element)) {
-				checkSon(son, checked);
+			List<Expert> childrens = ((Expert) element).getChildrens();
+			if(childrens != null) {
+				for (ProblemElement son : childrens) {
+					checkSon(son, checked);
+				}
 			}
 		} else if(element instanceof Criterion) {
-			for (ProblemElement son : _elementsSet.getCriterionSubcriteria(element)) {
-				checkSon(son, checked);
-			}
-		} else {
-			for (ProblemElement alternative : _elementsSet.getAlternatives()) {
-				checkSon(alternative, checked);
+			List<Criterion> subcriteria = ((Criterion) element).getSubcriteria();
+			if(subcriteria != null) {
+	 			for (ProblemElement son : subcriteria) {
+					checkSon(son, checked);
+				}
 			}
 		}
 		
@@ -90,17 +93,15 @@ public class CheckStateListener implements ICheckStateListener {
 	}
 
 	private void setCheckState(ProblemElement element) {
-		List<ProblemElement> sons;
+		List<ProblemElement> sons = new LinkedList<ProblemElement>();
 		
 		if(element instanceof Expert) {
 			sons = _elementsSet.getElementExpertChildren(element);
 		} else if(element instanceof Criterion) {
 			sons = _elementsSet.getElementCriterionSubcriteria(element);
-		} else {
-			sons = _elementsSet.getElementAlternatives();
 		}
 		
-		if (sons.size() == 0) {
+		if(sons.size() == 0) {
 			boolean checked = _treeViewer.getChecked(element);
 			_treeViewer.setGrayChecked(element, false);
 			_treeViewer.setChecked(element, checked);
@@ -109,33 +110,29 @@ public class CheckStateListener implements ICheckStateListener {
 				setCheckState(son);
 			}
 			switch (selection(element)) {
-			case NOTHING:
-				_treeViewer.setGrayChecked(element, false);
-				_treeViewer.setChecked(element, false);
-				break;
-			case FULL:
-				_treeViewer.setGrayChecked(element, false);
-				_treeViewer.setChecked(element, true);
-				break;
-			case PARTIAL:
-				_treeViewer.setGrayChecked(element, true);
-				break;
+				case NOTHING:
+					_treeViewer.setGrayChecked(element, false);
+					_treeViewer.setChecked(element, false);
+					break;
+				case FULL:
+					_treeViewer.setGrayChecked(element, false);
+					_treeViewer.setChecked(element, true);
+					break;
+				case PARTIAL:
+					_treeViewer.setGrayChecked(element, true);
+					break;
 			}
-			;
 		}
 	}
 
-	public void rebuildTreeState() {
+	public void rebuildTreeState(ProblemElement element) {
 		_treeViewer.removeCheckStateListener(this);
-		ProblemElement element = null;
-		List<ProblemElement> sons;
+		List<ProblemElement> sons = new LinkedList<ProblemElement>();
 		
 		if(element instanceof Expert) {
-			sons = _elementsSet.getElementExpertChildren(element);
+			sons = _elementsSet.getElementExpertChildren(null);
 		} else if(element instanceof Criterion) {
-			sons = _elementsSet.getElementCriterionSubcriteria(element);
-		} else {
-			sons = _elementsSet.getElementAlternatives();
+			sons = _elementsSet.getElementCriterionSubcriteria(null);
 		}
 		
 		for (ProblemElement son : sons) {
@@ -175,7 +172,7 @@ public class CheckStateListener implements ICheckStateListener {
 		ProblemElement element = (ProblemElement) event.getElement();
 		Boolean checked = event.getChecked();
 		checkSon(element, checked);
-		rebuildTreeState();
+		rebuildTreeState(element);
 		_treeViewer.addCheckStateListener(this);
 	}
 

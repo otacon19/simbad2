@@ -6,6 +6,15 @@ import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 
 public class AnalysisPhase implements IPhaseMethod {
 
+	private static AnalysisPhase _instance = null;
+	
+	public static AnalysisPhase getInstance() {
+		if(_instance == null) {
+			_instance = new AnalysisPhase();
+		}
+		return _instance;
+	}
+	
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new AnalysisPhase();

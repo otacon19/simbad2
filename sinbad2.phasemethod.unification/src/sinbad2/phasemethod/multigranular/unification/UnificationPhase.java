@@ -23,18 +23,27 @@ public class UnificationPhase implements IPhaseMethod {
 	public static final String ID = "flintstones.phasemethod.multigranular.unification";
 
 	private ValuationSetManager _valuationSetManager;
-	private static ValuationSet _valutationSet;
+	private ValuationSet _valutationSet;
 	
-	private static Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
-	private static Map<ValuationKey, Valuation> _twoTupleEvaluationsResult;
-	private static Map<Alternative, Valuation> _twoTupleEvaluationsAlternatives;
+	private Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
+	private Map<ValuationKey, Valuation> _twoTupleEvaluationsResult;
+	private Map<Alternative, Valuation> _twoTupleEvaluationsAlternatives;
 	
-	public UnificationPhase() {
+	private static UnificationPhase _instance = null;
+	
+	private UnificationPhase() {
 		_valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = _valuationSetManager.getActiveValuationSet();
 		
 		_twoTupleEvaluationsResult = new LinkedHashMap<ValuationKey, Valuation>();
 		_twoTupleEvaluationsAlternatives = new LinkedHashMap<Alternative, Valuation>();
+	}
+	
+	public static UnificationPhase getInstance() {
+		if(_instance == null) {
+			_instance = new UnificationPhase();
+		}
+		return _instance;
 	}
 
 	public ValuationSet getValuationSet() {
@@ -95,7 +104,7 @@ public class UnificationPhase implements IPhaseMethod {
 		return true;
 	}
 
-	public static Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
+	public Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
 		_unifiedEvaluationsResult = new HashMap<ValuationKey, Valuation>();
 		
 		if (unifiedDomain != null) {
@@ -130,7 +139,7 @@ public class UnificationPhase implements IPhaseMethod {
 		return _unifiedEvaluationsResult;
 	}
 	
-	public static Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple(FuzzySet unifiedDomain) {
+	public Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple(FuzzySet unifiedDomain) {
 		
 		if(unifiedDomain != null) {
 		
@@ -151,11 +160,11 @@ public class UnificationPhase implements IPhaseMethod {
 		return _twoTupleEvaluationsResult;
 	}
 	
-	public static Map<Alternative, Valuation> getAlternativesValuations() {
+	public Map<Alternative, Valuation> getAlternativesValuations() {
 		return _twoTupleEvaluationsAlternatives;
 	}
 	
-	public static Map<ValuationKey, Valuation> getValuationsResult() {
+	public Map<ValuationKey, Valuation> getValuationsResult() {
 		return _twoTupleEvaluationsResult;
 	}
 }
