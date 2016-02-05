@@ -6,6 +6,8 @@ import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 
 public class AnalysisPhase implements IPhaseMethod {
 
+	public static final String ID = "flintstones.phasemethod.multigranular.fusion.analysis";
+	
 	private static AnalysisPhase _instance = null;
 	
 	public static AnalysisPhase getInstance() {

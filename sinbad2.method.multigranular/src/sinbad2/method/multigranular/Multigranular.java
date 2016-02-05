@@ -12,7 +12,7 @@ import sinbad2.method.state.MethodStateChangeEvent;
 
 public class Multigranular extends MethodImplementation {
 	
-	public static final String ID = "flintstones.method.multigranular";
+	public static final String ID = "flintstones.method.linguistic.multigranular.fusion";
 	
 	private DomainSet _domainsSet;
 	

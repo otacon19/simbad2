@@ -5,7 +5,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 public class Images {
 
-	private static final String PLUGIN_ID = "sinbad2.phasemethod.multigranular.aggregation.ui"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "sinbad2.phasemethod.multigranular.fusion.aggregation.ui"; //$NON-NLS-1$
 	
 	public static final Image GroupOfExperts = AbstractUIPlugin
 			.imageDescriptorFromPlugin(PLUGIN_ID, "icons/group-of-experts.png").createImage(); //$NON-NLS-1$

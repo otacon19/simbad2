@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Multigranular Ui
-Bundle-SymbolicName: sinbad2.method.multigranular.ui;singleton:=true
+Bundle-SymbolicName: sinbad2.method.linguistic.multigranular.fusion.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

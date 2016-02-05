@@ -4,9 +4,9 @@
    <extension
          point="flintstones.phasemethod.ui">
       <ui
-            id="flintstones.phasemethod.multigranular.unification.ui"
+            id="flintstones.phasemethod.multigranular.fusion.unification.ui"
             name="Unification"
-            phasemethod="flintstones.phasemethod.multigranular.unification">
+            phasemethod="flintstones.phasemethod.multigranular.fusion.unification">
          <view
                step="sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS">
          </view>
@@ -24,14 +24,14 @@
       <view
             category="flintstones.phasemethod.multigranular.unification.ui.category"
             class="sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS"
-            id="flintstones.phasemethod.multigranular.unification.ui.view.selectblts"
+            id="flintstones.phasemethod.multigranular.fusion.unification.ui.view.selectblts"
             name="Select BLTS"
             restorable="true">
       </view>
       <view
             category="flintstones.phasemethod.multigranular.unification.ui.category"
             class="sinbad2.phasemethod.multigranular.unification.ui.view.Unification"
-            id="flintstones.phasemethod.multigranular.unification.ui.view.unification"
+            id="flintstones.phasemethod.multigranular.fusion.unification.ui.view.unification"
             name="Unification"
             restorable="true">
       </view>

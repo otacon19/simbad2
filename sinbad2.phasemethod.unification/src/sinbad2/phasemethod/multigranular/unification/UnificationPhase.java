@@ -20,7 +20,7 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class UnificationPhase implements IPhaseMethod {
 
-	public static final String ID = "flintstones.phasemethod.multigranular.unification";
+	public static final String ID = "flintstones.phasemethod.multigranular.fusion.unification";
 
 	private ValuationSetManager _valuationSetManager;
 	private ValuationSet _valutationSet;

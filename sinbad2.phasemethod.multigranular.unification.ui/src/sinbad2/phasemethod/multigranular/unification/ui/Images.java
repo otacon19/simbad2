@@ -5,7 +5,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 public class Images {
 
-	private static final String PLUGIN_ID = "sinbad2.phasemethod.multigranular.unification.ui"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "sinbad2.phasemethod.multigranular.fusion.unification.ui"; //$NON-NLS-1$
 
 	public static final Image Alternative = AbstractUIPlugin
 			.imageDescriptorFromPlugin(PLUGIN_ID, "icons/alternative.png").createImage(); //$NON-NLS-1$

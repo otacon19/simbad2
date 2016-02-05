@@ -4,9 +4,9 @@
    <extension
          point="flintstones.phasemethod.ui">
       <ui
-            id="flintstones.phasemethod.multigranular.analysis.ui"
+            id="flintstones.phasemethod.multigranular.fusion.analysis.ui"
             name="Analysis"
-            phasemethod="flintstones.phasemethod.multigranular.analysis">
+            phasemethod="flintstones.phasemethod.multigranular.fusion.analysis">
          <view
                step="sinbad2.phasemethod.multigranular.analysis.ui.view.Analysis">
          </view>
@@ -21,7 +21,7 @@
       <view
             category="flintstones.phasemethod.multigranular.analysis.ui.category"
             class="sinbad2.phasemethod.multigranular.analysis.ui.view.Analysis"
-            id="flintstones.phasemethod.multigranular.analysis.ui.view.analysis"
+            id="flintstones.phasemethod.multigranular.fusion.analysis.ui.view.analysis"
             name="Analysis"
             restorable="true">
       </view>

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Multigranular analysis
-Bundle-SymbolicName: sinbad2.phasemethod.multigranular.analysis;singleton:=true
+Bundle-SymbolicName: sinbad2.phasemethod.multigranular.fusion.analysis;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Sinbad2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
