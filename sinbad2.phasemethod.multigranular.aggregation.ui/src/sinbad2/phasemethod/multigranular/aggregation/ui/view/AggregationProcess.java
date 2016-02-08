@@ -104,6 +104,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	private LinguisticDomainChart _chart;
 	
 	private static boolean _completed;
+	private static boolean _loaded;
 	
 	private AggregationPhase _aggregationPhase;
 	private Map<ProblemElement, Valuation> _aggregationResult;
@@ -153,6 +154,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_elementsSet = elementsManager.getActiveElementSet();
 		
 		_completed = false;
+		_loaded = false;
 		
 		_aggregationPhase = AggregationPhase.getInstance();
 		_aggregationResult = null;
@@ -673,6 +675,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		alternatives.addAll(_elementsSet.getAlternatives());
 		Set<ProblemElement> criteria = new HashSet<ProblemElement>();
 		criteria.addAll(_elementsSet.getCriteria());
+		
 		_aggregationResult = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 		
 		refreshView();	
@@ -701,8 +704,10 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	
 	@Override
 	public void notifyStepStateChange() {
-		if(_completed) {
+		if(_completed && !_loaded) {
 			_ratingView.loadNextStep();
+			_completed = false;
+			_loaded = true;
 		}
 	}
 }

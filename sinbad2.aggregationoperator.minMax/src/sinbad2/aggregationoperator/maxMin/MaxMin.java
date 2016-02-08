@@ -1,5 +1,6 @@
 package sinbad2.aggregationoperator.maxMin;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
@@ -15,6 +16,17 @@ public class MaxMin extends UnweightedAggregationOperator {
 		
 		Validator.notNull(valuations);
 
+		List<Valuation> auxValuations = new LinkedList<Valuation>();
+		for (Valuation valuation : valuations) {
+			if (valuation != null) {
+				auxValuations.add(valuation);
+			}
+		}
+
+		if (auxValuations.size() != valuations.size()) {
+			valuations = auxValuations;
+		}
+		
 		if(valuations.size() > 0) {
 			for(Valuation valuation: valuations) {
 				if(valuation instanceof HesitantValuation) {

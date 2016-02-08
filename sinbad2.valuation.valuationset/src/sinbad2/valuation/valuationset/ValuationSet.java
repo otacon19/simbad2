@@ -250,10 +250,7 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 				removeValuationsOperation(ERemoveValuation.DOMAIN, event.getOldValue());
 			}
 		}
-
 	}
-	
-	//TODO eliminada newNotifyDomainSet()
 	
 	@Override
 	public void notifyNewActiveDomainAssignments(DomainAssignments domainAssignments) {
@@ -280,11 +277,13 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 			List<ValuationKey> valuations = new LinkedList<ValuationKey>();
 			for (ValuationKey key : _valuations.keySet()) {
 				valuation = _valuations.get(key);
-				domain = valuation.getDomain();
-				assignmentDomain = assignments.get(new DomainAssignmentKey(key.getExpert(), key.getAlternative(), key.getCriterion()));
-
-				if (domain.equals(assignmentDomain)) {
-					valuations.add(key);
+				if(valuation != null) {
+					domain = valuation.getDomain();
+					assignmentDomain = assignments.get(new DomainAssignmentKey(key.getExpert(), key.getAlternative(), key.getCriterion()));
+	
+					if (domain.equals(assignmentDomain)) {
+						valuations.add(key);
+					}
 				}
 			}
 			removeValuationsOperation(ERemoveValuation.VALUATIONS, valuations);

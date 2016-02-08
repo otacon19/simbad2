@@ -220,17 +220,19 @@ public class AggregationPhase implements IPhaseMethod {
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement criterion : criteria1) {
 			if(criteria.contains(criterion)) {
-				if(((Criterion) criterion).hasSubcriteria()) {
+				if(_elementsSet.getCriterionSubcriteria((Criterion) criterionParent).size() > 0) {
 					alternativeValuations.add(aggregateElementByCriteria(expertParent, alternative, criterion, experts, criteria));
 				} else {
 					criterionValuations = new LinkedList<Valuation>();
 					for (ProblemElement expert : experts1) {
 						if(experts.contains(expert)) {
-							if (((Expert) expert).hasChildrens()) {
+							if (_elementsSet.getExpertChildren((Expert) expertParent).size() > 0) {
 								criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion, experts, criteria));
 							} else {
 								criterionValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
 							}
+						} else {
+							criterionValuations.add(null);
 						}
 					}
 					
@@ -239,10 +241,12 @@ public class AggregationPhase implements IPhaseMethod {
 						if (operator instanceof UnweightedAggregationOperator) {
 							alternativeValuations.add(((UnweightedAggregationOperator) operator).aggregate(criterionValuations));
 						}
-					} else if(criterionValuations.size() == 1){
+					} else {
 						alternativeValuations.add(criterionValuations.get(0));
 					}
 				}
+			} else {
+				alternativeValuations.add(null);
 			}
 		}
 		
@@ -264,10 +268,8 @@ public class AggregationPhase implements IPhaseMethod {
 			} else {
 				return null;
 			}
-		} else if(alternativeValuations.size() == 1 ){
-			return alternativeValuations.get(0);
 		} else {
-			return null;
+			return alternativeValuations.get(0);
 		}
 	}
 	
@@ -291,17 +293,19 @@ public class AggregationPhase implements IPhaseMethod {
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement expert : experts1) {
 			if(experts.contains(expert)) {
-				if (((Expert) expert).hasChildrens()) {
+				if (_elementsSet.getExpertChildren((Expert) expertParent).size() > 0) {
 					alternativeValuations.add(aggregateElementByExperts(expert, alternative, criterionParent, experts, criteria));
 				} else {
 					expertValuations = new LinkedList<Valuation>();
 					for (ProblemElement criterion : criteria1) {
 						if(criteria.contains(criterion)) {
-							if (((Criterion) criterion).hasSubcriteria()) {
+							if (_elementsSet.getCriterionSubcriteria((Criterion) criterionParent).size() > 0) {
 								expertValuations.add(aggregateElementByCriteria(expert, alternative, criterion, experts, criteria));
 							} else {
 								expertValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
 							}
+						} else {
+							expertValuations.add(null);
 						}
 					}
 	
@@ -310,10 +314,12 @@ public class AggregationPhase implements IPhaseMethod {
 						if (operator instanceof UnweightedAggregationOperator) {
 							alternativeValuations.add(((UnweightedAggregationOperator) operator).aggregate(expertValuations));
 						} 
-					} else if(expertValuations.size() == 1){
+					} else {
 						alternativeValuations.add(expertValuations.get(0));
 					}
 				}
+			} else {
+				alternativeValuations.add(null);
 			}
 		}
 
@@ -334,11 +340,9 @@ public class AggregationPhase implements IPhaseMethod {
 			} else {
 				return null;
 			}
-		} else if(alternativeValuations.size() == 0){
-			return alternativeValuations.get(0);
 		} else {
-			return null;
-		}
+			return alternativeValuations.get(0);
+		} 
 	}
 
 	@Override

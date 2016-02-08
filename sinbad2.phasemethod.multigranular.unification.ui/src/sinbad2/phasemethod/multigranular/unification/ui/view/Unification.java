@@ -248,6 +248,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 	public void notifyStepStateChange() {
 		if(_completed) {
 			_ratingView.loadNextStep();
+			_completed = false;
 		}
 	}
 }

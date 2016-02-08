@@ -125,7 +125,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 		}
 		
 		_cellEditor = new ComboBoxCellEditor(_viewer.getTree(), _aggregationOperatorsNames);
-
+		
 		return _cellEditor;
 	}
 
@@ -332,6 +332,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				}
 			}
 		}
+		
 		_aggregationProcess.completed(true);
 		_aggregationProcess.notifyStepStateChange();
 	}

@@ -1,5 +1,6 @@
 package sinbad2.aggregationoperator.median;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
@@ -23,6 +24,17 @@ public class Median extends UnweightedAggregationOperator {
 	@Override
 	public Valuation aggregate(List<Valuation> valuations) {
 		Validator.notNull(valuations);
+		
+		List<Valuation> auxValuations = new LinkedList<Valuation>();
+		for (Valuation valuation : valuations) {
+			if (valuation != null) {
+				auxValuations.add(valuation);
+			}
+		}
+
+		if (auxValuations.size() != valuations.size()) {
+			valuations = auxValuations;
+		}
 		
 		if(valuations.size() > 0) {
 			for(Valuation valuation: valuations) {

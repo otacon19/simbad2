@@ -52,7 +52,9 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	private DomainSet _domainSet;
 	
 	private static Domain _selectedBLTSDomain;
+	
 	private static boolean _completed;
+	private static boolean _loaded;
 	
 	private RatingView _ratingView;
 	
@@ -63,6 +65,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 		_ratingView.disabledNextStep();
 		
 		_completed = false;
+		_loaded = false;
 		
 		_parent = parent;
 		
@@ -237,8 +240,10 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
-		if(_completed) {
+		if(_completed && !_loaded) {
 			_ratingView.loadNextStep();
+			_completed = false;
+			_loaded = true;
 		}	
 	}
 }
