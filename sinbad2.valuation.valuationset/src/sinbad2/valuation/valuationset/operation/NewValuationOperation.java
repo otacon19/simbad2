@@ -135,5 +135,4 @@ public class NewValuationOperation extends UndoableOperation {
 			_newValuations.put(new ValuationKey(expert, alternative, criterion), valuation);
 		}
 	}
-
 }

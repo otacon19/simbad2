@@ -83,7 +83,6 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 	
 	public void setDomain(Map<DomainAssignmentKey, Domain> oldDomainAssignment, Map<DomainAssignmentKey, Domain> newDomainAssignment,
 			boolean inUndoRedo) {
-		
 		notifyDomainAssignmentsChange(new DomainAssignmentsChangeEvent(EDomainAssignmentsChange.MODIFY_ASSIGNMENTS, oldDomainAssignment, 
 				newDomainAssignment, inUndoRedo));
 	}
@@ -352,12 +351,11 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 			
 			removeDomainAssignmentsOperation(ERemoveDomainAssignments.ALL, null);
 		}
-
 	}
 
 	private void removeDomainAssignmentsOperation(ERemoveDomainAssignments type, Object value) {
 		Map<DomainAssignmentKey, Domain> newAssignments = new RemoveDomainAssignmentsOperationProvider(this, type, value).check();
-		
+
 		if(newAssignments != null) {
 			RemoveDomainAssignmentsOperation operation = new RemoveDomainAssignmentsOperation(this, newAssignments);
 			IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();

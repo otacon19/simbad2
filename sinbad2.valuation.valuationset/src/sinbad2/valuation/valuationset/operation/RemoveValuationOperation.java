@@ -24,9 +24,7 @@ public class RemoveValuationOperation extends UndoableOperation {
 		super(""); //$NON-NLS-1$
 	}
 
-	public RemoveValuationOperation(
-			ValuationSet valuationSet,
-			Map<ValuationKey, Valuation> newValuations) {
+	public RemoveValuationOperation(ValuationSet valuationSet, Map<ValuationKey, Valuation> newValuations) {
 		this();
 
 		_valuationSet = valuationSet;
@@ -42,20 +40,16 @@ public class RemoveValuationOperation extends UndoableOperation {
 
 	@Override
 	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-
 		_valuationSet.setValuations(_newValuations);
-		
 		_valuationSet.modifySeveralValuations(_oldValuations, _newValuations, _inUndoRedo);
 
 		return Status.OK_STATUS;
 	}
 
 	@Override
-	public IStatus undo(IProgressMonitor monitor, IAdaptable info)
-			throws ExecutionException {
+	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 
 		_valuationSet.setValuations(_oldValuations);
-		
 		_valuationSet.modifySeveralValuations(_newValuations, _oldValuations, _inUndoRedo);
 		
 		return Status.OK_STATUS;

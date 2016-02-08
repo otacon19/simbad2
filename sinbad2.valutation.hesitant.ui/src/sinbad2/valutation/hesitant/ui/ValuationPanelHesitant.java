@@ -768,19 +768,15 @@ public class ValuationPanelHesitant extends ValuationPanel {
 				if (EUnaryRelationType.GreaterThan.toString().equals(value)) {
 					_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex() + 1);
 					_selectIndexes.add(((FuzzySet) _domain).getLabelSet().getCardinality() - 1);
-					System.out.println("Greater than");
 				} else if(EUnaryRelationType.LowerThan.toString().equals(value)) {
 					_selectIndexes.add(0);
 					_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex() - 1);
-					System.out.println("Lower than");
 				} else if(EUnaryRelationType.AtLeast.toString().equals(value)) {
 					_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
 					_selectIndexes.add(((FuzzySet) _domain).getLabelSet().getCardinality() - 1);
-					System.out.println("At least than");
 				} else if(EUnaryRelationType.AtMost.toString().equals(value)) {
 					_selectIndexes.add(0);
 					_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
-					System.out.println("At most " + _selectIndexes);
 				}
 			}
 		} else {

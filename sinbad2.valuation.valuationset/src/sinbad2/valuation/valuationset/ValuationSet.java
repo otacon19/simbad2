@@ -27,7 +27,6 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.resolutionphase.framework.Framework;
 import sinbad2.resolutionphase.frameworkstructuring.FrameworkStructuring;
-import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignmentKey;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignments;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignmentsManager;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.listener.DomainAssignmentsChangeEvent;
@@ -76,14 +75,11 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 	}
 	
 	public void modifySeveralValuations(Map<ValuationKey, Valuation> oldValuations, Map<ValuationKey, Valuation> newValuations, boolean inUndoRedo) {
-		
 		notifyValuationSetChange(new ValuationSetChangeEvent(EValuationSetChange.MODIFY_MULTIPLE_VALUATIONS, oldValuations, newValuations,
-				inUndoRedo));
-		
+				inUndoRedo));	
 	}
 	
 	public void modifyValuation(Valuation oldValuations, Valuation newValuations, boolean inUndoRedo) {
-		
 		notifyValuationSetChange(new ValuationSetChangeEvent(EValuationSetChange.MODIFY_VALUATION, oldValuations, newValuations,
 				inUndoRedo));
 		
@@ -267,23 +263,14 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 	public void notifyDomainAssignmentsChange(DomainAssignmentsChangeEvent event) {
 
 		if (!event.getInUndoRedo()) {
-			@SuppressWarnings("unchecked")
-			Map<DomainAssignmentKey, Domain> assignments = (Map<DomainAssignmentKey, Domain>) event.getNewValue();
 
-			Domain domain;
-			Domain assignmentDomain;
 			Valuation valuation;
-
+			
 			List<ValuationKey> valuations = new LinkedList<ValuationKey>();
 			for (ValuationKey key : _valuations.keySet()) {
 				valuation = _valuations.get(key);
-				if(valuation != null) {
-					domain = valuation.getDomain();
-					assignmentDomain = assignments.get(new DomainAssignmentKey(key.getExpert(), key.getAlternative(), key.getCriterion()));
-	
-					if (domain.equals(assignmentDomain)) {
-						valuations.add(key);
-					}
+				if(valuation == null) {
+					valuations.add(key);
 				}
 			}
 			removeValuationsOperation(ERemoveValuation.VALUATIONS, valuations);
