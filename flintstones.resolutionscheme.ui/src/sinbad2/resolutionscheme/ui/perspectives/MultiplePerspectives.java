@@ -123,13 +123,13 @@ public class MultiplePerspectives implements IWorkspaceListener {
 			imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(perspective.getDeclaringExtension().getContributor().getName(), iconPath);
 			
 			configureActions(action, name, imageDescriptor, ""); //$NON-NLS-1$
-		}
-		
+		}	
 	}
 	
 	private void makeActions() {
 		Action action;
 		//TODO cambiar a comandos
+		//TODO cada vez que se cambie de la perspectiva rating a otra se debe notificar con el mensaje de "la información se perderá..."
 		for(final ResolutionPhaseUI phase: _phasesUI) {
 			action = new Action() {
 				private final ResolutionPhasesUIManager resolutionPhasesUIManager = ResolutionPhasesUIManager.getInstance();
@@ -147,7 +147,6 @@ public class MultiplePerspectives implements IWorkspaceListener {
 						try {
 							workbench.showPerspective(perspectiveId, workbenchWindow);
 						} catch (WorkbenchException e) {
-							//TODO fallo en la activacion de la fase
 							e.printStackTrace();
 						}
 						
@@ -181,6 +180,7 @@ public class MultiplePerspectives implements IWorkspaceListener {
 		}
 		
 		String activeResolutionPhaseUI = ResolutionPhasesUIManager.getInstance().getActiveResolutionPhasesUI().getId();
+
 		if(!_actions.get(activeResolutionPhaseUI).isEnabled()) {
 			_actions.get(lastEnabled).run();
 		}

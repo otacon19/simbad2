@@ -205,7 +205,7 @@ public class RatingView extends ViewPart {
 		modifyStep(1);
 	}
 
-	private void resetRating(boolean confirm) {
+	public void resetRating(boolean confirm) {
 		boolean reset = true;
 		if(confirm) {
 			reset = MessageDialog.openConfirm(this.getSite().getShell(), "Cancel confirm", "All information will be lost");

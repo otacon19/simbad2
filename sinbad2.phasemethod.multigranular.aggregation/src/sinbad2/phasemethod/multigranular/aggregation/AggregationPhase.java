@@ -240,6 +240,23 @@ public class AggregationPhase implements IPhaseMethod {
 						operator = getExpertOperator(expertParent);
 						if (operator instanceof UnweightedAggregationOperator) {
 							alternativeValuations.add(((UnweightedAggregationOperator) operator).aggregate(criterionValuations));
+						} else {
+							aux = getExpertOperatorWeights(expertParent);
+							if(aux instanceof List<?>) {
+								weights = (List<Double>) aux;
+							} else if(aux instanceof Map<?, ?>) {
+								weights = ((Map<ProblemElement, List<Double>>) aux).get(criterion.getId());
+								if(weights == null) {
+									weights = ((Map<ProblemElement, List<Double>>) aux).get(null);
+								}
+							} else {
+								weights = null;
+							}
+							if(operator == null) {
+								alternativeValuations.add(null);
+							} else {
+								alternativeValuations.add(((WeightedAggregationOperator) operator).aggregate(criterionValuations, weights));
+							}
 						}
 					} else {
 						alternativeValuations.add(criterionValuations.get(0));
@@ -313,7 +330,24 @@ public class AggregationPhase implements IPhaseMethod {
 						operator = getCriterionOperator(criterionParent);
 						if (operator instanceof UnweightedAggregationOperator) {
 							alternativeValuations.add(((UnweightedAggregationOperator) operator).aggregate(expertValuations));
-						} 
+						} else {
+							aux = getCriterionOperatorWeights(criterionParent);
+							if(aux instanceof List<?>) {
+								weights = (List<Double>) aux;
+							} else if(aux instanceof Map<?, ?>) {
+								weights = ((Map<ProblemElement, List<Double>>) aux).get(expert.getId());
+								if(weights == null) {
+									weights = ((Map<ProblemElement, List<Double>>) aux).get(null);
+								}
+							} else {
+								weights = null;
+							}
+							if(operator == null) {
+								alternativeValuations.add(null);
+							} else {
+								alternativeValuations.add(((WeightedAggregationOperator) operator).aggregate(expertValuations, weights));
+							}
+						}
 					} else {
 						alternativeValuations.add(expertValuations.get(0));
 					}
