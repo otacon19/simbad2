@@ -60,12 +60,11 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	
 	@Override
 	public void createPartControl(Composite parent) {
-		_ratingView = RatingView.getInstance();
-		_ratingView.registerStepChangeListener(this);
-		_ratingView.disabledNextStep();
-		
 		_completed = false;
 		_loaded = false;
+		
+		_chart = null;
+		_controlListener = null;
 		
 		_parent = parent;
 		
@@ -245,5 +244,10 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 			_completed = false;
 			_loaded = true;
 		}	
+	}
+
+	@Override
+	public void notifyRatingView(RatingView rating) {
+		_ratingView = rating;
 	}
 }

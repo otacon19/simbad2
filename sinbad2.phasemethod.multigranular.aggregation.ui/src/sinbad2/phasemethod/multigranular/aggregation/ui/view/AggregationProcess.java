@@ -145,9 +145,6 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	
 	@Override
 	public void createPartControl(Composite parent) {		
-		_ratingView = RatingView.getInstance();
-		_ratingView.registerStepChangeListener(this);
-		
 		_unificationPhase = UnificationPhase.getInstance();
 		
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
@@ -709,5 +706,10 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_completed = false;
 			_loaded = true;
 		}
+	}
+
+	@Override
+	public void notifyRatingView(RatingView rating) {
+		_ratingView = rating;	
 	}
 }

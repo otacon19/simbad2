@@ -22,7 +22,6 @@ public class PhaseMethodUI implements IPhaseMethodStateListener {
 	
 	private List<IPhaseMethodUIStateListener> _listeners;
 	
-	
 	public PhaseMethodUI() {
 		_id = null;
 		_name = null;

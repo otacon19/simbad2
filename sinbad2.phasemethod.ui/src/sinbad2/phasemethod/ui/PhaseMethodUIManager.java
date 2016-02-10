@@ -79,6 +79,10 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 		}
 	}
 	
+	public Map<String, List<ViewPart>> getPhasesSteps() {
+		return _phasesSteps;
+	}
+	
 	public List<ViewPart> getSteps(String id) {
 		return _phasesSteps.get(id);
 	}
@@ -119,6 +123,10 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 	
 	public void activateStep(ViewPart step) {
 		_activeStep = step;
+	}
+	
+	public void deactivateStep() {
+		_activeStep = null;
 	}
 	
 	public ViewPart getNextStep() {

@@ -63,10 +63,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 	private UnificationPhase _unificacionPhase;
 	
 	@Override
-	public void createPartControl(Composite parent) {
-		_ratingView = RatingView.getInstance();
-		_ratingView.registerStepChangeListener(this);
-		
+	public void createPartControl(Composite parent) {	
 		_unificacionPhase = UnificationPhase.getInstance();
 		
 		_completed = true;
@@ -250,5 +247,10 @@ public class Unification extends ViewPart implements IStepStateListener {
 			_ratingView.loadNextStep();
 			_completed = false;
 		}
+	}
+
+	@Override
+	public void notifyRatingView(RatingView rating) {
+		_ratingView = rating;
 	}
 }

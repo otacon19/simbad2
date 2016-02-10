@@ -171,6 +171,7 @@ public class MethodUI {
 		
 		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
 		phasesMethodUIManager.deactiveCurrentActive();
+		phasesMethodUIManager.deactivateStep();
 		
 		notifyMethodUIStateChange(new MethodUIStateChangeEvent(EMethodUIStateChanges.DEACTIVATED));
 	}

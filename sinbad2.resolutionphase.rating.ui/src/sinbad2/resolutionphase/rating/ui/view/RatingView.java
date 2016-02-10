@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.CTabFolder;
@@ -45,38 +46,25 @@ public class RatingView extends ViewPart {
 	private Composite _ratingEditorContainer;
 	private Composite _buttonsBar;
 	private Composite _parent;
+	
 	private Text _descriptionText;
 	private Text _stepsText;
+	
 	private Label _methodName;
 	private Label _stepValue;
 	private CLabel _methodSelected;
-
-	private static Button _backButton;
-	private static Button _nextButton;
-	private static Button _resetButton;
-	private static CTabFolder _tabFolder;
-	private static RatingView _instance;
 	
 	private ExpandBar _methodsCategoriesBar; 
 
 	private MethodUI _methodUISelected;
-	
-	private static List<IStepStateListener> _listeners;
 
-	public RatingView() {
-		_listeners = new LinkedList<IStepStateListener>();
-	}
-
-	public static RatingView getInstance() {
-		if(_instance == null) {
-			_instance = new RatingView();
-		}
-		return _instance;
-	}
+	private Button _backButton;
+	private Button _nextButton;
+	private Button _resetButton;
 	
-	public void disabledNextStep() {
-		_nextButton.setEnabled(false);
-	}
+	private CTabFolder _tabFolder;
+	
+	private List<IStepStateListener> _listeners;
 
 	@Override
 	public void createPartControl(Composite parent) {	
@@ -85,7 +73,10 @@ public class RatingView extends ViewPart {
 		
 		_methodUISelected = null;
 		
+		_listeners = new LinkedList<IStepStateListener>();
+		
 		_parent = parent;
+		
 		createRatingEditorPanel();
 		createMethodSelectionStep();
 		createContent();
@@ -214,32 +205,43 @@ public class RatingView extends ViewPart {
 		modifyStep(1);
 	}
 
-	private void resetRating(boolean reset) {
-		// TODO Auto-generated method stub
+	private void resetRating(boolean confirm) {
+		boolean reset = true;
+		if(confirm) {
+			reset = MessageDialog.openConfirm(this.getSite().getShell(), "Cancel confirm", "All information will be lost");
+		}
+		if(reset) {
+			clear();
+			createMethodSelectionStep();
+			createContent();
+			_tabFolder.setSelection(0);
+		}
 	}
 
 	private void createMethodSelectionStep() {
-		_tabFolder = new CTabFolder(_ratingEditorContainer, SWT.BORDER | SWT.VERTICAL);
-		_tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		Display display = Display.getCurrent();
-		_tabFolder.setSelectionBackground(display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
-		_tabFolder.layout();
+		if(_tabFolder == null) {
+			_tabFolder = new CTabFolder(_ratingEditorContainer, SWT.BORDER | SWT.VERTICAL);
+			_tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
+	
+			Display display = Display.getCurrent();
+			_tabFolder.setSelectionBackground(display.getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
+			_tabFolder.layout();
+			  
+		    _tabFolder.addSelectionListener(new SelectionAdapter() {
+		    	@Override
+		    	public void widgetSelected(SelectionEvent e) {
+		    		if(_tabFolder.getSelectionIndex() < _numStep) {
+		    			getPreviousStep();
+		    		} else if(_tabFolder.getSelectionIndex() > _numStep) {
+		    			getNextStep();
+		    		}
+		    	}
+			});
+		}
 		
 		CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, 0);
 	    item.setText("Method selection");
 	    item.setShowClose(false);
-	    
-	    _tabFolder.addSelectionListener(new SelectionAdapter() {
-	    	@Override
-	    	public void widgetSelected(SelectionEvent e) {
-	    		if(_tabFolder.getSelectionIndex() < _numStep) {
-	    			getPreviousStep();
-	    		} else if(_tabFolder.getSelectionIndex() > _numStep) {
-	    			getNextStep();
-	    		}
-	    	}
-		});
 	}
 
 	private void createContent() {
@@ -359,6 +361,7 @@ public class RatingView extends ViewPart {
 				
 				MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
 				MethodUI currentMethod = methodsUIManager.getActivateMethodUI();
+		
 				if(currentMethod == null) {
 					methodsUIManager.activate(method.getId() + ".ui");
 					_methodUISelected = methodsUIManager.getActivateMethodUI();
@@ -368,7 +371,7 @@ public class RatingView extends ViewPart {
 				} else if(!currentMethod.equals(_methodUISelected)) {
 					methodsUIManager.activate(method.getId() + ".ui");
 					_methodUISelected = currentMethod;
-					clearTabFolder();
+					clear();
 					calculateNumSteps();
 					loadNextStep();
 					_stepsText.setText(_methodUISelected.getPhasesFormat());
@@ -396,24 +399,25 @@ public class RatingView extends ViewPart {
 		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
 		List<PhaseMethodUI> phasesMethodUI = methodsUIManager.getActivateMethodUI().getPhasesUI();
 		
+		if(_listeners.size() == 0) {
+			registerStepChangeListeners();
+		}
+		
 		ViewPart step;
 		if(currentPhaseMethod == null) {
 			currentPhaseMethod = phasesMethodUI.get(_numPhase);
 			phasesMethodUIManager.activate(currentPhaseMethod.getId());
 			step = phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
+		} else if(phasesMethodUIManager.getNextStep() == null) {
+			_numPhase++;
+			currentPhaseMethod = phasesMethodUI.get(_numPhase);
+			phasesMethodUIManager.activate(currentPhaseMethod.getId());	
+			step = phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
 		} else {
-			if(phasesMethodUIManager.getNextStep() == null) {
-				_numPhase++;
-				currentPhaseMethod = phasesMethodUI.get(_numPhase);
-				phasesMethodUIManager.activate(currentPhaseMethod.getId());	
-				step = phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
-			} else {
-				step = phasesMethodUIManager.getNextStep();	
-			}
+			step = phasesMethodUIManager.getNextStep();	
 		}
 		
 		phasesMethodUIManager.activateStep(step);
-		
 		boolean loaded = false;
 		for(CTabItem tabItem: _tabFolder.getItems()) {
 			if(tabItem.getText().equals(step.getPartName())) {
@@ -429,6 +433,7 @@ public class RatingView extends ViewPart {
 
 			Composite parent = new Composite(_tabFolder, SWT.NONE);
 			step.createPartControl(parent);
+			notifyRatingView();
 			item.setControl(parent);
 			item.setData(step);
 			
@@ -436,11 +441,22 @@ public class RatingView extends ViewPart {
 		}
 	}
 	
-	private void clearTabFolder() {
+	private void clear() {
 		for(CTabItem ti: _tabFolder.getItems()) {
 			ti.dispose();
 		}
 		_listeners.clear();
+		
+		_methodName.setText("Unselected");
+		_stepValue.setText("(0/0)");
+		
+		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
+		methodsUIManager.deactiveCurrentActive();
+
+		_numPhase = 0;
+		_numStep = 0;
+				
+		_methodUISelected = null;
 	}
 	
 	private void createInfoPanels(Composite composite) {
@@ -479,13 +495,26 @@ public class RatingView extends ViewPart {
 		notifyNewStep();
 	}
 	
+	public void disabledNextStep() {
+		_nextButton.setEnabled(false);
+	}
+	
 	@Override
 	public void setFocus() {
 		_tabFolder.setSelection(0);
 	}
 	
-	public void registerStepChangeListener(IStepStateListener listener) {
-		_listeners.add(listener);
+	public void registerStepChangeListeners() {
+		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
+		Map<String, List<ViewPart>> phasesSteps = phasesMethodUIManager.getPhasesSteps(); 
+		for(String id: phasesSteps.keySet()) {
+			List<ViewPart> views = phasesSteps.get(id);
+			for(ViewPart view: views) {
+				if(view instanceof IStepStateListener) {
+					_listeners.add((IStepStateListener) view);
+				}
+			}
+		}
 	}
 	
 	public void unregisterStepChangeListener(IStepStateListener listener) {
@@ -494,13 +523,16 @@ public class RatingView extends ViewPart {
 
 	private void notifyNewStep() {
 		CTabItem item = _tabFolder.getSelection();
-		List<IStepStateListener> auxListeners = new LinkedList<IStepStateListener>();
-		auxListeners.addAll(_listeners);
-		for(IStepStateListener listener: auxListeners) {
+		for(IStepStateListener listener: _listeners) {
 			if(listener.equals(item.getData())) {
 				listener.notifyStepStateChange();
 			}
 		}
 	}
 	
+	private void notifyRatingView() {
+		for(IStepStateListener listener: _listeners) {
+			listener.notifyRatingView(this);
+		}
+	}
 }

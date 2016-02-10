@@ -84,6 +84,8 @@ public class Analysis extends ViewPart {
 		_aggregationPhase = AggregationPhase.getInstance();
 		_aggregationResult = null;
 		
+		_controlListener = null;
+		
 		_parent = parent;
 		
 		GridLayout layout = new GridLayout(14, true);
@@ -225,13 +227,13 @@ public class Analysis extends ViewPart {
 
 		_rankingViewerAlternativeColumn = new TableViewerColumn(_rankingViewer, SWT.NONE);
 		_rankingAlternativeColumn = _rankingViewerAlternativeColumn.getColumn();
-		_rankingAlternativeColumn.setWidth(100);
+		_rankingAlternativeColumn.setWidth(130);
 		_rankingAlternativeColumn.setText("Alternative");
 		_rankingViewerAlternativeColumn.setLabelProvider(new AlternativeColumnLabelProvider());
 
 		_rankingViewerEvaluationColumn = new TableViewerColumn(_rankingViewer, SWT.NONE);
 		_rankingEvaluationColumn = _rankingViewerEvaluationColumn.getColumn();
-		_rankingEvaluationColumn.setWidth(100);
+		_rankingEvaluationColumn.setWidth(130);
 		_rankingEvaluationColumn.setText("Evaluation");
 		_rankingViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 	}
