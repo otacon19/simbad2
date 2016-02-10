@@ -120,8 +120,7 @@ public class MultiplePerspectives implements IWorkspaceListener {
 			action = _actions.get(phase.getId());			
 			name =  WordUtils.capitalize(phase.getName());
 			iconPath = perspective.getAttribute("icon"); //$NON-NLS-1$
-			imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(perspective.getDeclaringExtension().
-					getContributor().getName(), iconPath);
+			imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(perspective.getDeclaringExtension().getContributor().getName(), iconPath);
 			
 			configureActions(action, name, imageDescriptor, ""); //$NON-NLS-1$
 		}
@@ -162,7 +161,6 @@ public class MultiplePerspectives implements IWorkspaceListener {
 		
 		configureActions();
 		setState();
-		
 	}
 	
 	private void setState() {

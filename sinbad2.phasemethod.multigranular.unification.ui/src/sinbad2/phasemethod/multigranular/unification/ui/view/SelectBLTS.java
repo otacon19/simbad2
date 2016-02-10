@@ -53,8 +53,8 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	
 	private static Domain _selectedBLTSDomain;
 	
-	private static boolean _completed;
-	private static boolean _loaded;
+	private boolean _completed;
+	private boolean _loaded;
 	
 	private RatingView _ratingView;
 	

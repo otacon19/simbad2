@@ -1,13 +1,10 @@
 package sinbad2.resolutionphase.rating;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.workspace.WorkspaceContentPersistenceException;
-import sinbad2.method.Method;
 import sinbad2.resolutionphase.IResolutionPhase;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.resolutionphase.io.XMLWriter;
@@ -18,11 +15,7 @@ public class Rating implements IResolutionPhase {
 
 	public static final String ID = "flintstones.resolutionphase.rating";
 	
-	List<Method> _methods;
-	
-	public Rating() {
-		_methods = new LinkedList<Method>();
-	}
+	public Rating() {}
 
 	@Override
 	public IResolutionPhase copyStructure() {
@@ -35,13 +28,10 @@ public class Rating implements IResolutionPhase {
 	}
 
 	@Override
-	public void clear() {
-		_methods.clear();
-	}
+	public void clear() {}
 
 	@Override
-	public void save(XMLWriter writer) throws WorkspaceContentPersistenceException {
-	}
+	public void save(XMLWriter writer) throws WorkspaceContentPersistenceException {}
 
 	@Override
 	public void read(XMLRead reader, Map<String, IResolutionPhase> buffer)
@@ -51,7 +41,6 @@ public class Rating implements IResolutionPhase {
 	@Override
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
-		hcb.append(_methods);
 		return hcb.toHashCode();
 	}
 
@@ -81,11 +70,6 @@ public class Rating implements IResolutionPhase {
 
 	@Override
 	public boolean validate() {
-		if(_methods.isEmpty()) {
-			return false;
-		}
 		return true;
 	}
-
-
 }

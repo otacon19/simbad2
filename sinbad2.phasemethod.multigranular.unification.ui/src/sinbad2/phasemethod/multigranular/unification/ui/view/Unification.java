@@ -36,7 +36,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 	
 	public static final String ID = "flintstones.phasemethod.multigranular.unification.ui.view.unification";
 	
-	private static boolean _completed;
+	private boolean _completed;
 	
 	private Composite _parent;
 	

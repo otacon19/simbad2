@@ -8,9 +8,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 public class RatingPerspective implements IPerspectiveFactory {
+	
 	public static final String ID = "flintstones.resolutionphase.rating.perspective"; //$NON-NLS-1$
 
-	
 	@Override
 	public void createInitialLayout(IPageLayout layout) {
 		layout.setEditorAreaVisible(false);
@@ -20,8 +20,6 @@ public class RatingPerspective implements IPerspectiveFactory {
 
 			@Override
 			public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-			
-			//TODO
 			}
 			
 

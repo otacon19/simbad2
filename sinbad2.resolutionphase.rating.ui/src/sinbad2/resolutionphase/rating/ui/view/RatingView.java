@@ -400,7 +400,7 @@ public class RatingView extends ViewPart {
 		List<PhaseMethodUI> phasesMethodUI = methodsUIManager.getActivateMethodUI().getPhasesUI();
 		
 		if(_listeners.size() == 0) {
-			registerStepChangeListeners();
+			registerStepChangeListeners(phasesMethodUIManager);
 		}
 		
 		ViewPart step;
@@ -504,8 +504,7 @@ public class RatingView extends ViewPart {
 		_tabFolder.setSelection(0);
 	}
 	
-	public void registerStepChangeListeners() {
-		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
+	public void registerStepChangeListeners(PhaseMethodUIManager phasesMethodUIManager) {
 		Map<String, List<ViewPart>> phasesSteps = phasesMethodUIManager.getPhasesSteps(); 
 		for(String id: phasesSteps.keySet()) {
 			List<ViewPart> views = phasesSteps.get(id);

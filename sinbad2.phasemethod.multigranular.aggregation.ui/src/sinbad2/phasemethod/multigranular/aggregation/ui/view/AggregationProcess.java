@@ -103,8 +103,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	
 	private LinguisticDomainChart _chart;
 	
-	private static boolean _completed;
-	private static boolean _loaded;
+	private boolean _completed;
+	private boolean _loaded;
 	
 	private AggregationPhase _aggregationPhase;
 	private Map<ProblemElement, Valuation> _aggregationResult;
@@ -155,6 +155,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		
 		_aggregationPhase = AggregationPhase.getInstance();
 		_aggregationResult = null;
+		
+		_controlListener = null;
 		
 		_parent = parent;
 		
