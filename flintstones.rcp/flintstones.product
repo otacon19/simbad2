@@ -89,6 +89,8 @@
       <plugin id="sinbad2.method"/>
       <plugin id="sinbad2.method.linguistic.multigranular.fusion"/>
       <plugin id="sinbad2.method.linguistic.multigranular.fusion.ui"/>
+      <plugin id="sinbad2.method.linguistic.multigranular.lh"/>
+      <plugin id="sinbad2.method.linguistic.multigranular.lh.ui"/>
       <plugin id="sinbad2.method.ui"/>
       <plugin id="sinbad2.phasemethod"/>
       <plugin id="sinbad2.phasemethod.multigranular.fusion.aggregation"/>
@@ -97,6 +99,8 @@
       <plugin id="sinbad2.phasemethod.multigranular.fusion.analysis.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.fusion.unification"/>
       <plugin id="sinbad2.phasemethod.multigranular.fusion.unification.ui"/>
+      <plugin id="sinbad2.phasemethod.multigranular.lh.unification"/>
+      <plugin id="sinbad2.phasemethod.multigranular.lh.unification.ui"/>
       <plugin id="sinbad2.phasemethod.ui"/>
       <plugin id="sinbad2.rcp"/>
       <plugin id="sinbad2.resolutionphase"/>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method">
+      <method
+            category="Multi-granular framework"
+            description="F. Herrera, L. Martínez, A model based on linguistic 2-tuples for dealing with multigranularity hierarchical linguistic contexts in Multiexpert Decision-Making. IEEE Transactions on Systems, Man and Cybernetics. Part B: Cybernetics, vol. 31, issue 2, pp. 227-234, 2001."
+            id="flintstones.method.linguistic.multigranular.lh"
+            implementation="sinbad2.method.linguistic.multigranular.lh.LH"
+            name="Linguistic Hierarchies">
+         <aggregation_supported
+               type="TwoTuple">
+         </aggregation_supported>
+         <phasemethod
+               phase="flintstones.phasemethod.multigranular.lh.unification">
+         </phasemethod>
+      </method>
+   </extension>
+
+</plugin>

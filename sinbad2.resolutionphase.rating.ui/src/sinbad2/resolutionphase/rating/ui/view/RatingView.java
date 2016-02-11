@@ -433,7 +433,9 @@ public class RatingView extends ViewPart {
 
 			Composite parent = new Composite(_tabFolder, SWT.NONE);
 			step.createPartControl(parent);
-			notifyRatingView();
+			if(step instanceof IStepStateListener) {
+				notifyRatingView((IStepStateListener) step);
+			}
 			item.setControl(parent);
 			item.setData(step);
 			
@@ -529,9 +531,7 @@ public class RatingView extends ViewPart {
 		}
 	}
 	
-	private void notifyRatingView() {
-		for(IStepStateListener listener: _listeners) {
-			listener.notifyRatingView(this);
-		}
+	private void notifyRatingView(IStepStateListener listener) {
+		listener.notifyRatingView(this);
 	}
 }

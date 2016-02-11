@@ -1,4 +1,4 @@
-package sinbad2.phasemethod.multigranular.unification.ui.view.provider;
+package sinbad2.phasemethod.multigranular.lh.unification.ui.view.provider;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 

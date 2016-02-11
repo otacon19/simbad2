@@ -18,18 +18,18 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            id="flintstones.phasemethod.multigranular.unification.ui.category"
+            id="flintstones.phasemethod.multigranular.fusion.unification.ui.category"
             name="Unification">
       </category>
       <view
-            category="flintstones.phasemethod.multigranular.unification.ui.category"
+            category="flintstones.phasemethod.multigranular.fusion.unification.ui.category"
             class="sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS"
             id="flintstones.phasemethod.multigranular.fusion.unification.ui.view.selectblts"
             name="Select BLTS"
             restorable="true">
       </view>
       <view
-            category="flintstones.phasemethod.multigranular.unification.ui.category"
+            category="flintstones.phasemethod.multigranular.fusion.unification.ui.category"
             class="sinbad2.phasemethod.multigranular.unification.ui.view.Unification"
             id="flintstones.phasemethod.multigranular.fusion.unification.ui.view.unification"
             name="Unification"

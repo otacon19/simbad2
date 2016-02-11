@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LH Ui
+Bundle-SymbolicName: sinbad2.method.linguistic.multigranular.lh.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sinbad2.method.linguistic.multigranular.lh.ui.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ sinbad2.method.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
