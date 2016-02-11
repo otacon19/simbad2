@@ -5,7 +5,6 @@ import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
@@ -43,12 +42,11 @@ public class FilterContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 		
 		if(parentElement instanceof Expert) {
-			return _elementsSet.getExpertChildren((ProblemElement) parentElement).toArray();
+			return ((Expert) parentElement).getChildrens().toArray();
 		} else if(parentElement instanceof Criterion) {
-			return _elementsSet.getCriterionSubcriteria((ProblemElement) parentElement).toArray();
-		} else if(parentElement instanceof Alternative){
-			return _elementsSet.getAlternatives().toArray();
-		}
+			return ((Criterion) parentElement).getSubcriteria().toArray();
+		} 
+		
 		return new Object[0];
 	}
 

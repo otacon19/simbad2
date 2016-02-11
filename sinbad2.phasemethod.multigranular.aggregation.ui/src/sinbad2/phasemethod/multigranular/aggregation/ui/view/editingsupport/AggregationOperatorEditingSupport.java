@@ -332,7 +332,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				}
 			}
 		}
-		
+
 		_aggregationProcess.completed(true);
 		_aggregationProcess.notifyStepStateChange();
 	}

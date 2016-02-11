@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.multigranular.analysis.ui.view.Analysis;
@@ -146,17 +147,29 @@ public class CheckStateListener implements ICheckStateListener {
 		_treeViewer.removeCheckStateListener(this);
 		
 		if(type.equals("EXPERTS")) {
-			for (ProblemElement element : _elementsSet.getExperts()) {
+			for(Expert element : _elementsSet.getExperts()) {
+				if(element.hasChildrens()) {
+					for(Expert child: element.getChildrens()) {
+						_treeViewer.setGrayChecked(child, false);
+						_treeViewer.setChecked(child, true);
+					}
+				}
 				_treeViewer.setGrayChecked(element, false);
 				_treeViewer.setChecked(element, true);
 			}
 		} else if(type.equals("ALTERNATIVES")) {
-			for (ProblemElement element : _elementsSet.getAlternatives()) {
+			for(Alternative element : _elementsSet.getAlternatives()) {
 				_treeViewer.setGrayChecked(element, false);
 				_treeViewer.setChecked(element, true);
 			}
 		} else {
-			for (ProblemElement element : _elementsSet.getCriteria()) {
+			for(Criterion element : _elementsSet.getCriteria()) {
+				if(element.hasSubcriteria()) {
+					for(Criterion subcriterion: element.getSubcriteria()) {
+						_treeViewer.setGrayChecked(subcriterion, false);
+						_treeViewer.setChecked(subcriterion, true);
+					}
+				}
 				_treeViewer.setGrayChecked(element, false);
 				_treeViewer.setChecked(element, true);
 			}

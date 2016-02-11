@@ -169,7 +169,7 @@ public class LinguisticDomainChart extends DomainChart {
 			renderer.setSeriesPaint(i, colorForEachLabel(i));
 		}
 	}
-	
+
 	//TODO
 	@Override
 	public void displayRanking(Object ranking) {		

@@ -9,7 +9,7 @@ public class FilterLabelProvider extends LabelProvider {
 	@Override
 	public String getText(Object obj) {
 		String result = ((ProblemElement) obj).getId();
-		String[] tokens = result.split(":"); //$NON-NLS-1$
-		return tokens[tokens.length - 1];
+		
+		return result;
 	}
 }

@@ -194,6 +194,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		GridData gridData;
 		boolean multiExperts = _elementsSet.getExperts().size() > 1;
 		boolean multiCriteria = _elementsSet.getCriteria().size() > 1;
+		
 		if (multiExperts) {
 			_expertsComposite = new Composite(_operatorsPanel, SWT.NONE);
 			if (multiCriteria) {
@@ -297,7 +298,6 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		}
 
 		if (multiCriteria) {
-
 			_criteriaComposite = new Composite(_operatorsPanel, SWT.NONE);
 			if (multiExperts) {
 				gridData = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
@@ -458,7 +458,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			firstLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE));
 			gridData = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
 			firstLabel.setLayoutData(gridData);
-			firstLabel.setText("1vv "); //$NON-NLS-1$
+			firstLabel.setText("1º "); //$NON-NLS-1$
 
 			final Label firstValueLabel = new Label(elementsOrderComposite, SWT.CENTER);
 			firstValueLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE));
@@ -470,7 +470,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			secondLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE));
 			gridData = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
 			secondLabel.setLayoutData(gridData);
-			secondLabel.setText("2vv "); //$NON-NLS-1$
+			secondLabel.setText("2º "); //$NON-NLS-1$
 
 			final Label secondValueLabel = new Label(elementsOrderComposite, SWT.CENTER);
 			secondValueLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE));
@@ -686,7 +686,11 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			setChart(getDomain());
 		}
 	}
-
+	
+	public void completed(boolean state) {
+		_completed = state;
+	}
+	
 	@Override
 	public void setFocus() {
 		_rankingViewer.getControl().setFocus();
@@ -696,17 +700,22 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	public String getPartName() {
 		return "Aggregation process";
 	}
-
-	public void completed(boolean state) {
-		_completed = state;
-	}
 	
 	@Override
 	public void notifyStepStateChange() {
+		boolean notYet = false;
 		if(_completed && !_loaded) {
-			_ratingView.loadNextStep();
-			_completed = false;
-			_loaded = true;
+			for(ProblemElement alternative: _aggregationResult.keySet()) {
+				if(_aggregationResult.get(alternative) == null) {
+					notYet = true;
+					break;
+				}
+			}
+			if(!notYet) {
+				_ratingView.loadNextStep();
+				_completed = false;
+				_loaded = true;
+			}
 		}
 	}
 
