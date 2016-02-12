@@ -1,7 +1,8 @@
-package sinbad2.phasemethod.multigranular.aggregation.ui;
+package sinbad2.phasemethod.multigranular.lh.unification.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
 
 /**
  * The activator class controls the plug-in life cycle
@@ -9,7 +10,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "sinbad2.phasemethod.multigranular.fusion.aggregation.ui"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "sinbad2.phasemethod.multigranular.lh.unification.ui"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
@@ -48,3 +49,4 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 }
+
