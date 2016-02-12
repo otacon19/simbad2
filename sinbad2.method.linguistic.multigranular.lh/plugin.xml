@@ -9,12 +9,15 @@
             id="flintstones.method.linguistic.multigranular.lh"
             implementation="sinbad2.method.linguistic.multigranular.lh.LH"
             name="Linguistic Hierarchies">
-         <aggregation_supported
-               type="TwoTuple">
-         </aggregation_supported>
          <phasemethod
                phase="flintstones.phasemethod.multigranular.lh.unification">
          </phasemethod>
+         <phasemethod
+               phase="flintstones.phasemethod.multigranular.lh.aggregation">
+         </phasemethod>
+         <aggregation_supported
+               type="TwoTuple">
+         </aggregation_supported>
       </method>
    </extension>
 

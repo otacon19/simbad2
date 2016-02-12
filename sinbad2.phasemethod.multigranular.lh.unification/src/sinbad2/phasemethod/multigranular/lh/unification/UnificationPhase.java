@@ -30,14 +30,14 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class UnificationPhase implements IPhaseMethod {
 	
+	public static final String ID = "flintstones.phasemethod.multigranular.lh.unification";
+	
 	private class MyComparator implements Comparator<Object[]> {
 		@Override
 		public int compare(Object[] o1, Object[] o2) {
 			return Double.compare((Integer) o1[0], (Integer) o2[0]);
 		}
 	}
-	
-	public static final String ID = "flintstones.phasemethod.multigranular.lh.unification";
 
 	private ValuationSetManager _valuationSetManager;
 	private ValuationSet _valutationSet;
@@ -45,6 +45,8 @@ public class UnificationPhase implements IPhaseMethod {
 	private Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleEvaluationsResult;
 	private Map<Alternative, Valuation> _twoTupleEvaluationsAlternatives;
+	
+	private static FuzzySet _lhDomain;
 	
 	private static UnificationPhase _instance = null;
 	
@@ -269,6 +271,9 @@ public class UnificationPhase implements IPhaseMethod {
 				}
 			}
 		}
+		
+		_lhDomain = (FuzzySet) lh.get(lh.size() - 1)[2];
+		
 		return lh;
 	}
 
@@ -291,4 +296,7 @@ public class UnificationPhase implements IPhaseMethod {
 		return _twoTupleEvaluationsResult;
 	}
 	
+	public static FuzzySet getLHDomain() {
+		return _lhDomain;
+	}
 }
