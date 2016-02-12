@@ -274,14 +274,12 @@ public class RatingView extends ViewPart {
 		String[] ids = methodsUIManager.getIdsRegisters();
 		
 		Map<String, List<Method>> categoriesMethods = new HashMap<String, List<Method>>();
-		List<Method> methods = new LinkedList<Method>();
-		
+		List<Method> methods;
 		for(String id: ids) {
-			methods.clear();
+			methods = new LinkedList<Method>();
 			MethodUI methodUI = methodsUIManager.getUI(id);
 			Method method = methodUI.getMethod();
 			String category = method.getCategory();
-			
 			if(categoriesMethods.get(category) != null) {
 				methods = categoriesMethods.get(category);
 			}

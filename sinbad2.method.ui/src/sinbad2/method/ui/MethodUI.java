@@ -81,7 +81,6 @@ public class MethodUI {
 		String result = "";
 		
 		List<PhaseMethodUI> phasesMethod = getPhasesUI();
-
 		for(PhaseMethodUI phaseMethod: phasesMethod) {
 			result += phaseMethod.getName() + '\n';
 			List<ViewPart> steps = phaseMethodUIManager.getSteps(phaseMethod.getId());

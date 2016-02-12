@@ -1,5 +1,7 @@
 package sinbad2.phasemethod.multigranular.lh.unification.ui.view;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -184,10 +186,10 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		_treeEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 4));
 		_treeViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 		
-		Object[][] lhDomains = _unificacionPhase.generateLH();
+		List<Object[]> lhDomains = _unificacionPhase.generateLH();
 		FuzzySet unifiedDomain = null;
 		if (lhDomains != null) {
-			unifiedDomain = ((FuzzySet) lhDomains[lhDomains.length - 1][2]);
+			unifiedDomain = ((FuzzySet) lhDomains.get(lhDomains.size() - 1)[2]);
 		}
 		
 		TreeViewerContentProvider provider = new TreeViewerContentProvider(_unificacionPhase.unification(unifiedDomain));

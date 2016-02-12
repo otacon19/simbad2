@@ -177,7 +177,7 @@ public class UnificationPhase implements IPhaseMethod {
 		return _twoTupleEvaluationsResult;
 	}
 	
-	public Object[][] generateLH() {
+	public List<Object[]> generateLH() {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 		
@@ -190,37 +190,34 @@ public class UnificationPhase implements IPhaseMethod {
 		Set<Integer> cardinalities = new HashSet<Integer>();
 		Domain generateDomain;
 		for(Alternative alternative : elementsSet.getAlternatives()) {
-			if(elementsSet.getElementAlternatives().size() == 0) {
-				for(Criterion criterion : elementsSet.getCriteria()) {
-					if(elementsSet.getElementCriterionSubcriteria(criterion).size() == 0) {
-						for(Expert expert : elementsSet.getExperts()) {
-							if(elementsSet.getElementExpertChildren(expert).size() == 0) {
-								_valutationSet.getValuation(expert, alternative, criterion).getDomain();
-								generateDomain = _valutationSet.getValuation(expert, alternative, criterion).getDomain();
-
-								if(generateDomain != null) {
-									domainName = generateDomain.getName();
-									if(generateDomain instanceof FuzzySet) {
-										if(!domainsNames.contains(domainName)) {
-											if(((FuzzySet) generateDomain).isBLTS()) {
-												cardinality = ((FuzzySet) generateDomain).getLabelSet().getCardinality();
-												if(cardinalities.contains(cardinality)) {
-													return null;
-												} else {
-													cardinalities.add(cardinality);
-													domains.add(new Object[] {cardinality, domainName, generateDomain });
-													domainsNames.add(domainName);
-												}
-											} else {
+			for(Criterion criterion : elementsSet.getCriteria()) {
+				if(elementsSet.getElementCriterionSubcriteria(criterion).size() == 0) {
+					for(Expert expert : elementsSet.getExperts()) {
+						if(elementsSet.getElementExpertChildren(expert).size() == 0) {
+							_valutationSet.getValuation(expert, alternative, criterion).getDomain();
+							generateDomain = _valutationSet.getValuation(expert, alternative, criterion).getDomain();
+							if(generateDomain != null) {
+								domainName = generateDomain.getName();
+								if(generateDomain instanceof FuzzySet) {
+									if(!domainsNames.contains(domainName)) {
+										if(((FuzzySet) generateDomain).isBLTS()) {
+											cardinality = ((FuzzySet) generateDomain).getLabelSet().getCardinality();
+											if(cardinalities.contains(cardinality)) {
 												return null;
+											} else {
+												cardinalities.add(cardinality);
+												domains.add(new Object[] {cardinality, domainName, generateDomain });
+												domainsNames.add(domainName);
 											}
+										} else {
+											return null;
 										}
-									} else {
-										return null;
 									}
 								} else {
 									return null;
 								}
+							} else {
+								return null;
 							}
 						}
 					}
@@ -229,44 +226,42 @@ public class UnificationPhase implements IPhaseMethod {
 		}
 
 		Collections.sort(domains, new MyComparator());
-		Integer value;
+		
 		i = 0;
 		Set<Integer> sizes = new HashSet<Integer>();
-		int oldValue = -1;
-		int newLevel;
+		int oldValue = -1, currentCardinality, newLevelCardinality, index;
 		String generate = "generate";
-		int index;
 		Object[] auxEntry;
 		for(Object[] entry : domains) {
-			value = (Integer) entry[0];
-			sizes.add(value);
-			newLevel = (oldValue * 2) - 1;
-			if(oldValue != value) {
-				if ((newLevel == value) || (oldValue == -1)) {
-					oldValue = value;
+			currentCardinality = (Integer) entry[0];
+			sizes.add(currentCardinality);
+			newLevelCardinality = (oldValue * 2) - 1;
+			if(oldValue != currentCardinality) {
+				if ((newLevelCardinality == currentCardinality) || (oldValue == -1)) {
+					oldValue = currentCardinality;
 					i++;
-					entry[0] = "l(" + i + "," + value + ")";
+					entry[0] = "l(" + i + "," + currentCardinality + ")";
 					lh.add(entry);
 				} else {
-					while(value > newLevel) {
+					while(currentCardinality > newLevelCardinality) {
 						auxEntry = new Object[3];
 						i++;
-						auxEntry[0] = "l(" + i + "," + newLevel + ")";
+						auxEntry[0] = "l(" + i + "," + newLevelCardinality + ")";
 						domainName = "generate";
 						index = 1;
 						while (domainsNames.contains(domainName)) {
 							domainName = generate + "_" + index++;
 						}
 						auxEntry[1] = domainName;
-						auxEntry[2] = generateNewLHDomain(newLevel);
+						auxEntry[2] = generateNewLHDomain(newLevelCardinality);
 						lh.add(auxEntry);
-						newLevel = (newLevel * 2) - 1;
+						newLevelCardinality = (newLevelCardinality * 2) - 1;
 					}
 
-					if(value == newLevel) {
-						oldValue = value;
+					if(currentCardinality == newLevelCardinality) {
+						oldValue = currentCardinality;
 						i++;
-						entry[0] = "l(" + i + "," + value + ")";
+						entry[0] = "l(" + i + "," + currentCardinality + ")";
 						lh.add(entry);
 					} else {
 						return null;
@@ -274,7 +269,7 @@ public class UnificationPhase implements IPhaseMethod {
 				}
 			}
 		}
-		return lh.toArray(new Object[0][0]);
+		return lh;
 	}
 
 	private FuzzySet generateNewLHDomain(int size) {
