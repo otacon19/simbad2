@@ -637,7 +637,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	}
 	
 	private Domain getDomain() {
-		return UnificationPhase.getLHDomain() ;
+		return _aggregationPhase.getLHDomain() ;
 	}
 	
 	private void removeOldChart() {

@@ -10,6 +10,7 @@ import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
 import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.core.validator.Validator;
+import sinbad2.domain.Domain;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
@@ -377,6 +378,24 @@ public class AggregationPhase implements IPhaseMethod {
 		} else {
 			return alternativeValuations.get(0);
 		} 
+	}
+	
+	public Domain getLHDomain() {
+		Domain result = null;;
+		List<Object[]> lhDomains = _unificationPhase.getLHDomains();
+		
+		int cardinality = 0, levelLH = 0;
+		for(int i = 0; i < lhDomains.size(); ++i) {
+			Object[] dataDomain = lhDomains.get(i);
+			String level = (String) dataDomain[0];
+			System.out.println(level);
+			levelLH = Integer.parseInt(level.substring(level.indexOf(",") + 1, level.indexOf(")")));
+			if(levelLH > cardinality) {
+				cardinality = levelLH;
+				result = (Domain) dataDomain[2];
+			}
+		}
+		return result;
 	}
 
 	@Override

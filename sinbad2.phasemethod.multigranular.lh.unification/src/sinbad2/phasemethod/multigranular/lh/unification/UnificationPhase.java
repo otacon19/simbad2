@@ -46,7 +46,7 @@ public class UnificationPhase implements IPhaseMethod {
 	private Map<ValuationKey, Valuation> _twoTupleEvaluationsResult;
 	private Map<Alternative, Valuation> _twoTupleEvaluationsAlternatives;
 	
-	private static FuzzySet _lhDomain;
+	private List<Object[]> _lhDomains;
 	
 	private static UnificationPhase _instance = null;
 	
@@ -183,7 +183,9 @@ public class UnificationPhase implements IPhaseMethod {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 		
-		List<Object[]> domains = new LinkedList<Object[]>(), lh = new LinkedList<Object[]>();
+		 _lhDomains = new LinkedList<Object[]>();
+		
+		List<Object[]> domains = new LinkedList<Object[]>();
 		Set<String> domainsNames = new HashSet<String>();
 		int i = 1, cardinality;
 
@@ -199,7 +201,7 @@ public class UnificationPhase implements IPhaseMethod {
 							_valutationSet.getValuation(expert, alternative, criterion).getDomain();
 							generateDomain = _valutationSet.getValuation(expert, alternative, criterion).getDomain();
 							if(generateDomain != null) {
-								domainName = generateDomain.getName();
+								domainName = generateDomain.getId();
 								if(generateDomain instanceof FuzzySet) {
 									if(!domainsNames.contains(domainName)) {
 										if(((FuzzySet) generateDomain).isBLTS()) {
@@ -243,7 +245,7 @@ public class UnificationPhase implements IPhaseMethod {
 					oldValue = currentCardinality;
 					i++;
 					entry[0] = "l(" + i + "," + currentCardinality + ")";
-					lh.add(entry);
+					_lhDomains.add(entry);
 				} else {
 					while(currentCardinality > newLevelCardinality) {
 						auxEntry = new Object[3];
@@ -256,7 +258,7 @@ public class UnificationPhase implements IPhaseMethod {
 						}
 						auxEntry[1] = domainName;
 						auxEntry[2] = generateNewLHDomain(newLevelCardinality);
-						lh.add(auxEntry);
+						_lhDomains.add(auxEntry);
 						newLevelCardinality = (newLevelCardinality * 2) - 1;
 					}
 
@@ -264,7 +266,7 @@ public class UnificationPhase implements IPhaseMethod {
 						oldValue = currentCardinality;
 						i++;
 						entry[0] = "l(" + i + "," + currentCardinality + ")";
-						lh.add(entry);
+						_lhDomains.add(entry);
 					} else {
 						return null;
 					}
@@ -272,9 +274,7 @@ public class UnificationPhase implements IPhaseMethod {
 			}
 		}
 		
-		_lhDomain = (FuzzySet) lh.get(lh.size() - 1)[2];
-		
-		return lh;
+		return _lhDomains;
 	}
 
 	private FuzzySet generateNewLHDomain(int size) {
@@ -288,15 +288,15 @@ public class UnificationPhase implements IPhaseMethod {
 		return result;
 	}
 	
+	public List<Object[]> getLHDomains() {
+		return _lhDomains;
+	}
+	
 	public Map<Alternative, Valuation> getAlternativesValuations() {
 		return _twoTupleEvaluationsAlternatives;
 	}
 	
 	public Map<ValuationKey, Valuation> getValuationsResult() {
 		return _twoTupleEvaluationsResult;
-	}
-	
-	public static FuzzySet getLHDomain() {
-		return _lhDomain;
 	}
 }
