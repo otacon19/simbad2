@@ -129,7 +129,6 @@ public class UnificationPhase implements IPhaseMethod {
 		if (unifiedDomain != null) {
 			Criterion criterion;
 			Valuation valuation;
-			FuzzySet fuzzySet;
 			Boolean isCost;
 
 			Map<ValuationKey, Valuation> valuations = _valutationSet.getValuations();
@@ -138,19 +137,18 @@ public class UnificationPhase implements IPhaseMethod {
 				valuation = valuations.get(vk);
 				isCost = criterion.getCost();
 
-				if(valuation instanceof UnifiedValuation) {
-					Valuation auxValuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
+				if(valuation instanceof TwoTuple) {
 					if(isCost) {
-						auxValuation = auxValuation.negateValutation();
+						valuation = valuation.negateValutation();
 					}
-					fuzzySet = ((TwoTuple) auxValuation).unification(unifiedDomain);
-					valuation = new UnifiedValuation(fuzzySet);
+					valuation = ((TwoTuple) valuation).transform(unifiedDomain);
 				} else if(valuation instanceof LinguisticValuation) {
 					if(isCost) {
 						valuation = valuation.negateValutation();
 					}
-					fuzzySet = ((LinguisticValuation) valuation).unification(unifiedDomain);
-					valuation = new UnifiedValuation(fuzzySet);
+					valuation = new TwoTuple((FuzzySet) valuation.getDomain(), ((LinguisticValuation) valuation).getLabel()).transform(unifiedDomain);
+				} else {
+					throw new IllegalArgumentException();
 				}
 				_unifiedEvaluationsResult.put(vk, valuation);
 			}
