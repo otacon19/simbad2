@@ -273,7 +273,7 @@ public class UnificationPhase implements IPhaseMethod {
 				}
 			}
 		}
-		
+
 		return _lhDomains;
 	}
 
@@ -284,7 +284,7 @@ public class UnificationPhase implements IPhaseMethod {
 			labels[i] = "s" + i;
 		}
 		result.createTrapezoidalFunction(labels);
-
+	
 		return result;
 	}
 	

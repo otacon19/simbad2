@@ -388,7 +388,6 @@ public class AggregationPhase implements IPhaseMethod {
 		for(int i = 0; i < lhDomains.size(); ++i) {
 			Object[] dataDomain = lhDomains.get(i);
 			String level = (String) dataDomain[0];
-			System.out.println(level);
 			levelLH = Integer.parseInt(level.substring(level.indexOf(",") + 1, level.indexOf(")")));
 			if(levelLH > cardinality) {
 				cardinality = levelLH;
