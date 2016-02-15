@@ -15,6 +15,9 @@ public class LH extends MethodImplementation {
 	
 	private DomainSet _domainsSet;
 	
+	private static final String EVALUATIONS_IS_NOT_A_BLTS_DOMAIN = "Evaluations is not a BLTS domain";
+	private static final String EVALUATIONS_IS_NOT_A_LINGUISTIC_DOMAIN = "Evaluations is not a linguistic domain";
+	
 	public LH() {
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		_domainsSet = domainsManager.getActiveDomainSet();
@@ -29,16 +32,19 @@ public class LH extends MethodImplementation {
 	public void notifyMethodStateChange(MethodStateChangeEvent event) {}
 
 	@Override
-	public boolean isAvailable() {
+	public String isAvailable() {
 		List<Domain> domains = _domainsSet.getDomains();
 		for(Domain d: domains) {
 			if(d instanceof FuzzySet) {
-				if(((FuzzySet) d).isBLTS()) {
-					return true;
+				if(!((FuzzySet) d).isBLTS()) {
+					return EVALUATIONS_IS_NOT_A_BLTS_DOMAIN;
 				}
+			} else {
+				return EVALUATIONS_IS_NOT_A_LINGUISTIC_DOMAIN;
 			}
 		}
-		return false;
+		return "";
 	}
+
 }
 

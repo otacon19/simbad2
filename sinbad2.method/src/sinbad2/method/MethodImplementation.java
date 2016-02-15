@@ -142,6 +142,6 @@ public abstract class MethodImplementation implements IMethodStateListener, IWor
 	
 	public abstract MethodImplementation newInstance();
 	
-	public abstract boolean isAvailable();
+	public abstract String isAvailable();
 
 }

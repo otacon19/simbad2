@@ -14,6 +14,8 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -50,9 +52,10 @@ public class RatingView extends ViewPart {
 	private Text _descriptionText;
 	private Text _stepsText;
 	
-	private Label _methodName;
+	private Label _methodNameText;
 	private Label _stepValue;
-	private CLabel _methodSelected;
+	private CLabel _methodNameSelected;
+	private Label _warningLabel;
 	
 	private ExpandBar _methodsCategoriesBar; 
 
@@ -154,9 +157,9 @@ public class RatingView extends ViewPart {
 		method.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
 		method.setText("Method: ");
 		
-		_methodName = new Label(_ratingEditorFooter, SWT.NONE);
-		_methodName.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, false, false, 1, 1));
-		_methodName.setText("Unselected");
+		_methodNameText = new Label(_ratingEditorFooter, SWT.NONE);
+		_methodNameText.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, false, false, 1, 1));
+		_methodNameText.setText("Unselected");
 		
 		Label step = new Label(_ratingEditorFooter, SWT.NONE);
 		step.setLayoutData(new GridData(SWT.RIGHT, SWT.LEFT, true, false, 1, 1));
@@ -211,7 +214,7 @@ public class RatingView extends ViewPart {
 			reset = MessageDialog.openConfirm(this.getSite().getShell(), "Cancel confirm", "All information will be lost");
 		}
 		if(reset) {
-			clear();
+			clearAll();
 			createMethodSelectionStep();
 			createContent();
 			_tabFolder.setSelection(0);
@@ -298,6 +301,7 @@ public class RatingView extends ViewPart {
 		showAlgorithmButton.setText("Show algorithm");
 		
 		createInfoPanels(composite);
+		createWarningLabel(composite);
 		
 		_tabFolder.getItem(0).setControl(composite);
 	}
@@ -325,7 +329,7 @@ public class RatingView extends ViewPart {
 		categoryItem.setImage(Images.category);
 	}
 	
-	private void createMethod(Composite parent, final Method method) {
+	private void createMethod(Composite parent, final Method currentMethod) {
 		final CLabel label = new CLabel(parent, SWT.LEFT);
 
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -333,9 +337,10 @@ public class RatingView extends ViewPart {
 		label.setLayoutData(gridData);
 
 		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL)); //$NON-NLS-1$
-		label.setText(method.getName());
+		label.setText(currentMethod.getName());
 		
-		if(method.getImplementation().isAvailable()) {
+		final String test = currentMethod.getImplementation().isAvailable();
+		if(test.length() == 0) {
 			label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 			label.setImage(Images.signed_yes);
 		} else {
@@ -345,38 +350,37 @@ public class RatingView extends ViewPart {
 		
 		label.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void mouseDown(MouseEvent e) {			
 				CLabel labelSelected = (CLabel) e.getSource();
-				if(_methodSelected != null && _methodSelected != labelSelected) {
-					_methodSelected.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL));
+				if(_methodNameSelected != null && _methodNameSelected != labelSelected) {
+					_methodNameSelected.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL));
 				}
-				_methodSelected = labelSelected;
-				_methodSelected.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
-				_methodName.setText(_methodSelected.getText());
-				_methodName.getParent().layout();
+				_methodNameSelected = labelSelected;
+				_methodNameSelected.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
+				_methodNameText.setText(_methodNameSelected.getText());
+				_methodNameText.getParent().layout();
 				
-				_descriptionText.setText(method.getDescription());
+				_descriptionText.setText(currentMethod.getDescription());
 				
 				MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
-				MethodUI currentMethod = methodsUIManager.getActivateMethodUI();
-		
-				if(currentMethod == null) {
-					methodsUIManager.activate(method.getId() + ".ui");
-					_methodUISelected = methodsUIManager.getActivateMethodUI();
-					calculateNumSteps();
-					loadNextStep();
-					_stepsText.setText(_methodUISelected.getPhasesFormat());
-				} else if(!currentMethod.equals(_methodUISelected)) {
-					methodsUIManager.activate(method.getId() + ".ui");
-					_methodUISelected = currentMethod;
-					clear();
-					calculateNumSteps();
-					loadNextStep();
-					_stepsText.setText(_methodUISelected.getPhasesFormat());
+				MethodUI lastActivatedMethod = methodsUIManager.getActivateMethodUI();
+				if(lastActivatedMethod != null) {
+					clearMethodSteps();
+				}
+				
+				methodsUIManager.activate(currentMethod.getId() + ".ui");
+				_methodUISelected = methodsUIManager.getActivateMethodUI();
+				_stepsText.setText(_methodUISelected.getPhasesFormat());
+				
+				calculateNumSteps();
+				loadNextStep();
+				
+				if(_warningLabel != null) {
+					_warningLabel.setText(test);
 				}
 			}
 		});
-	
+		
 		label.pack();
 	}
 	
@@ -441,13 +445,13 @@ public class RatingView extends ViewPart {
 		}
 	}
 	
-	private void clear() {
+	private void clearAll() {
 		for(CTabItem ti: _tabFolder.getItems()) {
 			ti.dispose();
 		}
 		_listeners.clear();
 		
-		_methodName.setText("Unselected");
+		_methodNameText.setText("Unselected");
 		_stepValue.setText("(0/0)");
 		
 		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
@@ -457,6 +461,25 @@ public class RatingView extends ViewPart {
 		_numStep = 0;
 				
 		_methodUISelected = null;
+	}
+	
+	private void clearMethodSteps() {
+		
+		for(int i = 1; i < _tabFolder.getItemCount(); ++i) {
+			_tabFolder.getItem(i).dispose();
+		}
+		
+		_listeners.clear();
+
+		_numPhase = 0;
+		_numStep = 0;
+	}
+	
+	private void createWarningLabel(Composite composite) {
+		_warningLabel = new Label(composite, SWT.NONE);
+		_warningLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		_warningLabel.setForeground(new Color(_parent.getDisplay(), new RGB(255, 0, 0)));
+		_warningLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 5, 1));
 	}
 	
 	private void createInfoPanels(Composite composite) {
@@ -489,7 +512,7 @@ public class RatingView extends ViewPart {
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_stepsText.setLayoutData(gridData);
 	}
-	
+
 	private void activateStep(int numStep) {
 		_tabFolder.setSelection(numStep);
 		notifyNewStep();
