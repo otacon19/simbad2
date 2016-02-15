@@ -37,8 +37,6 @@ import sinbad2.resolutionphase.rating.ui.Images;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 
 public class RatingView extends ViewPart {
-	public RatingView() {
-	}
 	
 	public static final String ID = "flintstones.resolutionphase.rating.ui.view";
 	
@@ -56,8 +54,8 @@ public class RatingView extends ViewPart {
 	
 	private Label _methodNameText;
 	private Label _stepValue;
-	private CLabel _methodNameSelected;
 	private Label _warningLabel;
+	private CLabel _methodNameSelected;
 	
 	private ExpandBar _methodsCategoriesBar; 
 
@@ -513,17 +511,17 @@ public class RatingView extends ViewPart {
 	}
 	
 	private void createWarningLabel(Composite composite) {
-		Composite compositeWaring = new Composite(composite, SWT.NONE);
+		Composite compositeWarning = new Composite(composite, SWT.NONE);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		compositeWaring.setLayoutData(gridData);
+		compositeWarning.setLayoutData(gridData);
 
 		GridLayout layout = new GridLayout(1, true);
-		compositeWaring.setLayout(layout);
+		compositeWarning.setLayout(layout);
 		
-		_warningLabel = new Label(compositeWaring, SWT.NONE);
+		_warningLabel = new Label(compositeWarning, SWT.NONE);
 		_warningLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
-		_warningLabel.setForeground(new Color(compositeWaring.getDisplay(), new RGB(255, 0, 0)));
-		gridData  = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		_warningLabel.setForeground(new Color(compositeWarning.getDisplay(), new RGB(255, 0, 0)));	
+		gridData  = new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1);
 		gridData.verticalIndent = 10;
 		gridData.horizontalIndent = 100;
 		_warningLabel.setLayoutData(gridData);
@@ -573,4 +571,5 @@ public class RatingView extends ViewPart {
 	private void notifyRatingView(IStepStateListener listener) {
 		listener.notifyRatingView(this);
 	}
+	
 }

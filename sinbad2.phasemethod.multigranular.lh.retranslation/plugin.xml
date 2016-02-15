@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.phasemethod">
+      <phase
+            id="flintstones.phasemethod.multigranular.lh.retranslation"
+            implementation="sinbad2.phasemethod.multigranular.lh.retranslation.RetranslationPhase"
+            name="Retranslation">
+      </phase>
+   </extension>
+
+</plugin>
