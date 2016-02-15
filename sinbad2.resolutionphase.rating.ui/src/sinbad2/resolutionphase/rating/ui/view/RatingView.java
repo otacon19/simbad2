@@ -37,6 +37,8 @@ import sinbad2.resolutionphase.rating.ui.Images;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 
 public class RatingView extends ViewPart {
+	public RatingView() {
+	}
 	
 	public static final String ID = "flintstones.resolutionphase.rating.ui.view";
 	
@@ -366,8 +368,7 @@ public class RatingView extends ViewPart {
 				_descriptionText.setText(currentMethod.getDescription());
 				
 				MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
-				MethodUI lastActivatedMethod = methodsUIManager.getActivateMethodUI();
-				if(lastActivatedMethod != null) {
+				if(methodsUIManager.getActivateMethodUI() != null) {
 					clearMethodSteps();
 				}
 
@@ -376,10 +377,12 @@ public class RatingView extends ViewPart {
 				if(!label.getForeground().equals(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED))) {
 					calculateNumSteps();
 					loadNextStep();
+					_warningLabel.setText("");
 				} else {
 					_warningLabel.setText(test);
-					_warningLabel.pack();
 				}
+				
+				_warningLabel.pack();
 				
 				_stepsText.setText(_methodUISelected.getPhasesFormat());
 			}
@@ -511,22 +514,18 @@ public class RatingView extends ViewPart {
 	}
 	
 	private void createWarningLabel(Composite composite) {
-		Composite compositeWarning = new Composite(composite, SWT.NONE);
+		Composite compositePanels = new Composite(composite, SWT.NONE);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		compositeWarning.setLayoutData(gridData);
-
-		GridLayout layout = new GridLayout(1, true);
-		compositeWarning.setLayout(layout);
+		compositePanels.setLayoutData(gridData);
 		
-		_warningLabel = new Label(compositeWarning, SWT.NONE);
+		_warningLabel = new Label(compositePanels, SWT.NONE);
 		_warningLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
-		_warningLabel.setForeground(new Color(compositeWarning.getDisplay(), new RGB(255, 0, 0)));	
-		gridData  = new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1);
-		gridData.verticalIndent = 10;
-		gridData.horizontalIndent = 100;
+		_warningLabel.setForeground(new Color(compositePanels.getDisplay(), new RGB(255, 0, 0)));
+		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_warningLabel.setLayoutData(gridData);
 		
-		_warningLabel.setText("");
+		GridLayout layout = new GridLayout(1, true);
+		compositePanels.setLayout(layout);
 	}
 
 	private void activateStep(int numStep) {
