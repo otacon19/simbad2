@@ -37,6 +37,8 @@ import sinbad2.resolutionphase.rating.ui.Images;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 
 public class RatingView extends ViewPart {
+	public RatingView() {
+	}
 	
 	public static final String ID = "flintstones.resolutionphase.rating.ui.view";
 	
@@ -343,9 +345,12 @@ public class RatingView extends ViewPart {
 		if(test.length() == 0) {
 			label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 			label.setImage(Images.signed_yes);
+			_nextButton.setEnabled(false);
+			_resetButton.setEnabled(false);
 		} else {
 			label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED));
 			label.setImage(Images.signed_no);
+			_resetButton.setEnabled(true);
 		}
 		
 		label.addMouseListener(new MouseAdapter() {
@@ -367,17 +372,18 @@ public class RatingView extends ViewPart {
 				if(lastActivatedMethod != null) {
 					clearMethodSteps();
 				}
-				
+
 				methodsUIManager.activate(currentMethod.getId() + ".ui");
 				_methodUISelected = methodsUIManager.getActivateMethodUI();
-				_stepsText.setText(_methodUISelected.getPhasesFormat());
-				
-				calculateNumSteps();
-				loadNextStep();
-				
-				if(_warningLabel != null) {
+				if(!label.getForeground().equals(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED))) {
+					calculateNumSteps();
+					loadNextStep();
+				} else {
 					_warningLabel.setText(test);
+					_warningLabel.pack();
 				}
+				
+				_stepsText.setText(_methodUISelected.getPhasesFormat());
 			}
 		});
 		
@@ -475,13 +481,6 @@ public class RatingView extends ViewPart {
 		_numStep = 0;
 	}
 	
-	private void createWarningLabel(Composite composite) {
-		_warningLabel = new Label(composite, SWT.NONE);
-		_warningLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
-		_warningLabel.setForeground(new Color(_parent.getDisplay(), new RGB(255, 0, 0)));
-		_warningLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 5, 1));
-	}
-	
 	private void createInfoPanels(Composite composite) {
 		Composite compositePanels = new Composite(composite, SWT.NONE);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -511,6 +510,25 @@ public class RatingView extends ViewPart {
 		_stepsText = new Text(compositePanels, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_stepsText.setLayoutData(gridData);
+	}
+	
+	private void createWarningLabel(Composite composite) {
+		Composite compositeWaring = new Composite(composite, SWT.NONE);
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		compositeWaring.setLayoutData(gridData);
+
+		GridLayout layout = new GridLayout(1, true);
+		compositeWaring.setLayout(layout);
+		
+		_warningLabel = new Label(compositeWaring, SWT.NONE);
+		_warningLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		_warningLabel.setForeground(new Color(compositeWaring.getDisplay(), new RGB(255, 0, 0)));
+		gridData  = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gridData.verticalIndent = 10;
+		gridData.horizontalIndent = 100;
+		_warningLabel.setLayoutData(gridData);
+		
+		_warningLabel.setText("");
 	}
 
 	private void activateStep(int numStep) {
