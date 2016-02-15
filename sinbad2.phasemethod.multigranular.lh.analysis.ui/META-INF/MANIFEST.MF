@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: LH analysis ui
+Bundle-SymbolicName: sinbad2.phasemethod.multigranular.lh.analysis.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sinbad2.phasemethod.multigranular.lh.analysis.ui.Activator
+Require-Bundle: sinbad2.phasemethod.ui;bundle-version="1.0.0",
+ sinbad2.phasemethod.multigranular.lh.analysis;bundle-version="1.0.0",
+ sinbad2.phasemethod.multigranular.lh.aggregation.ui;bundle-version="1.0.0",
+ sinbad2.valuation.twoTuple,
+ sinbad2.valuation.unifiedValuation,
+ sinbad2.phasemethod.multigranular.lh.retranslation.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy

@@ -180,7 +180,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 		}
 	}
 
-	public static Domain getSelectedLHDomain() {
+	public static Domain getLHDomainSelected() {
 		return _selectedLHDomain;
 	}
 	

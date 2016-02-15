@@ -18,10 +18,13 @@
          <phasemethod
                phase="flintstones.phasemethod.multigranular.lh.retranslation">
          </phasemethod>
+         <phasemethod
+               phase="flintstones.phasemethod.multigranular.lh.analysis">
+         </phasemethod>
+    
          <aggregation_supported
                type="TwoTuple">
-         </aggregation_supported>
-      </method>
+         </aggregation_supported>  </method>
    </extension>
 
 </plugin>

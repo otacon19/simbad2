@@ -101,6 +101,8 @@
       <plugin id="sinbad2.phasemethod.multigranular.fusion.unification.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.lh.aggregation"/>
       <plugin id="sinbad2.phasemethod.multigranular.lh.aggregation.ui"/>
+      <plugin id="sinbad2.phasemethod.multigranular.lh.analysis"/>
+      <plugin id="sinbad2.phasemethod.multigranular.lh.analysis.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.lh.retranslation"/>
       <plugin id="sinbad2.phasemethod.multigranular.lh.retranslation.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.lh.unification"/>

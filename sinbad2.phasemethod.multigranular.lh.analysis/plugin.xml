@@ -4,7 +4,7 @@
    <extension
          point="flintstones.phasemethod">
       <phase
-            id="flintstones.phasemethod.multigranular.fusion.analysis"
+            id="flintstones.phasemethod.multigranular.lh.analysis"
             implementation="sinbad2.phasemethod.multigranular.lh.analysis.AnalysisPhase"
             name="Analysis">
       </phase>
