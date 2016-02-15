@@ -1,6 +1,5 @@
 package sinbad2.phasemethod.multigranular.lh.retranslation.ui.view;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -22,10 +21,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.Domain;
-import sinbad2.domain.DomainSet;
-import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
+import sinbad2.phasemethod.multigranular.lh.unification.UnificationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
@@ -43,15 +41,14 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 	
 	private ControlAdapter _controlListener;
 	
-	private List<Domain> _domainsBLTS;
-	private DomainSet _domainSet;
-	
 	private static Domain _selectedLHDomain;
 	
 	private boolean _completed;
 	private boolean _loaded;
 	
 	private RatingView _ratingView;
+	
+	private UnificationPhase _unificationPhase;
 	
 	@Override
 	public void createPartControl(Composite parent) {
@@ -63,10 +60,8 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 		
 		_parent = parent;
 		
-		_domainsBLTS = new LinkedList<Domain>();
+		_unificationPhase = UnificationPhase.getInstance();
 		_selectedLHDomain = null;
-		DomainsManager domainsManager = DomainsManager.getInstance();
-		_domainSet = domainsManager.getActiveDomainSet();
 		
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_parent.setLayoutData(gridData);
@@ -129,7 +124,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return ((FuzzySet) element).getId();
+				return ((String) ((Object[]) element)[0]);
 			}
 		});
 
@@ -139,7 +134,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 		descriptionColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return ((FuzzySet) element).formatDescriptionDomain();
+				return ((Domain) ((Object[]) element)[2]).formatDescriptionDomain();
 			}
 		});
 		
@@ -149,16 +144,9 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 	}
 	
 	private void loadDomains() {
-		List<Domain> domains = _domainSet.getDomains();
-		for(Domain d: domains) {
-			if(d instanceof FuzzySet) {
-				if(((FuzzySet) d).isBLTS()) {
-					_domainsBLTS.add(d);
-				}
-			}
-		}
-		
-		_validDomainsViewer.setInput(_domainsBLTS);
+		List<Object[]> domains = _unificationPhase.getLHDomains();
+	
+		_validDomainsViewer.setInput(domains);
 	}
 
 	private void createSelectedDomainPanel() {
