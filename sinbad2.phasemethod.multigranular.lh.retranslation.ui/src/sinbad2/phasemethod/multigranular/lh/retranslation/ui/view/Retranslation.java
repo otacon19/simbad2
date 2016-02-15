@@ -111,7 +111,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = _validDomainsViewer.getSelection();
-				_selectedLHDomain = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
+				_selectedLHDomain = (FuzzySet) ((Object[]) ((IStructuredSelection) selection).getFirstElement())[2];
 				_completed = true;
 				notifyStepStateChange();
 				refreshChart();
