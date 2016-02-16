@@ -40,7 +40,7 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	private ValuationSetManager _valuationSetManager;
-	private ValuationSet _valutationSet;
+	private ValuationSet _valuationSet;
 	
 	private Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleEvaluationsResult;
@@ -52,7 +52,7 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	private UnificationPhase() {
 		_valuationSetManager = ValuationSetManager.getInstance();
-		_valutationSet = _valuationSetManager.getActiveValuationSet();
+		_valuationSet = _valuationSetManager.getActiveValuationSet();
 		
 		_twoTupleEvaluationsResult = new LinkedHashMap<ValuationKey, Valuation>();
 		_twoTupleEvaluationsAlternatives = new LinkedHashMap<Alternative, Valuation>();
@@ -66,7 +66,7 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	public ValuationSet getValuationSet() {
-		return _valutationSet;
+		return _valuationSet;
 	}
 
 	@Override
@@ -80,12 +80,12 @@ public class UnificationPhase implements IPhaseMethod {
 
 		clear();
 
-		_valutationSet.setValuations(unification.getValuationSet().getValuations());
+		_valuationSet.setValuations(unification.getValuationSet().getValuations());
 	}
 
 	@Override
 	public void clear() {
-		_valutationSet.clear();
+		_valuationSet.clear();
 	}
 
 	@Override
@@ -110,13 +110,13 @@ public class UnificationPhase implements IPhaseMethod {
 
 	@Override
 	public void activate() {
-		_valuationSetManager.setActiveValuationSet(_valutationSet);
+		_valuationSetManager.setActiveValuationSet(_valuationSet);
 	}
 
 	@Override
 	public boolean validate() {
 
-		if (_valutationSet.getValuations().isEmpty()) {
+		if (_valuationSet.getValuations().isEmpty()) {
 			return false;
 		}
 
@@ -131,7 +131,7 @@ public class UnificationPhase implements IPhaseMethod {
 			Valuation valuation;
 			Boolean isCost;
 
-			Map<ValuationKey, Valuation> valuations = _valutationSet.getValuations();
+			Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
 			for(ValuationKey vk : valuations.keySet()) {
 				criterion = vk.getCriterion();
 				valuation = valuations.get(vk);
@@ -196,8 +196,7 @@ public class UnificationPhase implements IPhaseMethod {
 				if(elementsSet.getElementCriterionSubcriteria(criterion).size() == 0) {
 					for(Expert expert : elementsSet.getExperts()) {
 						if(elementsSet.getElementExpertChildren(expert).size() == 0) {
-							_valutationSet.getValuation(expert, alternative, criterion).getDomain();
-							generateDomain = _valutationSet.getValuation(expert, alternative, criterion).getDomain();
+							generateDomain = _valuationSet.getValuation(expert, alternative, criterion).getDomain();
 							if(generateDomain != null) {
 								domainName = generateDomain.getId();
 								if(generateDomain instanceof FuzzySet) {

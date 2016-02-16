@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ELH linguistic method
+Bundle-SymbolicName: sinbad2.method.linguistic.multigranular.elh;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Sinbad
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.method,
+ sinbad2.domain.linguistic.fuzzyset

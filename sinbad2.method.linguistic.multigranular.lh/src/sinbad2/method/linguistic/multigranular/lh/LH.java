@@ -20,8 +20,8 @@ public class LH extends MethodImplementation {
 	
 	private DomainSet _domainsSet;
 	
-	private static final String EVALUATIONS_IS_NOT_A_BLTS_DOMAIN = "Evaluations is not a BLTS domain";
-	private static final String EVALUATIONS_IS_NOT_A_LINGUISTIC_DOMAIN = "Evaluations is not a linguistic domain";
+	private static final String EVALUATIONS_IN_NOT_BLTS_DOMAINS = "Evaluations in not BLTS domains";
+	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAIN = "Evaluations in not linguistic domain";
 	private static final String EVALUATIONS_IN_DIFFERENT_DOMAINS_WITH_THE_SAME_CARDINALITY = "Evaluations in different domains with the same cardinality";
 	private static final String IMPOSSIBLE_TO_BUILD_LINGUISTIC_HIERARCHY_TAKING_THE_DOMAINS_USED = "Impossible to build linguistic hierarchy taking the domains used";
 	
@@ -56,7 +56,7 @@ public class LH extends MethodImplementation {
 		for(Domain d: domains) {
 			if(d instanceof FuzzySet) {
 				if(!((FuzzySet) d).isBLTS()) {
-					return EVALUATIONS_IS_NOT_A_BLTS_DOMAIN;
+					return EVALUATIONS_IN_NOT_BLTS_DOMAINS;
 				} else {
 					cardinality = ((FuzzySet) d).getLabelSet().getCardinality();
 					if(cardinalities.contains(cardinality)) {
@@ -68,7 +68,7 @@ public class LH extends MethodImplementation {
 					}
 				}
 			} else {
-				return EVALUATIONS_IS_NOT_A_LINGUISTIC_DOMAIN;
+				return EVALUATIONS_IN_NOT_LINGUISTIC_DOMAIN;
 			}
 		}
 		

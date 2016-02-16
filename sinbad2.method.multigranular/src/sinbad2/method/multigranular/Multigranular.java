@@ -14,8 +14,8 @@ public class Multigranular extends MethodImplementation {
 	
 	public static final String ID = "flintstones.method.linguistic.multigranular.fusion";
 	
-	private static final String EVALUATIONS_IS_NOT_A_BLTS_DOMAIN = "Evaluations is not a BLTS domain";
-	private static final String EVALUATIONS_IS_NOT_A_LINGUISTIC_DOMAIN = "Evaluations is not a linguistic domain";
+	private static final String EVALUATIONS_IN_NOT_BLTS_DOMAIN = "Evaluations in not BLTS domain";
+	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAIN = "Evaluations in not linguistic domain";
 	
 	private DomainSet _domainsSet;
 	
@@ -38,10 +38,10 @@ public class Multigranular extends MethodImplementation {
 		for(Domain d: domains) {
 			if(d instanceof FuzzySet) {
 				if(!((FuzzySet) d).isBLTS()) {
-					return EVALUATIONS_IS_NOT_A_BLTS_DOMAIN;
+					return EVALUATIONS_IN_NOT_BLTS_DOMAIN;
 				}
 			} else {
-				return EVALUATIONS_IS_NOT_A_LINGUISTIC_DOMAIN;
+				return EVALUATIONS_IN_NOT_LINGUISTIC_DOMAIN;
 			}
 		}
 		return "";
