@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.phasemethod.ui">
+      <ui
+            id="flintstones.phasemethod.multigranular.elh.aggregation.ui"
+            name="Aggregation process"
+            phasemethod="flintstones.phasemethod.multigranular.elh.aggregation">
+         <view
+               step="sinbad2.phasemethod.multigranular.elh.aggregation.ui.view.AggregationProcess">
+         </view>
+      </ui>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.phasemethod.multigranular.elh.aggregation.ui.category"
+            name="AggregationProcess">
+      </category>
+      <view
+            category="flintstones.phasemethod.multigranular.elh.aggregation.ui.category"
+            class="sinbad2.phasemethod.multigranular.elh.aggregation.ui.view.AggregationProcess"
+            id="flintstones.phasemethod.multigranular.elh.aggregation.ui.view.aggregationprocess"
+            name="AggregationProcess"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>
