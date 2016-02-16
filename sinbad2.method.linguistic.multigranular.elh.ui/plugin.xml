@@ -7,6 +7,9 @@
             id="flintstones.method.linguistic.multigranular.elh.ui"
             method="flintstones.method.linguistic.multigranular.elh"
             name="Extended Linguistic Hierarchies">
+         <ui
+               id="flintstones.phasemethod.multigranular.elh.unification.ui">
+         </ui>
       </method_ui>
    </extension>
 

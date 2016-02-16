@@ -23,7 +23,6 @@ import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
-import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -156,41 +155,19 @@ public class UnificationPhase implements IPhaseMethod {
 		return _unifiedEvaluationsResult;
 	}
 	
-	public Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple(FuzzySet unifiedDomain) {
-		
-		if(unifiedDomain != null) {
-		
-			Valuation valuation;
-
-			for(ValuationKey key : _unifiedEvaluationsResult.keySet()) {
-				valuation = _unifiedEvaluationsResult.get(key);
-				if(valuation instanceof UnifiedValuation) {
-					valuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
-				} else if(!(valuation instanceof TwoTuple)) {
-					valuation = null;
-				}
-				_twoTupleEvaluationsResult.put(key, valuation);
-				_twoTupleEvaluationsAlternatives.put(key.getAlternative(), valuation);
-			}
-		}
-
-		return _twoTupleEvaluationsResult;
-	}
-	
 	public List<Object[]> generateLH() {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 		
-		 _lhDomains = new LinkedList<Object[]>();
+		_lhDomains = new LinkedList<Object[]>();
 		
 		List<Object[]> domains = new LinkedList<Object[]>();
 		Set<String> domainsNames = new HashSet<String>();
 		int i = 1, cardinality;
 
 		String domainName;
-
-		Set<Integer> cardinalities = new HashSet<Integer>();
-		Domain generateDomain;
+		Domain generateDomain, domain;
+		
 		for(Alternative alternative : elementsSet.getAlternatives()) {
 			for(Criterion criterion : elementsSet.getCriteria()) {
 				if(elementsSet.getElementCriterionSubcriteria(criterion).size() == 0) {
@@ -203,22 +180,13 @@ public class UnificationPhase implements IPhaseMethod {
 									if(!domainsNames.contains(domainName)) {
 										if(((FuzzySet) generateDomain).isBLTS()) {
 											cardinality = ((FuzzySet) generateDomain).getLabelSet().getCardinality();
-											if(cardinalities.contains(cardinality)) {
-												return null;
-											} else {
-												cardinalities.add(cardinality);
-												domains.add(new Object[] {cardinality, domainName, generateDomain });
-												domainsNames.add(domainName);
-											}
-										} else {
-											return null;
-										}
+											domains.add(new Object[] { cardinality, domainName, generateDomain });
+											domainsNames.add(domainName);
+										} 
 									}
 								} else {
 									return null;
 								}
-							} else {
-								return null;
 							}
 						}
 					}
@@ -228,60 +196,84 @@ public class UnificationPhase implements IPhaseMethod {
 
 		Collections.sort(domains, new MyComparator());
 		
+		Integer value;
 		i = 0;
 		Set<Integer> sizes = new HashSet<Integer>();
-		int oldValue = -1, currentCardinality, newLevelCardinality, index;
-		String generate = "generate";
-		Object[] auxEntry;
+		int oldValue = -1;
 		for(Object[] entry : domains) {
-			currentCardinality = (Integer) entry[0];
-			sizes.add(currentCardinality);
-			newLevelCardinality = (oldValue * 2) - 1;
-			if(oldValue != currentCardinality) {
-				if ((newLevelCardinality == currentCardinality) || (oldValue == -1)) {
-					oldValue = currentCardinality;
-					i++;
-					entry[0] = "l(" + i + "," + currentCardinality + ")";
-					_lhDomains.add(entry);
-				} else {
-					while(currentCardinality > newLevelCardinality) {
-						auxEntry = new Object[3];
-						i++;
-						auxEntry[0] = "l(" + i + "," + newLevelCardinality + ")";
-						domainName = "generate";
-						index = 1;
-						while (domainsNames.contains(domainName)) {
-							domainName = generate + "_" + index++;
-						}
-						auxEntry[1] = domainName;
-						auxEntry[2] = generateNewLHDomain(newLevelCardinality);
-						_lhDomains.add(auxEntry);
-						newLevelCardinality = (newLevelCardinality * 2) - 1;
-					}
-
-					if(currentCardinality == newLevelCardinality) {
-						oldValue = currentCardinality;
-						i++;
-						entry[0] = "l(" + i + "," + currentCardinality + ")";
-						_lhDomains.add(entry);
-					} else {
-						return null;
-					}
-				}
+			value = (Integer) entry[0];
+			sizes.add(value);
+			if(oldValue != value) {
+				oldValue = value;
+				i++;
 			}
+			entry[0] = "l(" + i + "," + value + ")";
+		}
+
+		String generate = "generate";
+		domain = generateUnifiedDomain(sizes);
+		int index;
+		if(domain != null) {
+			domainName = generate;
+			index = 1;
+			while(domainsNames.contains(domainName)) {
+				domainName = generate + "_" + index++;
+			}
+			cardinality = ((FuzzySet) domain).getLabelSet().getCardinality();
+			if(cardinality != oldValue) {
+				i++;
+			}
+			_lhDomains.add(new Object[] { "l(" + i + "," + cardinality + ")", domainName, domain });
+			domainsNames.add(domainName);
 		}
 
 		return _lhDomains;
 	}
 
-	private FuzzySet generateNewLHDomain(int size) {
+	private FuzzySet generateUnifiedDomain(Set<Integer> sizes) {
+
 		FuzzySet result = new FuzzySet();
-		String[] labels = new String[size];
-		for (int i = 0; i < size; i++) {
-			labels[i] = "s" + i;
+
+		if(sizes.size() != 0) {
+			Integer[] formerModalPoints = sizes.toArray(new Integer[0]);
+			for(int i = 0; i < formerModalPoints.length; i++) {
+				formerModalPoints[i] = formerModalPoints[i] - 1;
+			}
+
+			int unifiedDomainSize = lcm(formerModalPoints) + 1;
+
+			if(!sizes.contains(unifiedDomainSize)) {
+				String[] labels = new String[unifiedDomainSize];
+				for(int i = 0; i < unifiedDomainSize; i++) {
+					labels[i] = "s" + i;
+				}
+				result.createTrapezoidalFunction(labels);
+			}
 		}
-		result.createTrapezoidalFunction(labels);
+
+		return result;
+	}
 	
+	private int lcm(int a, int b) {
+		return a * (b / gcd(a, b));
+	}
+	
+	private int gcd(int a, int b) {
+		int aux;
+		while(b > 0) {
+			aux = b;
+			b = a % b;
+			a = aux;
+		}
+		return a;
+	}
+
+	private int lcm(Integer[] input) {
+		int result = input[0];
+		for(int i = 1; i < input.length; i++) {
+			result = lcm(result, input[i]);
+		}
+		
 		return result;
 	}
 	
