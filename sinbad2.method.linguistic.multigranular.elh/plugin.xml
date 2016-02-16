@@ -12,6 +12,9 @@
          <phasemethod
                phase="flintstones.phasemethod.multigranular.elh.unification">
          </phasemethod>
+         <phasemethod
+               phase="flintstones.phasemethod.multigranular.elh.aggregation">
+         </phasemethod>
          <aggregation_supported
                type="TwoTuple">
          </aggregation_supported>

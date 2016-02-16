@@ -47,6 +47,8 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	private List<Object[]> _lhDomains;
 	
+	private FuzzySet _unifiedDomain;
+	
 	private static UnificationPhase _instance = null;
 	
 	private UnificationPhase() {
@@ -279,6 +281,10 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	public List<Object[]> getLHDomains() {
 		return _lhDomains;
+	}
+	
+	public Domain getUnifiedDomain() {
+		return _unifiedDomain;
 	}
 	
 	public Map<Alternative, Valuation> getAlternativesValuations() {
