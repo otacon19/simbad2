@@ -88,12 +88,14 @@
       <plugin id="sinbad2.element.ui"/>
       <plugin id="sinbad2.method"/>
       <plugin id="sinbad2.method.linguistic.multigranular.elh"/>
+      <plugin id="sinbad2.method.linguistic.multigranular.elh.ui"/>
       <plugin id="sinbad2.method.linguistic.multigranular.fusion"/>
       <plugin id="sinbad2.method.linguistic.multigranular.fusion.ui"/>
       <plugin id="sinbad2.method.linguistic.multigranular.lh"/>
       <plugin id="sinbad2.method.linguistic.multigranular.lh.ui"/>
       <plugin id="sinbad2.method.ui"/>
       <plugin id="sinbad2.phasemethod"/>
+      <plugin id="sinbad2.phasemethod.multigranular.elh.unification"/>
       <plugin id="sinbad2.phasemethod.multigranular.fusion.aggregation"/>
       <plugin id="sinbad2.phasemethod.multigranular.fusion.aggregation.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.fusion.analysis"/>

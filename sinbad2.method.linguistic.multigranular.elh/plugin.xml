@@ -9,6 +9,9 @@
             id="flintstones.method.linguistic.multigranular.elh"
             implementation="sinbad2.method.linguistic.multigranular.elh.ELH"
             name="Extended Linguistic Hierarchies">
+         <phasemethod
+               phase="flintstones.phasemethod.multigranular.elh.unification">
+         </phasemethod>
          <aggregation_supported
                type="TwoTuple">
          </aggregation_supported>
