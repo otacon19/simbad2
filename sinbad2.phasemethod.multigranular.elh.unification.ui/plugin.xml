@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.phasemethod.ui">
+      <ui
+            id="flintstones.phasemethod.multigranular.elh.unification.ui"
+            name="Unification"
+            phasemethod="flintstones.phasemethod.multigranular.elh.unification">
+         <view
+               step="sinbad2.phasemethod.multigranular.elh.unification.ui.view.GenerateUnificationDomain">
+         </view>
+      </ui>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.phasemethod.multigranular.elh.unification.ui.category"
+            name="Unification">
+      </category>
+      <view
+            category="flintstones.phasemethod.multigranular.elh.unification.ui.category"
+            class="sinbad2.phasemethod.multigranular.elh.unification.ui.view.GenerateUnificationDomain"
+            id="flintstones.phasemethod.multigranular.elh.unification.ui.view.generateunificationdomain"
+            name="Generate unification domain"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>
