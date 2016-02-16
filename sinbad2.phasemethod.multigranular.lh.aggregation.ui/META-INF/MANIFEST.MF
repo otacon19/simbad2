@@ -4,10 +4,7 @@ Bundle-Name: LH aggregation ui
 Bundle-SymbolicName: sinbad2.phasemethod.multigranular.lh.aggregation.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.multigranular.lh.aggregation.ui.Activator
-Require-Bundle: sinbad2.phasemethod.ui;bundle-version="1.0.0",
- sinbad2.phasemethod.multigranular.lh.aggregation;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.phasemethod.multigranular.lh.unification.ui;bundle-version="1.0.0",
- sinbad2.domain.linguistic.fuzzyset.ui;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.resolutionphase.rating.ui;bundle-version="1.0.0"
+Require-Bundle: sinbad2.phasemethod.multigranular.lh.aggregation;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.phasemethod.multigranular.lh.unification.ui;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

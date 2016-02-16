@@ -4,5 +4,5 @@ Bundle-Name: Lh
 Bundle-SymbolicName: sinbad2.method.linguistic.multigranular.lh;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: sinbad2.method,
+Require-Bundle: sinbad2.method;visibility:=reexport,
  sinbad2.domain.linguistic.fuzzyset;bundle-version="1.0.0"

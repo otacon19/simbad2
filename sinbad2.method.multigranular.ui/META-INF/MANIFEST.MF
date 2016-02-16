@@ -5,4 +5,4 @@ Bundle-SymbolicName: sinbad2.method.linguistic.multigranular.fusion.ui;singleton
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Require-Bundle: sinbad2.method.ui
+Require-Bundle: sinbad2.method.ui;visibility:=reexport
