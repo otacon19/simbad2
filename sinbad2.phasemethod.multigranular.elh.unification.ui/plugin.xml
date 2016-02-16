@@ -10,6 +10,9 @@
          <view
                step="sinbad2.phasemethod.multigranular.elh.unification.ui.view.GenerateUnificationDomain">
          </view>
+         <view
+               step="sinbad2.phasemethod.multigranular.elh.unification.ui.view.Unification">
+         </view>
       </ui>
    </extension>
    <extension
@@ -23,6 +26,13 @@
             class="sinbad2.phasemethod.multigranular.elh.unification.ui.view.GenerateUnificationDomain"
             id="flintstones.phasemethod.multigranular.elh.unification.ui.view.generateunificationdomain"
             name="Generate unification domain"
+            restorable="true">
+      </view>
+      <view
+            category="flintstones.phasemethod.multigranular.elh.unification.ui.category"
+            class="sinbad2.phasemethod.multigranular.elh.unification.ui.view.Unification"
+            id="flintstones.phasemethod.multigranular.elh.unification.ui.view.unification"
+            name="Unification"
             restorable="true">
       </view>
    </extension>

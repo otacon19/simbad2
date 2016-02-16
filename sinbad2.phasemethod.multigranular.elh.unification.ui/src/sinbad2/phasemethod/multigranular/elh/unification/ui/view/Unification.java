@@ -35,7 +35,7 @@ import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
 public class Unification extends ViewPart implements IStepStateListener {
 
-public static final String ID = "flintstones.phasemethod.multigranular.unification.ui.view.unification";
+	public static final String ID = "flintstones.phasemethod.multigranular.elh.unification.ui.view.unification";
 	
 	private boolean _completed;
 	
