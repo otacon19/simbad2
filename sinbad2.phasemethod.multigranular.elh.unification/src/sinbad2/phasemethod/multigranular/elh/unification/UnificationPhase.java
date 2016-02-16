@@ -254,6 +254,15 @@ public class UnificationPhase implements IPhaseMethod {
 		return result;
 	}
 	
+	private int lcm(Integer[] input) {
+		int result = input[0];
+		for(int i = 1; i < input.length; i++) {
+			result = lcm(result, input[i]);
+		}
+		
+		return result;
+	}
+	
 	private int lcm(int a, int b) {
 		return a * (b / gcd(a, b));
 	}
@@ -266,15 +275,6 @@ public class UnificationPhase implements IPhaseMethod {
 			a = aux;
 		}
 		return a;
-	}
-
-	private int lcm(Integer[] input) {
-		int result = input[0];
-		for(int i = 1; i < input.length; i++) {
-			result = lcm(result, input[i]);
-		}
-		
-		return result;
 	}
 	
 	public List<Object[]> getLHDomains() {

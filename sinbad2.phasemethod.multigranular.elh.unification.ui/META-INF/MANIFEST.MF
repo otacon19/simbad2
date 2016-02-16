@@ -10,4 +10,7 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: sinbad2.phasemethod.ui;bundle-version="1.0.0",
  sinbad2.phasemethod.multigranular.elh.unification;bundle-version="1.0.0",
  sinbad2.domain.linguistic.fuzzyset.ui,
- sinbad2.resolutionphase.rating.ui
+ sinbad2.resolutionphase.rating.ui,
+ sinbad2.valuation.linguistic,
+ sinbad2.valuation.unifiedValuation,
+ sinbad2.valuation.twoTuple

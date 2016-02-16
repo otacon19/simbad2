@@ -39,11 +39,11 @@ public class GenerateUnificationDomain extends ViewPart implements IStepStateLis
 	
 	private ControlAdapter _controlListener;
 	
-	private FuzzySet _unifiedDomain;
-	
 	private UnificationPhase _unificationPhase;
 	
 	private RatingView _ratingView;
+	
+	private static FuzzySet _unifiedDomain;
 	
 	@Override
 	public void createPartControl(Composite parent) {
@@ -54,9 +54,11 @@ public class GenerateUnificationDomain extends ViewPart implements IStepStateLis
 		
 		_controlListener = null;
 		
+		_unificationPhase = UnificationPhase.getInstance();
+		
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_parent.setLayoutData(gridData);
-		GridLayout layout = new GridLayout(14, true);
+		GridLayout layout = new GridLayout(1, true);
 		layout.marginLeft = 20;
 		layout.marginRight = 20;
 		layout.marginBottom = 15;
@@ -130,7 +132,7 @@ public class GenerateUnificationDomain extends ViewPart implements IStepStateLis
 		}
 	}
 
-	public FuzzySet getUnifiedDomain() {
+	public static FuzzySet getUnifiedDomain() {
 		return _unifiedDomain;
 	}
 
