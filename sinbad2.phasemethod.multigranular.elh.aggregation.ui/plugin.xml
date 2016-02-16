@@ -5,7 +5,7 @@
          point="flintstones.phasemethod.ui">
       <ui
             id="flintstones.phasemethod.multigranular.elh.aggregation.ui"
-            name="Aggregation process"
+            name="Aggregation"
             phasemethod="flintstones.phasemethod.multigranular.elh.aggregation">
          <view
                step="sinbad2.phasemethod.multigranular.elh.aggregation.ui.view.AggregationProcess">
@@ -16,13 +16,13 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.phasemethod.multigranular.elh.aggregation.ui.category"
-            name="AggregationProcess">
+            name="Aggregation">
       </category>
       <view
             category="flintstones.phasemethod.multigranular.elh.aggregation.ui.category"
             class="sinbad2.phasemethod.multigranular.elh.aggregation.ui.view.AggregationProcess"
             id="flintstones.phasemethod.multigranular.elh.aggregation.ui.view.aggregationprocess"
-            name="AggregationProcess"
+            name="Aggregation process"
             restorable="true">
       </view>
    </extension>

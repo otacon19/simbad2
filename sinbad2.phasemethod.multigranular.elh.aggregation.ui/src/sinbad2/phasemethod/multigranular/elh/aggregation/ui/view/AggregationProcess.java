@@ -665,7 +665,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	}
 	
 	private void testAggregationProcess() {
-		_unificationPhase.unification((FuzzySet) getDomain());
+		_unificationPhase.unifiedEvaluationToTwoTuple((FuzzySet) getDomain());
 		
 		Set<ProblemElement> experts = new HashSet<ProblemElement>();
 		experts.addAll(_elementsSet.getExperts());

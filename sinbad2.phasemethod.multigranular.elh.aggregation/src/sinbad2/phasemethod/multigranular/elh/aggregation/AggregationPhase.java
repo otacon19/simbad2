@@ -209,7 +209,7 @@ public class AggregationPhase implements IPhaseMethod {
 		Map<ValuationKey, Valuation> valuationsResult = _unificationPhase.getValuationsResult();
 		List<Double> weights;
 		Object aux;
-
+		
 		List<Criterion> criteria1 = _elementsSet.getCriterionSubcriteria((Criterion) criterionParent);
 		if (criteria1.size() == 0) {
 			criteria1.add((Criterion) criterionParent);

@@ -23,6 +23,7 @@ import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
+import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -157,6 +158,27 @@ public class UnificationPhase implements IPhaseMethod {
 		return _unifiedEvaluationsResult;
 	}
 	
+	public Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple(FuzzySet unifiedDomain) {
+		
+		if(unifiedDomain != null) {
+		
+			Valuation valuation;
+
+			for(ValuationKey key : _unifiedEvaluationsResult.keySet()) {
+				valuation = _unifiedEvaluationsResult.get(key);
+				if(valuation instanceof UnifiedValuation) {
+					valuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
+				} else if(!(valuation instanceof TwoTuple)) {
+					valuation = null;
+				}
+				_twoTupleEvaluationsResult.put(key, valuation);
+				_twoTupleEvaluationsAlternatives.put(key.getAlternative(), valuation);
+			}
+		}
+
+		return _twoTupleEvaluationsResult;
+	}
+	
 	public List<Object[]> generateLH() {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
@@ -253,6 +275,8 @@ public class UnificationPhase implements IPhaseMethod {
 			}
 		}
 
+		_unifiedDomain = result;
+		
 		return result;
 	}
 	
