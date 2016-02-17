@@ -86,14 +86,14 @@
       <plugin id="sinbad2.domain.valuations"/>
       <plugin id="sinbad2.element"/>
       <plugin id="sinbad2.element.ui"/>
-      <plugin id="sinbad2.method"/>
+      <plugin id="sinbad2.method.linguistic"/>
       <plugin id="sinbad2.method.linguistic.multigranular.elh"/>
       <plugin id="sinbad2.method.linguistic.multigranular.elh.ui"/>
       <plugin id="sinbad2.method.linguistic.multigranular.fusion"/>
       <plugin id="sinbad2.method.linguistic.multigranular.fusion.ui"/>
       <plugin id="sinbad2.method.linguistic.multigranular.lh"/>
       <plugin id="sinbad2.method.linguistic.multigranular.lh.ui"/>
-      <plugin id="sinbad2.method.ui"/>
+      <plugin id="sinbad2.method.linguistic.ui"/>
       <plugin id="sinbad2.phasemethod"/>
       <plugin id="sinbad2.phasemethod.multigranular.elh.aggregation"/>
       <plugin id="sinbad2.phasemethod.multigranular.elh.aggregation.ui"/>
