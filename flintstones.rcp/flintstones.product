@@ -87,6 +87,7 @@
       <plugin id="sinbad2.element"/>
       <plugin id="sinbad2.element.ui"/>
       <plugin id="sinbad2.method.linguistic"/>
+      <plugin id="sinbad2.method.linguistic.heterogeneous.fusion"/>
       <plugin id="sinbad2.method.linguistic.multigranular.elh"/>
       <plugin id="sinbad2.method.linguistic.multigranular.elh.ui"/>
       <plugin id="sinbad2.method.linguistic.multigranular.fusion"/>

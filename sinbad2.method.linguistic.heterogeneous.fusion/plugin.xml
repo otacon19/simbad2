@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method">
+      <method
+            category="Heterogeneous framework"
+            description="F. Herrera, L. Martínez, P.J. Sánchez, Managing non-homogeneous information in group decision making. European Journal of Operational Research, vol. 166, issue 1, pp. 115-132, 2005."
+            id="flintstones.method.linguistic.heterogeneous.fusion"
+            implementation="sinbad2.method.linguistic.heterogeneous.fusion.Fusion"
+            name="Fusion approach for managing heterogeneous information">
+         <aggregation_supported
+               type="Linguistic">
+         </aggregation_supported>
+         <aggregation_supported
+               type="Numeric">
+         </aggregation_supported>
+         <aggregation_supported
+               type="Interval">
+         </aggregation_supported>
+      </method>
+   </extension>
+
+</plugin>

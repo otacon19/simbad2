@@ -1,4 +1,4 @@
-package sinbad2.method.multigranular;
+package sinbad2.method.linguistic.heterogeneous.fusion;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import sinbad2.method.state.MethodStateChangeEvent;
 
 public class Fusion extends MethodImplementation {
 	
-	public static final String ID = "flintstones.method.linguistic.multigranular.fusion";
+	public static final String ID = "flintstones.method.linguistic.heterogeneous.fusion";
 	
 	private static final String EVALUATIONS_IN_NOT_BLTS_DOMAIN = "Evaluations in not BLTS domain";
 	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAIN = "Evaluations in not linguistic domain";
