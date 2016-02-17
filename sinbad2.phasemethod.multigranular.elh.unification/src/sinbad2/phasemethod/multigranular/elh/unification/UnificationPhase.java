@@ -233,6 +233,8 @@ public class UnificationPhase implements IPhaseMethod {
 			}
 			entry[0] = "l(" + i + "," + value + ")";
 		}
+		
+		_lhDomains.addAll(domains);
 
 		String generate = "generate";
 		domain = generateUnifiedDomain(sizes);
@@ -303,7 +305,7 @@ public class UnificationPhase implements IPhaseMethod {
 		return a;
 	}
 	
-	public List<Object[]> getLHDomains() {
+	public List<Object[]> getELHDomains() {
 		return _lhDomains;
 	}
 	

@@ -120,11 +120,21 @@ public static final String ID = "flintstones.phasemethod.multigranular.elh.retra
 		
 		TableViewerColumn col = new TableViewerColumn(_validDomainsViewer, SWT.NONE);
 		col.getColumn().setWidth(100);
-		col.getColumn().setText("Name");
+		col.getColumn().setText("Nivel");
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				return ((String) ((Object[]) element)[0]);
+			}
+		});
+		
+		TableViewerColumn nameColumn = new TableViewerColumn(_validDomainsViewer, SWT.NONE);
+		nameColumn.getColumn().setWidth(100);
+		nameColumn.getColumn().setText("Name");
+		nameColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return ((String) ((Object[]) element)[1]);
 			}
 		});
 
@@ -144,7 +154,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.elh.retra
 	}
 	
 	private void loadDomains() {
-		List<Object[]> domains = _unificationPhase.getLHDomains();
+		List<Object[]> domains = _unificationPhase.getELHDomains();
 	
 		_validDomainsViewer.setInput(domains);
 	}
