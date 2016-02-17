@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method.ui">
+      <method_ui
+            id="flintstones.method.linguistic.heterogeneous.fusion.ui"
+            method="flintstones.method.linguistic.heterogeneous.fusion"
+            name="Fusion approach for managing heterogeneous information">
+      </method_ui>
+   </extension>
+
+</plugin>
