@@ -428,5 +428,10 @@ public class HesitantValuation extends Valuation {
 		_lowerTerm = null;
 		_upperTerm = null;
 	}
+
+	@Override
+	public Domain unification(Domain fuzzySet) {
+		return null;
+	}
 	
 }

@@ -6,7 +6,6 @@ import javax.xml.stream.XMLStreamWriter;
 import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.resolutionphase.io.XMLRead;
-import sinbad2.valuation.real.interval.RealInterval;
 
 public interface IMembershipFunction extends Cloneable, Comparable<IMembershipFunction> {
 	
@@ -24,7 +23,7 @@ public interface IMembershipFunction extends Cloneable, Comparable<IMembershipFu
 	
 	public double centroid();
 	
-	public double maxMin(RealInterval interval);
+	public double maxMin(double max, double min);
 	
 	public double maxMin(IMembershipFunction function);
 	

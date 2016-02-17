@@ -106,6 +106,8 @@ public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 	
 	public abstract Valuation negateValutation();
 	
+	public abstract Domain unification(Domain fuzzySet);
+	
 	public abstract String changeFormatValuationToString();
 	
 	public abstract void save(XMLStreamWriter writer) throws XMLStreamException;

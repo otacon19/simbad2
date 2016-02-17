@@ -7,6 +7,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
+import sinbad2.domain.Domain;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
@@ -72,11 +73,12 @@ public class IntegerValuation extends Valuation {
 		return result;
 	}
 	
-	public FuzzySet unification(FuzzySet fuzzySet) {
+	@Override
+	public FuzzySet unification(Domain fuzzySet) {
 
 		Validator.notNull(fuzzySet);
 		
-		if (!fuzzySet.isBLTS()) {
+		if (!((FuzzySet) fuzzySet).isBLTS()) {
 			throw new IllegalArgumentException("Not BLTS fuzzy set.");
 		}
 
@@ -85,7 +87,7 @@ public class IntegerValuation extends Valuation {
 		IMembershipFunction function;
 
 		FuzzySet result = (FuzzySet) fuzzySet.clone();
-		cardinality = fuzzySet.getLabelSet().getCardinality();
+		cardinality = ((FuzzySet) fuzzySet).getLabelSet().getCardinality();
 		normalized = (IntegerValuation) normalized();
 
 		for(int i = 0; i < cardinality; i++) {

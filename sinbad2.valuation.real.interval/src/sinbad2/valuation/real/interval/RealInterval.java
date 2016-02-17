@@ -7,12 +7,12 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
+import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.integer.interval.IntegerInterval;
 import sinbad2.valuation.real.interval.nls.Messages;
 
 public class RealInterval extends Valuation {
@@ -87,11 +87,12 @@ public class RealInterval extends Valuation {
 		return result;
 	}
 	
-	public FuzzySet unification(FuzzySet fuzzySet) {
+	@Override
+	public FuzzySet unification(Domain fuzzySet) {
 
 		Validator.notNull(fuzzySet);
 
-		if (!fuzzySet.isBLTS()) {
+		if (!((FuzzySet) fuzzySet).isBLTS()) {
 			throw new IllegalArgumentException("Not BLTS fuzzy set.");
 		}
 		
@@ -100,12 +101,12 @@ public class RealInterval extends Valuation {
 		IMembershipFunction function;
 
 		FuzzySet result = (FuzzySet) fuzzySet.clone();
-		cardinality = fuzzySet.getLabelSet().getCardinality();
+		cardinality = ((FuzzySet) fuzzySet).getLabelSet().getCardinality();
 		normalized = (RealInterval) normalized();
 
 		for (int i = 0; i < cardinality; i++) {
 			function = result.getLabelSet().getLabel(i).getSemantic();
-			result.setValue(i, function.maxMin(normalized));
+			result.setValue(i, function.maxMin(normalized.getMax(), normalized.getMin()));
 		}
 
 		return result;

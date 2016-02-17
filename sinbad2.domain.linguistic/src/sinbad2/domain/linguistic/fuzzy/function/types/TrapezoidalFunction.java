@@ -13,7 +13,6 @@ import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.resolutionphase.io.XMLRead;
-import sinbad2.valuation.real.interval.RealInterval;
 
 public class TrapezoidalFunction implements IMembershipFunction {
 	
@@ -168,16 +167,9 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 
 	@Override
-	public double maxMin(RealInterval interval) {
+	public double maxMin(double min, double max) {
 		
-		Validator.notNull(interval);
-		
-		RealInterval normalized;
-		double min, max;
-		
-		normalized = (RealInterval) interval.normalized();
-		min = normalized.getMin();
-		max = normalized.getMax();
+		Validator.notDisorder(new double[] { min, max }, false);
 		
 		if(( max >= _b) && (min <= _c)) {
 			return 1d;
@@ -203,15 +195,8 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		double values[] = new double[5];
 		double result;
 		double slopeThisAB, slopeFunctionAB, slopeThisCD, slopeFunctionCD;
-
-		RealInterval interval = new RealInterval();
-		NumericRealDomain domain = new NumericRealDomain();
-		domain.setMinMax(0d, 1d);
 		
-		interval.setDomain(domain);
-		interval.setMinMax(tmf._b, tmf._c);
-		
-		values[0] = maxMin(interval);
+		values[0] = maxMin(tmf._b, tmf._c);
 		
 		if (values[0] == 1) {
 			return 1d;

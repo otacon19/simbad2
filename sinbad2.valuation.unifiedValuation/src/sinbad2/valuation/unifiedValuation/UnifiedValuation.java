@@ -6,6 +6,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import sinbad2.core.validator.Validator;
+import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.resolutionphase.io.XMLRead;
@@ -90,11 +91,15 @@ public class UnifiedValuation extends Valuation {
 		
 		return result.toString();
 	}
+	
+	@Override
+	public Domain unification(Domain fuzzySet) {
+		return null;
+	}
 
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {}
 
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {}
-
 }
