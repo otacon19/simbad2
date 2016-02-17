@@ -98,6 +98,7 @@
       <plugin id="sinbad2.phasemethod.multigranular.elh.aggregation"/>
       <plugin id="sinbad2.phasemethod.multigranular.elh.aggregation.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.elh.analysis"/>
+      <plugin id="sinbad2.phasemethod.multigranular.elh.analysis.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.elh.retranslation"/>
       <plugin id="sinbad2.phasemethod.multigranular.elh.retranslation.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.elh.unification"/>

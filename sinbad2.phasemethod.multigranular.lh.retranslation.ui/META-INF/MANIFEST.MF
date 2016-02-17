@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.multigranular.lh.retranslation.ui.Activator
 Require-Bundle: sinbad2.phasemethod.multigranular.lh.unification,
  sinbad2.domain.linguistic.fuzzyset.ui;bundle-version="1.0.0",
- sinbad2.resolutionphase.rating.ui;bundle-version="1.0.0"
+ sinbad2.resolutionphase.rating.ui;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: sinbad2.phasemethod.multigranular.lh.retranslation.ui.view
