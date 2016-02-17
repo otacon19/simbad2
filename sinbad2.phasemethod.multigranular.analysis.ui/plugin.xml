@@ -15,11 +15,11 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            id="flintstones.phasemethod.multigranular.analysis.ui.category"
+            id="flintstones.phasemethod.multigranular.fusion.analysis.ui.category"
             name="Analysis">
       </category>
       <view
-            category="flintstones.phasemethod.multigranular.analysis.ui.category"
+            category="flintstones.phasemethod.multigranular.fusion.analysis.ui.category"
             class="sinbad2.phasemethod.multigranular.analysis.ui.view.Analysis"
             id="flintstones.phasemethod.multigranular.fusion.analysis.ui.view.analysis"
             name="Analysis"

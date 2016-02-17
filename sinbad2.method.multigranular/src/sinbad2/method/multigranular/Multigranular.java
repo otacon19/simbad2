@@ -1,4 +1,4 @@
-package sinbad2.method.multigranular.fusion;
+package sinbad2.method.multigranular;
 
 
 import java.util.List;
@@ -10,7 +10,7 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.method.MethodImplementation;
 import sinbad2.method.state.MethodStateChangeEvent;
 
-public class Fusion extends MethodImplementation {
+public class Multigranular extends MethodImplementation {
 	
 	public static final String ID = "flintstones.method.linguistic.multigranular.fusion";
 	
@@ -19,14 +19,14 @@ public class Fusion extends MethodImplementation {
 	
 	private DomainSet _domainsSet;
 	
-	public Fusion() {
+	public Multigranular() {
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		_domainsSet = domainsManager.getActiveDomainSet();
 	}
 	
 	@Override
 	public MethodImplementation newInstance() {
-		return new Fusion();
+		return new Multigranular();
 	}
 
 	@Override

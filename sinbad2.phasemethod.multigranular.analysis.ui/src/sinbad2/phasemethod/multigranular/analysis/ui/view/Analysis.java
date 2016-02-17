@@ -40,6 +40,8 @@ import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class Analysis extends ViewPart {
+	
+	public static final String ID = "flintstones.phasemethod.multigranular.fusion.analysis.ui.view.analysis";
 
 	private Composite _parent;
 	private Composite _expertsComposite;

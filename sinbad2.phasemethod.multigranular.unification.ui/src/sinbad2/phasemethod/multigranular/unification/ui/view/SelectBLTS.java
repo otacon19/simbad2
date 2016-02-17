@@ -35,7 +35,7 @@ import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
 public class SelectBLTS extends ViewPart implements IStepStateListener {
 	
-	public static final String ID = "flintstones.phasemethod.multigranular.unification.ui.view.selectblts";
+	public static final String ID = "flintstones.phasemethod.multigranular.fusion.unification.ui.view.selectblts";
 	
 	private Composite _parent;
 	private Composite _validDomainsPanel;

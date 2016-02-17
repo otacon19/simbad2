@@ -7,7 +7,7 @@
             category="Multi-granular framework"
             description="F. Herrera, E. Herrera-Viedma, L. Martínez, A Fusion Approach for Managing Multi-Granularity Linguistic Term Sets in Decision Making. Fuzzy Sets and Systems, vol. 114, issue 1, pp. 43-58, 2000."
             id="flintstones.method.linguistic.multigranular.fusion"
-            implementation="sinbad2.method.multigranular.fusion.Fusion"
+            implementation="sinbad2.method.multigranular.Multigranular"
             name="Fusion approach for managing multi-granular linguistic information">
          <phasemethod
                phase="flintstones.phasemethod.multigranular.fusion.unification">

@@ -65,7 +65,7 @@ import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class AggregationProcess extends ViewPart implements AggregationProcessListener, IStepStateListener {
 	
-	public static final String ID = "flintstones.phasemethod.multigranular.aggregation.ui.view.aggregationprocess";
+	public static final String ID = "flintstones.phasemethod.multigranular.fusion.aggregation.ui.view.aggregationprocess";
 
 	private Composite _parent;
 	private Composite _operatorsPanel;
