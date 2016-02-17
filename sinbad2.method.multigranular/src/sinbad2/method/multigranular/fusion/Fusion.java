@@ -1,4 +1,4 @@
-package sinbad2.method.multigranular;
+package sinbad2.method.multigranular.fusion;
 
 
 import java.util.List;
