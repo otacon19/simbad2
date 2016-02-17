@@ -8,6 +8,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.DomainsManager;
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
@@ -22,6 +24,11 @@ public class IntegerValuation extends Valuation {
 	public IntegerValuation() {
 		super();
 		_value = 0;
+	}
+	
+	public IntegerValuation(NumericIntegerDomain domain, long value) {
+		_domain = domain;
+		_value = value;
 	}
 	
 	public void setValue(Long value) {
@@ -64,6 +71,31 @@ public class IntegerValuation extends Valuation {
 		
 		return result;
 	}
+	
+	public FuzzySet unification(FuzzySet fuzzySet) {
+
+		Validator.notNull(fuzzySet);
+		
+		if (!fuzzySet.isBLTS()) {
+			throw new IllegalArgumentException("Not BLTS fuzzy set.");
+		}
+
+		int cardinality;
+		IntegerValuation normalized;
+		IMembershipFunction function;
+
+		FuzzySet result = (FuzzySet) fuzzySet.clone();
+		cardinality = fuzzySet.getLabelSet().getCardinality();
+		normalized = (IntegerValuation) normalized();
+
+		for(int i = 0; i < cardinality; i++) {
+			function = result.getLabelSet().getLabel(i).getSemantic();
+			result.setValue(i, function.getMembershipValue(normalized.getValue()));
+		}
+
+		return result;
+	}
+
 	
 	@Override
 	public String toString() {

@@ -7,6 +7,8 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
@@ -21,6 +23,11 @@ public class RealValuation extends Valuation {
 	public RealValuation() {
 		super();
 		_value = 0;
+	}
+	
+	public RealValuation(NumericRealDomain domain, double value) {
+		_domain = domain;
+		_value = value;
 	}
 	
 	public void setValue(Double value) {
@@ -62,6 +69,31 @@ public class RealValuation extends Valuation {
 		
 		return result;
 	}
+	
+	public FuzzySet unification(FuzzySet fuzzySet) {
+
+		Validator.notNull(fuzzySet);
+		
+		if (!fuzzySet.isBLTS()) {
+			throw new IllegalArgumentException("Not BLTS fuzzy set.");
+		}
+
+		int cardinality;
+		RealValuation normalized;
+		IMembershipFunction function;
+
+		FuzzySet result = (FuzzySet) fuzzySet.clone();
+		cardinality = fuzzySet.getLabelSet().getCardinality();
+		normalized = (RealValuation) normalized();
+
+		for(int i = 0; i < cardinality; i++) {
+			function = result.getLabelSet().getLabel(i).getSemantic();
+			result.setValue(i, function.getMembershipValue(normalized.getValue()));
+		}
+
+		return result;
+	}
+
 	
 	@Override
 	public String toString() {

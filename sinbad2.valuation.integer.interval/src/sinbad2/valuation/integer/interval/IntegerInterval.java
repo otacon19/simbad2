@@ -8,11 +8,14 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.DomainsManager;
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
 import sinbad2.valuation.integer.interval.nls.Messages;
+import sinbad2.valuation.real.interval.RealInterval;
 
 public class IntegerInterval extends Valuation {
 
@@ -25,6 +28,13 @@ public class IntegerInterval extends Valuation {
 		super();
 		_min = 0;
 		_max = 0;
+	}
+	
+	public IntegerInterval(NumericIntegerDomain domain, long min, long max) {
+		super();
+		_domain = domain;
+		_min = min;
+		_max = max;
 	}
 	
 	public void setMin(Long min) {
@@ -74,6 +84,34 @@ public class IntegerInterval extends Valuation {
 		long aux = Math.round(((NumericIntegerDomain) _domain).getMin()) + Math.round(((NumericIntegerDomain) _domain).getMax());
 		result.setMinMax(aux - _max, aux - _min);
 		
+		return result;
+	}
+	
+	public FuzzySet unification(FuzzySet fuzzySet) {
+
+		Validator.notNull(fuzzySet);
+
+		if (!fuzzySet.isBLTS()) {
+			throw new IllegalArgumentException("Not BLTS fuzzy set.");
+		}
+		
+		int cardinality;
+		IntegerInterval normalized;
+		RealInterval auxNormalized = new RealInterval();
+		IMembershipFunction function;
+
+		FuzzySet result = (FuzzySet) fuzzySet.clone();
+		cardinality = fuzzySet.getLabelSet().getCardinality();
+		normalized = (IntegerInterval) normalized();
+		
+		auxNormalized.setDomain(normalized.getDomain());
+		auxNormalized.setMinMax((double) normalized.getMin(), (double) normalized.getMax());
+
+		for (int i = 0; i < cardinality; i++) {
+			function = result.getLabelSet().getLabel(i).getSemantic();
+			result.setValue(i, function.maxMin(auxNormalized));
+		}
+
 		return result;
 	}
 	

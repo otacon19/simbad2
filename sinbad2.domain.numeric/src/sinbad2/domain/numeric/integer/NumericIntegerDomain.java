@@ -24,7 +24,7 @@ public class NumericIntegerDomain extends Numeric {
 		_max = 0;
 	}
 	
-	public void setMin(Integer min) {
+	public void setMin(int min) {
 		_min = min;
 	}
 	
@@ -32,7 +32,7 @@ public class NumericIntegerDomain extends Numeric {
 		return _min;
 	}
 	
-	public void setMax(Integer max) {
+	public void setMax(int max) {
 		_max = max;
 	}
 	
@@ -40,7 +40,7 @@ public class NumericIntegerDomain extends Numeric {
 		return _max;
 	}
 
-	public void setMinMax(Integer min, Integer max) {
+	public void setMinMax(int min, int max) {
 		Validator.notDisorder(new double[] { min, max }, false);
 		_min = min;
 		_max = max;
