@@ -24,6 +24,9 @@
     
          <aggregation_supported
                type="TwoTuple">
+         </aggregation_supported>
+         <aggregation_supported
+               type="Linguistic">
          </aggregation_supported>  </method>
    </extension>
 
