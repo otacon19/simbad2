@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Heterogeneous aggregation ui
+Bundle-SymbolicName: sinbad2.phasemethod.heterogeneous.fusion.aggregation.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sinbad2.phasemethod.heterogeneous.fusion.aggregation.ui.Activator
+Bundle-Vendor: Sinbad2
+Require-Bundle: sinbad2.phasemethod.heterogeneous.fusion.aggregation;bundle-version="1.0.0",
+ sinbad2.phasemethod.heterogeneous.fusion.unification.ui;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
