@@ -4,7 +4,7 @@ Bundle-Name: Aggregation ui
 Bundle-SymbolicName: sinbad2.phasemethod.multigranular.fusion.aggregation.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.multigranular.aggregation.ui.Activator
-Require-Bundle: sinbad2.phasemethod.multigranular.fusion.aggregation;bundle-version="1.0.0",
+Require-Bundle: sinbad2.phasemethod.multigranular.fusion.aggregation;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.phasemethod.multigranular.fusion.unification.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
