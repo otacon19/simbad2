@@ -99,6 +99,7 @@
       <plugin id="sinbad2.phasemethod"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.aggregation"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.aggregation.ui"/>
+      <plugin id="sinbad2.phasemethod.heterogeneous.fusion.analysis"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.unification"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.unification.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.elh.aggregation"/>
