@@ -7,6 +7,9 @@
             id="flintstones.method.linguistic.heterogeneous.fusion.ui"
             method="flintstones.method.linguistic.heterogeneous.fusion"
             name="Fusion approach for managing heterogeneous information">
+         <ui
+               id="flintstones.phasemethod.heterogeneous.fusion.unification.ui">
+         </ui>
       </method_ui>
    </extension>
 
