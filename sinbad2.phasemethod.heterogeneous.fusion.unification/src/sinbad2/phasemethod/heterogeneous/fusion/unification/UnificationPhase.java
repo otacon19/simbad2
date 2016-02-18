@@ -19,6 +19,7 @@ import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.integer.IntegerValuation;
 import sinbad2.valuation.integer.interval.IntegerInterval;
+import sinbad2.valuation.linguistic.LinguisticValuation;
 import sinbad2.valuation.real.RealValuation;
 import sinbad2.valuation.real.interval.RealInterval;
 import sinbad2.valuation.twoTuple.TwoTuple;
@@ -159,13 +160,14 @@ public class UnificationPhase implements IPhaseMethod {
 						}
 						auxEvaluations.add(auxEvaluation);
 					}
-				} else if(valuations instanceof RealValuation) {
+				} else if(valuation instanceof RealValuation) {
 					if(isCost) {
 						valuation = valuation.negateValutation();
 					}
 					if(((NumericRealDomain) valuation.getDomain()).getInRange()) {
 						fuzzySet = ((RealValuation) valuation).unification(unifiedDomain);
 						valuation = new UnifiedValuation(fuzzySet);
+						_unifiedEvaluationsResult.put(vk, valuation);
 					} else {
 						Object[] auxEvaluation = new Object[4];
 						auxEvaluation[0] = expert;
@@ -191,6 +193,7 @@ public class UnificationPhase implements IPhaseMethod {
 					if (((NumericIntegerDomain) valuation.getDomain()).getInRange()) {
 						fuzzySet = ((IntegerInterval) valuation).unification(unifiedDomain);
 						valuation = new UnifiedValuation(fuzzySet);
+						_unifiedEvaluationsResult.put(vk, valuation);
 					} else {
 						Object[] auxEvaluation = new Object[4];
 						auxEvaluation[0] = expert;
@@ -216,6 +219,7 @@ public class UnificationPhase implements IPhaseMethod {
 					if (((NumericRealDomain) valuation.getDomain()).getInRange()) {
 						fuzzySet = ((RealInterval) valuation).unification(unifiedDomain);
 						valuation = new UnifiedValuation(fuzzySet);
+						_unifiedEvaluationsResult.put(vk, valuation);
 					} else {
 						Object[] auxEvaluation = new Object[4];
 						auxEvaluation[0] = expert;
@@ -234,7 +238,7 @@ public class UnificationPhase implements IPhaseMethod {
 
 						auxEvaluations.add(auxEvaluation);
 					}
-				} else {
+				} else if(valuation instanceof UnifiedValuation) {
 					Valuation auxValuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
 					if(isCost) {
 						auxValuation = auxValuation.negateValutation();
@@ -243,21 +247,32 @@ public class UnificationPhase implements IPhaseMethod {
 					valuation = new UnifiedValuation(fuzzySet);
 					
 					_unifiedEvaluationsResult.put(vk, valuation);
+				} else {
+					if(isCost) {
+						valuation = ((LinguisticValuation) valuation).negateValutation();
+					}
+					fuzzySet = ((LinguisticValuation) valuation).unification(unifiedDomain);
+					valuation = new UnifiedValuation(fuzzySet);
+					
+					_unifiedEvaluationsResult.put(vk, valuation);
 				}
 			}
 		}
 		
-		unifyNormalizedValuation(toNormalize, toNormalizeVk, unifiedDomain);
+		if(toNormalize.size() > 0) {
+			normalizeValuations(toNormalize, toNormalizeVk, unifiedDomain);
+		}
 		
 		return _unifiedEvaluationsResult;
 	}
 	
-	private void unifyNormalizedValuation(Map<Domain, List<Object[]>> toNormalize, Map<List<Object[]>, ValuationKey> toNormalizeVk, FuzzySet unifiedDomain) {
+	private void normalizeValuations(Map<Domain, List<Object[]>> toNormalize, Map<List<Object[]>, ValuationKey> toNormalizeVk, FuzzySet unifiedDomain) {
 		NumericIntegerDomain auxNumericIntegerDomain;
 		NumericRealDomain auxNumericRealDomain;
 		Valuation auxValuation;
 		FuzzySet fuzzySet;
 		double min, max, measure, minMeasure, maxMeasure;
+		
 		for(Domain d : toNormalize.keySet()) {
 			if(d instanceof NumericIntegerDomain) {
 				min = -1;
