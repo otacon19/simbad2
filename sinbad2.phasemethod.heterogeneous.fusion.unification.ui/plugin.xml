@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.phasemethod.ui">
+      <ui
+            id="flintstones.phasemethod.heterogeneous.fusion.unification.ui"
+            name="Unification"
+            phasemethod="flintstones.phasemethod.heterogeneous.fusion.unification">
+         <view
+               step="sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view.SelectBLTS">
+         </view>
+         <view
+               step="sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view.Unification">
+         </view>
+      </ui>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.phasemethod.heterogeneous.fusion.unification.ui.category"
+            name="Unification">
+      </category>
+      <view
+            category="flintstones.phasemethod.heterogeneous.fusion.unification.ui.category"
+            class="sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view.SelectBLTS"
+            id="flintstones.phasemethod.heterogeneous.fusion.unification.ui.view.selectblts"
+            name="Select BLTS"
+            restorable="true">
+      </view>
+      <view
+            category="flintstones.phasemethod.heterogeneous.fusion.unification.ui.category"
+            class="sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view.Unification"
+            id="flintstones.phasemethod.heterogeneous.fusion.unification.ui.view.unification"
+            name="Unification"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>
