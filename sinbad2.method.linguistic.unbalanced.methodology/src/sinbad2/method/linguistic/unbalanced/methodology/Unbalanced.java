@@ -1,5 +1,6 @@
 package sinbad2.method.linguistic.unbalanced.methodology;
 
+import sinbad2.domain.Domain;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -14,7 +15,7 @@ public class Unbalanced extends MethodImplementation {
 	
 	public static final String ID = "flintstones.method.linguistic.unbalanced.methodology";
 	
-	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS = "Evaluations iN not linguistic domains";
+	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS = "Evaluations in not linguistic domains";
 	private static final String EVALUATIONS_IN_NOT_UNBALANCED_DOMAIN = "Evaluations in not unbalanced domain";
 	private static final String EVALUATIONS_IN_DIFFERENT_DOMAINS = "Evaluations in different domains";
 	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignemnts";
@@ -40,7 +41,7 @@ public class Unbalanced extends MethodImplementation {
 
 	@Override
 	public String isAvailable() {
-		sinbad2.domain.linguistic.unbalanced.Unbalanced generateDomain = null;
+		Domain generateDomain = null;
 		String domainName = null;
 		
 		for(Expert expert : _elementsSet.getExperts()) {
@@ -48,14 +49,14 @@ public class Unbalanced extends MethodImplementation {
 				for(Criterion criterion : _elementsSet.getCriteria()) {
 					if(_elementsSet.getElementCriterionSubcriteria(criterion).size() == 0) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
-							generateDomain = (sinbad2.domain.linguistic.unbalanced.Unbalanced) _valuationSet.getValuation(expert, alternative, criterion).getDomain();
+							generateDomain = _valuationSet.getValuation(expert, alternative, criterion).getDomain();
 							if(generateDomain != null) {
-								domainName = generateDomain.getId();
 								if(domainName == null) {
+									domainName = generateDomain.getId();
 									if(!(generateDomain instanceof sinbad2.domain.linguistic.unbalanced.Unbalanced)) {
 										return EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS;
 									} else {
-										if (generateDomain.getInfo() == null) {
+										if (((sinbad2.domain.linguistic.unbalanced.Unbalanced) generateDomain).getInfo() == null) {
 											return EVALUATIONS_IN_NOT_UNBALANCED_DOMAIN;
 										}
 									}
