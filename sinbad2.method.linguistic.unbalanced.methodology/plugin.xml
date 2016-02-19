@@ -9,6 +9,9 @@
             id="flintstones.method.linguistic.unbalanced.methodology"
             implementation="sinbad2.method.linguistic.unbalanced.methodology.Unbalanced"
             name="Methodology to deal with unbalanced linguistic term sets">
+         <phasemethod
+               phase="flintstones.phasemethod.unbalanced.methodology.unification">
+         </phasemethod>
          <aggregation_supported
                type="Linguistic">
          </aggregation_supported>

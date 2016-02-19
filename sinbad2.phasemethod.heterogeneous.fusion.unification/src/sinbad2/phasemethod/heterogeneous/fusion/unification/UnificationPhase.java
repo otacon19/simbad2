@@ -66,8 +66,8 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void copyData(IPhaseMethod iMethodPhase) {
-		UnificationPhase unification = (UnificationPhase) iMethodPhase;
+	public void copyData(IPhaseMethod iPhaseMethod) {
+		UnificationPhase unification = (UnificationPhase) iPhaseMethod;
 
 		clear();
 
