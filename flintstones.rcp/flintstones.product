@@ -96,6 +96,7 @@
       <plugin id="sinbad2.method.linguistic.multigranular.lh"/>
       <plugin id="sinbad2.method.linguistic.multigranular.lh.ui"/>
       <plugin id="sinbad2.method.linguistic.ui"/>
+      <plugin id="sinbad2.method.linguistic.unbalanced.methodology"/>
       <plugin id="sinbad2.phasemethod"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.aggregation"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.aggregation.ui"/>

@@ -8,7 +8,8 @@ Bundle-Vendor: Sinbad2
 Require-Bundle: sinbad2.phasemethod.heterogeneous.fusion.unification;bundle-version="1.0.0",
  sinbad2.domain.linguistic.fuzzyset.ui;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.resolutionphase.rating.ui;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.valuation.linguistic
+ sinbad2.valuation.linguistic,
+ sinbad2.valuation.hesitant
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view

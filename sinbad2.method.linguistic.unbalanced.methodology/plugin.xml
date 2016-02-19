@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method">
+      <method
+            category="Unbalanced linguistic framework"
+            description="F. Herrera, E. Herrera-Viedma, L. Martínez, A Fuzzy Linguistic Methodology To Deal With Unbalanced Linguistic Term Sets. IEEE Transactions on Fuzzy Systems, vol. 16, issue 2, pp. 354-370, 2008."
+            id="flintstones.method.linguistic.unbalanced.methodology"
+            implementation="sinbad2.method.linguistic.unbalanced.methodology.Unbalanced"
+            name="Methodology to deal with unbalanced linguistic term sets">
+         <aggregation_supported
+               type="Linguistic">
+         </aggregation_supported>
+         <aggregation_supported
+               type="TwoTuple">
+         </aggregation_supported>
+      </method>
+   </extension>
+
+</plugin>
