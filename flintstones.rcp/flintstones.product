@@ -129,6 +129,7 @@
       <plugin id="sinbad2.phasemethod.multigranular.lh.unification.ui"/>
       <plugin id="sinbad2.phasemethod.ui"/>
       <plugin id="sinbad2.phasemethod.unbalanced.methodology.unification"/>
+      <plugin id="sinbad2.phasemethod.unbalanced.methodology.unification.ui"/>
       <plugin id="sinbad2.rcp"/>
       <plugin id="sinbad2.resolutionphase"/>
       <plugin id="sinbad2.resolutionphase.framework"/>

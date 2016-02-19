@@ -2,6 +2,7 @@ package sinbad2.phasemethod.unbalanced.methodology.unification;
 
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
+import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
@@ -20,7 +21,7 @@ public class UnificationPhase implements IPhaseMethod {
 		_domainSet = _domainsManager.getActiveDomainSet();
 	}
 	
-	public UnificationPhase getInstance() {
+	public static UnificationPhase getInstance() {
 		if(_instance == null) {
 			_instance = new UnificationPhase();
 		}
@@ -30,6 +31,10 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	public DomainSet getDomainSet() {
 		return _domainSet;
+	}
+	
+	public Unbalanced getDomainLH() {
+		return (Unbalanced) _domainSet.getDomains().get(0);
 	}
 	
 	@Override

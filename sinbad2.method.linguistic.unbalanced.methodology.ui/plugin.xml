@@ -7,6 +7,9 @@
             id="flintstones.method.linguistic.unbalanced.methodology.ui"
             method="flintstones.method.linguistic.unbalanced.methodology"
             name="Unbalanced ui">
+         <ui
+               id="flintstones.phasemethod.unbalanced.methodology.unification.ui">
+         </ui>
       </method_ui>
    </extension>
 
