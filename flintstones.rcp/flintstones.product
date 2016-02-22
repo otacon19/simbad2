@@ -130,6 +130,7 @@
       <plugin id="sinbad2.phasemethod.ui"/>
       <plugin id="sinbad2.phasemethod.unbalanced.methodology.aggregation"/>
       <plugin id="sinbad2.phasemethod.unbalanced.methodology.aggregation.ui"/>
+      <plugin id="sinbad2.phasemethod.unbalanced.methodology.analysis"/>
       <plugin id="sinbad2.phasemethod.unbalanced.methodology.unification"/>
       <plugin id="sinbad2.phasemethod.unbalanced.methodology.unification.ui"/>
       <plugin id="sinbad2.rcp"/>

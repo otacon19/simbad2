@@ -723,7 +723,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 					}
 				}
 				if(!notYet) {
-					//_ratingView.loadNextStep();
+					_ratingView.loadNextStep();
 					_completed = false;
 					_loaded = true;
 				}
