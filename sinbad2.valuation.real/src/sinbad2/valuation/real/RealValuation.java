@@ -62,7 +62,7 @@ public class RealValuation extends Valuation {
 	}
 	
 	@Override
-	public Valuation negateValutation() {
+	public Valuation negateValuation() {
 		RealValuation result = (RealValuation) clone();
 		double aux = ((NumericRealDomain)_domain).getMin() + ((NumericRealDomain)_domain).getMax();
 		

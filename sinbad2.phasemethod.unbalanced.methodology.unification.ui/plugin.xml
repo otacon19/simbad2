@@ -10,6 +10,9 @@
          <view
                step="sinbad2.phasemethod.unbalanced.methodology.unification.ui.view.GenerateLH">
          </view>
+         <view
+               step="sinbad2.phasemethod.unbalanced.methodology.unification.ui.view.CalculateRepresentation">
+         </view>
       </ui>
    </extension>
    <extension
@@ -23,6 +26,13 @@
             class="sinbad2.phasemethod.unbalanced.methodology.unification.ui.view.GenerateLH"
             id="flintstones.phasemethod.unbalanced.methodology.unification.ui.generatelh"
             name="Generate LH"
+            restorable="true">
+      </view>
+      <view
+            category="flintstones.phasemethod.unbalanced.methodology.unification.ui.category"
+            class="sinbad2.phasemethod.unbalanced.methodology.unification.ui.view.CalculateRepresentation"
+            id="flintstones.phasemethod.unbalanced.methodology.unification.ui.calculaterepresentation"
+            name="Calculate representation"
             restorable="true">
       </view>
    </extension>

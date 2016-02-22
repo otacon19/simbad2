@@ -64,7 +64,7 @@ public class IntegerValuation extends Valuation {
 		return result.normalizeRange();
 	}
 	
-	public Valuation negateValutation() {
+	public Valuation negateValuation() {
 		IntegerValuation result = (IntegerValuation) clone();
 		
 		long aux = Math.round(((NumericIntegerDomain) _domain).getMin()) + Math.round(((NumericIntegerDomain) _domain).getMax());

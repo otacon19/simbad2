@@ -31,22 +31,6 @@ public class Unbalanced extends FuzzySet {
 	
 	public Unbalanced() {
 		super();
-	}
-	
-	public Unbalanced(String info) {
-		String[] parts = info.split(";"); //$NON-NLS-1$
-		String[] lhLevels = parts[0].split(","); //$NON-NLS-1$
-		String[] format = parts[1].split(","); //$NON-NLS-1$
-		String[] labels = parts[2].split(","); //$NON-NLS-1$
-		
-		loadLhLevels(lhLevels);
-		loadFormat(format);
-		loadLabels(labels);
-		
-	}
-
-	public Unbalanced(Integer cardinality) {
-		_cardinality = cardinality;
 		_labels = new HashMap<Integer, Map<Integer,Integer>>();
 	}
 	
@@ -173,7 +157,7 @@ public class Unbalanced extends FuzzySet {
 		return loadStringLabels(result);
 	}
 	
-	public Unbalanced createUnbalancedDomain(String[] labels, int sr, int sl, int sldensity, int srdensity, int initialDomain) {
+	public void createUnbalancedDomain(String[] labels, int sr, int sl, int sldensity, int srdensity, int initialDomain) {
 		Validator.notNull(labels);
 		Validator.notEmpty(labels);
 		
@@ -214,24 +198,29 @@ public class Unbalanced extends FuzzySet {
 			throw new IllegalArgumentException(Messages.Unbalanced_Invalid_initial_domain);
 		}
 		
-		Unbalanced unbalancedInfo = new Unbalanced(labels.length);
-		_cardinality = labels.length;
-		_sr = sr;
-		_sl = sl;
-		_srDensity = srdensity;
-		_slDensity = sldensity;
-		
 		LabelLinguisticDomain leftCenterLabel, rightCenterLabel, centerLabel;
+
+		setSl(sl);
+		setSr(sr);
+		setSlDensity(sldensity);
+		setSrDensity(srdensity);
+		setCardinality(labels.length);
+		
+		_labels = new HashMap<Integer, Map<Integer,Integer>>();
+		
+		clearFuzzySet();
 		
 		List<Integer> lh = new LinkedList<Integer>();
-		int lab_t, lab_t1, sideCardinality  = ((initialDomain - 1) / 2);
-		boolean directly = false;
-		
 		lh.add(initialDomain);
 		
+		int Lab_t;
+		int Lab_t1;
+		boolean directly;
+		int sideCardinality = ((initialDomain - 1) / 2);
+
 		directly = false;
 		aux = sideCardinality;
-		while (aux < sl) {
+		while(aux < sl) {
 			aux *= 2;
 			lh.add((aux * 2) + 1);
 		}
@@ -240,77 +229,75 @@ public class Unbalanced extends FuzzySet {
 			directly = true;
 		}
 
-		if (directly) {
+		if(directly) {
 			int leftCardinality = (sl * 2) + 1;
 			String leftLabels[] = new String[leftCardinality];
 
-			for (int i = 0; i < leftCardinality; i++) {
-				if (i < sl) {
+			for(int i = 0; i < leftCardinality; i++) {
+				if(i < sl) {
 					leftLabels[i] = labels[i];
 				} else {
-					leftLabels[i] = Messages.Unbalanced_Dirty_label + i;
+					leftLabels[i] = "dirty label " + i;
 				}
 			}
-			
 			FuzzySet left = new FuzzySet();
 			left.createTrapezoidalFunction(leftLabels);
-			for (int i = 0; i < sl; i++) {
-				unbalancedInfo.setLabelInDomain(i, leftCardinality, i);
-				unbalancedInfo.addLabel(left.getLabelSet().getLabel(i));
+			for(int i = 0; i < sl; i++) {
+				setLabelInDomain(i, leftCardinality, i);
+				addLabel(left.getLabelSet().getLabel(i));
 			}
 
-			unbalancedInfo.setLabelInDomain(sl, leftCardinality, sl);
+			setLabelInDomain(sl, leftCardinality, sl);
 			leftCenterLabel = left.getLabelSet().getLabel(sl);
 		} else {
 			LabelLinguisticDomain leftBrid, rightBrid, brid;
-			lab_t = aux - sl;
-			lab_t1 = sl - lab_t;
+			Lab_t = aux - sl;
+			Lab_t1 = sl - Lab_t;
 			int sleCardinality, slcCardinality;
 			String sleLabels[], slcLabels[];
-			FuzzySet sleFuzzySet = new FuzzySet(), slcFuzzySet = new FuzzySet();;
+			FuzzySet sleFuzzySet, slcFuzzySet;
 
-			if (sldensity == 0) {
+			if(sldensity == 0) {
 				sleCardinality = (aux * 2) + 1;
 				sleLabels = new String[sleCardinality];
 
-				for (int i = 0; i < sleCardinality; i++) {
-					if (i < lab_t1) {
+				for(int i = 0; i < sleCardinality; i++) {
+					if(i < Lab_t1) {
 						sleLabels[i] = labels[i];
 					} else {
-						sleLabels[i] = Messages.Unbalanced_Dirty_label + i;
+						sleLabels[i] = "dirty label " + i;
 					}
 				}
-
+				sleFuzzySet = new FuzzySet(); 
 				sleFuzzySet.createTrapezoidalFunction(sleLabels);
-				for (int i = 0; i < lab_t1; i++) {
-					unbalancedInfo.setLabelInDomain(i, sleCardinality, i);
-					unbalancedInfo.addLabel(sleFuzzySet.getLabelSet().getLabel(i));
+				for(int i = 0; i < Lab_t1; i++) {
+					setLabelInDomain(i, sleCardinality, i);
+					addLabel(sleFuzzySet.getLabelSet().getLabel(i));
 				}
 
-				unbalancedInfo.setLabelInDomain(lab_t1, sleCardinality, lab_t1);
-				leftBrid = sleFuzzySet.getLabelSet().getLabel(lab_t1);
+				setLabelInDomain(Lab_t1, sleCardinality, Lab_t1);
+				leftBrid = sleFuzzySet.getLabelSet().getLabel(Lab_t1);
 
 				slcCardinality = aux + 1;
 				slcLabels = new String[slcCardinality];
 
-				int alreadyUsed = lab_t1 / 2;
+				int alreadyUsed = Lab_t1 / 2;
 				int j = 0;
-				for (int i = 0; i < slcCardinality; i++) {
-					if ((i >= alreadyUsed) && (i < (lab_t + alreadyUsed))) {
-						slcLabels[i] = labels[lab_t1 + j++];
+				for(int i = 0; i < slcCardinality; i++) {
+					if((i >= alreadyUsed) && (i < (Lab_t + alreadyUsed))) {
+						slcLabels[i] = labels[Lab_t1 + j++];
 					} else {
-						slcLabels[i] = Messages.Unbalanced_Dirty_label + i;
+						slcLabels[i] = "dirty label " + i;
 					}
 				}
-				
-					
+				slcFuzzySet = new FuzzySet(); 
 				slcFuzzySet.createTrapezoidalFunction(slcLabels);
-				for (int i = (alreadyUsed + 1); i < (lab_t + alreadyUsed); i++) {
-					unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, slcCardinality, i);
-					unbalancedInfo.addLabel(slcFuzzySet.getLabelSet().getLabel(i));
+				for(int i = (alreadyUsed + 1); i < (Lab_t + alreadyUsed); i++) {
+					setLabelInDomain(getLabelSet().getCardinality() + 1, slcCardinality, i);
+					addLabel(slcFuzzySet.getLabelSet().getLabel(i));
 				}
 
-				unbalancedInfo.setLabelInDomain(lab_t1, slcCardinality, alreadyUsed);
+				setLabelInDomain(Lab_t1, slcCardinality, alreadyUsed);
 				rightBrid = slcFuzzySet.getLabelSet().getLabel(alreadyUsed);
 
 				double a = leftBrid.getSemantic().getCoverage().getMin();
@@ -319,95 +306,98 @@ public class Unbalanced extends FuzzySet {
 				double limits[] = {a, b, b, d};
 				TrapezoidalFunction semantic = new TrapezoidalFunction(limits);
 				brid = new LabelLinguisticDomain(rightBrid.getName(), semantic);
-				unbalancedInfo.addLabel(lab_t1, brid);
+				addLabel(Lab_t1, brid);
 
-				unbalancedInfo.setLabelInDomain(sl, slcCardinality, lab_t + alreadyUsed);
-				leftCenterLabel = slcFuzzySet.getLabelSet().getLabel(lab_t + alreadyUsed);
+				setLabelInDomain(sl, slcCardinality, Lab_t + alreadyUsed);
+				leftCenterLabel = slcFuzzySet.getLabelSet().getLabel(Lab_t + alreadyUsed);
 
 			} else {
 				sleCardinality = aux + 1;
 				sleLabels = new String[sleCardinality];
 
-				for (int i = 0; i < sleCardinality; i++) {
-					if (i < lab_t) {
+				for(int i = 0; i < sleCardinality; i++) {
+					if(i < Lab_t) {
 						sleLabels[i] = labels[i];
 					} else {
-						sleLabels[i] = Messages.Unbalanced_Dirty_label + i;
+						sleLabels[i] = "dirty label " + i;
 					}
 				}
-				
+
+				sleFuzzySet = new FuzzySet();
 				sleFuzzySet.createTrapezoidalFunction(sleLabels);
-				for (int i = 0; i < lab_t; i++) {
-					unbalancedInfo.setLabelInDomain(i, sleCardinality, i);
-					unbalancedInfo.addLabel(sleFuzzySet.getLabelSet().getLabel(i));
+				for(int i = 0; i < Lab_t; i++) {
+					setLabelInDomain(i, sleCardinality, i);
+					addLabel(sleFuzzySet.getLabelSet().getLabel(i));
 				}
 
-				unbalancedInfo.setLabelInDomain(lab_t, sleCardinality, lab_t);
-				leftBrid = sleFuzzySet.getLabelSet().getLabel(lab_t);
+				setLabelInDomain(Lab_t, sleCardinality, Lab_t);
+				leftBrid = sleFuzzySet.getLabelSet().getLabel(Lab_t);
 
 				slcCardinality = (aux * 2) + 1;
 				slcLabels = new String[slcCardinality];
 
-				int alreadyUsed = lab_t * 2;
+				int alreadyUsed = Lab_t * 2;
 				int j = 0;
-				for (int i = 0; i < slcCardinality; i++) {
-					if ((i >= alreadyUsed) && (i < (lab_t1 + alreadyUsed))) {
-						slcLabels[i] = labels[lab_t + j++];
+				for(int i = 0; i < slcCardinality; i++) {
+					if((i >= alreadyUsed) && (i < (Lab_t1 + alreadyUsed))) {
+						slcLabels[i] = labels[Lab_t + j++];
 					} else {
-						slcLabels[i] = Messages.Unbalanced_Dirty_label + i;
+						slcLabels[i] = "dirty label " + i;
 					}
 				}
+				slcFuzzySet = new FuzzySet();
 				slcFuzzySet.createTrapezoidalFunction(slcLabels);
-				for (int i = (alreadyUsed + 1); i < (lab_t1 + alreadyUsed); i++) {
-					unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, slcCardinality, i);
-					unbalancedInfo.addLabel(slcFuzzySet.getLabelSet().getLabel(i));
+				for(int i = (alreadyUsed + 1); i < (Lab_t1 + alreadyUsed); i++) {
+					setLabelInDomain(getLabelSet().getCardinality() + 1, slcCardinality, i);
+					addLabel(slcFuzzySet.getLabelSet().getLabel(i));
 				}
 
-				unbalancedInfo.setLabelInDomain(lab_t, slcCardinality, alreadyUsed);
+				setLabelInDomain(Lab_t, slcCardinality, alreadyUsed);
 				rightBrid = slcFuzzySet.getLabelSet().getLabel(alreadyUsed);
 
 				double a = leftBrid.getSemantic().getCoverage().getMin();
 				double b = rightBrid.getSemantic().getCenter().getMin();
 				double d = rightBrid.getSemantic().getCoverage().getMax();
-				double limits[] = { a, b, b, d };
+				double limits[] = {a, b, b, d};
 				TrapezoidalFunction semantic = new TrapezoidalFunction(limits);
 				brid = new LabelLinguisticDomain(rightBrid.getName(), semantic);
-				unbalancedInfo.addLabel(lab_t, brid);
-				unbalancedInfo.setLabelInDomain(sl, slcCardinality, lab_t1 + alreadyUsed);
-				leftCenterLabel = slcFuzzySet.getLabelSet().getLabel(lab_t1 + alreadyUsed);
+				addLabel(Lab_t, brid);
+
+				setLabelInDomain(sl, slcCardinality, Lab_t1 + alreadyUsed);
+				leftCenterLabel = slcFuzzySet.getLabelSet().getLabel(Lab_t1 + alreadyUsed);
 			}
 		}
-	
+		
 		directly = false;
 		aux = sideCardinality;
 		int bigger = lh.get(lh.size() - 1);
-		while (aux < sr) {
+		while(aux < sr) {
 			aux *= 2;
 			if (((aux * 2) + 1) > bigger) {
 				lh.add((aux * 2) + 1);
 			}
 		}
 
-		if (aux == sr) {
+		if(aux == sr) {
 			directly = true;
 		}
 
-		if (directly) {
+		if(directly) {
 			int rightCardinality = (sr * 2) + 1;
 			String rightLabels[] = new String[rightCardinality];
 
-			for (int i = 0; i < rightCardinality; i++) {
-				if (i >= (rightCardinality - sr)) {
+			for(int i = 0; i < rightCardinality; i++) {
+				if(i >= (rightCardinality - sr)) {
 					rightLabels[i] = labels[labels.length - (rightCardinality - i)];
 				} else {
-					rightLabels[i] = Messages.Unbalanced_Dirty_label + i;
+					rightLabels[i] = "dirty label " + i;
 				}
 			}
-			FuzzySet right = new FuzzySet();;
+			FuzzySet right = new FuzzySet();
 			right.createTrapezoidalFunction(rightLabels);
-			for (int i = (rightCardinality - sr); i < rightCardinality; i++) {
-				unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, rightCardinality, i);
-				unbalancedInfo.addLabel(right.getLabelSet().getLabel(i));
+			for(int i = (rightCardinality - sr); i < rightCardinality; i++) {
+				setLabelInDomain(getLabelSet().getCardinality() + 1, rightCardinality, i);
+				addLabel(right.getLabelSet().getLabel(i));
 			}
 
 			rightCenterLabel = right.getLabelSet().getLabel(rightCardinality - sr - 1);
@@ -418,37 +408,38 @@ public class Unbalanced extends FuzzySet {
 			double limits[] = { a, b, b, d };
 			TrapezoidalFunction semantic = new TrapezoidalFunction(limits);
 			centerLabel = new LabelLinguisticDomain(labels[sl], semantic);
-			unbalancedInfo.setLabelInDomain(sl, rightCardinality, rightCardinality - sr - 1);
-			unbalancedInfo.addLabel(sl, centerLabel);
+			setLabelInDomain(sl, rightCardinality, rightCardinality - sr - 1);
+			addLabel(sl, centerLabel);
 
 		} else {
 			LabelLinguisticDomain leftBrid, rightBrid, brid;
-			lab_t = aux - sr;
-			lab_t1 = sr - lab_t;
+			Lab_t = aux - sr;
+			Lab_t1 = sr - Lab_t;
 			int sreCardinality, srcCardinality;
 			String sreLabels[], srcLabels[];
-			FuzzySet sreFuzzySet = new FuzzySet(), srcFuzzySet = new FuzzySet();
+			FuzzySet sreFuzzySet, srcFuzzySet;
 
-			if (srdensity == 0) {
+			if(srdensity == 0) {
 				srcCardinality = aux + 1;
 				srcLabels = new String[srcCardinality];
 
 				int j = 0;
-				for (int i = 0; i < srcCardinality; i++) {
-					if ((i > (aux / 2)) && (i <= ((aux / 2) + lab_t))) {
+				for(int i = 0; i < srcCardinality; i++) {
+					if((i > (aux / 2)) && (i <= ((aux / 2) + Lab_t))) {
 						srcLabels[i] = labels[sl + 1 + j++];
 					} else {
-						srcLabels[i] = Messages.Unbalanced_Dirty_label + i;
+						srcLabels[i] = "dirty label " + i;
 					}
 				}
 
+				srcFuzzySet = new FuzzySet();
 				srcFuzzySet.createTrapezoidalFunction(srcLabels);
-				for (int i = ((aux / 2) + 1); i < ((aux / 2) + lab_t); i++) {
-					unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, srcCardinality, i);
-					unbalancedInfo.addLabel(srcFuzzySet.getLabelSet().getLabel(i));
+				for(int i = ((aux / 2) + 1); i < ((aux / 2) + Lab_t); i++) {
+					setLabelInDomain(getLabelSet().getCardinality() + 1, srcCardinality, i);
+					addLabel(srcFuzzySet.getLabelSet().getLabel(i));
 				}
-				unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, srcCardinality, (aux / 2) + lab_t);
-				leftBrid = srcFuzzySet.getLabelSet().getLabel((aux / 2) + lab_t);
+				setLabelInDomain(getLabelSet().getCardinality() + 1, srcCardinality, (aux / 2) + Lab_t);
+				leftBrid = srcFuzzySet.getLabelSet().getLabel((aux / 2) + Lab_t);
 
 				rightCenterLabel = srcFuzzySet.getLabelSet().getLabel(aux / 2);
 
@@ -459,28 +450,29 @@ public class Unbalanced extends FuzzySet {
 				TrapezoidalFunction semantic = new TrapezoidalFunction(limits);
 				centerLabel = new LabelLinguisticDomain(labels[sl], semantic);
 				
-				unbalancedInfo.setLabelInDomain(sl, srcCardinality, aux / 2);
-				unbalancedInfo.addLabel(sl, centerLabel);
+				setLabelInDomain(sl, srcCardinality, aux / 2);
+				addLabel(sl, centerLabel);
 
 				sreCardinality = (aux * 2) + 1;
 				sreLabels = new String[sreCardinality];
 
-				for (int i = 0; i < sreCardinality; i++) {
-					if (i >= (sreCardinality - lab_t1)) {
+				for(int i = 0; i < sreCardinality; i++) {
+					if(i >= (sreCardinality - Lab_t1)) {
 						sreLabels[i] = labels[labels.length - (sreCardinality - i)];
 					} else {
-						sreLabels[i] = Messages.Unbalanced_Dirty_label + i;
+						sreLabels[i] = "dirty label " + i;
 					}
 				}
 
+				sreFuzzySet = new FuzzySet();
 				sreFuzzySet.createTrapezoidalFunction(sreLabels);
-				for (int i = (sreCardinality - lab_t1); i < sreCardinality; i++) {
-					unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, sreCardinality, i);
-					unbalancedInfo.addLabel(sreFuzzySet.getLabelSet().getLabel(i));
+				for(int i = (sreCardinality - Lab_t1); i < sreCardinality; i++) {
+					setLabelInDomain(getLabelSet().getCardinality() + 1, sreCardinality, i);
+					addLabel(sreFuzzySet.getLabelSet().getLabel(i));
 				}
 
-				unbalancedInfo.setLabelInDomain(sl + lab_t, sreCardinality, sreCardinality - lab_t1 - 1);
-				rightBrid = sreFuzzySet.getLabelSet().getLabel(sreCardinality - lab_t1 - 1);
+				setLabelInDomain(sl + Lab_t, sreCardinality, sreCardinality - Lab_t1 - 1);
+				rightBrid = sreFuzzySet.getLabelSet().getLabel(sreCardinality - Lab_t1 - 1);
 
 				a = leftBrid.getSemantic().getCoverage().getMin();
 				b = rightBrid.getSemantic().getCenter().getMin();
@@ -488,28 +480,29 @@ public class Unbalanced extends FuzzySet {
 				double limits1[] = { a, b, b, d };
 				TrapezoidalFunction semantic1 = new TrapezoidalFunction(limits1);
 				brid = new LabelLinguisticDomain(leftBrid.getName(), semantic1);
-				unbalancedInfo.addLabel(sl + lab_t, brid);
+				addLabel(sl + Lab_t, brid);
 
 			} else {
 				srcCardinality = (aux * 2) + 1;
 				srcLabels = new String[srcCardinality];
 
 				int j = 0;
-				for (int i = 0; i < srcCardinality; i++) {
-					if ((i > aux) && i < (aux + lab_t1)) {
+				for(int i = 0; i < srcCardinality; i++) {
+					if((i > aux) && i < (aux + Lab_t1)) {
 						srcLabels[i] = labels[sl + 1 + j++];
 					} else {
-						srcLabels[i] = Messages.Unbalanced_Dirty_label + i;
+						srcLabels[i] = "dirty label " + i;
 					}
 				}
 
+				srcFuzzySet = new FuzzySet();
 				srcFuzzySet.createTrapezoidalFunction(srcLabels);
-				for (int i = (aux + 1); i < (aux + lab_t1); i++) {
-					unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, srcCardinality, i);
-					unbalancedInfo.addLabel(srcFuzzySet.getLabelSet().getLabel(i));
+				for(int i = (aux + 1); i < (aux + Lab_t1); i++) {
+					setLabelInDomain(getLabelSet().getCardinality() + 1, srcCardinality, i);
+					addLabel(srcFuzzySet.getLabelSet().getLabel(i));
 				}
 
-				leftBrid = srcFuzzySet.getLabelSet().getLabel(aux + lab_t1);
+				leftBrid = srcFuzzySet.getLabelSet().getLabel(aux + Lab_t1);
 
 				rightCenterLabel = srcFuzzySet.getLabelSet().getLabel(aux);
 
@@ -519,54 +512,47 @@ public class Unbalanced extends FuzzySet {
 				double limits[] = { a, b, b, d };
 				TrapezoidalFunction semantic = new TrapezoidalFunction(limits);
 				centerLabel = new LabelLinguisticDomain(labels[sl], semantic);
-				unbalancedInfo.setLabelInDomain(sl, srcCardinality, aux);
-				unbalancedInfo.addLabel(sl, centerLabel);
+				setLabelInDomain(sl, srcCardinality, aux);
+				addLabel(sl, centerLabel);
 
 				sreCardinality = aux + 1;
 				sreLabels = new String[sreCardinality];
 
-				for (int i = 0; i < sreCardinality; i++) {
-					if (i >= (sreCardinality - lab_t - 1)) {
+				for(int i = 0; i < sreCardinality; i++) {
+					if(i >= (sreCardinality - Lab_t - 1)) {
 						sreLabels[i] = labels[labels.length - (sreCardinality - i)];
 					} else {
-						sreLabels[i] = Messages.Unbalanced_Dirty_label + i;
+						sreLabels[i] = "dirty label " + i;
 					}
 				}
 
+				sreFuzzySet = new FuzzySet();
 				sreFuzzySet.createTrapezoidalFunction(sreLabels);
 
-				for (int i = (sreCardinality - lab_t); i < sreCardinality; i++) {
-					unbalancedInfo.setLabelInDomain(unbalancedInfo.getCardinality() + 1, sreCardinality, i);
-					unbalancedInfo.addLabel(sreFuzzySet.getLabelSet().getLabel(i));
+				for(int i = (sreCardinality - Lab_t); i < sreCardinality; i++) {
+					setLabelInDomain(getLabelSet().getCardinality() + 1, sreCardinality, i);
+					addLabel(sreFuzzySet.getLabelSet().getLabel(i));
 				}
 
-				unbalancedInfo.setLabelInDomain(sl + lab_t1, srcCardinality, aux + lab_t1);
-				unbalancedInfo.setLabelInDomain(sl + lab_t1, sreCardinality, sreCardinality - lab_t - 1);
-				rightBrid = sreFuzzySet.getLabelSet().getLabel(sreCardinality - lab_t - 1);
+				setLabelInDomain(sl + Lab_t1, srcCardinality, aux + Lab_t1);
+				setLabelInDomain(sl + Lab_t1, sreCardinality, sreCardinality - Lab_t - 1);
+				rightBrid = sreFuzzySet.getLabelSet().getLabel(sreCardinality - Lab_t - 1);
 				a = leftBrid.getSemantic().getCoverage().getMin();
 				b = rightBrid.getSemantic().getCenter().getMin();
 				d = rightBrid.getSemantic().getCoverage().getMax();
+
 				double limits1[] = { a, b, b, d };
 				TrapezoidalFunction semantic1 = new TrapezoidalFunction(limits1);
 				brid = new LabelLinguisticDomain(rightBrid.getName(), semantic1);
-				unbalancedInfo.addLabel(sl + lab_t1, brid);
+
+				addLabel(sl + Lab_t1, brid);
 			}
 		}
 		
-		int lhArray[] = new int[lh.size()];
-		
-		for (int i = 0; i < lhArray.length; i++) {
-			lhArray[i] = lh.get(i);
+		_lh = new int[lh.size()];
+		for(int i = 0; i < _lh.length; i++) {
+			_lh[i] = lh.get(i);
 		}
-		
-		unbalancedInfo.setLh(lhArray);
-		_lh = lhArray;
-		
-		_labelSet = unbalancedInfo.getLabelSet();
-		_labels = unbalancedInfo.getLabels();
-		
-		return unbalancedInfo;
-		
 	}
 
 	@Override
@@ -690,34 +676,4 @@ public class Unbalanced extends FuzzySet {
 		
 		return result;
 	}
-
-	private void loadLhLevels(String[] lhLevels) {
-		_lh = new int[lhLevels.length];
-		for(int i = 0; i < lhLevels.length; ++i) {
-			_lh[i] = Integer.parseInt(lhLevels[i]);
-		}	
-	}
-	
-	private void loadFormat(String[] format) {
-		_sl = Integer.parseInt(format[0]);
-		_slDensity = Integer.parseInt(format[1]);
-		_sr = Integer.parseInt(format[2]);
-		_srDensity = Integer.parseInt(format[3]);
-		
-		_cardinality = _sl + _sr + 1;
-	}
-
-	private void loadLabels(String[] labels) {
-		_labels = new HashMap<Integer, Map<Integer,Integer>>();
-		
-		for(int i = 0; i < labels.length; ++i) {
-			_labels.put(i, new HashMap<Integer, Integer>());
-			String[] aux = labels[i].split("="); //$NON-NLS-1$
-			for(String s: aux) {
-				String[] value = s.split(":"); //$NON-NLS-1$
-				_labels.get(i).put(Integer.parseInt(value[0]), Integer.parseInt(value[1]));
-			}
-		}
-	}
-
 }

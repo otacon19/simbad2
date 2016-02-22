@@ -56,7 +56,7 @@ public class LinguisticValuation extends Valuation {
 	}
 
 	@Override
-	public Valuation negateValutation() {
+	public Valuation negateValuation() {
 		LinguisticValuation result = (LinguisticValuation) clone();
 		
 		FuzzySet domain = (FuzzySet) _domain;

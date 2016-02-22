@@ -104,7 +104,7 @@ public abstract class Valuation implements Cloneable, Comparable<Valuation> {
 		
 	}
 	
-	public abstract Valuation negateValutation();
+	public abstract Valuation negateValuation();
 	
 	public abstract Domain unification(Domain fuzzySet);
 	

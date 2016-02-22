@@ -78,7 +78,7 @@ public class IntegerInterval extends Valuation {
 	}
 	
 	@Override
-	public Valuation negateValutation() {
+	public Valuation negateValuation() {
 		IntegerInterval result = (IntegerInterval) clone();
 		
 		long aux = Math.round(((NumericIntegerDomain) _domain).getMin()) + Math.round(((NumericIntegerDomain) _domain).getMax());

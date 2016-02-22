@@ -83,7 +83,7 @@ public class TwoTuple extends LinguisticValuation {
 	}
 	
 	@Override
-	public Valuation negateValutation() {
+	public Valuation negateValuation() {
 		TwoTuple result = (TwoTuple) clone();
 		
 		FuzzySet domain = (FuzzySet) _domain;

@@ -12,6 +12,9 @@
          <phasemethod
                phase="flintstones.phasemethod.unbalanced.methodology.unification">
          </phasemethod>
+         <phasemethod
+               phase="flintstones.phasemethod.unbalanced.methodology.aggregation">
+         </phasemethod>
          <aggregation_supported
                type="Linguistic">
          </aggregation_supported>

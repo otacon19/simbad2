@@ -65,7 +65,7 @@ public class UnifiedValuation extends Valuation {
 	}
 
 	@Override
-	public Valuation negateValutation() {
+	public Valuation negateValuation() {
 		return null;
 	}
 

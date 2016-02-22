@@ -128,6 +128,7 @@
       <plugin id="sinbad2.phasemethod.multigranular.lh.unification"/>
       <plugin id="sinbad2.phasemethod.multigranular.lh.unification.ui"/>
       <plugin id="sinbad2.phasemethod.ui"/>
+      <plugin id="sinbad2.phasemethod.unbalanced.methodology.aggregation"/>
       <plugin id="sinbad2.phasemethod.unbalanced.methodology.unification"/>
       <plugin id="sinbad2.phasemethod.unbalanced.methodology.unification.ui"/>
       <plugin id="sinbad2.rcp"/>

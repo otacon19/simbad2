@@ -78,7 +78,7 @@ public class RealInterval extends Valuation {
 	}
 	
 	@Override
-	public Valuation negateValutation() {
+	public Valuation negateValuation() {
 		RealInterval result = (RealInterval) clone();
 		
 		double aux = ((NumericRealDomain) _domain).getMin() + ((NumericRealDomain) _domain).getMax();
