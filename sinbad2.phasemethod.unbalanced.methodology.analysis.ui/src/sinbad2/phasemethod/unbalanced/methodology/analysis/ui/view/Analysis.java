@@ -27,7 +27,6 @@ import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
-import sinbad2.element.alternative.Alternative;
 import sinbad2.phasemethod.unbalanced.methodology.aggregation.AggregationPhase;
 import sinbad2.phasemethod.unbalanced.methodology.analysis.ui.view.listener.CheckStateListener;
 import sinbad2.phasemethod.unbalanced.methodology.analysis.ui.view.provider.AlternativeColumnLabelProvider;
@@ -78,7 +77,7 @@ public class Analysis extends ViewPart {
 	private AggregationPhase _aggregationPhase;
 	private UnificationPhase _unificationPhase;
 	
-	private Map<Alternative, Valuation> _aggregationResult;
+	private Map<ProblemElement, Valuation> _aggregationResult;
 	
 	private ProblemElementsSet _elementsSet;
 	
@@ -348,16 +347,16 @@ public class Analysis extends ViewPart {
 		Set<ProblemElement> alternatives = getCheckedElements(_alternativesCheckboxTreeViewer);
 		Set<ProblemElement> criteria = getCheckedElements(_criteriaCheckboxTreeViewer);
 
-		boolean doIt = false;
+		boolean doIt = true;
 		Map<ProblemElement, Valuation> result = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 		for(ProblemElement alternative: result.keySet()) {
-			if(result.get(alternative) != null) {
-				doIt = true;
+			if(result.get(alternative) == null) {
+				doIt = false;
 				break;
 			}
 		}
 		if(doIt) {
-			_aggregationResult = _aggregationPhase.transform(getDomain());
+			_aggregationResult = _aggregationPhase.transform(result, getDomain());
 		}
 		
 		_rankingViewer.setInput(_aggregationResult);

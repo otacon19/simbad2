@@ -390,14 +390,14 @@ public class AggregationPhase implements IPhaseMethod {
 		} 
 	}
 
-	public Map<Alternative, Valuation> transform(Unbalanced resultsDomain) {
+	public Map<ProblemElement, Valuation> transform(Map<ProblemElement, Valuation> problemResult, Unbalanced resultsDomain) {
 
 		_resultsDomain = resultsDomain;
-		Map<Alternative, Valuation> results = null;
+		Map<ProblemElement, Valuation> results = null;
 
 		if(resultsDomain != null) {
 
-			results = new HashMap<Alternative, Valuation>();
+			results = new HashMap<ProblemElement, Valuation>();
 
 			Valuation valuation;
 			Unbalanced hgls = null;
@@ -424,8 +424,7 @@ public class AggregationPhase implements IPhaseMethod {
 				lhDomains.put(lh[i], createDomain(lh[i]));
 			}
 
-			Map<Alternative, Valuation> problemResult = _unificationPhase.getValuationsAlternativeResult();
-			for(Alternative alternative : problemResult.keySet()) {
+			for(ProblemElement alternative : problemResult.keySet()) {
 				valuation = problemResult.get(alternative);
 				if(valuation != null) {
 					if(hgls == null) {

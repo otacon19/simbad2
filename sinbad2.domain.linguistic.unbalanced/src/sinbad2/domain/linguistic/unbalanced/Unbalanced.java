@@ -638,9 +638,7 @@ public class Unbalanced extends FuzzySet {
 				}
 			}
 		}
-		
-		System.out.println(_labels);
-		
+	
 		super.read(reader);
 	}
 
