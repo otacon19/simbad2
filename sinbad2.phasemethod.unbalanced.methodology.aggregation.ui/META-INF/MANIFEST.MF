@@ -5,8 +5,8 @@ Bundle-SymbolicName: sinbad2.phasemethod.unbalanced.methodology.aggregation.ui;s
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.unbalanced.methodology.aggregation.ui.Activator
 Bundle-Vendor: Sinbad2
-Require-Bundle: sinbad2.phasemethod.unbalanced.methodology.aggregation;bundle-version="1.0.0",
+Require-Bundle: sinbad2.phasemethod.unbalanced.methodology.aggregation;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.phasemethod.unbalanced.methodology.unification.ui;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.valuation.unifiedValuation
+ sinbad2.valuation.unifiedValuation;visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

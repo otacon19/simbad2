@@ -13,6 +13,9 @@
          <ui
                id="flintstones.phasemethod.unbalanced.methodology.aggregation.ui">
          </ui>
+         <ui
+               id="flintstones.phasemethod.unbalanced.methodology.analysis.ui">
+         </ui>
       </method_ui>
    </extension>
 

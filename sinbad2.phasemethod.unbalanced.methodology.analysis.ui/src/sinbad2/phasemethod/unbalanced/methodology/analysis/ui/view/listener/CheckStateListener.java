@@ -1,4 +1,4 @@
-package sinbad2.phasemethod.multigranular.analysis.ui.view.listener;
+package sinbad2.phasemethod.unbalanced.methodology.analysis.ui.view.listener;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +12,7 @@ import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
-import sinbad2.phasemethod.multigranular.analysis.ui.view.Analysis;
+import sinbad2.phasemethod.unbalanced.methodology.analysis.ui.view.Analysis;
 
 public class CheckStateListener implements ICheckStateListener {
 
@@ -188,4 +188,5 @@ public class CheckStateListener implements ICheckStateListener {
 		rebuildTreeState(element);
 		_treeViewer.addCheckStateListener(this);
 	}
+
 }
