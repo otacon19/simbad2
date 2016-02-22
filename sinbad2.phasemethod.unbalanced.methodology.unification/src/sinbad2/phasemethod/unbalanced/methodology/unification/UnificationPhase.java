@@ -149,7 +149,7 @@ public class UnificationPhase implements IPhaseMethod {
 				_unifiedEvaluationsResultAlternative.put(vk.getAlternative(), valuation);
 			}
 		}
-
+		
 		return _unifiedEvaluationsResult;
 	}
 	

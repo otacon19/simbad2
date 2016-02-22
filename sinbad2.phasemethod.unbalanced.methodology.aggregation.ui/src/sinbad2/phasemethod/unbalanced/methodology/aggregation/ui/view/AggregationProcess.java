@@ -676,8 +676,17 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		Set<ProblemElement> criteria = new HashSet<ProblemElement>();
 		criteria.addAll(_elementsSet.getCriteria());
 		
-		_aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
-		_aggregationResult = _aggregationPhase.transform(getDomain());
+		boolean doIt = false;
+		Map<ProblemElement, Valuation> result = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
+		for(ProblemElement alternative: result.keySet()) {
+			if(result.get(alternative) != null) {
+				doIt = true;
+				break;
+			}
+		}
+		if(doIt) {
+			_aggregationResult = _aggregationPhase.transform(getDomain());
+		}
 		refreshView();	
 	}
 	
@@ -706,16 +715,18 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	public void notifyStepStateChange() {
 		boolean notYet = false;
 		if(_completed && !_loaded) {
-			for(ProblemElement alternative: _aggregationResult.keySet()) {
-				if(_aggregationResult.get(alternative) == null) {
-					notYet = true;
-					break;
+			if(_aggregationResult != null) {
+				for(ProblemElement alternative: _aggregationResult.keySet()) {
+					if(_aggregationResult.get(alternative) == null) {
+						notYet = true;
+						break;
+					}
 				}
-			}
-			if(!notYet) {
-				_ratingView.loadNextStep();
-				_completed = false;
-				_loaded = true;
+				if(!notYet) {
+					//_ratingView.loadNextStep();
+					_completed = false;
+					_loaded = true;
+				}
 			}
 		}
 	}

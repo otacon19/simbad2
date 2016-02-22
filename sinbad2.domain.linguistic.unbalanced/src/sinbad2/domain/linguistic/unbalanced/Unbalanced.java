@@ -599,7 +599,7 @@ public class Unbalanced extends FuzzySet {
 		Integer value = null;
 		boolean end = false;
 		ArrayList<Integer> lh = new ArrayList<Integer>();
-		Map<Integer, Integer> data = null;
+		Map<Integer, Integer> data = new HashMap<Integer, Integer>();
 		
 		_labels = new HashMap<Integer, Map<Integer,Integer>>();
 		
@@ -612,14 +612,14 @@ public class Unbalanced extends FuzzySet {
 					v = reader.getStartElementAttribute("l"); //$NON-NLS-1$
 					value = new Integer(v);
 					lh.add(value);
-				} else if("domain-label".equals(reader.getStartElementLocalPart())) {	 //$NON-NLS-1$
-					domain = reader.getStartElementAttribute("d"); //$NON-NLS-1$
-					label = reader.getStartElementAttribute("la"); //$NON-NLS-1$
-					data = new HashMap<Integer, Integer>();
-					data.put(Integer.parseInt(domain), Integer.parseInt(label));
 				} else if("labelU".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
 					pos = reader.getStartElementAttribute("pos"); //$NON-NLS-1$
 					_labels.put(Integer.parseInt(pos), data);	
+					data = new HashMap<Integer, Integer>();
+				} else if("domain-label".equals(reader.getStartElementLocalPart())) {	 //$NON-NLS-1$
+					domain = reader.getStartElementAttribute("d"); //$NON-NLS-1$
+					label = reader.getStartElementAttribute("la"); //$NON-NLS-1$
+					data.put(Integer.parseInt(domain), Integer.parseInt(label));
 				} else if("data".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
 					_sl = Integer.parseInt(reader.getStartElementAttribute("sl"));	 //$NON-NLS-1$
 					_sr = Integer.parseInt(reader.getStartElementAttribute("sr")); //$NON-NLS-1$
@@ -638,6 +638,8 @@ public class Unbalanced extends FuzzySet {
 				}
 			}
 		}
+		
+		System.out.println(_labels);
 		
 		super.read(reader);
 	}
