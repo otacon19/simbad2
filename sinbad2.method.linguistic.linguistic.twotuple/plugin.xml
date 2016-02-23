@@ -15,8 +15,14 @@
          <phasemethod
                phase="flintstones.phasemethod.linguistic.twotuple.aggregation">
          </phasemethod>
+         <phasemethod
+               phase="flintstones.phasemethod.linguistic.twotuple.analysis">
+         </phasemethod>
          <aggregation_supported
                type="Linguistic">
+         </aggregation_supported>
+         <aggregation_supported
+               type="TwoTuple">
          </aggregation_supported>
       </method>
    </extension>
