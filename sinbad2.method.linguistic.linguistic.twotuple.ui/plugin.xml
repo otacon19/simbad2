@@ -10,6 +10,9 @@
          <ui
                id="flintstones.phasemethod.linguistic.twotuple.unification.ui.ui1">
          </ui>
+         <ui
+               id="flintstones.phasemethod.linguistic.twotuple.aggregation.ui">
+         </ui>
       </method_ui>
    </extension>
 
