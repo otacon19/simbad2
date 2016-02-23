@@ -110,6 +110,7 @@
       <plugin id="sinbad2.phasemethod.linguistic.twotuple.aggregation"/>
       <plugin id="sinbad2.phasemethod.linguistic.twotuple.aggregation.ui"/>
       <plugin id="sinbad2.phasemethod.linguistic.twotuple.analysis"/>
+      <plugin id="sinbad2.phasemethod.linguistic.twotuple.analysis.ui"/>
       <plugin id="sinbad2.phasemethod.linguistic.twotuple.unification"/>
       <plugin id="sinbad2.phasemethod.linguistic.twotuple.unification.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.elh.aggregation"/>
