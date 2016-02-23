@@ -9,6 +9,9 @@
             id="flintstones.method.linguistic.linguistic.twotuple"
             implementation="sinbad2.method.linguistic.linguistic.twotuple.TwoTuple"
             name="2-Tuple">
+         <phasemethod
+               phase="flintstones.phasemethod.linguistic.twotuple.unification">
+         </phasemethod>
          <aggregation_supported
                type="Linguistic">
          </aggregation_supported>

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Twotuple unification
+Bundle-SymbolicName: sinbad2.phasemethod.linguistic.twotuple.unification;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Sinbad2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0",
+ sinbad2.domain.linguistic.fuzzyset;visibility:=reexport,
+ sinbad2.valuation.unifiedValuation;visibility:=reexport,
+ sinbad2.valuation.twoTuple;visibility:=reexport
