@@ -26,7 +26,7 @@ public class UnificationPhase implements IPhaseMethod {
 	public static final String ID = "flintstones.phasemethod.linguistic.twotuple.unification";
 
 	private ValuationSetManager _valuationSetManager;
-	private ValuationSet _valutationSet;
+	private ValuationSet _valuationSet;
 	
 	private DomainsManager _domainsManager;
 	private DomainSet _domainsSet;
@@ -39,7 +39,7 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	private UnificationPhase() {
 		_valuationSetManager = ValuationSetManager.getInstance();
-		_valutationSet = _valuationSetManager.getActiveValuationSet();
+		_valuationSet = _valuationSetManager.getActiveValuationSet();
 		
 		_domainsManager = DomainsManager.getInstance();
 		_domainsSet = _domainsManager.getActiveDomainSet();
@@ -56,7 +56,7 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	public ValuationSet getValuationSet() {
-		return _valutationSet;
+		return _valuationSet;
 	}
 
 	public DomainSet getDomainSet() {
@@ -74,13 +74,13 @@ public class UnificationPhase implements IPhaseMethod {
 
 		clear();
 
-		_valutationSet.setValuations(unification.getValuationSet().getValuations());
+		_valuationSet.setValuations(unification.getValuationSet().getValuations());
 		_domainsSet.setDomains(unification.getDomainSet().getDomains());
 	}
 
 	@Override
 	public void clear() {
-		_valutationSet.clear();
+		_valuationSet.clear();
 		_domainsSet.clear();
 	}
 
@@ -106,14 +106,14 @@ public class UnificationPhase implements IPhaseMethod {
 
 	@Override
 	public void activate() {
-		_valuationSetManager.setActiveValuationSet(_valutationSet);
+		_valuationSetManager.setActiveValuationSet(_valuationSet);
 		_domainsManager.setActiveDomainSet(_domainsSet);
 	}
 
 	@Override
 	public boolean validate() {
 
-		if (_valutationSet.getValuations().isEmpty()) {
+		if (_valuationSet.getValuations().isEmpty()) {
 			return false;
 		}
 		
@@ -130,28 +130,26 @@ public class UnificationPhase implements IPhaseMethod {
 		if (unifiedDomain != null) {
 			Criterion criterion;
 			Valuation valuation;
-			FuzzySet fuzzySet;
 			Boolean isCost;
 
-			Map<ValuationKey, Valuation> valuations = _valutationSet.getValuations();
+			Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
 			for(ValuationKey vk : valuations.keySet()) {
 				criterion = vk.getCriterion();
 				valuation = valuations.get(vk);
 				isCost = criterion.getCost();
 
-				if(valuation instanceof UnifiedValuation) {
-					Valuation auxValuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
+				if(valuation instanceof TwoTuple) {
 					if(isCost) {
-						auxValuation = auxValuation.negateValuation();
+						valuation = valuation.negateValuation();
 					}
-					fuzzySet = ((TwoTuple) auxValuation).unification(unifiedDomain);
-					valuation = new UnifiedValuation(fuzzySet);
+					valuation = ((TwoTuple) valuation).transform(unifiedDomain);
 				} else if(valuation instanceof LinguisticValuation) {
 					if(isCost) {
 						valuation = valuation.negateValuation();
 					}
-					fuzzySet = ((LinguisticValuation) valuation).unification(unifiedDomain);
-					valuation = new UnifiedValuation(fuzzySet);
+					valuation = new TwoTuple((FuzzySet) valuation.getDomain(), ((LinguisticValuation) valuation).getLabel()).transform(unifiedDomain);
+				} else {
+					throw new IllegalArgumentException();
 				}
 				_unifiedEvaluationsResult.put(vk, valuation);
 			}

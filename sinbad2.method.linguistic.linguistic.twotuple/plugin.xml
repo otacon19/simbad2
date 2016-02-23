@@ -8,7 +8,7 @@
             description="F. Herrera, L. Martínez, A 2-tuple Fuzzy Linguistic Representation Model for Computing with Words. IEEE Transactions on Fuzzy Systems, vol. 8, issue 6, pp. 746-752, 2000."
             id="flintstones.method.linguistic.linguistic.twotuple"
             implementation="sinbad2.method.linguistic.linguistic.twotuple.TwoTuple"
-            name="2-Tuple">
+            name="2-Tuple linguistic computational model">
          <phasemethod
                phase="flintstones.phasemethod.linguistic.twotuple.unification">
          </phasemethod>

@@ -6,7 +6,7 @@
       <method_ui
             id="flintstones.method.linguistic.linguistic.twotuple.ui"
             method="flintstones.method.linguistic.linguistic.twotuple"
-            name="2-tuple">
+            name="2-tuple linguistic computational model">
          <ui
                id="flintstones.phasemethod.linguistic.twotuple.unification.ui.ui1">
          </ui>
