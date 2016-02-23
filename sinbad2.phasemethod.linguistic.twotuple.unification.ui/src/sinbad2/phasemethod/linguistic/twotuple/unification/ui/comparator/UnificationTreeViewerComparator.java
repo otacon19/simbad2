@@ -1,10 +1,11 @@
-package sinbad2.phasemethod.multigranular.lh.unification.ui.comparator;
+package sinbad2.phasemethod.linguistic.twotuple.unification.ui.comparator;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 
-import sinbad2.phasemethod.multigranular.lh.unification.ui.view.provider.EvaluationColumnLabelProvider;
+import sinbad2.phasemethod.linguistic.twotuple.unification.ui.view.provider.EvaluationColumnLabelProvider;
+
 
 public class UnificationTreeViewerComparator extends ViewerComparator {
 
@@ -101,3 +102,4 @@ public class UnificationTreeViewerComparator extends ViewerComparator {
 		return result;
 	}	
 }
+

@@ -108,6 +108,7 @@
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.unification"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.unification.ui"/>
       <plugin id="sinbad2.phasemethod.linguistic.twotuple.unification"/>
+      <plugin id="sinbad2.phasemethod.linguistic.twotuple.unification.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.elh.aggregation"/>
       <plugin id="sinbad2.phasemethod.multigranular.elh.aggregation.ui"/>
       <plugin id="sinbad2.phasemethod.multigranular.elh.analysis"/>

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import sinbad2.domain.DomainSet;
+import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
@@ -26,6 +28,9 @@ public class UnificationPhase implements IPhaseMethod {
 	private ValuationSetManager _valuationSetManager;
 	private ValuationSet _valutationSet;
 	
+	private DomainsManager _domainsManager;
+	private DomainSet _domainsSet;
+	
 	private Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleEvaluationsResult;
 	private Map<Alternative, Valuation> _twoTupleEvaluationsAlternatives;
@@ -35,6 +40,9 @@ public class UnificationPhase implements IPhaseMethod {
 	private UnificationPhase() {
 		_valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = _valuationSetManager.getActiveValuationSet();
+		
+		_domainsManager = DomainsManager.getInstance();
+		_domainsSet = _domainsManager.getActiveDomainSet();
 		
 		_twoTupleEvaluationsResult = new LinkedHashMap<ValuationKey, Valuation>();
 		_twoTupleEvaluationsAlternatives = new LinkedHashMap<Alternative, Valuation>();
@@ -51,6 +59,10 @@ public class UnificationPhase implements IPhaseMethod {
 		return _valutationSet;
 	}
 
+	public DomainSet getDomainSet() {
+		return _domainsSet;
+	}
+	
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new UnificationPhase();
@@ -63,11 +75,13 @@ public class UnificationPhase implements IPhaseMethod {
 		clear();
 
 		_valutationSet.setValuations(unification.getValuationSet().getValuations());
+		_domainsSet.setDomains(unification.getDomainSet().getDomains());
 	}
 
 	@Override
 	public void clear() {
 		_valutationSet.clear();
+		_domainsSet.clear();
 	}
 
 	@Override
@@ -93,12 +107,17 @@ public class UnificationPhase implements IPhaseMethod {
 	@Override
 	public void activate() {
 		_valuationSetManager.setActiveValuationSet(_valutationSet);
+		_domainsManager.setActiveDomainSet(_domainsSet);
 	}
 
 	@Override
 	public boolean validate() {
 
 		if (_valutationSet.getValuations().isEmpty()) {
+			return false;
+		}
+		
+		if(_domainsSet.getDomains().isEmpty()) {
 			return false;
 		}
 
@@ -167,5 +186,9 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	public Map<ValuationKey, Valuation> getValuationsResult() {
 		return _twoTupleEvaluationsResult;
+	}
+	
+	public FuzzySet getDomain() {
+		return (FuzzySet) _domainsSet.getDomains().get(0);
 	}
 }
