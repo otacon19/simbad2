@@ -20,6 +20,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
@@ -29,6 +30,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.method.Method;
+import sinbad2.method.MethodsManager;
 import sinbad2.method.ui.MethodUI;
 import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.ui.PhaseMethodUI;
@@ -37,13 +39,8 @@ import sinbad2.resolutionphase.rating.ui.Images;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 
 public class RatingView extends ViewPart {
-	public RatingView() {
-	}
-	
+
 	public static final String ID = "flintstones.resolutionphase.rating.ui.view";
-	
-	private int _numStep;
-	private int _numPhase;
 	
 	private Composite _ratingEditorPanel;
 	private Composite _ratingEditorFooter;
@@ -69,12 +66,21 @@ public class RatingView extends ViewPart {
 	
 	private CTabFolder _tabFolder;
 	
+	private int _numStep;
+	private int _numPhase;
+	
+	private String _recommendedMethod;
+	
+	private Map<CLabel, Method> _methods;
+	
 	private List<IStepStateListener> _listeners;
 
 	@Override
 	public void createPartControl(Composite parent) {	
 		_numPhase = 0;
 		_numStep = 0;
+		
+		_methods = new HashMap<CLabel, Method>();
 		
 		_methodUISelected = null;
 		
@@ -211,15 +217,14 @@ public class RatingView extends ViewPart {
 	}
 
 	public void resetRating(boolean confirm) {
-		boolean reset = true;
+		boolean reset = false;
 		if(confirm) {
 			reset = MessageDialog.openConfirm(this.getSite().getShell(), "Cancel confirm", "All information will be lost");
 		}
 		if(reset) {
-			clearAll();
-			createMethodSelectionStep();
-			createContent();
+			clearMethodSteps();
 			_tabFolder.setSelection(0);
+			checkRecommendedMethod();
 		}
 	}
 
@@ -275,6 +280,9 @@ public class RatingView extends ViewPart {
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_methodsCategoriesBar.setLayoutData(gridData);
 		
+		createInfoPanels(composite);
+		createWarningLabel(composite);
+		
 		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
 		String[] ids = methodsUIManager.getIdsRegisters();
 		
@@ -298,12 +306,11 @@ public class RatingView extends ViewPart {
 			cont++;
 		}
 		
+		checkRecommendedMethod();
+		
 		Button showAlgorithmButton = new Button(compositeLeft, SWT.NONE);
 		showAlgorithmButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		showAlgorithmButton.setText("Show algorithm");
-		
-		createInfoPanels(composite);
-		createWarningLabel(composite);
 		
 		_tabFolder.getItem(0).setControl(composite);
 	}
@@ -320,6 +327,8 @@ public class RatingView extends ViewPart {
 		layout.verticalSpacing = 0;
 		composite.setLayout(layout);
 
+		MethodsManager methodsManager = MethodsManager.getInstance();
+		_recommendedMethod = methodsManager.getRecommendedMethod();
 		for (int i = 0; i < methods.size(); i++) {
 			createMethod(composite, methods.get(i));
 		}
@@ -340,6 +349,9 @@ public class RatingView extends ViewPart {
 
 		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL)); //$NON-NLS-1$
 		label.setText(currentMethod.getName());
+		if(currentMethod.getName().equals(_recommendedMethod)) {
+			label.setText(label.getText() + " (SUITABLE)");
+		}
 		
 		final String test = currentMethod.getImplementation().isAvailable();
 		if(test.length() == 0) {
@@ -365,30 +377,13 @@ public class RatingView extends ViewPart {
 				_methodNameText.setText(_methodNameSelected.getText());
 				_methodNameText.getParent().layout();
 				
-				_descriptionText.setText(currentMethod.getDescription());
-				
-				MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
-				if(methodsUIManager.getActivateMethodUI() != null) {
-					clearMethodSteps();
-				}
-
-				methodsUIManager.activate(currentMethod.getId() + ".ui");
-				_methodUISelected = methodsUIManager.getActivateMethodUI();
-				if(!label.getForeground().equals(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED))) {
-					calculateNumSteps();
-					loadNextStep();
-					_warningLabel.setText("");
-				} else {
-					_warningLabel.setText(test);
-				}
-				
-				_warningLabel.pack();
-				
-				_stepsText.setText(_methodUISelected.getPhasesFormat());
+				selectMethod(currentMethod, _methodNameSelected);
 			}
 		});
 		
 		label.pack();
+		
+		_methods.put(label, currentMethod);
 	}
 	
 	private void calculateNumSteps() {
@@ -452,34 +447,22 @@ public class RatingView extends ViewPart {
 		}
 	}
 	
-	private void clearAll() {
-		for(CTabItem ti: _tabFolder.getItems()) {
-			ti.dispose();
+	private void clearMethodSteps() {
+		while(_tabFolder.getItemCount() > 1) {
+			_tabFolder.getItem(1).dispose();
 		}
 		_listeners.clear();
+
+		_numPhase = 0;
+		_numStep = 0;
 		
 		_methodNameText.setText("Unselected");
 		_stepValue.setText("(0/0)");
 		
 		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
 		methodsUIManager.deactiveCurrentActive();
-
-		_numPhase = 0;
-		_numStep = 0;
-				
+		
 		_methodUISelected = null;
-	}
-	
-	private void clearMethodSteps() {
-		
-		for(int i = 1; i < _tabFolder.getItemCount(); ++i) {
-			_tabFolder.getItem(i).dispose();
-		}
-		
-		_listeners.clear();
-
-		_numPhase = 0;
-		_numStep = 0;
 	}
 	
 	private void createInfoPanels(Composite composite) {
@@ -528,6 +511,59 @@ public class RatingView extends ViewPart {
 		compositePanels.setLayout(layout);
 	}
 
+	public void checkRecommendedMethod() {
+		String methodName;
+		CLabel suitableLabel = null;
+		for(ExpandItem item: _methodsCategoriesBar.getItems()) {
+			Composite control = (Composite) item.getControl();
+			Control[] childrens = control.getChildren();
+			for(Control methodLabel : childrens) {
+				methodName = ((CLabel) methodLabel).getText();
+				if(methodName.contains(" (SUITABLE)")) {
+					suitableLabel = (CLabel) methodLabel;
+					if(!item.getExpanded()) {
+						item.setExpanded(true);
+						((CLabel) methodLabel).setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+						((CLabel) methodLabel).pack();
+					}
+				}
+			}
+		}
+
+		Method methodToSelect = _methods.get(suitableLabel);
+		if(methodToSelect != null) {
+			selectMethod(methodToSelect, suitableLabel);
+		}
+	}
+	
+	private void selectMethod(Method methodToSelect, CLabel suitableLabel) {
+		_methodNameSelected = suitableLabel;
+		
+		_descriptionText.setText(methodToSelect.getDescription());
+		
+		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
+		if(methodsUIManager.getActivateMethodUI() != null) {
+			clearMethodSteps();
+		}
+
+		methodsUIManager.activate(methodToSelect.getId() + ".ui");
+		_methodUISelected = methodsUIManager.getActivateMethodUI();
+		_stepsText.setText(_methodUISelected.getPhasesFormat());
+		
+		if(suitableLabel != null) {
+			if(!suitableLabel.getForeground().equals(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED))) {
+				calculateNumSteps();
+				loadNextStep();
+				_warningLabel.setText("");
+			} else {
+				String test = methodToSelect.getImplementation().isAvailable();
+				_warningLabel.setText(test);
+			}
+		}
+		
+		_warningLabel.pack();
+	}
+		
 	private void activateStep(int numStep) {
 		_tabFolder.setSelection(numStep);
 		notifyNewStep();

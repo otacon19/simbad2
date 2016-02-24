@@ -5,7 +5,7 @@
          point="flintstones.phasemethod.ui">
       <ui
             id="flintstones.phasemethod.linguistic.twotuple.aggregation.ui"
-            name="Aggregation process"
+            name="Aggregation"
             phasemethod="flintstones.phasemethod.linguistic.twotuple.aggregation">
          <view
                step="sinbad2.phasemethod.linguistic.twotuple.aggregation.ui.view.AggregationProcess">
