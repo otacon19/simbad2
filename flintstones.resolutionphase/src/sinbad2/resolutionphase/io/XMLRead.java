@@ -108,13 +108,17 @@ public class XMLRead {
 
 		return result;
 	}
-
+	
 	public boolean hasNext() {
 		return _reader.hasNext();
 	}
 
 	public XMLEvent next() throws XMLStreamException {
-		_event = _reader.nextEvent();
+		try {
+			_event = _reader.nextEvent();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		return _event;
 	}
 

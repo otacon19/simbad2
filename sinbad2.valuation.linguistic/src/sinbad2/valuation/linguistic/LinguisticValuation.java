@@ -156,7 +156,7 @@ public class LinguisticValuation extends Valuation {
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeStartElement("labelvaluation"); //$NON-NLS-1$
 		
-		writer.writeStartElement(_label.getName());
+		writer.writeStartElement("labelv");
 		writer.writeAttribute("label", _label.getName()); //$NON-NLS-1$
 		_label.save(writer);
 		writer.writeEndElement();
