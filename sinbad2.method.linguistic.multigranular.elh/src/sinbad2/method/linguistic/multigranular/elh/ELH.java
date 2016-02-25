@@ -52,10 +52,10 @@ public class ELH extends MethodImplementation {
 		Domain generateDomain;
 
 		for(Alternative alternative : _elementsSet.getAlternatives()) {
-			for(Criterion criterion : _elementsSet.getCriteria()) {
-				if(_elementsSet.getElementCriterionSubcriteria(criterion).size() == 0) {
-					for(Expert expert : _elementsSet.getExperts()) {
-						if(_elementsSet.getElementExpertChildren(expert).size() == 0) {
+			for(Criterion criterion : _elementsSet.getAllCriteria()) {
+				if(!criterion.hasSubcriteria()) {
+					for(Expert expert : _elementsSet.getAllExperts()) {
+						if(!expert.hasChildrens()) {
 							generateDomain = _valuationSet.getValuation(expert, alternative, criterion).getDomain();
 							if(generateDomain != null) {
 								domainName = generateDomain.getId();

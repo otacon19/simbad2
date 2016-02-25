@@ -44,10 +44,10 @@ public class Unbalanced extends MethodImplementation {
 		Domain generateDomain = null;
 		String domainName = null;
 		
-		for(Expert expert : _elementsSet.getExperts()) {
-			if(_elementsSet.getElementExpertChildren(expert).size() == 0) {
-				for(Criterion criterion : _elementsSet.getCriteria()) {
-					if(_elementsSet.getElementCriterionSubcriteria(criterion).size() == 0) {
+		for(Expert expert : _elementsSet.getAllExperts()) {
+			if(!expert.hasChildrens()) {
+				for(Criterion criterion : _elementsSet.getAllCriteria()) {
+					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
 							generateDomain = _valuationSet.getValuation(expert, alternative, criterion).getDomain();
 							if(generateDomain != null) {

@@ -37,11 +37,15 @@ public class Fusion extends MethodImplementation {
 
 	@Override
 	public String isAvailable() {
-		for(Expert expert : _elementsSet.getExperts()) {
-			for(Criterion criterion : _elementsSet.getCriteria()) {
-				for(Alternative alternative : _elementsSet.getAlternatives()) {
-					if(_valuationSet.getValuation(expert, alternative, criterion) == null) {
-						return NOT_SET_ALL_ASSIGNMENTS;
+		for(Expert expert : _elementsSet.getAllExperts()) {
+			if(!expert.hasChildrens()) {
+				for(Criterion criterion : _elementsSet.getAllCriteria()) {
+					if(!criterion.hasSubcriteria()) {
+						for(Alternative alternative : _elementsSet.getAlternatives()) {
+							if(_valuationSet.getValuation(expert, alternative, criterion) == null) {
+								return NOT_SET_ALL_ASSIGNMENTS;
+							}
+						}
 					}
 				}
 			}

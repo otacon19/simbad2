@@ -112,7 +112,7 @@ public class DomainsView extends ViewPart {
 		tvc.setLabelProvider(new DomainIdLabelProvider());
 		
 		tvc = new TableViewerColumn(_tableViewer, SWT.NONE);
-		tvc.getColumn().setWidth(150);
+		tvc.getColumn().setWidth(350);
 		tvc.getColumn().setText(Messages.DomainsView_Description);
 		tvc.setLabelProvider(new DomainDescriptionLabelProvider());
 		

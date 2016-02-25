@@ -206,10 +206,10 @@ public class MethodsManager {
 		Set<Integer> cardinalities = new HashSet<Integer>();
 		Domain generateDomain;
 		
-		for(Expert expert : _elementsSet.getExperts()) {
-			if(_elementsSet.getElementExpertChildren(expert).size() == 0) {
-				for(Criterion criterion : _elementsSet.getCriteria()) {
-					if(_elementsSet.getElementCriterionSubcriteria(criterion).size() == 0) {
+		for(Expert expert : _elementsSet.getAllExperts()) {
+			if(!expert.hasChildrens()) {
+				for(Criterion criterion : _elementsSet.getAllCriteria()) {
+					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
 							generateDomain = _valuationsSet.getValuation(expert, alternative, criterion).getDomain();
 							if(generateDomain != null) {
@@ -240,10 +240,10 @@ public class MethodsManager {
 		FuzzySet fs = null;
 		Domain generateDomain;
 		
-		for(Expert expert : _elementsSet.getExperts()) {
-			if(_elementsSet.getElementExpertChildren(expert).size() == 0) {
-				for(Criterion criterion : _elementsSet.getCriteria()) {
-					if(_elementsSet.getElementCriterionSubcriteria(criterion).size() == 0) {
+		for(Expert expert : _elementsSet.getAllExperts()) {
+			if(!expert.hasChildrens()) {
+				for(Criterion criterion : _elementsSet.getAllCriteria()) {
+					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
 							generateDomain = _valuationsSet.getValuation(expert, alternative, criterion).getDomain();
 							if(generateDomain != null) {
@@ -263,10 +263,10 @@ public class MethodsManager {
 	public boolean getBestConditionsUnbalanced() {
 		Domain generateDomain;
 		
-		for(Expert expert : _elementsSet.getExperts()) {
-			if(_elementsSet.getElementExpertChildren(expert).size() == 0) {
-				for(Criterion criterion : _elementsSet.getCriteria()) {
-					if(_elementsSet.getElementCriterionSubcriteria(criterion).size() == 0) {
+		for(Expert expert : _elementsSet.getAllExperts()) {
+			if(!expert.hasChildrens()) {
+				for(Criterion criterion : _elementsSet.getAllCriteria()) {
+					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
 							generateDomain = _valuationsSet.getValuation(expert, alternative, criterion).getDomain();
 							if(generateDomain != null) {
@@ -285,10 +285,10 @@ public class MethodsManager {
 	public boolean getBestConditionsNumeric() {
 		Domain generateDomain;
 		
-		for(Expert expert : _elementsSet.getExperts()) {
-			if(_elementsSet.getElementExpertChildren(expert).size() == 0) {
-				for(Criterion criterion : _elementsSet.getCriteria()) {
-					if(_elementsSet.getElementCriterionSubcriteria(criterion).size() == 0) {
+		for(Expert expert : _elementsSet.getAllExperts()) {
+			if(!expert.hasChildrens()) {
+				for(Criterion criterion : _elementsSet.getAllCriteria()) {
+					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
 							generateDomain = _valuationsSet.getValuation(expert, alternative, criterion).getDomain();
 							if(generateDomain != null) {

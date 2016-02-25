@@ -193,10 +193,10 @@ public class UnificationPhase implements IPhaseMethod {
 		Domain generateDomain, domain;
 		
 		for(Alternative alternative : elementsSet.getAlternatives()) {
-			for(Criterion criterion : elementsSet.getCriteria()) {
-				if(elementsSet.getElementCriterionSubcriteria(criterion).size() == 0) {
-					for(Expert expert : elementsSet.getExperts()) {
-						if(elementsSet.getElementExpertChildren(expert).size() == 0) {
+			for(Criterion criterion : elementsSet.getAllCriteria()) {
+				if(!criterion.hasSubcriteria()) {
+					for(Expert expert : elementsSet.getAllExperts()) {
+						if(!expert.hasChildrens()) {
 							generateDomain = _valuationSet.getValuation(expert, alternative, criterion).getDomain();
 							if(generateDomain != null) {
 								domainName = generateDomain.getId();
