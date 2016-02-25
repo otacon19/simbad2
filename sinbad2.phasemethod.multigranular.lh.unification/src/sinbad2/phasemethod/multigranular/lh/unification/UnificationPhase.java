@@ -196,29 +196,32 @@ public class UnificationPhase implements IPhaseMethod {
 				if(!criterion.hasSubcriteria()) {
 					for(Expert expert : elementsSet.getAllExperts()) {
 						if(!expert.hasChildrens()) {
-							generateDomain = _valuationSet.getValuation(expert, alternative, criterion).getDomain();
-							if(generateDomain != null) {
-								domainName = generateDomain.getId();
-								if(generateDomain instanceof FuzzySet) {
-									if(!domainsNames.contains(domainName)) {
-										if(((FuzzySet) generateDomain).isBLTS()) {
-											cardinality = ((FuzzySet) generateDomain).getLabelSet().getCardinality();
-											if(cardinalities.contains(cardinality)) {
-												return null;
+							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
+							if(v != null) {
+								generateDomain = v.getDomain();
+								if(generateDomain != null) {
+									domainName = generateDomain.getId();
+									if(generateDomain instanceof FuzzySet) {
+										if(!domainsNames.contains(domainName)) {
+											if(((FuzzySet) generateDomain).isBLTS()) {
+												cardinality = ((FuzzySet) generateDomain).getLabelSet().getCardinality();
+												if(cardinalities.contains(cardinality)) {
+													return null;
+												} else {
+													cardinalities.add(cardinality);
+													domains.add(new Object[] {cardinality, domainName, generateDomain });
+													domainsNames.add(domainName);
+												}
 											} else {
-												cardinalities.add(cardinality);
-												domains.add(new Object[] {cardinality, domainName, generateDomain });
-												domainsNames.add(domainName);
+												return null;
 											}
-										} else {
-											return null;
 										}
+									} else {
+										return null;
 									}
 								} else {
 									return null;
 								}
-							} else {
-								return null;
 							}
 						}
 					}

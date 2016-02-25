@@ -10,6 +10,7 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.method.MethodImplementation;
 import sinbad2.method.state.MethodStateChangeEvent;
+import sinbad2.valuation.Valuation;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
 
@@ -51,20 +52,23 @@ public class TwoTuple extends MethodImplementation {
 				for(Criterion criterion : _elementsSet.getAllCriteria()) {
 					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
-							generateDomain = _valuationSet.getValuation(expert, alternative, criterion).getDomain();
-							if(generateDomain != null) {
-								if(domainName == null) {
-									domainName = generateDomain.getId();
-									if(!(generateDomain instanceof FuzzySet)) {
-										return EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS;
-									} else {
-										if(generateDomain instanceof Unbalanced) {
-											return EVALUATIONS_IN_UNBALANCED_DOMAIN;
+							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
+							if(v != null) {
+								generateDomain = v.getDomain();
+								if(generateDomain != null) {
+									if(domainName == null) {
+										domainName = generateDomain.getId();
+										if(!(generateDomain instanceof FuzzySet)) {
+											return EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS;
+										} else {
+											if(generateDomain instanceof Unbalanced) {
+												return EVALUATIONS_IN_UNBALANCED_DOMAIN;
+											}
 										}
-									}
-								} else {
-									if(!domainName.equals(generateDomain.getId())) {
-										return EVALUATIONS_IN_DIFFERENT_DOMAINS;
+									} else {
+										if(!domainName.equals(generateDomain.getId())) {
+											return EVALUATIONS_IN_DIFFERENT_DOMAINS;
+										}
 									}
 								}
 							} else {

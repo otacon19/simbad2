@@ -250,7 +250,7 @@ public class LinguisticDomainChart extends DomainChart {
 		XYSeries series, alternativeSeries;
 		double[] centers = new double[size];
 		double x, y, factor;
-
+		
 		List<XYDataItem> dataItems;
 		for(int i = 0; i < size; i++) {
 			if(alternatives[i] != null) {

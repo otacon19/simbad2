@@ -25,6 +25,7 @@ import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
+import sinbad2.valuation.Valuation;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
 
@@ -211,10 +212,13 @@ public class MethodsManager {
 				for(Criterion criterion : _elementsSet.getAllCriteria()) {
 					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
-							generateDomain = _valuationsSet.getValuation(expert, alternative, criterion).getDomain();
-							if(generateDomain != null) {
-								if(generateDomain instanceof FuzzySet) {
-									cardinalities.add(((FuzzySet) generateDomain).getLabelSet().getCardinality());
+							Valuation v = _valuationsSet.getValuation(expert, alternative, criterion);
+							if(v != null) {
+								generateDomain = v.getDomain();
+								if(generateDomain != null) {
+									if(generateDomain instanceof FuzzySet) {
+										cardinalities.add(((FuzzySet) generateDomain).getLabelSet().getCardinality());
+									}
 								}
 							}
 						}
@@ -245,11 +249,14 @@ public class MethodsManager {
 				for(Criterion criterion : _elementsSet.getAllCriteria()) {
 					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
-							generateDomain = _valuationsSet.getValuation(expert, alternative, criterion).getDomain();
-							if(generateDomain != null) {
-								if(generateDomain instanceof FuzzySet) {
-									fs = (FuzzySet) generateDomain;
-									result.put(fs.getLabelSet().getCardinality(), fs.isBLTS());
+							Valuation v = _valuationsSet.getValuation(expert, alternative, criterion);
+							if(v != null) {
+								generateDomain = v.getDomain();
+								if(generateDomain != null) {
+									if(generateDomain instanceof FuzzySet) {
+										fs = (FuzzySet) generateDomain;
+										result.put(fs.getLabelSet().getCardinality(), fs.isBLTS());
+									}
 								}
 							}
 						}
@@ -268,10 +275,13 @@ public class MethodsManager {
 				for(Criterion criterion : _elementsSet.getAllCriteria()) {
 					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
-							generateDomain = _valuationsSet.getValuation(expert, alternative, criterion).getDomain();
-							if(generateDomain != null) {
-								if(generateDomain instanceof Unbalanced) {
-									return true;
+							Valuation v = _valuationsSet.getValuation(expert, alternative, criterion);
+							if(v != null) {
+								generateDomain = v.getDomain();
+								if(generateDomain != null) {
+									if(generateDomain instanceof Unbalanced) {
+										return true;
+									}
 								}
 							}
 						}
@@ -290,10 +300,13 @@ public class MethodsManager {
 				for(Criterion criterion : _elementsSet.getAllCriteria()) {
 					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
-							generateDomain = _valuationsSet.getValuation(expert, alternative, criterion).getDomain();
-							if(generateDomain != null) {
-								if(generateDomain instanceof NumericRealDomain || generateDomain instanceof NumericIntegerDomain) {
-									return true;
+							Valuation v = _valuationsSet.getValuation(expert, alternative, criterion);
+							if(v != null) {
+								generateDomain = v.getDomain();
+								if(generateDomain != null) {
+									if(generateDomain instanceof NumericRealDomain || generateDomain instanceof NumericIntegerDomain) {
+										return true;
+									}
 								}
 							}
 						}

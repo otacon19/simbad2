@@ -280,152 +280,155 @@ public class UnificationPhase implements IPhaseMethod {
 				
 				ValuationKey vk = toNormalizeVk.get(toNormalize.get(d));
 				Valuation v = _valutationSet.getValuation(vk.getExpert(), vk.getAlternative(), vk.getCriterion());
-				
-				if(v instanceof IntegerValuation) {	
-					for(Object[] evaluation : toNormalize.get(d)) {
-						auxValuation = (Valuation) evaluation[3];
-						measure = ((IntegerValuation) auxValuation).getValue();
-						if(min == -1) {
-							min = measure;
-							max = measure;
-						} else {
-							if (measure < min) {
-								min = measure;
-							}
-							if (measure > max) {
-								max = measure;
-							}
-						}
-					}
-					if(min != -1) {
-						auxNumericIntegerDomain = new NumericIntegerDomain();
-						auxNumericIntegerDomain.setMinMax((int) min, (int) max);
-						auxNumericIntegerDomain.setType(((NumericIntegerDomain) d).getType());
+				if(v != null) {
+					if(v instanceof IntegerValuation) {	
 						for(Object[] evaluation : toNormalize.get(d)) {
 							auxValuation = (Valuation) evaluation[3];
-							auxValuation = new IntegerValuation(auxNumericIntegerDomain, ((IntegerValuation) auxValuation).getValue());
+							measure = ((IntegerValuation) auxValuation).getValue();
+							if(min == -1) {
+								min = measure;
+								max = measure;
+							} else {
+								if (measure < min) {
+									min = measure;
+								}
+								if (measure > max) {
+									max = measure;
+								}
+							}
+						}
+						if(min != -1) {
+							auxNumericIntegerDomain = new NumericIntegerDomain();
+							auxNumericIntegerDomain.setMinMax((int) min, (int) max);
+							auxNumericIntegerDomain.setType(((NumericIntegerDomain) d).getType());
+							for(Object[] evaluation : toNormalize.get(d)) {
+								auxValuation = (Valuation) evaluation[3];
+								auxValuation = new IntegerValuation(auxNumericIntegerDomain, ((IntegerValuation) auxValuation).getValue());
+		
+								fuzzySet = ((IntegerValuation) auxValuation).unification(unifiedDomain);
+								UnifiedValuation valuation = new UnifiedValuation(fuzzySet);
+		
+								_unifiedEvaluationsResult.put(toNormalizeVk.get(d), valuation);
+							}
+						}
+					} else {
+						min = -1;
+						max = -1;
+						for(Object[] evaluation : toNormalize.get(d)) {
+							auxValuation = (Valuation) evaluation[3];
+							minMeasure = ((IntegerInterval) auxValuation).getMin();
 	
-							fuzzySet = ((IntegerValuation) auxValuation).unification(unifiedDomain);
-							UnifiedValuation valuation = new UnifiedValuation(fuzzySet);
+							if(min == -1) {
+								min = minMeasure;
+								max = minMeasure;
+							}
+							if(minMeasure < min) {
+								min = minMeasure;
+							}
+							if(minMeasure > max) {
+								max = minMeasure;
+							}
+							maxMeasure = ((IntegerInterval) auxValuation).getMax();
+							if(maxMeasure < min) {
+								min = maxMeasure;
+							}
+							if(maxMeasure > max) {
+								max = maxMeasure;
+							}
+						}
+						if(min != -1) {
+							auxNumericIntegerDomain = new NumericIntegerDomain();
+							auxNumericIntegerDomain.setMinMax((int) min, (int) max);
+							auxNumericIntegerDomain.setType(((NumericIntegerDomain) d).getType());
+							for(Object[] evaluation : toNormalize.get(d)) {
+								auxValuation = (Valuation) evaluation[3];
+								auxValuation = new IntegerInterval(auxNumericIntegerDomain, ((IntegerInterval) auxValuation).getMin(), ((IntegerInterval) auxValuation).getMax());
 	
-							_unifiedEvaluationsResult.put(toNormalizeVk.get(d), valuation);
+								fuzzySet = ((IntegerInterval) auxValuation).unification(unifiedDomain);
+								UnifiedValuation valuation = new UnifiedValuation(fuzzySet);
+	
+								_unifiedEvaluationsResult.put(toNormalizeVk.get(d), valuation);
+							}
 						}
 					}
-				} else {
+				} else if(d instanceof NumericRealDomain) {
 					min = -1;
 					max = -1;
-					for(Object[] evaluation : toNormalize.get(d)) {
-						auxValuation = (Valuation) evaluation[3];
-						minMeasure = ((IntegerInterval) auxValuation).getMin();
-
-						if(min == -1) {
-							min = minMeasure;
-							max = minMeasure;
-						}
-						if(minMeasure < min) {
-							min = minMeasure;
-						}
-						if(minMeasure > max) {
-							max = minMeasure;
-						}
-						maxMeasure = ((IntegerInterval) auxValuation).getMax();
-						if(maxMeasure < min) {
-							min = maxMeasure;
-						}
-						if(maxMeasure > max) {
-							max = maxMeasure;
-						}
-					}
-					if(min != -1) {
-						auxNumericIntegerDomain = new NumericIntegerDomain();
-						auxNumericIntegerDomain.setMinMax((int) min, (int) max);
-						auxNumericIntegerDomain.setType(((NumericIntegerDomain) d).getType());
-						for(Object[] evaluation : toNormalize.get(d)) {
-							auxValuation = (Valuation) evaluation[3];
-							auxValuation = new IntegerInterval(auxNumericIntegerDomain, ((IntegerInterval) auxValuation).getMin(), ((IntegerInterval) auxValuation).getMax());
-
-							fuzzySet = ((IntegerInterval) auxValuation).unification(unifiedDomain);
-							UnifiedValuation valuation = new UnifiedValuation(fuzzySet);
-
-							_unifiedEvaluationsResult.put(toNormalizeVk.get(d), valuation);
-						}
-					}
-				}
-			} else if(d instanceof NumericRealDomain) {
-				min = -1;
-				max = -1;
-				
-				ValuationKey vk = toNormalizeVk.get(toNormalize.get(d));
-				Valuation v = _valutationSet.getValuation(vk.getExpert(), vk.getAlternative(), vk.getCriterion());
-				
-				if(v instanceof RealValuation) {	
-				
-					for(Object[] evaluation : toNormalize.get(d)) {
-						auxValuation = (Valuation) evaluation[3];
-						measure = ((RealValuation) auxValuation).getValue();
-						if(min == -1) {
-							min = measure;
-							max = measure;
+					
+					vk = toNormalizeVk.get(toNormalize.get(d));
+					v = _valutationSet.getValuation(vk.getExpert(), vk.getAlternative(), vk.getCriterion());
+					
+					if(v != null) {
+						if(v instanceof RealValuation) {	
+						
+							for(Object[] evaluation : toNormalize.get(d)) {
+								auxValuation = (Valuation) evaluation[3];
+								measure = ((RealValuation) auxValuation).getValue();
+								if(min == -1) {
+									min = measure;
+									max = measure;
+								} else {
+									if (measure < min) {
+										min = measure;
+									}
+									if (measure > max) {
+										max = measure;
+									}
+								}
+							}
+							if(min != -1) {
+								auxNumericRealDomain = new NumericRealDomain();
+								auxNumericRealDomain.setMinMax(min, max);
+								auxNumericRealDomain.setType(((NumericRealDomain) d).getType());
+								for(Object[] evaluation : toNormalize.get(d)) {
+									auxValuation = (Valuation) evaluation[3];
+									auxValuation = new RealValuation(auxNumericRealDomain, ((RealValuation) auxValuation).getValue());
+			
+									fuzzySet = ((IntegerValuation) auxValuation).unification(unifiedDomain);
+									UnifiedValuation valuation = new UnifiedValuation(fuzzySet);
+			
+									_unifiedEvaluationsResult.put(toNormalizeVk.get(d), valuation);
+								}
+							}
 						} else {
-							if (measure < min) {
-								min = measure;
+							min = -1;
+							max = -1;
+							for(Object[] evaluation : toNormalize.get(d)) {
+								auxValuation = (Valuation) evaluation[3];
+								minMeasure = ((RealInterval) auxValuation).getMin();
+		
+								if(min == -1) {
+									min = minMeasure;
+									max = minMeasure;
+								}
+								if(minMeasure < min) {
+									min = minMeasure;
+								}
+								if(minMeasure > max) {
+									max = minMeasure;
+								}
+								maxMeasure = ((IntegerInterval) auxValuation).getMax();
+								if(maxMeasure < min) {
+									min = maxMeasure;
+								}
+								if(maxMeasure > max) {
+									max = maxMeasure;
+								}
 							}
-							if (measure > max) {
-								max = measure;
+							if(min != -1) {
+								auxNumericRealDomain = new NumericRealDomain();
+								auxNumericRealDomain.setMinMax( min, max);
+								auxNumericRealDomain.setType(((NumericRealDomain) d).getType());
+								for(Object[] evaluation : toNormalize.get(d)) {
+									auxValuation = (Valuation) evaluation[3];
+									auxValuation = new RealInterval(auxNumericRealDomain, ((RealInterval) auxValuation).getMin(), ((RealInterval) auxValuation).getMax());
+		
+									fuzzySet = ((RealInterval) auxValuation).unification(unifiedDomain);
+									UnifiedValuation valuation = new UnifiedValuation(fuzzySet);
+		
+									_unifiedEvaluationsResult.put(toNormalizeVk.get(d), valuation);
+								}
 							}
-						}
-					}
-					if(min != -1) {
-						auxNumericRealDomain = new NumericRealDomain();
-						auxNumericRealDomain.setMinMax(min, max);
-						auxNumericRealDomain.setType(((NumericRealDomain) d).getType());
-						for(Object[] evaluation : toNormalize.get(d)) {
-							auxValuation = (Valuation) evaluation[3];
-							auxValuation = new RealValuation(auxNumericRealDomain, ((RealValuation) auxValuation).getValue());
-	
-							fuzzySet = ((IntegerValuation) auxValuation).unification(unifiedDomain);
-							UnifiedValuation valuation = new UnifiedValuation(fuzzySet);
-	
-							_unifiedEvaluationsResult.put(toNormalizeVk.get(d), valuation);
-						}
-					}
-				} else {
-					min = -1;
-					max = -1;
-					for(Object[] evaluation : toNormalize.get(d)) {
-						auxValuation = (Valuation) evaluation[3];
-						minMeasure = ((RealInterval) auxValuation).getMin();
-
-						if(min == -1) {
-							min = minMeasure;
-							max = minMeasure;
-						}
-						if(minMeasure < min) {
-							min = minMeasure;
-						}
-						if(minMeasure > max) {
-							max = minMeasure;
-						}
-						maxMeasure = ((IntegerInterval) auxValuation).getMax();
-						if(maxMeasure < min) {
-							min = maxMeasure;
-						}
-						if(maxMeasure > max) {
-							max = maxMeasure;
-						}
-					}
-					if(min != -1) {
-						auxNumericRealDomain = new NumericRealDomain();
-						auxNumericRealDomain.setMinMax( min, max);
-						auxNumericRealDomain.setType(((NumericRealDomain) d).getType());
-						for(Object[] evaluation : toNormalize.get(d)) {
-							auxValuation = (Valuation) evaluation[3];
-							auxValuation = new RealInterval(auxNumericRealDomain, ((RealInterval) auxValuation).getMin(), ((RealInterval) auxValuation).getMax());
-
-							fuzzySet = ((RealInterval) auxValuation).unification(unifiedDomain);
-							UnifiedValuation valuation = new UnifiedValuation(fuzzySet);
-
-							_unifiedEvaluationsResult.put(toNormalizeVk.get(d), valuation);
 						}
 					}
 				}

@@ -354,7 +354,7 @@ public class RatingView extends ViewPart {
 		}
 		
 		final String test = currentMethod.getImplementation().isAvailable();
-		if(test.length() == 0) {
+		if(test.length() == 0 || test.equals("Not set all assignemnts")) {
 			label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 			label.setImage(Images.signed_yes);
 			_nextButton.setEnabled(false);
@@ -550,14 +550,21 @@ public class RatingView extends ViewPart {
 		_methodUISelected = methodsUIManager.getActivateMethodUI();
 		_stepsText.setText(_methodUISelected.getPhasesFormat());
 		
+		String test = methodToSelect.getImplementation().isAvailable();
 		if(suitableLabel != null) {
 			if(!suitableLabel.getForeground().equals(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED))) {
 				calculateNumSteps();
 				loadNextStep();
 				_warningLabel.setText("");
 			} else {
-				String test = methodToSelect.getImplementation().isAvailable();
 				_warningLabel.setText(test);
+				_warningLabel.setForeground(new Color(_warningLabel.getParent().getDisplay(), new RGB(255, 0, 0)));
+			}
+			
+			
+			if(test.equals("Not set all assignemnts")) {
+				_warningLabel.setText(test);
+				_warningLabel.setForeground(new Color(_warningLabel.getParent().getDisplay(), new RGB(255, 117, 20)));
 			}
 		}
 		

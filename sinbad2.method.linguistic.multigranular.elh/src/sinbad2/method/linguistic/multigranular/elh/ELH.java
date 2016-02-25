@@ -12,6 +12,7 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.method.MethodImplementation;
 import sinbad2.method.state.MethodStateChangeEvent;
+import sinbad2.valuation.Valuation;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
 
@@ -56,26 +57,29 @@ public class ELH extends MethodImplementation {
 				if(!criterion.hasSubcriteria()) {
 					for(Expert expert : _elementsSet.getAllExperts()) {
 						if(!expert.hasChildrens()) {
-							generateDomain = _valuationSet.getValuation(expert, alternative, criterion).getDomain();
-							if(generateDomain != null) {
-								domainName = generateDomain.getId();
-								if(generateDomain instanceof FuzzySet) {
-									if(((FuzzySet) generateDomain).isBLTS()) {
-										if(!domains.containsKey(domainName)) {
-											domains.put(domainName, generateDomain);
-											if(cardinalities.get(((FuzzySet) generateDomain).getLabelSet().getCardinality()) == null) {
-												cardinalities.put(((FuzzySet) generateDomain).getLabelSet().getCardinality(), domainName);
-											} else {
-												if(!domainName.equals(cardinalities.get(((FuzzySet) generateDomain).getLabelSet().getCardinality()))) {
-													return EVALUATIONS_IN_DIFFERENT_DOMAINS_WITH_THE_SAME_CARDINALITY;
+							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
+							if(v != null) {
+								generateDomain = v.getDomain();
+								if(generateDomain != null) {
+									domainName = generateDomain.getId();
+									if(generateDomain instanceof FuzzySet) {
+										if(((FuzzySet) generateDomain).isBLTS()) {
+											if(!domains.containsKey(domainName)) {
+												domains.put(domainName, generateDomain);
+												if(cardinalities.get(((FuzzySet) generateDomain).getLabelSet().getCardinality()) == null) {
+													cardinalities.put(((FuzzySet) generateDomain).getLabelSet().getCardinality(), domainName);
+												} else {
+													if(!domainName.equals(cardinalities.get(((FuzzySet) generateDomain).getLabelSet().getCardinality()))) {
+														return EVALUATIONS_IN_DIFFERENT_DOMAINS_WITH_THE_SAME_CARDINALITY;
+													}
 												}
 											}
+										} else {
+											return EVALUATIONS_IN_NOT_BLTS_DOMAINS;
 										}
 									} else {
-										return EVALUATIONS_IN_NOT_BLTS_DOMAINS;
+										return EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS;
 									}
-								} else {
-									return EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS;
 								}
 							} else {
 								return NOT_SET_ALL_ASSIGNMENTS;

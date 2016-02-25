@@ -167,7 +167,6 @@
       <plugin id="sinbad2.valuation.integer.ui"/>
       <plugin id="sinbad2.valuation.linguistic"/>
       <plugin id="sinbad2.valuation.linguistic.ui"/>
-      <plugin id="sinbad2.valuation.notApplicable"/>
       <plugin id="sinbad2.valuation.real"/>
       <plugin id="sinbad2.valuation.real.interval"/>
       <plugin id="sinbad2.valuation.real.interval.ui"/>
