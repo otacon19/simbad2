@@ -139,8 +139,7 @@ public class CriteriaView extends ViewPart {
 			    if(lastColumn.getWidth() < width - columnsWidth) {
 			        lastColumn.setWidth(width - columnsWidth);
 			    }
-				
-			}
+		    }
 	    });
 	}
 	

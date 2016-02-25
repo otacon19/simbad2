@@ -185,7 +185,7 @@ public abstract class ValuationPanel {
 		_valuateButton.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
 		_valuateButton.setImage(Images.VALUATION);
 		_valuateButton.setText("Evaluate");
-
+		
 		Point sizeRemove = _removeButton.getSize();
 		Point sizeValuate = _valuateButton.getSize();
 

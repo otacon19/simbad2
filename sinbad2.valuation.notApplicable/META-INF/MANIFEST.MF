@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: NotApplicable valuation
+Bundle-SymbolicName: sinbad2.valuation.notApplicable;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Sinbad2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.valuation;bundle-version="1.0.0"
+Export-Package: sinbad2.valuation.notApplicable

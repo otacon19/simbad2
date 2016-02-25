@@ -3,9 +3,12 @@ package sinbad2.valuation.linguistic.ui;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -15,11 +18,14 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
+import sinbad2.valuation.notApplicable.NotApplicable;
 import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
 
 public class ValuationPanelLinguistic extends ValuationPanel {
 	
 	private Combo _labelCombo;
+	private Button _notApplicableButton;
+	
 	private LabelLinguisticDomain _label;
 
 	protected void createControls() {
@@ -57,11 +63,29 @@ public class ValuationPanelLinguistic extends ValuationPanel {
 		_labelCombo.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		new Label(_valuationPart, SWT.NONE);
+		_notApplicableButton = new Button(_valuationPart, SWT.CHECK);
+		gd = new GridData(SWT.CENTER, SWT.TOP, true, false, 3, 1);
+		gd.horizontalIndent = 15;
+		_notApplicableButton.setLayoutData(gd);
+		_notApplicableButton.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
+		_notApplicableButton.setText("Not applicable");
+		_notApplicableButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(_notApplicableButton.getSelection()) {
+					_labelCombo.setEnabled(false);
+				} else {
+					_labelCombo.setEnabled(true);
+				}
+			}
+		});
+		
+		new Label(_valuationPart, SWT.NONE);
 		value = new Label(_valuationPart, SWT.NONE);
 		value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 
-		if (_valuation != null) {
+		if (_valuation != null && _valuation instanceof LinguisticValuation) {
 			_label = ((LinguisticValuation) _valuation).getLabel();
 			_labelCombo.select(((FuzzySet) _domain).getLabelSet().getPos(((LinguisticValuation) _valuation).getLabel()));
 		} else {
@@ -91,14 +115,25 @@ public class ValuationPanelLinguistic extends ValuationPanel {
 		if(_valuation == null) {
 			return true;
 		} else {
-			return ((LinguisticValuation) _valuation).getLabel().getName().equals(_label);
+			if(_valuation instanceof LinguisticValuation) {
+				return ((LinguisticValuation) _valuation).getLabel().getName().equals(_label);
+			}
 		}
+		
+		return true;
 	}
 
 	@Override
 	public Valuation getNewValuation() {
 		
 		LinguisticValuation result = null;
+		
+		if(_notApplicableButton.getSelection()) {
+			NotApplicable na = (NotApplicable) _valuationsManager.copyValuation(NotApplicable.ID);
+			na.setDomain(_domain);
+			
+			return na;
+		}
 		
 		if (_valuation == null) {
 			result = (LinguisticValuation) _valuationsManager.copyValuation(LinguisticValuation.ID);
@@ -114,13 +149,15 @@ public class ValuationPanelLinguistic extends ValuationPanel {
 
 	protected void initControls() {
 		
-		if(_valuation != null) {
-			_label = ((LinguisticValuation) _valuation).getLabel();
-		} else {
-			_label  = ((FuzzySet) _domain).getLabelSet().getLabel(0);
+		if(_valuation instanceof LinguisticValuation) {
+			if(_valuation != null) {
+				_label = ((LinguisticValuation) _valuation).getLabel();
+			} else {
+				_label  = ((FuzzySet) _domain).getLabelSet().getLabel(0);
+			}
+			
+			_labelCombo.setText(_label.getName());
 		}
-		
-		_labelCombo.setText(_label.getName());
 		selectionChange();
 	}
 	

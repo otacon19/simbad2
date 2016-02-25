@@ -101,7 +101,6 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeStartElement("valuations"); //$NON-NLS-1$
-
 		Valuation valuation;
 		for (ValuationKey key : _valuations.keySet()) {
 			valuation = _valuations.get(key);
