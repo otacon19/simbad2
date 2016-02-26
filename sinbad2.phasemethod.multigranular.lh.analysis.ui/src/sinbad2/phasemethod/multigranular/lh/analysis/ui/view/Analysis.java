@@ -26,6 +26,7 @@ import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.phasemethod.multigranular.elh.retranslation.RetranslationPhase;
 import sinbad2.phasemethod.multigranular.lh.aggregation.AggregationPhase;
 import sinbad2.phasemethod.multigranular.lh.analysis.ui.view.listener.CheckStateListener;
 import sinbad2.phasemethod.multigranular.lh.analysis.ui.view.provider.AlternativeColumnLabelProvider;
@@ -74,6 +75,8 @@ public class Analysis extends ViewPart {
 	private LinguisticDomainChart _chart;
 	
 	private AggregationPhase _aggregationPhase;
+	private RetranslationPhase _retranslationPhase;
+	
 	private Map<ProblemElement, Valuation> _aggregationResult;
 	
 	private ProblemElementsSet _elementsSet;
@@ -84,6 +87,8 @@ public class Analysis extends ViewPart {
 		_elementsSet = elementsManager.getActiveElementSet();
 		
 		_aggregationPhase = AggregationPhase.getInstance();
+		_retranslationPhase = RetranslationPhase.getInstance();
+		
 		_aggregationResult = null;
 		
 		_controlListener = null;
@@ -272,6 +277,10 @@ public class Analysis extends ViewPart {
 		}
 
 		if (!exit) {
+			
+			_aggregationResult = _retranslationPhase.transform(_aggregationResult, (FuzzySet) domain);
+			_rankingViewer.setInput(_aggregationResult);
+			
 			if (_controlListener == null) {
 				_controlListener = new ControlAdapter() {
 					@Override

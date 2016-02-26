@@ -34,6 +34,7 @@ import sinbad2.phasemethod.multigranular.elh.analysis.ui.view.provider.FilterCon
 import sinbad2.phasemethod.multigranular.elh.analysis.ui.view.provider.FilterLabelProvider;
 import sinbad2.phasemethod.multigranular.elh.analysis.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.elh.analysis.ui.view.provider.RankingViewerProvider;
+import sinbad2.phasemethod.multigranular.elh.retranslation.RetranslationPhase;
 import sinbad2.phasemethod.multigranular.elh.retranslation.ui.view.Retranslation;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
@@ -74,6 +75,8 @@ public class Analysis extends ViewPart {
 	private LinguisticDomainChart _chart;
 	
 	private AggregationPhase _aggregationPhase;
+	private RetranslationPhase _retranslationPhase;
+	
 	private Map<ProblemElement, Valuation> _aggregationResult;
 	
 	private ProblemElementsSet _elementsSet;
@@ -84,6 +87,8 @@ public class Analysis extends ViewPart {
 		_elementsSet = elementsManager.getActiveElementSet();
 		
 		_aggregationPhase = AggregationPhase.getInstance();
+		_retranslationPhase = RetranslationPhase.getInstance();
+		
 		_aggregationResult = null;
 		
 		_controlListener = null;
@@ -272,6 +277,10 @@ public class Analysis extends ViewPart {
 		}
 
 		if (!exit) {
+			
+			_aggregationResult = _retranslationPhase.transform(_aggregationResult, (FuzzySet) domain);
+			_rankingViewer.setInput(_aggregationResult);
+			
 			if (_controlListener == null) {
 				_controlListener = new ControlAdapter() {
 					@Override
@@ -300,7 +309,9 @@ public class Analysis extends ViewPart {
 						}
 	
 						if (valuation instanceof TwoTuple) {
+							System.out.println(((TwoTuple) valuation).getLabel());
 							pos[i] = ((FuzzySet) domain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
+							System.out.println(pos[i]);
 							alpha[i] = ((TwoTuple) valuation).getAlpha();
 							i++;
 						} else {

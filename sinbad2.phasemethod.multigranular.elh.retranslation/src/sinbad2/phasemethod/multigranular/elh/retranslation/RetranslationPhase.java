@@ -1,8 +1,16 @@
 package sinbad2.phasemethod.multigranular.elh.retranslation;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.element.ProblemElement;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.twoTuple.TwoTuple;
+import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class RetranslationPhase implements IPhaseMethod {
 	
@@ -15,6 +23,30 @@ public class RetranslationPhase implements IPhaseMethod {
 			_instance = new RetranslationPhase();
 		}
 		return _instance;
+	}
+	
+	public Map<ProblemElement, Valuation> transform(Map<ProblemElement, Valuation> problemResult, FuzzySet resultsDomain) {
+
+		Map<ProblemElement, Valuation> results = null;
+
+		if(resultsDomain != null) {
+			results = new HashMap<ProblemElement, Valuation>();
+
+			Valuation valuation;
+			for(ProblemElement alternative : problemResult.keySet()) {
+				valuation = problemResult.get(alternative);
+				if(valuation instanceof UnifiedValuation) {
+					valuation = ((UnifiedValuation) valuation).disunification((FuzzySet) ((UnifiedValuation) valuation).getDomain());
+				} else {
+					if(valuation != null) {
+						valuation = ((TwoTuple) valuation).transform(resultsDomain);
+					}
+				}
+				results.put(alternative, valuation);
+			}
+		}
+
+		return results;
 	}
 	
 	@Override
