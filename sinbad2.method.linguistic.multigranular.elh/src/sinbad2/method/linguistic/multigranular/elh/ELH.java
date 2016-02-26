@@ -23,7 +23,7 @@ public class ELH extends MethodImplementation {
 	private static final String EVALUATIONS_IN_NOT_BLTS_DOMAINS = "Evaluations in not BLTS domains";
 	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS = "Evaluations iN not linguistic domains";
 	private static final String EVALUATIONS_IN_DIFFERENT_DOMAINS_WITH_THE_SAME_CARDINALITY = "Evaluations in different domains with the same cardinality";
-	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignemnts";
+	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignments";
 
 	private ProblemElementsSet _elementsSet;
 	private ValuationSet _valuationSet;

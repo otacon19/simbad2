@@ -37,8 +37,11 @@ import sinbad2.phasemethod.ui.PhaseMethodUI;
 import sinbad2.phasemethod.ui.PhaseMethodUIManager;
 import sinbad2.resolutionphase.rating.ui.Images;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
+import sinbad2.resolutionphase.rating.ui.view.dialog.AlgorithmDialog;
 
 public class RatingView extends ViewPart {
+	public RatingView() {
+	}
 
 	public static final String ID = "flintstones.resolutionphase.rating.ui.view";
 	
@@ -51,10 +54,10 @@ public class RatingView extends ViewPart {
 	private Text _descriptionText;
 	private Text _stepsText;
 	
-	private Label _methodNameText;
+	private Label _methodNameFooterText;
 	private Label _stepValue;
-	private Label _warningLabel;
-	private CLabel _methodNameSelected;
+	private CLabel _warningLabel;
+	private CLabel _methodLabelSelected;
 	
 	private ExpandBar _methodsCategoriesBar; 
 
@@ -165,9 +168,9 @@ public class RatingView extends ViewPart {
 		method.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
 		method.setText("Method: ");
 		
-		_methodNameText = new Label(_ratingEditorFooter, SWT.NONE);
-		_methodNameText.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, false, false, 1, 1));
-		_methodNameText.setText("Unselected");
+		_methodNameFooterText = new Label(_ratingEditorFooter, SWT.NONE);
+		_methodNameFooterText.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, false, false, 1, 1));
+		_methodNameFooterText.setText("Unselected");
 		
 		Label step = new Label(_ratingEditorFooter, SWT.NONE);
 		step.setLayoutData(new GridData(SWT.RIGHT, SWT.LEFT, true, false, 1, 1));
@@ -311,6 +314,12 @@ public class RatingView extends ViewPart {
 		Button showAlgorithmButton = new Button(compositeLeft, SWT.NONE);
 		showAlgorithmButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		showAlgorithmButton.setText("Show algorithm");
+		showAlgorithmButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				new AlgorithmDialog(Display.getCurrent().getActiveShell()).open();
+			}
+		});
 		
 		_tabFolder.getItem(0).setControl(composite);
 	}
@@ -354,7 +363,7 @@ public class RatingView extends ViewPart {
 		}
 		
 		final String test = currentMethod.getImplementation().isAvailable();
-		if(test.length() == 0 || test.equals("Not set all assignemnts")) {
+		if(test.length() == 0 || test.equals("Not set all assignments")) {
 			label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 			label.setImage(Images.signed_yes);
 			_nextButton.setEnabled(false);
@@ -369,15 +378,15 @@ public class RatingView extends ViewPart {
 			@Override
 			public void mouseDown(MouseEvent e) {			
 				CLabel labelSelected = (CLabel) e.getSource();
-				if(_methodNameSelected != null && _methodNameSelected != labelSelected) {
-					_methodNameSelected.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL));
+				if(_methodLabelSelected != null && _methodLabelSelected != labelSelected) {
+					_methodLabelSelected.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL));
 				}
-				_methodNameSelected = labelSelected;
-				_methodNameSelected.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
-				_methodNameText.setText(_methodNameSelected.getText());
-				_methodNameText.getParent().layout();
+				_methodLabelSelected = labelSelected;
+				_methodLabelSelected.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
+				_methodNameFooterText.setText(_methodLabelSelected.getText());
+				_methodNameFooterText.getParent().layout();
 				
-				selectMethod(currentMethod, _methodNameSelected);
+				selectMethod(currentMethod, _methodLabelSelected);
 			}
 		});
 		
@@ -456,7 +465,7 @@ public class RatingView extends ViewPart {
 		_numPhase = 0;
 		_numStep = 0;
 		
-		_methodNameText.setText("Unselected");
+		_methodNameFooterText.setText("Unselected");
 		_stepValue.setText("(0/0)");
 		
 		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
@@ -497,18 +506,15 @@ public class RatingView extends ViewPart {
 	}
 	
 	private void createWarningLabel(Composite composite) {
-		Composite compositePanels = new Composite(composite, SWT.NONE);
-		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		compositePanels.setLayoutData(gridData);
+		Composite compositeWarning = new Composite(composite, SWT.NONE);
+		compositeWarning.setLayout(new GridLayout(1, true));
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
+		compositeWarning.setLayoutData(gridData);
 		
-		_warningLabel = new Label(compositePanels, SWT.NONE);
-		_warningLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
-		_warningLabel.setForeground(new Color(compositePanels.getDisplay(), new RGB(255, 0, 0)));
-		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		_warningLabel = new CLabel(compositeWarning, SWT.NONE);
+		_warningLabel.setFont(SWTResourceManager.getFont("Occidental", 10, SWT.BOLD)); //$NON-NLS-1$
+		gridData = new GridData(SWT.CENTER, SWT.FILL, true, true, 1, 1);
 		_warningLabel.setLayoutData(gridData);
-		
-		GridLayout layout = new GridLayout(1, true);
-		compositePanels.setLayout(layout);
 	}
 
 	public void checkRecommendedMethod() {
@@ -537,8 +543,6 @@ public class RatingView extends ViewPart {
 	}
 	
 	private void selectMethod(Method methodToSelect, CLabel suitableLabel) {
-		_methodNameSelected = suitableLabel;
-		
 		_descriptionText.setText(methodToSelect.getDescription());
 		
 		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
@@ -546,6 +550,9 @@ public class RatingView extends ViewPart {
 			clearMethodSteps();
 		}
 
+		_methodNameFooterText.setText(suitableLabel.getText().replace(" (SUITABLE)", ""));
+		_methodLabelSelected = suitableLabel;
+		
 		methodsUIManager.activate(methodToSelect.getId() + ".ui");
 		_methodUISelected = methodsUIManager.getActivateMethodUI();
 		_stepsText.setText(_methodUISelected.getPhasesFormat());
@@ -555,20 +562,24 @@ public class RatingView extends ViewPart {
 			if(!suitableLabel.getForeground().equals(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED))) {
 				calculateNumSteps();
 				loadNextStep();
+				_warningLabel.setImage(null);
 				_warningLabel.setText("");
 			} else {
+				_warningLabel.setImage(Images.error);
 				_warningLabel.setText(test);
-				_warningLabel.setForeground(new Color(_warningLabel.getParent().getDisplay(), new RGB(255, 0, 0)));
+				_warningLabel.setForeground(new Color(_warningLabel.getParent().getDisplay(), new RGB(205, 65, 65)));
 			}
 			
 			
-			if(test.equals("Not set all assignemnts")) {
+			if(test.equals("Not set all assignments")) {
+				_warningLabel.setImage(Images.warning);
 				_warningLabel.setText(test);
-				_warningLabel.setForeground(new Color(_warningLabel.getParent().getDisplay(), new RGB(255, 117, 20)));
+				_warningLabel.setForeground(new Color(_warningLabel.getParent().getDisplay(), new RGB(255, 212, 0)));
 			}
 		}
 		
 		_warningLabel.pack();
+		_warningLabel.getParent().layout();;
 	}
 		
 	private void activateStep(int numStep) {

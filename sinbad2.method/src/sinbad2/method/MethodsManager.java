@@ -183,24 +183,27 @@ public class MethodsManager {
 		Map<Integer, Boolean> bcl = getBestConditionsLinguistic();
 		int[] cardinalities = getCardinalitiesFuzzySet();
 		
-		if((bcl.get(cardinalities[0])) && _domainsSet.getDomains().size() == 1) {
-			return "2-Tuple linguistic computational model";
-		} else if(getBestConditionsNumeric()) {
-			return "Fusion approach for managing heterogeneous information";
-		} else if(getBestConditionsUnbalanced() && _domainsSet.getDomains().size() == 1) {
-			return "Methodology to deal with unbalanced linguistic term sets";
-		} else {
-			for(int i = 0; i < cardinalities.length; i++) {
-				if(!getBestConditionsLinguistic().get(cardinalities[i])) {
-					return "Fusion approach for managing multi-granular linguistic information";
-				} else if((i + 1) < cardinalities.length) {
-					if((((cardinalities[i] -1) * 2) +1) != cardinalities[i + 1]) {
-						return "Extended Linguistic Hierarchies";
+		if(cardinalities.length > 0 && bcl.size() > 0) {
+			if((bcl.get(cardinalities[0])) && _domainsSet.getDomains().size() == 1) {
+				return "2-Tuple linguistic computational model";
+			} else if(getBestConditionsNumeric()) {
+				return "Fusion approach for managing heterogeneous information";
+			} else if(getBestConditionsUnbalanced() && _domainsSet.getDomains().size() == 1) {
+				return "Methodology to deal with unbalanced linguistic term sets";
+			} else {
+				for(int i = 0; i < cardinalities.length; i++) {
+					if(!getBestConditionsLinguistic().get(cardinalities[i])) {
+						return "Fusion approach for managing multi-granular linguistic information";
+					} else if((i + 1) < cardinalities.length) {
+						if((((cardinalities[i] -1) * 2) +1) != cardinalities[i + 1]) {
+							return "Extended Linguistic Hierarchies";
+						}
 					}
 				}
+				return "Linguistic Hierarchies";
 			}
-			return "Linguistic Hierarchies";
 		}
+		return "";
 	}
 	
 	public int[] getCardinalitiesFuzzySet() {

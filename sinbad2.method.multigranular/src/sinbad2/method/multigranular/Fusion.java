@@ -23,7 +23,7 @@ public class Fusion extends MethodImplementation {
 	
 	private static final String EVALUATIONS_IN_NOT_BLTS_DOMAIN = "Evaluations in not BLTS domain";
 	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAIN = "Evaluations in not linguistic domain";
-	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignemnts";
+	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignments";
 	
 	private DomainSet _domainsSet;
 	private ProblemElementsSet _elementsSet;
@@ -49,7 +49,17 @@ public class Fusion extends MethodImplementation {
 	public void notifyMethodStateChange(MethodStateChangeEvent event) {}
 
 	@Override
-	public String isAvailable() {
+	public String isAvailable() {		
+		List<Domain> domains = _domainsSet.getDomains();
+		for(Domain d: domains) {
+			if(d instanceof FuzzySet) {
+				if(!((FuzzySet) d).isBLTS()) {
+					return EVALUATIONS_IN_NOT_BLTS_DOMAIN;
+				}
+			} else {
+				return EVALUATIONS_IN_NOT_LINGUISTIC_DOMAIN;
+			}
+		}
 		
 		for(Expert expert : _elementsSet.getAllExperts()) {
 			if(!expert.hasChildrens()) {
@@ -66,16 +76,6 @@ public class Fusion extends MethodImplementation {
 			}
 		}
 		
-		List<Domain> domains = _domainsSet.getDomains();
-		for(Domain d: domains) {
-			if(d instanceof FuzzySet) {
-				if(!((FuzzySet) d).isBLTS()) {
-					return EVALUATIONS_IN_NOT_BLTS_DOMAIN;
-				}
-			} else {
-				return EVALUATIONS_IN_NOT_LINGUISTIC_DOMAIN;
-			}
-		}
 		return "";
 	}
 }

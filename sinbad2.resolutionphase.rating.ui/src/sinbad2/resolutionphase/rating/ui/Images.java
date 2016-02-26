@@ -13,6 +13,10 @@ public class Images {
 	
 	public static final Image signed_no = AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, "icons/signed_no.gif").createImage(); //$NON-NLS-1$
 	
+	public static final Image warning = AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, "icons/warning.png").createImage(); //$NON-NLS-1$
+	
+	public static final Image error = AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, "icons/error.png").createImage(); //$NON-NLS-1$
+	
 	private Images() {}
 	
 }

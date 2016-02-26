@@ -6,4 +6,5 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Sinbad2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.method.linguistic;bundle-version="1.0.0",
- sinbad2.domain.linguistic.fuzzyset;bundle-version="1.0.0"
+ sinbad2.domain.linguistic.fuzzyset;bundle-version="1.0.0",
+ sinbad2.domain.numeric.integer

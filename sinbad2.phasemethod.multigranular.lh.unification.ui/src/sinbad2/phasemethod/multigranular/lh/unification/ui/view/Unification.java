@@ -189,7 +189,9 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		List<Object[]> lhDomains = _unificacionPhase.generateLH();
 		FuzzySet unifiedDomain = null;
 		if (lhDomains != null) {
-			unifiedDomain = ((FuzzySet) lhDomains.get(lhDomains.size() - 1)[2]);
+			if(lhDomains.size() > 0) {
+				unifiedDomain = ((FuzzySet) lhDomains.get(lhDomains.size() - 1)[2]);
+			}
 		}
 		
 		TreeViewerContentProvider provider = new TreeViewerContentProvider(_unificacionPhase.unification(unifiedDomain));

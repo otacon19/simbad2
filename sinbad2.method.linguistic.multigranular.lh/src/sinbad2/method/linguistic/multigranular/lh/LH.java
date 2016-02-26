@@ -32,7 +32,7 @@ public class LH extends MethodImplementation {
 	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAIN = "Evaluations in not linguistic domain";
 	private static final String EVALUATIONS_IN_DIFFERENT_DOMAINS_WITH_THE_SAME_CARDINALITY = "Evaluations in different domains with the same cardinality";
 	private static final String IMPOSSIBLE_TO_BUILD_LINGUISTIC_HIERARCHY_TAKING_THE_DOMAINS_USED = "Impossible to build linguistic hierarchy taking the domains used";
-	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignemnts";
+	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignments";
 	
 	private ProblemElementsSet _elementsSet;
 	private ValuationSet _valuationSet;
@@ -69,21 +69,6 @@ public class LH extends MethodImplementation {
 		Set<String> domainsNames = new HashSet<String>();
 		Set<Integer> cardinalities = new HashSet<Integer>();
 		int cardinality = 0;
-		
-		for(Expert expert : _elementsSet.getAllExperts()) {
-			if(!expert.hasChildrens()) {
-				for(Criterion criterion : _elementsSet.getAllCriteria()) {
-					if(!criterion.hasSubcriteria()) {
-						for(Alternative alternative : _elementsSet.getAlternatives()) {
-							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
-							if(v == null) { 
-								return NOT_SET_ALL_ASSIGNMENTS;
-							}
-						}
-					}
-				}
-			}
-		}
 		
 		List<Domain> domains = _domainsSet.getDomains();
 		for(Domain d: domains) {
@@ -129,6 +114,22 @@ public class LH extends MethodImplementation {
 				}
 			}
 		}
+		
+		for(Expert expert : _elementsSet.getAllExperts()) {
+			if(!expert.hasChildrens()) {
+				for(Criterion criterion : _elementsSet.getAllCriteria()) {
+					if(!criterion.hasSubcriteria()) {
+						for(Alternative alternative : _elementsSet.getAlternatives()) {
+							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
+							if(v == null) { 
+								return NOT_SET_ALL_ASSIGNMENTS;
+							}
+						}
+					}
+				}
+			}
+		}
+		
 		return "";
 	}
 
