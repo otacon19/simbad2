@@ -243,10 +243,14 @@ public class RatingView extends ViewPart {
 		    _tabFolder.addSelectionListener(new SelectionAdapter() {
 		    	@Override
 		    	public void widgetSelected(SelectionEvent e) {
-		    		if(_tabFolder.getSelectionIndex() < _numStep) {
-		    			getPreviousStep();
-		    		} else if(_tabFolder.getSelectionIndex() > _numStep) {
-		    			getNextStep();
+		    		_numStep = _tabFolder.getSelectionIndex();
+		    		if(_numStep == 0) {
+		    			_backButton.setEnabled(false);
+		    		} else if(_numStep == _tabFolder.getItemCount() - 1) {
+		    			_nextButton.setEnabled(false);
+		    		} else {
+		    			_backButton.setEnabled(true);
+		    			_nextButton.setEnabled(true);
 		    		}
 		    	}
 			});
