@@ -106,16 +106,11 @@ public abstract class MethodImplementation implements IMethodStateListener, IWor
 	
 	@Override
 	public IWorkspaceContent read(String fileName) throws IOException, WorkspaceContentPersistenceException {
-		//TODO
-		
-		MethodImplementation result = null;
-		return result;
+		return null;
 	}
 	
 	@Override
-	public void save(String fileName) throws IOException, WorkspaceContentPersistenceException {
-		//TODO
-	}
+	public void save(String fileName) throws IOException, WorkspaceContentPersistenceException {}
 	
 	@Override
 	public void clear() {
