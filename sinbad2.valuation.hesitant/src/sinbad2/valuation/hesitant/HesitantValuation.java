@@ -126,8 +126,8 @@ public class HesitantValuation extends Valuation {
 	}
 	
 	public void setBinaryRelation(int lowerTermPos, int upperTermPos) {
-		LabelLinguisticDomain lowertTerm = ((FuzzySet) _domain).getLabelSet().getLabel(lowerTermPos);
-		Validator.notNull(lowertTerm);
+		LabelLinguisticDomain lowerTerm = ((FuzzySet) _domain).getLabelSet().getLabel(lowerTermPos);
+		Validator.notNull(lowerTerm);
 		LabelLinguisticDomain upperTerm = ((FuzzySet) _domain).getLabelSet().getLabel(upperTermPos);
 		Validator.notNull(upperTerm);
 		
@@ -135,7 +135,7 @@ public class HesitantValuation extends Valuation {
 			throw new IllegalArgumentException("Upper term is bigger than lower term.");
 		}
 		
-		_lowerTerm = lowertTerm;
+		_lowerTerm = lowerTerm;
 		_upperTerm = upperTerm;
 		
 		disablePrimary();
@@ -350,18 +350,34 @@ public class HesitantValuation extends Valuation {
 		
 		writer.writeStartElement("hesitant"); //$NON-NLS-1$
 		
-		writer.writeStartElement("label"); //$NON-NLS-1$
-		_label.save(writer);
-		writer.writeEndElement();
-		writer.writeStartElement("term"); //$NON-NLS-1$
-		_term.save(writer);
-		writer.writeEndElement();
-		writer.writeStartElement("upperTerm"); //$NON-NLS-1$
-		_upperTerm.save(writer);
-		writer.writeEndElement();
-		writer.writeStartElement("lowerTerm"); //$NON-NLS-1$
-		_lowerTerm.save(writer);
-		writer.writeEndElement();
+		if(_label != null) {
+			writer.writeStartElement("labelv"); //$NON-NLS-1$
+			writer.writeAttribute("label", _label.getName()); //$NON-NLS-1$
+			_label.save(writer);
+			writer.writeEndElement();
+		}
+		if(_term != null) {
+			writer.writeStartElement("termv"); //$NON-NLS-1$
+			writer.writeAttribute("term", _term.getName()); //$NON-NLS-1$
+			_term.save(writer);
+			writer.writeEndElement();
+			
+			writer.writeStartElement("relation"); //$NON-NLS-1$
+			writer.writeAttribute("unaryRelation", _unaryRelation.getRelationType()); //$NON-NLS-1$
+			writer.writeEndElement();
+		}
+		if(_upperTerm != null) {
+			writer.writeStartElement("upperTermv"); //$NON-NLS-1$
+			writer.writeAttribute("upperTerm", _upperTerm.getName()); //$NON-NLS-1$
+			_upperTerm.save(writer);
+			writer.writeEndElement();
+		}
+		if(_lowerTerm != null) {
+			writer.writeStartElement("lowerTermv"); //$NON-NLS-1$
+			writer.writeAttribute("lowerTerm", _lowerTerm.getName()); //$NON-NLS-1$
+			_lowerTerm.save(writer);
+			writer.writeEndElement();
+		}
 		
 		writer.writeEndElement();
 		
@@ -375,23 +391,43 @@ public class HesitantValuation extends Valuation {
 		
 		reader.goToStartElement("hesitant"); //$NON-NLS-1$
 		
-		while (reader.hasNext() && !end) {
+		while(reader.hasNext() && !end) {
 			event = reader.next();
-			if (event.isStartElement()) {
-				if ("label".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
+			if(event.isStartElement()) {
+				if("labelv".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
+					String name = reader.getStartElementAttribute("label"); //$NON-NLS-1$
 					_label = new LabelLinguisticDomain();
+					_label.setName(name);
 					_label.read(reader);
-				} else if("term".equals(reader.getStartElementLocalPart())){ //$NON-NLS-1$
+				} else if("termv".equals(reader.getStartElementLocalPart())){ //$NON-NLS-1$
+					String name = reader.getStartElementAttribute("term"); //$NON-NLS-1$
 					_term = new LabelLinguisticDomain();
+					_term.setName(name);
 					_term.read(reader);
-				} else if("upperTerm".equals(reader.getStartElementLocalPart())){ //$NON-NLS-1$
+				} else if("relation".equals(reader.getStartElementLocalPart())) {
+					String unaryRelation = reader.getStartElementAttribute("unaryRelation"); //$NON-NLS-1$
+					if(unaryRelation.contains("greater")) {
+						_unaryRelation = EUnaryRelationType.GreaterThan;
+					} else if(unaryRelation.contains("lower")) {
+						_unaryRelation = EUnaryRelationType.LowerThan;
+					} else if(unaryRelation.contains("least")) {
+						_unaryRelation = EUnaryRelationType.AtLeast;
+					} else if(unaryRelation.contains("most")) {
+						_unaryRelation = EUnaryRelationType.AtMost;
+					}
+
+				} else if("upperTermv".equals(reader.getStartElementLocalPart())){ //$NON-NLS-1$
+					String name = reader.getStartElementAttribute("upperTerm"); //$NON-NLS-1$
 					_upperTerm = new LabelLinguisticDomain();
+					_upperTerm.setName(name);
 					_upperTerm.read(reader);
-				} else if("lowerTerm".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
+				} else if("lowerTermv".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
+					String name = reader.getStartElementAttribute("lowerTerm"); //$NON-NLS-1$
 					_lowerTerm = new LabelLinguisticDomain();
+					_lowerTerm.setName(name);
 					_lowerTerm.read(reader);
 				}
-			} else if (event.isEndElement()) {
+			} else if(event.isEndElement()) {
 				endtag = reader.getEndElementLocalPart();
 				if (endtag.equals("hesitant")) { //$NON-NLS-1$
 					end = true;
@@ -399,7 +435,7 @@ public class HesitantValuation extends Valuation {
 			}
 		}
 	}
-	
+
 	@Override
 	public Object clone() {
 		Object result = null;

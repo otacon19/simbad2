@@ -126,6 +126,13 @@ public class ValuationPanelHesitant extends ValuationPanel {
 						checkHesitantValues(true, true, true, true, false);
 					} else {
 						checkHesitantValues(false, true, false, true, false);
+						
+						_selectIndexes.add(0);
+						_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
+						_unaryRelation = EUnaryRelationType.AtMost;
+						_term = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getSelectionIndex());
+						_unaryIndexes.add(_unaryRelation, _term);
+						
 					}
 					modifyHesitantSelection();
 				}
@@ -156,6 +163,18 @@ public class ValuationPanelHesitant extends ValuationPanel {
 				if(_hesitantRelationshipComposite.getEnabled()) {
 					if(_compositeButton.getSelection()) {
 						checkHesitantValues(true, true, true, true, false);
+						
+						String items1[] = _hesitantEvaluationCombo1.getItems();
+						int pos1 = _hesitantEvaluationCombo1.getSelectionIndex();
+						int pos2 = items1.length + _hesitantEvaluationCombo2.getSelectionIndex();;
+						
+						_selectIndexes.add(pos1);
+						_selectIndexes.add(pos2);
+						_binaryIndexes.add(pos1);
+						_binaryIndexes.add(pos2);
+						_lowerTerm = ((FuzzySet) _domain).getLabelSet().getLabel(pos1);
+						_upperTerm = ((FuzzySet) _domain).getLabelSet().getLabel(pos2);
+						
 					} else {
 						checkHesitantValues(false, false, false, true, false);
 					}
@@ -230,7 +249,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 			result.setUnaryRelation(_unaryIndexes.getLeft(), _unaryIndexes.getRight());
 		} else {
 			if(!_binaryIndexes.isEmpty()) {
-				result.setBinaryRelation(_binaryIndexes.get(0), _binaryIndexes.get(1));
+				result.setBinaryRelation(_binaryIndexes.get(_binaryIndexes.size() - 2), _binaryIndexes.get(_binaryIndexes.size() - 1));
 			} else {
 				_label = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getItem(_hesitantEvaluationCombo2.getSelectionIndex()));
 				result.setLabel(_label);
@@ -437,7 +456,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 		if(_hesitantEvaluationCombo1 != null) {
 			if(!_hesitantEvaluationCombo1.isDisposed()) {
 				_hesitantEvaluationCombo1ModifyListener = new ModifyListener() {
-					
+
 					@Override
 					public void modifyText(ModifyEvent e) {
 						boolean binary = false;

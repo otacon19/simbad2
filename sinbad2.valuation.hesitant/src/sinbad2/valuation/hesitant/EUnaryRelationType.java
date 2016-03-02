@@ -14,4 +14,8 @@ public enum EUnaryRelationType {
 		return _relationType;
 	}	
 	
+	public void setRelationType(String relationType) {
+		_relationType = relationType;
+	}
+	
 }

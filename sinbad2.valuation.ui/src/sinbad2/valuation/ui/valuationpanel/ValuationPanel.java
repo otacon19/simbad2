@@ -212,7 +212,7 @@ public abstract class ValuationPanel {
 				Valuation newValuation = getNewValuation();
 				notifyValuationPanelChange(new ValuationPanelEvent(type, _valuation, newValuation));
 				_valuation = newValuation;
-				System.out.println(_valuation);
+
 				initControls();
 
 			}

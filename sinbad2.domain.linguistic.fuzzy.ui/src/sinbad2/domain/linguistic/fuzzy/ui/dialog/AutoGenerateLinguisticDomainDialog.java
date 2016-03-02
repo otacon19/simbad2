@@ -11,7 +11,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -92,6 +94,7 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
+				
 				if(!_labelsText.getText().isEmpty()) {
 					String[] labels = _labelsText.getText().split(":"); //$NON-NLS-1$
 					((FuzzySet) _specificDomain).createTrapezoidalFunction(labels);
@@ -103,14 +106,17 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 			
 		});
 		
-		/*_labelsText.addListener(SWT.Verify, new Listener() {
+		_labelsText.addListener(SWT.Verify, new Listener() {
 			public void handleEvent(Event e) {
 				if(e.character == ' ') {
-					e.doit = false;
-					return;
+					String before = _labelsText.getText().substring(_labelsText.getText().length() - 1);
+					if(before.equals(":")) {
+						e.doit = false;
+						return;
+					}
 				}
 			}
-		});*/
+		});
 		
 		_labelsTextControlDecoration = createNotificationDecorator(_labelsText);
 		_domainNameTextControlDecoration = createNotificationDecorator(textID);

@@ -15,17 +15,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
@@ -110,7 +105,7 @@ public class CriteriaView extends ViewPart {
 		tc.setImage(Images.TypeOfCriterion);
 		tc.pack();
 		
-		_treeViewer.getTree().addControlListener(new ControlAdapter() {
+		/*_treeViewer.getTree().addControlListener(new ControlAdapter() {
 		
 			public void controlResized(ControlEvent e) {
 	            packAndFillLastColumn();
@@ -140,7 +135,7 @@ public class CriteriaView extends ViewPart {
 			        lastColumn.setWidth(width - columnsWidth);
 			    }
 		    }
-	    });
+	    });*/
 	}
 	
 	private void hookContextMenu() {

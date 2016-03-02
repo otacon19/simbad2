@@ -309,9 +309,7 @@ public class Analysis extends ViewPart {
 						}
 	
 						if (valuation instanceof TwoTuple) {
-							System.out.println(((TwoTuple) valuation).getLabel());
 							pos[i] = ((FuzzySet) domain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
-							System.out.println(pos[i]);
 							alpha[i] = ((TwoTuple) valuation).getAlpha();
 							i++;
 						} else {
