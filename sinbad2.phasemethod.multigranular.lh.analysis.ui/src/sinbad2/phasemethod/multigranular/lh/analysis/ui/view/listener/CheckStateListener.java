@@ -39,7 +39,7 @@ public class CheckStateListener implements ICheckStateListener {
 
 	private void checkSon(ProblemElement element, boolean checked) {
 		if(element instanceof Expert) {
-			List<Expert> childrens = ((Expert) element).getChildrens();
+			List<Expert> childrens = ((Expert) element).getChildren();
 			if(childrens != null) {
 				for (ProblemElement son : childrens) {
 					checkSon(son, checked);
@@ -149,8 +149,8 @@ public class CheckStateListener implements ICheckStateListener {
 		
 		if(type.equals("EXPERTS")) {
 			for(Expert element : _elementsSet.getExperts()) {
-				if(element.hasChildrens()) {
-					for(Expert child: element.getChildrens()) {
+				if(element.hasChildren()) {
+					for(Expert child: element.getChildren()) {
 						_treeViewer.setGrayChecked(child, false);
 						_treeViewer.setChecked(child, true);
 					}

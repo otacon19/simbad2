@@ -42,7 +42,7 @@ public class FilterContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 		
 		if(parentElement instanceof Expert) {
-			return ((Expert) parentElement).getChildrens().toArray();
+			return ((Expert) parentElement).getChildren().toArray();
 		} else if(parentElement instanceof Criterion) {
 			return ((Criterion) parentElement).getSubcriteria().toArray();
 		} 
@@ -67,7 +67,7 @@ public class FilterContentProvider implements ITreeContentProvider {
 	public boolean hasChildren(Object element) {
 		
 		if(element instanceof Expert) {
-			return ((Expert) element).hasChildrens();
+			return ((Expert) element).hasChildren();
 		} else if(element instanceof Criterion) {
 			return ((Criterion) element).hasSubcriteria();
 		} else {

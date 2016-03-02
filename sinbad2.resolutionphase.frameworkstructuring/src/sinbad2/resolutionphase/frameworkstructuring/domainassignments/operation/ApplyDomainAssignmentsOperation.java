@@ -105,8 +105,8 @@ public class ApplyDomainAssignmentsOperation extends UndoableOperation {
 			}
 			doit = false;
 
-		} else if (expert.hasChildrens()) {
-			for (Expert e : expert.getChildrens()) {
+		} else if (expert.hasChildren()) {
+			for (Expert e : expert.getChildren()) {
 				setDomain(e, alternative, criterion, domain);
 			}
 			doit = false;

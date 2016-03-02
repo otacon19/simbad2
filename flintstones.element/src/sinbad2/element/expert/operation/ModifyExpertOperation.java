@@ -35,7 +35,7 @@ public class ModifyExpertOperation extends UndoableOperation {
 		Expert parent = _modifyExpert.getParent();
 		
 		if(parent != null) {
-			_childrensOrOthers = parent.getChildrens();
+			_childrensOrOthers = parent.getChildren();
 		} else {
 			_childrensOrOthers = elementSet.getExperts();
 		}

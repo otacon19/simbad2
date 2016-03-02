@@ -96,8 +96,8 @@ public class ProblemElementsSet implements Cloneable {
 		List<Expert> result = new LinkedList<Expert>();
 		for(Expert e: _experts) {
 			result.add(e);
-			if(e.hasChildrens()) {
-				result.addAll(e.getChildrens());
+			if(e.hasChildren()) {
+				result.addAll(e.getChildren());
 			}
 		}
 		return result;
@@ -663,8 +663,8 @@ public class ProblemElementsSet implements Cloneable {
 		for (Expert expert : experts) {
 			writer.writeStartElement("expert"); //$NON-NLS-1$
 			writer.writeAttribute("id", expert.getId()); //$NON-NLS-1$
-			if (expert.hasChildrens()) {
-				saveExperts(expert.getChildrens(), writer);
+			if (expert.hasChildren()) {
+				saveExperts(expert.getChildren(), writer);
 			}
 			writer.writeEndElement();
 		}

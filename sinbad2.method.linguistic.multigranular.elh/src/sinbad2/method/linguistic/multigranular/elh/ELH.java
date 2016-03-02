@@ -56,7 +56,7 @@ public class ELH extends MethodImplementation {
 			for(Criterion criterion : _elementsSet.getAllCriteria()) {
 				if(!criterion.hasSubcriteria()) {
 					for(Expert expert : _elementsSet.getAllExperts()) {
-						if(!expert.hasChildrens()) {
+						if(!expert.hasChildren()) {
 							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
 							if(v != null) {
 								generateDomain = v.getDomain();

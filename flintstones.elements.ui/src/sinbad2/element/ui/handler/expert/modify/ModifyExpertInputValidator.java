@@ -28,7 +28,7 @@ public class ModifyExpertInputValidator implements IInputValidator {
 		_brothers = new LinkedList<Expert>();
 		
 		if(_parentOfModifyExpert != null) {
-			_brothers = _parentOfModifyExpert.getChildrens();
+			_brothers = _parentOfModifyExpert.getChildren();
 		} else {
 			_brothers = _elementSet.getExperts();
 		}

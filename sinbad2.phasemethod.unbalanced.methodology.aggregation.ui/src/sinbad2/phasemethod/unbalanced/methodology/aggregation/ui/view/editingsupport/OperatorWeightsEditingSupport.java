@@ -36,7 +36,7 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 		if (root instanceof Expert || root == null) {
 			List<Expert> childrens = elementsSet.getExpertChildren((Expert) root);
 			for (Expert children : childrens) {
-				if (!children.hasChildrens()) {
+				if (!children.hasChildren()) {
 					result.add(children);
 				} else {
 					ProblemElement[] subchildrens = getLeafElements(children);

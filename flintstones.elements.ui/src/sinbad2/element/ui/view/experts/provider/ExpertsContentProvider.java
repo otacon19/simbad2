@@ -94,7 +94,7 @@ public class ExpertsContentProvider implements ITreeContentProvider, IExpertsCha
 
 	@Override
 	public Object[] getChildren(Object parentExpertElement) {
-		return ((Expert) parentExpertElement).getChildrens().toArray();
+		return ((Expert) parentExpertElement).getChildren().toArray();
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class ExpertsContentProvider implements ITreeContentProvider, IExpertsCha
 	
 	@Override
 	public boolean hasChildren(Object expertElement) {
-		return ((Expert) expertElement).hasChildrens();
+		return ((Expert) expertElement).hasChildren();
 	}
 	
 	public Object getInput() {

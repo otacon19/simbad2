@@ -117,7 +117,7 @@ public class ElementContentProvider implements ITreeContentProvider, IExpertsCha
 	public Object[] getChildren(Object parentElement) {
 		
 		if (Expert.class.equals(_type)) {
-			return ((Expert) parentElement).getChildrens().toArray();
+			return ((Expert) parentElement).getChildren().toArray();
 		} else if (Alternative.class.equals(_type)) {
 			return null;
 		} else if (Criterion.class.equals(_type)) {
@@ -149,7 +149,7 @@ public class ElementContentProvider implements ITreeContentProvider, IExpertsCha
 	public boolean hasChildren(Object element) {
 		
 		if (Expert.class.equals(_type)) {
-			return ((Expert) element).hasChildrens();
+			return ((Expert) element).hasChildren();
 		} else if (Alternative.class.equals(_type)) {
 			return false;
 		} else if (Criterion.class.equals(_type)) {

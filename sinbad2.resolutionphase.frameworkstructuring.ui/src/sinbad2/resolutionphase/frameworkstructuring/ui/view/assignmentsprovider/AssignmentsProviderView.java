@@ -294,8 +294,8 @@ public class AssignmentsProviderView extends ViewPart implements IAlternativesCh
 	private List<String> extractExpertValues(Expert expert) {
 		List<String> result = new LinkedList<String>();
 
-		if (expert.hasChildrens()) {
-			for (Expert e : expert.getChildrens()) {
+		if (expert.hasChildren()) {
+			for (Expert e : expert.getChildren()) {
 				result.addAll(extractExpertValues(e));
 			}
 		}

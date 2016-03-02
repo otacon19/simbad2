@@ -37,7 +37,7 @@ public class AddExpertInputValidator implements IInputValidator {
 		List<Expert> otherExperts = null;
 		
 		if(_isMember) {
-			brothers = _parentOfNewExpert.getChildrens();
+			brothers = _parentOfNewExpert.getChildren();
 		} else {
 			otherExperts = _elementSet.getExperts();
 		}

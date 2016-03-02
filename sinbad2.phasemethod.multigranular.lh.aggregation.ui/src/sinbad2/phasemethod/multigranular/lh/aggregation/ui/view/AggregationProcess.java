@@ -668,12 +668,12 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_unificationPhase.unifiedEvaluationToTwoTuple((FuzzySet) getDomain());
 		
 		Set<ProblemElement> experts = new HashSet<ProblemElement>();
-		experts.addAll(_elementsSet.getExperts());
+		experts.addAll(_elementsSet.getAllExperts());
 		Set<ProblemElement> alternatives = new HashSet<ProblemElement>();
 		alternatives.addAll(_elementsSet.getAlternatives());
 		Set<ProblemElement> criteria = new HashSet<ProblemElement>();
-		criteria.addAll(_elementsSet.getCriteria());
-		
+		criteria.addAll(_elementsSet.getAllCriteria());
+
 		_aggregationResult = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 		
 		refreshView();	

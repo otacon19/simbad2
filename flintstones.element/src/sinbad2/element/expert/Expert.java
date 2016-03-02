@@ -74,7 +74,7 @@ public class Expert extends ProblemElement {
 			
 	}
 
-	public List<Expert> getChildrens() {
+	public List<Expert> getChildren() {
 		return _childrens;
 	}
 	
@@ -82,7 +82,7 @@ public class Expert extends ProblemElement {
 		_childrens = childrens;
 	}
 	
-	public boolean hasChildrens() {
+	public boolean hasChildren() {
 		if(_childrens != null && !_childrens.isEmpty()) {
 			return true;
 		}
@@ -135,7 +135,7 @@ public class Expert extends ProblemElement {
 	public int hashCode() {
 		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
 		hcb.append(getCanonicalId());
-		if(hasChildrens()) {
+		if(hasChildren()) {
 			for(Expert expert: _childrens) {
 				hcb.append(expert);
 			}
@@ -151,7 +151,7 @@ public class Expert extends ProblemElement {
 		result = (Expert) super.clone();
 		result.setParent(_parent);
 		
-		if(hasChildrens()) {
+		if(hasChildren()) {
 			List<Expert> childrens = new LinkedList<Expert>();
 			for(Expert expert: _childrens){
 				childrens.add((Expert) expert.clone());
@@ -166,7 +166,7 @@ public class Expert extends ProblemElement {
 		
 		for(Expert expert: experts) {
 			if(expert.getId().equals(parentId)) {
-				return getExpertByCanonicalId(expert.getChildrens(), formatId.substring(parentId.length() + 1));
+				return getExpertByCanonicalId(expert.getChildren(), formatId.substring(parentId.length() + 1));
 			}
 		}
 		

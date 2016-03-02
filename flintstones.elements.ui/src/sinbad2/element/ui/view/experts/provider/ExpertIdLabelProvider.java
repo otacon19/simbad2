@@ -17,7 +17,7 @@ public class ExpertIdLabelProvider extends ColumnLabelProvider {
 
 	@Override
 	public Image getImage(Object obj){
-		if(((Expert) obj).hasChildrens()) {
+		if(((Expert) obj).hasChildren()) {
 			return Images.GroupOfExperts;
 		} else {
 			return Images.Expert;

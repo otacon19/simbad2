@@ -74,7 +74,6 @@ public class TwoTuple extends LinguisticValuation {
 			labelIndex++;
 			alpha = -0.5;
 		}
-		
 		setAlpha(alpha);
 	}
 	

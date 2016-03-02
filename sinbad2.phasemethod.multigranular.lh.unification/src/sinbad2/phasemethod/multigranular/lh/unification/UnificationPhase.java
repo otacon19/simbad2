@@ -195,7 +195,7 @@ public class UnificationPhase implements IPhaseMethod {
 			for(Criterion criterion : elementsSet.getAllCriteria()) {
 				if(!criterion.hasSubcriteria()) {
 					for(Expert expert : elementsSet.getAllExperts()) {
-						if(!expert.hasChildrens()) {
+						if(!expert.hasChildren()) {
 							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
 							if(v != null) {
 								generateDomain = v.getDomain();

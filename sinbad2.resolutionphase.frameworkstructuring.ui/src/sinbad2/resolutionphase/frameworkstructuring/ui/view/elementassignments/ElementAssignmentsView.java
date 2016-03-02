@@ -304,8 +304,8 @@ public class ElementAssignmentsView extends ViewPart implements ISelectionListen
 					List<Expert> aux = new LinkedList<Expert>(nextLevelExperts);
 					nextLevelExperts = new LinkedList<Expert>();
 					for (Expert expert : aux) {
-						if (expert.hasChildrens()) {
-							nextLevelExperts.addAll(expert.getChildrens());
+						if (expert.hasChildren()) {
+							nextLevelExperts.addAll(expert.getChildren());
 						} else {
 							toDisplay.add(expert);
 						}

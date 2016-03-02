@@ -48,7 +48,7 @@ public class TwoTuple extends MethodImplementation {
 		Domain generateDomain;
 		
 		for(Expert expert : _elementsSet.getAllExperts()) {
-			if(!expert.hasChildrens()) {
+			if(!expert.hasChildren()) {
 				for(Criterion criterion : _elementsSet.getAllCriteria()) {
 					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {

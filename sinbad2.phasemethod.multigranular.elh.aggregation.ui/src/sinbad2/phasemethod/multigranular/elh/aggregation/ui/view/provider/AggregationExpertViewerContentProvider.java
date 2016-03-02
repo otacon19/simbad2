@@ -43,7 +43,7 @@ public class AggregationExpertViewerContentProvider implements ITreeContentProvi
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
 		if(element instanceof Expert) {
 			for(ProblemElement e: _experts) {
-				List<Expert> sons = ((Expert) e).getChildrens();
+				List<Expert> sons = ((Expert) e).getChildren();
 				for(Expert son: sons) {
 					result.add(son);
 				}
@@ -68,7 +68,7 @@ public class AggregationExpertViewerContentProvider implements ITreeContentProvi
 	@Override
 	public boolean hasChildren(Object element) {
 		if(element instanceof Expert) {
-			return ((Expert) element).hasChildrens();
+			return ((Expert) element).hasChildren();
 		}
 		return false;
 	}

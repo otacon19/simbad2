@@ -102,7 +102,7 @@ public class AggregationPhase implements IPhaseMethod {
 		if(element instanceof Expert) {
 			List<Expert> childrens = _elementsSet.getExpertChildren((Expert) element);
 			for(Expert children : childrens) {
-				if(children.hasChildrens()) {
+				if(children.hasChildren()) {
 					result.add(children);
 				}
 			}
@@ -210,14 +210,28 @@ public class AggregationPhase implements IPhaseMethod {
 		List<Double> weights;
 		Object aux;
 		
-		List<Criterion> criteria1 = _elementsSet.getCriterionSubcriteria((Criterion) criterionParent);
-		if (criteria1.size() == 0) {
-			criteria1.add((Criterion) criterionParent);
+		List<Criterion> criteria1 = new LinkedList<Criterion>();
+		if(criterionParent != null) {
+			if(((Criterion) criterionParent).hasSubcriteria()) {
+				criteria1 = ((Criterion) criterionParent).getSubcriteria();
+			} else {
+				criteria1.add((Criterion) criterionParent);
+			}
+		} else {
+			criteria1 = _elementsSet.getAllCriteria();
 		}
-		List<Expert> experts1 = _elementsSet.getExpertChildren((Expert) expertParent);
-		if (experts1.size() == 0) {
-			experts1.add((Expert) expertParent);
+
+		List<Expert> experts1 = new LinkedList<Expert>();
+		if(expertParent != null) {
+			if(((Expert) expertParent).hasChildren()) {
+				experts1 = ((Expert) expertParent).getChildren();
+			} else {
+				experts1.add((Expert) expertParent);
+			}
+		} else {
+			experts1 = _elementsSet.getAllExperts();
 		}
+
 
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement criterion : criteria1) {
@@ -300,13 +314,26 @@ public class AggregationPhase implements IPhaseMethod {
 		List<Double> weights;
 		Object aux;
 
-		List<Criterion> criteria1 = _elementsSet.getCriterionSubcriteria((Criterion) criterionParent);
-		if (criteria1.size() == 0) {
-			criteria1.add((Criterion) criterionParent);
+		List<Criterion> criteria1 = new LinkedList<Criterion>();
+		if(criterionParent != null) {
+			if(((Criterion) criterionParent).hasSubcriteria()) {
+				criteria1 = ((Criterion) criterionParent).getSubcriteria();
+			} else {
+				criteria1.add((Criterion) criterionParent);
+			}
+		} else {
+			criteria1 = _elementsSet.getAllCriteria();
 		}
-		List<Expert> experts1 = _elementsSet.getExpertChildren((Expert) expertParent);
-		if (experts1.size() == 0) {
-			experts1.add((Expert) expertParent);
+
+		List<Expert> experts1 = new LinkedList<Expert>();
+		if(expertParent != null) {
+			if(((Expert) expertParent).hasChildren()) {
+				experts1 = ((Expert) expertParent).getChildren();
+			} else {
+				experts1.add((Expert) expertParent);
+			}
+		} else {
+			experts1 = _elementsSet.getAllExperts();
 		}
 
 		alternativeValuations = new LinkedList<Valuation>();

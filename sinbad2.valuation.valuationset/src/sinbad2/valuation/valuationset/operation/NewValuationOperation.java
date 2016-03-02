@@ -105,8 +105,8 @@ public class NewValuationOperation extends UndoableOperation {
 				setValuation(e, alternative, criterion, valuation);
 			}
 			doit = false;
-		} else if(expert.hasChildrens()) {
-			for(Expert e: expert.getChildrens()) {
+		} else if(expert.hasChildren()) {
+			for(Expert e: expert.getChildren()) {
 				setValuation(e, alternative, criterion, valuation);
 			}
 			doit = false;

@@ -148,6 +148,7 @@ public class UnificationPhase implements IPhaseMethod {
 					if(isCost) {
 						valuation = valuation.negateValuation();
 					}
+	
 					valuation = new TwoTuple((FuzzySet) valuation.getDomain(), ((LinguisticValuation) valuation).getLabel()).transform(unifiedDomain);
 				} else {
 					throw new IllegalArgumentException();
@@ -196,7 +197,7 @@ public class UnificationPhase implements IPhaseMethod {
 			for(Criterion criterion : elementsSet.getAllCriteria()) {
 				if(!criterion.hasSubcriteria()) {
 					for(Expert expert : elementsSet.getAllExperts()) {
-						if(!expert.hasChildrens()) {
+						if(!expert.hasChildren()) {
 							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
 							if(v != null) {
 								generateDomain = v.getDomain();
@@ -252,6 +253,7 @@ public class UnificationPhase implements IPhaseMethod {
 			if(cardinality != oldValue) {
 				i++;
 			}
+			
 			_lhDomains.add(new Object[] { "l(" + i + "," + cardinality + ")", domainName, domain });
 			domainsNames.add(domainName);
 		}
@@ -261,7 +263,7 @@ public class UnificationPhase implements IPhaseMethod {
 
 	private FuzzySet generateUnifiedDomain(Set<Integer> sizes) {
 
-		FuzzySet result = new FuzzySet();
+		FuzzySet result = null;
 
 		if(sizes.size() != 0) {
 			Integer[] formerModalPoints = sizes.toArray(new Integer[0]);
@@ -272,6 +274,8 @@ public class UnificationPhase implements IPhaseMethod {
 			int unifiedDomainSize = lcm(formerModalPoints) + 1;
 
 			if(!sizes.contains(unifiedDomainSize)) {
+				result = new FuzzySet();
+				
 				String[] labels = new String[unifiedDomainSize];
 				for(int i = 0; i < unifiedDomainSize; i++) {
 					labels[i] = "s" + i;

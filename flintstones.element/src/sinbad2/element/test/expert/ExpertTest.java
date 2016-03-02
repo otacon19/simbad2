@@ -30,7 +30,7 @@ public class ExpertTest {
 	public void testAddChildren() {
 		_parent.addChildren(_tester);
 		
-		assertThat(_parent.getChildrens().contains(_tester), is(true));
+		assertThat(_parent.getChildren().contains(_tester), is(true));
 		assertEquals("Parents must be introduced",_tester.getParent(), _parent); //$NON-NLS-1$
 	}
 	
@@ -46,7 +46,7 @@ public class ExpertTest {
 		Expert clone = (Expert) _tester.clone();
 		
 		assertThat(_tester.getParent() == clone.getParent(), is(true));
-		assertThat(_tester.getChildrens() == clone.getChildrens(), is(true));
+		assertThat(_tester.getChildren() == clone.getChildren(), is(true));
 		
 	}
 
@@ -54,11 +54,11 @@ public class ExpertTest {
 	public void testHasChildrens() {
 		Expert children = new Expert("Son"); //$NON-NLS-1$
 
-		assertEquals("return false if there aren't children", false, _tester.hasChildrens()); //$NON-NLS-1$
+		assertEquals("return false if there aren't children", false, _tester.hasChildren()); //$NON-NLS-1$
 		
 		_tester.addChildren(children);
 
-		assertEquals("return true if there are children", true, _tester.hasChildrens()); //$NON-NLS-1$
+		assertEquals("return true if there are children", true, _tester.hasChildren()); //$NON-NLS-1$
 	}
 
 	@Test

@@ -200,8 +200,8 @@ public class ElementValuationsTableContentProvider extends KTableNoScrollModel i
 			List<Expert> aux = new LinkedList<Expert>(nextLevelExperts);
 			nextLevelExperts = new LinkedList<Expert>();
 			for(Expert expert : aux) {
-				if(expert.hasChildrens()) {
-					nextLevelExperts.addAll(expert.getChildrens());
+				if(expert.hasChildren()) {
+					nextLevelExperts.addAll(expert.getChildren());
 				}
 			}
 			if(!nextLevelExperts.isEmpty()) {
@@ -259,8 +259,8 @@ public class ElementValuationsTableContentProvider extends KTableNoScrollModel i
 		_index.put(expert, index);
 
 		int counter = 1;
-		if(expert.hasChildrens()) {
-			for(Expert e : expert.getChildrens()) {
+		if(expert.hasChildren()) {
+			for(Expert e : expert.getChildren()) {
 				result.addAll(extractExperts(e, counter++));
 			}
 		} else {

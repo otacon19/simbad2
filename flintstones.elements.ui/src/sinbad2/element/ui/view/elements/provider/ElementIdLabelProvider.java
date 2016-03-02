@@ -20,7 +20,7 @@ public class ElementIdLabelProvider extends ColumnLabelProvider {
 	public Image getImage(Object element) {
 		
 		if(element instanceof Expert) {
-			if(((Expert) element).hasChildrens()) {
+			if(((Expert) element).hasChildren()) {
 				return Images.GroupOfExperts;
 			} else {
 				return Images.Expert;

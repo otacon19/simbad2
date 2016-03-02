@@ -64,7 +64,7 @@ public class ExpertsDropListener extends ViewerDropAdapter {
 		} else if(_newParent == null) {
 			return !(duplicateID(experts, _expert.getId()));
 		} else {
-			if((!duplicateID(_newParent.getChildrens(), _expert.getId()))) {
+			if((!duplicateID(_newParent.getChildren(), _expert.getId()))) {
 				return !isMember(_expert, _newParent);
 			} else {
 				return false;
@@ -75,8 +75,8 @@ public class ExpertsDropListener extends ViewerDropAdapter {
 	
 	private boolean isMember(Expert expert, Expert maybeMember) {
 		
-		if(expert.hasChildrens()) {
-			for(Expert member: expert.getChildrens()) {
+		if(expert.hasChildren()) {
+			for(Expert member: expert.getChildren()) {
 				if(member == maybeMember) {
 					return true;
 				} else {
