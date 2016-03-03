@@ -154,6 +154,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_loaded = false;
 		
 		_aggregationPhase = AggregationPhase.getInstance();
+		_aggregationPhase.clear();
+		
 		_aggregationResult = null;
 		
 		_controlListener = null;
@@ -174,7 +176,6 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		createViews();
 		
 		_aggregationPhase.addAggregationProcessListener(this);
-		_aggregationPhase.clear();
 	}
 	
 	private void createOperatorsSelectors() {
@@ -585,6 +586,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	
 	private void setChart(Domain domain) {
 		removeOldChart();
+		
 		boolean exit = false;
 		if (domain instanceof FuzzySet) {
 			_chart = new LinguisticDomainChart();
@@ -636,6 +638,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			}
 		}
 	}
+	
 	
 	private Domain getDomain() {
 		return SelectBLTS.getBLTSDomain() ;

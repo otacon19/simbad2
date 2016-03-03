@@ -1,5 +1,6 @@
 package sinbad2.phasemethod.heterogeneous.fusion.analysis.ui.view;
 
+import java.awt.Color;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +24,11 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
+import sinbad2.domain.numeric.integer.NumericIntegerDomain;
+import sinbad2.domain.numeric.integer.ui.jfreechart.NumericIntegerDomainChart;
+import sinbad2.domain.numeric.real.NumericRealDomain;
+import sinbad2.domain.numeric.real.ui.jfreechart.NumericRealDomainChart;
+import sinbad2.domain.ui.jfreechart.DomainChart;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
@@ -36,6 +42,8 @@ import sinbad2.phasemethod.heterogeneous.fusion.analysis.ui.view.provider.Rankin
 import sinbad2.phasemethod.heterogeneous.fusion.analysis.ui.view.provider.RankingViewerProvider;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view.SelectBLTS;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.integer.IntegerValuation;
+import sinbad2.valuation.real.RealValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
@@ -71,7 +79,7 @@ public class Analysis extends ViewPart {
 	
 	private SashForm _filtersForm;
 
-	private LinguisticDomainChart _chart;
+	private DomainChart _chart;
 	
 	private AggregationPhase _aggregationPhase;
 	private Map<ProblemElement, Valuation> _aggregationResult;
@@ -264,8 +272,15 @@ public class Analysis extends ViewPart {
 		removeOldChart();
 		
 		boolean exit = false;
-		if (domain instanceof FuzzySet) {
+	
+		if(domain instanceof FuzzySet) {
 			_chart = new LinguisticDomainChart();
+			_chart.initialize(domain, _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
+		} else if(domain instanceof NumericRealDomain) {
+			_chart = new NumericRealDomainChart();
+			_chart.initialize(domain, _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
+		} else if(domain instanceof NumericIntegerDomain){
+			_chart = new NumericIntegerDomainChart();
 			_chart.initialize(domain, _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
 		} else {
 			exit = true;
@@ -286,7 +301,10 @@ public class Analysis extends ViewPart {
 				if (size > 0) {
 					String[] alternatives = new String[size];
 					int[] pos = new int[size];
+					double[] measuresReal = new double[size];
+					int[] measuresInteger = new int[size];
 					double[] alpha = new double[size];
+					Color[] colors = new Color[size];
 					Valuation valuation = null, aux;
 					int i = 0;
 	
@@ -303,12 +321,24 @@ public class Analysis extends ViewPart {
 							pos[i] = ((FuzzySet) domain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
 							alpha[i] = ((TwoTuple) valuation).getAlpha();
 							i++;
+						} else if(valuation instanceof IntegerValuation) {
+							measuresInteger[i] = (int) ((IntegerValuation) valuation).getValue();
+							colors[i] = NumericIntegerDomainChart.colors[i % NumericIntegerDomainChart.colors.length];
+							i++;
+						} else if(valuation instanceof RealValuation) {
+							measuresReal[i] = ((RealValuation) valuation).getValue();
+							colors[i] = NumericRealDomainChart.colors[i % NumericRealDomainChart.colors.length];
+							i++;
 						} else {
 							alternatives[i] = null;
 						}
 					}
 					if (_chart instanceof LinguisticDomainChart) {
 						((LinguisticDomainChart) _chart).displayAlternatives(alternatives, pos, alpha);
+					} else if(_chart instanceof NumericRealDomainChart) {
+						((NumericRealDomainChart) _chart).displayAlternatives(alternatives, measuresReal, colors);
+					} else if(_chart instanceof NumericIntegerDomainChart) {
+						((NumericIntegerDomainChart) _chart).displayAlternatives(alternatives, measuresInteger, colors);
 					}
 				}
 			}

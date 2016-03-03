@@ -36,11 +36,13 @@ import sinbad2.phasemethod.multigranular.elh.analysis.ui.view.provider.RankingCo
 import sinbad2.phasemethod.multigranular.elh.analysis.ui.view.provider.RankingViewerProvider;
 import sinbad2.phasemethod.multigranular.elh.retranslation.RetranslationPhase;
 import sinbad2.phasemethod.multigranular.elh.retranslation.ui.view.Retranslation;
+import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
+import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
-public class Analysis extends ViewPart {
+public class Analysis extends ViewPart implements IStepStateListener {
 
 	public static final String ID = "flintstones.phasemethod.multigranular.elh.analysis.ui.view.analysis";
 	
@@ -79,6 +81,8 @@ public class Analysis extends ViewPart {
 	
 	private Map<ProblemElement, Valuation> _aggregationResult;
 	
+	private FuzzySet _domain;
+	
 	private ProblemElementsSet _elementsSet;
 	
 	@Override
@@ -88,6 +92,8 @@ public class Analysis extends ViewPart {
 		
 		_aggregationPhase = AggregationPhase.getInstance();
 		_retranslationPhase = RetranslationPhase.getInstance();
+		
+		_domain = (FuzzySet) Retranslation.getLHDomainSelected();
 		
 		_aggregationResult = null;
 		
@@ -285,7 +291,7 @@ public class Analysis extends ViewPart {
 				_controlListener = new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {
-						setChart(getDomain());
+						setChart(_domain);
 					}
 				};
 				_chartView.addControlListener(_controlListener);
@@ -324,10 +330,6 @@ public class Analysis extends ViewPart {
 		}
 	}
 	
-	private Domain getDomain() {
-		return Retranslation.getLHDomainSelected() ;
-	}
-	
 	private void removeOldChart() {
 		if (_chart != null) {
 			_chart.getChartComposite().dispose();
@@ -353,7 +355,7 @@ public class Analysis extends ViewPart {
 
 		_aggregationResult = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 		_rankingViewer.setInput(_aggregationResult);
-		setChart(getDomain());
+		setChart(_domain);
 	}
 	
 	private Set<ProblemElement> getCheckedElements(CheckboxTreeViewer tree) {
@@ -385,5 +387,14 @@ public class Analysis extends ViewPart {
 		_alternativesCheckStateListener.checkAll("ALTERNATIVES");
 		_criteriaCheckStateListener.checkAll("CRITERIA");
 	}
+
+	@Override
+	public void notifyStepStateChange() {
+		_domain = (FuzzySet) Retranslation.getLHDomainSelected();
+		refreshRanking();
+	}
+
+	@Override
+	public void notifyRatingView(RatingView rating) {}
 }
 

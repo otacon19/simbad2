@@ -257,7 +257,9 @@ public class UnificationPhase implements IPhaseMethod {
 			_lhDomains.add(new Object[] { "l(" + i + "," + cardinality + ")", domainName, domain });
 			domainsNames.add(domainName);
 		}
-
+		
+		_unifiedDomain = (FuzzySet) _lhDomains.get(_lhDomains.size() - 1)[2];
+		
 		return _lhDomains;
 	}
 
@@ -283,8 +285,6 @@ public class UnificationPhase implements IPhaseMethod {
 				result.createTrapezoidalFunction(labels);
 			}
 		}
-
-		_unifiedDomain = result;
 		
 		return result;
 	}

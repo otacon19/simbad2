@@ -6,6 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.heterogeneous.fusion.analysis.ui.Activator
 Bundle-Vendor: Sinbad2
 Require-Bundle: sinbad2.phasemethod.heterogeneous.fusion.aggregation.ui;bundle-version="1.0.0",
- sinbad2.phasemethod.heterogeneous.fusion.unification.ui;bundle-version="1.0.0"
+ sinbad2.phasemethod.heterogeneous.fusion.unification.ui;bundle-version="1.0.0",
+ sinbad2.domain.numeric.real.ui,
+ sinbad2.domain.numeric.integer.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

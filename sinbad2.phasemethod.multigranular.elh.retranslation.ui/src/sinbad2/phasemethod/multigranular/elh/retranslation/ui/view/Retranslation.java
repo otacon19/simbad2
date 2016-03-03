@@ -113,7 +113,9 @@ public static final String ID = "flintstones.phasemethod.multigranular.elh.retra
 				ISelection selection = _validDomainsViewer.getSelection();
 				_selectedLHDomain = (FuzzySet) ((Object[]) ((IStructuredSelection) selection).getFirstElement())[2];
 				_completed = true;
+				
 				notifyStepStateChange();
+				
 				refreshChart();
 			}
 		});

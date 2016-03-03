@@ -92,6 +92,11 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 		_aggregationPhase = aggregationPhase;
 		_aggregationProcess = aggregationProcess;
 		_aggregationOperatorsManager = AggregationOperatorsManager.getInstance();
+		
+		_abort = false;
+		_assignAll = false;
+		
+		_cellEditor = null;
 
 		_viewer = viewer;
 	}

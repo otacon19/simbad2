@@ -35,6 +35,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 		_valutationSet = valuationSetManager.getActiveValuationSet();
 		_unifiedEvaluations = unifiedEvaluations;
 	}
+
 	
 	@Override
 	public void dispose() {}

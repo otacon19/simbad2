@@ -229,17 +229,17 @@ public class AggregationPhase implements IPhaseMethod {
 		} else {
 			experts1 = _elementsSet.getAllExperts();
 		}
-
+		
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement criterion : criteria1) {
 			if(criteria.contains(criterion)) {
-				if(_elementsSet.getCriterionSubcriteria((Criterion) criterionParent).size() > 0) {
+				if(_elementsSet.getCriterionSubcriteria((Criterion) criterion).size() > 0) {
 					alternativeValuations.add(aggregateElementByCriteria(expertParent, alternative, criterion, experts, criteria));
 				} else {
 					criterionValuations = new LinkedList<Valuation>();
 					for (ProblemElement expert : experts1) {
 						if(experts.contains(expert)) {
-							if (_elementsSet.getExpertChildren((Expert) expertParent).size() > 0) {
+							if (_elementsSet.getExpertChildren((Expert) expert).size() > 0) {
 								criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion, experts, criteria));
 							} else {
 								criterionValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
@@ -279,7 +279,7 @@ public class AggregationPhase implements IPhaseMethod {
 				alternativeValuations.add(null);
 			}
 		}
-		
+	
 		if (alternativeValuations.size() > 1) {
 			operator = getCriterionOperator(criterionParent);
 			if(operator instanceof UnweightedAggregationOperator) {

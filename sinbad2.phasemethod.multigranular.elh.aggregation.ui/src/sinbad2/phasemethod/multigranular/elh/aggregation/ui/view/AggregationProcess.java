@@ -106,9 +106,9 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	private boolean _loaded;
 	
 	private AggregationPhase _aggregationPhase;
-	private Map<ProblemElement, Valuation> _aggregationResult;
-	
 	private UnificationPhase _unificationPhase;
+	
+	private Map<ProblemElement, Valuation> _aggregationResult;
 	
 	private RatingView _ratingView;
 	
@@ -153,6 +153,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_loaded = false;
 		
 		_aggregationPhase = AggregationPhase.getInstance();
+		_aggregationPhase.clear();
+		
 		_aggregationResult = null;
 		
 		_controlListener = null;
@@ -173,7 +175,6 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		createViews();
 		
 		_aggregationPhase.addAggregationProcessListener(this);
-		_aggregationPhase.clear();
 	}
 	
 	private void createOperatorsSelectors() {

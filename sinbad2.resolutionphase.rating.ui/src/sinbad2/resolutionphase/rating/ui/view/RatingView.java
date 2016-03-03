@@ -40,9 +40,7 @@ import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.dialog.AlgorithmDialog;
 
 public class RatingView extends ViewPart {
-	public RatingView() {
-	}
-
+	
 	public static final String ID = "flintstones.resolutionphase.rating.ui.view";
 	
 	private Composite _ratingEditorPanel;
@@ -78,6 +76,8 @@ public class RatingView extends ViewPart {
 	
 	private List<IStepStateListener> _listeners;
 
+	public RatingView() {}
+	
 	@Override
 	public void createPartControl(Composite parent) {	
 		_numPhase = 0;
@@ -464,6 +464,7 @@ public class RatingView extends ViewPart {
 		while(_tabFolder.getItemCount() > 1) {
 			_tabFolder.getItem(1).dispose();
 		}
+		
 		_listeners.clear();
 
 		_numPhase = 0;
@@ -522,12 +523,19 @@ public class RatingView extends ViewPart {
 	}
 
 	public void checkRecommendedMethod() {
+		
+		for(ExpandItem item: _methodsCategoriesBar.getItems()) {
+			item.setExpanded(false);
+		}
+		
 		String methodName;
 		CLabel suitableLabel = null;
 		for(ExpandItem item: _methodsCategoriesBar.getItems()) {
 			Composite control = (Composite) item.getControl();
 			Control[] childrens = control.getChildren();
 			for(Control methodLabel : childrens) {
+				((CLabel) methodLabel).setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL)); //$NON-NLS-1$
+				((CLabel) methodLabel).pack();
 				methodName = ((CLabel) methodLabel).getText();
 				if(methodName.contains(" (SUITABLE)")) {
 					suitableLabel = (CLabel) methodLabel;

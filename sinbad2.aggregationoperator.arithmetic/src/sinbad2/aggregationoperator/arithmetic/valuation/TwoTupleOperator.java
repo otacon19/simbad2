@@ -16,24 +16,26 @@ public class TwoTupleOperator {
 		double beta = 0;
 		FuzzySet domain = null;
 		int size = valuations.size();
-		
-		for(Valuation valuation: valuations) {
-			Validator.notIllegalElementType(valuation, new String[] {TwoTuple.class.toString()});
-			
+
+		for(Valuation valuation : valuations) {
+			Validator.notIllegalElementType(valuation, new String[] { TwoTuple.class.toString() });
+
 			if(domain == null) {
 				domain = (FuzzySet) valuation.getDomain();
 			} else if(!domain.equals(valuation.getDomain())) {
 				throw new IllegalArgumentException("Invalid domain");
 			}
-			
-			beta += ((TwoTuple) valuation).calculateInverseDelta() / (double) size;
+
+			beta += (((TwoTuple) valuation).calculateInverseDelta());
 		}
 
-		if(domain != null) {
+		beta /= size;
+		
+		if (domain != null) {
 			result = (TwoTuple) valuations.get(0).clone();
 			result.calculateDelta(beta);
 		}
-		
+
 		return result;
 	}
 }

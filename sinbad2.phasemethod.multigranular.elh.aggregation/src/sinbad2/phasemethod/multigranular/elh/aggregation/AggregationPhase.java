@@ -432,6 +432,8 @@ public class AggregationPhase implements IPhaseMethod {
 	public void clear() {
 		_criteriaOperators.clear();
 		_expertsOperators.clear();
+		_criteriaOperatorsWeights.clear();
+		_expertsOperatorsWeights.clear();
 		_aggregateBy = "CRITERIA";
 	}
 

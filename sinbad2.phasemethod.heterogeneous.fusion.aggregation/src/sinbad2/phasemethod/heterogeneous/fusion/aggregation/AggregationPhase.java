@@ -223,13 +223,13 @@ public class AggregationPhase implements IPhaseMethod {
 		if(expertParent != null) {
 			if(((Expert) expertParent).hasChildren()) {
 				experts1 = ((Expert) expertParent).getChildren();
+				experts1.add((Expert) expertParent);
 			} else {
 				experts1.add((Expert) expertParent);
 			}
 		} else {
 			experts1 = _elementsSet.getAllExperts();
 		}
-
 
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement criterion : criteria1) {
@@ -312,7 +312,7 @@ public class AggregationPhase implements IPhaseMethod {
 		List<Double> weights;
 		Object aux;
 
-		List<Criterion> criteria1 = new LinkedList<Criterion>();
+		/*List<Criterion> criteria1 = new LinkedList<Criterion>();
 		if(criterionParent != null) {
 			if(((Criterion) criterionParent).hasSubcriteria()) {
 				criteria1 = ((Criterion) criterionParent).getSubcriteria();
@@ -332,6 +332,17 @@ public class AggregationPhase implements IPhaseMethod {
 			}
 		} else {
 			experts1 = _elementsSet.getAllExperts();
+		}*/
+		
+		List<Criterion> criteria1 = _elementsSet.getCriterionSubcriteria(criterionParent);
+		if (criteria1.size() == 0) {
+			criteria1 = new LinkedList<Criterion>();
+			criteria1.add((Criterion) criterionParent);
+		}
+		List<Expert> experts1 = _elementsSet.getExpertChildren(expertParent);
+		if (experts1.size() == 0) {
+			experts1 = new LinkedList<Expert>();
+			experts1.add((Expert) expertParent);
 		}
 
 
