@@ -7,18 +7,19 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import sinbad2.element.ProblemElement;
+import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.expert.Expert;
 
 public class AggregationExpertViewerContentProvider implements ITreeContentProvider {
 
-	private List<Expert> _experts;
+	private ProblemElementsSet _elementsSet;
 	
 	private AggregationExpertViewerContentProvider() {}
 	
-	public AggregationExpertViewerContentProvider(List<Expert> experts) {
+	public AggregationExpertViewerContentProvider(ProblemElementsSet elementsSet) {
 		this();
 
-		_experts = experts;
+		_elementsSet = elementsSet;
 	}
 	
 	@Override
@@ -39,16 +40,13 @@ public class AggregationExpertViewerContentProvider implements ITreeContentProvi
 			element = (ProblemElement) parentElement;
 		}
 
-		
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		if(element instanceof Expert) {
-			for(ProblemElement e: _experts) {
-				List<Expert> sons = ((Expert) e).getChildren();
-				for(Expert son: sons) {
-					result.add(son);
-				}
+		for (ProblemElement son : _elementsSet.getElementExpertChildren(element)) {
+			if (((Expert) son).hasChildren()) {
+				result.add(son);
 			}
 		}
+		
 		if (result.size() > 0) {
 			return result.toArray(new ProblemElement[0]);
 		} else {
@@ -67,9 +65,17 @@ public class AggregationExpertViewerContentProvider implements ITreeContentProvi
 
 	@Override
 	public boolean hasChildren(Object element) {
-		if(element instanceof Expert) {
-			return ((Expert) element).hasChildren();
+		ProblemElement problemElement = null;
+		if (element instanceof ProblemElement) {
+			problemElement = (ProblemElement) element;
 		}
+
+		for (ProblemElement son : _elementsSet.getElementExpertChildren(problemElement)) {
+			if (((Expert) son).hasChildren()) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 }

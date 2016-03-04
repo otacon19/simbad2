@@ -246,6 +246,12 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 			_completed = false;
 			_loaded = true;
 		}	
+	
+		disposeFollowingPhase();
+	}
+
+	private void disposeFollowingPhase() {
+		_ratingView.disposeFollowingPhases(3);
 	}
 
 	@Override

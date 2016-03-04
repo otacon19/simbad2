@@ -58,6 +58,8 @@ public class Unification extends ViewPart implements IStepStateListener {
 	private TreeViewerColumn _treeViewerUnifiedEvaluationColumn;
 	private TreeColumn _treeUnifiedEvaluationColumn;
 	
+	private FuzzySet _domain;
+	
 	private Button _saveButton;
 	
 	private RatingView _ratingView;
@@ -69,6 +71,8 @@ public class Unification extends ViewPart implements IStepStateListener {
 		_unificacionPhase = UnificationPhase.getInstance();
 		
 		_completed = true;
+		
+		_domain = null;
 		
 		_parent = parent;
 		
@@ -242,12 +246,18 @@ public class Unification extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
+		boolean loadAgain = false;
 		
-		_provider = new TreeViewerContentProvider(_unificacionPhase.unification((FuzzySet) SelectBLTS.getBLTSDomain()));
+		if(_domain != null) {
+			loadAgain = true;
+		}
+		
+		_domain = (FuzzySet) SelectBLTS.getBLTSDomain();
+		_provider = new TreeViewerContentProvider(_unificacionPhase.unification(_domain));
 		_treeViewer.setContentProvider(_provider);
 		_treeViewer.setInput(_provider.getInput());
 		
-		if(_completed) {
+		if(_completed || loadAgain) {
 			_ratingView.loadNextStep();
 			_completed = false;
 		}

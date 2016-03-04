@@ -68,7 +68,7 @@ public class RatingView extends ViewPart {
 	private CTabFolder _tabFolder;
 	
 	private int _numStep;
-	private int _numPhase;
+	public int _numPhase;
 	
 	private String _recommendedMethod;
 	
@@ -606,6 +606,16 @@ public class RatingView extends ViewPart {
 	@Override
 	public void setFocus() {
 		_tabFolder.setSelection(0);
+	}
+	
+	public void disposeFollowingPhases(int numPhase) {
+		if(_tabFolder.getItemCount() > numPhase) {
+			int size = _tabFolder.getItemCount();
+			for(int i = numPhase; i < size; ++i) {
+				_tabFolder.getItem(_tabFolder.getItemCount() - 1).dispose();
+				_numPhase--;
+			}
+		}
 	}
 	
 	public void registerStepChangeListeners(PhaseMethodUIManager phasesMethodUIManager) {

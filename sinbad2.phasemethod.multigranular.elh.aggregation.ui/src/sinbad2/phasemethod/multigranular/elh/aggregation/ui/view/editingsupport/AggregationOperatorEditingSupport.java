@@ -281,7 +281,6 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				result = _aggregationPhase.setCriterionOperator(element, operator, _weights);
 			}
 		}
-
 		if (result.length > 0) {
 			if (!_assignAll) {
 				MessageDialog dg = new MessageDialog(Display.getCurrent().getActiveShell(), "Assign the operator to all elements", null, "Assign the operator to all elements",
@@ -305,7 +304,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
-	
+		
 		if ((element == null) || (value == null)) {
 			return;
 		}

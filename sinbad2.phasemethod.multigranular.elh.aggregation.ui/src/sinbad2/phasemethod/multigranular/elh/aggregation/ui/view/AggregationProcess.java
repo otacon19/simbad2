@@ -216,7 +216,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_expertsComposite.setLayout(layout);
 
 			_expertsViewer = new TreeViewer(_expertsComposite, SWT.BORDER | SWT.FULL_SELECTION);
-			_expertsViewer.setContentProvider(new AggregationExpertViewerContentProvider(_elementsSet.getExperts()));
+			_expertsViewer.setContentProvider(new AggregationExpertViewerContentProvider(_elementsSet));
 			_expertsTree = _expertsViewer.getTree();
 			_expertsTree.setHeaderVisible(true);
 			_expertsTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,true, 1, 1));
@@ -294,7 +294,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_treeViewerExpertOperatorColumn.setEditingSupport(new AggregationOperatorEditingSupport(_aggregationPhase, this, _expertsViewer, AggregationPhase.EXPERTS));
 			_treeViewerExpertOperatorColumn.setLabelProvider(new OperatorColumnLabelProvider(_aggregationPhase, AggregationPhase.EXPERTS));
 
-			_expertsViewer.setInput(_aggregationPhase);
+			_expertsViewer.setInput(_elementsSet.getExperts().toArray());
 		}
 
 		if (multiCriteria) {
@@ -323,7 +323,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_criteriaComposite.setLayout(layout);
 
 			_criteriaViewer = new TreeViewer(_criteriaComposite, SWT.BORDER | SWT.FULL_SELECTION);
-			_criteriaViewer.setContentProvider(new AggregationCriterionViewerContentProvider(_elementsSet.getCriteria()));
+			_criteriaViewer.setContentProvider(new AggregationCriterionViewerContentProvider(_elementsSet));
 			_criteriaTree = _criteriaViewer.getTree();
 			_criteriaTree.setHeaderVisible(true);
 			_criteriaTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -399,7 +399,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_treeViewerCriterionOperatorColumn.setEditingSupport(new AggregationOperatorEditingSupport(_aggregationPhase, this, _criteriaViewer, AggregationPhase.CRITERIA));
 			_treeViewerCriterionOperatorColumn.setLabelProvider(new OperatorColumnLabelProvider(_aggregationPhase, AggregationPhase.CRITERIA));
 			
-			_criteriaViewer.setInput(_aggregationPhase);
+			_criteriaViewer.setInput(_elementsSet.getCriteria().toArray());
 		}
 
 		if ((multiExperts) && (multiCriteria)) {

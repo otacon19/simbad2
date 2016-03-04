@@ -7,18 +7,19 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import sinbad2.element.ProblemElement;
+import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
 
 public class AggregationCriterionViewerContentProvider implements ITreeContentProvider {
 
-	private List<Criterion> _criteria;
+	private ProblemElementsSet _elementsSet;
 	
 	private AggregationCriterionViewerContentProvider() {}
 	
-	public AggregationCriterionViewerContentProvider(List<Criterion> criteria) {
+	public AggregationCriterionViewerContentProvider(ProblemElementsSet elementsSet) {
 		this();
 
-		_criteria = criteria;
+		_elementsSet = elementsSet;
 	}
 	
 	@Override
@@ -39,16 +40,13 @@ public class AggregationCriterionViewerContentProvider implements ITreeContentPr
 			element = (ProblemElement) parentElement;
 		}
 
-		
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		if(element instanceof Criterion) {
-			for(ProblemElement c: _criteria) {
-				List<Criterion> sons = ((Criterion) c).getSubcriteria();
-				for(Criterion son: sons) {
-					result.add(son);
-				}
+		for (ProblemElement son : _elementsSet.getElementCriterionSubcriteria(element)) {
+			if (((Criterion) son).hasSubcriteria()) {
+				result.add(son);
 			}
 		}
+		
 		if (result.size() > 0) {
 			return result.toArray(new ProblemElement[0]);
 		} else {
@@ -67,9 +65,17 @@ public class AggregationCriterionViewerContentProvider implements ITreeContentPr
 
 	@Override
 	public boolean hasChildren(Object element) {
-		if(element instanceof Criterion) {
-			return ((Criterion) element).hasSubcriteria();
+		ProblemElement problemElement = null;
+		if (element instanceof ProblemElement) {
+			problemElement = (ProblemElement) element;
 		}
+
+		for (ProblemElement son : _elementsSet.getElementCriterionSubcriteria(problemElement)) {
+			if (((Criterion) son).hasSubcriteria()) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 }
