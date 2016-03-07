@@ -48,32 +48,32 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	
 	private AggregationProcess _aggregationProcess;
 	
-	private static ProblemElement[] getLeafElements(ProblemElement root) {
+	private static ProblemElement[] getLeafElements(ProblemElement root, String type) {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		if (root instanceof Expert || root == null) {
+		if(type.equals("expert")) {
 			List<Expert> childrens = elementsSet.getExpertChildren((Expert) root);
-			for (Expert children : childrens) {
-				if (!children.hasChildren()) {
+			for(Expert children : childrens) {
+				if(!children.hasChildren()) {
 					result.add(children);
 				} else {
-					ProblemElement[] subchildrens = getLeafElements(children);
+					ProblemElement[] subchildrens = getLeafElements(children, "expert");
 					for (ProblemElement subchildren : subchildrens) {
 						result.add(subchildren);
 					}
 				}
 			}
 
-		} else if(root instanceof Criterion){
+		} else {
 			List<Criterion> subcriteria = elementsSet.getCriterionSubcriteria((Criterion) root);
-			for (Criterion subcriterion : subcriteria) {
-				if (!subcriterion.hasSubcriteria()) {
+			for(Criterion subcriterion : subcriteria) {
+				if(!subcriterion.hasSubcriteria()) {
 					result.add(subcriterion);
 				} else {
-					ProblemElement[] sub2criteria = getLeafElements(subcriterion);
-					for (ProblemElement sub2criterion : sub2criteria) {
+					ProblemElement[] sub2criteria = getLeafElements(subcriterion, "criterion");
+					for(ProblemElement sub2criterion : sub2criteria) {
 						result.add(sub2criterion);
 					}
 				}
@@ -240,15 +240,17 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				_mapWeights = null;
 				if (aggregationOperator.getName().equals("Weighted mean")) { //$NON-NLS-1$
 					ProblemElement nullElement = null;
-					ProblemElement[] secondary = getLeafElements(nullElement);
+					ProblemElement[] secondary;
 					
 					ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 					ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 					
 					WeightsDialog dialog; 
 					if(elementType.equals("Expert")) {
+						secondary = getLeafElements(nullElement, "criterion");
 						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getElementExpertChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
 					} else {
+						secondary = getLeafElements(nullElement, "expert");
 						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getElementCriterionSubcriteria((Criterion) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
 					}
 						
