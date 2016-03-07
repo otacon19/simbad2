@@ -1,11 +1,10 @@
 package sinbad2.phasemethod.multigranular.lh.aggregation.ui.view.editingsupport;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -37,7 +36,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	
 	private AggregationPhase _aggregationPhase;
 	private List<String> _aggregationOperatorsNames;
-	private Set<String> _aggregationOperatorsIds;
+	private TreeSet<String> _aggregationOperatorsIds;
 	private List<Double> _weights;
 	private Map<String, List<Double>> _mapWeights;
 	private String _type;
@@ -106,7 +105,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	protected CellEditor getCellEditor(Object element) {
 		
 		if(_aggregationOperatorsIds == null) {
-			_aggregationOperatorsIds = new HashSet<String>();
+			_aggregationOperatorsIds = new TreeSet<String>();
 			MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();	
 			Set<EAggregationOperatorType> operatorsTypes = methodsUIManager.getActivateMethodUI().getMethod().getAggregationTypesSupported();
 	
@@ -129,8 +128,6 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				}
 			}
 		}
-		
-		Collections.sort(_aggregationOperatorsNames);
 		
 		_cellEditor = new ComboBoxCellEditor(_viewer.getTree(), _aggregationOperatorsNames.toArray(new String[0]));
 		
