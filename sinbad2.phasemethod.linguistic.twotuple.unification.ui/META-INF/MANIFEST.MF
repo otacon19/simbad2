@@ -10,3 +10,4 @@ Require-Bundle: sinbad2.phasemethod.linguistic.twotuple.unification;bundle-versi
  sinbad2.domain.linguistic.fuzzyset.ui;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Import-Package: sinbad2.phasemethod.aggregation

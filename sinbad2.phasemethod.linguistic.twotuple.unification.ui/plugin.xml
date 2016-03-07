@@ -4,7 +4,7 @@
    <extension
          point="flintstones.phasemethod.ui">
       <ui
-            id="flintstones.phasemethod.linguistic.twotuple.unification.ui.ui1"
+            id="flintstones.phasemethod.linguistic.twotuple.unification.ui"
             name="Unification"
             phasemethod="flintstones.phasemethod.linguistic.twotuple.unification">
          <view

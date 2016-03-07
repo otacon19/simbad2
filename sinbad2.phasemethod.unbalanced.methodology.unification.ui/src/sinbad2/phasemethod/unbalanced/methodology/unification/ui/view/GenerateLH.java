@@ -12,7 +12,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.domain.linguistic.unbalanced.ui.jfreechart.LHChart;
+import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.unbalanced.methodology.unification.UnificationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
@@ -43,6 +45,7 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 	public void createPartControl(Composite parent) {
 		_parent = parent;
 		
+		_lh = null;
 		_chart = null;
 		_controlListener = null;
 		
@@ -91,7 +94,6 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 
 	private void generateLH() {
 		_lh = _unification.getDomainLH().getLh();
-
 		if(_lh != null) {
 			StringBuilder description = new StringBuilder("["); //$NON-NLS-1$
 			for(int i = 0; i < _lh.length; i++) {
@@ -143,6 +145,11 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
+		AggregationPhase aggregationPhase = AggregationPhase.getInstance();
+		Unbalanced unifiedDomain = _unification.getDomainLH();
+		aggregationPhase.setUnificationValues(_unification.unification(unifiedDomain));
+		aggregationPhase.setUnifiedDomain(unifiedDomain);
+		
 		if(_completed) {
 			_ratingView.loadNextStep();
 			_completed = false;

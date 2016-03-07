@@ -13,7 +13,7 @@
                phase="flintstones.phasemethod.unbalanced.methodology.unification">
          </phasemethod>
          <phasemethod
-               phase="flintstones.phasemethod.unbalanced.methodology.aggregation">
+               phase="flintstones.phasemethod.aggregation">
          </phasemethod>
          <phasemethod
                phase="flintstones.phasemethod.unbalanced.methodology.analysis">

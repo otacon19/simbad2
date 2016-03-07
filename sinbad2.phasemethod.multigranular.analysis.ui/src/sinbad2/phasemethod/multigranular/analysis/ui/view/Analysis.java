@@ -26,7 +26,7 @@ import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
-import sinbad2.phasemethod.multigranular.aggregation.AggregationPhase;
+import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.multigranular.analysis.ui.view.listener.CheckStateListener;
 import sinbad2.phasemethod.multigranular.analysis.ui.view.provider.AlternativeColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.analysis.ui.view.provider.EvaluationColumnLabelProvider;
@@ -34,7 +34,6 @@ import sinbad2.phasemethod.multigranular.analysis.ui.view.provider.FilterContent
 import sinbad2.phasemethod.multigranular.analysis.ui.view.provider.FilterLabelProvider;
 import sinbad2.phasemethod.multigranular.analysis.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.analysis.ui.view.provider.RankingViewerProvider;
-import sinbad2.phasemethod.multigranular.unification.ui.view.SelectBLTS;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
@@ -318,7 +317,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 	}
 	
 	private Domain getDomain() {
-		return SelectBLTS.getBLTSDomain() ;
+		return _aggregationPhase.getUnifiedDomain();
 	}
 	
 	private void removeOldChart() {

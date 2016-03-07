@@ -13,7 +13,7 @@
                phase="flintstones.phasemethod.multigranular.elh.unification">
          </phasemethod>
          <phasemethod
-               phase="flintstones.phasemethod.multigranular.elh.aggregation">
+               phase="flintstones.phasemethod.aggregation">
          </phasemethod>
          <phasemethod
                phase="flintstones.phasemethod.multigranular.elh.retranslation">

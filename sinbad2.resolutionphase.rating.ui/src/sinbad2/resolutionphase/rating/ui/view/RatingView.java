@@ -33,6 +33,7 @@ import sinbad2.method.Method;
 import sinbad2.method.MethodsManager;
 import sinbad2.method.ui.MethodUI;
 import sinbad2.method.ui.MethodsUIManager;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.ui.PhaseMethodUI;
 import sinbad2.phasemethod.ui.PhaseMethodUIManager;
 import sinbad2.resolutionphase.rating.ui.Images;
@@ -411,6 +412,7 @@ public class RatingView extends ViewPart {
 	}
 	
 	public void loadNextStep() {
+		PhasesMethodManager phasesMethodManager = PhasesMethodManager.getInstance();
 		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
 		PhaseMethodUI currentPhaseMethod = phasesMethodUIManager.getActiveResolutionPhasesUI();
 		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
@@ -419,15 +421,17 @@ public class RatingView extends ViewPart {
 		if(_listeners.size() == 0) {
 			registerStepChangeListeners(phasesMethodUIManager);
 		}
-		
+
 		ViewPart step;
 		if(currentPhaseMethod == null) {
 			currentPhaseMethod = phasesMethodUI.get(_numPhase);
+			phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
 			phasesMethodUIManager.activate(currentPhaseMethod.getId());
 			step = phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
 		} else if(phasesMethodUIManager.getNextStep() == null) {
 			_numPhase++;
 			currentPhaseMethod = phasesMethodUI.get(_numPhase);
+			phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
 			phasesMethodUIManager.activate(currentPhaseMethod.getId());	
 			step = phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
 		} else {

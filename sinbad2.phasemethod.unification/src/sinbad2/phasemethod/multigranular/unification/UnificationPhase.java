@@ -136,6 +136,9 @@ public class UnificationPhase implements IPhaseMethod {
 				_unifiedEvaluationsResult.put(vk, valuation);
 			}
 		}
+		
+		unifiedEvaluationToTwoTuple(unifiedDomain);
+		
 		return _unifiedEvaluationsResult;
 	}
 	
@@ -159,11 +162,7 @@ public class UnificationPhase implements IPhaseMethod {
 
 		return _twoTupleEvaluationsResult;
 	}
-	
-	public Map<Alternative, Valuation> getAlternativesValuations() {
-		return _twoTupleEvaluationsAlternatives;
-	}
-	
+
 	public Map<ValuationKey, Valuation> getValuationsResult() {
 		return _twoTupleEvaluationsResult;
 	}

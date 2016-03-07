@@ -5,6 +5,6 @@ Bundle-SymbolicName: sinbad2.phasemethod.unbalanced.methodology.analysis.ui;sing
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.unbalanced.methodology.analysis.ui.Activator
 Bundle-Vendor: Sinbad2
-Require-Bundle: sinbad2.phasemethod.unbalanced.methodology.aggregation.ui;bundle-version="1.0.0"
+Require-Bundle: sinbad2.phasemethod.aggregation.ui;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

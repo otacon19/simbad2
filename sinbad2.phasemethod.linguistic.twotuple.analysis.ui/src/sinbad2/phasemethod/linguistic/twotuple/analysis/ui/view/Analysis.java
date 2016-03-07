@@ -26,7 +26,7 @@ import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
-import sinbad2.phasemethod.linguistic.twotuple.aggregation.AggregationPhase;
+import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.linguistic.twotuple.analysis.ui.view.listener.CheckStateListener;
 import sinbad2.phasemethod.linguistic.twotuple.analysis.ui.view.provider.AlternativeColumnLabelProvider;
 import sinbad2.phasemethod.linguistic.twotuple.analysis.ui.view.provider.EvaluationColumnLabelProvider;
@@ -34,7 +34,6 @@ import sinbad2.phasemethod.linguistic.twotuple.analysis.ui.view.provider.FilterC
 import sinbad2.phasemethod.linguistic.twotuple.analysis.ui.view.provider.FilterLabelProvider;
 import sinbad2.phasemethod.linguistic.twotuple.analysis.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.linguistic.twotuple.analysis.ui.view.provider.RankingViewerProvider;
-import sinbad2.phasemethod.linguistic.twotuple.unification.UnificationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
@@ -76,7 +75,6 @@ public class Analysis extends ViewPart implements IStepStateListener {
 	private LinguisticDomainChart _chart;
 	
 	private AggregationPhase _aggregationPhase;
-	private UnificationPhase _unificationPhase;
 	
 	private Map<ProblemElement, Valuation> _aggregationResult;
 	
@@ -88,7 +86,6 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		_elementsSet = elementsManager.getActiveElementSet();
 		
 		_aggregationPhase = AggregationPhase.getInstance();
-		_unificationPhase = UnificationPhase.getInstance();
 		
 		_aggregationResult = null;
 		
@@ -322,7 +319,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 	}
 	
 	private Domain getDomain() {
-		return _unificationPhase.getDomain();
+		return _aggregationPhase.getUnifiedDomain();
 	}
 	
 	private void removeOldChart() {

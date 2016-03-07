@@ -4,7 +4,7 @@ Bundle-Name: Multigranular fusion analysis ui
 Bundle-SymbolicName: sinbad2.phasemethod.multigranular.fusion.analysis.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.multigranular.analysis.ui.Activator
-Require-Bundle: sinbad2.phasemethod.multigranular.fusion.aggregation.ui;bundle-version="1.0.0",
+Require-Bundle: sinbad2.phasemethod.aggregation.ui;bundle-version="1.0.0",
  sinbad2.domain.numeric.integer.ui,
  sinbad2.valuation.integer,
  sinbad2.valuation.real.ui;bundle-version="1.0.0"

@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Aggregation
+Bundle-SymbolicName: sinbad2.phasemethod.aggregation;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Sinbad2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: sinbad2.phasemethod.aggregation,
+ sinbad2.phasemethod.aggregation.listener
+Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0",
+ sinbad2.aggregationoperator;visibility:=reexport,
+ sinbad2.valuation.twoTuple,
+ sinbad2.domain.linguistic.unbalanced;visibility:=reexport

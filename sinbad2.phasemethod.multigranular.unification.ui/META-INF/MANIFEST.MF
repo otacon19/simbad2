@@ -4,9 +4,8 @@ Bundle-Name: Multigranular unification ui
 Bundle-SymbolicName: sinbad2.phasemethod.multigranular.fusion.unification.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.multigranular.unification.ui.Activator
-Require-Bundle: sinbad2.phasemethod.multigranular.fusion.unification;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.domain.linguistic.fuzzyset.ui;visibility:=reexport,
- sinbad2.resolutionphase.rating.ui;visibility:=reexport
+Require-Bundle: sinbad2.phasemethod.aggregation.ui;bundle-version="1.0.0",
+ sinbad2.phasemethod.multigranular.fusion.unification;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: sinbad2.phasemethod.multigranular.unification.ui.view

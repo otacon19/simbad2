@@ -1,5 +1,7 @@
 package sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view;
 
+import java.util.Map;
+
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -19,6 +21,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.UnificationPhase;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.ui.Images;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.ui.comparator.UnificationTreeViewerComparator;
@@ -31,6 +34,8 @@ import sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view.provider.Tre
 import sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view.provider.UnifiedEvaluationColumnLabelProvider;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.valuationset.ValuationKey;
 
 public class Unification extends ViewPart implements IStepStateListener {
 	
@@ -251,9 +256,16 @@ public class Unification extends ViewPart implements IStepStateListener {
 		}
 		
 		_domain = (FuzzySet) SelectBLTS.getBLTSDomain();
-		_provider = new TreeViewerContentProvider(_unificacionPhase.unification(_domain));
+		Map<ValuationKey, Valuation> unifiedValues = _unificacionPhase.unification(_domain);
+		Map<ValuationKey, Valuation> unifiedTwoTupleValues = _unificacionPhase.getValuationsResult();
+		
+		_provider = new TreeViewerContentProvider(unifiedValues);
 		_treeViewer.setContentProvider(_provider);
 		_treeViewer.setInput(_provider.getInput());
+		
+		AggregationPhase aggregationPhase = AggregationPhase.getInstance();
+		aggregationPhase.setUnificationValues(unifiedTwoTupleValues);
+		aggregationPhase.setUnifiedDomain(_domain);
 		
 		if(_completed || loadAgain) {
 			_ratingView.loadNextStep();

@@ -1,6 +1,8 @@
 package sinbad2.phasemethod.linguistic.twotuple.unification.ui.view;
 
 
+import java.util.Map;
+
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -20,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.linguistic.twotuple.unification.UnificationPhase;
 import sinbad2.phasemethod.linguistic.twotuple.unification.ui.Images;
 import sinbad2.phasemethod.linguistic.twotuple.unification.ui.comparator.UnificationTreeViewerComparator;
@@ -32,6 +35,8 @@ import sinbad2.phasemethod.linguistic.twotuple.unification.ui.view.provider.Tree
 import sinbad2.phasemethod.linguistic.twotuple.unification.ui.view.provider.UnifiedEvaluationColumnLabelProvider;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.valuationset.ValuationKey;
 
 
 public class Unification extends ViewPart implements IStepStateListener {
@@ -39,6 +44,8 @@ public class Unification extends ViewPart implements IStepStateListener {
 public static final String ID = "flintstones.phasemethod.linguistic.twotuple.ui.view.unification";
 	
 	private boolean _completed;
+	
+	private Map<ValuationKey, Valuation> _unifiedValues;
 	
 	private Composite _parent;
 	
@@ -186,7 +193,8 @@ public static final String ID = "flintstones.phasemethod.linguistic.twotuple.ui.
 		_treeEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 4));
 		_treeViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 		
-		TreeViewerContentProvider provider = new TreeViewerContentProvider(_unificacionPhase.unification(((FuzzySet) _unificacionPhase.getDomain())));
+		_unifiedValues = _unificacionPhase.unification((FuzzySet) _unificacionPhase.getDomain());
+		TreeViewerContentProvider provider = new TreeViewerContentProvider(_unifiedValues);
 		_treeViewer.setContentProvider(provider);
 		_treeViewer.setInput(provider.getInput());
 		compactTable();
@@ -245,6 +253,11 @@ public static final String ID = "flintstones.phasemethod.linguistic.twotuple.ui.
 
 	@Override
 	public void notifyStepStateChange() {
+		
+		AggregationPhase aggregationPhase = AggregationPhase.getInstance();
+		aggregationPhase.setUnificationValues(_unifiedValues);
+		aggregationPhase.setUnifiedDomain(_unificacionPhase.getDomain());
+		
 		if(_completed) {
 			_ratingView.loadNextStep();
 			_completed = false;

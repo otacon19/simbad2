@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Aggregation
+Bundle-SymbolicName: sinbad2.phasemethod.aggregation.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sinbad2.phasemethod.aggregation.ui.Activator
+Bundle-Vendor: Sinbad2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Require-Bundle: sinbad2.phasemethod.aggregation;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.valuation.twoTuple;visibility:=reexport,
+ sinbad2.valuation.unifiedValuation;visibility:=reexport,
+ sinbad2.resolutionphase.rating.ui;visibility:=reexport,
+ sinbad2.domain.linguistic.fuzzyset.ui;visibility:=reexport

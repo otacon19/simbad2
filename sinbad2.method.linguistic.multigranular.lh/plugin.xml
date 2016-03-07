@@ -13,21 +13,24 @@
                phase="flintstones.phasemethod.multigranular.lh.unification">
          </phasemethod>
          <phasemethod
-               phase="flintstones.phasemethod.multigranular.lh.aggregation">
-         </phasemethod>
-         <phasemethod
                phase="flintstones.phasemethod.multigranular.lh.retranslation">
          </phasemethod>
          <phasemethod
                phase="flintstones.phasemethod.multigranular.lh.analysis">
          </phasemethod>
-    
+ 
+         <phasemethod
+               phase="flintstones.phasemethod.aggregation">
+         </phasemethod>   
          <aggregation_supported
                type="TwoTuple">
          </aggregation_supported>
          <aggregation_supported
                type="Linguistic">
-         </aggregation_supported>  </method>
+         </aggregation_supported>
+         <phasemethod
+               phase="flintstones.phasemethod.aggregation">
+         </phasemethod>  </method>
    </extension>
 
 </plugin>

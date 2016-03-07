@@ -13,7 +13,7 @@
                phase="flintstones.phasemethod.multigranular.fusion.unification">
          </phasemethod>
          <phasemethod
-               phase="flintstones.phasemethod.multigranular.fusion.aggregation">
+               phase="flintstones.phasemethod.aggregation">
          </phasemethod>
          <phasemethod
                phase="flintstones.phasemethod.multigranular.fusion.analysis">

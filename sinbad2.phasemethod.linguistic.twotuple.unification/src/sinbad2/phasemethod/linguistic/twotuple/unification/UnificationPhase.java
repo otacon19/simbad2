@@ -7,7 +7,6 @@ import java.util.Map;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
-import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
@@ -15,7 +14,6 @@ import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
-import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -33,7 +31,6 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	private Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleEvaluationsResult;
-	private Map<Alternative, Valuation> _twoTupleEvaluationsAlternatives;
 	
 	private static UnificationPhase _instance = null;
 	
@@ -45,7 +42,6 @@ public class UnificationPhase implements IPhaseMethod {
 		_domainsSet = _domainsManager.getActiveDomainSet();
 		
 		_twoTupleEvaluationsResult = new LinkedHashMap<ValuationKey, Valuation>();
-		_twoTupleEvaluationsAlternatives = new LinkedHashMap<Alternative, Valuation>();
 	}
 	
 	public static UnificationPhase getInstance() {
@@ -154,32 +150,8 @@ public class UnificationPhase implements IPhaseMethod {
 				_unifiedEvaluationsResult.put(vk, valuation);
 			}
 		}
+		
 		return _unifiedEvaluationsResult;
-	}
-	
-	public Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple(FuzzySet unifiedDomain) {
-		
-		if(unifiedDomain != null) {
-		
-			Valuation valuation;
-
-			for(ValuationKey key : _unifiedEvaluationsResult.keySet()) {
-				valuation = _unifiedEvaluationsResult.get(key);
-				if(valuation instanceof UnifiedValuation) {
-					valuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
-				} else if(!(valuation instanceof TwoTuple)) {
-					valuation = null;
-				}
-				_twoTupleEvaluationsResult.put(key, valuation);
-				_twoTupleEvaluationsAlternatives.put(key.getAlternative(), valuation);
-			}
-		}
-
-		return _twoTupleEvaluationsResult;
-	}
-	
-	public Map<Alternative, Valuation> getAlternativesValuations() {
-		return _twoTupleEvaluationsAlternatives;
 	}
 	
 	public Map<ValuationKey, Valuation> getValuationsResult() {

@@ -1,6 +1,7 @@
 package sinbad2.phasemethod.multigranular.lh.unification.ui.view;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
@@ -21,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.multigranular.lh.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.lh.unification.ui.Images;
 import sinbad2.phasemethod.multigranular.lh.unification.ui.comparator.UnificationTreeViewerComparator;
@@ -33,11 +35,16 @@ import sinbad2.phasemethod.multigranular.lh.unification.ui.view.provider.TreeVie
 import sinbad2.phasemethod.multigranular.lh.unification.ui.view.provider.UnifiedEvaluationColumnLabelProvider;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.valuationset.ValuationKey;
 
 public class Unification extends ViewPart implements IStepStateListener {
 
 public static final String ID = "flintstones.phasemethod.multigranular.unification.ui.view.unification";
-	
+
+	private FuzzySet _unifiedDomain;
+	private Map<ValuationKey, Valuation> _unifiedValues;
+
 	private boolean _completed;
 	
 	private Composite _parent;
@@ -67,6 +74,8 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 	@Override
 	public void createPartControl(Composite parent) {	
 		_unificacionPhase = UnificationPhase.getInstance();
+		
+		_unifiedDomain = null;
 		
 		_completed = true;
 		
@@ -187,14 +196,14 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		_treeViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 		
 		List<Object[]> lhDomains = _unificacionPhase.generateLH();
-		FuzzySet unifiedDomain = null;
 		if (lhDomains != null) {
 			if(lhDomains.size() > 0) {
-				unifiedDomain = ((FuzzySet) lhDomains.get(lhDomains.size() - 1)[2]);
+				_unifiedDomain = ((FuzzySet) lhDomains.get(lhDomains.size() - 1)[2]);
 			}
 		}
 		
-		TreeViewerContentProvider provider = new TreeViewerContentProvider(_unificacionPhase.unification(unifiedDomain));
+		_unifiedValues = _unificacionPhase.unification(_unifiedDomain);
+		TreeViewerContentProvider provider = new TreeViewerContentProvider(_unifiedValues);
 		_treeViewer.setContentProvider(provider);
 		_treeViewer.setInput(provider.getInput());
 		compactTable();
@@ -253,6 +262,11 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 
 	@Override
 	public void notifyStepStateChange() {
+		
+		AggregationPhase aggregationPhase = AggregationPhase.getInstance();
+		aggregationPhase.setUnificationValues(_unifiedValues);
+		aggregationPhase.setUnifiedDomain(_unifiedDomain);
+		
 		if(_completed) {
 			_ratingView.loadNextStep();
 			_completed = false;

@@ -26,7 +26,7 @@ import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
-import sinbad2.phasemethod.multigranular.elh.aggregation.AggregationPhase;
+import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.multigranular.elh.analysis.ui.view.listener.CheckStateListener;
 import sinbad2.phasemethod.multigranular.elh.analysis.ui.view.provider.AlternativeColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.elh.analysis.ui.view.provider.EvaluationColumnLabelProvider;
