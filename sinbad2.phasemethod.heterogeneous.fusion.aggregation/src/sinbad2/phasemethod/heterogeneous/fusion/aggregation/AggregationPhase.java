@@ -203,7 +203,7 @@ public class AggregationPhase implements IPhaseMethod {
 	@SuppressWarnings("unchecked")
 	private Valuation aggregateElementByCriteria(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent, Set<ProblemElement> experts, Set<ProblemElement> criteria) {
 		AggregationOperator operator;
-		List<Valuation> alternativeValuations, criterionValuations;
+		List<Valuation> alternativeValuations, criterionValuations = null;
 		Map<ValuationKey, Valuation> valuationsResult = _unificationPhase.getValuationsResult();
 		List<Double> weights;
 		Object aux;
@@ -223,7 +223,6 @@ public class AggregationPhase implements IPhaseMethod {
 		if(expertParent != null) {
 			if(((Expert) expertParent).hasChildren()) {
 				experts1 = ((Expert) expertParent).getChildren();
-				experts1.add((Expert) expertParent);
 			} else {
 				experts1.add((Expert) expertParent);
 			}
@@ -234,13 +233,13 @@ public class AggregationPhase implements IPhaseMethod {
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement criterion : criteria1) {
 			if(criteria.contains(criterion)) {
-				if(((Criterion) criterionParent).hasSubcriteria()) {
+				if(_elementsSet.getCriterionSubcriteria((Criterion) criterionParent).size() > 0) {
 					alternativeValuations.add(aggregateElementByCriteria(expertParent, alternative, criterion, experts, criteria));
 				} else {
 					criterionValuations = new LinkedList<Valuation>();
 					for (ProblemElement expert : experts1) {
 						if(experts.contains(expert)) {
-							if (((Expert) expertParent).hasChildren()) {
+							if (_elementsSet.getExpertChildren((Expert) expertParent).size() > 0) {
 								criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion, experts, criteria));
 							} else {
 								criterionValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
@@ -333,17 +332,17 @@ public class AggregationPhase implements IPhaseMethod {
 		} else {
 			experts1 = _elementsSet.getAllExperts();
 		}
-		
+
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement expert : experts1) {
 			if(experts.contains(expert)) {
-				if (((Expert) expertParent).hasChildren()) {
+				if (_elementsSet.getExpertChildren((Expert) expertParent).size() > 0) {
 					alternativeValuations.add(aggregateElementByExperts(expert, alternative, criterionParent, experts, criteria));
 				} else {
 					expertValuations = new LinkedList<Valuation>();
 					for (ProblemElement criterion : criteria1) {
 						if(criteria.contains(criterion)) {
-							if (((Criterion) criterionParent).hasSubcriteria()) {
+							if (_elementsSet.getCriterionSubcriteria((Criterion) criterionParent).size() > 0) {
 								expertValuations.add(aggregateElementByCriteria(expert, alternative, criterion, experts, criteria));
 							} else {
 								expertValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));

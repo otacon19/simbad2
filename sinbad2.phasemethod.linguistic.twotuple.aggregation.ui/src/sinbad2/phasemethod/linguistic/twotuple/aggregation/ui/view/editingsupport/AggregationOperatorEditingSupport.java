@@ -1,5 +1,6 @@
 package sinbad2.phasemethod.linguistic.twotuple.aggregation.ui.view.editingsupport;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	private CellEditor _cellEditor;
 	
 	private AggregationPhase _aggregationPhase;
-	private String[] _aggregationOperatorsNames;
+	private List<String> _aggregationOperatorsNames;
 	private Set<String> _aggregationOperatorsIds;
 	private List<Double> _weights;
 	private Map<String, List<Double>> _mapWeights;
@@ -101,7 +102,6 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 		_viewer = viewer;
 	}
 
-	@Override
 	protected CellEditor getCellEditor(Object element) {
 		
 		if(_aggregationOperatorsIds == null) {
@@ -117,23 +117,24 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				}
 			}
 			
-			_aggregationOperatorsNames = new String[_aggregationOperatorsIds.size()];
+			_aggregationOperatorsNames = new LinkedList<String>();
 			AggregationOperator operator;
 			for(int i = 0; i < _aggregationOperatorsIds.size(); i++) {
 				operator = _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]);
 				if (operator instanceof WeightedAggregationOperator) {
-					_aggregationOperatorsNames[i] = "(W) " + _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName();
+					_aggregationOperatorsNames.add("(W) " + _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName());
 				} else {
-					_aggregationOperatorsNames[i] = _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName();
+					_aggregationOperatorsNames.add(_aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName());
 				}
 			}
 		}
 		
-		_cellEditor = new ComboBoxCellEditor(_viewer.getTree(), _aggregationOperatorsNames);
+		Collections.sort(_aggregationOperatorsNames);
+		
+		_cellEditor = new ComboBoxCellEditor(_viewer.getTree(), _aggregationOperatorsNames.toArray(new String[0]));
 		
 		return _cellEditor;
 	}
-
 	@Override
 	protected boolean canEdit(Object element) {
 		if (AggregationPhase.EXPERTS.equals(_type) || AggregationPhase.CRITERIA.equals(_type)) {
