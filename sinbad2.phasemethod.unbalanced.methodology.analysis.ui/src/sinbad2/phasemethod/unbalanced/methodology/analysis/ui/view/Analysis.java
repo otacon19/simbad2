@@ -36,11 +36,13 @@ import sinbad2.phasemethod.unbalanced.methodology.analysis.ui.view.provider.Filt
 import sinbad2.phasemethod.unbalanced.methodology.analysis.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.unbalanced.methodology.analysis.ui.view.provider.RankingViewerProvider;
 import sinbad2.phasemethod.unbalanced.methodology.unification.UnificationPhase;
+import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
+import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
-public class Analysis extends ViewPart {
+public class Analysis extends ViewPart implements IStepStateListener {
 
 	public static final String ID = "flintstones.phasemethod.unbalanced.methodology.analysis.ui.view.analysis";
 	
@@ -392,4 +394,12 @@ public class Analysis extends ViewPart {
 		_alternativesCheckStateListener.checkAll("ALTERNATIVES");
 		_criteriaCheckStateListener.checkAll("CRITERIA");
 	}
+
+	@Override
+	public void notifyStepStateChange() {
+		refreshRanking();
+	}
+
+	@Override
+	public void notifyRatingView(RatingView rating) {}
 }

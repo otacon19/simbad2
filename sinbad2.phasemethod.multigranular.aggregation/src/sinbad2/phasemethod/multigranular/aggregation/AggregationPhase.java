@@ -105,7 +105,7 @@ public class AggregationPhase implements IPhaseMethod {
 				}
 			}
 
-		} else if (elementType.equals("criterion")) {
+		} else if(elementType.equals("criterion")) {
 			List<Criterion> subcriteria = _elementsSet.getCriterionSubcriteria((Criterion) element);
 			for(Criterion subcriterion : subcriteria) {
 				if(subcriterion.hasSubcriteria()) {
@@ -207,7 +207,7 @@ public class AggregationPhase implements IPhaseMethod {
 		Map<ValuationKey, Valuation> valuationsResult = _unificationPhase.getValuationsResult();
 		List<Double> weights;
 		Object aux;
-
+		
 		List<Criterion> criteria1 = new LinkedList<Criterion>();
 		if(criterionParent != null) {
 			if(((Criterion) criterionParent).hasSubcriteria()) {
@@ -229,17 +229,18 @@ public class AggregationPhase implements IPhaseMethod {
 		} else {
 			experts1 = _elementsSet.getAllExperts();
 		}
-		
+
+
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement criterion : criteria1) {
 			if(criteria.contains(criterion)) {
-				if(((Criterion) criterion).hasSubcriteria()) {
+				if(_elementsSet.getCriterionSubcriteria((Criterion) criterionParent).size() > 0) {
 					alternativeValuations.add(aggregateElementByCriteria(expertParent, alternative, criterion, experts, criteria));
 				} else {
 					criterionValuations = new LinkedList<Valuation>();
 					for (ProblemElement expert : experts1) {
 						if(experts.contains(expert)) {
-							if (((Expert) expert).hasChildren()) {
+							if (_elementsSet.getExpertChildren((Expert) expertParent).size() > 0) {
 								criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion, experts, criteria));
 							} else {
 								criterionValuations.add(valuationsResult.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
@@ -279,7 +280,7 @@ public class AggregationPhase implements IPhaseMethod {
 				alternativeValuations.add(null);
 			}
 		}
-	
+		
 		if (alternativeValuations.size() > 1) {
 			operator = getCriterionOperator(criterionParent);
 			if(operator instanceof UnweightedAggregationOperator) {
@@ -332,7 +333,6 @@ public class AggregationPhase implements IPhaseMethod {
 		} else {
 			experts1 = _elementsSet.getAllExperts();
 		}
-
 
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement expert : experts1) {
@@ -405,6 +405,7 @@ public class AggregationPhase implements IPhaseMethod {
 			return alternativeValuations.get(0);
 		} 
 	}
+	
 
 	@Override
 	public IPhaseMethod copyStructure() {
@@ -426,6 +427,8 @@ public class AggregationPhase implements IPhaseMethod {
 	public void clear() {
 		_criteriaOperators.clear();
 		_expertsOperators.clear();
+		_expertsOperatorsWeights.clear();
+		_criteriaOperatorsWeights.clear();
 		_aggregateBy = "CRITERIA";
 	}
 

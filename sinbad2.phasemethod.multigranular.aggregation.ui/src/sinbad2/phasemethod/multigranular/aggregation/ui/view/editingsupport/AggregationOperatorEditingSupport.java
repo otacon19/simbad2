@@ -190,6 +190,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	}
 
 	private ProblemElement[] setOperator(ProblemElement element, AggregationOperator aggregationOperator) {
+		
 		ProblemElement[] result = new ProblemElement[] {};
 
 		AggregationOperator operator = null;
@@ -307,7 +308,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
-	
+		
 		if ((element == null) || (value == null)) {
 			return;
 		}

@@ -41,13 +41,15 @@ import sinbad2.phasemethod.heterogeneous.fusion.analysis.ui.view.provider.Filter
 import sinbad2.phasemethod.heterogeneous.fusion.analysis.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.heterogeneous.fusion.analysis.ui.view.provider.RankingViewerProvider;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view.SelectBLTS;
+import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
+import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.integer.IntegerValuation;
 import sinbad2.valuation.real.RealValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
-public class Analysis extends ViewPart {
+public class Analysis extends ViewPart implements IStepStateListener {
 	
 	public static final String ID = "flintstones.phasemethod.heteorgeneous.fusion.analysis.ui.view.analysis";
 
@@ -406,4 +408,12 @@ public class Analysis extends ViewPart {
 		_alternativesCheckStateListener.checkAll("ALTERNATIVES");
 		_criteriaCheckStateListener.checkAll("CRITERIA");
 	}
+
+	@Override
+	public void notifyStepStateChange() {
+		refreshRanking();	
+	}
+
+	@Override
+	public void notifyRatingView(RatingView rating) {}
 }
