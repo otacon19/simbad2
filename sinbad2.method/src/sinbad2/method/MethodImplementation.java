@@ -63,6 +63,8 @@ public abstract class MethodImplementation implements IMethodStateListener, IWor
 			_phasesNames.add(name);
 			_phases.put(name, phase);
 			_phasesImplementation.put(name, phase.getImplementation());
+			System.out.println(phase.getId());
+			System.out.println(phase.getImplementation());
 		}
 	}
 

@@ -70,11 +70,7 @@ public class PhaseMethod {
 		
 		if (_implementation == null) {
 			try {
-				_implementation = (IPhaseMethod) _registry
-						.getConfiguration().createExecutableExtension(
-								EPhaseMethodElements.implementation
-										.toString());
-				
+				_implementation = (IPhaseMethod) _registry.getConfiguration().createExecutableExtension(EPhaseMethodElements.implementation.toString());
 				PhasesMethodManager ppm = PhasesMethodManager.getInstance();
 				ppm.setImplementationPhaseMethod(_implementation, _id);
 

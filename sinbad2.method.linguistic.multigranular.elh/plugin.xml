@@ -16,7 +16,7 @@
                phase="flintstones.phasemethod.aggregation">
          </phasemethod>
          <phasemethod
-               phase="flintstones.phasemethod.multigranular.elh.retranslation">
+               phase="flintstones.phasemethod.retranslation">
          </phasemethod>
          <phasemethod
                phase="flintstones.phasemethod.analysis">

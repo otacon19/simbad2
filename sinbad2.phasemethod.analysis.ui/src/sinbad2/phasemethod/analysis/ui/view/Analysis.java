@@ -33,6 +33,9 @@ import sinbad2.domain.ui.jfreechart.DomainChart;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.method.Method;
+import sinbad2.method.MethodsManager;
+import sinbad2.phasemethod.PhaseMethod;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.analysis.AnalysisPhase;
 import sinbad2.phasemethod.analysis.ui.view.listener.CheckStateListener;
@@ -42,7 +45,7 @@ import sinbad2.phasemethod.analysis.ui.view.provider.FilterContentProvider;
 import sinbad2.phasemethod.analysis.ui.view.provider.FilterLabelProvider;
 import sinbad2.phasemethod.analysis.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.analysis.ui.view.provider.RankingViewerProvider;
-import sinbad2.phasemethod.multigranular.elh.retranslation.RetranslationPhase;
+import sinbad2.phasemethod.retranslation.RetranslationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
@@ -297,12 +300,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		}
 
 		if (!exit) {
-			
-			if(_analysisPhase.getDomain() != null) {
-				_aggregationResult = _retranslationPhase.transform(_aggregationResult, (FuzzySet) domain);
-				_rankingViewer.setInput(_aggregationResult);
-			}
-			
+
 			if (_controlListener == null) {
 				_controlListener = new ControlAdapter() {
 					@Override
@@ -395,10 +393,20 @@ public class Analysis extends ViewPart implements IStepStateListener {
 			_rankingViewer.setInput(_aggregationResult);
 			setChart(getDomain());
 		} else {
-			Domain retranslationDomain = _analysisPhase.getDomain();
-			if(retranslationDomain != null) {
-				setChart(retranslationDomain);
+			MethodsManager methodsManager = MethodsManager.getInstance();
+			Method method = methodsManager.getActiveMethod();
+			for(PhaseMethod pm: method.getPhases()) {
+				if(pm.getImplementation().equals(_retranslationPhase)) {
+					 System.out.println("lo misma mierda son");
+				}
+			}
+			if(method.getPhases().contains(_retranslationPhase)) {
+				Domain domain = _analysisPhase.getDomain();
+				_aggregationResult = _retranslationPhase.transform(_aggregationResult, (FuzzySet) domain);
+				_rankingViewer.setInput(_aggregationResult);
+				setChart(domain);
 			} else {
+				_rankingViewer.setInput(_aggregationResult);
 				setChart(getDomain());
 			}
 		}

@@ -116,7 +116,6 @@ public class Method {
 		if (_implementation == null) {
 			try {
 				_implementation = (MethodImplementation) _registry.getConfiguration().createExecutableExtension(EMethodElements.implementation.toString());
-
 				_implementation.setMethod(this);
 
 				MethodsManager rsm = MethodsManager.getInstance();

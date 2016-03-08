@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.phasemethod.ui">
+      <ui
+            id="flintstones.phasemethod.retranslation.ui"
+            name="Retranslation"
+            phasemethod="flintstones.phasemethod.retranslation">
+         <view
+               step="sinbad2.phasemethod.retranslation.ui.view.Retranslation">
+         </view>
+      </ui>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.phasemethod.retranslation.ui.category"
+            name="Retranslation">
+      </category>
+      <view
+            category="flintstones.phasemethod.retranslation.ui.category"
+            class="sinbad2.phasemethod.retranslation.ui.view.Retranslation"
+            id="flintstones.phasemethod.retranslation.ui.view.retranslation"
+            name="Retranslation"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>

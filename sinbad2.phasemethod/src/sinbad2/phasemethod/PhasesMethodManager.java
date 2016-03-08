@@ -59,8 +59,8 @@ public class PhasesMethodManager {
 	}
 
 	public void setImplementationPhaseMethod(
-			IPhaseMethod implementation, String resolutionPhaseId) {
-		_implementationsPhasesMethod.put(implementation, resolutionPhaseId);
+			IPhaseMethod implementation, String phaseMethodId) {
+		_implementationsPhasesMethod.put(implementation, phaseMethodId);
 	}
 
 	public PhaseMethod getImplementationPhaseMethod(

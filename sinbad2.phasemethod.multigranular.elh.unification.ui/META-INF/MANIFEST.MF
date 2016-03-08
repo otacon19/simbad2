@@ -8,4 +8,5 @@ Bundle-Vendor: Sinbad2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Require-Bundle: sinbad2.phasemethod.aggregation.ui;bundle-version="1.0.0",
- sinbad2.phasemethod.multigranular.elh.unification;bundle-version="1.0.0";visibility:=reexport
+ sinbad2.phasemethod.multigranular.elh.unification;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.phasemethod.retranslation.ui;bundle-version="1.0.0"

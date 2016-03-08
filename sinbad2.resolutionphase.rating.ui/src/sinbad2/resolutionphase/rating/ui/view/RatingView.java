@@ -228,7 +228,7 @@ public class RatingView extends ViewPart {
 		if(reset) {
 			clearMethodSteps();
 			_tabFolder.setSelection(0);
-			checkRecommendedMethod();
+			createContent();
 		}
 	}
 

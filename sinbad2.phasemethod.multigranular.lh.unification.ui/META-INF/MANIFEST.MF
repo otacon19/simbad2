@@ -5,5 +5,6 @@ Bundle-SymbolicName: sinbad2.phasemethod.multigranular.lh.unification.ui;singlet
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.phasemethod.aggregation.ui;bundle-version="1.0.0",
- sinbad2.phasemethod.multigranular.lh.unification;bundle-version="1.0.0";visibility:=reexport
+ sinbad2.phasemethod.multigranular.lh.unification;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.phasemethod.retranslation.ui;bundle-version="1.0.0"
 Bundle-Activator: sinbad2.phasemethod.multigranular.lh.unification.ui.Activator

@@ -33,6 +33,7 @@ import sinbad2.phasemethod.multigranular.lh.unification.ui.view.provider.Evaluat
 import sinbad2.phasemethod.multigranular.lh.unification.ui.view.provider.ExpertColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.lh.unification.ui.view.provider.TreeViewerContentProvider;
 import sinbad2.phasemethod.multigranular.lh.unification.ui.view.provider.UnifiedEvaluationColumnLabelProvider;
+import sinbad2.phasemethod.retranslation.RetranslationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
@@ -266,6 +267,8 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		AggregationPhase aggregationPhase = AggregationPhase.getInstance();
 		aggregationPhase.setUnificationValues(_unifiedValues);
 		aggregationPhase.setUnifiedDomain(_unifiedDomain);
+		RetranslationPhase retranslationPhase = RetranslationPhase.getInstance();
+		retranslationPhase.setLHDomains(_unificacionPhase.getLHDomains());
 		
 		if(_completed) {
 			_ratingView.loadNextStep();

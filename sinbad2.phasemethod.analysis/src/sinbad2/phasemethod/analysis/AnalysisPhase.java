@@ -9,9 +9,13 @@ public class AnalysisPhase implements IPhaseMethod {
 
 	public static final String ID = "flintstones.phasemethod.analysis";
 	
-	private Domain _domain = null;
+	private Domain _domain;
 	
 	private static AnalysisPhase _instance = null;
+	
+	private AnalysisPhase() {
+		_domain = null;
+	}
 	
 	public static AnalysisPhase getInstance() {
 		if(_instance == null) {
