@@ -23,6 +23,7 @@ import org.eclipse.ui.part.ViewPart;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
+import sinbad2.phasemethod.analysis.AnalysisPhase;
 import sinbad2.phasemethod.multigranular.elh.unification.UnificationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
@@ -61,6 +62,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.elh.retra
 		_parent = parent;
 		
 		_unificationPhase = UnificationPhase.getInstance();
+		
 		_selectedLHDomain = null;
 		
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -208,6 +210,10 @@ public static final String ID = "flintstones.phasemethod.multigranular.elh.retra
 
 	@Override
 	public void notifyStepStateChange() {
+		
+		AnalysisPhase analysis = AnalysisPhase.getInstance();
+		analysis.setDomain(_selectedLHDomain);
+		
 		if(_completed && !_loaded) {
 			_ratingView.loadNextStep();
 			_completed = false;

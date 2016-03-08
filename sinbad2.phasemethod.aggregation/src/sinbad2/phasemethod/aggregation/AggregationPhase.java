@@ -34,13 +34,12 @@ import sinbad2.valuation.valuationset.ValuationKey;
 public class AggregationPhase implements IPhaseMethod {
 	
 	public static final String ID = "flintstones.phasemethod.aggregation";
+	
 	public static final String CRITERIA = "CRITERIA";
 	public static final String EXPERTS = "EXPERTS";
 
-	private static final int LEFT = 0;
-	private static final int RIGHT = 1;
-	
-	private Unbalanced _resultsDomain;
+	private static final int UNBALANCED_LEFT = 0;
+	private static final int UNBALANCED_RIGHT = 1;
 	
 	private ProblemElementsManager _elementsManager;
 	private ProblemElementsSet _elementsSet;
@@ -429,7 +428,7 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	public Map<ProblemElement, Valuation> transform(Map<ProblemElement, Valuation> problemResult, Unbalanced resultsDomain) {
 
-		_resultsDomain = resultsDomain;
+		_unifiedDomain = resultsDomain;
 		Map<ProblemElement, Valuation> results = null;
 
 		if(resultsDomain != null) {
@@ -480,7 +479,7 @@ public class AggregationPhase implements IPhaseMethod {
 						labelPos = resultsDomain.labelPos(domainSize, testPos);
 						if(labelPos != null) {
 							find = true;
-							labelTest = _resultsDomain.getLabelSet().getLabel(labelPos);
+							labelTest = ((Unbalanced) _unifiedDomain).getLabelSet().getLabel(labelPos);
 							domains = resultsDomain.getLabel(labelPos);
 							size = domains.size();
 							auxDomains = new Unbalanced[size];
@@ -511,7 +510,7 @@ public class AggregationPhase implements IPhaseMethod {
 						valuation = transformToResultsDomain(labelTest, alphas[0]);
 					} else {
 						if(alpha > 0) {
-							if(smallSide(labelTest) == RIGHT) {
+							if(smallSide(labelTest) == UNBALANCED_RIGHT) {
 								if (sizes[0] > sizes[1]) {
 									valuation = transformToResultsDomain(labelTest, alphas[0]);
 								} else {
@@ -525,7 +524,7 @@ public class AggregationPhase implements IPhaseMethod {
 								}
 							}
 						} else {
-							if (smallSide(label) == RIGHT) {
+							if (smallSide(label) == UNBALANCED_RIGHT) {
 								if (sizes[0] > sizes[1]) {
 									valuation = transformToResultsDomain(labelTest, alphas[1]);
 								} else {
@@ -569,14 +568,14 @@ public class AggregationPhase implements IPhaseMethod {
 		double right = coverage.getMax() - center.getMax();
 
 		if(left > right) {
-			return RIGHT;
+			return UNBALANCED_RIGHT;
 		} else {
-			return LEFT;
+			return UNBALANCED_LEFT;
 		}
 	}
 	
 	private Valuation transformToResultsDomain(LabelLinguisticDomain label, double alpha) {
-		TwoTuple result = new TwoTuple((FuzzySet) _resultsDomain, label, alpha);
+		TwoTuple result = new TwoTuple((FuzzySet) _unifiedDomain, label, alpha);
 		return result;
 	}
 	

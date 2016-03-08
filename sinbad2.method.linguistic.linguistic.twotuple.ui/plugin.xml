@@ -14,7 +14,7 @@
                id="flintstones.phasemethod.aggregation.ui">
          </ui>
          <ui
-               id="flintstones.phasemethod.linguistic.twotuple.analysis.ui">
+               id="flintstones.phasemethod.analysis.ui">
          </ui>
       </method_ui>
    </extension>

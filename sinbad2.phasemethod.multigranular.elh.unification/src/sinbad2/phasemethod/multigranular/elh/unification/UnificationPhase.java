@@ -12,6 +12,7 @@ import java.util.Set;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -42,7 +43,7 @@ public class UnificationPhase implements IPhaseMethod {
 	private ValuationSet _valuationSet;
 	
 	private Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
-	private Map<ValuationKey, Valuation> _twoTupleEvaluationsResult;
+	private Map<ProblemElement, Valuation> _alternativeEvaluationsResult;
 	
 	private List<Object[]> _lhDomains;
 	
@@ -54,7 +55,7 @@ public class UnificationPhase implements IPhaseMethod {
 		_valuationSetManager = ValuationSetManager.getInstance();
 		_valuationSet = _valuationSetManager.getActiveValuationSet();
 		
-		_twoTupleEvaluationsResult = new LinkedHashMap<ValuationKey, Valuation>();
+		_alternativeEvaluationsResult = new LinkedHashMap<ProblemElement, Valuation>();
 	}
 	
 	public static UnificationPhase getInstance() {
@@ -150,7 +151,9 @@ public class UnificationPhase implements IPhaseMethod {
 				} else {
 					throw new IllegalArgumentException();
 				}
+				
 				_unifiedEvaluationsResult.put(vk, valuation);
+				_alternativeEvaluationsResult.put(vk.getAlternative(), valuation);
 			}
 		}
 		return _unifiedEvaluationsResult;
@@ -295,8 +298,8 @@ public class UnificationPhase implements IPhaseMethod {
 	public Domain getUnifiedDomain() {
 		return _unifiedDomain;
 	}
-	
-	public Map<ValuationKey, Valuation> getValuationsResult() {
-		return _twoTupleEvaluationsResult;
+
+	public Map<ProblemElement, Valuation> getAlternativeValuationsResult() {
+		return _alternativeEvaluationsResult;
 	}
 }

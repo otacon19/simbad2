@@ -103,7 +103,7 @@ public class TwoTuple extends LinguisticValuation {
 			throw new IllegalArgumentException("Not BLTS fuzzy set.");
 		}
 		
-		int thisCardinality = ((FuzzySet)_domain).getLabelSet().getCardinality();
+		int thisCardinality = ((FuzzySet) _domain).getLabelSet().getCardinality();
 		int otherCardinality = fuzzySet.getLabelSet().getCardinality();
 		
 		double numerator = calculateInverseDelta() * ((double) (otherCardinality - 1));
