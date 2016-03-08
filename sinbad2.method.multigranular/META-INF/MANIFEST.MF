@@ -4,5 +4,4 @@ Bundle-Name: Multigranular method
 Bundle-SymbolicName: sinbad2.method.linguistic.multigranular.fusion;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: sinbad2.method.linguistic,
- sinbad2.domain.linguistic.fuzzyset
+Require-Bundle: sinbad2.method.linguistic

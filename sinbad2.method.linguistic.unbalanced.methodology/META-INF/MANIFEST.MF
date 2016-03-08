@@ -5,5 +5,4 @@ Bundle-SymbolicName: sinbad2.method.linguistic.unbalanced.methodology;singleton:
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Sinbad2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: sinbad2.method.linguistic;bundle-version="1.0.0",
- sinbad2.domain.linguistic.unbalanced;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: sinbad2.method.linguistic;bundle-version="1.0.0"
