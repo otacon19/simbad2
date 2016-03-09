@@ -70,12 +70,12 @@ public class Unification extends ViewPart implements IStepStateListener {
 	
 	private RatingView _ratingView;
 	
-	private UnificationPhase _unificacionPhase;
+	private UnificationPhase _unificationPhase;
 	
 	@Override
 	public void createPartControl(Composite parent) {	
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		_unificacionPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
+		_unificationPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
 		
 		_completed = true;
 		
@@ -251,27 +251,28 @@ public class Unification extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
-		boolean loadAgain = false;
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		boolean reloaded = false;
 		
-		if(_domain != null) {
-			loadAgain = true;
+		if(pmm.getActivePhaseMethod().getImplementation().equals(_unificationPhase)) {
+			reloaded = true;
 		}
 		
+		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+		aggregationPhase.clear();
+		
 		_domain = (FuzzySet) SelectBLTS.getBLTSDomain();
-		Map<ValuationKey, Valuation> unifiedValues = _unificacionPhase.unification(_domain);
-		Map<ValuationKey, Valuation> unifiedTwoTupleValues = _unificacionPhase.getTwoTupleValuationsResult();
+		Map<ValuationKey, Valuation> unifiedValues = _unificationPhase.unification(_domain);
+		Map<ValuationKey, Valuation> unifiedTwoTupleValues = _unificationPhase.getTwoTupleValuationsResult();
 		
 		_provider = new TreeViewerContentProvider(unifiedValues);
 		_treeViewer.setContentProvider(_provider);
 		_treeViewer.setInput(_provider.getInput());
-		
-		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		aggregationPhase.clear();
+	
 		aggregationPhase.setUnificationValues(unifiedTwoTupleValues);
 		aggregationPhase.setUnifiedDomain(_domain);
 		
-		if(_completed || loadAgain) {
+		if(_completed || reloaded) {
 			_ratingView.loadNextStep();
 			_completed = false;
 		}

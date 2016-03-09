@@ -241,12 +241,13 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
+		
 		if(_completed && !_loaded) {
 			_ratingView.loadNextStep();
 			_completed = false;
 			_loaded = true;
 		}	
-	
+		
 		disposeFollowingPhase();
 	}
 

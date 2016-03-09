@@ -253,27 +253,28 @@ public class Unification extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
-		boolean loadAgain = false;
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		boolean reloaded = false;
 		
-		if(_domain != null) {
-			loadAgain = true;
+		if(pmm.getActivePhaseMethod().getImplementation().equals(_unificationPhase)) {
+			reloaded = true;
 		}
+		
+		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+		aggregationPhase.clear();
 		
 		_domain = (FuzzySet) SelectBLTS.getBLTSDomain();
 		Map<ValuationKey, Valuation> unifiedValues = _unificationPhase.unification(_domain);
-		Map<ValuationKey, Valuation> unifiedTwoTupleValues = _unificationPhase.getUnifiedValuationsResult();
+		Map<ValuationKey, Valuation> unifiedTwoTupleValues = _unificationPhase.getTwoTupleValuationsResult();
 		
 		_provider = new TreeViewerContentProvider(unifiedValues);
 		_treeViewer.setContentProvider(_provider);
 		_treeViewer.setInput(_provider.getInput());
-		
-		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		aggregationPhase.clear();
+
 		aggregationPhase.setUnificationValues(unifiedTwoTupleValues);
 		aggregationPhase.setUnifiedDomain(_domain);
 		
-		if(_completed || loadAgain) {
+		if(_completed || reloaded) {
 			_ratingView.loadNextStep();
 			_completed = false;
 		}

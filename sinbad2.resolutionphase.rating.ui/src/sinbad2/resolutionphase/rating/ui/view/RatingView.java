@@ -69,13 +69,18 @@ public class RatingView extends ViewPart {
 	private CTabFolder _tabFolder;
 	
 	private int _numStep;
-	public int _numPhase;
+	private int _numPhase;
 	
 	private String _recommendedMethod;
 	
 	private Map<CLabel, Method> _methods;
 	
 	private List<IStepStateListener> _listeners;
+	
+	private MethodsManager _methodsManager;
+	private MethodsUIManager _methodsUIManager;
+	private PhasesMethodManager _phasesMethodManager;
+	private PhaseMethodUIManager _phasesMethodUIManager;
 
 	public RatingView() {}
 	
@@ -91,6 +96,11 @@ public class RatingView extends ViewPart {
 		_listeners = new LinkedList<IStepStateListener>();
 		
 		_parent = parent;
+		
+		_methodsManager = MethodsManager.getInstance();
+		_methodsUIManager = MethodsUIManager.getInstance();
+		_phasesMethodManager = PhasesMethodManager.getInstance();
+		_phasesMethodUIManager = PhaseMethodUIManager.getInstance();
 		
 		createRatingEditorPanel();
 		createMethodSelectionStep();
@@ -291,14 +301,13 @@ public class RatingView extends ViewPart {
 		createInfoPanels(composite);
 		createWarningLabel(composite);
 		
-		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
-		String[] ids = methodsUIManager.getIdsRegisters();
+		String[] ids = _methodsUIManager.getIdsRegisters();
 		
 		Map<String, List<Method>> categoriesMethods = new HashMap<String, List<Method>>();
 		List<Method> methods;
 		for(String id: ids) {
 			methods = new LinkedList<Method>();
-			MethodUI methodUI = methodsUIManager.getUI(id);
+			MethodUI methodUI = _methodsUIManager.getUI(id);
 			Method method = methodUI.getMethod();
 			String category = method.getCategory();
 			if(categoriesMethods.get(category) != null) {
@@ -341,8 +350,7 @@ public class RatingView extends ViewPart {
 		layout.verticalSpacing = 0;
 		composite.setLayout(layout);
 
-		MethodsManager methodsManager = MethodsManager.getInstance();
-		_recommendedMethod = methodsManager.getRecommendedMethod();
+		_recommendedMethod = _methodsManager.getRecommendedMethod();
 		for (int i = 0; i < methods.size(); i++) {
 			createMethod(composite, methods.get(i));
 		}
@@ -402,43 +410,39 @@ public class RatingView extends ViewPart {
 	
 	private void calculateNumSteps() {
 		List<PhaseMethodUI> phasesMethodUI = _methodUISelected.getPhasesUI();
-		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
 		
 		int numSteps = 0;
 		for(PhaseMethodUI phase: phasesMethodUI) {
-			numSteps += phasesMethodUIManager.getSteps(phase.getId()).size();
+			numSteps += _phasesMethodUIManager.getSteps(phase.getId()).size();
 		}
 		_stepValue.setText("(0/" + numSteps + ")");
 	}
 	
-	public void loadNextStep() {
-		PhasesMethodManager phasesMethodManager = PhasesMethodManager.getInstance();
-		PhaseMethodUIManager phasesMethodUIManager = PhaseMethodUIManager.getInstance();
-		PhaseMethodUI currentPhaseMethod = phasesMethodUIManager.getActiveResolutionPhasesUI();
-		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
-		List<PhaseMethodUI> phasesMethodUI = methodsUIManager.getActivateMethodUI().getPhasesUI();
+	public void loadNextStep() {;
+		PhaseMethodUI currentPhaseMethod = _phasesMethodUIManager.getActiveResolutionPhasesUI();
+		List<PhaseMethodUI> phasesMethodUI = _methodsUIManager.getActivateMethodUI().getPhasesUI();
 		
 		if(_listeners.size() == 0) {
-			registerStepChangeListeners(phasesMethodUIManager);
+			registerStepChangeListeners(_phasesMethodUIManager);
 		}
 
 		ViewPart step;
 		if(currentPhaseMethod == null) {
 			currentPhaseMethod = phasesMethodUI.get(_numPhase);
-			phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
-			phasesMethodUIManager.activate(currentPhaseMethod.getId());
-			step = phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
-		} else if(phasesMethodUIManager.getNextStep() == null) {
+			_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
+			_phasesMethodUIManager.activate(currentPhaseMethod.getId());
+			step = _phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
+		} else if(_phasesMethodUIManager.getNextStep() == null) {
 			_numPhase++;
 			currentPhaseMethod = phasesMethodUI.get(_numPhase);
-			phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
-			phasesMethodUIManager.activate(currentPhaseMethod.getId());	
-			step = phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
+			_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
+			_phasesMethodUIManager.activate(currentPhaseMethod.getId());	
+			step = _phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
 		} else {
-			step = phasesMethodUIManager.getNextStep();	
+			step = _phasesMethodUIManager.getNextStep();	
 		}
 		
-		phasesMethodUIManager.activateStep(step);
+		_phasesMethodUIManager.activateStep(step);
 		boolean loaded = false;
 		for(CTabItem tabItem: _tabFolder.getItems()) {
 			if(tabItem.getText().equals(step.getPartName())) {
@@ -477,8 +481,7 @@ public class RatingView extends ViewPart {
 		_methodNameFooterText.setText("Unselected");
 		_stepValue.setText("(0/0)");
 		
-		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
-		methodsUIManager.deactiveCurrentActive();
+		_methodsUIManager.deactiveCurrentActive();
 		
 		_methodUISelected = null;
 	}
@@ -561,16 +564,15 @@ public class RatingView extends ViewPart {
 	private void selectMethod(Method methodToSelect, CLabel suitableLabel) {
 		_descriptionText.setText(methodToSelect.getDescription());
 		
-		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();
-		if(methodsUIManager.getActivateMethodUI() != null) {
+		if(_methodsUIManager.getActivateMethodUI() != null) {
 			clearMethodSteps();
 		}
 
 		_methodNameFooterText.setText(suitableLabel.getText().replace(" (SUITABLE)", ""));
 		_methodLabelSelected = suitableLabel;
 		
-		methodsUIManager.activate(methodToSelect.getId() + ".ui");
-		_methodUISelected = methodsUIManager.getActivateMethodUI();
+		_methodsUIManager.activate(methodToSelect.getId() + ".ui");
+		_methodUISelected = _methodsUIManager.getActivateMethodUI();
 		_stepsText.setText(_methodUISelected.getPhasesFormat());
 		
 		String test = methodToSelect.getImplementation().isAvailable();
@@ -585,7 +587,6 @@ public class RatingView extends ViewPart {
 				_warningLabel.setText(test);
 				_warningLabel.setForeground(new Color(_warningLabel.getParent().getDisplay(), new RGB(205, 65, 65)));
 			}
-			
 			
 			if(test.equals("Not set all assignments")) {
 				_warningLabel.setImage(Images.warning);
@@ -619,6 +620,13 @@ public class RatingView extends ViewPart {
 				_tabFolder.getItem(_tabFolder.getItemCount() - 1).dispose();
 				_numPhase--;
 			}
+			
+			List<PhaseMethodUI> phasesMethodUI = _methodsUIManager.getActivateMethodUI().getPhasesUI();
+			PhaseMethodUI currentPhaseMethod = phasesMethodUI.get(_numPhase);
+			_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
+			_phasesMethodUIManager.activate(currentPhaseMethod.getId());
+			ViewPart step = _phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 1);
+			_phasesMethodUIManager.activateStep(step);
 		}
 	}
 	
