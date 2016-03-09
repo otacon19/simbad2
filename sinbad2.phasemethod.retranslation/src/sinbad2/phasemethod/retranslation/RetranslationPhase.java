@@ -1,6 +1,7 @@
 package sinbad2.phasemethod.retranslation;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,8 @@ public class RetranslationPhase implements IPhaseMethod {
 	public RetranslationPhase() {
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valuationSet = valuationSetManager.getActiveValuationSet();
+		
+		_lhDomains = new LinkedList<Object[]>();
 	}
 	
 	public List<Object[]> getLHDomains() {

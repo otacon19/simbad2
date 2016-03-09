@@ -284,7 +284,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		setChart(null);
 	}
 	
-	private void setChart(Domain domain) {
+	private void setChart(final Domain domain) {
 		removeOldChart();
 		
 		boolean exit = false;
@@ -308,7 +308,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 				_controlListener = new ControlAdapter() {
 					@Override
 					public void controlResized(ControlEvent e) {
-						setChart(getDomain());
+						setChart(domain);
 					}
 				};
 				_chartView.addControlListener(_controlListener);
