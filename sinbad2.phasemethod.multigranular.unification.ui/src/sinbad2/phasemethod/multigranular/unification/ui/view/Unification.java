@@ -1,5 +1,6 @@
 package sinbad2.phasemethod.multigranular.unification.ui.view;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ITreeViewerListener;
@@ -20,6 +21,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
@@ -260,19 +262,21 @@ public class Unification extends ViewPart implements IStepStateListener {
 			reloaded = true;
 		}
 		
-		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		aggregationPhase.clear();
+		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();
+		unifiedValues.putAll(_unificationPhase.unification(_domain));
+		Map<ValuationKey, Valuation> unifiedTwoTupleValues = new HashMap<ValuationKey, Valuation>(); 
+		unifiedTwoTupleValues.putAll(_unificationPhase.getTwoTupleValuationsResult());
 		
 		_domain = (FuzzySet) SelectBLTS.getBLTSDomain();
-		Map<ValuationKey, Valuation> unifiedValues = _unificationPhase.unification(_domain);
-		Map<ValuationKey, Valuation> unifiedTwoTupleValues = _unificationPhase.getTwoTupleValuationsResult();
 		
 		_provider = new TreeViewerContentProvider(unifiedValues);
 		_treeViewer.setContentProvider(_provider);
 		_treeViewer.setInput(_provider.getInput());
 
+		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+		aggregationPhase.clear();
 		aggregationPhase.setUnificationValues(unifiedTwoTupleValues);
-		aggregationPhase.setUnifiedDomain(_domain);
+		aggregationPhase.setUnifiedDomain((Domain) _domain.clone());
 		
 		if(_completed || reloaded) {
 			_ratingView.loadNextStep();

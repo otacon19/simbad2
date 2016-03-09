@@ -1,5 +1,7 @@
 package sinbad2.phasemethod.multigranular.lh.unification.ui.view;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
@@ -265,15 +268,20 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 
 	@Override
 	public void notifyStepStateChange() {
+		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();
+		unifiedValues.putAll(_unifiedValues);
 		
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
 		aggregationPhase.clear();
-		aggregationPhase.setUnificationValues(_unifiedValues);
-		aggregationPhase.setUnifiedDomain(_unifiedDomain);
+		aggregationPhase.setUnificationValues(unifiedValues);
+		aggregationPhase.setUnifiedDomain((Domain) _unifiedDomain.clone());
+		
+		List<Object[]> lhDomains = new LinkedList<Object[]>();
+		lhDomains.addAll(_unificationPhase.getLHDomains());
 		RetranslationPhase retranslationPhase = (RetranslationPhase) pmm.getPhaseMethod(RetranslationPhase.ID).getImplementation();
 		retranslationPhase.clear();
-		retranslationPhase.setLHDomains(_unificationPhase.getLHDomains());
+		retranslationPhase.setLHDomains(lhDomains);
 		
 		if(_completed) {
 			_ratingView.loadNextStep();

@@ -43,7 +43,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 	
 	private ControlAdapter _controlListener;
 	
-	private static Domain _selectedLHDomain;
+	private Domain _selectedLHDomain;
 	
 	private boolean _completed;
 	private boolean _loaded;
@@ -183,10 +183,6 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 		}
 	}
 
-	public static Domain getLHDomainSelected() {
-		return _selectedLHDomain;
-	}
-	
 	@Override
 	public String getPartName() {
 		return "Retranslation";
@@ -203,7 +199,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		AnalysisPhase analysis = (AnalysisPhase) pmm.getPhaseMethod(AnalysisPhase.ID).getImplementation();
 		analysis.clear();
-		analysis.setDomain(_selectedLHDomain);
+		analysis.setDomain((Domain) _selectedLHDomain.clone());
 		
 		if(_completed && !_loaded) {
 			_ratingView.loadNextStep();

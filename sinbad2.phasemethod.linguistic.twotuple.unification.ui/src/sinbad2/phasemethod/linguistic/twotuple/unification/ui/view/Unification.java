@@ -1,6 +1,7 @@
 package sinbad2.phasemethod.linguistic.twotuple.unification.ui.view;
 
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ITreeViewerListener;
@@ -21,6 +22,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
@@ -255,12 +257,14 @@ public static final String ID = "flintstones.phasemethod.linguistic.twotuple.ui.
 
 	@Override
 	public void notifyStepStateChange() {
+		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();
+		unifiedValues.putAll(_unifiedValues);
 		
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
 		aggregationPhase.clear();
-		aggregationPhase.setUnificationValues(_unifiedValues);
-		aggregationPhase.setUnifiedDomain(_unificacionPhase.getDomain());
+		aggregationPhase.setUnificationValues(unifiedValues);
+		aggregationPhase.setUnifiedDomain((Domain) _unificacionPhase.getDomain().clone());
 		
 		if(_completed) {
 			_ratingView.loadNextStep();

@@ -1,5 +1,8 @@
 package sinbad2.phasemethod.unbalanced.methodology.unification.ui.view;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -19,6 +22,8 @@ import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.unbalanced.methodology.unification.UnificationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.valuationset.ValuationKey;
 
 public class GenerateLH extends ViewPart implements IStepStateListener {
 	
@@ -152,8 +157,10 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
 		aggregationPhase.clear();
 		
-		Unbalanced unifiedDomain = _unification.getDomainLH();
-		aggregationPhase.setUnificationValues(_unification.unification(unifiedDomain));
+		Unbalanced unifiedDomain = (Unbalanced) _unification.getDomainLH().clone();
+		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();
+		unifiedValues.putAll(_unification.unification(unifiedDomain));
+		aggregationPhase.setUnificationValues(unifiedValues);
 		aggregationPhase.setUnifiedDomain(unifiedDomain);
 		
 		if(_completed) {
