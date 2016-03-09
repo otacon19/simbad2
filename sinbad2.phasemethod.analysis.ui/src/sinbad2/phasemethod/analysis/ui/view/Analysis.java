@@ -2,6 +2,7 @@ package sinbad2.phasemethod.analysis.ui.view;
 
 import java.awt.Color;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -395,18 +396,18 @@ public class Analysis extends ViewPart implements IStepStateListener {
 			_rankingViewer.setInput(_aggregationResult);
 			setChart(getDomain());
 		} else {
+			boolean retranslation = false;
 			MethodsManager methodsManager = MethodsManager.getInstance();
 			Method method = methodsManager.getActiveMethod();
-			for(PhaseMethod pm: method.getPhases()) {
-				if(pm.getImplementation() != null) {
-					System.out.println(pm.getImplementation());
-					System.out.println(_retranslationPhase);
-					if(pm.getImplementation().equals(_retranslationPhase)) {
-						System.out.println("iguales");
-					}
+			List<PhaseMethod> phases = method.getPhases();
+			for(PhaseMethod phase: phases) {
+				if(phase.getImplementation().equals(_retranslationPhase)) {
+					retranslation = true;
+					break;
 				}
 			}
-			if(method.getPhases().contains(_retranslationPhase)) {
+			
+			if(retranslation) {
 				Domain domain = _analysisPhase.getDomain();
 				_aggregationResult = _retranslationPhase.transform(_aggregationResult, (FuzzySet) domain);
 				_rankingViewer.setInput(_aggregationResult);

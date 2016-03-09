@@ -256,7 +256,7 @@ public class AggregationPhase implements IPhaseMethod {
 		List<Valuation> alternativeValuations, criterionValuations = null;
 		List<Double> weights;
 		Object aux;
-
+		
 		List<Criterion> criteria1 = new LinkedList<Criterion>();
 		if(criterionParent != null) {
 			if(((Criterion) criterionParent).hasSubcriteria()) {

@@ -152,7 +152,6 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		_aggregationPhase.clear();
 		
 		_aggregationResult = null;
 		

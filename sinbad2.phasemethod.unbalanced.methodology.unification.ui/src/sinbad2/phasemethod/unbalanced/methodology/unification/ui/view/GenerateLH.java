@@ -149,6 +149,7 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 	public void notifyStepStateChange() {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+		aggregationPhase.clear();
 		Unbalanced unifiedDomain = _unification.getDomainLH();
 		aggregationPhase.setUnificationValues(_unification.unification(unifiedDomain));
 		aggregationPhase.setUnifiedDomain(unifiedDomain);

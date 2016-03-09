@@ -258,6 +258,7 @@ public static final String ID = "flintstones.phasemethod.linguistic.twotuple.ui.
 		
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+		aggregationPhase.clear();
 		aggregationPhase.setUnificationValues(_unifiedValues);
 		aggregationPhase.setUnifiedDomain(_unificacionPhase.getDomain());
 		

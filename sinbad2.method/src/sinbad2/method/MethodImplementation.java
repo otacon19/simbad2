@@ -56,8 +56,6 @@ public abstract class MethodImplementation implements IMethodStateListener, IWor
 		_phasesNames = new LinkedList<String>();
 		_phasesImplementation = new HashMap<String, IPhaseMethod>();
 		_phases = new HashMap<String, PhaseMethod>();
-
-		System.out.println(method.getName());
 		
 		String name;
 		for (PhaseMethod phase : _method.getPhases()) {
@@ -66,8 +64,6 @@ public abstract class MethodImplementation implements IMethodStateListener, IWor
 			_phases.put(name, phase);
 			
 			_phasesImplementation.put(name, phase.getImplementation());
-			System.out.println(phase.getId());
-			System.out.println(phase.getImplementation());
 		}
 	}
 

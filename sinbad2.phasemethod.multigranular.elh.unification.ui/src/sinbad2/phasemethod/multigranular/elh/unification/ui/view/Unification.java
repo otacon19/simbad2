@@ -261,10 +261,11 @@ public class Unification extends ViewPart implements IStepStateListener {
 
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-	
+		aggregationPhase.clear();
 		aggregationPhase.setUnificationValues(_unifiedValues);
 		aggregationPhase.setUnifiedDomain(_unifiedDomain);
 		RetranslationPhase retranslationPhase = (RetranslationPhase) pmm.getPhaseMethod(RetranslationPhase.ID).getImplementation();
+		retranslationPhase.clear();
 		retranslationPhase.setLHDomains(_unificationPhase.getELHDomains());
 		
 		if(_completed) {
