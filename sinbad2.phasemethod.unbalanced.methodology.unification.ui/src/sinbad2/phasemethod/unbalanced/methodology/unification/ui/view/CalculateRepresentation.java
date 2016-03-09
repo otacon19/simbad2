@@ -23,6 +23,7 @@ import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.PlainFuzzySetChart;
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.domain.linguistic.unbalanced.ui.jfreechart.LHChart;
 import sinbad2.domain.numeric.real.NumericRealDomain;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.unbalanced.methodology.unification.UnificationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
@@ -74,7 +75,8 @@ public class CalculateRepresentation extends ViewPart implements IStepStateListe
 		
 		_completed = false;
 		
-		_unification = UnificationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_unification = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
 
 		createRepresentationInfo();
 		createChart();

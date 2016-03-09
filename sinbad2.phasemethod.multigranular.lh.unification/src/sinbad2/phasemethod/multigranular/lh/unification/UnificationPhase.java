@@ -28,44 +28,57 @@ import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class UnificationPhase implements IPhaseMethod {
-	
-	public static final String ID = "flintstones.phasemethod.multigranular.lh.unification";
-	
+
 	private class MyComparator implements Comparator<Object[]> {
 		@Override
 		public int compare(Object[] o1, Object[] o2) {
 			return Double.compare((Integer) o1[0], (Integer) o2[0]);
 		}
 	}
-
-	private ValuationSetManager _valuationSetManager;
-	private ValuationSet _valuationSet;
 	
-	private Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
-	private Map<ValuationKey, Valuation> _twoTupleEvaluationsResult;
+	public static final String ID = "flintstones.phasemethod.multigranular.lh.unification";
+	
+	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
+	private Map<ValuationKey, Valuation> _twoTupleValuationsResult;
 	
 	private List<Object[]> _lhDomains;
 	
-	private static UnificationPhase _instance = null;
+	private ValuationSet _valuationSet;
 	
-	private UnificationPhase() {
-		_valuationSetManager = ValuationSetManager.getInstance();
-		_valuationSet = _valuationSetManager.getActiveValuationSet();
+	public UnificationPhase() {
+		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
+		_valuationSet = valuationSetManager.getActiveValuationSet();
 		
-		_twoTupleEvaluationsResult = new LinkedHashMap<ValuationKey, Valuation>();
+		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
+		_twoTupleValuationsResult = new LinkedHashMap<ValuationKey, Valuation>();
+		
+		_lhDomains = new LinkedList<Object[]>();
 	}
 	
-	public static UnificationPhase getInstance() {
-		if(_instance == null) {
-			_instance = new UnificationPhase();
-		}
-		return _instance;
+	public Map<ValuationKey, Valuation> getUnifiedValuationsResult() {
+		return _unifiedValuationsResult;
 	}
-
-	public ValuationSet getValuationSet() {
-		return _valuationSet;
+	
+	public void setUnifiedValuationsResult(Map<ValuationKey, Valuation> unifiedValuationsResult) {
+		_unifiedValuationsResult = unifiedValuationsResult;
 	}
-
+	
+	public Map<ValuationKey, Valuation> getTwoTupleValuationsResult() {
+		return _twoTupleValuationsResult;
+	}
+	
+	public void setTwoTupleValuationsResult(Map<ValuationKey, Valuation> twoTupleValuationsResult) {
+		_twoTupleValuationsResult = twoTupleValuationsResult;
+	}
+	
+	public List<Object[]> getLHDomains() {
+		return _lhDomains;
+	}
+	
+	public void setLHDomains(List<Object[]> lhDomains) {
+		_lhDomains = lhDomains;
+	}
+	
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new UnificationPhase();
@@ -77,12 +90,16 @@ public class UnificationPhase implements IPhaseMethod {
 
 		clear();
 
-		_valuationSet.setValuations(unification.getValuationSet().getValuations());
+		_lhDomains = unification.getLHDomains();
+		_twoTupleValuationsResult = unification.getTwoTupleValuationsResult();
+		_unifiedValuationsResult = unification.getUnifiedValuationsResult();
 	}
 
 	@Override
 	public void clear() {
-		_valuationSet.clear();
+		_lhDomains.clear();
+		_twoTupleValuationsResult.clear();
+		_unifiedValuationsResult.clear();
 	}
 
 	@Override
@@ -106,9 +123,7 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void activate() {
-		_valuationSetManager.setActiveValuationSet(_valuationSet);
-	}
+	public void activate() {}
 
 	@Override
 	public boolean validate() {
@@ -121,7 +136,7 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	public Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
-		_unifiedEvaluationsResult = new HashMap<ValuationKey, Valuation>();
+		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
 		
 		if (unifiedDomain != null) {
 			Criterion criterion;
@@ -147,10 +162,10 @@ public class UnificationPhase implements IPhaseMethod {
 				} else {
 					throw new IllegalArgumentException();
 				}
-				_unifiedEvaluationsResult.put(vk, valuation);
+				_unifiedValuationsResult.put(vk, valuation);
 			}
 		}
-		return _unifiedEvaluationsResult;
+		return _unifiedValuationsResult;
 	}
 	
 	public List<Object[]> generateLH() {
@@ -262,13 +277,5 @@ public class UnificationPhase implements IPhaseMethod {
 		result.createTrapezoidalFunction(labels);
 	
 		return result;
-	}
-	
-	public List<Object[]> getLHDomains() {
-		return _lhDomains;
-	}
-	
-	public Map<ValuationKey, Valuation> getValuationsResult() {
-		return _twoTupleEvaluationsResult;
 	}
 }

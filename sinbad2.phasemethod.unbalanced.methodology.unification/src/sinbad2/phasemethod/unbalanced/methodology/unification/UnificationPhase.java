@@ -9,7 +9,6 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.domain.numeric.real.NumericRealDomain;
-import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
@@ -31,63 +30,38 @@ public class UnificationPhase implements IPhaseMethod {
 	private Unbalanced _hgls;
 	
 	private Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
-	private Map<Alternative, Valuation> _unifiedEvaluationsResultAlternative;
 	
-	private ValuationSetManager _valuationSetManager;
 	private ValuationSet _valutationSet;
 	
-	private DomainsManager _domainsManager;
 	private DomainSet _domainSet;
 	
-	private static UnificationPhase _instance;
-	
 	public UnificationPhase() {
-		_valuationSetManager = ValuationSetManager.getInstance();
-		_valutationSet = _valuationSetManager.getActiveValuationSet();
+		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
+		_valutationSet = valuationSetManager.getActiveValuationSet();
 		
-		_domainsManager = DomainsManager.getInstance();
-		_domainSet = _domainsManager.getActiveDomainSet();
+		DomainsManager domainsManager = DomainsManager.getInstance();
+		_domainSet = domainsManager.getActiveDomainSet();
 	}
 	
-	public static UnificationPhase getInstance() {
-		if(_instance == null) {
-			_instance = new UnificationPhase();
-		}
-		
-		return _instance;
+	public Map<ValuationKey, Valuation> getUnifiedValuationsResult() {
+		return _unifiedEvaluationsResult;
 	}
 	
-	public DomainSet getDomainSet() {
-		return _domainSet;
-	}
-	
-	public ValuationSet getValuationSet() {
-		return _valutationSet;
+	public void setUnifiedValuationsResult(Map<ValuationKey, Valuation> unifiedValuationsResult) {
+		_unifiedEvaluationsResult = unifiedValuationsResult;
 	}
 	
 	public Unbalanced getDomainLH() {
 		return (Unbalanced) _domainSet.getDomains().get(0);
 	}
 	
-	@Override
-	public IPhaseMethod copyStructure() {
-		return new UnificationPhase();
-	}
-
-	@Override
-	public void copyData(IPhaseMethod iPhaseMethod) {
-		UnificationPhase unification = (UnificationPhase) iPhaseMethod;
-		
-		clear();
-		
-		_valutationSet.setValuations(unification.getValuationSet().getValuations());
-		_domainSet.setDomains(unification.getDomainSet().getDomains());
+	public Unbalanced getHGLS() {
+		return _hgls;
 	}
 	
 	public Map<ValuationKey, Valuation> unification(Unbalanced domain) {
 
 		_unifiedEvaluationsResult = new HashMap<ValuationKey, Valuation>();
-		_unifiedEvaluationsResultAlternative = new HashMap<Alternative, Valuation>();
 
 		if(domain != null) {
 			int[] lh = domain.getLh();
@@ -146,7 +120,6 @@ public class UnificationPhase implements IPhaseMethod {
 				}
 				
 				_unifiedEvaluationsResult.put(vk, valuation);
-				_unifiedEvaluationsResultAlternative.put(vk.getAlternative(), valuation);
 			}
 		}
 		
@@ -238,26 +211,30 @@ public class UnificationPhase implements IPhaseMethod {
 			return LEFT;
 		}
 	}
-
-	public Map<ValuationKey, Valuation> getValuationsResult() {
-		return _unifiedEvaluationsResult;
-	}
 	
-	public Map<Alternative, Valuation> getValuationsAlternativeResult() {
-		return _unifiedEvaluationsResultAlternative;
+	@Override
+	public IPhaseMethod copyStructure() {
+		return new UnificationPhase();
+	}
+
+	@Override
+	public void copyData(IPhaseMethod iPhaseMethod) {
+		UnificationPhase unification = (UnificationPhase) iPhaseMethod;
+		
+		clear();
+		
+		_unifiedEvaluationsResult = unification.getUnifiedValuationsResult();
+		_hgls = unification.getHGLS();
 	}
 	
 	@Override
 	public void clear() {
-		_domainSet.clear();
-		_valutationSet.clear();
+		_unifiedEvaluationsResult.clear();
+		_hgls = null;
 	}
 
 	@Override
-	public void activate() {
-		_domainsManager.setActiveDomainSet(_domainSet);
-		_valuationSetManager.setActiveValuationSet(_valutationSet);
-	}
+	public void activate() {}
 
 	@Override
 	public boolean validate() {

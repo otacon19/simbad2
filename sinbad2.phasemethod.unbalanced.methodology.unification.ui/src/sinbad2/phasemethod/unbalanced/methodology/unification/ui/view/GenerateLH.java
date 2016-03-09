@@ -14,6 +14,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.domain.linguistic.unbalanced.ui.jfreechart.LHChart;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.unbalanced.methodology.unification.UnificationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
@@ -49,7 +50,8 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 		_chart = null;
 		_controlListener = null;
 		
-		_unification = UnificationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_unification = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
 		
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		_parent.setLayoutData(gridData);
@@ -145,7 +147,8 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
-		AggregationPhase aggregationPhase = AggregationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
 		Unbalanced unifiedDomain = _unification.getDomainLH();
 		aggregationPhase.setUnificationValues(_unification.unification(unifiedDomain));
 		aggregationPhase.setUnifiedDomain(unifiedDomain);

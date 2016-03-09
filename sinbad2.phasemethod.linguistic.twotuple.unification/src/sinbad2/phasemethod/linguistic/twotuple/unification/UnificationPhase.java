@@ -22,41 +22,43 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 public class UnificationPhase implements IPhaseMethod {
 
 	public static final String ID = "flintstones.phasemethod.linguistic.twotuple.unification";
-
-	private ValuationSetManager _valuationSetManager;
+	
+	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
+	private Map<ValuationKey, Valuation> _twoTupleValuationsResult;
+	
 	private ValuationSet _valuationSet;
 	
-	private DomainsManager _domainsManager;
 	private DomainSet _domainsSet;
 	
-	private Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
-	private Map<ValuationKey, Valuation> _twoTupleEvaluationsResult;
-	
-	private static UnificationPhase _instance = null;
-	
-	private UnificationPhase() {
-		_valuationSetManager = ValuationSetManager.getInstance();
-		_valuationSet = _valuationSetManager.getActiveValuationSet();
+	public UnificationPhase() {
+		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
+		_valuationSet = valuationSetManager.getActiveValuationSet();
 		
-		_domainsManager = DomainsManager.getInstance();
-		_domainsSet = _domainsManager.getActiveDomainSet();
+		DomainsManager domainsManager = DomainsManager.getInstance();
+		_domainsSet = domainsManager.getActiveDomainSet();
 		
-		_twoTupleEvaluationsResult = new LinkedHashMap<ValuationKey, Valuation>();
+		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
+		_twoTupleValuationsResult = new LinkedHashMap<ValuationKey, Valuation>();
 	}
 	
-	public static UnificationPhase getInstance() {
-		if(_instance == null) {
-			_instance = new UnificationPhase();
-		}
-		return _instance;
+	public Map<ValuationKey, Valuation> getUnifiedValuationsResult() {
+		return _unifiedValuationsResult;
 	}
-
-	public ValuationSet getValuationSet() {
-		return _valuationSet;
+	
+	public void setUnifiedValuationsResult(Map<ValuationKey, Valuation> unifiedValuationsResult) {
+		_unifiedValuationsResult = unifiedValuationsResult;
 	}
-
-	public DomainSet getDomainSet() {
-		return _domainsSet;
+	
+	public Map<ValuationKey, Valuation> getTwoTupleValuationsResult() {
+		return _twoTupleValuationsResult;
+	}
+	
+	public void setTwoTupleValuationsResult(Map<ValuationKey, Valuation> twoTupleValuationsResult) {
+		_twoTupleValuationsResult = twoTupleValuationsResult;
+	}
+	
+	public FuzzySet getDomain() {
+		return (FuzzySet) _domainsSet.getDomains().get(0);
 	}
 	
 	@Override
@@ -70,14 +72,14 @@ public class UnificationPhase implements IPhaseMethod {
 
 		clear();
 
-		_valuationSet.setValuations(unification.getValuationSet().getValuations());
-		_domainsSet.setDomains(unification.getDomainSet().getDomains());
+		_unifiedValuationsResult = unification.getUnifiedValuationsResult();
+		_twoTupleValuationsResult = unification.getTwoTupleValuationsResult();
 	}
 
 	@Override
 	public void clear() {
-		_valuationSet.clear();
-		_domainsSet.clear();
+		_unifiedValuationsResult.clear();
+		_twoTupleValuationsResult.clear();
 	}
 
 	@Override
@@ -101,10 +103,7 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void activate() {
-		_valuationSetManager.setActiveValuationSet(_valuationSet);
-		_domainsManager.setActiveDomainSet(_domainsSet);
-	}
+	public void activate() {}
 
 	@Override
 	public boolean validate() {
@@ -121,7 +120,7 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	public Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
-		_unifiedEvaluationsResult = new HashMap<ValuationKey, Valuation>();
+		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
 		
 		if (unifiedDomain != null) {
 			Criterion criterion;
@@ -147,18 +146,10 @@ public class UnificationPhase implements IPhaseMethod {
 				} else {
 					throw new IllegalArgumentException();
 				}
-				_unifiedEvaluationsResult.put(vk, valuation);
+				_unifiedValuationsResult.put(vk, valuation);
 			}
 		}
 		
-		return _unifiedEvaluationsResult;
-	}
-	
-	public Map<ValuationKey, Valuation> getValuationsResult() {
-		return _twoTupleEvaluationsResult;
-	}
-	
-	public FuzzySet getDomain() {
-		return (FuzzySet) _domainsSet.getDomains().get(0);
+		return _unifiedValuationsResult;
 	}
 }

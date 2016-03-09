@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.multigranular.elh.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.elh.unification.ui.Images;
@@ -70,11 +71,12 @@ public class Unification extends ViewPart implements IStepStateListener {
 	
 	private RatingView _ratingView;
 	
-	private UnificationPhase _unificacionPhase;
+	private UnificationPhase _unificationPhase;
 	
 	@Override
 	public void createPartControl(Composite parent) {	
-		_unificacionPhase = UnificationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_unificationPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
 		
 		_completed = true;
 		
@@ -195,7 +197,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 		_treeViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 	
 		_unifiedDomain = GenerateUnificationDomain.getUnifiedDomain();
-		_unifiedValues = _unificacionPhase.unification(_unifiedDomain);
+		_unifiedValues = _unificationPhase.unification(_unifiedDomain);
 		
 		TreeViewerContentProvider provider = new TreeViewerContentProvider(_unifiedValues);
 		_treeViewer.setContentProvider(provider);
@@ -257,11 +259,13 @@ public class Unification extends ViewPart implements IStepStateListener {
 	@Override
 	public void notifyStepStateChange() {
 
-		AggregationPhase aggregationPhase = AggregationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+	
 		aggregationPhase.setUnificationValues(_unifiedValues);
 		aggregationPhase.setUnifiedDomain(_unifiedDomain);
-		RetranslationPhase retranslationPhase = RetranslationPhase.getInstance();
-		retranslationPhase.setLHDomains(_unificacionPhase.getELHDomains());
+		RetranslationPhase retranslationPhase = (RetranslationPhase) pmm.getPhaseMethod(RetranslationPhase.ID).getImplementation();
+		retranslationPhase.setLHDomains(_unificationPhase.getELHDomains());
 		
 		if(_completed) {
 			_ratingView.loadNextStep();

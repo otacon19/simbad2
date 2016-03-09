@@ -21,6 +21,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.UnificationPhase;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.ui.Images;
@@ -73,7 +74,8 @@ public class Unification extends ViewPart implements IStepStateListener {
 	
 	@Override
 	public void createPartControl(Composite parent) {	
-		_unificacionPhase = UnificationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_unificacionPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
 		
 		_completed = true;
 		
@@ -257,13 +259,14 @@ public class Unification extends ViewPart implements IStepStateListener {
 		
 		_domain = (FuzzySet) SelectBLTS.getBLTSDomain();
 		Map<ValuationKey, Valuation> unifiedValues = _unificacionPhase.unification(_domain);
-		Map<ValuationKey, Valuation> unifiedTwoTupleValues = _unificacionPhase.getValuationsResult();
+		Map<ValuationKey, Valuation> unifiedTwoTupleValues = _unificacionPhase.getTwoTupleValuationsResult();
 		
 		_provider = new TreeViewerContentProvider(unifiedValues);
 		_treeViewer.setContentProvider(_provider);
 		_treeViewer.setInput(_provider.getInput());
 		
-		AggregationPhase aggregationPhase = AggregationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
 		aggregationPhase.setUnificationValues(unifiedTwoTupleValues);
 		aggregationPhase.setUnifiedDomain(_domain);
 		

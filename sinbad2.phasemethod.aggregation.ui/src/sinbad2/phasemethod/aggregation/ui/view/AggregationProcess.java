@@ -42,6 +42,7 @@ import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.aggregation.listener.AggregationProcessListener;
 import sinbad2.phasemethod.aggregation.listener.AggregationProcessStateChangeEvent;
@@ -149,7 +150,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_completed = false;
 		_loaded = false;
 		
-		_aggregationPhase = AggregationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
 		_aggregationPhase.clear();
 		
 		_aggregationResult = null;

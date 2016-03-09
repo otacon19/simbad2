@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,6 @@ import java.util.Set;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
-import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -30,45 +28,56 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class UnificationPhase implements IPhaseMethod {
 	
-	public static final String ID = "flintstones.phasemethod.multigranular.elh.unification";
-	
 	private class MyComparator implements Comparator<Object[]> {
 		@Override
 		public int compare(Object[] o1, Object[] o2) {
 			return Double.compare((Integer) o1[0], (Integer) o2[0]);
 		}
 	}
+	
+	public static final String ID = "flintstones.phasemethod.multigranular.elh.unification";
 
-	private ValuationSetManager _valuationSetManager;
-	private ValuationSet _valuationSet;
+	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
 	
-	private Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
-	private Map<ProblemElement, Valuation> _alternativeEvaluationsResult;
-	
-	private List<Object[]> _lhDomains;
+	private List<Object[]> _elhDomains;
 	
 	private FuzzySet _unifiedDomain;
 	
-	private static UnificationPhase _instance = null;
+	private ValuationSet _valuationSet;
 	
-	private UnificationPhase() {
-		_valuationSetManager = ValuationSetManager.getInstance();
-		_valuationSet = _valuationSetManager.getActiveValuationSet();
+	public UnificationPhase() {
+		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
+		_valuationSet = valuationSetManager.getActiveValuationSet();
 		
-		_alternativeEvaluationsResult = new LinkedHashMap<ProblemElement, Valuation>();
+		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
+		_elhDomains = new LinkedList<Object[]>();
+		_unifiedDomain = null;	
 	}
 	
-	public static UnificationPhase getInstance() {
-		if(_instance == null) {
-			_instance = new UnificationPhase();
-		}
-		return _instance;
+	public Map<ValuationKey, Valuation> getUnifiedValuationsResult() {
+		return _unifiedValuationsResult;
 	}
-
-	public ValuationSet getValuationSet() {
-		return _valuationSet;
+	
+	public void setUnifiedValuationsResult(Map<ValuationKey, Valuation> unifiedValuationsResult) {
+		_unifiedValuationsResult = unifiedValuationsResult;
 	}
-
+	
+	public List<Object[]> getELHDomains() {
+		return _elhDomains;
+	}
+	
+	public void setELHDomains(List<Object[]> elhDomains) {
+		_elhDomains = elhDomains;
+	}
+	
+	public FuzzySet getUnifiedDomain() {
+		return _unifiedDomain;
+	}
+	
+	public void setUnifiedDomain(FuzzySet unifiedDomain) {
+		_unifiedDomain = unifiedDomain;
+	}
+	
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new UnificationPhase();
@@ -80,12 +89,16 @@ public class UnificationPhase implements IPhaseMethod {
 
 		clear();
 
-		_valuationSet.setValuations(unification.getValuationSet().getValuations());
+		_elhDomains = unification.getELHDomains();
+		_unifiedDomain = unification.getUnifiedDomain();
+		_unifiedValuationsResult = unification.getUnifiedValuationsResult();
 	}
 
 	@Override
 	public void clear() {
-		_valuationSet.clear();
+		_elhDomains.clear();
+		_unifiedDomain = null;
+		_unifiedValuationsResult.clear();
 	}
 
 	@Override
@@ -109,9 +122,7 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void activate() {
-		_valuationSetManager.setActiveValuationSet(_valuationSet);
-	}
+	public void activate() {}
 
 	@Override
 	public boolean validate() {
@@ -124,7 +135,7 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	public Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
-		_unifiedEvaluationsResult = new HashMap<ValuationKey, Valuation>();
+		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
 		
 		if (unifiedDomain != null) {
 			Criterion criterion;
@@ -152,18 +163,17 @@ public class UnificationPhase implements IPhaseMethod {
 					throw new IllegalArgumentException();
 				}
 				
-				_unifiedEvaluationsResult.put(vk, valuation);
-				_alternativeEvaluationsResult.put(vk.getAlternative(), valuation);
+				_unifiedValuationsResult.put(vk, valuation);
 			}
 		}
-		return _unifiedEvaluationsResult;
+		return _unifiedValuationsResult;
 	}
 	
 	public List<Object[]> generateLH() {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 		
-		_lhDomains = new LinkedList<Object[]>();
+		_elhDomains = new LinkedList<Object[]>();
 		
 		List<Object[]> domains = new LinkedList<Object[]>();
 		Set<String> domainsNames = new HashSet<String>();
@@ -217,7 +227,7 @@ public class UnificationPhase implements IPhaseMethod {
 			entry[0] = "l(" + i + "," + value + ")";
 		}
 		
-		_lhDomains.addAll(domains);
+		_elhDomains.addAll(domains);
 
 		String generate = "generate";
 		domain = generateUnifiedDomain(sizes);
@@ -233,13 +243,13 @@ public class UnificationPhase implements IPhaseMethod {
 				i++;
 			}
 			
-			_lhDomains.add(new Object[] { "l(" + i + "," + cardinality + ")", domainName, domain });
+			_elhDomains.add(new Object[] { "l(" + i + "," + cardinality + ")", domainName, domain });
 			domainsNames.add(domainName);
 		}
 		
-		_unifiedDomain = (FuzzySet) _lhDomains.get(_lhDomains.size() - 1)[2];
+		_unifiedDomain = (FuzzySet) _elhDomains.get(_elhDomains.size() - 1)[2];
 		
-		return _lhDomains;
+		return _elhDomains;
 	}
 
 	private FuzzySet generateUnifiedDomain(Set<Integer> sizes) {
@@ -289,17 +299,5 @@ public class UnificationPhase implements IPhaseMethod {
 			a = aux;
 		}
 		return a;
-	}
-	
-	public List<Object[]> getELHDomains() {
-		return _lhDomains;
-	}
-	
-	public Domain getUnifiedDomain() {
-		return _unifiedDomain;
-	}
-
-	public Map<ProblemElement, Valuation> getAlternativeValuationsResult() {
-		return _alternativeEvaluationsResult;
 	}
 }

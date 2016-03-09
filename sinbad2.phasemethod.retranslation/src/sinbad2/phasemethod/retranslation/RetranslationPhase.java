@@ -12,6 +12,8 @@ import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
+import sinbad2.valuation.valuationset.ValuationSet;
+import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class RetranslationPhase implements IPhaseMethod {
 	
@@ -19,15 +21,13 @@ public class RetranslationPhase implements IPhaseMethod {
 
 	private List<Object[]> _lhDomains;
 	
-	private static RetranslationPhase _instance = null;
+	private ValuationSet _valuationSet;
 	
-	public static RetranslationPhase getInstance() {
-		if(_instance == null) {
-			_instance = new RetranslationPhase();
-		}
-		return _instance;
+	public RetranslationPhase() {
+		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
+		_valuationSet = valuationSetManager.getActiveValuationSet();
 	}
-
+	
 	public List<Object[]> getLHDomains() {
 		return _lhDomains;
 	}
@@ -60,9 +60,19 @@ public class RetranslationPhase implements IPhaseMethod {
 		return results;
 	}
 	
+	@Override
+	public void copyData(IPhaseMethod iPhaseMethod) {
+		RetranslationPhase retranslationPhase = (RetranslationPhase) iPhaseMethod;
+		
+		clear();
+		
+		_lhDomains = retranslationPhase.getLHDomains();
+	}
 	
 	@Override
-	public void clear() {}
+	public void clear() {
+		_lhDomains.clear();
+	}
 
 	@Override
 	public IPhaseMethod clone() {
@@ -82,13 +92,15 @@ public class RetranslationPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void copyData(IPhaseMethod iPhaseMethod) {}
-
-	@Override
 	public void activate() {}
 
 	@Override
 	public boolean validate() {
+		
+		if(_valuationSet.getValuations().isEmpty()) {
+			return false;
+		}
+		
 		return true;
 	}
 	

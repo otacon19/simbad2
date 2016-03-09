@@ -36,6 +36,7 @@ import sinbad2.element.ProblemElementsSet;
 import sinbad2.method.Method;
 import sinbad2.method.MethodsManager;
 import sinbad2.phasemethod.PhaseMethod;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.analysis.AnalysisPhase;
 import sinbad2.phasemethod.analysis.ui.view.listener.CheckStateListener;
@@ -101,9 +102,10 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
 		
-		_aggregationPhase = AggregationPhase.getInstance();
-		_analysisPhase = AnalysisPhase.getInstance();
-		_retranslationPhase = RetranslationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+		_analysisPhase = (AnalysisPhase) pmm.getPhaseMethod(AnalysisPhase.ID).getImplementation();
+		_retranslationPhase = (RetranslationPhase) pmm.getPhaseMethod(RetranslationPhase.ID).getImplementation();
 		
 		_aggregationResult = null;
 		
@@ -396,8 +398,12 @@ public class Analysis extends ViewPart implements IStepStateListener {
 			MethodsManager methodsManager = MethodsManager.getInstance();
 			Method method = methodsManager.getActiveMethod();
 			for(PhaseMethod pm: method.getPhases()) {
-				if(pm.getImplementation().equals(_retranslationPhase)) {
-					 System.out.println("lo misma mierda son");
+				if(pm.getImplementation() != null) {
+					System.out.println(pm.getImplementation());
+					System.out.println(_retranslationPhase);
+					if(pm.getImplementation().equals(_retranslationPhase)) {
+						System.out.println("iguales");
+					}
 				}
 			}
 			if(method.getPhases().contains(_retranslationPhase)) {

@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.linguistic.twotuple.unification.UnificationPhase;
 import sinbad2.phasemethod.linguistic.twotuple.unification.ui.Images;
@@ -73,7 +74,8 @@ public static final String ID = "flintstones.phasemethod.linguistic.twotuple.ui.
 	
 	@Override
 	public void createPartControl(Composite parent) {	
-		_unificacionPhase = UnificationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_unificacionPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
 		
 		_completed = true;
 		
@@ -254,7 +256,8 @@ public static final String ID = "flintstones.phasemethod.linguistic.twotuple.ui.
 	@Override
 	public void notifyStepStateChange() {
 		
-		AggregationPhase aggregationPhase = AggregationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
 		aggregationPhase.setUnificationValues(_unifiedValues);
 		aggregationPhase.setUnifiedDomain(_unificacionPhase.getDomain());
 		

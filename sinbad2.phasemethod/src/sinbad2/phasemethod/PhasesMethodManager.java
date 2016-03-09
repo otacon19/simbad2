@@ -37,8 +37,7 @@ public class PhasesMethodManager {
 		PhaseMethodRegistryExtension registry;
 		for (IConfigurationElement extension : extensions) {
 			registry = new PhaseMethodRegistryExtension(extension);
-			_registers.put(registry.getAttribute(EPhaseMethodElements.id),
-					registry);
+			_registers.put(registry.getAttribute(EPhaseMethodElements.id), registry);
 		}
 
 	}
@@ -77,10 +76,9 @@ public class PhasesMethodManager {
 	}
 
 	public PhaseMethod getPhaseMethod(String id) {
-
+		
 		if (_phasesMethod.containsKey(id)) {
 			return _phasesMethod.get(id);
-
 		} else {
 			try {
 

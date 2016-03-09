@@ -23,6 +23,7 @@ import org.eclipse.ui.part.ViewPart;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.analysis.AnalysisPhase;
 import sinbad2.phasemethod.retranslation.RetranslationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
@@ -56,7 +57,8 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 		_completed = false;
 		_loaded = false;
 		
-		_retranslationPhase = RetranslationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_retranslationPhase = (RetranslationPhase) pmm.getPhaseMethod(RetranslationPhase.ID).getImplementation();
 		
 		_chart = null;
 		_controlListener = null;
@@ -198,7 +200,8 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 	@Override
 	public void notifyStepStateChange() {
 		
-		AnalysisPhase analysis = AnalysisPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		AnalysisPhase analysis = (AnalysisPhase) pmm.getPhaseMethod(AnalysisPhase.ID).getImplementation();
 		analysis.setDomain(_selectedLHDomain);
 		
 		if(_completed && !_loaded) {

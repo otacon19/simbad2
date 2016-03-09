@@ -4,6 +4,8 @@ import sinbad2.domain.Domain;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
+import sinbad2.valuation.valuationset.ValuationSet;
+import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class AnalysisPhase implements IPhaseMethod {
 
@@ -11,17 +13,13 @@ public class AnalysisPhase implements IPhaseMethod {
 	
 	private Domain _domain;
 	
-	private static AnalysisPhase _instance = null;
+	private ValuationSet _valuationSet;
 	
-	private AnalysisPhase() {
+	public AnalysisPhase() {
+		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
+		_valuationSet = valuationSetManager.getActiveValuationSet();
+		
 		_domain = null;
-	}
-	
-	public static AnalysisPhase getInstance() {
-		if(_instance == null) {
-			_instance = new AnalysisPhase();
-		}
-		return _instance;
 	}
 	
 	public Domain getDomain() {
@@ -38,10 +36,18 @@ public class AnalysisPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void copyData(IPhaseMethod iMethodPhase) {}
+	public void copyData(IPhaseMethod iMethodPhase) {
+		AnalysisPhase analysisPhase = (AnalysisPhase) iMethodPhase;
+		
+		clear();
+		
+		_domain = analysisPhase.getDomain();
+	}
 
 	@Override
-	public void clear() {}
+	public void clear() {
+		_domain = null;
+	}
 
 	@Override
 	public void notifyPhaseMethodStateChange(PhaseMethodStateChangeEvent event) {
@@ -67,6 +73,10 @@ public class AnalysisPhase implements IPhaseMethod {
 
 	@Override
 	public boolean validate() {
+		
+		if(_valuationSet.getValuations().isEmpty()) {
+			return false;
+		}
 		return true;
 	}
 }

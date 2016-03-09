@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.multigranular.lh.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.lh.unification.ui.Images;
@@ -70,11 +71,12 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 	
 	private RatingView _ratingView;
 	
-	private UnificationPhase _unificacionPhase;
+	private UnificationPhase _unificationPhase;
 	
 	@Override
 	public void createPartControl(Composite parent) {	
-		_unificacionPhase = UnificationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_unificationPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
 		
 		_unifiedDomain = null;
 		
@@ -196,14 +198,14 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		_treeEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 4));
 		_treeViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 		
-		List<Object[]> lhDomains = _unificacionPhase.generateLH();
+		List<Object[]> lhDomains = _unificationPhase.generateLH();
 		if (lhDomains != null) {
 			if(lhDomains.size() > 0) {
 				_unifiedDomain = ((FuzzySet) lhDomains.get(lhDomains.size() - 1)[2]);
 			}
 		}
 		
-		_unifiedValues = _unificacionPhase.unification(_unifiedDomain);
+		_unifiedValues = _unificationPhase.unification(_unifiedDomain);
 		TreeViewerContentProvider provider = new TreeViewerContentProvider(_unifiedValues);
 		_treeViewer.setContentProvider(provider);
 		_treeViewer.setInput(provider.getInput());
@@ -264,11 +266,12 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 	@Override
 	public void notifyStepStateChange() {
 		
-		AggregationPhase aggregationPhase = AggregationPhase.getInstance();
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
 		aggregationPhase.setUnificationValues(_unifiedValues);
 		aggregationPhase.setUnifiedDomain(_unifiedDomain);
-		RetranslationPhase retranslationPhase = RetranslationPhase.getInstance();
-		retranslationPhase.setLHDomains(_unificacionPhase.getLHDomains());
+		RetranslationPhase retranslationPhase = (RetranslationPhase) pmm.getPhaseMethod(RetranslationPhase.ID).getImplementation();
+		retranslationPhase.setLHDomains(_unificationPhase.getLHDomains());
 		
 		if(_completed) {
 			_ratingView.loadNextStep();

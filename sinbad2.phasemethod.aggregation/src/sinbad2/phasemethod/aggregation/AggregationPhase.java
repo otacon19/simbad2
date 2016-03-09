@@ -30,6 +30,8 @@ import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
+import sinbad2.valuation.valuationset.ValuationSet;
+import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class AggregationPhase implements IPhaseMethod {
 	
@@ -40,9 +42,6 @@ public class AggregationPhase implements IPhaseMethod {
 
 	private static final int UNBALANCED_LEFT = 0;
 	private static final int UNBALANCED_RIGHT = 1;
-	
-	private ProblemElementsManager _elementsManager;
-	private ProblemElementsSet _elementsSet;
 
 	private Map<ProblemElement, AggregationOperator> _expertsOperators;
 	private Map<ProblemElement, Object> _expertsOperatorsWeights;
@@ -58,47 +57,99 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	private Domain _unifiedDomain;
 	
-	private static AggregationPhase _instance = null;
+	private ProblemElementsSet _elementsSet;
+	private ValuationSet _valuationSet;
 
-	private AggregationPhase() {
-		_elementsManager = ProblemElementsManager.getInstance();
-		_elementsSet = _elementsManager.getActiveElementSet();
+	public AggregationPhase() {
+		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+		_elementsSet = elementsManager.getActiveElementSet();
+		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
+		_valuationSet = valuationSetManager.getActiveValuationSet();
 
 		_expertsOperators = new HashMap<ProblemElement, AggregationOperator>();
 		_criteriaOperators = new HashMap<ProblemElement, AggregationOperator>();
 		_expertsOperatorsWeights = new HashMap<ProblemElement, Object>();
 		_criteriaOperatorsWeights = new HashMap<ProblemElement, Object>();
 
+		_unificationValues = new HashMap<ValuationKey, Valuation>();
+		
 		_listeners = new LinkedList<AggregationProcessListener>();
 
 		_aggregateBy = "CRITERIA";
-		
-		_unificationValues = new HashMap<ValuationKey, Valuation>();
 	}
 	
-	public static AggregationPhase getInstance() {
-		if(_instance == null) {
-			_instance = new AggregationPhase();
-		}
-		return _instance;
+	public Map<ValuationKey, Valuation> getUnificationValues() {
+		return _unificationValues;
 	}
-
+	
 	public void setUnificationValues(Map<ValuationKey, Valuation> values) {
 		_unificationValues = values;
-	}
-	
-	public void setUnifiedDomain(Domain unifiedDomain) {
-		_unifiedDomain = unifiedDomain;
 	}
 	
 	public Domain getUnifiedDomain() {
 		return _unifiedDomain;
 	}
 	
-	public ProblemElementsSet getElementSet() {
-		return _elementsSet;
+	public void setUnifiedDomain(Domain unifiedDomain) {
+		_unifiedDomain = unifiedDomain;
+	}
+	
+	public Map<ProblemElement, AggregationOperator> getExpertsOperators() {
+		return _expertsOperators;
+	}
+	
+	public void setExpertsOperators(Map<ProblemElement, AggregationOperator> expertsOperators) {
+		_expertsOperators = expertsOperators;
+	}
+	
+	public Map<ProblemElement, AggregationOperator> getCriteriaOperators() {
+		return _criteriaOperators;
+	}
+	
+	public void setCriteriaOperators(Map<ProblemElement, AggregationOperator> criteriaOperators) {
+		_criteriaOperators = criteriaOperators;
+	}
+	
+	public Map<ProblemElement, Object> getExpertsOperatorWeights() {
+		return _expertsOperatorsWeights;
+	}
+	
+	public void setExpertsOperatorWeights(Map<ProblemElement, Object> expertsOperatorWeights) {
+		_expertsOperatorsWeights = expertsOperatorWeights;
+	}
+	
+	public Map<ProblemElement, Object> getCriteriaOperatorWeights() {
+		return _criteriaOperatorsWeights;
+	}
+	
+	public void setCriteriaOperatorWeights(Map<ProblemElement, Object> criteriaOperatorWeights) {
+		_criteriaOperatorsWeights = criteriaOperatorWeights;
+	}
+	
+	public ProblemElement[] setExpertOperator(ProblemElement expert, AggregationOperator operator, Object weights) {
+		return setOperator(expert, operator, weights, _expertsOperatorsWeights, _expertsOperators, "experts");
 	}
 
+	public ProblemElement[] setCriterionOperator(ProblemElement criterion, AggregationOperator operator, Object weights) {
+		return setOperator(criterion, operator, weights, _criteriaOperatorsWeights, _criteriaOperators, "criteria");
+	}
+
+	public AggregationOperator getExpertOperator(ProblemElement expert) {
+		return _expertsOperators.get(expert);
+	}
+
+	public Object getExpertOperatorWeights(ProblemElement expert) {
+		return _expertsOperatorsWeights.get(expert);
+	}
+	
+	public AggregationOperator getCriterionOperator(ProblemElement criterion) {
+		return _criteriaOperators.get(criterion);
+	}
+	
+	public Object getCriterionOperatorWeights(ProblemElement criterion) {
+		return _criteriaOperatorsWeights.get(criterion);
+	}
+	
 	public String getAggregateBy() {
 		return _aggregateBy;
 	}
@@ -140,30 +191,6 @@ public class AggregationPhase implements IPhaseMethod {
 		notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
 
 		return result.toArray(new ProblemElement[0]);
-	}
-
-	public ProblemElement[] setExpertOperator(ProblemElement expert, AggregationOperator operator, Object weights) {
-		return setOperator(expert, operator, weights, _expertsOperatorsWeights, _expertsOperators, "experts");
-	}
-
-	public ProblemElement[] setCriterionOperator(ProblemElement criterion, AggregationOperator operator, Object weights) {
-		return setOperator(criterion, operator, weights, _criteriaOperatorsWeights, _criteriaOperators, "criteria");
-	}
-
-	public AggregationOperator getExpertOperator(ProblemElement expert) {
-		return _expertsOperators.get(expert);
-	}
-
-	public Object getExpertOperatorWeights(ProblemElement expert) {
-		return _expertsOperatorsWeights.get(expert);
-	}
-	
-	public AggregationOperator getCriterionOperator(ProblemElement criterion) {
-		return _criteriaOperators.get(criterion);
-	}
-	
-	public Object getCriterionOperatorWeights(ProblemElement criterion) {
-		return _criteriaOperatorsWeights.get(criterion);
 	}
 
 	public boolean isValid() {
@@ -590,16 +617,23 @@ public class AggregationPhase implements IPhaseMethod {
 		AggregationPhase aggregationPhase = (AggregationPhase) iMethodPhase;
 
 		clear();
-
-		_elementsSet.setExperts(aggregationPhase.getElementSet().getExperts());
-		_elementsSet.setAlternatives(aggregationPhase.getElementSet().getAlternatives());
-		_elementsSet.setCriteria(aggregationPhase.getElementSet().getCriteria());
+		
+		_criteriaOperatorsWeights = aggregationPhase.getCriteriaOperatorWeights();
+		_expertsOperatorsWeights = aggregationPhase.getExpertsOperatorWeights();
+		_criteriaOperators = aggregationPhase.getCriteriaOperators();
+		_expertsOperators = aggregationPhase.getExpertsOperators();
+		_unificationValues = aggregationPhase.getUnificationValues();
+		_unifiedDomain = aggregationPhase.getUnifiedDomain();
 	}
 
 	@Override
 	public void clear() {
+		_criteriaOperatorsWeights.clear();
+		_expertsOperatorsWeights.clear();
 		_criteriaOperators.clear();
 		_expertsOperators.clear();
+		_unificationValues.clear();
+		_unifiedDomain = null;
 		_aggregateBy = "CRITERIA";
 	}
 
@@ -640,21 +674,12 @@ public class AggregationPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void activate() {
-		_elementsManager.setActiveElementSet(_elementsSet);
-	}
+	public void activate() {}
 
 	@Override
 	public boolean validate() {
-		if (_elementsSet.getAlternatives().isEmpty()) {
-			return false;
-		}
-
-		if (_elementsSet.getExperts().isEmpty()) {
-			return false;
-		}
-
-		if (_elementsSet.getCriteria().isEmpty()) {
+		
+		if(_valuationSet.getValuations().isEmpty()) {
 			return false;
 		}
 
