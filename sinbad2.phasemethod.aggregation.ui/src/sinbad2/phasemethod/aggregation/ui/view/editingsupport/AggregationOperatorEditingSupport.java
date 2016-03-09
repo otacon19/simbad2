@@ -55,20 +55,20 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
 		if(type.equals("expert")) {
-			List<Expert> childrens = elementsSet.getExpertChildren((Expert) root);
-			for(Expert children : childrens) {
-				if(!children.hasChildren()) {
-					result.add(children);
+			List<Expert> children = elementsSet.getAllExpertChildren((Expert) root);
+			for(Expert child : children) {
+				if(!child.hasChildren()) {
+					result.add(child);
 				} else {
-					ProblemElement[] subchildrens = getLeafElements(children, "expert");
-					for (ProblemElement subchildren : subchildrens) {
-						result.add(subchildren);
+					ProblemElement[] subchildren = getLeafElements(child, "expert");
+					for (ProblemElement subchild : subchildren) {
+						result.add(subchild);
 					}
 				}
 			}
 
 		} else {
-			List<Criterion> subcriteria = elementsSet.getCriterionSubcriteria((Criterion) root);
+			List<Criterion> subcriteria = elementsSet.getAllCriterionSubcriteria((Criterion) root);
 			for(Criterion subcriterion : subcriteria) {
 				if(!subcriterion.hasSubcriteria()) {
 					result.add(subcriterion);
@@ -249,10 +249,10 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 					WeightsDialog dialog; 
 					if(elementType.equals("Expert")) {
 						secondary = getLeafElements(nullElement, "criterion");
-						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getElementExpertChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
 					} else {
 						secondary = getLeafElements(nullElement, "expert");
-						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getElementCriterionSubcriteria((Criterion) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
 					}
 						
 					int exitValue = dialog.open();

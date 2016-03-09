@@ -265,7 +265,7 @@ public class AggregationPhase implements IPhaseMethod {
 				criteria1.add((Criterion) criterionParent);
 			}
 		} else {
-			criteria1 = _elementsSet.getAllCriteria();
+			criteria1 = _elementsSet.getCriteria();
 		}
 
 		List<Expert> experts1 = new LinkedList<Expert>();
@@ -276,7 +276,7 @@ public class AggregationPhase implements IPhaseMethod {
 				experts1.add((Expert) expertParent);
 			}
 		} else {
-			experts1 = _elementsSet.getAllExperts();
+			experts1 = _elementsSet.getExperts();
 		}
 
 		alternativeValuations = new LinkedList<Valuation>();
@@ -317,7 +317,11 @@ public class AggregationPhase implements IPhaseMethod {
 							if(operator == null) {
 								alternativeValuations.add(null);
 							} else {
-								alternativeValuations.add(((WeightedAggregationOperator) operator).aggregate(criterionValuations, weights));
+								if(weights != null) {
+									alternativeValuations.add(((WeightedAggregationOperator) operator).aggregate(criterionValuations, weights));
+								} else {
+									alternativeValuations.add(null);
+								}
 							}
 						}
 					} else {
@@ -367,7 +371,7 @@ public class AggregationPhase implements IPhaseMethod {
 				criteria1.add((Criterion) criterionParent);
 			}
 		} else {
-			criteria1 = _elementsSet.getAllCriteria();
+			criteria1 = _elementsSet.getCriteria();
 		}
 
 		List<Expert> experts1 = new LinkedList<Expert>();
@@ -378,7 +382,7 @@ public class AggregationPhase implements IPhaseMethod {
 				experts1.add((Expert) expertParent);
 			}
 		} else {
-			experts1 = _elementsSet.getAllExperts();
+			experts1 = _elementsSet.getExperts();
 		}
 
 		alternativeValuations = new LinkedList<Valuation>();
@@ -419,7 +423,11 @@ public class AggregationPhase implements IPhaseMethod {
 							if(operator == null) {
 								alternativeValuations.add(null);
 							} else {
-								alternativeValuations.add(((WeightedAggregationOperator) operator).aggregate(expertValuations, weights));
+								if(weights != null) {
+									alternativeValuations.add(((WeightedAggregationOperator) operator).aggregate(expertValuations, weights));
+								} else {
+									alternativeValuations.add(null);
+								}
 							}
 						}
 					} else {

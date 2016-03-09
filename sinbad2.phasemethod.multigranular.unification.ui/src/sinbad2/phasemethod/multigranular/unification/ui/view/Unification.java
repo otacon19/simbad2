@@ -262,12 +262,12 @@ public class Unification extends ViewPart implements IStepStateListener {
 			reloaded = true;
 		}
 		
+		_domain = (FuzzySet) SelectBLTS.getBLTSDomain();
+		
 		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();
 		unifiedValues.putAll(_unificationPhase.unification(_domain));
 		Map<ValuationKey, Valuation> unifiedTwoTupleValues = new HashMap<ValuationKey, Valuation>(); 
 		unifiedTwoTupleValues.putAll(_unificationPhase.getTwoTupleValuationsResult());
-		
-		_domain = (FuzzySet) SelectBLTS.getBLTSDomain();
 		
 		_provider = new TreeViewerContentProvider(unifiedValues);
 		_treeViewer.setContentProvider(_provider);

@@ -162,7 +162,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 					for(int j = 0; j < _cols; j++) {
 						auxWeights.add(new Double(0));
 					}
-					_weights.put(_secondary[i].getId(), auxWeights);
+					_weights.put(_secondary[i].getCanonicalId(), auxWeights);
 					_sums[i] = 0;
 				}
 
@@ -175,13 +175,13 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 				_sumGeneral = round(_sumGeneral);
 
 				for(int i = 0; i < _rows; i++) {
-					auxWeights = _weights.get(_secondary[i].getId());
+					auxWeights = _weights.get(_secondary[i].getCanonicalId());
 					if(auxWeights == null) {
 						auxWeights = new LinkedList<Double>();
 						for(int j = 0; j < _cols; j++) {
 							auxWeights.add(new Double(0));
 						}
-						_weights.put(_secondary[i].getId(), auxWeights);
+						_weights.put(_secondary[i].getCanonicalId(), auxWeights);
 						_sums[i] = 0;
 					} else {
 						for(Double weight : auxWeights) {
@@ -220,7 +220,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 			Object aux = ((Object[]) element)[0];
 
 			if (aux instanceof ProblemElement) {
-				return ((ProblemElement) aux).getId();
+				return ((ProblemElement) aux).getCanonicalId();
 			} else {
 				return null;
 			}
@@ -457,7 +457,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 					aux = new Object[_cols + 2];
 					aux[0] = _secondary[i];
 					sum = 0;
-					weights = _weights.get(_secondary[i].getId());
+					weights = _weights.get(_secondary[i].getCanonicalId());
 					for(int j = 0; j < _cols; j++) {
 						value = weights.get(j);
 						aux[j + 1] = Double.valueOf(value);
@@ -520,7 +520,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 					return result;
 				} else {
 					ProblemElement pe = (ProblemElement) ((Object[]) element)[0];
-					return pe.getId();
+					return pe.getCanonicalId();
 				}
 			}
 		});
@@ -528,7 +528,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 		for(int i = 0; i < _cols; i++) {
 			col = new TableViewerColumn(viewer, SWT.CENTER);
 			col.getColumn().setWidth(70);
-			col.getColumn().setText(_primary.get(i).getId());
+			col.getColumn().setText(_primary.get(i).getCanonicalId());
 			createColumnLabelProvider(col, i + 1);
 			col.setEditingSupport(new WeightEditingSupport(viewer, input, i + 1));
 		}
