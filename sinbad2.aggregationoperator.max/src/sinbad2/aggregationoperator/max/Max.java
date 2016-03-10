@@ -13,9 +13,9 @@ import sinbad2.aggregationoperator.max.valuation.UnifiedValuationOperator;
 import sinbad2.core.validator.Validator;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.integer.IntegerValuation;
-import sinbad2.valuation.integer.interval.IntegerInterval;
+import sinbad2.valuation.integer.interval.IntegerIntervalValuation;
 import sinbad2.valuation.real.RealValuation;
-import sinbad2.valuation.real.interval.RealInterval;
+import sinbad2.valuation.real.interval.RealIntervalValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
@@ -42,9 +42,9 @@ public class Max extends UnweightedAggregationOperator {
 					return IntegerOperator.aggregate(valuations);
 				} else if(valuation instanceof RealValuation) {
 					return RealOperator.aggregate(valuations);
-				} else if(valuation instanceof IntegerInterval){
+				} else if(valuation instanceof IntegerIntervalValuation){
 					return IntervalIntegerOperator.aggregate(valuations);
-				} else if(valuation instanceof RealInterval) {
+				} else if(valuation instanceof RealIntervalValuation) {
 					return IntervalRealOperator.aggregate(valuations);
 				} else if(valuation instanceof TwoTuple){
 					return TwoTupleOperator.aggregate(valuations);

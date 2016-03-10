@@ -30,9 +30,9 @@ public class FilterContentProvider implements ITreeContentProvider {
 		List<?> data = (List<?>) parent;
 		
 		if(data.get(0) instanceof Expert) {
-			return _elementsSet.getExpertChildren(null).toArray();
+			return _elementsSet.getAllExpertChildren(null).toArray();
 		} else if(data.get(0) instanceof Criterion) {
-			return _elementsSet.getCriterionSubcriteria(null).toArray();
+			return _elementsSet.getAllCriterionSubcriteria(null).toArray();
 		} else {
 			return _elementsSet.getAlternatives().toArray();
 		}

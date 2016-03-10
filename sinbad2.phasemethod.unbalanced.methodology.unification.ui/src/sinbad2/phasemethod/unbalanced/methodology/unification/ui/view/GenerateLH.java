@@ -133,6 +133,11 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 		}
 	}
 	
+	@Override
+	public String getPartName() {
+		return "Generate LH";
+	}
+
 	public void activate() {
 		if(_lh == null) {
 			generateLH();
@@ -144,12 +149,17 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 	public void setFocus() {
 		_chartPanel.setFocus();
 	}
-	
-	@Override
-	public String getPartName() {
-		return "Generate LH";
-	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		_chart = null;
+		_completed = false;
+		_controlListener = null;
+		_lh = null;
+	}
+	
 	@Override
 	public void notifyStepStateChange() {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();

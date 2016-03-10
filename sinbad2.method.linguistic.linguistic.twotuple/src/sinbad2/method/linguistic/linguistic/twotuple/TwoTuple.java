@@ -1,6 +1,8 @@
 package sinbad2.method.linguistic.linguistic.twotuple;
 
 import sinbad2.domain.Domain;
+import sinbad2.domain.DomainSet;
+import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.element.ProblemElementsManager;
@@ -24,11 +26,15 @@ public class TwoTuple extends MethodImplementation {
 	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignments";
 	
 	private ProblemElementsSet _elementsSet;
+	private DomainSet _domainSet;
 	private ValuationSet _valuationSet;
 	
 	public TwoTuple() {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
+		
+		DomainsManager domainsManager = DomainsManager.getInstance();
+		_domainSet = domainsManager.getActiveDomainSet();
 		
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valuationSet = valuationSetManager.getActiveValuationSet();
@@ -46,6 +52,12 @@ public class TwoTuple extends MethodImplementation {
 	public String isAvailable() {
 		String domainName = null;
 		Domain generateDomain;
+		
+		for(Domain d: _domainSet.getDomains()) {
+			if(!(d instanceof FuzzySet)) {
+				return EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS;
+			}
+		}
 		
 		for(Expert expert : _elementsSet.getAllExperts()) {
 			if(!expert.hasChildren()) {

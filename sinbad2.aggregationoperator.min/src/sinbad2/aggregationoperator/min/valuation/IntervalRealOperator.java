@@ -7,7 +7,7 @@ import java.util.List;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.real.interval.RealInterval;
+import sinbad2.valuation.real.interval.RealIntervalValuation;
 
 public class IntervalRealOperator {
 	
@@ -19,7 +19,7 @@ public class IntervalRealOperator {
 		List<Valuation> values = new LinkedList<Valuation>();
 		
 		for(Valuation valuation: valuations) {
-			Validator.notIllegalElementType(valuation, new String[] {RealInterval.class.toString()});
+			Validator.notIllegalElementType(valuation, new String[] {RealIntervalValuation.class.toString()});
 			
 			if(domain == null) {
 				domain = (NumericRealDomain) valuation.getDomain();
@@ -27,7 +27,7 @@ public class IntervalRealOperator {
 				throw new IllegalArgumentException("Invalid domain");
 			}
 			
-			values.add((RealInterval) valuation);
+			values.add((RealIntervalValuation) valuation);
 		}
 		
 		if(!values.isEmpty()) {

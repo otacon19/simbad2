@@ -5,10 +5,10 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.integer.IntegerValuation;
-import sinbad2.valuation.integer.interval.IntegerInterval;
+import sinbad2.valuation.integer.interval.IntegerIntervalValuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
 import sinbad2.valuation.real.RealValuation;
-import sinbad2.valuation.real.interval.RealInterval;
+import sinbad2.valuation.real.interval.RealIntervalValuation;
 
 public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 
@@ -35,10 +35,10 @@ public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 					return Integer.toString((int) ((IntegerValuation) result).getValue());
 				} else if(result instanceof RealValuation) {
 					return Double.toString(((RealValuation) result).getValue());
-				} else if(result instanceof IntegerInterval) {
-					return "[" + Integer.toString((int) ((IntegerInterval) result).getMin()) + ", " + Integer.toString((int) ((IntegerInterval) result).getMax()) + "]"; //$NON-NLS-1$
-				} else if(result instanceof RealInterval) {
-					return "[" + Double.toString(((RealInterval) result).getMin()) + ", " + Double.toString(((RealInterval) result).getMax()) + "]"; //$NON-NLS-1$
+				} else if(result instanceof IntegerIntervalValuation) {
+					return "[" + Integer.toString((int) ((IntegerIntervalValuation) result).getMin()) + ", " + Integer.toString((int) ((IntegerIntervalValuation) result).getMax()) + "]"; //$NON-NLS-1$
+				} else if(result instanceof RealIntervalValuation) {
+					return "[" + Double.toString(((RealIntervalValuation) result).getMin()) + ", " + Double.toString(((RealIntervalValuation) result).getMax()) + "]"; //$NON-NLS-1$
 				} else {
 					return "Not evaluate";
 				}

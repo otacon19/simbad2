@@ -254,6 +254,14 @@ public static final String ID = "flintstones.phasemethod.linguistic.twotuple.ui.
 	public void setFocus() {
 		_treeViewer.getControl().setFocus();
 	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+			
+		_completed = false;
+		_unifiedValues = null;
+	}
 
 	@Override
 	public void notifyStepStateChange() {

@@ -252,6 +252,14 @@ public class Unification extends ViewPart implements IStepStateListener {
 	}
 
 	@Override
+	public void dispose() {
+		super.dispose();
+		
+		_domain = null;
+		_completed = false;
+	}
+	
+	@Override
 	public void notifyStepStateChange() {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		boolean reloaded = false;

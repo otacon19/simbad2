@@ -7,7 +7,7 @@ import java.util.List;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.real.interval.RealInterval;
+import sinbad2.valuation.real.interval.RealIntervalValuation;
 
 public class IntervalRealOperator {
 	
@@ -19,7 +19,7 @@ public class IntervalRealOperator {
 		List<Valuation> values = new LinkedList<Valuation>();
 		
 		for(Valuation valuation: valuations) {
-			Validator.notIllegalElementType(valuation, new String[] {RealInterval.class.toString()});
+			Validator.notIllegalElementType(valuation, new String[] {RealIntervalValuation.class.toString()});
 			
 			if(domain == null) {
 				domain = (NumericRealDomain) valuation.getDomain();
@@ -38,11 +38,11 @@ public class IntervalRealOperator {
 			
 			if((values.size() % 2) == 0) {
 				Valuation auxValuation = values.get(median - 1);
-				double minValue = (((RealInterval) result).getMin()) + (((RealInterval) auxValuation).getMin());
-				double maxValue = (((RealInterval) result).getMax()) + (((RealInterval) auxValuation).getMax());
+				double minValue = (((RealIntervalValuation) result).getMin()) + (((RealIntervalValuation) auxValuation).getMin());
+				double maxValue = (((RealIntervalValuation) result).getMax()) + (((RealIntervalValuation) auxValuation).getMax());
 				minValue /= 2;
 				maxValue /= 2;
-				((RealInterval) result).setMinMax(minValue, maxValue);
+				((RealIntervalValuation) result).setMinMax(minValue, maxValue);
 			}
 		}
 		

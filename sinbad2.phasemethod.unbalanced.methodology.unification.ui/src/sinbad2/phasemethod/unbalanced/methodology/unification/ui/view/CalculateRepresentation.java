@@ -264,9 +264,9 @@ public class CalculateRepresentation extends ViewPart implements IStepStateListe
 
 	private void generateLH() {
 		_lh = _domain.getLh();
-
+		
 		if(_lh != null) {
-			_chart = new LHChart(_lh, _chartPanel, _chartPanel.getSize().x, _chartPanel.getSize().y, _domain);
+			_chart = new LHChart(_lh, _chartPanel, _chartPanel.getSize().x, _chartPanel.getSize().y - 1, _domain);
 			if(_controlListener == null) {
 				_controlListener = new ControlAdapter() {
 					@Override
@@ -287,15 +287,14 @@ public class CalculateRepresentation extends ViewPart implements IStepStateListe
 				_selectionPos = -1;
 			}
 		}
-
 	}
 	
 	public void activate() {
 		if(_domain == null) {
 			calculateRepresentation();
-			_representationPanel.layout();
-			_chartPanel.layout();
 		}
+		_representationPanel.layout();
+		_chartPanel.layout();
 	}
 	
 	@Override
@@ -309,7 +308,17 @@ public class CalculateRepresentation extends ViewPart implements IStepStateListe
 	}
 
 	@Override
+	public void dispose() {
+		super.dispose();
+		
+		_chart = null;
+		_lh = null;
+		_domain = null;
+	}
+	
+	@Override
 	public void notifyStepStateChange() {
+		
 		if(_completed) {
 			_ratingView.loadNextStep();
 			_completed = false;

@@ -7,7 +7,7 @@ import java.util.List;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.integer.interval.IntegerInterval;
+import sinbad2.valuation.integer.interval.IntegerIntervalValuation;
 
 public class IntervalIntegerOperator {
 	
@@ -19,7 +19,7 @@ public class IntervalIntegerOperator {
 		List<Valuation> values = new LinkedList<Valuation>();
 		
 		for(Valuation valuation: valuations) {
-			Validator.notIllegalElementType(valuation, new String[] {IntegerInterval.class.toString()});
+			Validator.notIllegalElementType(valuation, new String[] {IntegerIntervalValuation.class.toString()});
 			
 			if(domain == null) {
 				domain = (NumericIntegerDomain) valuation.getDomain();
@@ -38,11 +38,11 @@ public class IntervalIntegerOperator {
 			
 			if((values.size() % 2) == 0) {
 				Valuation auxValuation = values.get(median - 1);
-				long minValue = (((IntegerInterval) result).getMin()) + (((IntegerInterval) auxValuation).getMin());
-				long maxValue = (((IntegerInterval) result).getMax()) + (((IntegerInterval) auxValuation).getMax());
+				long minValue = (((IntegerIntervalValuation) result).getMin()) + (((IntegerIntervalValuation) auxValuation).getMin());
+				long maxValue = (((IntegerIntervalValuation) result).getMax()) + (((IntegerIntervalValuation) auxValuation).getMax());
 				minValue /= 2;
 				maxValue /= 2;
-				((IntegerInterval) result).setMinMax(minValue, maxValue);
+				((IntegerIntervalValuation) result).setMinMax(minValue, maxValue);
 			}
 		}
 		

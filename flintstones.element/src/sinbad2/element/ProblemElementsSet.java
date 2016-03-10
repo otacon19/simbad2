@@ -136,12 +136,23 @@ public class ProblemElementsSet implements Cloneable {
 	public List<Expert> getAllExperts() {
 		List<Expert> result = new LinkedList<Expert>();
 		for(Expert e: _experts) {
-			result.add(e);
-			if(e.hasChildren()) {
-				result.addAll(e.getChildren());
-			}
+			result.addAll(getAllChildren(e));
 		}
+	
 		return result;
+	}
+	
+	public List<Expert> getAllChildren(Expert parent) {
+		List<Expert> experts = new LinkedList<Expert>();
+		if(parent.hasChildren()) {
+			experts.add(parent);
+			for(Expert child: parent.getChildren()) {
+				experts.addAll(getAllChildren(child));
+			}
+		} else {
+			experts.add(parent);
+		}
+		return experts;
 	}
 	
 	public List<Alternative> getAlternatives() {
@@ -245,12 +256,22 @@ public class ProblemElementsSet implements Cloneable {
 	public List<Criterion> getAllCriteria() {
 		List<Criterion> result = new LinkedList<Criterion>();
 		for(Criterion c: _criteria) {
-			result.add(c);
-			if(c.hasSubcriteria()) {
-				result.addAll(c.getSubcriteria());
-			}
+			result.addAll(getAllSubcriteria(c));
 		}
 		return result;
+	}
+	
+	public List<Criterion> getAllSubcriteria(Criterion parent) {
+		List<Criterion> criteria = new LinkedList<Criterion>();
+		if(parent.hasSubcriteria()) {
+			criteria.add(parent);
+			for(Criterion subcriterion: parent.getSubcriteria()) {
+				criteria.addAll(getAllSubcriteria(subcriterion));
+			}
+		} else {
+			criteria.add(parent);
+		}
+		return criteria;
 	}
 	
 	public void setExperts(List<Expert> experts) {

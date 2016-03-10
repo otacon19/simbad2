@@ -418,11 +418,11 @@ public class Validator {
 	 *             Si el tamaño no está dentro del rango permitido o si el rango
 	 *             es inválido.
 	 */
-	public static void notInvalidSize(double size, double minValidSize,
-			double maxValidSize, String parameterName) {
+	public static void notInvalidSize(double size, double minValidSize, double maxValidSize, String parameterName) {
 		if (!inRange(size, minValidSize, maxValidSize)) {
 			throw new IllegalArgumentException(INVALID_SIZE
 					+ Messages.ParameterValidator_Value_must_be_in_range_1
+					+ size + ", "
 					+ minValidSize + ", " //$NON-NLS-1$
 					+ maxValidSize + "]."); //$NON-NLS-1$
 		}

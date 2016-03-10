@@ -41,7 +41,7 @@ public class AggregationCriterionViewerContentProvider implements ITreeContentPr
 		}
 
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		for (ProblemElement son : _elementsSet.getElementCriterionSubcriteria(element)) {
+		for (ProblemElement son : _elementsSet.getAllElementCriterionSubcriteria(element)) {
 			if (((Criterion) son).hasSubcriteria()) {
 				result.add(son);
 			}
@@ -70,7 +70,7 @@ public class AggregationCriterionViewerContentProvider implements ITreeContentPr
 			problemElement = (ProblemElement) element;
 		}
 
-		for (ProblemElement son : _elementsSet.getElementCriterionSubcriteria(problemElement)) {
+		for (ProblemElement son : _elementsSet.getAllElementCriterionSubcriteria(problemElement)) {
 			if (((Criterion) son).hasSubcriteria()) {
 				return true;
 			}

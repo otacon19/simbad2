@@ -265,6 +265,15 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 	public void setFocus() {
 		_treeViewer.getControl().setFocus();
 	}
+	
+	@Override
+		public void dispose() {
+			super.dispose();
+			
+			_completed = false;
+			_unifiedDomain = null;
+			_unifiedValues = null;
+		}
 
 	@Override
 	public void notifyStepStateChange() {

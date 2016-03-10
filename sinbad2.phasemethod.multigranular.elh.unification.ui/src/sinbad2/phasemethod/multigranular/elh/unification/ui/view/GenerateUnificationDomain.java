@@ -174,6 +174,16 @@ public class GenerateUnificationDomain extends ViewPart implements IStepStateLis
 	public void setFocus() {}
 	
 	@Override
+	public void dispose() {
+		super.dispose();
+		
+		_completed = false;
+		_controlListener = null;
+		_domainChart = null;
+		_unifiedDomain = null;
+	} 
+	
+	@Override
 	public void notifyStepStateChange() {
 		activate();
 		

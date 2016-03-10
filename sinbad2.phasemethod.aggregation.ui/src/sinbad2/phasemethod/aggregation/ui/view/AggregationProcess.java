@@ -704,6 +704,17 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	}
 	
 	@Override
+	public void dispose() {
+		super.dispose();
+		
+		_aggregationResult = null;
+		_chart = null;
+		_completed = false;
+		_controlListener = null;
+		_loaded = false;
+	}
+	
+	@Override
 	public void notifyStepStateChange() {
 		boolean notYet = false;
 		if(_completed && !_loaded) {

@@ -17,7 +17,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.integer.interval.IntegerInterval;
+import sinbad2.valuation.integer.interval.IntegerIntervalValuation;
 import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
 
 public class ValuationPanelIntegerInterval extends ValuationPanel  {
@@ -131,7 +131,7 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 		if(_valuation == null) {
 			return true;
 		} else {
-			if((((IntegerInterval) _valuation).getMin() !=_valueMin) || ((int) ((IntegerInterval) _valuation).getMax() !=_valueMax)) {
+			if((((IntegerIntervalValuation) _valuation).getMin() !=_valueMin) || ((int) ((IntegerIntervalValuation) _valuation).getMax() !=_valueMax)) {
 				return true;
 			} else {
 				return false;
@@ -142,13 +142,13 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 	@Override
 	public Valuation getNewValuation() {
 		
-		IntegerInterval result = null;
+		IntegerIntervalValuation result = null;
 		
 		if (_valuation == null) {
-			result = (IntegerInterval) _valuationsManager.copyValuation(IntegerInterval.ID);
+			result = (IntegerIntervalValuation) _valuationsManager.copyValuation(IntegerIntervalValuation.ID);
 			result.setDomain(_domain);
 		} else {
-			result = (IntegerInterval) _valuation.clone();
+			result = (IntegerIntervalValuation) _valuation.clone();
 		}
 		
 		result.setMin((long) _valueMin);
@@ -160,8 +160,8 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 	protected void initControls() {
 		
 		if(_valuation != null) {
-			_valueMin = (int) ((IntegerInterval) _valuation).getMin();
-			_valueMax = (int) ((IntegerInterval) _valuation).getMax();
+			_valueMin = (int) ((IntegerIntervalValuation) _valuation).getMin();
+			_valueMax = (int) ((IntegerIntervalValuation) _valuation).getMax();
 			_valueSpinnerMin.setSelection(_valueMin);
 			_valueSpinnerMax.setSelection(_valueMax);
 		} else {

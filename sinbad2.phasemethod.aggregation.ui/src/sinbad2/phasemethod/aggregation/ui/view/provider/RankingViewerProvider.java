@@ -83,6 +83,7 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 				}
 			}
 		}
+		
 		return result.toArray(new Object[0][0]);
 	}
 }

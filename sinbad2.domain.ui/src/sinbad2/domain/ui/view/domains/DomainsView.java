@@ -15,14 +15,10 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -128,7 +124,7 @@ public class DomainsView extends ViewPart {
 	        }
 
 			private void packAndFillLastColumn() {
-				Table table = _tableViewer.getTable();
+				/*Table table = _tableViewer.getTable();
 			    int columnsWidth = 0;
 			    
 			    for (int i = 0; i < table.getColumnCount() - 1; i++) {
@@ -150,7 +146,7 @@ public class DomainsView extends ViewPart {
 			    if(lastColumn.getWidth() < width - columnsWidth) {
 			        lastColumn.setWidth(width - columnsWidth);
 			    }
-				
+				*/
 			}
 	    });
 	}

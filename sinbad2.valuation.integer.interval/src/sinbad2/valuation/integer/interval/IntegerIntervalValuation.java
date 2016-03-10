@@ -17,20 +17,20 @@ import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
 import sinbad2.valuation.integer.interval.nls.Messages;
 
-public class IntegerInterval extends Valuation {
+public class IntegerIntervalValuation extends Valuation {
 
 	public static final String ID = "flintstones.valuation.integer.interval"; //$NON-NLS-1$
 	
 	public long _min;
 	public long _max;
 	
-	public IntegerInterval() {
+	public IntegerIntervalValuation() {
 		super();
 		_min = 0;
 		_max = 0;
 	}
 	
-	public IntegerInterval(NumericIntegerDomain domain, long min, long max) {
+	public IntegerIntervalValuation(NumericIntegerDomain domain, long min, long max) {
 		super();
 		_domain = domain;
 		_min = min;
@@ -63,7 +63,7 @@ public class IntegerInterval extends Valuation {
 	
 	public Valuation normalized() {
 		ValuationsManager valuationsManager = ValuationsManager.getInstance();
-		IntegerInterval result = (IntegerInterval) valuationsManager.copyValuation(ID);
+		IntegerIntervalValuation result = (IntegerIntervalValuation) valuationsManager.copyValuation(ID);
 		
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		NumericIntegerDomain domain = (NumericIntegerDomain) domainsManager.copyDomain(NumericIntegerDomain.ID);
@@ -79,7 +79,7 @@ public class IntegerInterval extends Valuation {
 	
 	@Override
 	public Valuation negateValuation() {
-		IntegerInterval result = (IntegerInterval) clone();
+		IntegerIntervalValuation result = (IntegerIntervalValuation) clone();
 		
 		long aux = Math.round(((NumericIntegerDomain) _domain).getMin()) + Math.round(((NumericIntegerDomain) _domain).getMax());
 		result.setMinMax(aux - _max, aux - _min);
@@ -97,12 +97,12 @@ public class IntegerInterval extends Valuation {
 		}
 		
 		int cardinality;
-		IntegerInterval normalized;
+		IntegerIntervalValuation normalized;
 		IMembershipFunction function;
 
 		FuzzySet result = (FuzzySet) fuzzySet.clone();
 		cardinality = ((FuzzySet) fuzzySet).getLabelSet().getCardinality();
-		normalized = (IntegerInterval) normalized();
+		normalized = (IntegerIntervalValuation) normalized();
 
 		for (int i = 0; i < cardinality; i++) {
 			function = result.getLabelSet().getLabel(i).getSemantic();
@@ -132,7 +132,7 @@ public class IntegerInterval extends Valuation {
 			return false;
 		}
 		
-		final IntegerInterval other = (IntegerInterval) obj;
+		final IntegerIntervalValuation other = (IntegerIntervalValuation) obj;
 		
 		EqualsBuilder eb = new EqualsBuilder();
 		eb.append(_max, other._max);
@@ -158,7 +158,7 @@ public class IntegerInterval extends Valuation {
 		
 		if(_domain.equals(other.getDomain())) {
 			long middle = (_max + _min) / 2l;
-			long otherMidle = (((IntegerInterval) other)._max + ((IntegerInterval) other)._min) / 2l;
+			long otherMidle = (((IntegerIntervalValuation) other)._max + ((IntegerIntervalValuation) other)._min) / 2l;
 			return Long.valueOf(middle).compareTo(Long.valueOf(otherMidle));
 		} else {
 			throw new IllegalArgumentException(Messages.IntegerInterval_Differents_domains);
@@ -167,8 +167,8 @@ public class IntegerInterval extends Valuation {
 	
 	@Override
 	public Object clone() {
-		IntegerInterval result = null;
-		result = (IntegerInterval) super.clone();
+		IntegerIntervalValuation result = null;
+		result = (IntegerIntervalValuation) super.clone();
 		result._min = new Long(_min);
 		result._max = new Long(_max);
 		
@@ -193,7 +193,7 @@ public class IntegerInterval extends Valuation {
 	}
 	
 	private Valuation normalizeInterval() {
-		IntegerInterval result = (IntegerInterval) clone();
+		IntegerIntervalValuation result = (IntegerIntervalValuation) clone();
 		
 		long min, max, intervalSize;
 		

@@ -172,7 +172,7 @@ public class AggregationPhase implements IPhaseMethod {
 		
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
 		if(elementType.equals("experts")) {
-			List<Expert> children = _elementsSet.getExpertChildren((Expert) element);
+			List<Expert> children = _elementsSet.getAllExpertChildren((Expert) element);
 			for(Expert child : children) {
 				if(child.hasChildren()) {
 					result.add(child);
@@ -180,7 +180,7 @@ public class AggregationPhase implements IPhaseMethod {
 			}
 
 		} else if (elementType.equals("criteria")) {
-			List<Criterion> subcriteria = _elementsSet.getCriterionSubcriteria((Criterion) element);
+			List<Criterion> subcriteria = _elementsSet.getAllCriterionSubcriteria((Criterion) element);
 			for(Criterion subcriterion : subcriteria) {
 				if(subcriterion.hasSubcriteria()) {
 					result.add(subcriterion);
@@ -282,13 +282,13 @@ public class AggregationPhase implements IPhaseMethod {
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement criterion : criteria1) {
 			if(criteria.contains(criterion)) {
-				if(_elementsSet.getCriterionSubcriteria((Criterion) criterionParent).size() > 0) {
+				if(_elementsSet.getAllCriterionSubcriteria((Criterion) criterionParent).size() > 0) {
 					alternativeValuations.add(aggregateElementByCriteria(expertParent, alternative, criterion, experts, criteria));
 				} else {
 					criterionValuations = new LinkedList<Valuation>();
 					for (ProblemElement expert : experts1) {
 						if(experts.contains(expert)) {
-							if (_elementsSet.getExpertChildren((Expert) expertParent).size() > 0) {
+							if (_elementsSet.getAllExpertChildren((Expert) expertParent).size() > 0) {
 								criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion, experts, criteria));
 							} else {
 								criterionValuations.add(_unificationValues.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
@@ -345,6 +345,7 @@ public class AggregationPhase implements IPhaseMethod {
 					weights = ((Map<ProblemElement, List<Double>>) aux).get(null);
 				} else {
 					weights = null;
+					
 					return null;
 				}
 				return ((WeightedAggregationOperator) operator).aggregate(alternativeValuations, weights);
@@ -362,7 +363,7 @@ public class AggregationPhase implements IPhaseMethod {
 		List<Valuation> alternativeValuations, expertValuations;
 		List<Double> weights;
 		Object aux;
-
+		
 		List<Criterion> criteria1 = new LinkedList<Criterion>();
 		if(criterionParent != null) {
 			if(((Criterion) criterionParent).hasSubcriteria()) {
@@ -388,13 +389,13 @@ public class AggregationPhase implements IPhaseMethod {
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement expert : experts1) {
 			if(experts.contains(expert)) {
-				if (_elementsSet.getExpertChildren((Expert) expertParent).size() > 0) {
+				if (_elementsSet.getAllExpertChildren((Expert) expertParent).size() > 0) {
 					alternativeValuations.add(aggregateElementByExperts(expert, alternative, criterionParent, experts, criteria));
 				} else {
 					expertValuations = new LinkedList<Valuation>();
 					for (ProblemElement criterion : criteria1) {
 						if(criteria.contains(criterion)) {
-							if (_elementsSet.getCriterionSubcriteria((Criterion) criterionParent).size() > 0) {
+							if (_elementsSet.getAllCriterionSubcriteria((Criterion) criterionParent).size() > 0) {
 								expertValuations.add(aggregateElementByCriteria(expert, alternative, criterion, experts, criteria));
 							} else {
 								expertValuations.add(_unificationValues.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
@@ -420,6 +421,7 @@ public class AggregationPhase implements IPhaseMethod {
 							} else {
 								weights = null;
 							}
+							
 							if(operator == null) {
 								alternativeValuations.add(null);
 							} else {
@@ -451,6 +453,8 @@ public class AggregationPhase implements IPhaseMethod {
 					weights = ((Map<ProblemElement, List<Double>>) aux).get(null);
 				} else {
 					weights = null;
+					
+					return null;
 				}
 				return ((WeightedAggregationOperator) operator).aggregate(alternativeValuations, weights);
 			} else {

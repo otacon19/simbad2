@@ -61,9 +61,9 @@ public class CheckStateListener implements ICheckStateListener {
 		List<ProblemElement> sons;
 		
 		if(element instanceof Expert) {
-			sons = _elementsSet.getElementExpertChildren(element);
+			sons = _elementsSet.getAllElementExpertChildren(element);
 		} else if(element instanceof Criterion) {
-			sons = _elementsSet.getElementCriterionSubcriteria(element);
+			sons = _elementsSet.getAllElementCriterionSubcriteria(element);
 		} else {
 			sons = _elementsSet.getElementAlternatives();
 		}
@@ -97,9 +97,9 @@ public class CheckStateListener implements ICheckStateListener {
 		List<ProblemElement> sons = new LinkedList<ProblemElement>();
 		
 		if(element instanceof Expert) {
-			sons = _elementsSet.getElementExpertChildren(element);
+			sons = _elementsSet.getAllElementExpertChildren(element);
 		} else if(element instanceof Criterion) {
-			sons = _elementsSet.getElementCriterionSubcriteria(element);
+			sons = _elementsSet.getAllElementCriterionSubcriteria(element);
 		}
 		
 		if(sons.size() == 0) {
@@ -131,9 +131,9 @@ public class CheckStateListener implements ICheckStateListener {
 		List<ProblemElement> sons = new LinkedList<ProblemElement>();
 		
 		if(element instanceof Expert) {
-			sons = _elementsSet.getElementExpertChildren(null);
+			sons = _elementsSet.getAllElementExpertChildren(null);
 		} else if(element instanceof Criterion) {
-			sons = _elementsSet.getElementCriterionSubcriteria(null);
+			sons = _elementsSet.getAllElementCriterionSubcriteria(null);
 		}
 		
 		for (ProblemElement son : sons) {
@@ -147,7 +147,7 @@ public class CheckStateListener implements ICheckStateListener {
 		_treeViewer.removeCheckStateListener(this);
 		
 		if(type.equals("EXPERTS")) {
-			for(Expert element : _elementsSet.getExperts()) {
+			for(Expert element : _elementsSet.getAllExperts()) {
 				if(element.hasChildren()) {
 					for(Expert child: element.getChildren()) {
 						_treeViewer.setGrayChecked(child, false);
@@ -163,7 +163,7 @@ public class CheckStateListener implements ICheckStateListener {
 				_treeViewer.setChecked(element, true);
 			}
 		} else {
-			for(Criterion element : _elementsSet.getCriteria()) {
+			for(Criterion element : _elementsSet.getAllCriteria()) {
 				if(element.hasSubcriteria()) {
 					for(Criterion subcriterion: element.getSubcriteria()) {
 						_treeViewer.setGrayChecked(subcriterion, false);

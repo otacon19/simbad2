@@ -17,7 +17,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.real.interval.RealInterval;
+import sinbad2.valuation.real.interval.RealIntervalValuation;
 import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
 
 public class ValuationPanelRealInterval extends ValuationPanel {
@@ -139,7 +139,7 @@ public class ValuationPanelRealInterval extends ValuationPanel {
 		if(_valuation == null) {
 			return true;
 		} else {
-			if(((double) ((RealInterval) _valuation).getMin() != _valueMin) || ((double) ((RealInterval) _valuation).getMax() != _valueMax)) {
+			if(((double) ((RealIntervalValuation) _valuation).getMin() != _valueMin) || ((double) ((RealIntervalValuation) _valuation).getMax() != _valueMax)) {
 				return true;
 			} else {
 				return false;
@@ -150,13 +150,13 @@ public class ValuationPanelRealInterval extends ValuationPanel {
 	@Override
 	public Valuation getNewValuation() {
 		
-		RealInterval result = null;
+		RealIntervalValuation result = null;
 		
 		if (_valuation == null) {
-			result = (RealInterval) _valuationsManager.copyValuation(RealInterval.ID);
+			result = (RealIntervalValuation) _valuationsManager.copyValuation(RealIntervalValuation.ID);
 			result.setDomain(_domain);
 		} else {
-			result = (RealInterval) _valuation.clone();
+			result = (RealIntervalValuation) _valuation.clone();
 		}
 		
 		result.setMin((double) _valueMin);
@@ -168,8 +168,8 @@ public class ValuationPanelRealInterval extends ValuationPanel {
 	protected void initControls() {
 		
 		if(_valuation != null) {
-			_valueMin = ((RealInterval) _valuation).getMin();
-			_valueMax = ((RealInterval) _valuation).getMax();
+			_valueMin = ((RealIntervalValuation) _valuation).getMin();
+			_valueMax = ((RealIntervalValuation) _valuation).getMax();
 			_valueSpinnerMin.setSelection((int) (_valueMin * 100d));
 			_valueSpinnerMax.setSelection((int) (_valueMax * 100d));
 		} else {

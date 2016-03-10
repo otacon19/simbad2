@@ -74,9 +74,9 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 				}
 			}
 			
-			_information[i][0] = expert.getId();
+			_information[i][0] = expert.getCanonicalId();
 			_information[i][1] = alternative.getId();
-			_information[i][2] = criterion.getId();
+			_information[i][2] = criterion.getCanonicalId();
 			_information[i][3] = domain.getId();
 			_information[i][4] = v;
 			_information[i][5] = unifiedValuation;

@@ -8,7 +8,7 @@
             id="flintstones.valuation.real.interval"
             name="%valuation.real.interval">
          <type
-               implementation="sinbad2.valuation.real.interval.RealInterval">
+               implementation="sinbad2.valuation.real.interval.RealIntervalValuation">
          </type>
       </valuation>
    </extension>

@@ -259,6 +259,15 @@ public class Unification extends ViewPart implements IStepStateListener {
 	public void setFocus() {
 		_treeViewer.getControl().setFocus();
 	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		_completed = false;
+		_unifiedDomain = null;
+		_unifiedValues = null;
+	}
 
 	@Override
 	public void notifyStepStateChange() {

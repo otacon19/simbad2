@@ -15,7 +15,7 @@ import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.real.interval.nls.Messages;
 
-public class RealInterval extends Valuation {
+public class RealIntervalValuation extends Valuation {
 	
 	public static final String ID = "flintstones.valuation.real.interval"; //$NON-NLS-1$
 
@@ -23,13 +23,13 @@ public class RealInterval extends Valuation {
 	public double _max;
 	
 	
-	public RealInterval() {
+	public RealIntervalValuation() {
 		super();
 		_min = 0;
 		_max = 0;
 	}
 	
-	public RealInterval(NumericRealDomain domain, double min, double max) {
+	public RealIntervalValuation(NumericRealDomain domain, double min, double max) {
 		super();
 		_domain = domain;
 		_min = min;
@@ -61,7 +61,7 @@ public class RealInterval extends Valuation {
 	}
 	
 	public Valuation normalized() {
-		RealInterval result = (RealInterval) clone();
+		RealIntervalValuation result = (RealIntervalValuation) clone();
 		double min, max, intervalSize;
 		
 		min = ((NumericRealDomain) _domain).getMin();
@@ -79,7 +79,7 @@ public class RealInterval extends Valuation {
 	
 	@Override
 	public Valuation negateValuation() {
-		RealInterval result = (RealInterval) clone();
+		RealIntervalValuation result = (RealIntervalValuation) clone();
 		
 		double aux = ((NumericRealDomain) _domain).getMin() + ((NumericRealDomain) _domain).getMax();
 		result.setMinMax(aux - _max, aux - _min);
@@ -97,12 +97,12 @@ public class RealInterval extends Valuation {
 		}
 		
 		int cardinality;
-		RealInterval normalized;
+		RealIntervalValuation normalized;
 		IMembershipFunction function;
 
 		FuzzySet result = (FuzzySet) fuzzySet.clone();
 		cardinality = ((FuzzySet) fuzzySet).getLabelSet().getCardinality();
-		normalized = (RealInterval) normalized();
+		normalized = (RealIntervalValuation) normalized();
 
 		for (int i = 0; i < cardinality; i++) {
 			function = result.getLabelSet().getLabel(i).getSemantic();
@@ -132,7 +132,7 @@ public class RealInterval extends Valuation {
 			return false;
 		}
 		
-		final RealInterval other = (RealInterval) obj;
+		final RealIntervalValuation other = (RealIntervalValuation) obj;
 		
 		EqualsBuilder eb = new EqualsBuilder();
 		eb.append(_max, other._max);
@@ -158,7 +158,7 @@ public class RealInterval extends Valuation {
 		
 		if(_domain.equals(other.getDomain())) {
 			double middle = (_max + _min) / 2l;
-			double otherMidle = (((RealInterval) other)._max + ((RealInterval) other)._min) / 2d;
+			double otherMidle = (((RealIntervalValuation) other)._max + ((RealIntervalValuation) other)._min) / 2d;
 			return Double.compare(middle, otherMidle);	
 		} else {
 			throw new IllegalArgumentException(Messages.RealInterval_Differents_domains);
@@ -167,8 +167,8 @@ public class RealInterval extends Valuation {
 	
 	@Override
 	public Object clone() {
-		RealInterval result = null;
-		result = (RealInterval) super.clone();
+		RealIntervalValuation result = null;
+		result = (RealIntervalValuation) super.clone();
 		result._min = new Double(_min);
 		result._max = new Double(_max);
 		

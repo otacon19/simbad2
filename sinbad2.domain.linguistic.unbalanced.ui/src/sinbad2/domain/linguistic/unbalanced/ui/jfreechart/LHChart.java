@@ -14,7 +14,7 @@ import sinbad2.domain.numeric.real.NumericRealDomain;
 
 public class LHChart {
 	
-	private PlainFuzzySetChart[] _charts;
+	public PlainFuzzySetChart[] _charts;
 
 	private int[] _lh;
 

@@ -192,6 +192,17 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 	public void setFocus() {
 		_validDomainsViewer.getControl().setFocus();
 	}
+	
+	@Override
+		public void dispose() {
+			super.dispose();
+			
+			_chart = null;
+			_completed = false;
+			_controlListener = null;
+			_loaded = false;
+			_selectedLHDomain = null;
+		}
 
 	@Override
 	public void notifyStepStateChange() {

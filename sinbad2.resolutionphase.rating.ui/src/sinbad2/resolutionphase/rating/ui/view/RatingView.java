@@ -455,6 +455,7 @@ public class RatingView extends ViewPart {
 			CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, _tabFolder.getItemCount());
 			item.setText(step.getPartName());
 			item.setShowClose(false);
+			item.setData("view", step);
 
 			Composite parent = new Composite(_tabFolder, SWT.NONE);
 			step.createPartControl(parent);
@@ -470,6 +471,7 @@ public class RatingView extends ViewPart {
 	
 	private void clearMethodSteps() {
 		while(_tabFolder.getItemCount() > 1) {
+			((ViewPart) _tabFolder.getItem(1).getData("view")).dispose();
 			_tabFolder.getItem(1).dispose();
 		}
 		

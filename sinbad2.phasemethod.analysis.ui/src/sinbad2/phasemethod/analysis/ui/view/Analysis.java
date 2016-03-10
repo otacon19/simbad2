@@ -448,6 +448,15 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		_alternativesCheckStateListener.checkAll("ALTERNATIVES");
 		_criteriaCheckStateListener.checkAll("CRITERIA");
 	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		_aggregationResult = null;
+		_chart = null;
+		_controlListener = null;
+	}
 
 	@Override
 	public void notifyStepStateChange() {

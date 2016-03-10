@@ -239,6 +239,17 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	public void setFocus() {
 		_validDomainsViewer.getControl().setFocus();
 	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		_chart = null;
+		_completed = false;
+		_controlListener = null;
+		_domainsBLTS = null;
+		_selectedBLTSDomain = null;
+	}
 
 	@Override
 	public void notifyStepStateChange() {
