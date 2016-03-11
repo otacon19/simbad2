@@ -86,6 +86,8 @@
       <plugin id="sinbad2.domain.valuations"/>
       <plugin id="sinbad2.element"/>
       <plugin id="sinbad2.element.ui"/>
+      <plugin id="sinbad2.method.decision.topsis"/>
+      <plugin id="sinbad2.method.decision.topsis.ui"/>
       <plugin id="sinbad2.method.linguistic"/>
       <plugin id="sinbad2.method.linguistic.heterogeneous.fusion"/>
       <plugin id="sinbad2.method.linguistic.heterogeneous.fusion.ui"/>
