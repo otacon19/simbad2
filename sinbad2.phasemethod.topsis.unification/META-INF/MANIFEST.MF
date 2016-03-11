@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: TOPSIS Unification
+Bundle-SymbolicName: sinbad2.phasemethod.topsis.unification;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Sinbad2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0",
+ sinbad2.valuation.integer;visibility:=reexport,
+ sinbad2.valuation.real;visibility:=reexport,
+ sinbad2.valuation.integer.interval;visibility:=reexport,
+ sinbad2.valuation.real.interval;visibility:=reexport

@@ -9,6 +9,9 @@
             id="flintstones.method.decision.topsis"
             implementation="sinbad2.method.decision.topsis.Topsis"
             name="Technique for Order of Preference by Similarity to Ideal Solution (TOPSIS)">
+         <phasemethod
+               phase="flintstones.phasemethod.topsis.unification">
+         </phasemethod>
          <aggregation_supported
                type="TwoTuple">
          </aggregation_supported>
