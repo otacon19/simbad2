@@ -369,23 +369,24 @@ public class RatingView extends ViewPart {
 		gridData.horizontalIndent = 15;
 		label.setLayoutData(gridData);
 
-		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL)); //$NON-NLS-1$
-		label.setText(currentMethod.getName());
-		if(currentMethod.getName().equals(_recommendedMethod)) {
-			label.setText(label.getText() + " (SUITABLE)");
-		}
-		
 		final String test = currentMethod.getImplementation().isAvailable();
 		if(test.length() == 0 || test.equals("Not set all assignments")) {
 			label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 			label.setImage(Images.signed_yes);
 			_nextButton.setEnabled(false);
 			_resetButton.setEnabled(false);
-		} else {
+		} else {	
 			label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED));
 			label.setImage(Images.signed_no);
 			_resetButton.setEnabled(true);
 		}
+		
+		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL)); //$NON-NLS-1$
+		label.setText(currentMethod.getName());
+		if(currentMethod.getName().equals(_recommendedMethod) && (!label.getForeground().equals(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED)))) {
+			label.setText(label.getText() + " (SUITABLE)");
+		}
+		
 		
 		label.addMouseListener(new MouseAdapter() {
 			@Override

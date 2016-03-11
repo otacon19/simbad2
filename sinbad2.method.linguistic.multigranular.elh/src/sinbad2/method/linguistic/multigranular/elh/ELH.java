@@ -15,6 +15,7 @@ import sinbad2.element.expert.Expert;
 import sinbad2.method.MethodImplementation;
 import sinbad2.method.state.MethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
 
@@ -23,8 +24,9 @@ public class ELH extends MethodImplementation {
 	public static final String ID = "flintstones.method.linguistic.multigranular.elh";
 	
 	private static final String EVALUATIONS_IN_NOT_BLTS_DOMAINS = "Evaluations in not BLTS domains";
-	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS = "Evaluations in not linguistic domains";
+	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS = "Evaluations in not linguistic domain";
 	private static final String EVALUATIONS_IN_DIFFERENT_DOMAINS_WITH_THE_SAME_CARDINALITY = "Evaluations in different domains with the same cardinality";
+	private static final String HESITANT_VALUATIONS = "Hesitant evaluations";
 	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignments";
 
 	private ProblemElementsSet _elementsSet;
@@ -70,6 +72,11 @@ public class ELH extends MethodImplementation {
 					for(Expert expert : _elementsSet.getAllExperts()) {
 						if(!expert.hasChildren()) {
 							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
+							
+							if(v instanceof HesitantValuation) {
+								return HESITANT_VALUATIONS;
+							}
+							
 							if(v != null) {
 								generateDomain = v.getDomain();
 								if(generateDomain != null) {

@@ -7,6 +7,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.aggregationoperator;visibility:=reexport,
  sinbad2.domain.linguistic.unbalanced;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.valuation.hesitant;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.domain.numeric.integer
 Export-Package: sinbad2.method,
  sinbad2.method.state

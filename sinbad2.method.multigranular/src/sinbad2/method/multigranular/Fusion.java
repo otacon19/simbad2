@@ -14,6 +14,7 @@ import sinbad2.element.expert.Expert;
 import sinbad2.method.MethodImplementation;
 import sinbad2.method.state.MethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
 
@@ -23,6 +24,7 @@ public class Fusion extends MethodImplementation {
 	
 	private static final String EVALUATIONS_IN_NOT_BLTS_DOMAIN = "Evaluations in not BLTS domain";
 	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAIN = "Evaluations in not linguistic domain";
+	private static final String HESISTANT_VALUATIONS = "Hesitant evaluations";
 	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignments";
 	
 	private DomainSet _domainsSet;
@@ -67,7 +69,9 @@ public class Fusion extends MethodImplementation {
 					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
 							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
-							if(v == null) { 
+							if(v instanceof HesitantValuation) { 
+								return HESISTANT_VALUATIONS;
+							} else if(v == null) {
 								return NOT_SET_ALL_ASSIGNMENTS;
 							}
 						}

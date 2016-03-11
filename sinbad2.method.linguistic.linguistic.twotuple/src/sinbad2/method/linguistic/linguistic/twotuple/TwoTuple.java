@@ -13,6 +13,7 @@ import sinbad2.element.expert.Expert;
 import sinbad2.method.MethodImplementation;
 import sinbad2.method.state.MethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
 
@@ -20,9 +21,10 @@ public class TwoTuple extends MethodImplementation {
 	
 	public static final String ID = "flintstones.method.linguistic.linguistic.twotuple";
 	
-	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS = "Evaluations in not linguistic domains";
+	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS = "Evaluations in not linguistic domain";
 	private static final String EVALUATIONS_IN_UNBALANCED_DOMAIN = "Evaluations in unbalanced domain";
 	private static final String EVALUATIONS_IN_DIFFERENT_DOMAINS = "Evaluations in different domains";
+	private static final String HESITANT_VALUATIONS = "Hesitant evaluations";
 	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignments";
 	
 	private ProblemElementsSet _elementsSet;
@@ -65,6 +67,11 @@ public class TwoTuple extends MethodImplementation {
 					if(!criterion.hasSubcriteria()) {
 						for(Alternative alternative : _elementsSet.getAlternatives()) {
 							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
+							
+							if(v instanceof HesitantValuation) {
+								return HESITANT_VALUATIONS;
+							}
+							
 							if(v != null) {
 								generateDomain = v.getDomain();
 								if(generateDomain != null) {
