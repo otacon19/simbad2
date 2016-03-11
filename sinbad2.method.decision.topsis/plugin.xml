@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method">
+      <method
+            category="Multi-criteria decision analysis"
+            description="TOPSIS method"
+            id="flintstones.method.decision.topsis"
+            implementation="sinbad2.method.decision.topsis.Topsis"
+            name="Technique for Order of Preference by Similarity to Ideal Solution (TOPSIS)">
+         <aggregation_supported
+               type="TwoTuple">
+         </aggregation_supported>
+      </method>
+   </extension>
+
+</plugin>
