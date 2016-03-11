@@ -7,6 +7,9 @@
             id="flintstones.method.decision.topsis.ui"
             method="flintstones.method.decision.topsis"
             name="TOPSIS">
+         <ui
+               id="flintstones.phasemethod.topsis.unification.ui">
+         </ui>
       </method_ui>
    </extension>
 

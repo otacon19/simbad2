@@ -48,7 +48,6 @@ public class NewBLTSDomainDialog extends Dialog {
 		super(parent, style);
 	}
 	
-
 	public Integer open() {
 		_domainBLTS = new FuzzySet();
 		
