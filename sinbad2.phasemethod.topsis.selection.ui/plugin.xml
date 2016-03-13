@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.phasemethod.ui">
+      <ui
+            id="flintstones.phasemethod.topsis.selection.ui"
+            name="Selection process"
+            phasemethod="flintstones.phasemethod.topsis.selection">
+         <view
+               step="sinbad2.phasemethod.topsis.selection.ui.view.SelectionProcess">
+         </view>
+      </ui>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.phasemethod.topsis.selection.ui.category"
+            name="Selection">
+      </category>
+      <view
+            category="flintstones.phasemethod.topsis.selection.ui.category"
+            class="sinbad2.phasemethod.topsis.selection.ui.view.SelectionProcess"
+            id="flintstones.phasemethod.topsis.selection.ui.view.selectionprocess"
+            name="Selection process"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>
