@@ -119,6 +119,7 @@
       <plugin id="sinbad2.phasemethod.multigranular.lh.unification.ui"/>
       <plugin id="sinbad2.phasemethod.retranslation"/>
       <plugin id="sinbad2.phasemethod.retranslation.ui"/>
+      <plugin id="sinbad2.phasemethod.topsis.selection"/>
       <plugin id="sinbad2.phasemethod.topsis.unification"/>
       <plugin id="sinbad2.phasemethod.topsis.unification.ui"/>
       <plugin id="sinbad2.phasemethod.ui"/>

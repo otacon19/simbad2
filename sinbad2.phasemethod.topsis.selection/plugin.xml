@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.phasemethod">
+      <phase
+            id="flintstones.phasemethod.topsis.selection"
+            implementation="sinbad2.phasemethod.topsis.selection.SelectionPhase"
+            name="Selection">
+      </phase>
+   </extension>
+
+</plugin>

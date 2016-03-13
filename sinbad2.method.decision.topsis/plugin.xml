@@ -12,6 +12,9 @@
          <phasemethod
                phase="flintstones.phasemethod.topsis.unification">
          </phasemethod>
+         <phasemethod
+               phase="flintstones.phasemethod.topsis.selection">
+         </phasemethod>
          <aggregation_supported
                type="TwoTuple">
          </aggregation_supported>
