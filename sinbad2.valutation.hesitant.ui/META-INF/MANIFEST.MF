@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: sinbad2.valutation.hesitant.ui;singleton:=true
+Bundle-SymbolicName: sinbad2.valuation.hesitant.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.valuation.ui;bundle-version="1.0.0";visibility:=reexport,

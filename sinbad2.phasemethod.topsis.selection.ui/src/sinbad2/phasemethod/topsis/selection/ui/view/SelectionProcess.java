@@ -25,6 +25,7 @@ public class SelectionProcess extends ViewPart {
 	private CTabFolder _tabFolder;
 	
 	private TableViewer _tableViewer;
+	private TableViewer _tableViewerResult;
 	
 	private ProblemElementsSet _elementsSet;
 
@@ -54,6 +55,7 @@ public class SelectionProcess extends ViewPart {
 		ratingEditorPanelLayout.marginWidth = 0;
 		ratingEditorPanelLayout.marginHeight = 0;
 		_ratingEditorPanel.setLayout(ratingEditorPanelLayout);
+		_ratingEditorPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		_tabFolder = new CTabFolder(_ratingEditorPanel, SWT.BORDER | SWT.VERTICAL);
 		_tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -79,25 +81,24 @@ public class SelectionProcess extends ViewPart {
 	    CTabItem item4 = new CTabItem(_tabFolder, SWT.CLOSE, 3);
 	    item4.setText("Negative ideal distance");
 	    item4.setShowClose(false);
+	    
+	    _tabFolder.setSelection(0);
 		
 	    GridLayout topsisPanelLayout = new GridLayout(1, false);
-	    topsisPanelLayout.marginRight = 0;
-	    topsisPanelLayout.marginWidth = 0;
-		topsisPanelLayout.marginHeight = 0;
-	    topsisPanelLayout.verticalSpacing = 0;
-	    Composite topsisPanel = new Composite(_ratingEditorPanel, SWT.BORDER);
+	    topsisPanelLayout.marginWidth = 10;
+	    topsisPanelLayout.marginHeight = 10;
+	    Composite topsisPanel = new Composite(_tabFolder, SWT.BORDER);
 	    topsisPanel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 	    topsisPanel.setLayout(topsisPanelLayout);
 	   
 	    _tableViewer = new TableViewer(topsisPanel, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gridData.verticalIndent = 0;
 		_tableViewer.getTable().setLayoutData(gridData);
 		_tableViewer.getTable().setHeaderVisible(true);
 		
 		TableViewerColumn alternativeColumn = new TableViewerColumn(_tableViewer, SWT.NONE);
-		alternativeColumn.getColumn().setWidth(25);
 		alternativeColumn.getColumn().setText("Alternative");
+		alternativeColumn.getColumn().pack();
 		alternativeColumn.getColumn().setResizable(false);
 		alternativeColumn.getColumn().setMoveable(false);
 		alternativeColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -109,22 +110,44 @@ public class SelectionProcess extends ViewPart {
 		
 		for(int i = 0; i < _elementsSet.getAllExperts().size(); ++i) {
 			TableViewerColumn columnCoeficient = new TableViewerColumn(_tableViewer, SWT.NONE);
-			columnCoeficient.getColumn().setWidth(25);
 			columnCoeficient.getColumn().setText("CO" + (i + 1));
+			columnCoeficient.getColumn().pack();
 			columnCoeficient.getColumn().setResizable(false);
 			columnCoeficient.getColumn().setMoveable(false);
 		}
+		
+		_tableViewerResult = new TableViewer(topsisPanel, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		gridData = new GridData(SWT.CENTER, SWT.FILL, true, true, 1, 1);
+		gridData.verticalIndent = 5;
+		_tableViewerResult.getTable().setLayoutData(gridData);
+		_tableViewerResult.getTable().setHeaderVisible(true);
+		
+		TableViewerColumn alternativeColumnResult = new TableViewerColumn(_tableViewerResult, SWT.NONE);
+		alternativeColumnResult.getColumn().setText("Alternative");
+		alternativeColumnResult.getColumn().pack();
+		alternativeColumnResult.getColumn().setResizable(false);
+		alternativeColumnResult.getColumn().setMoveable(false);
+		
+		TableViewerColumn distanceColumnResult = new TableViewerColumn(_tableViewerResult, SWT.NONE);
+		distanceColumnResult.getColumn().setText("Closeness coefficient distance");
+		distanceColumnResult.getColumn().pack();
+		distanceColumnResult.getColumn().setResizable(false);
+		distanceColumnResult.getColumn().setMoveable(false);
 		
 		item1.setControl(topsisPanel);
 		item2.setControl(topsisPanel);
 		item3.setControl(topsisPanel);
 		item4.setControl(topsisPanel);
-	    
 	}
 
 	@Override
 	public void setFocus() {
 		_tableViewer.getTable().setFocus();	
+	}
+	
+	@Override
+	public String getPartName() {
+		return "Selection process";
 	}
 
 }

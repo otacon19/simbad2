@@ -5,4 +5,8 @@ Bundle-SymbolicName: sinbad2.phasemethod.topsis.selection;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Sinbad2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0"
+Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0",
+ sinbad2.domain.numeric.integer,
+ sinbad2.valuation.integer,
+ sinbad2.valuation.real,
+ sinbad2.valuation.hesitant
