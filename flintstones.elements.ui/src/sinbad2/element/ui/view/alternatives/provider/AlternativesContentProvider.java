@@ -53,7 +53,7 @@ public class AlternativesContentProvider implements IStructuredContentProvider,
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object[] getElements(Object inputElement) {
-		return ((List<Alternative>)inputElement).toArray();
+		return ((List<Alternative>) inputElement).toArray();
 	}
 	
 	public Object getInput() {

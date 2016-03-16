@@ -4,10 +4,11 @@ Bundle-Name: Max
 Bundle-SymbolicName: sinbad2.aggregationoperator.max;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: sinbad2.aggregationoperator;bundle-version="1.0.0",
+Require-Bundle: sinbad2.aggregationoperator;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.valuation.integer,
  sinbad2.valuation.real,
  sinbad2.valuation.integer.interval,
  sinbad2.valuation.real.interval,
  sinbad2.valuation.twoTuple;bundle-version="1.0.0",
  sinbad2.valuation.unifiedValuation
+Export-Package: sinbad2.aggregationoperator.max

@@ -20,6 +20,8 @@ import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class Max extends UnweightedAggregationOperator {
+	
+	public static final String ID = "flintstones.aggregationoperator.max";
 
 	@Override
 	public Valuation aggregate(List<Valuation> valuations) {

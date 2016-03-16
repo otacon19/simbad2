@@ -1,5 +1,8 @@
 package sinbad2.phasemethod.topsis.unification.ui.view;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -20,6 +23,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.phasemethod.PhasesMethodManager;
+import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.unification.UnificationPhase;
 import sinbad2.phasemethod.topsis.unification.ui.Images;
 import sinbad2.phasemethod.topsis.unification.ui.comparator.UnificationTreeViewerComparator;
@@ -32,6 +36,8 @@ import sinbad2.phasemethod.topsis.unification.ui.view.provider.TreeViewerContent
 import sinbad2.phasemethod.topsis.unification.ui.view.provider.UnifiedEvaluationColumnLabelProvider;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.valuationset.ValuationKey;
 
 public class Unification extends ViewPart implements IStepStateListener {
 	
@@ -255,10 +261,20 @@ public class Unification extends ViewPart implements IStepStateListener {
 	@Override
 	public void notifyStepStateChange() {
 		_domain = (FuzzySet) SelectBLTS.getBLTSDomain();
-
-		_provider = new TreeViewerContentProvider(_unificationPhase.unification(_domain));
+		
+		_unificationPhase.unification(_domain);
+		
+		Map<ValuationKey, Valuation> unifiedTwoTupleValues = new HashMap<ValuationKey, Valuation>();
+		unifiedTwoTupleValues.putAll(_unificationPhase.getTwoTupleValuationsResult());
+		
+		_provider = new TreeViewerContentProvider(unifiedTwoTupleValues);
 		_treeViewer.setContentProvider(_provider);
 		_treeViewer.setInput(_provider.getInput());
+		
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		SelectionPhase selectionPhase = (SelectionPhase) pmm.getPhaseMethod(SelectionPhase.ID).getImplementation();
+		selectionPhase.clear();
+		selectionPhase.setUnificationValues(unifiedTwoTupleValues);
 		
 		if(_completed) {
 			_ratingView.loadNextStep();

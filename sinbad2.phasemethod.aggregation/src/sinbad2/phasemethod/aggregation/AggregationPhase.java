@@ -404,7 +404,7 @@ public class AggregationPhase implements IPhaseMethod {
 							expertValuations.add(null);
 						}
 					}
-	
+					
 					if (expertValuations.size() > 1) {
 						operator = getCriterionOperator(criterionParent);
 						if (operator instanceof UnweightedAggregationOperator) {

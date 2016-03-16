@@ -1,49 +1,182 @@
 package sinbad2.phasemethod.topsis.selection;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import sinbad2.aggregationoperator.AggregationOperator;
+import sinbad2.aggregationoperator.AggregationOperatorsManager;
+import sinbad2.aggregationoperator.UnweightedAggregationOperator;
+import sinbad2.aggregationoperator.max.Max;
+import sinbad2.aggregationoperator.min.Min;
+import sinbad2.element.ProblemElementsManager;
+import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
-import sinbad2.valuation.valuationset.ValuationSet;
-import sinbad2.valuation.valuationset.ValuationSetManager;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.valuationset.ValuationKey;
 
 public class SelectionPhase implements IPhaseMethod {
 	
-	private Map<Criterion, Map<Alternative, Double>> _decisionMatrix;
+	public static final String ID = "flintstones.phasemethod.topsis.selection";
 	
-	private ValuationSet _valuationSet;
-
-	public SelectionPhase() {
-		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
-		_valuationSet = valuationSetManager.getActiveValuationSet();
+	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
+	
+	private List<Object[]> _decisionMatrix;
+	private List<Object[]> _idealSolution;
+	private List<Object[]> _noIdealSolution;
+	
+	private ProblemElementsSet _elementsSet;
+	
+	public SelectionPhase() {		
+		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+		_elementsSet = elementsManager.getActiveElementSet();
 		
-		_decisionMatrix = new HashMap<Criterion, Map<Alternative, Double>>();
+		_decisionMatrix = new LinkedList<Object[]>();
+		_idealSolution = new LinkedList<Object[]>();
+		_noIdealSolution = new LinkedList<Object[]>();
 		
-		calculateDecisionMatrix();
-		standarizeDecisionMatrix();
+		_valuationsInTwoTuple = new HashMap<ValuationKey, Valuation>();
 	}
 
-	public Map<Criterion, Map<Alternative, Double>> getDecisionMatrix() {
+	public Map<ValuationKey, Valuation> getUnificationValues() {
+		return _valuationsInTwoTuple;
+	}
+	
+	public void setUnificationValues(Map<ValuationKey, Valuation> valuationsInTwoTuple) {
+		_valuationsInTwoTuple = valuationsInTwoTuple;
+	}
+	
+	public List<Object[]> getDecisionMatrix() {
 		return _decisionMatrix;
 	}
 	
-	public void setDecisionMatrix(Map<Criterion, Map<Alternative, Double>> decisionMatrix) {
+	public void setDecisionMatrix(List<Object[]> decisionMatrix) {
 		_decisionMatrix = decisionMatrix;
 	}
 	
-	private void calculateDecisionMatrix() {		
-		
+	public List<Object[]> getIdealSolution() {
+		return _idealSolution;
 	}
 	
-	private void standarizeDecisionMatrix() {
+	public void setIdealSolution(List<Object[]> idealSolution) {
+		_idealSolution = idealSolution;
+	}
+	
+	public List<Object[]> getNoIdealSolution() {
+		return _noIdealSolution;
+	}
+	
+	public void setNoIdealSolution(List<Object[]> noIdealSolution) {
+		_noIdealSolution = noIdealSolution;
+	}
+	
+	
+	public List<Object[]> calculateDecisionMatrix(AggregationOperator operator) {
 		
+		_decisionMatrix.clear();
+		
+		for(Alternative a: _elementsSet.getAlternatives()) {
+			for(Criterion c: _elementsSet.getAllCriteria()) {
+				aggregateExperts(a, c, operator);
+			}
+		}
+		
+		return _decisionMatrix;
+	}
+	
+	private void aggregateExperts(Alternative alternative, Criterion criterion, AggregationOperator operator) {
+		List<Valuation> valuations = new LinkedList<Valuation>();
+		for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
+			if(vk.getAlternative().equals(alternative) && vk.getCriterion().equals(criterion)) {
+				valuations.add(_valuationsInTwoTuple.get(vk));
+			}
+		}
+		
+		if(operator instanceof UnweightedAggregationOperator) {
+			Valuation compositeValuation = ((UnweightedAggregationOperator) operator).aggregate(valuations);
+			Object[] data = new Object[3];
+			data[0] = alternative;
+			data[1] = criterion;
+			data[2] = compositeValuation;
+			
+			_decisionMatrix.add(data);
+		}
+	}
+	
+	public List<Object[]> calculateIdealSolution() {
+		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
+		AggregationOperator max = aggregationOperatorManager.getAggregationOperator(Max.ID);
+		
+		_idealSolution.clear();
+		
+		List<Valuation> valuations;
+		List<Criterion> criteria = new LinkedList<Criterion>();
+		for(Object[] data: _decisionMatrix) {
+			Criterion c = (Criterion) data[1];
+			if(!criteria.contains(c)) {
+				valuations = new LinkedList<Valuation>();
+				criteria.add(c);
+				valuations.add((Valuation) data[2]);
+				for(Object[] data2: _decisionMatrix) {
+					if(c.equals(data2[1]) && !data.equals(data2)) {
+						valuations.add((Valuation) data2[2]);
+					}
+				}	
+				
+				if(!valuations.isEmpty()) {
+					Object[] values = new Object[2];
+					values[0] = c;
+					values[1] = ((UnweightedAggregationOperator) max).aggregate(valuations);
+					
+					_idealSolution.add(values);
+				}
+			}
+		}
+		
+		return _idealSolution;
 		
 	}
 
+	public List<Object[]> calculateNoIdealSolution() {
+		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
+		AggregationOperator min = aggregationOperatorManager.getAggregationOperator(Min.ID);
+		
+		_idealSolution.clear();
+		
+		List<Valuation> valuations;
+		List<Criterion> criteria = new LinkedList<Criterion>();
+		for(Object[] data: _decisionMatrix) {
+			Criterion c = (Criterion) data[1];
+			if(!criteria.contains(c)) {
+				valuations = new LinkedList<Valuation>();
+				criteria.add(c);
+				valuations.add((Valuation) data[2]);
+				for(Object[] data2: _decisionMatrix) {
+					if(c.equals(data2[1]) && !data.equals(data2)) {
+						valuations.add((Valuation) data2[2]);
+					}
+				}	
+				
+				if(!valuations.isEmpty()) {
+					Object[] values = new Object[2];
+					values[0] = c;
+					values[1] = ((UnweightedAggregationOperator) min).aggregate(valuations);
+					
+					_idealSolution.add(values);
+				}
+			}
+		}
+		
+		return _idealSolution;
+		
+	}
+	
+	
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new SelectionPhase();
@@ -56,6 +189,9 @@ public class SelectionPhase implements IPhaseMethod {
 		clear();
 		
 		_decisionMatrix = selectionPhase.getDecisionMatrix();
+		_valuationsInTwoTuple = selectionPhase.getUnificationValues();
+		_idealSolution = selectionPhase.getIdealSolution();
+		_noIdealSolution = selectionPhase.getNoIdealSolution();
 	}
 
 	@Override
@@ -64,7 +200,15 @@ public class SelectionPhase implements IPhaseMethod {
 	@Override
 	public boolean validate() {
 		
-		if (_valuationSet.getValuations().isEmpty()) {
+		if (_elementsSet.getExperts().isEmpty()) {
+			return false;
+		}
+		
+		if(_elementsSet.getAlternatives().isEmpty()) {
+			return false;
+		}
+		
+		if(_elementsSet.getCriteria().isEmpty()) {
 			return false;
 		}
 
@@ -87,6 +231,9 @@ public class SelectionPhase implements IPhaseMethod {
 	@Override
 	public void clear() {
 		_decisionMatrix.clear();
+		_valuationsInTwoTuple.clear();
+		_idealSolution.clear();
+		_noIdealSolution.clear();
 	}
 
 	@Override

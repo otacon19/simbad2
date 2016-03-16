@@ -21,6 +21,8 @@ import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class Min extends UnweightedAggregationOperator {
 	
+	public static final String ID = "flintstones.aggregationoperator.min";
+	
 	@Override
 	public Valuation aggregate(List<Valuation> valuations) {
 		Validator.notNull(valuations);

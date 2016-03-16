@@ -5,10 +5,9 @@ Bundle-SymbolicName: sinbad2.phasemethod.topsis.unification.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.topsis.unification.ui.Activator
 Bundle-Vendor: Sinbad2
-Require-Bundle: sinbad2.phasemethod.ui;bundle-version="1.0.0",
- sinbad2.phasemethod.topsis.unification;bundle-version="1.0.0",
- sinbad2.valuation.hesitant,
- sinbad2.resolutionphase.rating.ui,
+Require-Bundle: sinbad2.phasemethod.topsis.unification;bundle-version="1.0.0",
+ sinbad2.phasemethod.topsis.selection.ui;bundle-version="1.0.0",
+ sinbad2.resolutionphase.rating.ui;bundle-version="1.0.0",
  sinbad2.domain.linguistic.fuzzyset.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
