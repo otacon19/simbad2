@@ -10,6 +10,9 @@
          <view
                step="sinbad2.phasemethod.topsis.selection.ui.view.AggregationExperts">
          </view>
+         <view
+               step="sinbad2.phasemethod.topsis.selection.ui.view.CalculateDistances">
+         </view>
       </ui>
    </extension>
    <extension
@@ -23,6 +26,13 @@
             class="sinbad2.phasemethod.topsis.selection.ui.view.AggregationExperts"
             id="flintstones.phasemethod.topsis.selection.ui.view.aggregationexperts"
             name="Aggregation experts"
+            restorable="true">
+      </view>
+      <view
+            category="flintstones.phasemethod.topsis.selection.ui.category"
+            class="sinbad2.phasemethod.topsis.selection.ui.view.CalculateDistances"
+            id="flintstones.phasemethod.topsis.selection.ui.view.calculatedistances"
+            name="Calculate distances"
             restorable="true">
       </view>
    </extension>

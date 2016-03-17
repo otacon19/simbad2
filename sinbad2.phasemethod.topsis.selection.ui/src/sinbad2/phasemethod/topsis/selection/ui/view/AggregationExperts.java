@@ -61,7 +61,11 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 	private IdealSolutionTableViewerContentProvider _idealSolutionProvider;
 	private NoIdealSolutionTableViewerContentProvider _noIdealSolutionProvider;
 	
+	private boolean _completed;
+	
 	private Map<String, String> _operators;
+	
+	private RatingView _ratingView;
 	
 	private SelectionPhase _selectionPhase;
 	
@@ -89,6 +93,8 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 	public void createPartControl(Composite parent) {	
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_selectionPhase = (SelectionPhase) pmm.getPhaseMethod(SelectionPhase.ID).getImplementation();
+		
+		_completed = false;
 		
 		_operators = new HashMap<String, String>();
 		
@@ -136,6 +142,10 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setOperator(_aggregationOperatorCombo.getItem(_aggregationOperatorCombo.getSelectionIndex()));
+				
+				_completed = true;
+				
+				notifyStepStateChange();
 			}
 		});
 		
@@ -337,8 +347,8 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		});
 		
 		GridLayout colectiveValuationsLayout = new GridLayout(1, false);
-		selectOperatorLayout.marginWidth = 10;
-		selectOperatorLayout.marginHeight = 10;
+		colectiveValuationsLayout.marginWidth = 10;
+		colectiveValuationsLayout.marginHeight = 10;
 		
 		Composite colectiveValuationsPanel = new Composite(_aggregationEditorPanel, SWT.NONE);
 		gridData = new GridData(SWT.CENTER, SWT.FILL, true, true, 1, 1);
@@ -526,13 +536,14 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
-		// TODO Auto-generated method stub
-		
+		if(_completed) {
+			_ratingView.loadNextStep();
+			_completed = false;
+		}	
 	}
 
 	@Override
 	public void notifyRatingView(RatingView rating) {
-		// TODO Auto-generated method stub
-		
+		_ratingView = rating;
 	}
 }
