@@ -10,9 +10,6 @@
          <view
                step="sinbad2.phasemethod.topsis.selection.ui.view.AggregationExperts">
          </view>
-         <view
-               step="sinbad2.phasemethod.topsis.selection.ui.view.SelectionProcess">
-         </view>
       </ui>
    </extension>
    <extension
@@ -26,13 +23,6 @@
             class="sinbad2.phasemethod.topsis.selection.ui.view.AggregationExperts"
             id="flintstones.phasemethod.topsis.selection.ui.view.aggregationexperts"
             name="Aggregation experts"
-            restorable="true">
-      </view>
-      <view
-            category="flintstones.phasemethod.topsis.selection.ui.category"
-            class="sinbad2.phasemethod.topsis.selection.ui.view.SelectionProcess"
-            id="flintstones.phasemethod.topsis.selection.ui.view.selectionprocess"
-            name="Selection process"
             restorable="true">
       </view>
    </extension>

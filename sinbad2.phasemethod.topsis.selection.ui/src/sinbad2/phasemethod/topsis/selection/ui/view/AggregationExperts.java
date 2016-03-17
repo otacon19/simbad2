@@ -19,6 +19,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 
@@ -26,12 +27,16 @@ import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.AggregationOperatorsManager;
 import sinbad2.aggregationoperator.EAggregationOperatorType;
 import sinbad2.aggregationoperator.WeightedAggregationOperator;
+import sinbad2.element.ProblemElement;
+import sinbad2.element.ProblemElementsManager;
+import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.Images;
+import sinbad2.phasemethod.topsis.selection.ui.view.dialog.WeightsDialog;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.ColectiveValuationsTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.IdealSolutionTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.NoIdealSolutionTableViewerContentProvider;
@@ -59,6 +64,26 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 	private Map<String, String> _operators;
 	
 	private SelectionPhase _selectionPhase;
+	
+	private static ProblemElement[] getLeafElements(ProblemElement root) {
+		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+
+		List<ProblemElement> result = new LinkedList<ProblemElement>();
+		List<Criterion> subcriteria = elementsSet.getAllCriterionSubcriteria((Criterion) root);
+		for(Criterion subcriterion : subcriteria) {
+			if(!subcriterion.hasSubcriteria()) {
+				result.add(subcriterion);
+			} else {
+				ProblemElement[] sub2criteria = getLeafElements(subcriterion);
+				for(ProblemElement sub2criterion : sub2criteria) {
+					result.add(sub2criterion);
+				}
+			}
+		}
+		
+		return result.toArray(new ProblemElement[0]);
+	}
 
 	@Override
 	public void createPartControl(Composite parent) {	
@@ -455,7 +480,24 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		AggregationOperatorsManager aggregationOperatorsManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator aggregationOperator = aggregationOperatorsManager.getAggregationOperator(_operators.get(operator));
 		
-		List<Object[]> decisionMatrix = _selectionPhase.calculateDecisionMatrix(aggregationOperator);
+		Map<String, List<Double>> mapWeights = new HashMap<String, List<Double>>();
+		if(aggregationOperator instanceof WeightedAggregationOperator) { 
+			ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+			ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+			
+			ProblemElement nullElement = null;
+			ProblemElement[] secondary = getLeafElements(nullElement);
+			WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren(null), secondary, null, 1, "expert", "all experts");
+			
+			int exitValue = dialog.open();
+			if(exitValue == WeightsDialog.SAVE) {
+				mapWeights = dialog.getWeights();
+			} else { 
+				mapWeights = null;
+			}
+		}
+		
+		List<Object[]> decisionMatrix = _selectionPhase.calculateDecisionMatrix(aggregationOperator, mapWeights.get(null));
 		_colectiveValuationsProvider.setInput(decisionMatrix);
 		_tableViewerColectiveValuations.setInput(_colectiveValuationsProvider.getInput());
 		

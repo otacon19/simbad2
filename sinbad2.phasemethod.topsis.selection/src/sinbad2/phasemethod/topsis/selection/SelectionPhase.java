@@ -8,6 +8,7 @@ import java.util.Map;
 import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.AggregationOperatorsManager;
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
+import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.aggregationoperator.max.Max;
 import sinbad2.aggregationoperator.min.Min;
 import sinbad2.element.ProblemElementsManager;
@@ -76,20 +77,20 @@ public class SelectionPhase implements IPhaseMethod {
 	}
 	
 	
-	public List<Object[]> calculateDecisionMatrix(AggregationOperator operator) {
+	public List<Object[]> calculateDecisionMatrix(AggregationOperator operator, List<Double> weights) {
 		
 		_decisionMatrix.clear();
 		
 		for(Alternative a: _elementsSet.getAlternatives()) {
 			for(Criterion c: _elementsSet.getAllCriteria()) {
-				aggregateExperts(a, c, operator);
+				aggregateExperts(a, c, operator, weights);
 			}
 		}
 		
 		return _decisionMatrix;
 	}
 	
-	private void aggregateExperts(Alternative alternative, Criterion criterion, AggregationOperator operator) {
+	private void aggregateExperts(Alternative alternative, Criterion criterion, AggregationOperator operator, List<Double> weights) {
 		List<Valuation> valuations = new LinkedList<Valuation>();
 		for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
 			if(vk.getAlternative().equals(alternative) && vk.getCriterion().equals(criterion)) {
@@ -97,15 +98,19 @@ public class SelectionPhase implements IPhaseMethod {
 			}
 		}
 		
+		Valuation compositeValuation = null;
 		if(operator instanceof UnweightedAggregationOperator) {
-			Valuation compositeValuation = ((UnweightedAggregationOperator) operator).aggregate(valuations);
-			Object[] data = new Object[3];
-			data[0] = alternative;
-			data[1] = criterion;
-			data[2] = compositeValuation;
-			
-			_decisionMatrix.add(data);
+			compositeValuation = ((UnweightedAggregationOperator) operator).aggregate(valuations);
+		} else if(operator instanceof WeightedAggregationOperator) {
+			compositeValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, weights);
 		}
+		
+		Object[] data = new Object[3];
+		data[0] = alternative;
+		data[1] = criterion;
+		data[2] = compositeValuation;
+		
+		_decisionMatrix.add(data);
 	}
 	
 	public List<Object[]> calculateIdealSolution() {
