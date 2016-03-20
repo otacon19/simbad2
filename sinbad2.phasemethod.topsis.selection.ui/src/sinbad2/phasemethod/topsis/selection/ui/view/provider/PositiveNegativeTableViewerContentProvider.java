@@ -18,8 +18,8 @@ private List<Object[]> _positiveNegativeDistances;
 		return _positiveNegativeDistances;
 	}
 	
-	public void setInput(List<Object[]> idealSolution) {
-		_positiveNegativeDistances = idealSolution;
+	public void setInput(List<Object[]> positiveNegativeDistances) {
+		_positiveNegativeDistances = positiveNegativeDistances;
 	}
 	
 	@Override

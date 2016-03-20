@@ -253,14 +253,18 @@ public class UnificationPhase implements IPhaseMethod {
 					valuation = new UnifiedValuation(fuzzySet);
 					
 					_unifiedValuationsResult.put(vk, valuation);
-				} else {
+				} else if(valuation instanceof LinguisticValuation){
 					if(isCost) {
 						valuation = ((LinguisticValuation) valuation).negateValuation();
 					}
-					fuzzySet = ((LinguisticValuation) valuation).unification(unifiedDomain);
-					valuation = new UnifiedValuation(fuzzySet);
+					valuation = new TwoTuple((FuzzySet) valuation.getDomain(), ((LinguisticValuation) valuation).getLabel()).transform(unifiedDomain);
 					
 					_unifiedValuationsResult.put(vk, valuation);
+				} else if(valuation instanceof TwoTuple) {
+					if(isCost) {
+						valuation = valuation.negateValuation();
+					}
+					valuation = ((TwoTuple) valuation).transform(unifiedDomain);
 				}
 			}
 		}

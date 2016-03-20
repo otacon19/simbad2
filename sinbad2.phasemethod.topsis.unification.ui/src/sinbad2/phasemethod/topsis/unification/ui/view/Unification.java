@@ -262,7 +262,8 @@ public class Unification extends ViewPart implements IStepStateListener {
 	public void notifyStepStateChange() {
 		_domain = (FuzzySet) SelectBLTS.getBLTSDomain();
 		
-		_unificationPhase.unification(_domain);
+		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();
+		unifiedValues.putAll(_unificationPhase.unification(_domain));
 		
 		Map<ValuationKey, Valuation> unifiedTwoTupleValues = new HashMap<ValuationKey, Valuation>();
 		unifiedTwoTupleValues.putAll(_unificationPhase.getTwoTupleValuationsResult());
@@ -274,7 +275,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		SelectionPhase selectionPhase = (SelectionPhase) pmm.getPhaseMethod(SelectionPhase.ID).getImplementation();
 		selectionPhase.clear();
-		selectionPhase.setUnificationValues(unifiedTwoTupleValues);
+		selectionPhase.setUnificationValues(unifiedValues);
 		
 		if(_completed) {
 			_ratingView.loadNextStep();

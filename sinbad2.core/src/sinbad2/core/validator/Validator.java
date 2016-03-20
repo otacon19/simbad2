@@ -399,6 +399,7 @@ public class Validator {
 		if (!inRange(size, minValidSize, maxValidSize)) {
 			throw new IllegalArgumentException(INVALID_SIZE
 					+ Messages.ParameterValidator_Value_must_be_in_range_1
+					+ size + ", "
 					+ minValidSize + ", " //$NON-NLS-1$
 					+ maxValidSize + "]."); //$NON-NLS-1$
 		}

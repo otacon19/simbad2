@@ -1,5 +1,10 @@
 package sinbad2.phasemethod.topsis.selection.ui.view;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -11,14 +16,20 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.element.ProblemElement;
+import sinbad2.element.ProblemElementsManager;
+import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.topsis.selection.ui.Images;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
+import sinbad2.phasemethod.topsis.selection.ui.view.dialog.WeightsDialog;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.DistanceIdealSolutionTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.PositiveNegativeTableViewerContentProvider;
 import sinbad2.valuation.twoTuple.TwoTuple;
@@ -39,6 +50,26 @@ public class CalculateDistances extends ViewPart {
 	private DistanceIdealSolutionTableViewerContentProvider _distanceIdealSolutionProvider;
 	
 	private SelectionPhase _selectionPhase;
+	
+	private static ProblemElement[] getLeafElements(ProblemElement root) {
+		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+
+		List<ProblemElement> result = new LinkedList<ProblemElement>();
+		List<Expert> children = elementsSet.getAllExpertChildren((Expert) root);
+		for(Expert child : children) {
+			if(!child.hasChildren()) {
+				result.add(child);
+			} else {
+				ProblemElement[] subchildren = getLeafElements(child);
+				for(ProblemElement subchild : subchildren) {
+					result.add(subchild);
+				}
+			}
+		}
+		
+		return result.toArray(new ProblemElement[0]);
+	}
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -156,6 +187,7 @@ public class CalculateDistances extends ViewPart {
 			@Override
 			public Image getImage(Object element) {
 				Object[] data = (Object[]) element;
+				
 				if(((Criterion) data[1]).getCost()) {
 					return Images.Cost;
 				} else {
@@ -285,19 +317,6 @@ public class CalculateDistances extends ViewPart {
 			}
 		});
 		
-		criterionColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
-		criterionColumn.getColumn().setText("Criterion");
-		criterionColumn.getColumn().pack();
-		criterionColumn.getColumn().setResizable(false);
-		criterionColumn.getColumn().setMoveable(false);
-		criterionColumn.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				Object[] data = (Object[]) element;
-				return ((Criterion) data[1]).getId();
-			}
-		});
-		
 		TableViewerColumn positiveDistanceColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
 		positiveDistanceColumn.getColumn().setText("Positive distance");
 		positiveDistanceColumn.getColumn().pack();
@@ -410,10 +429,49 @@ public class CalculateDistances extends ViewPart {
 
 	private void fillCombo() {
 		_distanceCombo.add("Euclidean distance");
+		_distanceCombo.add("Weighted distance");
 	}
 	
-	private void setDistance(String item) {
+	private void setDistance(String distance) {
+		Map<String, List<Double>> mapWeights = new HashMap<String, List<Double>>();
+		
+		if(distance.contains("Weighted")) {
+			ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+			ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 			
+			ProblemElement nullElement = null;
+			ProblemElement[] secondary = getLeafElements(nullElement);
+			WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria(null), secondary, null, 1, "criterion", "all criteria");
+			
+			int exitValue = dialog.open();
+			if(exitValue == WeightsDialog.SAVE) {
+				mapWeights = dialog.getWeights();
+			} else { 
+				mapWeights = null;
+			}
+		}
+		
+		List<Object[]> idealDistances = _selectionPhase.calculateIdealEuclideanDistance(mapWeights.get(null));
+		List<Object[]> noIdealDistances = _selectionPhase.calculateNoIdealEuclideanDistance(mapWeights.get(null));
+		List<Object[]> distances = new LinkedList<Object[]>();
+		
+		for(int i = 0; i < idealDistances.size(); ++i) {
+			Object[] idealData = idealDistances.get(i);
+			Object[] noIdealData = noIdealDistances.get(i);
+			Object[] distanceData = new Object[4];
+			distanceData[0] = idealData[0];
+			distanceData[1] = idealData[1];
+			distanceData[2] = idealData[2];
+			distanceData[3] = noIdealData[2];
+			distances.add(distanceData);
+		}
+
+		_positiveNegativeProvider.setInput(distances);
+		_tableViewerPositiveNegative.setInput(_positiveNegativeProvider.getInput());
+		
+		List<Object[]> coefficients = _selectionPhase.calculateClosenessCoefficient();
+		_distanceIdealSolutionProvider.setInput(coefficients);
+		_tableViewerIdealSolution.setInput(_distanceIdealSolutionProvider.getInput());
 	}
 	
 	@Override
