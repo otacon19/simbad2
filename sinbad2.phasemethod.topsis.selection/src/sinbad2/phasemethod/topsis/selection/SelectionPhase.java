@@ -13,7 +13,6 @@ import sinbad2.aggregationoperator.UnweightedAggregationOperator;
 import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.aggregationoperator.max.Max;
 import sinbad2.aggregationoperator.min.Min;
-import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -44,10 +43,10 @@ public class SelectionPhase implements IPhaseMethod {
 	
 	 private static class CoefficientComparator implements Comparator<Object[]> {
 	     public int compare(Object[] cd1, Object[] cd2) {
-	         TwoTuple coefficient1 = (TwoTuple) cd1[3];
-	         TwoTuple coefficient2 = (TwoTuple) cd2[3];
+	         double coefficient1 = (double) cd1[3];
+	         double coefficient2 = (double) cd2[3];
 	         
-	         return coefficient2.compareTo(coefficient1);
+	         return Double.compare(coefficient2, coefficient1);
 	     }
 	 }
 	
@@ -252,13 +251,11 @@ public class SelectionPhase implements IPhaseMethod {
 						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta() - idealValuation.calculateInverseDelta()) * weights.get(numWeight);
 						numWeight++;
 					}
-					TwoTuple idealEuclideanDistanceValuation = (TwoTuple) idealValuation.clone();
-					idealEuclideanDistanceValuation.calculateDelta(beta);
 					
 					Object[] dataDistance = new Object[3];
 					dataDistance[0] = (Alternative) decisionMatrixData[0];
 					dataDistance[1] = (Criterion) decisionMatrixData[1];
-					dataDistance[2] = idealEuclideanDistanceValuation;
+					dataDistance[2] = beta;
 					_idealDistanceByCriteria.add(dataDistance);
  				}
 			}
@@ -293,15 +290,10 @@ public class SelectionPhase implements IPhaseMethod {
 						}
 					}
 				}
-			}
-			
-			FuzzySet unificationDomain = (FuzzySet) ((TwoTuple) _idealSolution.get(0)[1]).getDomain();
-			TwoTuple idealEuclideanDistanceValuation = new TwoTuple((FuzzySet) unificationDomain.clone());
-			idealEuclideanDistanceValuation.calculateDelta(beta);
-			
+			}	
 			Object[] dataDistance = new Object[2];
 			dataDistance[0] = a;
-			dataDistance[1] = idealEuclideanDistanceValuation;
+			dataDistance[1] = beta;
 			_idealDistanceByAlternatives.add(dataDistance);
 		}
 	}
@@ -329,14 +321,11 @@ public class SelectionPhase implements IPhaseMethod {
 						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta() - noIdealValuation.calculateInverseDelta()) * weights.get(numWeight);
 						numWeight++;
 					}
-					
-					TwoTuple noIdealEuclideanDistanceValuation = (TwoTuple) noIdealValuation.clone();
-					noIdealEuclideanDistanceValuation.calculateDelta(beta);
-					
+
 					Object[] dataDistance = new Object[3];
 					dataDistance[0] = (Alternative) decisionMatrixData[0];
 					dataDistance[1] = (Criterion) decisionMatrixData[1];
-					dataDistance[2] = noIdealEuclideanDistanceValuation;
+					dataDistance[2] = beta;
 					_noIdealDistanceByCriteria.add(dataDistance);
  				}
 			}
@@ -372,14 +361,9 @@ public class SelectionPhase implements IPhaseMethod {
 					}
 				}
 			}
-	
-			FuzzySet unificationDomain = (FuzzySet) ((TwoTuple) _noIdealSolution.get(0)[1]).getDomain();
-			TwoTuple noIdealEuclideanDistanceValuation = new TwoTuple((FuzzySet) unificationDomain.clone());
-			noIdealEuclideanDistanceValuation.calculateDelta(beta);
-
 			Object[] dataDistance = new Object[2];
 			dataDistance[0] = a;
-			dataDistance[1] = noIdealEuclideanDistanceValuation;
+			dataDistance[1] = beta;
 			_noIdealDistanceByAlternatives.add(dataDistance);
 		}
 		
@@ -392,18 +376,16 @@ public class SelectionPhase implements IPhaseMethod {
 		for(int i = 0; i < _idealDistanceByAlternatives.size(); ++i) {
 			Object[] dataIdealAlternative = _idealDistanceByAlternatives.get(i);
 			Object[] dataNoIdealAlternative = _noIdealDistanceByAlternatives.get(i);
-			TwoTuple ideal = (TwoTuple) dataIdealAlternative[1];
-			TwoTuple noIdeal = (TwoTuple) dataNoIdealAlternative[1];
+			double ideal = (double) dataIdealAlternative[1];
+			double noIdeal = (double) dataNoIdealAlternative[1];
 			
-			double coefficient = noIdeal.calculateInverseDelta() / (ideal.calculateInverseDelta() + noIdeal.calculateInverseDelta());
-			TwoTuple closenessCoefficient = new TwoTuple((FuzzySet) ideal.getDomain());
-			closenessCoefficient.calculateDelta(coefficient);
+			double coefficient = noIdeal / (ideal + noIdeal);
 			
 			Object[] coefficientData = new Object[5];
 			coefficientData[1] = dataIdealAlternative[0];
 			coefficientData[2] = dataIdealAlternative[1];
 			coefficientData[3] = dataNoIdealAlternative[1];
-			coefficientData[4] = closenessCoefficient;
+			coefficientData[4] = coefficient;
 			_closenessCoefficient.add(coefficientData);
 		}
 		

@@ -32,7 +32,6 @@ import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.view.dialog.WeightsDialog;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.DistanceIdealSolutionTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.PositiveNegativeTableViewerContentProvider;
-import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class CalculateDistances extends ViewPart {
 	
@@ -205,30 +204,10 @@ public class CalculateDistances extends ViewPart {
 			@Override
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
-				TwoTuple valuation = (TwoTuple) data[2];
-
-				String labelName = valuation.getLabel().getName();
-				String alpha = Double.toString(valuation.getAlpha());
+				double distance = (double) data[2];
+				double rounded = Math.floor(100 * distance + 0.5) / 100;
 				
-				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$
-					alpha = "0"; //$NON-NLS-1$
-				}
-
-				int size = 4;
-				if(alpha.startsWith("-")) {
-					size = 5;
-				}
-				
-				if(alpha.length() > size) {
-					alpha = alpha.substring(0, size);
-				}
-				
-				if(alpha.length() > 1) {
-					if(alpha.endsWith("0")) {
-						alpha = alpha.substring(0, size - 1);
-					}
-				}
-				return "(" + labelName + ", " + alpha + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				return Double.toString(rounded);
 			}
 		});
 		
@@ -242,32 +221,13 @@ public class CalculateDistances extends ViewPart {
 			@Override
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
-				TwoTuple valuation = (TwoTuple) data[3];
-
-				String labelName = valuation.getLabel().getName();
-				String alpha = Double.toString(valuation.getAlpha());
+				double distance = (double) data[3];
+				double rounded = Math.floor(100 * distance + 0.5) / 100;
 				
-				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$
-					alpha = "0"; //$NON-NLS-1$
-				}
-
-				int size = 4;
-				if(alpha.startsWith("-")) {
-					size = 5;
-				}
-				
-				if(alpha.length() > size) {
-					alpha = alpha.substring(0, size);
-				}
-				
-				if(alpha.length() > 1) {
-					if(alpha.endsWith("0")) {
-						alpha = alpha.substring(0, size - 1);
-					}
-				}
-				return "(" + labelName + ", " + alpha + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				return Double.toString(rounded);
 			}
 		});
+	
 		
 		GridLayout distanceIdealSolutionLayout = new GridLayout(1, false);
 		distanceIdealSolutionLayout.marginWidth = 10;
@@ -326,30 +286,10 @@ public class CalculateDistances extends ViewPart {
 			@Override
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
-				TwoTuple valuation = (TwoTuple) data[2];
-
-				String labelName = valuation.getLabel().getName();
-				String alpha = Double.toString(valuation.getAlpha());
+				double distance = (double) data[2];
+				double rounded = Math.floor(100 * distance + 0.5) / 100;
 				
-				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$
-					alpha = "0"; //$NON-NLS-1$
-				}
-
-				int size = 4;
-				if(alpha.startsWith("-")) {
-					size = 5;
-				}
-				
-				if(alpha.length() > size) {
-					alpha = alpha.substring(0, size);
-				}
-				
-				if(alpha.length() > 1) {
-					if(alpha.endsWith("0")) {
-						alpha = alpha.substring(0, size - 1);
-					}
-				}
-				return "(" + labelName + ", " + alpha + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				return Double.toString(rounded);
 			}
 		});
 		
@@ -362,30 +302,10 @@ public class CalculateDistances extends ViewPart {
 			@Override
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
-				TwoTuple valuation = (TwoTuple) data[3];
-
-				String labelName = valuation.getLabel().getName();
-				String alpha = Double.toString(valuation.getAlpha());
+				double distance = (double) data[3];
+				double rounded = Math.floor(100 * distance + 0.5) / 100;
 				
-				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$
-					alpha = "0"; //$NON-NLS-1$
-				}
-
-				int size = 4;
-				if(alpha.startsWith("-")) {
-					size = 5;
-				}
-				
-				if(alpha.length() > size) {
-					alpha = alpha.substring(0, size);
-				}
-				
-				if(alpha.length() > 1) {
-					if(alpha.endsWith("0")) {
-						alpha = alpha.substring(0, size - 1);
-					}
-				}
-				return "(" + labelName + ", " + alpha + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				return Double.toString(rounded);
 			}
 		});
 	
@@ -398,30 +318,10 @@ public class CalculateDistances extends ViewPart {
 			@Override
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
-				TwoTuple valuation = (TwoTuple) data[4];
-
-				String labelName = valuation.getLabel().getName();
-				String alpha = Double.toString(valuation.getAlpha());
+				double coefficient = (double) data[4];
+				double rounded = Math.floor(100 * coefficient + 0.5) / 100;
 				
-				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$
-					alpha = "0"; //$NON-NLS-1$
-				}
-
-				int size = 4;
-				if(alpha.startsWith("-")) {
-					size = 5;
-				}
-				
-				if(alpha.length() > size) {
-					alpha = alpha.substring(0, size);
-				}
-				
-				if(alpha.length() > 1) {
-					if(alpha.endsWith("0")) {
-						alpha = alpha.substring(0, size - 1);
-					}
-				}
-				return "(" + labelName + ", " + alpha + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				return Double.toString(rounded);
 			}
 		});
 		
