@@ -427,46 +427,52 @@ public class RatingView extends ViewPart {
 			registerStepChangeListeners(_phasesMethodUIManager);
 		}
 
-		ViewPart step;
+		ViewPart step = null;
 		if(currentPhaseMethod == null) {
 			currentPhaseMethod = phasesMethodUI.get(_numPhase);
-			_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
-			_phasesMethodUIManager.activate(currentPhaseMethod.getId());
-			step = _phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
+			if(currentPhaseMethod.getPhaseMethod().getImplementation().validate()) {
+				_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
+				_phasesMethodUIManager.activate(currentPhaseMethod.getId());
+				step = _phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
+			}
 		} else if(_phasesMethodUIManager.getNextStep() == null) {
 			_numPhase++;
 			currentPhaseMethod = phasesMethodUI.get(_numPhase);
-			_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
-			_phasesMethodUIManager.activate(currentPhaseMethod.getId());	
-			step = _phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
+			if(currentPhaseMethod.getPhaseMethod().getImplementation().validate()) {
+				_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
+				_phasesMethodUIManager.activate(currentPhaseMethod.getId());	
+				step = _phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
+			}
 		} else {
 			step = _phasesMethodUIManager.getNextStep();	
 		}
 		
-		_phasesMethodUIManager.activateStep(step);
-		boolean loaded = false;
-		for(CTabItem tabItem: _tabFolder.getItems()) {
-			if(tabItem.getText().equals(step.getPartName())) {
-				loaded = true;
-				break;
+		if(step != null) {
+			_phasesMethodUIManager.activateStep(step);
+			boolean loaded = false;
+			for(CTabItem tabItem: _tabFolder.getItems()) {
+				if(tabItem.getText().equals(step.getPartName())) {
+					loaded = true;
+					break;
+				}
 			}
-		}
-
-		if(!loaded) {
-			CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, _tabFolder.getItemCount());
-			item.setText(step.getPartName());
-			item.setShowClose(false);
-			item.setData("view", step);
-
-			Composite parent = new Composite(_tabFolder, SWT.NONE);
-			step.createPartControl(parent);
-			if(step instanceof IStepStateListener) {
-				notifyRatingView((IStepStateListener) step);
+	
+			if(!loaded) {
+				CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, _tabFolder.getItemCount());
+				item.setText(step.getPartName());
+				item.setShowClose(false);
+				item.setData("view", step);
+	
+				Composite parent = new Composite(_tabFolder, SWT.NONE);
+				step.createPartControl(parent);
+				if(step instanceof IStepStateListener) {
+					notifyRatingView((IStepStateListener) step);
+				}
+				item.setControl(parent);
+				item.setData(step);
+				
+				_nextButton.setEnabled(true);
 			}
-			item.setControl(parent);
-			item.setData(step);
-			
-			_nextButton.setEnabled(true);
 		}
 	}
 	
