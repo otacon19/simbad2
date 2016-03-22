@@ -1,6 +1,5 @@
 package sinbad2.phasemethod.topsis.selection.ui.view;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -333,7 +332,8 @@ public class CalculateDistances extends ViewPart {
 	}
 	
 	private void setDistance(String distance) {
-		Map<String, List<Double>> mapWeights = new HashMap<String, List<Double>>();
+		Map<String, List<Double>> mapWeights;
+		List<Double> weights = null;
 		
 		if(distance.contains("Weighted")) {
 			ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
@@ -346,13 +346,33 @@ public class CalculateDistances extends ViewPart {
 			int exitValue = dialog.open();
 			if(exitValue == WeightsDialog.SAVE) {
 				mapWeights = dialog.getWeights();
-			} else { 
-				mapWeights = null;
+				if(mapWeights.size() == 1) {
+					weights = mapWeights.get(null);
+				} else {
+					weights = new LinkedList<Double>();
+					List<List<Double>> weightsByCriterion = new LinkedList<List<Double>>();
+					double weightByCriterion;
+					int i = 0;
+					while(i < mapWeights.size()) {
+						List<Double> weightsSameCriterion = new LinkedList<Double>();
+						for(Expert expert: elementsSet.getAllExperts()) {
+							List<Double> expertWeights= mapWeights.get(expert.getId());
+							weightByCriterion = expertWeights.get(i);
+							weightsSameCriterion.add(weightByCriterion);
+						}
+						weightsByCriterion.add(weightsSameCriterion);
+						++i;
+					}
+					
+					for(List<Double> weightCriterion: weightsByCriterion) {
+						weights.add(calculateArithmeticMean(weightCriterion));
+					}
+				}
 			}
 		}
 		
-		List<Object[]> idealDistances = _selectionPhase.calculateIdealEuclideanDistance(mapWeights.get(null));
-		List<Object[]> noIdealDistances = _selectionPhase.calculateNoIdealEuclideanDistance(mapWeights.get(null));
+		List<Object[]> idealDistances = _selectionPhase.calculateIdealEuclideanDistance(weights);
+		List<Object[]> noIdealDistances = _selectionPhase.calculateNoIdealEuclideanDistance(weights);
 		List<Object[]> distances = new LinkedList<Object[]>();
 		
 		for(int i = 0; i < idealDistances.size(); ++i) {
@@ -374,6 +394,15 @@ public class CalculateDistances extends ViewPart {
 		_tableViewerIdealSolution.setInput(_distanceIdealSolutionProvider.getInput());
 	}
 	
+	private Double calculateArithmeticMean(List<Double> weightCriterion) {
+		double result = 0;
+		for(double weight: weightCriterion) {
+			result += weight;
+		}
+		
+		return result / weightCriterion.size();
+	}
+
 	@Override
 	public String getPartName() {
 		return "Calculate distances";

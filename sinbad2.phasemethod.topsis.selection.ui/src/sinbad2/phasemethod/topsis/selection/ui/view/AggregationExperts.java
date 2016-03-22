@@ -507,7 +507,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 			}
 		}
 		
-		List<Object[]> decisionMatrix = _selectionPhase.calculateDecisionMatrix(aggregationOperator, mapWeights.get(null));
+		List<Object[]> decisionMatrix = _selectionPhase.calculateDecisionMatrix(aggregationOperator, mapWeights);
 		_colectiveValuationsProvider.setInput(decisionMatrix);
 		_tableViewerColectiveValuations.setInput(_colectiveValuationsProvider.getInput());
 		

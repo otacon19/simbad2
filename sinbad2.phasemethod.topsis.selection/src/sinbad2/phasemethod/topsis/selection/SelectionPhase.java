@@ -138,7 +138,7 @@ public class SelectionPhase implements IPhaseMethod {
 		_closenessCoefficient = closenessCoeficient;
 	}
 	
-	public List<Object[]> calculateDecisionMatrix(AggregationOperator operator, List<Double> weights) {
+	public List<Object[]> calculateDecisionMatrix(AggregationOperator operator, Map<String, List<Double>> weights) {
 		
 		_decisionMatrix.clear();
 		
@@ -151,19 +151,32 @@ public class SelectionPhase implements IPhaseMethod {
 		return _decisionMatrix;
 	}
 
-	private void aggregateExperts(Alternative alternative, Criterion criterion, AggregationOperator operator, List<Double> weights) {
+	private void aggregateExperts(Alternative alternative, Criterion criterion, AggregationOperator operator, Map<String, List<Double>> weights) {
+		
+		List<Double> globalWeights = new LinkedList<Double>();
+		List<Double> criterionWeights = new LinkedList<Double>();
+		if(weights.size() == 1) {
+			globalWeights = weights.get(null);
+		} else if(weights.size() > 1) {
+			criterionWeights = weights.get(criterion.getCanonicalId());
+		}
+		
 		List<Valuation> valuations = new LinkedList<Valuation>();
 		for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
 			if(vk.getAlternative().equals(alternative) && vk.getCriterion().equals(criterion)) {
 				valuations.add(_valuationsInTwoTuple.get(vk));
 			}
 		}
-		
+
 		Valuation expertsColectiveValuation = null;
 		if(operator instanceof UnweightedAggregationOperator) {
 			expertsColectiveValuation = ((UnweightedAggregationOperator) operator).aggregate(valuations);
 		} else if(operator instanceof WeightedAggregationOperator) {
-			expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, weights);
+			if(!globalWeights.isEmpty()) {
+				expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, globalWeights);
+			} else {
+				expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, criterionWeights);
+			}
 		}
 		
 		Object[] data = new Object[3];
@@ -251,7 +264,7 @@ public class SelectionPhase implements IPhaseMethod {
 						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta() - idealValuation.calculateInverseDelta()) * weights.get(numWeight);
 						numWeight++;
 					}
-					
+
 					Object[] dataDistance = new Object[3];
 					dataDistance[0] = (Alternative) decisionMatrixData[0];
 					dataDistance[1] = (Criterion) decisionMatrixData[1];
