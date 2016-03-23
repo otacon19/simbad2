@@ -144,7 +144,9 @@ public class SelectionPhase implements IPhaseMethod {
 		
 		for(Alternative a: _elementsSet.getAlternatives()) {
 			for(Criterion c: _elementsSet.getAllCriteria()) {
-				aggregateExperts(a, c, operator, weights);
+				if(!c.hasSubcriteria()) {
+					aggregateExperts(a, c, operator, weights);
+				}
 			}
 		}
 		
@@ -195,19 +197,20 @@ public class SelectionPhase implements IPhaseMethod {
 		
 		List<Valuation> valuationsByCriterion;	
 		for(Criterion c: _elementsSet.getAllCriteria()) {
-			valuationsByCriterion = new LinkedList<Valuation>();
-			for(Object[] decisionMatrixData: _decisionMatrix) {
-				Criterion decisionMatrixCriterion = (Criterion) decisionMatrixData[1];
-				if(c.equals(decisionMatrixCriterion)) {
-					valuationsByCriterion.add((Valuation) decisionMatrixData[2]);
+			if(!c.hasSubcriteria()) {
+				valuationsByCriterion = new LinkedList<Valuation>();
+				for(Object[] decisionMatrixData: _decisionMatrix) {
+					Criterion decisionMatrixCriterion = (Criterion) decisionMatrixData[1];
+					if(c.equals(decisionMatrixCriterion)) {
+						valuationsByCriterion.add((Valuation) decisionMatrixData[2]);
+					}
 				}
+				Valuation idealSolutionValuation = ((UnweightedAggregationOperator) max).aggregate(valuationsByCriterion);
+				Object[] idealSolutionData = new Object[2];
+				idealSolutionData[0] = c;
+				idealSolutionData[1] = idealSolutionValuation;
+				_idealSolution.add(idealSolutionData);
 			}
-			
-			Valuation idealSolutionValuation = ((UnweightedAggregationOperator) max).aggregate(valuationsByCriterion);
-			Object[] idealSolutionData = new Object[2];
-			idealSolutionData[0] = c;
-			idealSolutionData[1] = idealSolutionValuation;
-			_idealSolution.add(idealSolutionData);
 		}
 		
 		return _idealSolution;
@@ -222,19 +225,21 @@ public class SelectionPhase implements IPhaseMethod {
 		
 		List<Valuation> valuationsByCriterion;	
 		for(Criterion c: _elementsSet.getAllCriteria()) {
-			valuationsByCriterion = new LinkedList<Valuation>();
-			for(Object[] decisionMatrixData: _decisionMatrix) {
-				Criterion decisionMatrixCriterion = (Criterion) decisionMatrixData[1];
-				if(c.equals(decisionMatrixCriterion)) {
-					valuationsByCriterion.add((Valuation) decisionMatrixData[2]);
+			if(!c.hasSubcriteria()) {
+				valuationsByCriterion = new LinkedList<Valuation>();
+				for(Object[] decisionMatrixData: _decisionMatrix) {
+					Criterion decisionMatrixCriterion = (Criterion) decisionMatrixData[1];
+					if(c.equals(decisionMatrixCriterion)) {
+						valuationsByCriterion.add((Valuation) decisionMatrixData[2]);
+					}
 				}
+				
+				Valuation noIdealSolutionValuation = ((UnweightedAggregationOperator) min).aggregate(valuationsByCriterion);
+				Object[] noIdealSolutionData = new Object[2];
+				noIdealSolutionData[0] = c;
+				noIdealSolutionData[1] = noIdealSolutionValuation;
+				_noIdealSolution.add(noIdealSolutionData);
 			}
-			
-			Valuation noIdealSolutionValuation = ((UnweightedAggregationOperator) min).aggregate(valuationsByCriterion);
-			Object[] noIdealSolutionData = new Object[2];
-			noIdealSolutionData[0] = c;
-			noIdealSolutionData[1] = noIdealSolutionValuation;
-			_noIdealSolution.add(noIdealSolutionData);
 		}
 		
 		

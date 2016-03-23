@@ -191,7 +191,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 			@Override
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
-				return ((Criterion) data[0]).getId();
+				return ((Criterion) data[0]).getCanonicalId();
 			}
 		});
 		
@@ -284,7 +284,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 			@Override
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
-				return ((Criterion) data[0]).getId();
+				return ((Criterion) data[0]).getCanonicalId();
 			}
 		});
 		
@@ -390,7 +390,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 			@Override
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
-				return ((Criterion) data[1]).getId();
+				return ((Criterion) data[1]).getCanonicalId();
 			}
 		});
 		
@@ -520,6 +520,8 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		_tableViewerNoIdealSolution.setInput(_noIdealSolutionProvider.getInput());
 		
 		_tableViewerColectiveValuations.getTable().getColumn(3).pack();
+		_tableViewerIdealSolution.getTable().getColumn(0).pack();
+		_tableViewerNoIdealSolution.getTable().getColumn(0).pack();
 		_tableViewerIdealSolution.getTable().getColumn(2).pack();
 		_tableViewerNoIdealSolution.getTable().getColumn(2).pack();
 	}

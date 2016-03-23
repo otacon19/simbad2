@@ -167,7 +167,7 @@ public class CalculateDistances extends ViewPart {
 			@Override
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
-				return ((Criterion) data[1]).getId();
+				return ((Criterion) data[1]).getCanonicalId();
 			}
 		});
 		
