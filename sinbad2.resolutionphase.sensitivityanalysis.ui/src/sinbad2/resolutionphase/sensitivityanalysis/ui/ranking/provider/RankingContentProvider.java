@@ -7,7 +7,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import sinbad2.resolutionphase.sensitivityanalysis.MockModel;
+import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 
 public class RankingContentProvider implements IStructuredContentProvider {	
 
@@ -33,14 +33,14 @@ public class RankingContentProvider implements IStructuredContentProvider {
 	public Object[] getElements(Object inputElement) {
 		Object[] result = null;
 
-		MockModel model = (MockModel) inputElement;
+		SensitivityAnalysis sensitivityAnalysis = (SensitivityAnalysis) inputElement;
 		List<MyElement> elements = new LinkedList<MyElement>();
 		MyElement element;
-		for (int i = 0; i < model._numberOfAlternatives; i++) {
+		for (int i = 0; i < sensitivityAnalysis.getNumAlternatives(); i++) {
 			element = new MyElement();
-			element.alternative = model._alternatives[i];
-			element.ranking = model._ranking[i];
-			element.value = model._alternativesFinalPreferences[i];
+			element.alternative = sensitivityAnalysis.getAlternativesIds()[i];
+			element.ranking = sensitivityAnalysis.getRanking()[i];
+			element.value = sensitivityAnalysis.getAlternativesFinalPreferences()[i];
 
 			elements.add(element);
 		}

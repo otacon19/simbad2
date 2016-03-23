@@ -63,14 +63,12 @@ public class ResolutionScheme {
 		if (_phases == null) {
 			_phases = new LinkedList<ResolutionPhase>();
 			String[] phases = _registry.getPhasesID();
-
-			ResolutionPhasesManager resolutionPhasesManager = ResolutionPhasesManager
-					.getInstance();
+			
+			ResolutionPhasesManager resolutionPhasesManager = ResolutionPhasesManager.getInstance();
 			for (String phase : phases) {
 				_phases.add(resolutionPhasesManager.getResolutionPhase(phase));
 			}
 		}
-
 		return _phases;
 	}
 

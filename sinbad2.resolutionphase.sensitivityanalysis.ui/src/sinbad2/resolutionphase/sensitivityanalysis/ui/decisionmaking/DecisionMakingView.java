@@ -10,7 +10,6 @@ import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.ISensitivityAnalysisChangeListener;
-import sinbad2.resolutionphase.sensitivityanalysis.MockModel;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 
 public class DecisionMakingView extends ViewPart implements ISensitivityAnalysisChangeListener {
@@ -21,7 +20,6 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 	private SensitivityAnalysis _sensitivityAnalysis;
 	private DMTable _dmTable = null;
 	private Composite _container;
-	private MockModel _model;
 
 	private static final IContextService _contextService = (IContextService) PlatformUI
 			.getWorkbench().getService(IContextService.class);
@@ -29,18 +27,19 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 	@Override
 	public void createPartControl(Composite parent) {
 		_container = parent;
+		
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 		_sensitivityAnalysis.registerSensitivityAnalysisChangeListener(this);
+		
 		initDMTable();
 		hookFocusListener();
 	}
 
 	private void initDMTable() {
 		disposeDMTable();
-		_model = _sensitivityAnalysis.getModel();
 
 		_dmTable = new DMTable(_container);
-		_dmTable.setModel(_model._alternatives, _model._criteria, _model._dm);
+		_dmTable.setModel(_sensitivityAnalysis.getAlternativesIds(), _sensitivityAnalysis.getCriteriaIds(), _sensitivityAnalysis.getDecisionMaking());
 	}
 
 	private void disposeDMTable() {

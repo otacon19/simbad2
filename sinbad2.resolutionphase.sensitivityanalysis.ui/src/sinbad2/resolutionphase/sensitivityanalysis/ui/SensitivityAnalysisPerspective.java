@@ -11,7 +11,6 @@ import sinbad2.core.workspace.Workspace;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.domain.ui.view.domain.DomainViewManager;
-import sinbad2.resolutionphase.sensitivityanalysis.MockModel;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingViewManager;
 
@@ -37,12 +36,10 @@ public class SensitivityAnalysisPerspective implements IPerspectiveFactory {
 					DomainsManager manager = DomainsManager.getInstance();
 					NumericRealDomain domain = (NumericRealDomain) manager.copyDomain(NumericRealDomain.ID);
 					domain.setMinMax(0d, 1d);
-					MockModel model = new MockModel();
 					SensitivityAnalysis sa = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
-					sa.setModel(model);
-					Object ranking = new Object[] { model._alternatives, model._alternativesFinalPreferences };
+					Object ranking = new Object[] { sa.getAlternativesIds(), sa.getAlternativesFinalPreferences() };
 					domainViewManager.setContent(domain, ranking);
-					rankingViewManager.setContent(model);
+					rankingViewManager.setContent(sa);
 				}
 
 			}

@@ -10,7 +10,6 @@ import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.ISensitivityAnalysisChangeListener;
-import sinbad2.resolutionphase.sensitivityanalysis.MockModel;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 
 public class SensitivityAnalysisView extends ViewPart implements ISensitivityAnalysisChangeListener {
@@ -20,7 +19,6 @@ public class SensitivityAnalysisView extends ViewPart implements ISensitivityAna
 
 	private SATable _saTable = null;
 	private Composite _container;
-	private MockModel _model = null;
 	private SensitivityAnalysis _sensitivityAnalysis = null;
 
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
@@ -38,9 +36,8 @@ public class SensitivityAnalysisView extends ViewPart implements ISensitivityAna
 	
 	private void initSATable() {
 		disposeSATable();
-		_model = _sensitivityAnalysis.getModel();
 		_saTable = new SATable(_container);
-		_saTable.setModel(_model._alternatives, _model._criteria, _model._minimumAbsoluteChangeInCriteriaWeights, _model._dm, _model._w);
+		_saTable.setModel(_sensitivityAnalysis.getAlternativesIds(), _sensitivityAnalysis.getCriteriaIds(), _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights(), _sensitivityAnalysis.getDecisionMaking(), _sensitivityAnalysis.getWeights());
 	}
 	
 	private void disposeSATable() {
