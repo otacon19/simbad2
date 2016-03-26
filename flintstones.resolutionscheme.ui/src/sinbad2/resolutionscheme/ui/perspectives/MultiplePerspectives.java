@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CBanner;
@@ -83,7 +84,6 @@ public class MultiplePerspectives implements IWorkspaceListener {
 	
 	private void configureActions() {
 		IExtensionRegistry reg = Platform.getExtensionRegistry();
-		//TODO todo perspectivas?
 		IConfigurationElement[] perspectives = reg.getConfigurationElementsFor("org.eclipse.ui.perspectives"); //$NON-NLS-1$
 		
 		_perspectives = new HashMap<String, IConfigurationElement>();
@@ -128,8 +128,6 @@ public class MultiplePerspectives implements IWorkspaceListener {
 	
 	private void makeActions() {
 		Action action;
-		//TODO cambiar a comandos
-		//TODO cada vez que se cambie de la perspectiva rating a otra se debe notificar con el mensaje de "la información se perderá..."
 		for(final ResolutionPhaseUI phase: _phasesUI) {
 			action = new Action() {
 				private final ResolutionPhasesUIManager resolutionPhasesUIManager = ResolutionPhasesUIManager.getInstance();
@@ -142,17 +140,25 @@ public class MultiplePerspectives implements IWorkspaceListener {
 				public void run() {
 					String activeResolutionPhaseUI = resolutionPhasesUIManager.getActiveResolutionPhasesUI().getId();
 					
+					int state = 0 ;
 					if(!activeResolutionPhaseUI.equals(phaseUIId)) {
-						resolutionPhasesUIManager.activate(phaseUIId);
-						try {
-							workbench.showPerspective(perspectiveId, workbenchWindow);
-						} catch (WorkbenchException e) {
-							e.printStackTrace();
+						if(activeResolutionPhaseUI.equals("flintstones.resolutionphase.rating.ui")) {
+							MessageDialog dialog = new MessageDialog(null, "Confirm cancelation", null, "You will lose all information", MessageDialog.QUESTION, new String[] {"Yes", "No"}, 0);
+							state = dialog.open();
 						}
-						
-						_actions.get(activeResolutionPhaseUI).setChecked(false);
+						if(state == 0) {
+							resolutionPhasesUIManager.activate(phaseUIId);
+							try {
+								workbench.showPerspective(perspectiveId, workbenchWindow);
+							} catch (WorkbenchException e) {
+								e.printStackTrace();
+							}
+							_actions.get(activeResolutionPhaseUI).setChecked(false);
+							_actions.get(phaseUIId).setChecked(true);
+						} else {
+							_actions.get(phaseUIId).setChecked(false);
+						}
 					}
-					_actions.get(phaseUIId).setChecked(true);
 				}
 			};
 			_actions.put(phase.getId(), action);
