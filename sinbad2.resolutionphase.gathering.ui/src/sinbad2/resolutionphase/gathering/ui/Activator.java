@@ -4,6 +4,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import sinbad2.valuation.ui.ValuationUIsManager;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -19,6 +21,7 @@ public class Activator extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public Activator() {
+		 ValuationUIsManager.getInstance();
 	}
 
 	/*
