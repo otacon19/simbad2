@@ -10,3 +10,4 @@ Require-Bundle: sinbad2.aggregationoperator,
  sinbad2.valuation.unifiedValuation,
  sinbad2.valuation.integer,
  sinbad2.valuation.real
+Export-Package: sinbad2.aggregationoperator.owa

@@ -17,6 +17,8 @@ import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class OWA extends WeightedAggregationOperator {
 
+	public static final String ID = "sinbad2.aggregationoperator.owa";
+	
 	@Override
 	public Valuation aggregate(List<Valuation> valuations, List<Double> weights) {
 		Validator.notNull(valuations);
@@ -34,13 +36,11 @@ public class OWA extends WeightedAggregationOperator {
 
 		if(valuations.size() > 0) {
 			for(Valuation valuation : valuations) {
-				if(valuation instanceof TwoTuple) {
-				}
 				if(valuation instanceof IntegerValuation) {
 					return IntegerOperator.aggregate(valuations, weights.get(0), weights.get(1));
 				} else if(valuation instanceof RealValuation) {
 					return RealOperator.aggregate(valuations, weights.get(0), weights.get(1));
-				} else if (valuation instanceof TwoTuple) {
+				} else if(valuation instanceof TwoTuple) {
 					if(weights.get(0) == -1) {
 						weights.remove(0);
 						return TwoTupleOperator.aggregate(auxValuations, weights);

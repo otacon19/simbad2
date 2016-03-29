@@ -1,7 +1,7 @@
 package sinbad2.valuation.hesitant;
 
 public enum EUnaryRelationType {
-	 AtMost("at most"), AtLeast("at least"), LowerThan("lower than"), GreaterThan("greater than");
+	LowerThan("lower than"), GreaterThan("greather than"), AtLeast("at least"), AtMost("at most");
 	
 	private String _relationType;
 	

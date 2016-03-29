@@ -6,6 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import sinbad2.aggregationoperator.AggregationOperator;
+import sinbad2.aggregationoperator.AggregationOperatorsManager;
+import sinbad2.aggregationoperator.WeightedAggregationOperator;
+import sinbad2.aggregationoperator.owa.OWA;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
@@ -480,9 +484,12 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 	
 	private void unifiedToTwoTupleHesitant(ValuationKey vk, HesitantValuation valuation, FuzzySet domain) {	
-		double a = 0, b = 0, c = 0, d = 0;
+		double a, b, c, d;
 		int g = domain.getLabelSet().getCardinality();
 		Boolean lower = null;
+		
+		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
+		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
 		
         if(valuation.isPrimary()) {
             IMembershipFunction semantic = valuation.getLabel().getSemantic();
@@ -494,16 +501,16 @@ public class UnificationPhase implements IPhaseMethod {
             int envelope[] = valuation.getEnvelopeIndex();
             if(valuation.isUnary()) {
                 switch(valuation.getUnaryRelation().ordinal()) {
-                case 1: // '\001'
+                case 0:
                     lower = Boolean.valueOf(true);
                     break;
-
-                case 4: // '\004'
+                case 1:
+                	break;
+                case 2:
+                	break;
+                case 3:
                     lower = Boolean.valueOf(true);
                     break;
-
-                case 2: // '\002'
-                case 3: // '\003'
                 default:
                     lower = Boolean.valueOf(false);
                     break;
@@ -512,6 +519,17 @@ public class UnificationPhase implements IPhaseMethod {
                 lower = null;
             }
 
+            WeightedAggregationOperator.NumeredQuantificationType nqt = WeightedAggregationOperator.NumeredQuantificationType.FilevYager;
+            List<Double> weights = new LinkedList<Double>();
+            double ad1[];
+            double auxWeights[] = WeightedAggregationOperator.QWeighted(nqt, g, envelope, lower);
+            weights.add(new Double(-1D));
+            int j2 = (ad1 = auxWeights).length;
+            for(int l1 = 0; l1 < j2; l1++) {
+                Double weight = Double.valueOf(ad1[l1]);
+                weights.add(weight);
+            }
+            
             if(lower == null) {
                 a = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
                 d = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
@@ -531,7 +549,7 @@ public class UnificationPhase implements IPhaseMethod {
                         valuations.add(new TwoTuple(domain, domain.getLabelSet().getLabel(i)));
                     }
 
-                    Valuation aux = owa.aggregate(valuations, weights);
+                    Valuation aux = ((OWA) owa).aggregate(valuations, weights);
                     b = ((TwoTuple) aux).calculateInverseDelta() / (double) g;
                     c = 2D * domain.getLabelSet().getLabel(top).getSemantic().getCenter().getMin() - b;
                 }
@@ -541,7 +559,7 @@ public class UnificationPhase implements IPhaseMethod {
                     valuations.add(new TwoTuple(domain, domain.getLabelSet().getLabel(i)));
                 }
 
-                Valuation aux = owa.aggregate(valuations, weights);
+                Valuation aux = ((OWA) owa).aggregate(valuations, weights);
                 if(lower.booleanValue()) {
                     a = 0.0D;
                     b = 0.0D;
@@ -556,6 +574,17 @@ public class UnificationPhase implements IPhaseMethod {
             }
         }
         TrapezoidalFunction tmf = new TrapezoidalFunction(new double[] {a, b, c, d});
-        System.out.println(tmf);
+		IMembershipFunction function;
+		FuzzySet result;
+
+		result = (FuzzySet) ((FuzzySet) domain).clone();
+
+		for(int i = 0; i < g; i++) {
+			function = result.getLabelSet().getLabel(i).getSemantic();
+			result.setValue(i, function.maxMin(tmf));
+		}
+		
+		UnifiedValuation unifiedValuation = new UnifiedValuation(result);
+		_unifiedValuationsResult.put(vk, unifiedValuation);
 	}
 }

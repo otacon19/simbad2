@@ -12,7 +12,8 @@ import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class TwoTupleOperator {
 
-	private TwoTupleOperator() {}
+	private TwoTupleOperator() {
+	}
 
 	public static Valuation aggregate(List<Valuation> valuations, double alphaQ, double betaQ) {
 
@@ -21,12 +22,12 @@ public class TwoTupleOperator {
 		List<Double> measures = new LinkedList<Double>();
 		FuzzySet domain = null;
 
-		for(Valuation valuation : valuations) {
+		for (Valuation valuation : valuations) {
 			Validator.notIllegalElementType(valuation, new String[] { TwoTuple.class.toString() });
 
-			if(domain == null) {
+			if (domain == null) {
 				domain = (FuzzySet) valuation.getDomain();
-			} else if(!domain.equals(valuation.getDomain())) {
+			} else if (!domain.equals(valuation.getDomain())) {
 				throw new IllegalArgumentException("Invalid domain");
 			}
 
@@ -43,7 +44,7 @@ public class TwoTupleOperator {
 			for (int i = 0; i < size; i++) {
 				beta += weights[i] * measures.get(i);
 			}
-			
+
 			result = (TwoTuple) valuations.get(0).clone();
 			result.calculateDelta(beta);
 		}
@@ -51,7 +52,7 @@ public class TwoTupleOperator {
 		return result;
 
 	}
-	
+
 	public static Valuation aggregate(List<Valuation> valuations, List<Double> weights) {
 		TwoTuple result = null;
 		double beta = 0;
@@ -63,24 +64,26 @@ public class TwoTupleOperator {
 
 			if(domain == null) {
 				domain = (FuzzySet) valuation.getDomain();
-			} else if(!domain.equals(valuation.getDomain())) {
+			} else if (!domain.equals(valuation.getDomain())) {
 				throw new IllegalArgumentException("Invalid domain");
 			}
 			measures.add(((TwoTuple) valuation).calculateInverseDelta());
 		}
 
-		if (domain != null) {
+		if(domain != null) {
 			Collections.sort(measures);
 			Collections.reverse(measures);
 
 			int size = measures.size();
-			for(int i = 0; i < size; i++) {
+			for (int i = 0; i < size; i++) {
 				beta += weights.get(i) * measures.get(i);
 			}
 			
 			result = (TwoTuple) valuations.get(0).clone();
 			result.calculateDelta(beta);
 		}
+
 		return result;
+
 	}
 }

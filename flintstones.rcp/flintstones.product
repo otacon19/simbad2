@@ -70,6 +70,7 @@
       <plugin id="sinbad2.aggregationoperator.maxMin"/>
       <plugin id="sinbad2.aggregationoperator.median"/>
       <plugin id="sinbad2.aggregationoperator.min"/>
+      <plugin id="sinbad2.aggregationoperator.owa"/>
       <plugin id="sinbad2.aggregationoperator.weightedmean"/>
       <plugin id="sinbad2.core"/>
       <plugin id="sinbad2.core.ui"/>

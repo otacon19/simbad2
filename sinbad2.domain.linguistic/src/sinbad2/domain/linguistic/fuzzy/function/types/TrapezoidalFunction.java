@@ -168,8 +168,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 
 	@Override
 	public double maxMin(double max, double min) {
-		
-		Validator.notDisorder(new double[] { min, max }, false);
+		Validator.notDisorder(new double[] { max, min }, false);
 		
 		if(( max >= _b) && (min <= _c)) {
 			return 1d;
@@ -293,9 +292,9 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	public String toString() {
 		
 		if(_b == _c) {
-			return ("Trapezoidal(" + _a + ", " + _b + "," + _d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			return ("Trapezoidal(" + _a + ", " + _b + ", " + _d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else {
-			return ("Trapezoidal(" + _a + ", " + _b + "," + _c + ", " + _d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			return ("Trapezoidal(" + _a + ", " + _b + ", " + _c + ", " + _d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		}
 	}
 	
