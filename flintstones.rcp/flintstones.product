@@ -145,6 +145,7 @@
       <plugin id="sinbad2.resolutionscheme.ui"/>
       <plugin id="sinbad2.valuation"/>
       <plugin id="sinbad2.valuation.hesitant"/>
+      <plugin id="sinbad2.valuation.hesitant.ui"/>
       <plugin id="sinbad2.valuation.integer"/>
       <plugin id="sinbad2.valuation.integer.interval"/>
       <plugin id="sinbad2.valuation.integer.interval.ui"/>

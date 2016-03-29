@@ -7,7 +7,8 @@ Bundle-Activator: sinbad2.resolutionphase.framework.ui.Activator
 Require-Bundle: sinbad2.resolutionphase.ui;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.domain.ui;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.element.ui;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.resolutionphase.framework;bundle-version="1.0.0"
+ sinbad2.resolutionphase.framework;bundle-version="1.0.0",
+ sinbad2.valuation.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.8
 Bundle-ActivationPolicy: lazy

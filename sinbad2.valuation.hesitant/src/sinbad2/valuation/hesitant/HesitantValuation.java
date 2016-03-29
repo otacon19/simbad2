@@ -465,7 +465,7 @@ public class HesitantValuation extends Valuation {
 	}
 
 	@Override
-	public Domain unification(Domain fuzzySet) {
+	public FuzzySet unification(Domain fuzzySet) {
 		return null;
 	}
 }

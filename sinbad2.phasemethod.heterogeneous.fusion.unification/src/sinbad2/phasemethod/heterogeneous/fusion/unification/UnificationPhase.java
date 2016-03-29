@@ -8,6 +8,8 @@ import java.util.Map;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
+import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.element.alternative.Alternative;
@@ -17,6 +19,7 @@ import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.integer.IntegerValuation;
 import sinbad2.valuation.integer.interval.IntegerIntervalValuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
@@ -253,7 +256,7 @@ public class UnificationPhase implements IPhaseMethod {
 					valuation = new UnifiedValuation(fuzzySet);
 					
 					_unifiedValuationsResult.put(vk, valuation);
-				} else {
+				} else if(valuation instanceof LinguisticValuation) {
 					if(isCost) {
 						valuation = ((LinguisticValuation) valuation).negateValuation();
 					}
@@ -261,6 +264,8 @@ public class UnificationPhase implements IPhaseMethod {
 					valuation = new UnifiedValuation(fuzzySet);
 					
 					_unifiedValuationsResult.put(vk, valuation);
+				} else {
+					unifiedToTwoTupleHesitant(vk, (HesitantValuation) valuation, unifiedDomain);
 				}
 			}
 		}
@@ -472,5 +477,85 @@ public class UnificationPhase implements IPhaseMethod {
 		}
 
 		return _twoTupleValuationsResult;
+	}
+	
+	private void unifiedToTwoTupleHesitant(ValuationKey vk, HesitantValuation valuation, FuzzySet domain) {	
+		double a = 0, b = 0, c = 0, d = 0;
+		int g = domain.getLabelSet().getCardinality();
+		Boolean lower = null;
+		
+        if(valuation.isPrimary()) {
+            IMembershipFunction semantic = valuation.getLabel().getSemantic();
+            a = semantic.getCoverage().getMin();
+            b = semantic.getCenter().getMin();
+            c = semantic.getCenter().getMax();
+            d = semantic.getCoverage().getMax();
+        } else {
+            int envelope[] = valuation.getEnvelopeIndex();
+            if(valuation.isUnary()) {
+                switch(valuation.getUnaryRelation().ordinal()) {
+                case 1: // '\001'
+                    lower = Boolean.valueOf(true);
+                    break;
+
+                case 4: // '\004'
+                    lower = Boolean.valueOf(true);
+                    break;
+
+                case 2: // '\002'
+                case 3: // '\003'
+                default:
+                    lower = Boolean.valueOf(false);
+                    break;
+                }
+            } else {
+                lower = null;
+            }
+
+            if(lower == null) {
+                a = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
+                d = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
+                if(envelope[0] + 1 == envelope[1]) {
+                    b = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCenter().getMin();
+                    c = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCenter().getMax();
+                } else {
+                    int sum = envelope[1] + envelope[0];
+                    int top;
+                    if(sum % 2 == 0) {
+                        top = sum / 2;
+                    } else {
+                        top = (sum - 1) / 2;
+                    }
+                    List<Valuation> valuations = new LinkedList<Valuation>();
+                    for(int i = envelope[0]; i <= top; i++) {
+                        valuations.add(new TwoTuple(domain, domain.getLabelSet().getLabel(i)));
+                    }
+
+                    Valuation aux = owa.aggregate(valuations, weights);
+                    b = ((TwoTuple) aux).calculateInverseDelta() / (double) g;
+                    c = 2D * domain.getLabelSet().getLabel(top).getSemantic().getCenter().getMin() - b;
+                }
+            } else {
+                List<Valuation> valuations = new LinkedList<Valuation>();
+                for(int i = envelope[0]; i <= envelope[1]; i++) {
+                    valuations.add(new TwoTuple(domain, domain.getLabelSet().getLabel(i)));
+                }
+
+                Valuation aux = owa.aggregate(valuations, weights);
+                if(lower.booleanValue()) {
+                    a = 0.0D;
+                    b = 0.0D;
+                    c = ((TwoTuple) aux).calculateInverseDelta() / (double) g;
+                    d = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
+                } else {
+                    a = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
+                    b = ((TwoTuple) aux).calculateInverseDelta() / (double) g;
+                    c = 1.0D;
+                    d = 1.0D;
+                }
+            }
+        }
+        TrapezoidalFunction tmf = new TrapezoidalFunction(new double[] {a, b, c, d});
+        System.out.println(tmf);
 	}
 }

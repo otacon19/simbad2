@@ -18,8 +18,7 @@ import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 public class Weightedmean extends WeightedAggregationOperator {
 
 	@Override
-	public Valuation aggregate(List<Valuation> valuations, List<Double> weights) {
-		
+	public Valuation aggregate(List<Valuation> valuations, List<Double> weights) {		
 		Validator.notNull(valuations);
 		Validator.notNull(weights);
 		

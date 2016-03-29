@@ -64,7 +64,7 @@ public class Fusion extends MethodImplementation {
 							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
 							
 							if(v instanceof HesitantValuation) {
-								return HESITANT_VALUATIONS;
+								//return HESITANT_VALUATIONS;
 							}
 							
 							if(v == null) {

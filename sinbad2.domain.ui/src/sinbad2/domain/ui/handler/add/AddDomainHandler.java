@@ -46,7 +46,6 @@ public class AddDomainHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		
 		TwoPaneElementSelector dialogTwoPanes = createTwoPanes();
-		
 		if(dialogTwoPanes.open() == Window.OK) {
 			Domain domain;
 			Object[] result = dialogTwoPanes.getResult();
@@ -59,7 +58,6 @@ public class AddDomainHandler extends AbstractHandler {
 				NewDomainDialog newDomainDialog = null;
 								
 				String dialogIDSelected = getSelectedDomainDialog(selections);
-					
 				if(dialogIDSelected != null && !dialogIDSelected.isEmpty()) {
 					newDomainDialog = _domainUIsManager.newDomainDialog(domain, dialogIDSelected);
 					if(newDomainDialog.open() == Window.OK) {
