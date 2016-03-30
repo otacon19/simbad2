@@ -9,8 +9,5 @@ Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0",
  sinbad2.valuation.integer;visibility:=reexport,
  sinbad2.valuation.real;visibility:=reexport,
  sinbad2.valuation.integer.interval;visibility:=reexport,
- sinbad2.valuation.real.interval;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.valuation.hesitant,
- sinbad2.aggregationoperator,
- sinbad2.aggregationoperator.owa
+ sinbad2.valuation.real.interval;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.phasemethod.heterogeneous.fusion.unification

@@ -7,6 +7,9 @@
             id="flintstones.method.linguistic.hesitant.ui"
             method="flintstones.method.linguistic.hesitant"
             name="Hesitant Fuzzy 2-tuple Linguistic Information">
+         <ui
+               id="flintstones.phasemethod.linguistic.hesitant.unification.ui">
+         </ui>
       </method_ui>
    </extension>
 
