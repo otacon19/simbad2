@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Hesitant unification phase
+Bundle-SymbolicName: sinbad2.phasemethod.linguistic.hesitant.unification;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Sinbad2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.phasemethod,
+ sinbad2.valuation.hesitant,
+ sinbad2.aggregationoperator,
+ sinbad2.aggregationoperator.owa
+Export-Package: sinbad2.phasemethod.linguistic.hesitant.unification
