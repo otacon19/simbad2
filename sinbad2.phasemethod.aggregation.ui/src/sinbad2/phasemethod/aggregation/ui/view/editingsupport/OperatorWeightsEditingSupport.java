@@ -160,7 +160,7 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 			elementId = problemElement.getId();
 		}
 
-		if (operator.getName().equals("Owa")) { //$NON-NLS-1$
+		if (operator.getName().equals("OWA")) { //$NON-NLS-1$
 			QuantifiersDialog dialog = new QuantifiersDialog(Display.getCurrent().getActiveShell(), weights.get(0), weights.get(1), QuantifiersDialog.SIMPLE, elementType, elementId);
 			if(dialog.open() == QuantifiersDialog.SAVE) {
 				weights = new LinkedList<Double>();

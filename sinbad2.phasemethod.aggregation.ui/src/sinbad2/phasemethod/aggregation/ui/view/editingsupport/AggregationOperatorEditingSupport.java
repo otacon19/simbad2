@@ -216,7 +216,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				elementId = element.getId();
 			}
 
-			if (aggregationOperator.getName().equals("Owa")) { //$NON-NLS-1$
+			if (aggregationOperator.getName().equals("OWA")) { //$NON-NLS-1$
 				if (_weights == null) {
 					QuantifiersDialog dialog = new QuantifiersDialog(Display.getCurrent().getActiveShell(), null, null, QuantifiersDialog.SIMPLE, elementType, elementId);
 

@@ -12,6 +12,7 @@ import sinbad2.element.expert.Expert;
 import sinbad2.method.MethodImplementation;
 import sinbad2.method.state.MethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
 
@@ -21,6 +22,7 @@ public class Topsis extends MethodImplementation {
 	
 	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignments";
 	private static final String NOT_SUPPORTED_DOMAINS = "Not supported domains";
+	private static final String HESITANT_VALUATIONS = "Hesitant evaluations";
 	
 	private DomainSet _domainSet;
 	private ProblemElementsSet _elementsSet;
@@ -61,6 +63,8 @@ public class Topsis extends MethodImplementation {
 							Valuation v = _valuationSet.getValuation(expert, alternative, criterion);
 							if(v == null) {
 								return NOT_SET_ALL_ASSIGNMENTS;
+							} else if(v instanceof HesitantValuation) {
+								return HESITANT_VALUATIONS;
 							}
 						}
 					}

@@ -26,6 +26,8 @@ import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.HesitantValuation;
+import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
 
@@ -183,6 +185,10 @@ public class MethodsManager {
 		Map<Integer, Boolean> bcl = getBestConditionsLinguistic();
 		int[] cardinalities = getCardinalitiesFuzzySet();
 		
+		if(getBestConditionsHesitant()) {
+			return "Hesitant Fuzzy 2-tuple Linguistic Information";
+		}
+		
 		if(cardinalities.length > 0 && bcl.size() > 0) {
 			if((bcl.get(cardinalities[0])) && _domainsSet.getDomains().size() == 1) {
 				return "2-Tuple linguistic computational model";
@@ -318,6 +324,17 @@ public class MethodsManager {
 			}
 		}
 		return false;
+	}
+
+	private boolean getBestConditionsHesitant() {
+		for(ValuationKey vk: _valuationsSet.getValuations().keySet()) {
+			Valuation v = _valuationsSet.getValuations().get(vk);
+			if(!(v instanceof HesitantValuation)) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 }
