@@ -521,12 +521,13 @@ public class UnificationPhase implements IPhaseMethod {
 
             WeightedAggregationOperator.NumeredQuantificationType nqt = WeightedAggregationOperator.NumeredQuantificationType.FilevYager;
             List<Double> weights = new LinkedList<Double>();
-            double ad1[];
             double auxWeights[] = WeightedAggregationOperator.QWeighted(nqt, g, envelope, lower);
+            double aW[];
+           
             weights.add(new Double(-1D));
-            int j2 = (ad1 = auxWeights).length;
-            for(int l1 = 0; l1 < j2; l1++) {
-                Double weight = Double.valueOf(ad1[l1]);
+            int numWeights = (aW = auxWeights).length;
+            for(int w = 0; w < numWeights; w++) {
+                Double weight = Double.valueOf(aW[w]);
                 weights.add(weight);
             }
             

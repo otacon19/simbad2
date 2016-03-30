@@ -78,6 +78,8 @@
                   </enumeration>
                   <enumeration value="Multi-criteria decision analysis">
                   </enumeration>
+                  <enumeration value="Hesitant Fuzzy Linguistic Information">
+                  </enumeration>
                </restriction>
             </simpleType>
          </attribute>

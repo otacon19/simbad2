@@ -83,8 +83,7 @@ public abstract class WeightedAggregationOperator extends AggregationOperator {
 				int aux;
 				double alpha;
 
-				if (lower) {
-
+				if(lower) {
 					values = envelope[1] + 1;
 					aux = values - 1;
 
@@ -109,51 +108,46 @@ public abstract class WeightedAggregationOperator extends AggregationOperator {
 						if (i == 0) {
 							result[i] = Math.pow(alpha, g - envelope[0]);
 						} else {
-							result[i] = (1d - alpha)
-									* Math.pow(alpha, g - envelope[0] - i);
+							result[i] = (1d - alpha) * Math.pow(alpha, g - envelope[0] - i);
 						}
 					}
 				}
 			}
 		}
 		return result;
-
 	}
 
-	public static double[] Quantification(QuantificationType type,
-			int numberOfValuations) {
+	public static double[] Quantification(QuantificationType type, int numberOfValuations) {
 
 		switch (type) {
-		case most:
-			return Q(numberOfValuations, 0.3, 0.8);
-
-		case at_least_half:
-			return Q(numberOfValuations, 0, 0.5);
-
-		case as_many_as_possible:
-			return Q(numberOfValuations, 0.5, 1);
-
-		default:
-			return null;
+			case most:
+				return Q(numberOfValuations, 0.3, 0.8);
+	
+			case at_least_half:
+				return Q(numberOfValuations, 0, 0.5);
+	
+			case as_many_as_possible:
+				return Q(numberOfValuations, 0.5, 1);
+	
+			default:
+				return null;
 		}
-
 	}
 
 	public static double[] getQuantificationParams(QuantificationType type) {
 		switch (type) {
-		case most:
-			return new double[] { 0.3, 0.8 };
-
-		case at_least_half:
-			return new double[] { 0, 0.5 };
-
-		case as_many_as_possible:
-			return new double[] { 0.5, 1 };
-
-		default:
-			return null;
+			case most:
+				return new double[] { 0.3, 0.8 };
+	
+			case at_least_half:
+				return new double[] { 0, 0.5 };
+	
+			case as_many_as_possible:
+				return new double[] { 0.5, 1 };
+	
+			default:
+				return null;
 		}
-
 	}
 	
 }

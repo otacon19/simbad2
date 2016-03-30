@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Hesitant Ui
+Bundle-SymbolicName: sinbad2.method.linguistic.hesitant.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Sinbad2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.method.linguistic.ui

@@ -12,11 +12,9 @@ import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class TwoTupleOperator {
 
-	private TwoTupleOperator() {
-	}
+	private TwoTupleOperator() {}
 
 	public static Valuation aggregate(List<Valuation> valuations, double alphaQ, double betaQ) {
-
 		TwoTuple result = null;
 		double beta = 0;
 		List<Double> measures = new LinkedList<Double>();
