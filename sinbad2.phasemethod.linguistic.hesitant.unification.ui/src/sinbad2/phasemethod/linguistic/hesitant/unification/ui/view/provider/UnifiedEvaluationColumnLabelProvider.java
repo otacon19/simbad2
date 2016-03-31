@@ -2,10 +2,8 @@ package sinbad2.phasemethod.linguistic.hesitant.unification.ui.view.provider;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
-import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
-import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class UnifiedEvaluationColumnLabelProvider extends ColumnLabelProvider {
 	
@@ -16,12 +14,7 @@ public class UnifiedEvaluationColumnLabelProvider extends ColumnLabelProvider {
 			Valuation result = (Valuation) ((Object[]) element)[5];
 			if (result != null) {
 					TwoTuple valuation;
-					if (result instanceof UnifiedValuation) {
-						FuzzySet domain = (FuzzySet) result.getDomain();
-						valuation = ((UnifiedValuation) result).disunification(domain);
-					} else {
-						valuation = (TwoTuple) result;
-					}
+					valuation = (TwoTuple) result;
 					
 					String labelName = valuation.getLabel().getName();
 					String alpha = Double.toString(valuation.getAlpha());

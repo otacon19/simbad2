@@ -2,6 +2,7 @@ package sinbad2.domain.linguistic.fuzzy.function.types;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -167,8 +168,8 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 
 	@Override
-	public double maxMin(double max, double min) {
-		Validator.notDisorder(new double[] { max, min }, false);
+	public double maxMin(double min, double max) {
+		Validator.notDisorder(new double[] { min, max }, false);
 		
 		if(( max >= _b) && (min <= _c)) {
 			return 1d;
@@ -181,7 +182,6 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 	@Override
 	public double maxMin(IMembershipFunction function) {
-
 		TrapezoidalFunction tmf;
 
 		Validator.notNull(function);
@@ -197,15 +197,10 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		
 		values[0] = maxMin(tmf._b, tmf._c);
 		
+		
 		if (values[0] == 1) {
 			return 1d;
 		}
-
-		// Calcular la intersección entre las rectas:
-		// (a,0),(b,1) y (funcion.a,0),(funcion.b,1)
-		// (a,0),(b,1) y (funcion.c,1),(funcion.d,0)
-		// (c,1),(d,0) y (funcion.a,0),(funcion.b,1)
-		// (c,1),(d,0) y (funcion.c,1),(funcion.d,0)
 
 		if (_b == _a) {
 			values[1] = values[2] = tmf.getMembershipValue(_a);
@@ -232,7 +227,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 				values[2] = slopeFunctionCD * slopeThisAB * (_a - tmf._d) / (slopeThisAB - slopeFunctionCD);
 			}
 		}
-
+		
 		if (_c == _d) {
 			values[3] = values[4] = tmf.getMembershipValue(_c);
 		} else {
@@ -259,14 +254,18 @@ public class TrapezoidalFunction implements IMembershipFunction {
 				}
 			}
 		}
-
+		
 		for (int i = 1; i < values.length; i++) {
 			if (values[i] > 1) {
 				values[i] = 0d;
 			}
 		}
-
+		
 		result = Math.max(values[0], Math.max(values[1], Math.max(values[2], Math.max(values[3], values[4]))));
+		
+		System.out.println("Punto de corte:");
+		System.out.println(result);
+		System.out.println();
 		
 		return result;
 	}
@@ -290,11 +289,13 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 	@Override
 	public String toString() {
+		DecimalFormat df = new DecimalFormat("#.##");
+		df.setRoundingMode(RoundingMode.CEILING);
 		
 		if(_b == _c) {
-			return ("Trapezoidal(" + _a + ", " + _b + ", " + _d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			return ("Trapezoidal(" + df.format(_a) + ", " + df.format(_b) + ", " + df.format(_d) + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} else {
-			return ("Trapezoidal(" + _a + ", " + _b + ", " + _c + ", " + _d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			return ("Trapezoidal(" + df.format(_a) + ", " + df.format(_b) + ", " + df.format(_c) + ", " + df.format(_d) + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		}
 	}
 	

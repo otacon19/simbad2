@@ -1,17 +1,20 @@
 package sinbad2.phasemethod.linguistic.hesitant.unification.ui.view.provider;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import sinbad2.domain.Domain;
-import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
+import sinbad2.phasemethod.PhasesMethodManager;
+import sinbad2.phasemethod.linguistic.hesitant.unification.UnificationPhase;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.unifiedValuation.UnifiedValuation;
+import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -22,10 +25,18 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 	private Map<ValuationKey, Valuation> _valuations;
 	private Object[][] _information;
 	private Map<ValuationKey, Valuation> _unifiedEvaluations;
+	private Map<String, TrapezoidalFunction> _trapezoidalFunctions;
+	
+	private UnificationPhase _unificationPhase;
 	
 	public TreeViewerContentProvider() {
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = valuationSetManager.getActiveValuationSet();
+		
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_unificationPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
+		
+		_trapezoidalFunctions = new HashMap<String, TrapezoidalFunction>();
 	}
 	
 	public TreeViewerContentProvider(Map<ValuationKey, Valuation> unifiedEvaluations) {
@@ -50,12 +61,14 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 	public Object[][] getInput() {
 		_valuations = _valutationSet.getValuations();
 		_information = new Object[_valuations.size()][6];
+		Map<ValuationKey, TrapezoidalFunction> envelopeValuations = _unificationPhase.getEnvelopeValuations();
 
 		Expert expert;
 		Alternative alternative;
 		Criterion criterion;
 		Domain domain;
 		Valuation unifiedValuation;
+		TrapezoidalFunction tmf = null;
 		
 		int i = 0;
 		for (ValuationKey vk: _valuations.keySet()) {
@@ -69,6 +82,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 			 for(ValuationKey vku: _unifiedEvaluations.keySet()) {
 				if ((vku.getExpert().equals(vk.getExpert())) && (vku.getAlternative().equals(vk.getAlternative())) && (vku.getCriterion().equals(vk.getCriterion()))) {
 					unifiedValuation = (Valuation) _unifiedEvaluations.get(vku);
+					tmf = envelopeValuations.get(vku);
 					break;
 				}
 			}
@@ -80,6 +94,10 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 			_information[i][4] = v;
 			_information[i][5] = unifiedValuation;
 			
+			unifiedValuation.setId(Integer.toString(i));
+			
+			_trapezoidalFunctions.put(unifiedValuation.getId(), tmf);
+			
 			i++;
 		}
 		return _information;
@@ -89,20 +107,10 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof Object[]) {
 			Valuation valuation = (Valuation) ((Object[]) parentElement)[5];
-			if (valuation instanceof UnifiedValuation) {
-				FuzzySet domain = (FuzzySet) valuation.getDomain();
-				int size = domain.getLabelSet().getCardinality();
-				String[] result = new String[size];
-				String labelName, measure;
-				for (int i = 0; i < size; i++) {
-					labelName = domain.getLabelSet().getLabel(i).getName();
-					measure = Double.toString(domain.getValue(i));
-					if (measure.length() > 5) {
-						measure = measure.substring(0, 5);
-					}
-					result[i] = labelName + "/" + measure; //$NON-NLS-1$
-				}		
-				return result;
+			if (valuation instanceof TwoTuple) {
+				Object[] tf = new String[1];
+				tf[0] = _trapezoidalFunctions.get(valuation.getId()).toString();
+				return tf;
 			} else {
 				return null;
 			}
@@ -120,7 +128,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 	public boolean hasChildren(Object element) {
 		
 		if (element instanceof Object[]) {
-			if (((Object[]) element)[5] instanceof UnifiedValuation) {
+			if (((Object[]) element)[5] instanceof TwoTuple) {
 				return true;
 			}
 		}

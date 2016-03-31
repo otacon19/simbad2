@@ -34,6 +34,7 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleValuationsResult;
+	private Map<ValuationKey, TrapezoidalFunction> _envelopeValuations;
 	
 	private ValuationSet _valutationSet;
 	private DomainSet _domainSet;
@@ -47,6 +48,7 @@ public class UnificationPhase implements IPhaseMethod {
 		
 		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
 		_twoTupleValuationsResult = new LinkedHashMap<ValuationKey, Valuation>();
+		_envelopeValuations = new LinkedHashMap<ValuationKey, TrapezoidalFunction>();
 	}
 	
 	public Map<ValuationKey, Valuation> getUnifiedValuationsResult() {
@@ -65,6 +67,14 @@ public class UnificationPhase implements IPhaseMethod {
 	public void setTwoTupleValuationsResult(Map<ValuationKey, Valuation> twoTupleValuationsResult) {
 		_twoTupleValuationsResult = twoTupleValuationsResult;
 	}
+	
+	public Map<ValuationKey, TrapezoidalFunction> getEnvelopeValuations() {
+		return _envelopeValuations;
+	}
+	
+	public void setEnvelopeValuations(Map<ValuationKey, TrapezoidalFunction> envelopeValuations) {
+		_envelopeValuations = envelopeValuations;
+	}
 
 	@Override
 	public IPhaseMethod copyStructure() {
@@ -79,12 +89,14 @@ public class UnificationPhase implements IPhaseMethod {
 
 		_unifiedValuationsResult = unification.getUnifiedValuationsResult();
 		_twoTupleValuationsResult = unification.getTwoTupleValuationsResult();
+		_envelopeValuations = unification.getEnvelopeValuations();
 	}
 
 	@Override
 	public void clear() {
 		_unifiedValuationsResult.clear();
 		_twoTupleValuationsResult.clear();
+		_envelopeValuations.clear();
 	}
 
 	@Override
@@ -132,6 +144,7 @@ public class UnificationPhase implements IPhaseMethod {
 
 			Map<ValuationKey, Valuation> valuations = _valutationSet.getValuations();
 			for(ValuationKey vk : valuations.keySet()) {
+				
 				valuation = valuations.get(vk);
 				
 				if(valuation instanceof HesitantValuation) {
@@ -141,26 +154,6 @@ public class UnificationPhase implements IPhaseMethod {
 		}
 		
 		return _unifiedValuationsResult;
-	}
-	
-	public Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple(FuzzySet unifiedDomain) {
-		
-		if(unifiedDomain != null) {
-		
-			Valuation valuation;
-
-			for(ValuationKey key : _unifiedValuationsResult.keySet()) {
-				valuation = _unifiedValuationsResult.get(key);
-				if(valuation instanceof UnifiedValuation) {
-					valuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
-				} else if(!(valuation instanceof TwoTuple)) {
-					valuation = null;
-				}
-				_twoTupleValuationsResult.put(key, valuation);
-			}
-		}
-
-		return _twoTupleValuationsResult;
 	}
 	
 	private void unifiedToTwoTupleHesitant(ValuationKey vk, HesitantValuation valuation, FuzzySet domain) {	
@@ -180,20 +173,16 @@ public class UnificationPhase implements IPhaseMethod {
         } else {
             int envelope[] = valuation.getEnvelopeIndex();
             if(valuation.isUnary()) {
-                switch(valuation.getUnaryRelation().ordinal()) {
-                case 0:
-                    lower = Boolean.valueOf(true);
-                    break;
-                case 1:
+                switch(valuation.getUnaryRelation()) {
+                case LowerThan:
+                	lower = Boolean.valueOf(true);
                 	break;
-                case 2:
+                case AtMost:
+                	lower = Boolean.valueOf(true);
                 	break;
-                case 3:
-                    lower = Boolean.valueOf(true);
-                    break;
                 default:
-                    lower = Boolean.valueOf(false);
-                    break;
+                	lower = Boolean.valueOf(false);
+                	break;
                 }
             } else {
                 lower = null;
@@ -201,15 +190,12 @@ public class UnificationPhase implements IPhaseMethod {
 
             WeightedAggregationOperator.NumeredQuantificationType nqt = WeightedAggregationOperator.NumeredQuantificationType.FilevYager;
             List<Double> weights = new LinkedList<Double>();
-            double auxWeights[] = WeightedAggregationOperator.QWeighted(nqt, g, envelope, lower);
-            double aW[];
-           
-            weights.add(new Double(-1D));
-            int numWeights = (aW = auxWeights).length;
-            for(int w = 0; w < numWeights; w++) {
-                Double weight = Double.valueOf(aW[w]);
-                weights.add(weight);
-            }
+			double[] auxWeights = WeightedAggregationOperator.QWeighted(nqt, g - 1, envelope, lower);
+			
+			weights.add(new Double(-1));
+			for(Double weight : auxWeights) {
+				weights.add(weight);
+			}
             
             if(lower == null) {
                 a = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
@@ -231,7 +217,7 @@ public class UnificationPhase implements IPhaseMethod {
                     }
 
                     Valuation aux = ((OWA) owa).aggregate(valuations, weights);
-                    b = ((TwoTuple) aux).calculateInverseDelta() / (double) g;
+                    b = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
                     c = 2D * domain.getLabelSet().getLabel(top).getSemantic().getCenter().getMin() - b;
                 }
             } else {
@@ -244,31 +230,44 @@ public class UnificationPhase implements IPhaseMethod {
                 if(lower.booleanValue()) {
                     a = 0.0D;
                     b = 0.0D;
-                    c = ((TwoTuple) aux).calculateInverseDelta() / (double) g;
+                    c = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
                     d = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
                 } else {
                     a = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
-                    b = ((TwoTuple) aux).calculateInverseDelta() / (double) g;
+                    b = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
                     c = 1.0D;
                     d = 1.0D;
                 }
             }
         }
+        
+        System.out.println(valuation.changeFormatValuationToString());
+        
         TrapezoidalFunction tmf = new TrapezoidalFunction(new double[] {a, b, c, d});
+        _envelopeValuations.put(vk, tmf);
+        
+        transformToTwoTuple(vk, tmf, domain);
+	}
+	
+	private void transformToTwoTuple(ValuationKey vk, TrapezoidalFunction tmf, Domain domain) {
 		IMembershipFunction function;
 		FuzzySet result;
 
 		result = (FuzzySet) ((FuzzySet) domain).clone();
+		int g = result.getLabelSet().getCardinality();
 
 		for(int i = 0; i < g; i++) {
+			System.out.println(result.getLabelSet().getLabel(i).getName());
 			function = result.getLabelSet().getLabel(i).getSemantic();
 			result.setValue(i, function.maxMin(tmf));
 		}
 		
-		UnifiedValuation unifiedValuation = new UnifiedValuation(result);
-		_unifiedValuationsResult.put(vk, unifiedValuation);
+		Valuation unifiedValuation = new UnifiedValuation(result);
+		TwoTuple twoTuple = ((UnifiedValuation) unifiedValuation).disunification(result);
+		
+		_unifiedValuationsResult.put(vk, twoTuple);
 	}
-	
+
 	public Domain getDomain() {
 		return (FuzzySet) _domainSet.getDomains().get(0);
 	}
