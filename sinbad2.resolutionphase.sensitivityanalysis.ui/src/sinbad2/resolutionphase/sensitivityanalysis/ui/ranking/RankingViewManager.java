@@ -10,13 +10,12 @@ public class RankingViewManager {
 	private Object _activeRanking;
 	private List<IDisplayRankingChangeListener> _listeners;
 
-	private RankingViewManager() {
+	private RankingViewManager() {	
 		_activeRanking = null;
 		_listeners = new LinkedList<IDisplayRankingChangeListener>();
 	}
 
 	public static RankingViewManager getInstance() {
-		
 		if(_instance == null) {
 			_instance = new RankingViewManager();
 		}
@@ -43,5 +42,4 @@ public class RankingViewManager {
 			listener.displayRankingChange(_activeRanking);
 		}
 	}
-
 }

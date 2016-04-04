@@ -37,7 +37,7 @@ public class SensitivityAnalysisView extends ViewPart implements ISensitivityAna
 	private void initSATable() {
 		disposeSATable();
 		_saTable = new SATable(_container);
-		_saTable.setModel(_sensitivityAnalysis.getAlternativesIds(), _sensitivityAnalysis.getCriteriaIds(), _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights(), _sensitivityAnalysis.getDecisionMaking(), _sensitivityAnalysis.getWeights());
+		_saTable.setModel(_sensitivityAnalysis.getAlternativesIds(), _sensitivityAnalysis.getCriteriaIds(), _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights(), _sensitivityAnalysis.getDecisionMatrix(), _sensitivityAnalysis.getWeights());
 	}
 	
 	private void disposeSATable() {

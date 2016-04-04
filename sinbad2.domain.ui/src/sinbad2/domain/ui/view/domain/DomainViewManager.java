@@ -37,6 +37,12 @@ public class DomainViewManager {
 		notifyDisplayDomainChange();
 	}
 	
+	public void setRanking(Object ranking) {
+		_activeRanking = ranking;
+		
+		notifyDisplayDomainChange();
+	}
+	
 	public void registerDisplayDomainChangeListener(IDisplayDomainChangeListener listener) {
 		_listeners.add(listener);
 	}

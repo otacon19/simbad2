@@ -10,6 +10,8 @@ import org.eclipse.jface.viewers.Viewer;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 
 public class RankingContentProvider implements IStructuredContentProvider {	
+	
+	private SensitivityAnalysis _sensitivityAnalysis;
 
 	class MyElement implements Comparable<MyElement> {
 
@@ -22,6 +24,10 @@ public class RankingContentProvider implements IStructuredContentProvider {
 			return ((Integer) ranking).compareTo(other.ranking);
 		}
 	}
+	
+	public RankingContentProvider(SensitivityAnalysis sensitivityAnalysis) {
+		_sensitivityAnalysis = sensitivityAnalysis;
+	}
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput,Object newInput) {}
@@ -32,15 +38,13 @@ public class RankingContentProvider implements IStructuredContentProvider {
 	@Override
 	public Object[] getElements(Object inputElement) {
 		Object[] result = null;
-
-		SensitivityAnalysis sensitivityAnalysis = (SensitivityAnalysis) inputElement;
 		List<MyElement> elements = new LinkedList<MyElement>();
 		MyElement element;
-		for (int i = 0; i < sensitivityAnalysis.getNumAlternatives(); i++) {
+		for (int i = 0; i < _sensitivityAnalysis.getNumAlternatives(); i++) {
 			element = new MyElement();
-			element.alternative = sensitivityAnalysis.getAlternativesIds()[i];
-			element.ranking = sensitivityAnalysis.getRanking()[i];
-			element.value = sensitivityAnalysis.getAlternativesFinalPreferences()[i];
+			element.alternative = _sensitivityAnalysis.getAlternativesIds()[i];
+			element.ranking = _sensitivityAnalysis.getRanking()[i];
+			element.value = _sensitivityAnalysis.getAlternativesFinalPreferences()[i];
 
 			elements.add(element);
 		}

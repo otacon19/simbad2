@@ -9,8 +9,10 @@ import de.kupzog.ktable.KTableCellEditor;
 import de.kupzog.ktable.KTableCellRenderer;
 import de.kupzog.ktable.KTableNoScrollModel;
 import de.kupzog.ktable.SWTX;
+import de.kupzog.ktable.editors.KTableCellEditorText;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
+import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 
 
 public class DMTableContentProvider extends KTableNoScrollModel {
@@ -18,15 +20,18 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	private String[] _alternatives;
 	private String[] _criteria;
 	private double[][] _values;
+	
+	private SensitivityAnalysis _sensitivityAnalysis;
 
 	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
 	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 
 	
-	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria,
-			double[][] values) {
+	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria, double[][] values, SensitivityAnalysis sensitivityAnalysis) {
 		super(table);
 
+		_sensitivityAnalysis = sensitivityAnalysis;
+		
 		_alternatives = alternatives;
 		_criteria = criteria;
 		_values = values;
@@ -62,11 +67,16 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	}
 
 	public KTableCellEditor doGetCellEditor(int col, int row) {
-		return null;
+		return new KTableCellEditorText();
 	}
 
 	@Override
-	public void doSetContentAt(int col, int row, Object value) {}
+	public void doSetContentAt(int col, int row, Object value) {
+		double v = Double.parseDouble((String) value);
+		_values[row - 1][col - 1] = v;
+		
+		_sensitivityAnalysis.compute();
+	}
 
 	@Override
 	public int doGetRowCount() {

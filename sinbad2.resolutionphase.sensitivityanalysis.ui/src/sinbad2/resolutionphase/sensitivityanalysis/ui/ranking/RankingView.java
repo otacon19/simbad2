@@ -15,13 +15,17 @@ import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.core.workspace.Workspace;
+import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.provider.RankingContentProvider;
 
 public class RankingView extends ViewPart implements IDisplayRankingChangeListener {
 	
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking"; //$NON-NLS-1$
 	public static final String CONTEXT_ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking.ranking_view"; //$NON-NLS-1$
-
+	
+	private SensitivityAnalysis _sensitivityAnalysis;
+	
 	private TableViewer _rankingViewer;
 
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
@@ -34,7 +38,9 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		rankingTable.setHeaderVisible(true);
 		rankingTable.setLinesVisible(true);
 
-		_rankingViewer.setContentProvider(new RankingContentProvider());
+		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
+		
+		_rankingViewer.setContentProvider(new RankingContentProvider(_sensitivityAnalysis));
 
 		addColumn("Ranking", 0); //$NON-NLS-1$
 		addColumn("Alternative", 1); //$NON-NLS-1$
@@ -62,7 +68,11 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		tc.setText(text);
 		tc.setResizable(true);
 		tc.setMoveable(true);
-		tc.pack();
+		if(pos == 2) {
+			tc.setWidth(45);
+		} else {
+			tc.pack();
+		}
 	}
 
 	private void hookFocusListener() {
@@ -85,13 +95,10 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	@Override
 	public void setFocus() {
 		_rankingViewer.getControl().setFocus();
-
 	}
 
 	@Override
 	public void displayRankingChange(Object ranking) {
 		_rankingViewer.setInput(ranking);
-		
 	}
-
 }

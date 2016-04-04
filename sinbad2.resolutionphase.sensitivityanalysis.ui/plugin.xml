@@ -31,7 +31,7 @@
             category="flintstones.resolutionphase.sensitivityanalysis.views.category"
             class="sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView"
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking"
-            name="Decision making"
+            name="Decision matrix"
             restorable="true">
       </view>
       <view

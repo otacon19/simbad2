@@ -28,7 +28,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private int _numberOfCriteria;
 	
 	private double[] _w;
-	private double[][] _dm;
+	private double[][] _decisionMatrix;
 
 	private double[] _alternativesFinalPreferences;
 	private int[] _ranking;
@@ -72,12 +72,12 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_w = w;
 	}
 	
-	public double[][] getDecisionMaking() {
-		return _dm;
+	public double[][] getDecisionMatrix() {
+		return _decisionMatrix;
 	}
 	
-	public void setDecisionMaking(double[][] dm) {
-		_dm = dm;
+	public void setDecisionMatrix(double[][] dm) {
+		_decisionMatrix = dm;
 	}
 	
 	public double[] getAlternativesFinalPreferences() {
@@ -166,7 +166,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_absoluteAny = sa.getAbsoluteAny();
 		_absoluteTop = sa.getAbsoluteTop();
 		_alternativesFinalPreferences = sa.getAlternativesFinalPreferences();
-		_dm = sa.getDecisionMaking();
+		_decisionMatrix = sa.getDecisionMatrix();
 		_minimumAbsoluteChangeInCriteriaWeights = sa.getMinimumAbsoluteChangeInCriteriaWeights();
 		_minimumPercentChangeInCriteriaWeights = sa.getMinimumPercentChangeInCriteriaWeights();
 		_numberOfAlternatives = sa.getNumAlternatives();
@@ -180,7 +180,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_absoluteAny.clear();
 		_absoluteTop.clear();
 		_alternativesFinalPreferences = null;
-		_dm = null;
+		_decisionMatrix = null;
 		_minimumAbsoluteChangeInCriteriaWeights = null;
 		_minimumPercentChangeInCriteriaWeights = null;
 		_numberOfAlternatives = -1;
@@ -277,17 +277,17 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				}
 				previousPreference = preference;
 			}
-
 		}
 	}
 
+	//Weighted sum
 	private void computeFinalPreferences() {
 		_alternativesFinalPreferences = new double[_numberOfAlternatives];
 
 		for(int alternative = 0; alternative < _numberOfAlternatives; alternative++) {
 			_alternativesFinalPreferences[alternative] = 0;
 			for(int criterion = 0; criterion < _numberOfCriteria; criterion++) {
-				_alternativesFinalPreferences[alternative] += _dm[criterion][alternative] * _w[criterion];
+				_alternativesFinalPreferences[alternative] += _decisionMatrix[criterion][alternative] * _w[criterion];
 			}
 		}
 		computeRanking();
@@ -307,10 +307,15 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		for(int i = 0; i < (_numberOfAlternatives - 1); i++) {
 			for(int j = (i + 1); j < _numberOfAlternatives; j++) {
 				for(int k = 0; k < _numberOfCriteria; k++) {
-					_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = (_alternativesFinalPreferences[j] - _alternativesFinalPreferences[i]) / (_dm[k][j] - _dm[k][i]);
-
-					if(_minimumAbsoluteChangeInCriteriaWeights[i][j][k] > _w[k]) {
+					
+					if(_decisionMatrix[k][j] - _decisionMatrix[k][i] == 0) {
 						_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;
+					} else {
+						_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = (_alternativesFinalPreferences[j] - _alternativesFinalPreferences[i]) / (_decisionMatrix[k][j] - _decisionMatrix[k][i]);
+						
+						if(_minimumAbsoluteChangeInCriteriaWeights[i][j][k] > _w[k]) {
+							_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;
+						}
 					}
 				}
 			}
@@ -435,21 +440,27 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			_w[i] = tempW;
 		}
 		
-		_dm = new double[_numberOfCriteria][_numberOfAlternatives];
+		_decisionMatrix = new double[_numberOfCriteria][_numberOfAlternatives];
 		for(int i = 0; i < _numberOfCriteria; i++) {
 			for (int j = 0; j < _numberOfAlternatives; j++) {
-				_dm[i][j] = tempW;
+				_decisionMatrix[i][j] = tempW;
 			}
 		}
 		
+		compute();
+	}
+	
+	public void compute() {
 		normalize(_w);
 		computeFinalPreferences();
 		computeMinimumAbsoluteChangeInCriteriaWeights();
 		computeMinimumPercentChangeInCriteriaWeights();
 		computeAbsoluteTop();
 		computeAbsoluteAny();
+		
+		notifySensitivityAnalysisChange();
 	}
-	
+
 	public void registerSensitivityAnalysisChangeListener(ISensitivityAnalysisChangeListener listener) {
 		_listeners.add(listener);
 	}
@@ -464,5 +475,4 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			listener.notifySensitivityAnalysisChange();
 		}
 	}
-	
 }
