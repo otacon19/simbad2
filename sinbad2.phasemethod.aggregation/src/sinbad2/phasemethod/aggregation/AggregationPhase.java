@@ -48,12 +48,16 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	private Map<ProblemElement, AggregationOperator> _criteriaOperators;
 	private Map<ProblemElement, Object> _criteriaOperatorsWeights;
+	
+	private Map<ValuationKey, Valuation> _unificationValues;
+	
+	private double[][] _aggregatedValuationsAlternativeCriterion;
+	private int _numCriterion;
+	private int _numAlternative;;
 
 	private String _aggregateBy;
 
 	private List<AggregationProcessListener> _listeners;
-
-	private Map<ValuationKey, Valuation> _unificationValues;
 	
 	private Domain _unifiedDomain;
 	
@@ -72,6 +76,9 @@ public class AggregationPhase implements IPhaseMethod {
 		_criteriaOperatorsWeights = new HashMap<ProblemElement, Object>();
 
 		_unificationValues = new HashMap<ValuationKey, Valuation>();
+		
+		_numCriterion = 0;
+		_numAlternative = 0;
 		
 		_listeners = new LinkedList<AggregationProcessListener>();
 
@@ -124,6 +131,10 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	public void setCriteriaOperatorWeights(Map<ProblemElement, Object> criteriaOperatorWeights) {
 		_criteriaOperatorsWeights = criteriaOperatorWeights;
+	}
+	
+	public double[][] getAggregatedValuationsAlternativeCriterion() {
+		return _aggregatedValuationsAlternativeCriterion;
 	}
 	
 	public ProblemElement[] setExpertOperator(ProblemElement expert, AggregationOperator operator, Object weights) {
@@ -231,14 +242,22 @@ public class AggregationPhase implements IPhaseMethod {
 	public Map<ProblemElement, Valuation> aggregateAlternatives(Set<ProblemElement> experts, Set<ProblemElement> alternatives, Set<ProblemElement> criteria) {
 		Map<ProblemElement, Valuation> results = new HashMap<ProblemElement, Valuation>();
 		
+		_aggregatedValuationsAlternativeCriterion = new double[criteria.size()][alternatives.size()];
+		_numAlternative = 0;
+		_numCriterion = 0;
+		
 		for (ProblemElement alternative : alternatives) {
 			if (CRITERIA.equals(getAggregateBy())) {
 				results.put(alternative, aggregateAlternativeByCriteria(alternative, experts, criteria));
+				_numAlternative++;
+				_numCriterion = 0;
 			} else {
 				results.put(alternative, aggregateAlternativeByExperts(alternative, experts, criteria));
+				_numAlternative++;
+				_numCriterion = 0;
 			}
 		}
-
+		
 		return results;
 	}
 	
@@ -297,11 +316,13 @@ public class AggregationPhase implements IPhaseMethod {
 							criterionValuations.add(null);
 						}
 					}
-					
 					if (criterionValuations.size() > 1) {
 						operator = getExpertOperator(expertParent);
 						if (operator instanceof UnweightedAggregationOperator) {
-							alternativeValuations.add(((UnweightedAggregationOperator) operator).aggregate(criterionValuations));
+							Valuation v = ((UnweightedAggregationOperator) operator).aggregate(criterionValuations);
+							alternativeValuations.add(v);
+							_aggregatedValuationsAlternativeCriterion[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
+							_numCriterion++;
 						} else {
 							aux = getExpertOperatorWeights(expertParent);
 							if(aux instanceof List<?>) {
@@ -318,7 +339,10 @@ public class AggregationPhase implements IPhaseMethod {
 								alternativeValuations.add(null);
 							} else {
 								if(weights != null) {
-									alternativeValuations.add(((WeightedAggregationOperator) operator).aggregate(criterionValuations, weights));
+									Valuation v = ((WeightedAggregationOperator) operator).aggregate(criterionValuations, weights);
+									alternativeValuations.add(v);
+									_aggregatedValuationsAlternativeCriterion[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
+									_numCriterion++;
 								} else {
 									alternativeValuations.add(null);
 								}
@@ -326,6 +350,8 @@ public class AggregationPhase implements IPhaseMethod {
 						}
 					} else {
 						alternativeValuations.add(criterionValuations.get(0));
+						_aggregatedValuationsAlternativeCriterion[_numCriterion][_numAlternative] = ((TwoTuple) criterionValuations.get(0)).calculateInverseDelta();
+						_numCriterion++;
 					}
 				}
 			} else {

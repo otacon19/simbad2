@@ -262,11 +262,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		}
 		
 		result = Math.max(values[0], Math.max(values[1], Math.max(values[2], Math.max(values[3], values[4]))));
-		
-		System.out.println("Punto de corte:");
-		System.out.println(result);
-		System.out.println();
-		
+	
 		return result;
 	}
 	
