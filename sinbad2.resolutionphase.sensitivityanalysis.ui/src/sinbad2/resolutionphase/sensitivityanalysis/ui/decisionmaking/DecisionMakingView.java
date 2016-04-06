@@ -3,6 +3,7 @@ package sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -150,6 +151,11 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 		refreshDMTable();
 		RankingViewManager.getInstance().setContent(_sensitivityAnalysis.getRanking());
 		DomainViewManager.getInstance().setRanking(new Object[] { _sensitivityAnalysis.getAlternativesIds(), _sensitivityAnalysis.getAlternativesFinalPreferences() });
+	}
+
+	@Override
+	public void notifyAggregationOperatorNoSelected() {
+		MessageDialog.openInformation(getSite().getShell(), "Info", "You don't have selected any agregation operator. Select a method in Rating phase and execute its aggregation phase.");
 	}
 
 }

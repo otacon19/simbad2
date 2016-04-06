@@ -154,97 +154,19 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		return criteriaIds;
 	}
 
-	
-	@Override
-	public IResolutionPhase copyStructure() {
-		return new SensitivityAnalysis();
-	}
-
-	@Override
-	public void copyData(IResolutionPhase iResolutionPhase) {
-		SensitivityAnalysis sa = (SensitivityAnalysis) iResolutionPhase;
-
-		clear();
-
-		_absoluteAny = sa.getAbsoluteAny();
-		_absoluteTop = sa.getAbsoluteTop();
-		_alternativesFinalPreferences = sa.getAlternativesFinalPreferences();
-		_decisionMatrix = sa.getDecisionMatrix();
-		_minimumAbsoluteChangeInCriteriaWeights = sa.getMinimumAbsoluteChangeInCriteriaWeights();
-		_minimumPercentChangeInCriteriaWeights = sa.getMinimumPercentChangeInCriteriaWeights();
-		_numberOfAlternatives = sa.getNumAlternatives();
-		_numberOfCriteria = sa.getNumCriteria();
-		_ranking = sa.getRanking();
-		_w = sa.getWeights();
-	}
-
-	@Override
-	public void clear() {
-		_absoluteAny.clear();
-		_absoluteTop.clear();
-		_alternativesFinalPreferences = null;
-		_decisionMatrix = null;
-		_minimumAbsoluteChangeInCriteriaWeights = null;
-		_minimumPercentChangeInCriteriaWeights = null;
-		_numberOfAlternatives = -1;
-		_numberOfCriteria = -1;
-		_ranking = null;
-		_w = null;
-	}
-
-	@Override
-	public void save(XMLWriter writer) throws WorkspaceContentPersistenceException {
-		@SuppressWarnings("unused")
-		XMLStreamWriter streamWriter = writer.getStreamWriter();
-	}
-
-	@Override
-	public void read(XMLRead reader, Map<String, IResolutionPhase> buffer) throws WorkspaceContentPersistenceException {
-	}
-
-	@Override
-	public int hashCode() {
-		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
-
-		return hcb.toHashCode();
-	}
-
-	@Override
-	public IResolutionPhase clone() {
-		SensitivityAnalysis result = null;
-
-		try {
-			result = (SensitivityAnalysis) super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-
-		return result;
-	}
-
-	@Override
-	public boolean validate() {
-		if (_elementsSet.getAlternatives().isEmpty()) {
-			return false;
-		}
-
-		if (_elementsSet.getCriteria().isEmpty()) {
-			return false;
-		}
-
-		if (_elementsSet.getExperts().isEmpty()) {
-			return false;
-		}
-
+	public void calculateDecisionMatrix() {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		if(aggregationPhase.getAggregatedValuationsAlternativeCriterion() == null) {
-			return false;
+		
+		if(aggregationPhase.getAggregatedValuationsAlternativeCriterion() != null) {
+			_decisionMatrix = aggregationPhase.getAggregatedValuationsAlternativeCriterion();
+		} else {
+			notifyAggregationOperatorNoSelected();
 		}
 		
-		return true;
+		compute();
 	}
-
+	
 	private void normalize(double[] values) {
 
 		double sum = 0;
@@ -258,7 +180,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				values[i] /= sum;
 			}
 		}
-
 	}
 
 	private void computeRanking() {
@@ -300,6 +221,9 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				_alternativesFinalPreferences[alternative] += _decisionMatrix[criterion][alternative] * _w[criterion];
 			}
 		}
+		
+		normalize(_alternativesFinalPreferences);
+		
 		computeRanking();
 	}
 
@@ -437,6 +361,91 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			activate();
 		}
 	}
+	
+	@Override
+	public IResolutionPhase copyStructure() {
+		return new SensitivityAnalysis();
+	}
+
+	@Override
+	public void copyData(IResolutionPhase iResolutionPhase) {
+		SensitivityAnalysis sa = (SensitivityAnalysis) iResolutionPhase;
+
+		clear();
+
+		_absoluteAny = sa.getAbsoluteAny();
+		_absoluteTop = sa.getAbsoluteTop();
+		_alternativesFinalPreferences = sa.getAlternativesFinalPreferences();
+		_decisionMatrix = sa.getDecisionMatrix();
+		_minimumAbsoluteChangeInCriteriaWeights = sa.getMinimumAbsoluteChangeInCriteriaWeights();
+		_minimumPercentChangeInCriteriaWeights = sa.getMinimumPercentChangeInCriteriaWeights();
+		_numberOfAlternatives = sa.getNumAlternatives();
+		_numberOfCriteria = sa.getNumCriteria();
+		_ranking = sa.getRanking();
+		_w = sa.getWeights();
+	}
+
+	@Override
+	public void clear() {
+		_absoluteAny.clear();
+		_absoluteTop.clear();
+		_alternativesFinalPreferences = null;
+		_decisionMatrix = null;
+		_minimumAbsoluteChangeInCriteriaWeights = null;
+		_minimumPercentChangeInCriteriaWeights = null;
+		_numberOfAlternatives = -1;
+		_numberOfCriteria = -1;
+		_ranking = null;
+		_w = null;
+	}
+
+	@Override
+	public void save(XMLWriter writer) throws WorkspaceContentPersistenceException {
+		@SuppressWarnings("unused")
+		XMLStreamWriter streamWriter = writer.getStreamWriter();
+	}
+
+	@Override
+	public void read(XMLRead reader, Map<String, IResolutionPhase> buffer) throws WorkspaceContentPersistenceException {
+	}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+
+		return hcb.toHashCode();
+	}
+
+	@Override
+	public IResolutionPhase clone() {
+		SensitivityAnalysis result = null;
+
+		try {
+			result = (SensitivityAnalysis) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	@Override
+	public boolean validate() {
+		if (_elementsSet.getAlternatives().isEmpty()) {
+			return false;
+		}
+
+		if (_elementsSet.getCriteria().isEmpty()) {
+			return false;
+		}
+
+		if (_elementsSet.getExperts().isEmpty()) {
+			return false;
+		}
+
+		return true;
+	}
+
 
 	@Override
 	public void activate() {
@@ -452,10 +461,13 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			_w[i] = tempW;
 		}
 
-		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		_decisionMatrix = aggregationPhase.getAggregatedValuationsAlternativeCriterion();
-
+		_decisionMatrix = new double[_numberOfCriteria][_numberOfAlternatives];
+		for(int j= 0; j < _numberOfAlternatives; ++j) {
+			for (int i = 0; i < _numberOfCriteria; i++) {
+				_decisionMatrix[i][j] = tempW;
+			}
+		}
+		
 		compute();
 	}
 
@@ -482,6 +494,13 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 		for (ISensitivityAnalysisChangeListener listener : _listeners) {
 			listener.notifySensitivityAnalysisChange();
+		}
+	}
+	
+	public void notifyAggregationOperatorNoSelected() {
+
+		for (ISensitivityAnalysisChangeListener listener : _listeners) {
+			listener.notifyAggregationOperatorNoSelected();
 		}
 	}
 }

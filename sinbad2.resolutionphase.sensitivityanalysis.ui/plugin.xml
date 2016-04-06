@@ -30,6 +30,7 @@
       <view
             category="flintstones.resolutionphase.sensitivityanalysis.views.category"
             class="sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView"
+            icon="icons/decision_matrix_24x24.png"
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking"
             name="Decision matrix"
             restorable="true">
@@ -37,6 +38,7 @@
       <view
             category="flintstones.resolutionphase.sensitivityanalysis.views.category"
             class="sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView"
+            icon="icons/ranking_24x24.png"
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking"
             name="Ranking"
             restorable="true">
@@ -44,8 +46,17 @@
       <view
             category="flintstones.resolutionphase.sensitivityanalysis.views.category"
             class="sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SensitivityAnalysisView"
+            icon="icons/sensitivityanalysis_24x24.png"
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis"
             name="Sensitivity analysis"
+            restorable="true">
+      </view>
+      <view
+            category="flintstones.resolutionphase.sensitivityanalysis.views.category"
+            class="sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.AnalysisView"
+            icon="icons/analysis_24x24.png"
+            id="flintstones.resolutionphase.sensitivityanalysis.ui.views.analysis"
+            name="Analysis"
             restorable="true">
       </view>
    </extension>
@@ -98,7 +109,18 @@
                relationship="right"
                relative="org.eclipse.ui.editorss"
                showTitle="true"
-               standalone="true"
+               standalone="false"
+               visible="true">
+         </view>
+         <view
+               closeable="false"
+               id="flintstones.resolutionphase.sensitivityanalysis.ui.views.analysis"
+               minimized="false"
+               moveable="false"
+               relationship="bottom"
+               relative="flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis"
+               showTitle="true"
+               standalone="false"
                visible="true">
          </view>
       </perspectiveExtension>

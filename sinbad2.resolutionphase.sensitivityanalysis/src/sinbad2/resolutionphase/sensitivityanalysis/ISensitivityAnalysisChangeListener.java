@@ -4,4 +4,5 @@ public interface ISensitivityAnalysisChangeListener {
 	
 	public void notifySensitivityAnalysisChange();
 	
+	public void notifyAggregationOperatorNoSelected();
 }

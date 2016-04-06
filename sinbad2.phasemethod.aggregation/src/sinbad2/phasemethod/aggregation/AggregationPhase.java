@@ -316,6 +316,7 @@ public class AggregationPhase implements IPhaseMethod {
 							criterionValuations.add(null);
 						}
 					}
+
 					if (criterionValuations.size() > 1) {
 						operator = getExpertOperator(expertParent);
 						if (operator instanceof UnweightedAggregationOperator) {
@@ -371,7 +372,6 @@ public class AggregationPhase implements IPhaseMethod {
 					weights = ((Map<ProblemElement, List<Double>>) aux).get(null);
 				} else {
 					weights = null;
-					
 					return null;
 				}
 				return ((WeightedAggregationOperator) operator).aggregate(alternativeValuations, weights);

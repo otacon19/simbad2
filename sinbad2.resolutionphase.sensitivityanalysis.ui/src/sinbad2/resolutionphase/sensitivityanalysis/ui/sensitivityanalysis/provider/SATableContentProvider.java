@@ -1,6 +1,7 @@
 package sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.provider;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 
@@ -20,7 +21,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	private Double[][][] _values;
 
 	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
-	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
+	private final FixedCellRenderer _fixedRendererRed = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
+	private final FixedCellRenderer _fixedRendererGreen = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 
 	public SATableContentProvider(KTable table, String[] alternatives, String[] criteria, Double[][][] values) {
 		super(table);
@@ -32,8 +34,12 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		initialize();
 
 		_fixedRenderer.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
-		_fixedRenderersInTable.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
-		_fixedRenderersInTable.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		_fixedRendererRed.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
+		Color red = new Color(Display.getCurrent(), 255, 137, 137);
+		_fixedRendererRed.setBackground(red);
+		_fixedRendererGreen.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
+		Color green = new Color(Display.getCurrent(), 137, 255, 176);
+		_fixedRendererGreen.setBackground(green);
 	}
 
 	private void computePairs() {
@@ -73,7 +79,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 			} catch(Exception e) {
 				erg = null;
 			}
-
+			
 			return erg;
 		}
 	}
@@ -155,7 +161,12 @@ public class SATableContentProvider extends KTableNoScrollModel {
 			if(doGetContentAt(col, row).equals("N/A")) {
 				return _fixedRenderer;
 			} else {
-				return _fixedRenderersInTable;
+				double value = (Double) doGetContentAt(col, row);
+				if(value > 0) {
+					return _fixedRendererRed;
+				} else {
+					return _fixedRendererGreen;
+				}
 			}
 		}
 	}
@@ -188,5 +199,4 @@ public class SATableContentProvider extends KTableNoScrollModel {
 			return _alternatives[_pairs[row - 1][0]] + "-" + _alternatives[_pairs[row - 1][1]] + "/" + _criteria[col - 1]; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-
 }
