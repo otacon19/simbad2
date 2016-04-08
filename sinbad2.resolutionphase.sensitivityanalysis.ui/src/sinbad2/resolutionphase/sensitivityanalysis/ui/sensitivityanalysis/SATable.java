@@ -14,18 +14,11 @@ import de.kupzog.ktable.KTableCellSelectionListener;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.provider.SATableContentProvider;
 
 public class SATable extends KTable implements ISelectionProvider {
-	
-	private ListenerList listeners = new ListenerList();
+
 	private ISelection _selection = new StructuredSelection(0d);
 	private SATableContentProvider _provider;
-	@SuppressWarnings("unused")
-	private String[] _criteria;
-	@SuppressWarnings("unused")
-	private String[] _alternatives;
-	@SuppressWarnings("unused")
-	private double[] _w;
-	@SuppressWarnings("unused")
-	private double[][] _dm;
+	
+	private static ListenerList listeners = new ListenerList();
 
 	public SATable(Composite parent) {
 		super(parent, SWT.NO_BACKGROUND | SWT.FLAT);
@@ -35,10 +28,6 @@ public class SATable extends KTable implements ISelectionProvider {
 		
 		setNumRowsVisibleInPreferredSize(alternatives.length + 1);
 		setNumColsVisibleInPreferredSize(criteria.length + 1);
-		_alternatives = alternatives;
-		_criteria = criteria;
-		_dm = dm;
-		_w = w;
 		_provider = new SATableContentProvider(this, alternatives, criteria, values);
 		setModel(_provider);
 
@@ -50,9 +39,21 @@ public class SATable extends KTable implements ISelectionProvider {
 			public void fixedCellSelected(int arg0, int arg1, int arg2) {}
 
 			@Override
-			public void cellSelected(int arg0, int arg1, int arg2) {
-				//TODO
-				setSelection(new StructuredSelection(0d));
+			public void cellSelected(int col, int row, int arg2) {
+				if(col == 0) {
+					String pair = (String) _provider.getContentAt(col, row);
+					String a1 = pair.substring(0, pair.indexOf("-"));
+					String a2 = pair.substring(pair.indexOf("-") + 1, pair.length());
+					
+					int numAlternative1 = Integer.parseInt(a1.substring(1, a1.length()));
+					int numAlternative2 = Integer.parseInt(a2.substring(1, a2.length()));
+					
+					Object[] pairAlternatives = new Object[2];
+					pairAlternatives[0] = numAlternative1 - 1;
+					pairAlternatives[1] = numAlternative2 - 1;
+					
+					setSelection(new StructuredSelection(pairAlternatives));
+				}
 			}
 		});
 	}
@@ -70,7 +71,6 @@ public class SATable extends KTable implements ISelectionProvider {
 	@Override
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		listeners.remove(listener);
-
 	}
 
 	@Override

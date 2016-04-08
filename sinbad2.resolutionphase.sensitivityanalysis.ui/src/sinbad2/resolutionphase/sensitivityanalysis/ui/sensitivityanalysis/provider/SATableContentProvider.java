@@ -20,7 +20,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	private String[] _criteria;
 	private Double[][][] _values;
 
-	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
+	private final FixedCellRenderer _fixedRendererHeader = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS | SWT.BOLD);
+	private final FixedCellRenderer _fixedRendererNA = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
 	private final FixedCellRenderer _fixedRendererRed = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	private final FixedCellRenderer _fixedRendererGreen = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 
@@ -33,7 +34,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		computePairs();
 		initialize();
 
-		_fixedRenderer.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
+		_fixedRendererHeader.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
+		_fixedRendererNA.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		_fixedRendererRed.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		Color red = new Color(Display.getCurrent(), 255, 137, 137);
 		_fixedRendererRed.setBackground(red);
@@ -104,12 +106,12 @@ public class SATableContentProvider extends KTableNoScrollModel {
 
 	@Override
 	public int doGetColumnCount() {
-		return _criteria.length + getFixedColumnCount();
+		return _criteria.length + getFixedColumnCount() + 1;
 	}
 
 	@Override
 	public int getFixedHeaderColumnCount() {
-		return 1;
+		return 0;
 	}
 
 	@Override
@@ -149,17 +151,19 @@ public class SATableContentProvider extends KTableNoScrollModel {
 
 	@Override
 	public boolean isHeaderCell(int col, int row) {
-		return isFixedCell(col, row);
+		return true;
 	}
 
 	@Override
 	public KTableCellRenderer doGetCellRenderer(int col, int row) {
 		
 		if((col < getFixedColumnCount()) || (row < getFixedRowCount())) {
-			return _fixedRenderer;
+			return _fixedRendererHeader;
 		} else {
 			if(doGetContentAt(col, row).equals("N/A")) {
-				return _fixedRenderer;
+				return _fixedRendererNA;
+			} else if((doGetContentAt(col, row) instanceof String)) {
+				return _fixedRendererHeader;
 			} else {
 				double value = (Double) doGetContentAt(col, row);
 				if(value > 0) {
@@ -191,8 +195,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		
 		if((col == 0) && (row == 0)) {
 			return ""; //$NON-NLS-1$
-		} else if(col < getFixedColumnCount()) {
-			return _alternatives[_pairs[row - 1][0]] + "-" + _alternatives[_pairs[row - 1][0]]; //$NON-NLS-1$
+		} else if(col == 0) {
+			return _alternatives[_pairs[row - 1][0]] + "-" + _alternatives[_pairs[row - 1][1]]; //$NON-NLS-1$
 		} else if(row < getFixedRowCount()) {
 			return _criteria[col - 1];
 		} else {

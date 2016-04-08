@@ -148,15 +148,20 @@ public class UnificationPhase implements IPhaseMethod {
 				valuation = valuations.get(vk);
 				
 				if(valuation instanceof HesitantValuation) {
-					unifiedToTwoTupleHesitant(vk, (HesitantValuation) valuation, unifiedDomain);
+					calculateFuzzyEnvelope(vk, (HesitantValuation) valuation, unifiedDomain);
 				}
 			}
 		}
 		
 		return _unifiedValuationsResult;
 	}
-	
-	private void unifiedToTwoTupleHesitant(ValuationKey vk, HesitantValuation valuation, FuzzySet domain) {	
+	/**
+	 * 
+	 * @param vk: Clave de valoración. La valoración de un experto para un criterion y alternativa determinadas
+	 * @param valuation: Valoración hesitant a tratar
+	 * @param domain: dominio hesitant
+	 */
+	private void calculateFuzzyEnvelope(ValuationKey vk, HesitantValuation valuation, FuzzySet domain) {	
 		double a, b, c, d;
 		int g = domain.getLabelSet().getCardinality();
 		Boolean lower = null;
@@ -241,8 +246,6 @@ public class UnificationPhase implements IPhaseMethod {
             }
         }
         
-        System.out.println(valuation.changeFormatValuationToString());
-        
         TrapezoidalFunction tmf = new TrapezoidalFunction(new double[] {a, b, c, d});
         _envelopeValuations.put(vk, tmf);
         
@@ -257,7 +260,6 @@ public class UnificationPhase implements IPhaseMethod {
 		int g = result.getLabelSet().getCardinality();
 
 		for(int i = 0; i < g; i++) {
-			System.out.println(result.getLabelSet().getLabel(i).getName());
 			function = result.getLabelSet().getLabel(i).getSemantic();
 			result.setValue(i, function.maxMin(tmf));
 		}

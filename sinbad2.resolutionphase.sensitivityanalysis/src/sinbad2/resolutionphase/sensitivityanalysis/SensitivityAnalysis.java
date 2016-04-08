@@ -245,8 +245,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 					if (_decisionMatrix[k][j] - _decisionMatrix[k][i] == 0) {
 						_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;
 					} else {
-						_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = (_alternativesFinalPreferences[j]
-								- _alternativesFinalPreferences[i]) / (_decisionMatrix[k][j] - _decisionMatrix[k][i]);
+						_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = (_alternativesFinalPreferences[j] - _alternativesFinalPreferences[i]) / (_decisionMatrix[k][j] - _decisionMatrix[k][i]);
 
 						if (_minimumAbsoluteChangeInCriteriaWeights[i][j][k] > _w[k]) {
 							_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;
@@ -264,14 +263,24 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			for (int j = 0; j < _numberOfAlternatives; j++) {
 				for (int k = 0; k < _numberOfCriteria; k++) {
 					if (_minimumAbsoluteChangeInCriteriaWeights[i][j][k] != null) {
-						_minimumPercentChangeInCriteriaWeights[i][j][k] = _minimumAbsoluteChangeInCriteriaWeights[i][j][k]
-								* 100d / _w[k];
+						_minimumPercentChangeInCriteriaWeights[i][j][k] = _minimumAbsoluteChangeInCriteriaWeights[i][j][k] * 100d / _w[k];
 					} else {
 						_minimumPercentChangeInCriteriaWeights[i][j][k] = null;
 					}
 				}
 			}
 		}
+	}
+	
+	public double[] getMinimumPercentPairAlternatives(int a1, int a2) {
+		double[] percents = new double[_numberOfCriteria];
+		for(int k = 0; k < _numberOfCriteria; k++) {
+			if(_minimumPercentChangeInCriteriaWeights[a1][a2][k] != null) {
+				percents[k] = _minimumPercentChangeInCriteriaWeights[a1][a2][k];
+			}
+		}
+		
+		return percents;
 	}
 
 	private void computeAbsoluteTop() {

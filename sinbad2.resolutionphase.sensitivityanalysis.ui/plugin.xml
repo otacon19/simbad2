@@ -117,6 +117,7 @@
                id="flintstones.resolutionphase.sensitivityanalysis.ui.views.analysis"
                minimized="false"
                moveable="false"
+               ratio="0.35"
                relationship="bottom"
                relative="flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis"
                showTitle="true"

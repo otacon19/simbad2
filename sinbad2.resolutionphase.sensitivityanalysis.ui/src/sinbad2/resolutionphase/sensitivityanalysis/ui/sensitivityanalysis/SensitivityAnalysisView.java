@@ -34,6 +34,10 @@ public class SensitivityAnalysisView extends ViewPart implements ISensitivityAna
 		getSite().setSelectionProvider(_saTable);
 	}
 	
+	public SATable getSATable() {
+		return _saTable;
+	}
+	
 	private void initSATable() {
 		disposeSATable();
 		_saTable = new SATable(_container);
