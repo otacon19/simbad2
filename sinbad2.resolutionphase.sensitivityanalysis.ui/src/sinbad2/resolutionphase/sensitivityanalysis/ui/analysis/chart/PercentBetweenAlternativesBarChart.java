@@ -1,15 +1,30 @@
 package sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GradientPaint;
+import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.AxisLocation;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.labels.ItemLabelAnchor;
+import org.jfree.chart.labels.ItemLabelPosition;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
+import org.jfree.ui.TextAnchor;
+
+import sinbad2.element.ProblemElementsManager;
+import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.criterion.Criterion;
 
 public class PercentBetweenAlternativesBarChart {
 	
@@ -19,7 +34,12 @@ public class PercentBetweenAlternativesBarChart {
 	private int[] _currentAlternativesPair;
 	private double[] _percents;
 	
+	private ProblemElementsSet _elementsSet;
+	
 	public PercentBetweenAlternativesBarChart() {
+		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+		_elementsSet = elementsManager.getActiveElementSet();
+		
 		_chart = null;
 		_chartComposite = null;
 		
@@ -65,27 +85,54 @@ public class PercentBetweenAlternativesBarChart {
 		}
 	}
 
+	@SuppressWarnings("serial")
 	private JFreeChart createChart(DefaultCategoryDataset dataset) {
-		JFreeChart result = ChartFactory.createBarChart3D("", "", "Percent", dataset, PlotOrientation.HORIZONTAL, false, true, false);
+		JFreeChart result = ChartFactory.createBarChart(null, null, "Percent", dataset, PlotOrientation.HORIZONTAL, false, true, false);
 		
 		result.setBackgroundPaint(new GradientPaint(0, 0, Color.white, 1000, 0, Color.blue));
 	    CategoryPlot plot = result.getCategoryPlot();
 	    plot.getRangeAxis().setRange(0d, 100d);
 	    plot.getRangeAxis().setUpperBound(100);
 	    plot.getRangeAxis().setLowerBound(-100);
-	    
+	    plot.setRangeCrosshairVisible(true);
+	    plot.getDomainAxis().setVisible(false);
+	    plot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_RIGHT);
+
+		NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+		rangeAxis.setUpperMargin(0.15);
+		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+		CategoryAxis domainAxis = plot.getDomainAxis();
+        domainAxis.setVisible(false);
+             
+        BarRenderer br = (BarRenderer) plot.getRenderer();
+	    br.setMaximumBarWidth(.35);
+        br.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator() {
+        	@Override
+        	public String generateLabel(CategoryDataset dataset, int row, int column) {
+        		return dataset.getRowKey(row).toString();
+        	}
+        });
+        
+        br.setBaseItemLabelsVisible(true);
+        br.setSeriesItemLabelFont(0, new java.awt.Font("SansSerif", Font.PLAIN, 12));
+        br.setSeriesPositiveItemLabelPosition(0, new ItemLabelPosition(ItemLabelAnchor.OUTSIDE3, TextAnchor.BOTTOM_LEFT, TextAnchor.BOTTOM_LEFT, 0));
+	  
 		return result;
 	}
 
 	private DefaultCategoryDataset createDataset() {
+		String a1 = "", a2 = "";
 		if(_currentAlternativesPair != null) {
-			_chart.setTitle("A" + Integer.toString(_currentAlternativesPair[0] + 1).toUpperCase() + " - " + "A" + Integer.toString(_currentAlternativesPair[1] + 1).toUpperCase());
+			a1 = _elementsSet.getAlternatives().get(_currentAlternativesPair[0]).getId();
+			a2 = _elementsSet.getAlternatives().get(_currentAlternativesPair[1]).getId();
+			_chart.setTitle("Minimun percent " + a1 + " - " + a2);
 		}
 		
 		_dataset = new DefaultCategoryDataset();
 		
+		List<Criterion> criteria = _elementsSet.getAllCriteria();
 		for(int i = 0; i < _percents.length; ++i) {
-			_dataset.setValue(_percents[i], "criterion", "c" + i);
+			_dataset.setValue(_percents[i], criteria.get(i), a1 + " - " + a2);
 		}
 		
 		return _dataset;

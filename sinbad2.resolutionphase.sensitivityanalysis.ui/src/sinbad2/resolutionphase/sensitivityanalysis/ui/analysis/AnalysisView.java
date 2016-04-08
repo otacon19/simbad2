@@ -84,6 +84,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener 
 				@Override
 				public void controlResized(ControlEvent e) {
 					initializeChart();
+					refreshChart();
 				}
 			};
 			_chartComposite.addControlListener(_controlListener);
@@ -97,16 +98,19 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener 
 	}
 	
 	private void refreshChart() {
-		int a1Index = Integer.parseInt((String) _pairAlternatives[0]);
-		int a2Index = Integer.parseInt((String) _pairAlternatives[1]);
-		double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
-		_chart.setPercents(percents);
-		int[] indexes = new int[2];
-		indexes[0] = a1Index;
-		indexes[1] = a2Index;
-		_chart.setCurrentAlternativesPair(indexes);
-		
-		_chart.refreshChart();
+		if(_pairAlternatives != null) {
+			int a1Index = Integer.parseInt((String) _pairAlternatives[0]);
+			int a2Index = Integer.parseInt((String) _pairAlternatives[1]);
+			int[] indexes = new int[2];
+			indexes[0] = a1Index;
+			indexes[1] = a2Index;
+			_chart.setCurrentAlternativesPair(indexes);
+			
+			double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
+			_chart.setPercents(percents);
+			
+			_chart.refreshChart();
+		}
 	}
 	
 	@Override
