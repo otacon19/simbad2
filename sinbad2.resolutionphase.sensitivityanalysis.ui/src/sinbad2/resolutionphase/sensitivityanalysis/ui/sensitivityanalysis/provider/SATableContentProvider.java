@@ -1,6 +1,7 @@
 package sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.provider;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
@@ -10,23 +11,48 @@ import de.kupzog.ktable.KTableCellEditor;
 import de.kupzog.ktable.KTableCellRenderer;
 import de.kupzog.ktable.KTableNoScrollModel;
 import de.kupzog.ktable.SWTX;
+import de.kupzog.ktable.editors.KTableCellEditorCombo;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
+import sinbad2.core.workspace.Workspace;
+import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 
 public class SATableContentProvider extends KTableNoScrollModel {
+	
+	private static final String PERCENTS = "PERCENTS";
+	private static final String ABSOLUTE = "ABSOLUTE";
+	
+	private String _typeDataSelected;
 	
 	private int[][] _pairs;
 	private String[] _alternatives;
 	private String[] _criteria;
 	private Double[][][] _values;
+	
+	private KTable _table;
 
 	private final FixedCellRenderer _fixedRendererHeader = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS | SWT.BOLD);
 	private final FixedCellRenderer _fixedRendererNA = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
 	private final FixedCellRenderer _fixedRendererRed = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	private final FixedCellRenderer _fixedRendererGreen = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
+	
+	private SensitivityAnalysis _sensitivityAnalysis;
+	
+	class MyOwnKTableCellEditorCombo extends KTableCellEditorCombo {
+		@Override
+		public int getActivationSignals() {
+			return SINGLECLICK;
+		}
+	}
 
+	private MyOwnKTableCellEditorCombo _kTableCombo = new MyOwnKTableCellEditorCombo();
+	
 	public SATableContentProvider(KTable table, String[] alternatives, String[] criteria, Double[][][] values) {
 		super(table);
+		
+		_table = table;
+		
+		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 
 		_alternatives = alternatives;
 		_criteria = criteria;
@@ -42,6 +68,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		_fixedRendererGreen.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		Color green = new Color(Display.getCurrent(), 137, 255, 176);
 		_fixedRendererGreen.setBackground(green);
+		
+		_typeDataSelected = ABSOLUTE;
 	}
 
 	private void computePairs() {
@@ -61,7 +89,27 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	public Object doGetContentAt(int col, int row) {
 		
 		if((col == 0) && (row == 0)) {
-			return ""; //$NON-NLS-1$
+			String type = "";
+			if(_kTableCombo.getControl() != null) {
+				CCombo combo = (CCombo) _kTableCombo.getControl();
+				type = combo.getText();
+			}
+			if(!type.isEmpty()) {
+				_typeDataSelected = type;
+				
+				if(_typeDataSelected.equals(ABSOLUTE)) {
+					if(_values != _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights()) {
+						_values = _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights();
+						refreshTable();
+					}
+				} else {
+					if(_values != _sensitivityAnalysis.getMinimumPercentChangeInCriteriaWeights()) {
+						_values = _sensitivityAnalysis.getMinimumPercentChangeInCriteriaWeights();
+						refreshTable();
+					}
+				}
+			}
+			return _typeDataSelected;
 		} else {
 			Object erg;
 
@@ -75,7 +123,12 @@ public class SATableContentProvider extends KTableNoScrollModel {
 					if(erg == null) {
 						erg = "N/A"; //$NON-NLS-1$
 					} else {
-						erg = ((int) (((Double) erg) * 10000d)) / 10000d;
+						if(_typeDataSelected.equals(ABSOLUTE)) {
+							erg = ((int) (((Double) erg) * 10000d)) / 10000d; 
+						} else {
+							double percent = ((int) (((Double) erg) * 10000d)) / 10000d; 
+							erg = Double.toString((Double) percent) + "%";
+						}
 					}
 				}
 			} catch(Exception e) {
@@ -86,13 +139,32 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		}
 	}
 
+	private void refreshTable() {
+		for(int col = 1; col < getColumnCount(); ++col) {
+			for(int row = 1; row < getRowCount(); ++row) {
+				doGetContentAt(col, row);
+			}
+		}
+		
+		_table.redraw();
+	}
+
 	public KTableCellEditor doGetCellEditor(int col, int row) {
+		if(col == 0 && row == 0) {
+			_kTableCombo = new  MyOwnKTableCellEditorCombo();
+			String[] valuesString = new String[2];
+			valuesString[0] = PERCENTS;
+			valuesString[1] = ABSOLUTE;
+			_kTableCombo.setItems(valuesString);
+			
+			return _kTableCombo;
+		}
+		
 		return null;
 	}
 
 	@Override
-	public void doSetContentAt(int col, int row, Object value) {
-	}
+	public void doSetContentAt(int col, int row, Object value) {}
 
 	@Override
 	public int doGetRowCount() {
@@ -101,7 +173,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 
 	@Override
 	public int getFixedHeaderRowCount() {
-		return 1;
+		return 0;
 	}
 
 	@Override
@@ -160,10 +232,21 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		if((col < getFixedColumnCount()) || (row < getFixedRowCount())) {
 			return _fixedRendererHeader;
 		} else {
-			if(doGetContentAt(col, row).equals("N/A")) {
-				return _fixedRendererNA;
-			} else if((doGetContentAt(col, row) instanceof String)) {
-				return _fixedRendererHeader;
+			if((doGetContentAt(col, row) instanceof String)) {
+				String content = (String) doGetContentAt(col, row);
+				if(content.equals("N/A")) {
+					return _fixedRendererNA;
+				}else if(!content.contains("%")) {
+					return _fixedRendererHeader;
+				} else {
+					String stringWithoutPercent = content.replace("%", "");
+					double value = Double.parseDouble(stringWithoutPercent);
+					if(value > 0) {
+						return _fixedRendererRed;
+					} else {
+						return _fixedRendererGreen;
+					}
+				}
 			} else {
 				double value = (Double) doGetContentAt(col, row);
 				if(value > 0) {

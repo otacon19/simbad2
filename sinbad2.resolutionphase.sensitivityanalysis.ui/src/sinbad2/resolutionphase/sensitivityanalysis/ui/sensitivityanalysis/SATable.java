@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import de.kupzog.ktable.KTable;
 import de.kupzog.ktable.KTableCellSelectionListener;
+import de.kupzog.ktable.SWTX;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.provider.SATableContentProvider;
 
 public class SATable extends KTable implements ISelectionProvider {
@@ -21,7 +22,7 @@ public class SATable extends KTable implements ISelectionProvider {
 	private static ListenerList listeners = new ListenerList();
 
 	public SATable(Composite parent) {
-		super(parent, SWT.NO_BACKGROUND | SWT.FLAT);
+		super(parent, SWT.NO_BACKGROUND | SWT.FLAT | SWTX.AUTO_SCROLL);
 	}
 
 	public void setModel(String[] alternatives, String[] criteria, Double[][][] values, double[][] dm, double[] w) {
@@ -40,7 +41,7 @@ public class SATable extends KTable implements ISelectionProvider {
 
 			@Override
 			public void cellSelected(int col, int row, int arg2) {
-				if(col == 0) {
+				if(col == 0 && row != 0) {
 					String pair = (String) _provider.getContentAt(col, row);
 					String a1 = pair.substring(0, pair.indexOf("-"));
 					String a2 = pair.substring(pair.indexOf("-") + 1, pair.length());

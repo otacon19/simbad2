@@ -46,7 +46,7 @@
       <view
             category="flintstones.resolutionphase.sensitivityanalysis.views.category"
             class="sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SensitivityAnalysisView"
-            icon="icons/sensitivityanalysis_24x24.png"
+            icon="icons/sensitivity_analysis_24x24.png"
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis"
             name="Sensitivity analysis"
             restorable="true">

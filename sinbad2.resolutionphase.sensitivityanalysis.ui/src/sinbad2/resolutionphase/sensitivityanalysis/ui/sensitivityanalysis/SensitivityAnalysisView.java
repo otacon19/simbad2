@@ -1,7 +1,10 @@
 package sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
@@ -13,12 +16,15 @@ import sinbad2.resolutionphase.sensitivityanalysis.ISensitivityAnalysisChangeLis
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 
 public class SensitivityAnalysisView extends ViewPart implements ISensitivityAnalysisChangeListener {
+	public SensitivityAnalysisView() {
+	}
 	
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis"; //$NON-NLS-1$
 	public static final String CONTEXT_ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis.sensitivityanalysis_view"; //$NON-NLS-1$
 
 	private SATable _saTable = null;
 	private Composite _container;
+	
 	private SensitivityAnalysis _sensitivityAnalysis = null;
 
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
@@ -26,8 +32,15 @@ public class SensitivityAnalysisView extends ViewPart implements ISensitivityAna
 	@Override
 	public void createPartControl(Composite parent) {
 		_container = parent;
+		
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		_container.setLayoutData(gridData);
+		GridLayout layout = new GridLayout(1, true);
+		_container.setLayout(layout);
+		
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 		_sensitivityAnalysis.registerSensitivityAnalysisChangeListener(this);
+		
 		initSATable();
 		hookFocusListener();
 
@@ -40,7 +53,9 @@ public class SensitivityAnalysisView extends ViewPart implements ISensitivityAna
 	
 	private void initSATable() {
 		disposeSATable();
+		
 		_saTable = new SATable(_container);
+		_saTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_saTable.setModel(_sensitivityAnalysis.getAlternativesIds(), _sensitivityAnalysis.getCriteriaIds(), _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights(), _sensitivityAnalysis.getDecisionMatrix(), _sensitivityAnalysis.getWeights());
 	}
 	

@@ -16,7 +16,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.PercentBetweenAlternativesBarChart;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.MinimunValueBetweenAlternativesBarChart;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SATable;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SensitivityAnalysisView;
 
@@ -28,7 +28,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener 
 	private SATable _saTable;
 	private Object[] _pairAlternatives;
 	
-	private PercentBetweenAlternativesBarChart _chart;
+	private MinimunValueBetweenAlternativesBarChart _chart;
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
 	private SensitivityAnalysisView _sensitivityAnalysisView;
@@ -76,7 +76,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener 
 		
 		double[] percents = new double[0];
 		
-		_chart = new PercentBetweenAlternativesBarChart();
+		_chart = new MinimunValueBetweenAlternativesBarChart();
 		_chart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.BORDER, percents);
 		
 		if (_controlListener == null) {
@@ -107,7 +107,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener 
 			_chart.setCurrentAlternativesPair(indexes);
 			
 			double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
-			_chart.setPercents(percents);
+			_chart.setValues(percents);
 			
 			_chart.refreshChart();
 		}

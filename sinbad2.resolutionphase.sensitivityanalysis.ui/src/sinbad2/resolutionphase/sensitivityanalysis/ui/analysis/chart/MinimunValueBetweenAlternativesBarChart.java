@@ -26,17 +26,17 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
 
-public class PercentBetweenAlternativesBarChart {
+public class MinimunValueBetweenAlternativesBarChart {
 	
 	private JFreeChart _chart;
 	private ChartComposite _chartComposite;
 	private DefaultCategoryDataset _dataset;
 	private int[] _currentAlternativesPair;
-	private double[] _percents;
+	private double[] _values;
 	
 	private ProblemElementsSet _elementsSet;
 	
-	public PercentBetweenAlternativesBarChart() {
+	public MinimunValueBetweenAlternativesBarChart() {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
 		
@@ -44,15 +44,15 @@ public class PercentBetweenAlternativesBarChart {
 		_chartComposite = null;
 		
 		_currentAlternativesPair = null;
-		_percents = new double[0];
+		_values = new double[0];
 	}
 	
-	public double[] getPercents() {
-		return _percents;
+	public double[] getValues() {
+		return _values;
 	}
 
-	public void setPercents(double[] percents) {
-		_percents = percents;
+	public void setValues(double[] values) {
+		_values = values;
 	}
 	
 	public int[] getCurrentAlternativesPair() {
@@ -74,7 +74,7 @@ public class PercentBetweenAlternativesBarChart {
 		_chartComposite = new ChartComposite(container, style, _chart, true);
 		_chartComposite.setSize(width, height);
 
-		_percents = percents;
+		_values = percents;
 	}
 
 	public void refreshChart() {
@@ -131,8 +131,10 @@ public class PercentBetweenAlternativesBarChart {
 		_dataset = new DefaultCategoryDataset();
 		
 		List<Criterion> criteria = _elementsSet.getAllCriteria();
-		for(int i = 0; i < _percents.length; ++i) {
-			_dataset.setValue(_percents[i], criteria.get(i), a1 + " - " + a2);
+		for(int i = 0; i < _values.length; ++i) {
+			if(_values[i] != 0) {
+				_dataset.setValue(_values[i], criteria.get(i), a1 + " - " + a2);
+			}
 		}
 		
 		return _dataset;
