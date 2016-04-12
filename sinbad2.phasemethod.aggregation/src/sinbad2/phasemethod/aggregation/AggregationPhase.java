@@ -76,7 +76,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_criteriaOperatorsWeights = new HashMap<ProblemElement, Object>();
 
 		_unificationValues = new HashMap<ValuationKey, Valuation>();
-		
+				
 		_numCriterion = 0;
 		_numAlternative = 0;
 		

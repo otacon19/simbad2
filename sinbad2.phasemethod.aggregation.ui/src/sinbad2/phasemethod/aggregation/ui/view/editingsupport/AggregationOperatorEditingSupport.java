@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 import sinbad2.aggregationoperator.AggregationOperator;
@@ -129,7 +130,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			}
 		}
 		
-		_cellEditor = new ComboBoxCellEditor(_viewer.getTree(), _aggregationOperatorsNames.toArray(new String[0]));
+		_cellEditor = new ComboBoxCellEditor(_viewer.getTree(), _aggregationOperatorsNames.toArray(new String[0]), SWT.READ_ONLY);
 		
 		return _cellEditor;
 	}

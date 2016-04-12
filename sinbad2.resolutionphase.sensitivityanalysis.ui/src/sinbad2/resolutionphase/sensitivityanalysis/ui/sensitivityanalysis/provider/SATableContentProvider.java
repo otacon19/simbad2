@@ -1,5 +1,8 @@
 package sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.provider;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.graphics.Color;
@@ -16,6 +19,7 @@ import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
 
 public class SATableContentProvider extends KTableNoScrollModel {
 	
@@ -38,6 +42,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
 	
+	private static List<IChangeSATableValues> _listeners = new LinkedList<IChangeSATableValues>();
+	
 	class MyOwnKTableCellEditorCombo extends KTableCellEditorCombo {
 		@Override
 		public int getActivationSignals() {
@@ -57,6 +63,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		_alternatives = alternatives;
 		_criteria = criteria;
 		_values = values;
+		
 		computePairs();
 		initialize();
 
@@ -109,6 +116,9 @@ public class SATableContentProvider extends KTableNoScrollModel {
 					}
 				}
 			}
+			
+			notifyChangeSATableListener(_typeDataSelected);
+			
 			return _typeDataSelected;
 		} else {
 			Object erg;
@@ -280,10 +290,24 @@ public class SATableContentProvider extends KTableNoScrollModel {
 			return ""; //$NON-NLS-1$
 		} else if(col == 0) {
 			return _alternatives[_pairs[row - 1][0]] + "-" + _alternatives[_pairs[row - 1][1]]; //$NON-NLS-1$
-		} else if(row < getFixedRowCount()) {
+		} else if(row == 0) {
 			return _criteria[col - 1];
 		} else {
 			return _alternatives[_pairs[row - 1][0]] + "-" + _alternatives[_pairs[row - 1][1]] + "/" + _criteria[col - 1]; //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+	
+	public void registerNotifyChangeSATableListener(IChangeSATableValues listener) {
+		_listeners.add(listener);
+	}
+
+	public void unregisterNotifyChangeSATableListener(IChangeSATableValues listener) {
+		_listeners.remove(listener);
+	}
+
+	public void notifyChangeSATableListener(String type) {
+		for (IChangeSATableValues listener : _listeners) {
+			listener.notifyChangeSATableValues(type);
 		}
 	}
 }

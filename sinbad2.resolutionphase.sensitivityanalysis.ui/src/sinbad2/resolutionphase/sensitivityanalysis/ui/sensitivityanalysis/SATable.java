@@ -83,5 +83,9 @@ public class SATable extends KTable implements ISelectionProvider {
 		}
 
 	}
+	
+	public SATableContentProvider getProvider() {
+		return _provider;
+	}
 
 }

@@ -17,10 +17,11 @@ import org.eclipse.ui.part.ViewPart;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.MinimunValueBetweenAlternativesBarChart;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SATable;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SensitivityAnalysisView;
 
-public class AnalysisView extends ViewPart implements ISelectionChangedListener {
+public class AnalysisView extends ViewPart implements ISelectionChangedListener, IChangeSATableValues {
 	
 	private Composite _parent;
 	private Composite _chartComposite;
@@ -34,6 +35,8 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener 
 	private SensitivityAnalysisView _sensitivityAnalysisView;
 	
 	private ControlAdapter _controlListener;
+	
+	private String _typeData = "ABSOLUTE";
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -59,6 +62,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener 
 
 		_saTable = _sensitivityAnalysisView.getSATable();
 		_saTable.addSelectionChangedListener(this);
+		_saTable.getProvider().registerNotifyChangeSATableListener(this);
 		
 		createChartComposite();
 	}
@@ -106,8 +110,15 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener 
 			indexes[1] = a2Index;
 			_chart.setCurrentAlternativesPair(indexes);
 			
-			double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
-			_chart.setValues(percents);
+			if(_typeData.equals("PERCENTS")) {
+				double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
+				_chart.setValues(percents);
+				_chart.setTypeData(_typeData);
+			} else {
+				double[] absolute = _sensitivityAnalysis.getMinimumAbsolutePairAlternatives(a1Index, a2Index);
+				_chart.setValues(absolute);
+				_chart.setTypeData(_typeData);
+			}
 			
 			_chart.refreshChart();
 		}
@@ -126,6 +137,12 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener 
 		_pairAlternatives[0] = alternative1;
 		_pairAlternatives[1] = alternative2;
 		
+		refreshChart();
+	}
+
+	@Override
+	public void notifyChangeSATableValues(String type) {
+		_typeData = type;
 		refreshChart();
 	}
 }
