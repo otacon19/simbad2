@@ -16,8 +16,6 @@ import sinbad2.resolutionphase.sensitivityanalysis.ISensitivityAnalysisChangeLis
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 
 public class SensitivityAnalysisView extends ViewPart implements ISensitivityAnalysisChangeListener {
-	public SensitivityAnalysisView() {
-	}
 	
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis"; //$NON-NLS-1$
 	public static final String CONTEXT_ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis.sensitivityanalysis_view"; //$NON-NLS-1$

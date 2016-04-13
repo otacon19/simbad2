@@ -136,8 +136,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 						if(_typeDataSelected.equals(ABSOLUTE)) {
 							erg = ((int) (((Double) erg) * 10000d)) / 10000d; 
 						} else {
-							double percent = ((int) (((Double) erg) * 10000d)) / 10000d; 
-							erg = Double.toString((Double) percent) + "%";
+							int percent = (int) (Math.round(((Double) erg) * 10000)) / 10000; 
+							erg = Integer.toString((Integer) percent) + "%";
 						}
 					}
 				}

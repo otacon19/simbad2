@@ -54,6 +54,9 @@ public class SATable extends KTable implements ISelectionProvider {
 					pairAlternatives[1] = numAlternative2 - 1;
 					
 					setSelection(new StructuredSelection(pairAlternatives));
+				} else if(col != 0 && row == 0) {
+					String criterion = (String) _provider.getContentAt(col, row);
+					setSelection(new StructuredSelection(criterion));
 				}
 			}
 		});

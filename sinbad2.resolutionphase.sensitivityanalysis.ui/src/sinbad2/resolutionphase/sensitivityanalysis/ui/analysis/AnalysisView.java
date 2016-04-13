@@ -15,7 +15,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.core.workspace.Workspace;
+import sinbad2.element.ProblemElementsManager;
+import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.criterion.Criterion;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.AlternativesEvolutionWeigthsLineChart;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.MinimunValueBetweenAlternativesBarChart;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SATable;
@@ -27,16 +31,22 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	private Composite _chartComposite;
 	
 	private SATable _saTable;
-	private Object[] _pairAlternatives;
 	
-	private MinimunValueBetweenAlternativesBarChart _chart;
+	private Object[] _pairAlternatives;
+	private Criterion _criterionSelected;
+	
+	private MinimunValueBetweenAlternativesBarChart _barChart;
+	private AlternativesEvolutionWeigthsLineChart _lineChart;
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
 	private SensitivityAnalysisView _sensitivityAnalysisView;
 	
 	private ControlAdapter _controlListener;
 	
-	private String _typeData = "ABSOLUTE";
+	private String _typeBarChart = "ABSOLUTE";
+	private int _typeChart = 0;
+	
+	private ProblemElementsSet _elementsSet;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -46,9 +56,13 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_parent.setLayoutData(gridData);
 		GridLayout layout = new GridLayout(1, true);
 		_parent.setLayout(layout);
+		_parent.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		
 		_controlListener = null;
 		_pairAlternatives = null;
+		
+		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+		_elementsSet = elementsManager.getActiveElementSet();
 		
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 		
@@ -66,7 +80,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		
 		createChartComposite();
 	}
-	
+
 	private void createChartComposite() {
 		_chartComposite = new Composite(_parent, SWT.NONE);
 		_chartComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -80,9 +94,17 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		
 		double[] percents = new double[0];
 		
-		_chart = new MinimunValueBetweenAlternativesBarChart();
-		_chart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.BORDER, percents);
-		
+		if(_typeChart == 0) {
+			_barChart = new MinimunValueBetweenAlternativesBarChart();
+			_barChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, percents);
+		} else {
+			_lineChart = new AlternativesEvolutionWeigthsLineChart();
+			_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE);
+			_lineChart.setDecisionMatrix(_sensitivityAnalysis.getDecisionMatrix());
+			_lineChart.setCriterionSelected(_criterionSelected);
+			_lineChart.setValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllCriteria().indexOf(_criterionSelected)]);
+		}
+			
 		if (_controlListener == null) {
 			_controlListener = new ControlAdapter() {
 				@Override
@@ -96,31 +118,39 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	}
 
 	private void removeChart() {
-		if (_chart != null) {
-			_chart.getChartComposite().dispose();
+		if (_barChart != null) {
+			_barChart.getChartComposite().dispose();
+		}
+		
+		if(_lineChart != null) {
+			_lineChart.getChartComposite().dispose();
 		}
 	}
 	
 	private void refreshChart() {
-		if(_pairAlternatives != null) {
-			int a1Index = Integer.parseInt((String) _pairAlternatives[0]);
-			int a2Index = Integer.parseInt((String) _pairAlternatives[1]);
-			int[] indexes = new int[2];
-			indexes[0] = a1Index;
-			indexes[1] = a2Index;
-			_chart.setCurrentAlternativesPair(indexes);
-			
-			if(_typeData.equals("PERCENTS")) {
-				double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
-				_chart.setValues(percents);
-				_chart.setTypeData(_typeData);
-			} else {
-				double[] absolute = _sensitivityAnalysis.getMinimumAbsolutePairAlternatives(a1Index, a2Index);
-				_chart.setValues(absolute);
-				_chart.setTypeData(_typeData);
+		if(_typeChart == 0) {
+			if(_pairAlternatives != null) {
+				int a1Index = Integer.parseInt((String) _pairAlternatives[0]);
+				int a2Index = Integer.parseInt((String) _pairAlternatives[1]);
+				int[] indexes = new int[2];
+				indexes[0] = a1Index;
+				indexes[1] = a2Index;
+				_barChart.setCurrentAlternativesPair(indexes);
+				
+				if(_typeBarChart.equals("PERCENTS")) {
+					double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
+					_barChart.setValues(percents);
+					_barChart.setTypeData(_typeBarChart);
+				} else {
+					double[] absolute = _sensitivityAnalysis.getMinimumAbsolutePairAlternatives(a1Index, a2Index);
+					_barChart.setValues(absolute);
+					_barChart.setTypeData(_typeBarChart);
+				}
+				
+				_barChart.refreshChart();
 			}
-			
-			_chart.refreshChart();
+		} else {
+			_lineChart.refreshChart();
 		}
 	}
 	
@@ -129,20 +159,32 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
-		_pairAlternatives = new Object[2];
+		if(event.getSelection().toString().length() > 4 ) {
+			_typeChart = 0;
+			
+			_pairAlternatives = new Object[2];
+			
+			ISelection pairAlternatives = event.getSelection();
+			String alternative1 = pairAlternatives.toString().substring(1, 2);
+			String alternative2 = pairAlternatives.toString().substring(4, pairAlternatives.toString().length() - 1);
+			_pairAlternatives[0] = alternative1;
+			_pairAlternatives[1] = alternative2;
+		} else {
+			_typeChart = 1;
 		
-		ISelection pairAlternatives = event.getSelection();
-		String alternative1 = pairAlternatives.toString().substring(1, 2);
-		String alternative2 = pairAlternatives.toString().substring(4, pairAlternatives.toString().length() - 1);
-		_pairAlternatives[0] = alternative1;
-		_pairAlternatives[1] = alternative2;
+			ISelection criterion = event.getSelection();
+			String criterionNumber = criterion.toString().substring(2, 3);
+			int indexCriterion = Integer.parseInt(criterionNumber) - 1;
+			_criterionSelected = _elementsSet.getCriteria().get(indexCriterion);
+		}
 		
+		initializeChart();
 		refreshChart();
 	}
 
 	@Override
 	public void notifyChangeSATableValues(String type) {
-		_typeData = type;
+		_typeBarChart = type;
 		refreshChart();
 	}
 }

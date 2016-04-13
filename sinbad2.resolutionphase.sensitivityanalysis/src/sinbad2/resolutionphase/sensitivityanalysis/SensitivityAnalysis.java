@@ -290,11 +290,11 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			}
 		}
 		
-		normalize(_alternativesFinalPreferences);
+		//normalize(_alternativesFinalPreferences);
 		
 		computeRanking();
 	}
-
+	
 	private void computeMinimumAbsoluteChangeInCriteriaWeights() {
 
 		_minimumAbsoluteChangeInCriteriaWeights = new Double[_numberOfAlternatives][_numberOfAlternatives][_numberOfCriteria];
