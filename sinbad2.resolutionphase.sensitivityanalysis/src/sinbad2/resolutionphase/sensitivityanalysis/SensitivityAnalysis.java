@@ -290,9 +290,25 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			}
 		}
 		
-		//normalize(_alternativesFinalPreferences);
+		if(_aplicatedWeights) {
+			normalize(_alternativesFinalPreferences);
+		}
 		
 		computeRanking();
+	}
+
+	public double computeAlternativeFinalPreferenceInferWeights(int alternativeIndex, double[] w) {
+		double alternativeFinalPreference = 0;
+		
+		for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
+			if(!_aplicatedWeights) {
+				alternativeFinalPreference += _decisionMatrix[criterion][alternativeIndex] * w[criterion];
+			} else {
+				alternativeFinalPreference += _decisionMatrix[criterion][alternativeIndex];
+			}
+		}
+		
+		return alternativeFinalPreference;
 	}
 	
 	private void computeMinimumAbsoluteChangeInCriteriaWeights() {

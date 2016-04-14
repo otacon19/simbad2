@@ -1,5 +1,6 @@
 package sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.List;
@@ -11,7 +12,6 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -21,24 +21,26 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 
 public class AlternativesEvolutionWeigthsLineChart {
 
 	private JFreeChart _chart;
 	private ChartComposite _chartComposite;
 	private XYSeriesCollection _dataset;
-	private ValueMarker _marker;
+	private ValueMarker _currentMarker;
+	private ValueMarker _variableMarker;
 
-	private double[][] _decisionMatrix;
 	private Criterion _criterionSelected;
-	private double _markerPosition;
+	
+	private SensitivityAnalysis _sensitivityAnalysis;
 	
 	private ProblemElementsSet _elementsSet;
 
 	public AlternativesEvolutionWeigthsLineChart() {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
-
+		
 		_chart = null;
 		_chartComposite = null;
 	}
@@ -51,27 +53,34 @@ public class AlternativesEvolutionWeigthsLineChart {
 		_criterionSelected = criterionSelected;
 	}
 	
-	public double[][] getDecisionMatrix() {
-		return _decisionMatrix;
+	public double getPositionCurrentValueMarker() {
+		if(_currentMarker != null) {
+			return _currentMarker.getValue();
+		}
+		return -1;
 	}
 	
-	public void setDecisionMatrix(double[][] decisionMatrix) {
-		_decisionMatrix = decisionMatrix;
+	public void setPositionCurrentValueMarker(double valueMarker) {
+		_currentMarker.setValue(valueMarker);
 	}
 	
-	public double getValueMarker() {
-		return _markerPosition;
+	public double getPositionVariableValueMarker() {
+		if(_variableMarker != null) {
+			return _variableMarker.getValue();
+		}
+		return -1;
 	}
 	
-	public void setValueMarker(double valueMarker) {
-		_markerPosition = valueMarker;
+	public void setPositionVariableValueMarker(double valueMarker) {
+		_variableMarker.setValue(valueMarker);
 	}
 	
 	public ChartComposite getChartComposite() {
 		return _chartComposite;
 	}
 
-	public void initialize(Composite container, int width, int height, int style) {
+	public void initialize(Composite container, int width, int height, int style, SensitivityAnalysis sensitivityAnalysis) {
+		_sensitivityAnalysis = sensitivityAnalysis;
 		
 		refreshChart();
 
@@ -97,42 +106,70 @@ public class AlternativesEvolutionWeigthsLineChart {
         plot.setDomainGridlinePaint(Color.white);
         plot.setRangeGridlinePaint(Color.white);
         
-        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesLinesVisible(0, false);
-        renderer.setSeriesShapesVisible(1, false);
-        plot.setRenderer(renderer);
-        
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setRange(0, 1);
         rangeAxis.setTickMarksVisible(true);
+        
+        NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
+        domainAxis.setRange(0, 1);
+        domainAxis.setTickMarksVisible(true);
+        
+        _currentMarker = new ValueMarker(0);
+		_currentMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+		_currentMarker.setLabel("peso real");
+		_currentMarker.setPaint(Color.red);
+		_currentMarker.setStroke(new BasicStroke(2));
+        plot.addDomainMarker(_currentMarker);
+        
+        _variableMarker = new ValueMarker(0);
+		_variableMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+		_variableMarker.setLabel("peso variable");
+		_variableMarker.setPaint(Color.blue);
+		_variableMarker.setStroke(new BasicStroke(2));
+        plot.addDomainMarker(_variableMarker);
         
 		return result;
 	}
 
 	private XYDataset createDataset() {
 		_dataset = new XYSeriesCollection();
-		
-		if(_chart != null) {
-			_chart.getXYPlot().removeDomainMarker(_marker);
-			_marker = new ValueMarker(_markerPosition);
-			_marker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
-			_marker.setLabel("peso real");
-			_marker.setPaint(Color.red);
-	        _chart.getXYPlot().addDomainMarker(_marker);
-		}
                 
 		if(_criterionSelected != null) {
 			_chart.setTitle(_criterionSelected.getId().toUpperCase());
 			
 			List<Alternative> alternatives = _elementsSet.getAlternatives();
-			int criterion = _elementsSet.getAllCriteria().indexOf(_criterionSelected);
 			for(int i = 0; i < alternatives.size(); ++i) {
-				XYSeries alternativeSeries = new XYSeries(alternatives.get(i).getId());
-				for(double w = 0; w <= 1; w += 0.1 ) {
-					alternativeSeries.add(w, _decisionMatrix[criterion][i] * w);
-				}
-				_dataset.addSeries(alternativeSeries);
+				XYSeries alternativeSerie = new XYSeries(alternatives.get(i).getId());
+				alternativeSerie.add(0, _sensitivityAnalysis.computeAlternativeFinalPreferenceInferWeights(i, calculateInferWeights(0)));
+				alternativeSerie.add(_sensitivityAnalysis.getWeights()[_elementsSet.getAllCriteria().indexOf(_criterionSelected)], _sensitivityAnalysis.getAlternativesFinalPreferences()[i]);
+				alternativeSerie.add(1, _sensitivityAnalysis.computeAlternativeFinalPreferenceInferWeights(i, calculateInferWeights(1)));
+				_dataset.addSeries(alternativeSerie);
 			}
 		}
 		return _dataset;
+	}
+
+	private double[] calculateInferWeights(double weightCriterionSelected) {
+		List<Criterion> criteria = _elementsSet.getAllCriteria();
+		double[] actualWeights = _sensitivityAnalysis.getWeights();
+		double[] inferWeights = new double[criteria.size()];
+		if(weightCriterionSelected == 0) {
+			int indexCriterionSelected = criteria.indexOf(_criterionSelected);
+			inferWeights[indexCriterionSelected] = 0;
+			for(int i = 0; i < criteria.size(); ++i) {
+				if(i != indexCriterionSelected) {
+					inferWeights[i] = actualWeights[i] / (Math.abs(1 - actualWeights[indexCriterionSelected]));
+				}
+			}
+		} else if(weightCriterionSelected == 1) {
+			int indexCriterionSelected = criteria.indexOf(_criterionSelected);
+			inferWeights[indexCriterionSelected] = 1;
+			for(int i = 0; i < criteria.size(); ++i) {
+				if(i != indexCriterionSelected) {
+					inferWeights[i] = 0;
+				}
+			}
+		}
+		return inferWeights;
 	}
 }

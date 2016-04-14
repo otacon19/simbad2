@@ -6,10 +6,13 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
@@ -26,11 +29,15 @@ import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SATabl
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SensitivityAnalysisView;
 
 public class AnalysisView extends ViewPart implements ISelectionChangedListener, IChangeSATableValues {
-	
+	public AnalysisView() {
+	}
+
 	private Composite _parent;
 	private Composite _chartComposite;
+	private Composite _spinnerComposite;
 	
 	private SATable _saTable;
+	private Spinner _weightSpinner;
 	
 	private Object[] _pairAlternatives;
 	private Criterion _criterionSelected;
@@ -79,6 +86,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_saTable.getProvider().registerNotifyChangeSATableListener(this);
 		
 		createChartComposite();
+		createSpinnerComposite();
 	}
 
 	private void createChartComposite() {
@@ -88,6 +96,18 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	
 		initializeChart();
 	}
+	
+	private void createSpinnerComposite() {
+		_spinnerComposite = new Composite(_parent, SWT.NONE);
+		_spinnerComposite.setLayout(new GridLayout());
+		GridData layout = new GridData(SWT.RIGHT, SWT.RIGHT, true, false, 1, 1);
+		layout.widthHint = 65;
+		layout.heightHint = 35;
+		_spinnerComposite.setLayoutData(layout);
+		_spinnerComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		
+		initializeSpinner();
+	}
 
 	private void initializeChart() {
 		removeChart();
@@ -95,14 +115,18 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		double[] percents = new double[0];
 		
 		if(_typeChart == 0) {
+			if(_weightSpinner != null) {
+				_weightSpinner.setVisible(false);
+			}
 			_barChart = new MinimunValueBetweenAlternativesBarChart();
 			_barChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, percents);
 		} else {
 			_lineChart = new AlternativesEvolutionWeigthsLineChart();
-			_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE);
-			_lineChart.setDecisionMatrix(_sensitivityAnalysis.getDecisionMatrix());
+			_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
 			_lineChart.setCriterionSelected(_criterionSelected);
-			_lineChart.setValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllCriteria().indexOf(_criterionSelected)]);
+			_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllCriteria().indexOf(_criterionSelected)]);
+			
+			_weightSpinner.setVisible(true);
 		}
 			
 		if (_controlListener == null) {
@@ -117,6 +141,36 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		}
 	}
 
+	private void initializeSpinner() {
+		removeSpinner();
+		
+		_weightSpinner = new Spinner(_spinnerComposite, SWT.BORDER);
+		_weightSpinner.setLayoutData(new GridData(SWT.RIGHT, SWT.RIGHT, true, true, 1, 1));
+		_weightSpinner.setMaximum(100);
+		_weightSpinner.setMinimum(0);
+		_weightSpinner.setDigits(2);
+		_weightSpinner.setIncrement(1);
+		
+		_weightSpinner.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				double value = ((Spinner) e.widget).getSelection() / 100d;
+				_lineChart.setPositionVariableValueMarker(value);
+				_lineChart.refreshChart();
+			}
+		});
+		
+		_spinnerComposite.pack();
+	}
+	
+	private void removeSpinner() {
+		if(_weightSpinner != null) {
+			if(!_weightSpinner.isDisposed()) {
+				_weightSpinner.dispose();
+			}
+		}
+	}
+	
 	private void removeChart() {
 		if (_barChart != null) {
 			_barChart.getChartComposite().dispose();
