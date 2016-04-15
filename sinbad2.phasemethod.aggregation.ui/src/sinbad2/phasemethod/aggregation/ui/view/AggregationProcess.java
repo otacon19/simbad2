@@ -35,6 +35,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.WeightedAggregationOperator;
+import sinbad2.core.workspace.Workspace;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
@@ -728,6 +729,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 				_ratingView.loadNextStep();
 				_completed = false;
 				_loaded = true;
+				
+				Workspace.getWorkspace().updateHashCode();
 			}
 		}
 	}

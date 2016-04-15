@@ -30,7 +30,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private int _numberOfCriteria;
 	
 	private boolean _aplicatedWeights;
-
+	
 	private double[] _w;
 	private double[][] _decisionMatrix;
 
@@ -42,6 +42,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private List<Integer> _absoluteAny;
 
 	private ProblemElementsSet _elementsSet;
+	
+	private AggregationPhase _aggregationPhase;
 
 	public List<ISensitivityAnalysisChangeListener> _listeners;
 
@@ -52,7 +54,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_absoluteAny = new LinkedList<Integer>();
 		
 		_aplicatedWeights = false;
-
+	
 		_listeners = new LinkedList<ISensitivityAnalysisChangeListener>();
 	}
 
@@ -167,28 +169,19 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		
 		_aplicatedWeights = false;
 		
-		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		
-		if(aggregationPhase.getAggregatedValuationsAlternativeCriterion() != null) {
-			_decisionMatrix = aggregationPhase.getAggregatedValuationsAlternativeCriterion();
+		_decisionMatrix = _aggregationPhase.getAggregatedValuationsAlternativeCriterion();
 			
-			normalizeDecisionMatrix();
+		normalizeDecisionMatrix();
 
-			if((aggregationPhase.getCriteriaOperatorWeights().get(null) == null)) {
-				createDefaultWeights();
-			} else {
-				List<Double> weights = ((Map<Object, List<Double>>) aggregationPhase.getCriteriaOperatorWeights().get(null)).get(null);
-				_w = new double[_numberOfCriteria];
-				for(int i = 0; i < weights.size(); ++i) {
-					_w[i] = weights.get(i);
-				}
-				_aplicatedWeights = true;
-			}
-		} else {
+		if((_aggregationPhase.getCriteriaOperatorWeights().get(null) == null)) {
 			createDefaultWeights();
-			createDefaultDecisionMatrix();
-			notifyAggregationOperatorNoSelected();
+		} else {
+			List<Double> weights = ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(null)).get(null);
+			_w = new double[_numberOfCriteria];
+			for(int i = 0; i < weights.size(); ++i) {
+				_w[i] = weights.get(i);
+			}
+			_aplicatedWeights = true;
 		}
 		
 		compute();
@@ -220,15 +213,28 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			_w[i] = tempW;
 		}
 	}
-
-	private void createDefaultDecisionMatrix() {
-		_decisionMatrix = new double[_numberOfCriteria][_numberOfAlternatives];
-		double tempW = 1d / (double) _numberOfCriteria;
-		for(int j = 0; j < _numberOfAlternatives; ++j) {
-			for (int i = 0; i < _numberOfCriteria; i++) {
-				_decisionMatrix[i][j] = tempW;
+	
+	public double[] calculateInferWeights(Criterion criterion, double weightCriterionSelected) {
+		List<Criterion> criteria = _elementsSet.getAllCriteria();
+		double[] inferWeights = new double[criteria.size()];
+		if(weightCriterionSelected == 0) {
+			int indexCriterionSelected = criteria.indexOf(criterion);
+			inferWeights[indexCriterionSelected] = 0;
+			for(int i = 0; i < criteria.size(); ++i) {
+				if(i != indexCriterionSelected) {
+					inferWeights[i] = _w[i] / (Math.abs(1 - _w[indexCriterionSelected]));
+				}
+			}
+		} else if(weightCriterionSelected == 1) {
+			int indexCriterionSelected = criteria.indexOf(criterion);
+			inferWeights[indexCriterionSelected] = 1;
+			for(int i = 0; i < criteria.size(); ++i) {
+				if(i != indexCriterionSelected) {
+					inferWeights[i] = 0;
+				}
 			}
 		}
+		return inferWeights;
 	}
 	
 	private void normalize(double[] values) {
@@ -535,6 +541,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 	@Override
 	public boolean validate() {
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+
+		
 		if (_elementsSet.getAlternatives().isEmpty()) {
 			return false;
 		}
@@ -546,7 +556,11 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		if (_elementsSet.getExperts().isEmpty()) {
 			return false;
 		}
-
+		
+		if(_aggregationPhase.getCriteriaOperators().isEmpty()) {
+			return false;
+		}
+		
 		return true;
 	}
 
@@ -580,13 +594,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 		for (ISensitivityAnalysisChangeListener listener : _listeners) {
 			listener.notifySensitivityAnalysisChange();
-		}
-	}
-	
-	public void notifyAggregationOperatorNoSelected() {
-
-		for (ISensitivityAnalysisChangeListener listener : _listeners) {
-			listener.notifyAggregationOperatorNoSelected();
 		}
 	}
 }

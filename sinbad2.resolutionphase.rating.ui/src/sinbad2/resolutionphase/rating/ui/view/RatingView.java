@@ -196,7 +196,7 @@ public class RatingView extends ViewPart {
 	private void getPreviousStep() {
 		if(_numStep != 0) {
 			_numStep--;
-			activateStep(_numStep);
+			activateStep();
 			_nextButton.setEnabled(true);
 		}
 		
@@ -220,7 +220,7 @@ public class RatingView extends ViewPart {
 	private void getNextStep() {
 		if((_numStep + 1) < _tabFolder.getItemCount()) {
 			_numStep++;
-			activateStep(_numStep);
+			activateStep();
 			_backButton.setEnabled(true);
 		}
 		
@@ -263,6 +263,8 @@ public class RatingView extends ViewPart {
 		    			_backButton.setEnabled(true);
 		    			_nextButton.setEnabled(true);
 		    		}
+		    		
+		    		activateStep();
 		    	}
 			});
 		}
@@ -387,7 +389,6 @@ public class RatingView extends ViewPart {
 			label.setText(label.getText() + " (SUITABLE)");
 		}
 		
-		
 		label.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {			
@@ -419,7 +420,7 @@ public class RatingView extends ViewPart {
 		_stepValue.setText("(0/" + numSteps + ")");
 	}
 	
-	public void loadNextStep() {;
+	public void loadNextStep() {
 		PhaseMethodUI currentPhaseMethod = _phasesMethodUIManager.getActiveResolutionPhasesUI();
 		List<PhaseMethodUI> phasesMethodUI = _methodsUIManager.getActivateMethodUI().getPhasesUI();
 		
@@ -608,8 +609,8 @@ public class RatingView extends ViewPart {
 		_warningLabel.getParent().layout();;
 	}
 		
-	private void activateStep(int numStep) {
-		_tabFolder.setSelection(numStep);
+	private void activateStep() {
+		_tabFolder.setSelection(_numStep);
 		notifyNewStep();
 	}
 	

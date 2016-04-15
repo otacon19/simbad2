@@ -9,9 +9,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -101,7 +103,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 
 		result.setBackgroundPaint(Color.white);
 
-        XYPlot plot = result.getXYPlot();
+        final XYPlot plot = result.getXYPlot();
         plot.setBackgroundPaint(Color.lightGray);
         plot.setDomainGridlinePaint(Color.white);
         plot.setRangeGridlinePaint(Color.white);
@@ -113,6 +115,21 @@ public class AlternativesEvolutionWeigthsLineChart {
         NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
         domainAxis.setRange(0, 1);
         domainAxis.setTickMarksVisible(true);
+        
+        XYToolTipGenerator xyToolTipGenerator = new XYToolTipGenerator() {
+            public String generateToolTip(XYDataset dataset, int series, int item) {
+               StringBuffer sb = new StringBuffer();
+               double x = dataset.getX(series, item).doubleValue();
+               double y = dataset.getY(series, item).doubleValue();
+               String coordX = Double.toString(Math.round(x * 10000d) / 10000d);
+               String coordY = Double.toString(Math.round(y * 10000d) / 10000d);
+               sb.append("(" + coordX + ", " + coordY + ")");
+               return sb.toString();
+            }
+         };
+
+         XYLineAndShapeRenderer render = (XYLineAndShapeRenderer) plot.getRenderer();
+         render.setBaseToolTipGenerator(xyToolTipGenerator);
         
         _currentMarker = new ValueMarker(0);
 		_currentMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
@@ -140,36 +157,12 @@ public class AlternativesEvolutionWeigthsLineChart {
 			List<Alternative> alternatives = _elementsSet.getAlternatives();
 			for(int i = 0; i < alternatives.size(); ++i) {
 				XYSeries alternativeSerie = new XYSeries(alternatives.get(i).getId());
-				alternativeSerie.add(0, _sensitivityAnalysis.computeAlternativeFinalPreferenceInferWeights(i, calculateInferWeights(0)));
+				alternativeSerie.add(0, _sensitivityAnalysis.computeAlternativeFinalPreferenceInferWeights(i, _sensitivityAnalysis.calculateInferWeights(_criterionSelected, 0)));
 				alternativeSerie.add(_sensitivityAnalysis.getWeights()[_elementsSet.getAllCriteria().indexOf(_criterionSelected)], _sensitivityAnalysis.getAlternativesFinalPreferences()[i]);
-				alternativeSerie.add(1, _sensitivityAnalysis.computeAlternativeFinalPreferenceInferWeights(i, calculateInferWeights(1)));
+				alternativeSerie.add(1, _sensitivityAnalysis.computeAlternativeFinalPreferenceInferWeights(i, _sensitivityAnalysis.calculateInferWeights(_criterionSelected, 1)));
 				_dataset.addSeries(alternativeSerie);
 			}
 		}
 		return _dataset;
-	}
-
-	private double[] calculateInferWeights(double weightCriterionSelected) {
-		List<Criterion> criteria = _elementsSet.getAllCriteria();
-		double[] actualWeights = _sensitivityAnalysis.getWeights();
-		double[] inferWeights = new double[criteria.size()];
-		if(weightCriterionSelected == 0) {
-			int indexCriterionSelected = criteria.indexOf(_criterionSelected);
-			inferWeights[indexCriterionSelected] = 0;
-			for(int i = 0; i < criteria.size(); ++i) {
-				if(i != indexCriterionSelected) {
-					inferWeights[i] = actualWeights[i] / (Math.abs(1 - actualWeights[indexCriterionSelected]));
-				}
-			}
-		} else if(weightCriterionSelected == 1) {
-			int indexCriterionSelected = criteria.indexOf(_criterionSelected);
-			inferWeights[indexCriterionSelected] = 1;
-			for(int i = 0; i < criteria.size(); ++i) {
-				if(i != indexCriterionSelected) {
-					inferWeights[i] = 0;
-				}
-			}
-		}
-		return inferWeights;
 	}
 }

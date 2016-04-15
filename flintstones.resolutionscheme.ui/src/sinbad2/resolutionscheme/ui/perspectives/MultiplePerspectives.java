@@ -175,7 +175,7 @@ public class MultiplePerspectives implements IWorkspaceListener {
 		for(ResolutionPhaseUI resolutionPhaseUI: _phasesUI) {
 			enabled = (previousEnabled) ? resolutionPhaseUI.getResolutionPhase().getImplementation().validate() : false;
 			if(!enabled) {
-				if(firstNotValid) {
+				if(firstNotValid && !resolutionPhaseUI.getResolutionPhase().getId().equals("flintstones.resolutionphase.sensitivityanalysis")) {
 					enabled = true;
 					lastEnabled = resolutionPhaseUI.getId();
 					firstNotValid = false;

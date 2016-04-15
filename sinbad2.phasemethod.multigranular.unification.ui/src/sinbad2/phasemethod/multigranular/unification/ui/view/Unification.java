@@ -276,7 +276,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 		unifiedValues.putAll(_unificationPhase.unification(_domain));
 		Map<ValuationKey, Valuation> unifiedTwoTupleValues = new HashMap<ValuationKey, Valuation>(); 
 		unifiedTwoTupleValues.putAll(_unificationPhase.getTwoTupleValuationsResult());
-		
+	
 		_provider = new TreeViewerContentProvider(unifiedValues);
 		_treeViewer.setContentProvider(_provider);
 		_treeViewer.setInput(_provider.getInput());

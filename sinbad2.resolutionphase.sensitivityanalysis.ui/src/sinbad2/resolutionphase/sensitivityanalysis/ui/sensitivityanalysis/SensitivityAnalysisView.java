@@ -98,7 +98,4 @@ public class SensitivityAnalysisView extends ViewPart implements ISensitivityAna
 	public void notifySensitivityAnalysisChange() {
 		initSATable();
 	}
-
-	@Override
-	public void notifyAggregationOperatorNoSelected() {}
 }
