@@ -1,10 +1,14 @@
 package sinbad2.resolutionphase.rating;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.workspace.WorkspaceContentPersistenceException;
+import sinbad2.method.Method;
+import sinbad2.method.MethodsManager;
+import sinbad2.phasemethod.PhaseMethod;
 import sinbad2.resolutionphase.IResolutionPhase;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.resolutionphase.io.XMLWriter;
@@ -28,7 +32,17 @@ public class Rating implements IResolutionPhase {
 	}
 
 	@Override
-	public void clear() {}
+	public void clear() {
+		MethodsManager methodsManager = MethodsManager.getInstance();
+		Method m = methodsManager.getActiveMethod();
+		if(m != null) {
+			m.deactivate();
+			List<PhaseMethod> phases = m.getPhases();
+			for(PhaseMethod p: phases) {
+				p.getImplementation().clear();
+			}
+		}
+	}
 
 	@Override
 	public void save(XMLWriter writer) throws WorkspaceContentPersistenceException {}

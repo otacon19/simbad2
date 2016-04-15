@@ -40,7 +40,7 @@ public class SensitivityAnalysisPerspective implements IPerspectiveFactory {
 					Object ranking = new Object[] { sa.getAlternativesIds(), sa.getAlternativesFinalPreferences() };
 					domainViewManager.setContent(domain, ranking);
 					rankingViewManager.setContent(sa);
-					sa.calculateDecisionMatrix();
+					sa.calculateDecisionMatrix(null);
 				}
 
 			}

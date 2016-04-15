@@ -7,6 +7,9 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -27,14 +30,22 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	private SensitivityAnalysis _sensitivityAnalysis;
 	
 	private TableViewer _rankingViewer;
+	private Combo _sensitivityMethods;
 
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 
 	@Override
 	public void createPartControl(Composite parent) {
-		_rankingViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI| SWT.FULL_SELECTION | SWT.NO_FOCUS | SWT.HIDE_SELECTION);
+		parent.setLayout(new GridLayout());
+		parent.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		Composite rankingComposite = new Composite(parent, SWT.NONE);
+		rankingComposite.setLayout(new GridLayout());
+		rankingComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_rankingViewer = new TableViewer(rankingComposite, SWT.BORDER | SWT.MULTI| SWT.FULL_SELECTION | SWT.NO_FOCUS | SWT.HIDE_SELECTION);
 
 		Table rankingTable = _rankingViewer.getTable();
+		rankingTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		rankingTable.setHeaderVisible(true);
 		rankingTable.setLinesVisible(true);
 
@@ -58,6 +69,17 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		tc.setMoveable(true);
 		tc.setWidth(55);
 
+		Composite comboComposite = new Composite(parent, SWT.NONE);
+		comboComposite.setLayout(new GridLayout());
+		comboComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		_sensitivityMethods = new Combo(comboComposite, SWT.READ_ONLY);
+		_sensitivityMethods.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
+		String[] methods = new String[2];
+		methods[0] = "WSM";
+		methods[1] = "WPM";
+		_sensitivityMethods.setItems(methods);
+		_sensitivityMethods.select(0);
+		
 		RankingViewManager.getInstance().registerDisplayRankingChangeListener(this);
 		hookFocusListener();
 	}

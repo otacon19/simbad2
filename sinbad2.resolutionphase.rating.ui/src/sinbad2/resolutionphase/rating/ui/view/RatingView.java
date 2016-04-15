@@ -667,6 +667,5 @@ public class RatingView extends ViewPart {
 	
 	private void notifyRatingView(IStepStateListener listener) {
 		listener.notifyRatingView(this);
-	}
-	
+	}	
 }
