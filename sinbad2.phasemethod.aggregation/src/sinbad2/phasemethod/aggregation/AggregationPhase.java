@@ -29,6 +29,7 @@ import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
+import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -50,6 +51,8 @@ public class AggregationPhase implements IPhaseMethod {
 	private Map<ProblemElement, Object> _criteriaOperatorsWeights;
 	
 	private Map<ValuationKey, Valuation> _unificationValues;
+	
+	private Map<ProblemElement, Valuation> _aggregatedValuations;
 	
 	private double[][] _aggregatedValuationsAlternativeCriterion;
 	private int _numCriterion;
@@ -92,6 +95,15 @@ public class AggregationPhase implements IPhaseMethod {
 	public void setUnificationValues(Map<ValuationKey, Valuation> values) {
 		_unificationValues = values;
 	}
+	
+	public Map<ProblemElement, Valuation> getAggregatedValuations() {
+		return _aggregatedValuations;
+	}
+	
+	public void setAggregatedValuations(Map<ProblemElement, Valuation> aggregatedValuations) {
+		_aggregatedValuations = aggregatedValuations;
+	}
+	
 	
 	public Domain getUnifiedDomain() {
 		return _unifiedDomain;
@@ -240,7 +252,7 @@ public class AggregationPhase implements IPhaseMethod {
 	}
 
 	public Map<ProblemElement, Valuation> aggregateAlternatives(Set<ProblemElement> experts, Set<ProblemElement> alternatives, Set<ProblemElement> criteria) {
-		Map<ProblemElement, Valuation> results = new HashMap<ProblemElement, Valuation>();
+		_aggregatedValuations = new HashMap<ProblemElement, Valuation>();
 		
 		_aggregatedValuationsAlternativeCriterion = new double[criteria.size()][alternatives.size()];
 		_numAlternative = 0;
@@ -248,17 +260,18 @@ public class AggregationPhase implements IPhaseMethod {
 		
 		for (ProblemElement alternative : alternatives) {
 			if (CRITERIA.equals(getAggregateBy())) {
-				results.put(alternative, aggregateAlternativeByCriteria(alternative, experts, criteria));
+				_aggregatedValuations.put(alternative, aggregateAlternativeByCriteria(alternative, experts, criteria));
 				_numAlternative++;
 				_numCriterion = 0;
 			} else {
-				results.put(alternative, aggregateAlternativeByExperts(alternative, experts, criteria));
+				_aggregatedValuations.put(alternative, aggregateAlternativeByExperts(alternative, experts, criteria));
 				_numAlternative++;
 				_numCriterion = 0;
 			}
 		}
 		
-		return results;
+		
+		return _aggregatedValuations;
 	}
 	
 	private Valuation aggregateAlternativeByCriteria(ProblemElement alternative, Set<ProblemElement> experts, Set<ProblemElement> criteria) {
@@ -491,7 +504,38 @@ public class AggregationPhase implements IPhaseMethod {
 		} 
 	}
 	
-	public Map<ProblemElement, Valuation> transform(Map<ProblemElement, Valuation> problemResult, Unbalanced resultsDomain) {
+	public Object[]  getAggregatedValuationsAlpha() {
+		int size = _aggregatedValuations.size();
+		String[] alternatives = new String[size];
+		int[] pos = new int[size];
+		double[] alpha = new double[size];
+		Valuation valuation = null, aux;
+		int i = 0;
+
+		for (ProblemElement alternative : _aggregatedValuations.keySet()) {
+			alternatives[i] = alternative.getId();
+			aux = _aggregatedValuations.get(alternative);
+			if (aux instanceof UnifiedValuation) {
+				valuation = ((UnifiedValuation) aux).disunification((FuzzySet) aux.getDomain());
+			} else {
+				valuation = aux;
+			}
+
+			if (valuation instanceof TwoTuple) {
+				pos[i] = ((FuzzySet) _unifiedDomain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
+				alpha[i] = ((TwoTuple) valuation).getAlpha();
+				i++;
+			}
+		}
+		
+		Object[] data = new Object[2];
+		data[0] = pos;
+		data[1] = alpha;
+		
+		return data;
+	}
+	
+	public Map<ProblemElement, Valuation> transformUnbalanced(Map<ProblemElement, Valuation> problemResult, Unbalanced resultsDomain) {
 
 		_unifiedDomain = resultsDomain;
 		Map<ProblemElement, Valuation> results = null;

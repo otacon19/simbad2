@@ -170,19 +170,34 @@ public class LinguisticDomainChart extends DomainChart {
 		}
 	}
 
-	//TODO
 	@Override
 	public void displayRanking(Object ranking) {		
 		
+		Double[] values = null;
 		if(ranking != null) {
 			String[] alternatives = (String[]) ((Object[]) ranking)[0];
-			int[] pos = (int[]) ((Object[]) ranking)[1];
-			displayAlternatives(alternatives, pos, colors);
+			if(((Object[]) ranking)[1] instanceof int[]) {
+				values = new Double[((int[]) ((Object[]) ranking)[1]).length];
+				for(int i = 0; i < ((int[]) ((Object[]) ranking)[1]).length; ++i) {
+					values[i] = (double) ((int[]) ((Object[]) ranking)[1])[i];
+				}
+			} else if(((Object[]) ranking)[1] instanceof double[]) {
+				values = new Double[((double[]) ((Object[]) ranking)[1]).length];
+				for(int i = 0; i < ((double[]) ((Object[]) ranking)[1]).length; ++i) {
+					values[i] = (double) ((double[]) ((Object[]) ranking)[1])[i];
+				}
+			}
+			if(((Object[]) ranking).length == 2) {
+				displayAlternatives(alternatives, values, colors);
+			} else {
+				int[] pos = ((int[]) ((Object[]) ranking)[2]);
+				double[] alpha = ((double[]) ((Object[]) ranking)[3]);
+				displayAlternatives(alternatives, values, pos, alpha, colors);
+			}
 		}
 	}
 	
-	//TODO
-	public void displayAlternatives(String[] alternatives, int[] pos, Color[] colors) {
+	public void displayAlternatives(String[] alternatives, Double[] pos, Color[] colors) {
 
 		if(_alternativesMarkers != null) {
 			for (ValueMarker marker : _alternativesMarkers) {
@@ -214,7 +229,7 @@ public class LinguisticDomainChart extends DomainChart {
 			items = new LinkedList<MyItem>();
 			for(int i = 0; i < pos.length; i++) {
 				if (alternatives[i] != null) {
-					items.add(new MyItem(alternatives[i], pos[i], colors[i]));
+					items.add(new MyItem(alternatives[i], (Double) pos[i], colors[i]));
 				}
 			}
 
@@ -236,11 +251,17 @@ public class LinguisticDomainChart extends DomainChart {
 					_alternativesMarkers[i].setLabel(item.alternative);
 					_alternativesMarkers[i].setLabelFont(new Font("TimesRoman", Font.BOLD, 20));
 					_alternativesMarkers[i].setLabelPaint(item.color);
-					_alternativesMarkers[i].setLabelOffset(new RectangleInsets(offset + (offset * i), 15, 0, 0));
+					_alternativesMarkers[i].setLabelOffset(new RectangleInsets(offset * (i / offset), 25, 0, 0));
 					_chart.getXYPlot().addRangeMarker(0, _alternativesMarkers[i], Layer.FOREGROUND);
 				}
 			}
 		}
+	}
+	
+	
+	public void displayAlternatives(String[] alternatives, Double[] values, int[] pos, double[] alpha, Color[] colors) {
+		displayAlternatives(alternatives, values, colors);
+		displayAlternatives(alternatives, pos, alpha);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -178,7 +178,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 
 	@Override
 	public int doGetRowCount() {
-		return _pairs.length + getFixedRowCount();
+		return _pairs.length + getFixedRowCount() + 1;
 	}
 
 	@Override

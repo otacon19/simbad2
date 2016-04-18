@@ -3,6 +3,8 @@ package sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.provider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.PlatformUI;
 
 import de.kupzog.ktable.KTable;
 import de.kupzog.ktable.KTableCellEditor;
@@ -13,6 +15,7 @@ import de.kupzog.ktable.editors.KTableCellEditorText;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 
 
 public class DMTableContentProvider extends KTableNoScrollModel {
@@ -21,6 +24,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	private String[] _criteria;
 	private double[][] _values;
 	
+	private RankingView _rankingView;
 	private SensitivityAnalysis _sensitivityAnalysis;
 
 	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
@@ -30,6 +34,13 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria, double[][] values, SensitivityAnalysis sensitivityAnalysis) {
 		super(table);
 
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+		for(int i = 0; i < viewReferences.length; i++) {
+			if(RankingView.ID.equals(viewReferences[i].getId())) {
+				_rankingView = (RankingView) viewReferences[i].getView(false);
+			}
+		}
+		
 		_sensitivityAnalysis = sensitivityAnalysis;
 		
 		_alternatives = alternatives;
@@ -75,7 +86,11 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		double v = Double.parseDouble((String) value);
 		_values[row - 1][col - 1] = v;
 		
-		_sensitivityAnalysis.compute();
+		if(_rankingView.getModel() == 0) {
+			_sensitivityAnalysis.computeWeightedSumModel();
+		} else {
+			_sensitivityAnalysis.computeWeightedProductModel();
+		}
 	}
 
 	@Override

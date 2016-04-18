@@ -7,6 +7,8 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -30,7 +32,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	private SensitivityAnalysis _sensitivityAnalysis;
 	
 	private TableViewer _rankingViewer;
-	private Combo _sensitivityMethods;
+	private Combo _sensitivityModels;
 
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 
@@ -51,7 +53,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 		
-		_rankingViewer.setContentProvider(new RankingContentProvider(_sensitivityAnalysis));
+		_rankingViewer.setContentProvider(new RankingContentProvider(_sensitivityAnalysis, this));
 
 		addColumn("Ranking", 0); //$NON-NLS-1$
 		addColumn("Alternative", 1); //$NON-NLS-1$
@@ -72,13 +74,30 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		Composite comboComposite = new Composite(parent, SWT.NONE);
 		comboComposite.setLayout(new GridLayout());
 		comboComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		_sensitivityMethods = new Combo(comboComposite, SWT.READ_ONLY);
-		_sensitivityMethods.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
-		String[] methods = new String[2];
-		methods[0] = "WSM";
-		methods[1] = "WPM";
-		_sensitivityMethods.setItems(methods);
-		_sensitivityMethods.select(0);
+		_sensitivityModels = new Combo(comboComposite, SWT.READ_ONLY);
+		_sensitivityModels.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
+		String[] methods = new String[3];
+		methods[0] = "Weighted sum";
+		methods[1] = "Weighted product";
+		methods[2] = "Analytic Hierarchy process";
+		_sensitivityModels.setItems(methods);
+		_sensitivityModels.select(0);
+		_sensitivityModels.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(_sensitivityModels.getSelectionIndex() == 0) {
+					_sensitivityAnalysis.computeWeightedSumModel();
+					_rankingViewer.getTable().getColumn(2).setText("Value");
+				} else if(_sensitivityModels.getSelectionIndex() == 1){
+					_sensitivityAnalysis.computeWeightedProductModel();
+					_rankingViewer.getTable().getColumn(2).setText("Ratios");
+				} else if(_sensitivityModels.getSelectionIndex() == 2) {
+					_sensitivityAnalysis.computeAnalyticHierarchyProcess();
+					_rankingViewer.getTable().getColumn(2).setText("Value");
+				}
+				_rankingViewer.getTable().getColumn(2).pack();
+			}
+		});
 		
 		RankingViewManager.getInstance().registerDisplayRankingChangeListener(this);
 		hookFocusListener();
@@ -121,12 +140,16 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 			}
 		});
 	}
+	
+	public int getModel() {
+		return _sensitivityModels.getSelectionIndex();
+	}
 
 	@Override
 	public void setFocus() {
 		_rankingViewer.getControl().setFocus();
 	}
-
+	
 	@Override
 	public void displayRankingChange(Object ranking) {
 		_rankingViewer.setInput(ranking);

@@ -677,7 +677,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_aggregationResult = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 		
 		if(getDomain() instanceof Unbalanced) {
-			_aggregationResult = _aggregationPhase.transform(_aggregationResult, (Unbalanced) getDomain());
+			_aggregationResult = _aggregationPhase.transformUnbalanced(_aggregationResult, (Unbalanced) getDomain());
 		}
 		
 		refreshView();	

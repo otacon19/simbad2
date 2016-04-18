@@ -392,7 +392,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		_aggregationResult = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 		
 		if(getDomain() instanceof Unbalanced) {
-			_aggregationResult = _aggregationPhase.transform(_aggregationResult, (Unbalanced) getDomain());
+			_aggregationResult = _aggregationPhase.transformUnbalanced(_aggregationResult, (Unbalanced) getDomain());
 			_rankingViewer.setInput(_aggregationResult);
 			setChart(getDomain());
 		} else {
