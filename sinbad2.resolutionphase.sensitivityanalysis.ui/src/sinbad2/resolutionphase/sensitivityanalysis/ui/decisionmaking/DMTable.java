@@ -7,13 +7,14 @@ import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.provider.DMTableContentProvider;
 import de.kupzog.ktable.KTable;
 import de.kupzog.ktable.KTableCellSelectionListener;
+import de.kupzog.ktable.SWTX;
 
 public class DMTable extends KTable {
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
 
 	public DMTable(Composite parent, SensitivityAnalysis sensitivityAnalysis) {
-		super(parent, SWT.NO_BACKGROUND | SWT.FLAT);
+		super(parent, SWT.NO_BACKGROUND | SWT.FLAT | SWTX.AUTO_SCROLL);
 		
 		_sensitivityAnalysis = sensitivityAnalysis;
 	}

@@ -191,7 +191,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				indexes[1] = a2Index;
 				_barChart.setCurrentAlternativesPair(indexes);
 				
-				if(_typeBarChart.equals("PERCENTS")) {
+				if(_typeBarChart.equals("RELATIVE")) {
 					double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
 					_barChart.setValues(percents);
 					_barChart.setTypeData(_typeBarChart);
