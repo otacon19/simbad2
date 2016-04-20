@@ -86,13 +86,13 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(_sensitivityModels.getSelectionIndex() == 0) {
-					_sensitivityAnalysis.computeWeightedSumModel();
+					_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
 					_rankingViewer.getTable().getColumn(2).setText("Value");
 				} else if(_sensitivityModels.getSelectionIndex() == 1){
-					_sensitivityAnalysis.computeWeightedProductModel();
+					_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
 					_rankingViewer.getTable().getColumn(2).setText("Ratios");
 				} else if(_sensitivityModels.getSelectionIndex() == 2) {
-					_sensitivityAnalysis.computeAnalyticHierarchyProcess();
+					_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
 					_rankingViewer.getTable().getColumn(2).setText("Value");
 				}
 				_rankingViewer.getTable().getColumn(2).pack();

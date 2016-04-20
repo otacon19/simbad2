@@ -1,6 +1,7 @@
 package sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.provider;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewReference;
@@ -11,24 +12,38 @@ import de.kupzog.ktable.KTableCellEditor;
 import de.kupzog.ktable.KTableCellRenderer;
 import de.kupzog.ktable.KTableNoScrollModel;
 import de.kupzog.ktable.SWTX;
+import de.kupzog.ktable.editors.KTableCellEditorCombo;
 import de.kupzog.ktable.editors.KTableCellEditorText;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 
-
 public class DMTableContentProvider extends KTableNoScrollModel {
+	
+	private static final String MOST_CRITICAL_CRITERION = "MCC";
+	private static final String MOST_CRITICAL_MEASURE = "MCM";
 	
 	private String[] _alternatives;
 	private String[] _criteria;
 	private double[][] _values;
+	
+	private String _typeProblemSelected;
 	
 	private RankingView _rankingView;
 	private SensitivityAnalysis _sensitivityAnalysis;
 
 	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
 	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
+	
+	class MyOwnKTableCellEditorCombo extends KTableCellEditorCombo {
+		@Override
+		public int getActivationSignals() {
+			return SINGLECLICK;
+		}
+	}
+
+	private MyOwnKTableCellEditorCombo _kTableCombo = new MyOwnKTableCellEditorCombo();
 
 	
 	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria, double[][] values, SensitivityAnalysis sensitivityAnalysis) {
@@ -46,21 +61,51 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		_alternatives = alternatives;
 		_criteria = criteria;
 		_values = values;
+		
 		initialize();
 
 		_fixedRenderer.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		_fixedRenderersInTable.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		_fixedRenderersInTable.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		
+		_typeProblemSelected = MOST_CRITICAL_CRITERION;
 	}
 
 	@Override
 	public Object doGetContentAt(int col, int row) {
-		
 		if((col == 0) && (row == 0)) {
-			return ""; //$NON-NLS-1$
+			String type = "";
+			if(_kTableCombo.getControl() != null) {
+				CCombo combo = (CCombo) _kTableCombo.getControl();
+				type = combo.getText();
+			}
+			
+			if(!type.isEmpty()) {
+				_typeProblemSelected = type;
+				int model = _rankingView.getModel();
+				if(_typeProblemSelected.equals(MOST_CRITICAL_CRITERION)) {
+					if(model == 0) {
+						_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
+					} else if(model == 1) {
+						_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
+					} else {
+						_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
+					}
+				} else {
+					if(model == 0) {
+						_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
+					} else if(model == 1) {
+						_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
+					} else {
+						_sensitivityAnalysis.computeAnalyticHierarchyModelCriticalMeasure();
+					}
+				}
+			}
+			
+			return _typeProblemSelected;
+			
 		} else {
 			Object erg;
-
 			try {
 				if (col == 0) {
 					erg = "C" + row; //$NON-NLS-1$
@@ -78,29 +123,58 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	}
 
 	public KTableCellEditor doGetCellEditor(int col, int row) {
-		return new KTableCellEditorText();
+		
+		if(col == 0 && row == 0) {
+			_kTableCombo = new  MyOwnKTableCellEditorCombo();
+			String[] valuesString = new String[2];
+			valuesString[0] = MOST_CRITICAL_MEASURE;
+			valuesString[1] = MOST_CRITICAL_CRITERION;
+			_kTableCombo.setItems(valuesString);
+			
+			return _kTableCombo;
+		} else if(col != 0 && row != 0){
+			return new KTableCellEditorText();
+		}
+		
+		return null;
 	}
 
 	@Override
 	public void doSetContentAt(int col, int row, Object value) {
-		double v = Double.parseDouble((String) value);
-		_values[row - 1][col - 1] = v;
-		
-		if(_rankingView.getModel() == 0) {
-			_sensitivityAnalysis.computeWeightedSumModel();
-		} else {
-			_sensitivityAnalysis.computeWeightedProductModel();
+		if(col != 0 && row != 0) {
+			double v = Double.parseDouble((String) value);
+			_values[row - 1][col - 1] = v;
+			
+			if(_rankingView.getModel() == 0) {
+				if(_typeProblemSelected.equals(MOST_CRITICAL_CRITERION)) {
+					_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
+				} else {
+					_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
+				}
+			} else if(_rankingView.getModel() == 1){
+				if(_typeProblemSelected.equals(MOST_CRITICAL_CRITERION)) {
+					_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
+				} else {
+					_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
+				}
+			} else {
+				if(_typeProblemSelected.equals(MOST_CRITICAL_CRITERION)) {
+					_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
+				} else {
+					_sensitivityAnalysis.computeAnalyticHierarchyModelCriticalMeasure();
+				}
+			}
 		}
 	}
 
 	@Override
 	public int doGetRowCount() {
-		return _criteria.length + getFixedRowCount();
+		return _criteria.length + getFixedRowCount() + 1;
 	}
 
 	@Override
 	public int getFixedHeaderRowCount() {
-		return 1;
+		return 0;
 	}
 
 	@Override
@@ -156,7 +230,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	@Override
 	public KTableCellRenderer doGetCellRenderer(int col, int row) {
 		
-		if((col < getFixedColumnCount()) || (row < getFixedRowCount())) {
+		if((col < getFixedColumnCount()) || (row < getFixedRowCount() + 1)) {
 			return _fixedRenderer;
 		} else {
 			return _fixedRenderersInTable;
@@ -191,6 +265,13 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 			return _criteria[row - 1] + "/" + _alternatives[col - 1]; //$NON-NLS-1$
 		}
 	}
-
-
+	
+	public double[][] getValues() {
+		return _values;
+	}
+	
+	public String getTypeProblemSelected() {
+		return _typeProblemSelected;
+	}
+	
 }

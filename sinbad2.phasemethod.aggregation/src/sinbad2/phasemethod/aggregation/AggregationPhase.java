@@ -504,7 +504,7 @@ public class AggregationPhase implements IPhaseMethod {
 		} 
 	}
 	
-	public Object[]  getAggregatedValuationsAlpha() {
+	public Object[]  getAggregatedValuationsPosAndAlpha() {
 		int size = _aggregatedValuations.size();
 		String[] alternatives = new String[size];
 		int[] pos = new int[size];

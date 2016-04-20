@@ -97,5 +97,6 @@ public class SensitivityAnalysisView extends ViewPart implements ISensitivityAna
 	@Override
 	public void notifySensitivityAnalysisChange() {
 		initSATable();
+		_saTable.getProvider().refreshTable();
 	}
 }

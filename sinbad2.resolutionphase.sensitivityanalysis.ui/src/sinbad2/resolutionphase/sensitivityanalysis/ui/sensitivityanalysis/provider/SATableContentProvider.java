@@ -8,6 +8,8 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.PlatformUI;
 
 import de.kupzog.ktable.KTable;
 import de.kupzog.ktable.KTableCellEditor;
@@ -19,6 +21,9 @@ import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DMTable;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.provider.DMTableContentProvider;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
 
 public class SATableContentProvider extends KTableNoScrollModel {
@@ -40,6 +45,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	private final FixedCellRenderer _fixedRendererRed = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	private final FixedCellRenderer _fixedRendererGreen = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	
+	private DecisionMakingView _decisionMakingView;
 	private SensitivityAnalysis _sensitivityAnalysis;
 	
 	private static List<IChangeSATableValues> _listeners = new LinkedList<IChangeSATableValues>();
@@ -58,6 +64,12 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		
 		_table = table;
 		
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+		for(int i = 0; i < viewReferences.length; i++) {
+			if(DecisionMakingView.ID.equals(viewReferences[i].getId())) {
+				_decisionMakingView = (DecisionMakingView) viewReferences[i].getView(false);
+			}
+		}
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 
 		_alternatives = alternatives;
@@ -102,16 +114,32 @@ public class SATableContentProvider extends KTableNoScrollModel {
 				type = combo.getText();
 			}
 			if(!type.isEmpty()) {
-				_typeDataSelected = type;
-				
-				if(_typeDataSelected.equals(ABSOLUTE)) {
+				_typeDataSelected = type;	
+			}
+			
+			DMTable dmTable = _decisionMakingView.getTable();
+			DMTableContentProvider provider = dmTable.getProvider();
+			if(_typeDataSelected.equals(ABSOLUTE)) {
+				if(provider.getTypeProblemSelected().equals("MCC")) {
 					if(_values != _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights()) {
 						_values = _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights();
 						refreshTable();
 					}
 				} else {
+					if(_values != _sensitivityAnalysis.getAbsoluteThresholdValues()) {
+						_values = _sensitivityAnalysis.getAbsoluteThresholdValues();
+						refreshTable();
+					}
+				}
+			} else {
+				if(provider.getTypeProblemSelected().equals("MCC")) {
 					if(_values != _sensitivityAnalysis.getMinimumPercentChangeInCriteriaWeights()) {
 						_values = _sensitivityAnalysis.getMinimumPercentChangeInCriteriaWeights();
+						refreshTable();
+					}
+				} else {
+					if(_values != _sensitivityAnalysis.getRelativeThresholdValues()) {
+						_values = _sensitivityAnalysis.getRelativeThresholdValues();
 						refreshTable();
 					}
 				}
@@ -149,7 +177,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		}
 	}
 
-	private void refreshTable() {
+	public void refreshTable() {
 		for(int col = 1; col < getColumnCount(); ++col) {
 			for(int row = 1; row < getRowCount(); ++row) {
 				doGetContentAt(col, row);

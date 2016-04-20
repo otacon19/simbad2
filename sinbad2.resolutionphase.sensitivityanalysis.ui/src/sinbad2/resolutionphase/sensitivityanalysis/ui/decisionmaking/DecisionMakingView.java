@@ -32,7 +32,7 @@ import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingViewManager;
 
 public class DecisionMakingView extends ViewPart implements ISensitivityAnalysisChangeListener {
-
+	
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking"; //$NON-NLS-1$
 	public static final String CONTEXT_ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking.decisionmaking_view"; //$NON-NLS-1$
 
@@ -41,6 +41,8 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 
 	private DMTable _dmTable = null;
 	private Composite _container;
+	private Composite _tableComposite;
+	private Composite _buttonComposite;
 	private Button _changeWeightsButton;
 	
 	private ProblemElementsSet _elementsSet;
@@ -50,7 +52,7 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 	@Override
 	public void createPartControl(Composite parent) {
 		_container = parent;
-
+		
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
 		
@@ -68,12 +70,19 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 	}
 
 	private void init() {
-		_dmTable = new DMTable(_container, _sensitivityAnalysis);
+		_tableComposite = new Composite(_container, SWT.NONE);
+		_tableComposite.setLayout(new GridLayout());
+		_tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_dmTable = new DMTable(_tableComposite, _sensitivityAnalysis);
 		_dmTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		_changeWeightsButton = new Button(_container, SWT.NONE);
+		_buttonComposite = new Composite(_container, SWT.NONE);
+		_buttonComposite.setLayout(new GridLayout());
+		_buttonComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		_changeWeightsButton = new Button(_buttonComposite, SWT.NONE);
 		_changeWeightsButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
 		_changeWeightsButton.setText("Weights");
+		_buttonComposite.pack();
 
 		_changeWeightsButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -119,10 +128,15 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 		_dmTable.setModel(_sensitivityAnalysis.getAlternativesIds(), _sensitivityAnalysis.getCriteriaIds(),
 				_sensitivityAnalysis.getDecisionMatrix());
 	}
+	
+	public DMTable getTable() {
+		return _dmTable;
+	}
 
 	private void disposeDMTable() {
 		if (_dmTable != null) {
 			if (!_dmTable.isDisposed()) {
+				_tableComposite.dispose();
 				_dmTable.dispose();
 			}
 		}
@@ -131,6 +145,7 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 	private void disposeButton() {
 		if (_changeWeightsButton != null) {
 			if (!_changeWeightsButton.isDisposed()) {
+				_buttonComposite.dispose();
 				_changeWeightsButton.dispose();
 			}
 		}
