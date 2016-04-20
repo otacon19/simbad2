@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
@@ -22,6 +23,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.provider.RankingContentProvider;
 
 public class RankingView extends ViewPart implements IDisplayRankingChangeListener {
@@ -29,6 +31,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking"; //$NON-NLS-1$
 	public static final String CONTEXT_ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking.ranking_view"; //$NON-NLS-1$
 	
+	private DecisionMakingView _decisionMakingView;
 	private SensitivityAnalysis _sensitivityAnalysis;
 	
 	private TableViewer _rankingViewer;
@@ -51,6 +54,13 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		rankingTable.setHeaderVisible(true);
 		rankingTable.setLinesVisible(true);
 
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+		for(int i = 0; i < viewReferences.length; i++) {
+			if(DecisionMakingView.ID.equals(viewReferences[i].getId())) {
+				_decisionMakingView = (DecisionMakingView) viewReferences[i].getView(false);
+			}
+		}
+		
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 		
 		_rankingViewer.setContentProvider(new RankingContentProvider(_sensitivityAnalysis, this));
@@ -85,14 +95,27 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		_sensitivityModels.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				String typeProblem = _decisionMakingView.getTable().getProvider().getTypeProblemSelected();
 				if(_sensitivityModels.getSelectionIndex() == 0) {
-					_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
+					if(typeProblem.equals("MCC")) {
+						_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
+					} else {
+						_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
+					}
 					_rankingViewer.getTable().getColumn(2).setText("Value");
 				} else if(_sensitivityModels.getSelectionIndex() == 1){
-					_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
+					if(typeProblem.equals("MCC")) {
+						_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
+					} else {
+						_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
+					}
 					_rankingViewer.getTable().getColumn(2).setText("Ratios");
 				} else if(_sensitivityModels.getSelectionIndex() == 2) {
-					_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
+					if(typeProblem.equals("MCC")) {
+						_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
+					} else {
+						_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalMeasure();
+					}
 					_rankingViewer.getTable().getColumn(2).setText("Value");
 				}
 				_rankingViewer.getTable().getColumn(2).pack();

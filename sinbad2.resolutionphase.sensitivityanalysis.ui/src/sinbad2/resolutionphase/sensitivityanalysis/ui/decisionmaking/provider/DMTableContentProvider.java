@@ -97,7 +97,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 					} else if(model == 1) {
 						_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
 					} else {
-						_sensitivityAnalysis.computeAnalyticHierarchyModelCriticalMeasure();
+						_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalMeasure();
 					}
 				}
 			}
@@ -161,7 +161,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 				if(_typeProblemSelected.equals(MOST_CRITICAL_CRITERION)) {
 					_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
 				} else {
-					_sensitivityAnalysis.computeAnalyticHierarchyModelCriticalMeasure();
+					_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalMeasure();
 				}
 			}
 		}

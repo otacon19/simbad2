@@ -1026,7 +1026,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		notifySensitivityAnalysisChange();
 	}
 	
-	public void computeAnalyticHierarchyModelCriticalMeasure() {
+	public void computeAnalyticHierarchyProcessModelCriticalMeasure() {
 		normalize(_w);
 		normalizeDecisionMatrix();
 		computeFinalPreferences();
