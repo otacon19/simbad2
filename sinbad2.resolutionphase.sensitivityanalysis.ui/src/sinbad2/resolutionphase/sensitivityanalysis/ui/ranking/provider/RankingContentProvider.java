@@ -50,7 +50,7 @@ public class RankingContentProvider implements IStructuredContentProvider {
 				element = new MyElement();
 				element.alternative = _sensitivityAnalysis.getAlternativesIds()[i];
 				element.ranking = _sensitivityAnalysis.getRanking()[i];
-				element.value = Math.round(_sensitivityAnalysis.getAlternativesFinalPreferences()[i] * 100d) / 100d;
+				element.value = Math.round(_sensitivityAnalysis.getAlternativesFinalPreferences()[i] * 10000d) / 10000d;
 				elements.add(element);
 			}
 		} else if(model == 1){

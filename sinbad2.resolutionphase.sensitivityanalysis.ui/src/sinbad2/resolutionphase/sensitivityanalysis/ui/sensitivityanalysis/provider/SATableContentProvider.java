@@ -28,7 +28,7 @@ import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChang
 
 public class SATableContentProvider extends KTableNoScrollModel {
 	
-	private static final String RELATIVE = "RELATIVE";
+	private static final String PERCENT = "PERCENT";
 	private static final String ABSOLUTE = "ABSOLUTE";
 	
 	private String _typeDataSelected;
@@ -76,7 +76,11 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		_criteria = criteria;
 		_values = values;
 		
-		computePairs();
+		if(_decisionMakingView.getTable().getProvider().getTypeProblemSelected().endsWith("MCC")) {
+			computePairs();
+		} else {
+			computeAllPairs();
+		}
 		initialize();
 
 		_fixedRendererHeader.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
@@ -104,6 +108,21 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		}
 	}
 
+	private void computeAllPairs() {
+		int pairs = (_alternatives.length *_alternatives.length) - _alternatives.length;
+		_pairs = new int[pairs][2];
+		int pair = 0;
+		for(int i = 0; i < _alternatives.length; i++) {
+			for(int j = 0; j < _alternatives.length; j++) {
+				if(i != j) {
+					_pairs[pair][0] = i;
+					_pairs[pair][1] = j;
+					pair++;
+				}
+			}
+		}
+	}
+	
 	@Override
 	public Object doGetContentAt(int col, int row) {
 		
@@ -162,10 +181,11 @@ public class SATableContentProvider extends KTableNoScrollModel {
 						erg = "N/A"; //$NON-NLS-1$
 					} else {
 						if(_typeDataSelected.equals(ABSOLUTE)) {
-							erg = ((int) (((Double) erg) * 10000d)) / 10000d; 
+							double value = Math.round((Double) erg * 1000d) / 1000d;
+							erg = value;
 						} else {
-							int percent = (int) (Math.round(((Double) erg) * 10000)) / 10000; 
-							erg = Integer.toString((Integer) percent) + "%";
+							double percent = Math.round((Double) erg * 1000d) / 1000d;
+							erg = Double.toString(percent) + "%";
 						}
 					}
 				}
@@ -191,7 +211,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		if(col == 0 && row == 0) {
 			_kTableCombo = new  MyOwnKTableCellEditorCombo();
 			String[] valuesString = new String[2];
-			valuesString[0] = RELATIVE;
+			valuesString[0] = PERCENT;
 			valuesString[1] = ABSOLUTE;
 			_kTableCombo.setItems(valuesString);
 			

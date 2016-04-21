@@ -257,9 +257,9 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		
 		if((col == 0) && (row == 0)) {
 			return "";
-		} else if(col < getFixedColumnCount()) {
+		} else if(col == 0) {
 			return _criteria[row - 1];
-		} else if(row < getFixedRowCount()) {
+		} else if(row == 0) {
 			return _alternatives[col - 1];
 		} else {
 			return _criteria[row - 1] + "/" + _alternatives[col - 1]; //$NON-NLS-1$

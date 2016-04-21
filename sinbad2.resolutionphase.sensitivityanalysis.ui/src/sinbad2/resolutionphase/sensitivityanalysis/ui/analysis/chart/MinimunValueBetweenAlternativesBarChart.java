@@ -137,7 +137,7 @@ public class MinimunValueBetweenAlternativesBarChart {
 	private DefaultCategoryDataset createDataset() {
 		String a1 = "", a2 = "";
 		if (_currentAlternativesPair != null) {
-			if (_type.equals("RELATIVE")) {
+			if (_type.equals("PERCENT")) {
 				a1 = _elementsSet.getAlternatives().get(_currentAlternativesPair[0]).getId();
 				a2 = _elementsSet.getAlternatives().get(_currentAlternativesPair[1]).getId();
 				_chart.setTitle("Minimun percent " + a1 + " - " + a2);
