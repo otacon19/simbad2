@@ -10,8 +10,6 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.labels.ItemLabelAnchor;
 import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
@@ -97,21 +95,14 @@ public class MinimunValueBetweenAlternativesBarChart {
 
 	@SuppressWarnings("serial")
 	private JFreeChart createChart(DefaultCategoryDataset dataset) {
-		JFreeChart result = ChartFactory.createBarChart(null, null, "Absolute", dataset, PlotOrientation.HORIZONTAL,
-				false, true, false);
+		JFreeChart result = ChartFactory.createBarChart(null, null, "Absolute", dataset, PlotOrientation.HORIZONTAL, false, true, false);
 
 		result.setBackgroundPaint(new GradientPaint(0, 0, Color.white, 1000, 0, Color.blue));
-		CategoryPlot plot = result.getCategoryPlot();
-		plot.getRangeAxis().setRange(0d, 100d);
-		plot.getRangeAxis().setUpperBound(100);
-		plot.getRangeAxis().setLowerBound(-100);
-		plot.setRangeCrosshairVisible(true);
-		plot.getDomainAxis().setVisible(false);
+		CategoryPlot plot = result.getCategoryPlot();;
+		plot.setRangeCrosshairVisible(false);
+		plot.getDomainAxis().setVisible(true);
 		plot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_RIGHT);
 
-		NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-		rangeAxis.setUpperMargin(0.15);
-		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 		CategoryAxis domainAxis = plot.getDomainAxis();
 		domainAxis.setVisible(false);
 
@@ -137,17 +128,14 @@ public class MinimunValueBetweenAlternativesBarChart {
 	private DefaultCategoryDataset createDataset() {
 		String a1 = "", a2 = "";
 		if (_currentAlternativesPair != null) {
-			if (_type.equals("PERCENT")) {
+			if (_type.equals("RELATIVE")) {
 				a1 = _elementsSet.getAlternatives().get(_currentAlternativesPair[0]).getId();
 				a2 = _elementsSet.getAlternatives().get(_currentAlternativesPair[1]).getId();
 				_chart.setTitle("Minimun percent " + a1 + " - " + a2);
-				int maxValue = (int) getMax();
-				setRange(maxValue + 30, maxValue / 10);
 			} else {
 				a1 = _elementsSet.getAlternatives().get(_currentAlternativesPair[0]).getId();
 				a2 = _elementsSet.getAlternatives().get(_currentAlternativesPair[1]).getId();
 				_chart.setTitle("Minimun absolute " + a1 + " - " + a2);
-				setRange(1, 0.1);
 			}
 		}
 
@@ -161,27 +149,5 @@ public class MinimunValueBetweenAlternativesBarChart {
 		}
 
 		return _dataset;
-	}
-
-	private void setRange(double value, double tickUnit) {
-		CategoryPlot plot = _chart.getCategoryPlot();
-		plot.getRangeAxis().setRange(0d, value);
-		plot.getRangeAxis().setUpperBound(value);
-		plot.getRangeAxis().setLowerBound(-value);
-		((NumberAxis) plot.getRangeAxis()).setTickUnit(new NumberTickUnit(tickUnit));
-	}
-
-	private double getMax() {
-		double max = 0;
-		for (int i = 0; i < _values.length; ++i) {
-			if (Math.abs(_values[i]) > max) {
-				max = Math.abs(_values[i]);
-			}
-		}
-		if (max == 0) {
-			return 100d;
-		}
-
-		return max;
 	}
 }

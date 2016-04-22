@@ -13,6 +13,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
@@ -21,17 +22,17 @@ import sinbad2.core.workspace.Workspace;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.resolutionphase.sensitivityanalysis.ISensitivityAnalysisChangeListener;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.AlternativesEvolutionWeigthsLineChart;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.MinimunValueBetweenAlternativesBarChart;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SATable;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SensitivityAnalysisView;
 
-public class AnalysisView extends ViewPart implements ISelectionChangedListener, IChangeSATableValues {
-	public AnalysisView() {
-	}
-
+public class AnalysisView extends ViewPart implements ISelectionChangedListener, IChangeSATableValues, ISensitivityAnalysisChangeListener {
+	
 	private Composite _parent;
 	private Composite _chartComposite;
 	private Composite _spinnerComposite;
@@ -47,6 +48,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
 	private SensitivityAnalysisView _sensitivityAnalysisView;
+	private RankingView _rankingView;
 	
 	private ControlAdapter _controlListener;
 	
@@ -72,14 +74,10 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_elementsSet = elementsManager.getActiveElementSet();
 		
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
+		_sensitivityAnalysis.registerSensitivityAnalysisChangeListener(this);
 		
-		String id = "flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis";
-		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
-		for(int i = 0; i < viewReferences.length; i++) {
-			if(id.equals(viewReferences[i].getId())) {
-				_sensitivityAnalysisView = (SensitivityAnalysisView) viewReferences[i].getView(false);
-			}
-		}
+		_rankingView = (RankingView) getView(RankingView.ID);
+		_sensitivityAnalysisView = (SensitivityAnalysisView) getView(SensitivityAnalysisView.ID);
 
 		_saTable = _sensitivityAnalysisView.getSATable();
 		_saTable.addSelectionChangedListener(this);
@@ -125,6 +123,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 			_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
 			_lineChart.setCriterionSelected(_criterionSelected);
 			_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllCriteria().indexOf(_criterionSelected)]);
+			_lineChart.setModel(_rankingView.getModel());
 			
 			_weightSpinner.setVisible(true);
 		}
@@ -191,7 +190,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				indexes[1] = a2Index;
 				_barChart.setCurrentAlternativesPair(indexes);
 				
-				if(_typeBarChart.equals("PERCENT")) {
+				if(_typeBarChart.equals("RELATIVE")) {
 					double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
 					_barChart.setValues(percents);
 					_barChart.setTypeData(_typeBarChart);
@@ -240,5 +239,23 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	public void notifyChangeSATableValues(String type) {
 		_typeBarChart = type;
 		refreshChart();
+	}
+
+	@Override
+	public void notifySensitivityAnalysisChange() {
+		initializeChart();
+		refreshChart();
+	}
+	
+	private IViewPart getView(String id) {
+		IViewPart view = null;
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.getViewReferences();
+		for (int i = 0; i < viewReferences.length; i++) {
+			if (id.equals(viewReferences[i].getId())) {
+				view = viewReferences[i].getView(false);
+			}
+		}
+		return view;
 	}
 }

@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
@@ -54,12 +55,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		rankingTable.setHeaderVisible(true);
 		rankingTable.setLinesVisible(true);
 
-		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
-		for(int i = 0; i < viewReferences.length; i++) {
-			if(DecisionMakingView.ID.equals(viewReferences[i].getId())) {
-				_decisionMakingView = (DecisionMakingView) viewReferences[i].getView(false);
-			}
-		}
+		_decisionMakingView = (DecisionMakingView) getView(DecisionMakingView.ID);
 		
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 		
@@ -176,5 +172,17 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	@Override
 	public void displayRankingChange(Object ranking) {
 		_rankingViewer.setInput(ranking);
+	}
+	
+	private IViewPart getView(String id) {
+		IViewPart view = null;
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.getViewReferences();
+		for (int i = 0; i < viewReferences.length; i++) {
+			if (id.equals(viewReferences[i].getId())) {
+				view = viewReferences[i].getView(false);
+			}
+		}
+		return view;
 	}
 }

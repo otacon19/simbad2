@@ -28,7 +28,7 @@ import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChang
 
 public class SATableContentProvider extends KTableNoScrollModel {
 	
-	private static final String PERCENT = "PERCENT";
+	private static final String RELATIVE = "RELATIVE";
 	private static final String ABSOLUTE = "ABSOLUTE";
 	
 	private String _typeDataSelected;
@@ -211,7 +211,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		if(col == 0 && row == 0) {
 			_kTableCombo = new  MyOwnKTableCellEditorCombo();
 			String[] valuesString = new String[2];
-			valuesString[0] = PERCENT;
+			valuesString[0] = RELATIVE;
 			valuesString[1] = ABSOLUTE;
 			_kTableCombo.setItems(valuesString);
 			

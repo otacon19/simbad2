@@ -15,6 +15,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
@@ -32,7 +33,7 @@ import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingViewManager;
 
 public class DecisionMakingView extends ViewPart implements ISensitivityAnalysisChangeListener {
-	
+
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking"; //$NON-NLS-1$
 	public static final String CONTEXT_ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking.decisionmaking_view"; //$NON-NLS-1$
 
@@ -44,18 +45,19 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 	private Composite _tableComposite;
 	private Composite _buttonComposite;
 	private Button _changeWeightsButton;
-	
+
 	private ProblemElementsSet _elementsSet;
-	
-	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
+
+	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench()
+			.getService(IContextService.class);
 
 	@Override
 	public void createPartControl(Composite parent) {
 		_container = parent;
-		
+
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
-		
+
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 		_sensitivityAnalysis.registerSensitivityAnalysisChangeListener(this);
 
@@ -89,13 +91,15 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 			public void widgetSelected(SelectionEvent e) {
 				double[] weights = _sensitivityAnalysis.getWeights();
 				List<Double> weightsList = new LinkedList<Double>();
-				for(int i = 0; i < weights.length; ++i) {
+				for (int i = 0; i < weights.length; ++i) {
 					weightsList.add(weights[i]);
 				}
 				Map<String, List<Double>> criteriaWeights = new HashMap<String, List<Double>>();
 				criteriaWeights.put(null, weightsList);
-				
-				WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), _elementsSet.getAllElementCriterionSubcriteria(null), criteriaWeights, 1, "criterion", "all criteria");
+
+				WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(),
+						_elementsSet.getAllElementCriterionSubcriteria(null), criteriaWeights, 1, "criterion",
+						"all criteria");
 
 				weights = null;
 				List<Double> ws;
@@ -106,16 +110,7 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 					for (int i = 0; i < weights.length; ++i) {
 						weights[i] = ws.get(i);
 					}
-					
-					if(_rankingView == null) {
-						IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
-						for(int i = 0; i < viewReferences.length; i++) {
-							if(RankingView.ID.equals(viewReferences[i].getId())) {
-								_rankingView = (RankingView) viewReferences[i].getView(false);
-							}
-						}
-					}
-					
+
 					_sensitivityAnalysis.calculateDecisionMatrix(ws, _rankingView.getModel());
 				}
 			}
@@ -128,7 +123,7 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 		_dmTable.setModel(_sensitivityAnalysis.getAlternativesIds(), _sensitivityAnalysis.getCriteriaIds(),
 				_sensitivityAnalysis.getDecisionMatrix());
 	}
-	
+
 	public DMTable getTable() {
 		return _dmTable;
 	}
@@ -183,10 +178,36 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 
 	@Override
 	public void notifySensitivityAnalysisChange() {
-		refreshDMTable();		
+		refreshDMTable();
+
+		if (_rankingView == null) {
+			_rankingView = (RankingView) getView(RankingView.ID);
+		}
+
 		Object[] aggregatedValuationsData = _sensitivityAnalysis.getAggregatedValuationsPosAndAlpha();
 		RankingViewManager.getInstance().setContent(_sensitivityAnalysis.getRanking());
-		DomainViewManager.getInstance().setContent(_sensitivityAnalysis.getUnifiedDomain(), new Object[] { _sensitivityAnalysis.getAlternativesIds(), _sensitivityAnalysis.getAlternativesFinalPreferences(), 
-				aggregatedValuationsData[0], aggregatedValuationsData[1]});
+	
+		if (_rankingView.getModel() != 1) {
+			DomainViewManager.getInstance().setContent(_sensitivityAnalysis.getUnifiedDomain(),
+					new Object[] { _sensitivityAnalysis.getAlternativesIds(),
+							_sensitivityAnalysis.getAlternativesFinalPreferences(), aggregatedValuationsData[0],
+							aggregatedValuationsData[1] });
+		} else {
+			DomainViewManager.getInstance().setContent(_sensitivityAnalysis.getUnifiedDomain(),
+					new Object[] { _sensitivityAnalysis.getAlternativesIds(), new double[0],
+							aggregatedValuationsData[0], aggregatedValuationsData[1] });
+		}
+	}
+
+	private IViewPart getView(String id) {
+		IViewPart view = null;
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.getViewReferences();
+		for (int i = 0; i < viewReferences.length; i++) {
+			if (id.equals(viewReferences[i].getId())) {
+				view = viewReferences[i].getView(false);
+			}
+		}
+		return view;
 	}
 }
