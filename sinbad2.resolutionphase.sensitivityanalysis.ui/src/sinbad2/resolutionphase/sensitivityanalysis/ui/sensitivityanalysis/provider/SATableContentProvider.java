@@ -81,6 +81,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		} else {
 			computeAllPairs();
 		}
+		
 		initialize();
 
 		_fixedRendererHeader.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);

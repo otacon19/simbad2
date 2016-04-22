@@ -17,9 +17,11 @@ import de.kupzog.ktable.editors.KTableCellEditorText;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.IDisplayRankingChangeListener;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingViewManager;
 
-public class DMTableContentProvider extends KTableNoScrollModel {
+public class DMTableContentProvider extends KTableNoScrollModel implements IDisplayRankingChangeListener {
 	
 	private static final String MOST_CRITICAL_CRITERION = "MCC";
 	private static final String MOST_CRITICAL_MEASURE = "MCM";
@@ -30,6 +32,9 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	
 	private String _typeProblemSelected;
 	
+	private KTable _table;
+	
+	private RankingViewManager _rankingViewManager;
 	private RankingView _rankingView;
 	private SensitivityAnalysis _sensitivityAnalysis;
 
@@ -49,6 +54,11 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria, double[][] values, SensitivityAnalysis sensitivityAnalysis) {
 		super(table);
 
+		_table = table;
+		
+		_rankingViewManager = RankingViewManager.getInstance();
+		_rankingViewManager.registerDisplayRankingChangeListener(this);
+		
 		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
 		for(int i = 0; i < viewReferences.length; i++) {
 			if(RankingView.ID.equals(viewReferences[i].getId())) {
@@ -117,9 +127,18 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 			} catch(Exception e) {
 				erg = null;
 			}
-
 			return erg;
 		}
+	}
+	
+	private void refreshTable() {
+		for(int col = 1; col < getColumnCount(); ++col) {
+			for(int row = 1; row < getRowCount(); ++row) {
+				doGetContentAt(col, row);
+			}
+		}
+		
+		_table.redraw();
 	}
 
 	public KTableCellEditor doGetCellEditor(int col, int row) {
@@ -273,5 +292,9 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	public String getTypeProblemSelected() {
 		return _typeProblemSelected;
 	}
-	
+
+	@Override
+	public void displayRankingChange(Object ranking) {
+		refreshTable();
+	}
 }

@@ -239,8 +239,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				createDefaultWeights();
 			}
 		}
-	
-		_decisionMatrix = _aggregationPhase.getAggregatedValuationsAlternativeCriterion();
 		
 		if(model == 0) {
 			computeWeightedSumModelCriticalCriterion();
@@ -333,7 +331,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 					if (!_aplicatedWeights) {
 						_alternativesRatioFinalPreferences[alternative1][alternative2] *= Math.pow((_decisionMatrix[criterion][alternative1] 
 								/ _decisionMatrix[criterion][alternative2]), _w[criterion]);
-							
 					} else {
 						_alternativesRatioFinalPreferences[alternative1][alternative2] *= _decisionMatrix[criterion][alternative1] 
 								/ _decisionMatrix[criterion][alternative2];
@@ -983,6 +980,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	public void computeWeightedSumModelCriticalCriterion() {
+		copyDecisionMatrix();
+		
 		normalize(_w);
 		normalizeDecisionMatrix();
 		computeFinalPreferences();
@@ -993,8 +992,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 		notifySensitivityAnalysisChange();
 	}
-	
+
 	public void computeWeightedSumModelCriticalMeasure() {
+		copyDecisionMatrix();
+		
 		normalize(_w);
 		normalizeDecisionMatrix();
 		computeFinalPreferences();
@@ -1007,6 +1008,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	public void computeAnalyticHierarchyProcessModelCriticalCriterion() {
+		copyDecisionMatrix();
+		
 		normalize(_w);
 		normalizeDecisionMatrixSumToOne();
 		computeFinalPreferences();
@@ -1019,6 +1022,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	public void computeAnalyticHierarchyProcessModelCriticalMeasure() {
+		copyDecisionMatrix();
+		
 		normalize(_w);
 		normalizeDecisionMatrixSumToOne();
 		computeFinalPreferences();
@@ -1031,6 +1036,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	public void computeWeightedProductModelCriticalCriterion() {
+		copyDecisionMatrix();
+		
 		normalize(_w);
 		normalizeDecisionMatrix();
 		computeFinalPreferencesWeightedProduct();
@@ -1043,6 +1050,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	public void computeWeightedProductModelCriticalMeasure() {
+		copyDecisionMatrix();
+		
 		normalize(_w);
 		normalizeDecisionMatrix();
 		computeFinalPreferencesWeightedProduct();
@@ -1054,8 +1063,18 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		notifySensitivityAnalysisChange();
 	}
 	
-	private void normalizeDecisionMatrix() {
+	private void copyDecisionMatrix() {
+		_decisionMatrix = new double[_numberOfCriteria][_numberOfAlternatives];
 		
+		double[][] aggregatedValuations = _aggregationPhase.getAggregatedValuationsAlternativeCriterion();
+		for(int i = 0; i < _numberOfAlternatives; ++i) {
+			for(int j = 0; j < _numberOfCriteria; ++j) {
+				_decisionMatrix[j][i] = aggregatedValuations[j][i];
+			}
+		}
+	}
+	
+	private void normalizeDecisionMatrix() {
 		if(!checkNormalizedMatrix()) {
 			double acum, noStandarizedValue;
 			for (int i = 0; i < _numberOfCriteria; ++i) {
@@ -1096,7 +1115,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				rowAcum += _decisionMatrix[c][a];
 			}
 			if(rowAcum != 1) {
-				normalizeRow(c, rowAcum);
+				normalizeRow(c, Math.round(rowAcum * 10000d) / 10000d);
 			}
 		}
 	}
@@ -1127,7 +1146,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	public void notifySensitivityAnalysisChange() {
-
 		for (ISensitivityAnalysisChangeListener listener : _listeners) {
 			listener.notifySensitivityAnalysisChange();
 		}
