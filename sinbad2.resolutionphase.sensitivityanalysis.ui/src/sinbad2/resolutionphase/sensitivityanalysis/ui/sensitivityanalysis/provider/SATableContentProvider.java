@@ -23,7 +23,6 @@ import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DMTable;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.provider.DMTableContentProvider;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
 
 public class SATableContentProvider extends KTableNoScrollModel {
@@ -76,7 +75,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		_criteria = criteria;
 		_values = values;
 		
-		if(_decisionMakingView.getTable().getProvider().getTypeProblemSelected().endsWith("MCC")) {
+		if(_decisionMakingView.getTable().getTypeProblem().endsWith("MCC")) {
 			computePairs();
 		} else {
 			computeAllPairs();
@@ -138,9 +137,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 			}
 			
 			DMTable dmTable = _decisionMakingView.getTable();
-			DMTableContentProvider provider = dmTable.getProvider();
 			if(_typeDataSelected.equals(ABSOLUTE)) {
-				if(provider.getTypeProblemSelected().equals("MCC")) {
+				if(dmTable.getTypeProblem().equals("MCC")) {
 					if(_values != _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights()) {
 						_values = _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights();
 						refreshTable();
@@ -152,7 +150,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 					}
 				}
 			} else {
-				if(provider.getTypeProblemSelected().equals("MCC")) {
+				if(dmTable.getTypeProblem().equals("MCC")) {
 					if(_values != _sensitivityAnalysis.getMinimumPercentChangeInCriteriaWeights()) {
 						_values = _sensitivityAnalysis.getMinimumPercentChangeInCriteriaWeights();
 						refreshTable();

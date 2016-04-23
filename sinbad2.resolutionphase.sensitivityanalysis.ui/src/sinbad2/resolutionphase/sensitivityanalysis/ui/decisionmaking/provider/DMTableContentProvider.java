@@ -17,6 +17,7 @@ import de.kupzog.ktable.editors.KTableCellEditorText;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DMTable;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.IDisplayRankingChangeListener;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingViewManager;
@@ -29,8 +30,6 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 	private String[] _alternatives;
 	private String[] _criteria;
 	private double[][] _values;
-	
-	private String _typeProblemSelected;
 	
 	private KTable _table;
 	
@@ -77,8 +76,6 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 		_fixedRenderer.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		_fixedRenderersInTable.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		_fixedRenderersInTable.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		
-		_typeProblemSelected = MOST_CRITICAL_CRITERION;
 	}
 
 	@Override
@@ -88,12 +85,12 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 			if(_kTableCombo.getControl() != null) {
 				CCombo combo = (CCombo) _kTableCombo.getControl();
 				type = combo.getText();
+				((DMTable) _table).setTypeProblem(type);
 			}
 			
 			if(!type.isEmpty()) {
-				_typeProblemSelected = type;
 				int model = _rankingView.getModel();
-				if(_typeProblemSelected.equals(MOST_CRITICAL_CRITERION)) {
+				if(((DMTable) _table).getTypeProblem().equals(MOST_CRITICAL_CRITERION)) {
 					if(model == 0) {
 						_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
 					} else if(model == 1) {
@@ -112,7 +109,7 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 				}
 			}
 			
-			return _typeProblemSelected;
+			return ((DMTable) _table).getTypeProblem();
 			
 		} else {
 			Object erg;
@@ -165,19 +162,19 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 			_values[row - 1][col - 1] = v;
 			
 			if(_rankingView.getModel() == 0) {
-				if(_typeProblemSelected.equals(MOST_CRITICAL_CRITERION)) {
+				if(((DMTable) _table).getTypeProblem().equals(MOST_CRITICAL_CRITERION)) {
 					_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
 				} else {
 					_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
 				}
 			} else if(_rankingView.getModel() == 1){
-				if(_typeProblemSelected.equals(MOST_CRITICAL_CRITERION)) {
+				if(((DMTable) _table).getTypeProblem().equals(MOST_CRITICAL_CRITERION)) {
 					_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
 				} else {
 					_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
 				}
 			} else {
-				if(_typeProblemSelected.equals(MOST_CRITICAL_CRITERION)) {
+				if(((DMTable) _table).getTypeProblem().equals(MOST_CRITICAL_CRITERION)) {
 					_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
 				} else {
 					_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalMeasure();
@@ -289,10 +286,6 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 		return _values;
 	}
 	
-	public String getTypeProblemSelected() {
-		return _typeProblemSelected;
-	}
-
 	@Override
 	public void displayRankingChange(Object ranking) {
 		refreshTable();

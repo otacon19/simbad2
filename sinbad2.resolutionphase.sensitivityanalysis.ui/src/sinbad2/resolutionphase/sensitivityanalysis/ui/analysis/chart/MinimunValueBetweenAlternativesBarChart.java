@@ -95,7 +95,7 @@ public class MinimunValueBetweenAlternativesBarChart {
 
 	@SuppressWarnings("serial")
 	private JFreeChart createChart(DefaultCategoryDataset dataset) {
-		JFreeChart result = ChartFactory.createBarChart(null, null, "Absolute", dataset, PlotOrientation.HORIZONTAL, false, true, false);
+		JFreeChart result = ChartFactory.createBarChart(null, null, null, dataset, PlotOrientation.HORIZONTAL, false, true, false);
 
 		result.setBackgroundPaint(new GradientPaint(0, 0, Color.white, 1000, 0, Color.blue));
 		CategoryPlot plot = result.getCategoryPlot();;

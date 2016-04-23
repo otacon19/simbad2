@@ -91,7 +91,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		_sensitivityModels.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String typeProblem = _decisionMakingView.getTable().getProvider().getTypeProblemSelected();
+				String typeProblem = _decisionMakingView.getTable().getTypeProblem();
 				if(_sensitivityModels.getSelectionIndex() == 0) {
 					if(typeProblem.equals("MCC")) {
 						_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();

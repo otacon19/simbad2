@@ -459,6 +459,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 								_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;	
 							} else {
 								_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = total;
+								
+								if (_minimumAbsoluteChangeInCriteriaWeights[i][j][k] > _w[k]) {
+									_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;
+								}
 							}
 						} else {
 							_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;
@@ -500,6 +504,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 							_absoluteThresholdValues[i][j][k] = null;
 						} else {
 							_absoluteThresholdValues[i][j][k] = (_alternativesFinalPreferences[i] - _alternativesFinalPreferences[j]) / _w[k];
+							
+							if (_absoluteThresholdValues[i][j][k] > _w[k]) {
+								_absoluteThresholdValues[i][j][k] = null;
+							}
 						}
 					}
 				}
@@ -518,10 +526,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 							_relativeThresholdValues[i][j][k] = null;
 						} else {
 							_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * (100d / _decisionMatrix[k][i]);
-							
-							if(_relativeThresholdValues[i][j][k] > 100) {
-								_relativeThresholdValues[i][j][k] = null;
-							}	
 						}
 					} else {
 						_relativeThresholdValues[i][j][k] = null;
@@ -561,6 +565,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 							_absoluteThresholdValues[i][j][k] = null;
 						} else {
 							_absoluteThresholdValues[i][j][k] = 1 - Math.pow(auxAlternativesRatioPreferences[j][i], 1d/_w[k]);
+							
+							if (_absoluteThresholdValues[i][j][k] > _w[k]) {
+								_absoluteThresholdValues[i][j][k] = null;
+							}
 						}
 					}
 				}
@@ -578,10 +586,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 						_relativeThresholdValues[i][j][k] = null;
 					} else {
 						_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * 100d;
-							
-						if(_relativeThresholdValues[i][j][k] > 100) {
-							_relativeThresholdValues[i][j][k] = null;
-						}
 					}
 				}
 			}
@@ -601,6 +605,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 							_absoluteThresholdValues[i][j][k] = null;
 						} else {
 							_absoluteThresholdValues[i][j][k] = (_alternativesFinalPreferences[i] - _alternativesFinalPreferences[j]) / denominator;
+							
+							if (_absoluteThresholdValues[i][j][k] > _w[k]) {
+								_absoluteThresholdValues[i][j][k] = null;
+							}
 						}
 					}
 				}
@@ -619,10 +627,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 							_relativeThresholdValues[i][j][k] = null;
 						} else {
 							_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * (100 / _decisionMatrix[k][i]);
-		
-							if(_relativeThresholdValues[i][j][k] > 100) {
-								_relativeThresholdValues[i][j][k] = null;
-							}
 						}
 					} else {
 						_relativeThresholdValues[i][j][k] = null;
@@ -646,7 +650,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		for (int i = 0; i < bestAlternatives.size(); i++) {
 			for (int j = 0; j < _numberOfAlternatives; j++) {
 				for (int k = 0; k < _numberOfCriteria; k++) {
-					aux = _minimumPercentChangeInCriteriaWeights[bestAlternatives.get(i)][j][k];
+					aux = _minimumAbsoluteChangeInCriteriaWeights[bestAlternatives.get(i)][j][k];
 					if (aux != null) {
 						aux = Math.abs(aux);
 						if (minimum == null) {
@@ -663,62 +667,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 					}
 				}
 			}
+			
 			for (int j = 0; j < _numberOfAlternatives; j++) {
 				for (int k = 0; k < _numberOfCriteria; k++) {
-					aux = _minimumPercentChangeInCriteriaWeights[j][bestAlternatives.get(i)][k];
-					if (aux != null) {
-						aux = Math.abs(aux);
-						if (minimum == null) {
-							minimum = aux;
-							_absoluteTop = new LinkedList<Integer>();
-							_absoluteTop.add(new Integer(k));
-						} else if (aux < minimum) {
-							minimum = aux;
-							_absoluteTop = new LinkedList<Integer>();
-							_absoluteTop.add(new Integer(k));
-						} else if (aux == minimum) {
-							_absoluteTop.add(new Integer(k));
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	private void computeAbsoluteTopCriticalMeasure() {
-		List<Integer> bestAlternatives = new LinkedList<Integer>();
-
-		for (int i = 0; i < _numberOfAlternatives; i++) {
-			if (_ranking[i] == 1) {
-				bestAlternatives.add(new Integer(i));
-			}
-		}
-
-		Double minimum = null;
-		Double aux = null;
-		for (int i = 0; i < bestAlternatives.size(); i++) {
-			for (int j = 0; j < _numberOfAlternatives; j++) {
-				for (int k = 0; k < _numberOfCriteria; k++) {
-					aux = _relativeThresholdValues[bestAlternatives.get(i)][j][k];
-					if (aux != null) {
-						aux = Math.abs(aux);
-						if (minimum == null) {
-							minimum = aux;
-							_absoluteTop = new LinkedList<Integer>();
-							_absoluteTop.add(new Integer(k));
-						} else if (aux < minimum) {
-							minimum = aux;
-							_absoluteTop = new LinkedList<Integer>();
-							_absoluteTop.add(new Integer(k));
-						} else if (aux == minimum) {
-							_absoluteTop.add(new Integer(k));
-						}
-					}
-				}
-			}
-			for (int j = 0; j < _numberOfAlternatives; j++) {
-				for (int k = 0; k < _numberOfCriteria; k++) {
-					aux = _relativeThresholdValues[j][bestAlternatives.get(i)][k];
+					aux = _minimumAbsoluteChangeInCriteriaWeights[j][bestAlternatives.get(i)][k];
 					if (aux != null) {
 						aux = Math.abs(aux);
 						if (minimum == null) {
@@ -745,34 +697,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		for (int i = 0; i < _numberOfAlternatives; i++) {
 			for (int j = 0; j < _numberOfAlternatives; j++) {
 				for (int k = 0; k < _numberOfCriteria; k++) {
-					aux = _minimumPercentChangeInCriteriaWeights[i][j][k];
-					if (aux != null) {
-						aux = Math.abs(aux);
-						if (minimum == null) {
-							minimum = aux;
-							_absoluteAny = new LinkedList<Integer>();
-							_absoluteAny.add(new Integer(k));
-						} else if (aux < minimum) {
-							minimum = aux;
-							_absoluteAny = new LinkedList<Integer>();
-							_absoluteAny.add(new Integer(k));
-						} else if (aux == minimum) {
-							_absoluteAny.add(new Integer(k));
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	private void computeAbsoluteAnyCriticalMeasure() {
-		Double minimum = null;
-		Double aux = null;
-
-		for (int i = 0; i < _numberOfAlternatives; i++) {
-			for (int j = 0; j < _numberOfAlternatives; j++) {
-				for (int k = 0; k < _numberOfCriteria; k++) {
-					aux = _relativeThresholdValues[i][j][k];
+					aux = _minimumAbsoluteChangeInCriteriaWeights[i][j][k];
 					if (aux != null) {
 						aux = Math.abs(aux);
 						if (minimum == null) {
@@ -1001,8 +926,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		computeFinalPreferences();
 		computeAbsoluteThresholdValuesWeightedSumModel();
 		computeRelativeThresholdValuesWeightedSumModel();
-		computeAbsoluteTopCriticalMeasure();
-		computeAbsoluteAnyCriticalMeasure();
 
 		notifySensitivityAnalysisChange();
 	}
@@ -1029,8 +952,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		computeFinalPreferences();
 		computeAbsoluteThresholdValuesAnalyticHierarchyProcess();
 		computeRelativeThresholdValuesAnalyticHierarchyProcess();
-		computeAbsoluteTopCriticalMeasure();
-		computeAbsoluteAnyCriticalMeasure();
 
 		notifySensitivityAnalysisChange();
 	}
@@ -1057,8 +978,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		computeFinalPreferencesWeightedProduct();
 		computeAbsoluteThresholdValuesWeightedProductModel();
 		computeRelativeThresholdValuesWeightedProductModel();
-		computeAbsoluteTopCriticalMeasure();
-		computeAbsoluteAnyCriticalMeasure();
 		
 		notifySensitivityAnalysisChange();
 	}

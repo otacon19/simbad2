@@ -120,8 +120,7 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 	}
 
 	private void refreshDMTable() {
-		_dmTable.setModel(_sensitivityAnalysis.getAlternativesIds(), _sensitivityAnalysis.getCriteriaIds(),
-				_sensitivityAnalysis.getDecisionMatrix());
+		_dmTable.setModel(_sensitivityAnalysis.getAlternativesIds(), _sensitivityAnalysis.getCriteriaIds(), _sensitivityAnalysis.getDecisionMatrix());
 	}
 
 	public DMTable getTable() {
@@ -201,8 +200,7 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 
 	private IViewPart getView(String id) {
 		IViewPart view = null;
-		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.getViewReferences();
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
 		for (int i = 0; i < viewReferences.length; i++) {
 			if (id.equals(viewReferences[i].getId())) {
 				view = viewReferences[i].getView(false);

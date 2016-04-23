@@ -10,6 +10,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Spinner;
@@ -35,10 +36,13 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	
 	private Composite _parent;
 	private Composite _chartComposite;
+	private Composite _componentsComposite;
 	private Composite _spinnerComposite;
+	private Composite _buttonComposite;
 	
 	private SATable _saTable;
 	private Spinner _weightSpinner;
+	private Button _changeChartButton;
 	
 	private Object[] _pairAlternatives;
 	private Criterion _criterionSelected;
@@ -84,7 +88,15 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_saTable.getProvider().registerNotifyChangeSATableListener(this);
 		
 		createChartComposite();
+		
+		_componentsComposite = new Composite(_parent, SWT.NONE);
+		_componentsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		layout = new GridLayout(2, false);
+		_componentsComposite.setLayout(layout);
+		_componentsComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		
 		createSpinnerComposite();
+		createButtonComposite();
 	}
 
 	private void createChartComposite() {
@@ -96,7 +108,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	}
 	
 	private void createSpinnerComposite() {
-		_spinnerComposite = new Composite(_parent, SWT.NONE);
+		_spinnerComposite = new Composite(_componentsComposite, SWT.NONE);
 		_spinnerComposite.setLayout(new GridLayout());
 		GridData layout = new GridData(SWT.RIGHT, SWT.RIGHT, true, false, 1, 1);
 		layout.widthHint = 65;
@@ -105,6 +117,18 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_spinnerComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		
 		initializeSpinner();
+	}
+	
+	private void createButtonComposite() {
+		_buttonComposite = new Composite(_componentsComposite, SWT.NONE);
+		_buttonComposite.setLayout(new GridLayout());
+		GridData layout = new GridData(SWT.RIGHT, SWT.RIGHT, false, false, 1, 1);
+		layout.widthHint = 65;
+		layout.heightHint = 35;
+		_buttonComposite.setLayoutData(layout);
+		_buttonComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		
+		initializeButton();
 	}
 
 	private void initializeChart() {
@@ -115,6 +139,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		if(_typeChart == 0) {
 			if(_weightSpinner != null) {
 				_weightSpinner.setVisible(false);
+				_changeChartButton.setVisible(false);
 			}
 			_barChart = new MinimunValueBetweenAlternativesBarChart();
 			_barChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, percents);
@@ -126,6 +151,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 			_lineChart.setModel(_rankingView.getModel());
 			
 			_weightSpinner.setVisible(true);
+			_changeChartButton.setVisible(true);
 		}
 			
 		if (_controlListener == null) {
@@ -162,10 +188,29 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_spinnerComposite.pack();
 	}
 	
+	private void initializeButton() {
+		removeButton();
+		
+		_changeChartButton = new Button(_buttonComposite, SWT.BORDER);
+		_changeChartButton.setLayoutData(new GridData(SWT.RIGHT, SWT.RIGHT, true, true, 1, 1));
+		_changeChartButton.setText("Button");
+		
+		_changeChartButton.pack();
+	}
+	
+	
 	private void removeSpinner() {
 		if(_weightSpinner != null) {
 			if(!_weightSpinner.isDisposed()) {
 				_weightSpinner.dispose();
+			}
+		}
+	}
+	
+	private void removeButton() {
+		if(_changeChartButton != null) {
+			if(!_changeChartButton.isDisposed()) {
+				_changeChartButton.dispose();
 			}
 		}
 	}
