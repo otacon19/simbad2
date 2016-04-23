@@ -27,6 +27,7 @@ import sinbad2.resolutionphase.sensitivityanalysis.ISensitivityAnalysisChangeLis
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.AlternativesEvolutionWeigthsLineChart;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.MinimunValueBetweenAlternativesBarChart;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.SturdinessMeasureStackedChart;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SATable;
@@ -49,6 +50,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	
 	private MinimunValueBetweenAlternativesBarChart _barChart;
 	private AlternativesEvolutionWeigthsLineChart _lineChart;
+	private SturdinessMeasureStackedChart _stackedChart;
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
 	private SensitivityAnalysisView _sensitivityAnalysisView;
@@ -123,8 +125,6 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_buttonComposite = new Composite(_componentsComposite, SWT.NONE);
 		_buttonComposite.setLayout(new GridLayout());
 		GridData layout = new GridData(SWT.RIGHT, SWT.RIGHT, false, false, 1, 1);
-		layout.widthHint = 65;
-		layout.heightHint = 35;
 		_buttonComposite.setLayoutData(layout);
 		_buttonComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		
@@ -144,14 +144,21 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 			_barChart = new MinimunValueBetweenAlternativesBarChart();
 			_barChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, percents);
 		} else {
-			_lineChart = new AlternativesEvolutionWeigthsLineChart();
-			_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
-			_lineChart.setCriterionSelected(_criterionSelected);
-			_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllCriteria().indexOf(_criterionSelected)]);
-			_lineChart.setModel(_rankingView.getModel());
-			
-			_weightSpinner.setVisible(true);
-			_changeChartButton.setVisible(true);
+			if(_changeChartButton.getText().equals("Sturdiness")) {
+				_lineChart = new AlternativesEvolutionWeigthsLineChart();
+				_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
+				_lineChart.setCriterionSelected(_criterionSelected);
+				_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllCriteria().indexOf(_criterionSelected)]);
+				_lineChart.setModel(_rankingView.getModel());
+				
+				_weightSpinner.setVisible(true);
+				_changeChartButton.setVisible(true);
+			} else {
+				_stackedChart = new SturdinessMeasureStackedChart();
+				_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentByCriterion());
+				
+				_weightSpinner.setVisible(false);
+			}
 		}
 			
 		if (_controlListener == null) {
@@ -193,7 +200,33 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		
 		_changeChartButton = new Button(_buttonComposite, SWT.BORDER);
 		_changeChartButton.setLayoutData(new GridData(SWT.RIGHT, SWT.RIGHT, true, true, 1, 1));
-		_changeChartButton.setText("Button");
+		_changeChartButton.setText("Sturdiness");
+		
+		_changeChartButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				removeChart();
+				
+				if(_changeChartButton.getText().equals("Sturdiness")) {
+					_stackedChart = new SturdinessMeasureStackedChart();
+					_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentByCriterion());
+					
+					_weightSpinner.setVisible(false);
+					_changeChartButton.setText("Evolution");
+				} else {
+					_lineChart = new AlternativesEvolutionWeigthsLineChart();
+					_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
+					_lineChart.setCriterionSelected(_criterionSelected);
+					_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllCriteria().indexOf(_criterionSelected)]);
+					_lineChart.setModel(_rankingView.getModel());
+					
+					_weightSpinner.setVisible(true);
+					_changeChartButton.setText("Sturdiness");
+				}
+				
+				refreshChart();
+			}
+		});
 		
 		_changeChartButton.pack();
 	}
@@ -222,6 +255,10 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		
 		if(_lineChart != null) {
 			_lineChart.getChartComposite().dispose();
+		}
+		
+		if(_stackedChart != null) {
+			_stackedChart.getChartComposite().dispose();
 		}
 	}
 	

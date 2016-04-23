@@ -2,6 +2,7 @@ package sinbad2.resolutionphase.sensitivityanalysis;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -798,6 +799,38 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		}
 
 		return absolute;
+	}
+	
+	public Map<Criterion, Map<Alternative, Double>> getMinimunPercentByCriterion() {
+		Map<Criterion, Map<Alternative, Double>> result = new LinkedHashMap<Criterion, Map<Alternative, Double>>();
+		
+		List<Alternative> alternatives = _elementsSet.getAlternatives();
+		List<Criterion> criteria = _elementsSet.getAllCriteria();
+		double min;
+		for(int c = 0; c < _numberOfCriteria; ++c) {
+			for(int a1 = 0; a1 < _numberOfAlternatives; ++a1) {
+				min = Double.MAX_VALUE;
+				for(int a2 = 0; a2 < _numberOfAlternatives; ++a2) {
+					if(_relativeThresholdValues[a1][a2][c] != null) {
+						if(min > Math.abs(_relativeThresholdValues[a1][a2][c])) {
+							min = Math.abs(_relativeThresholdValues[a1][a2][c]);
+						}
+					}
+				}
+				if(min != Double.MAX_VALUE) {
+					if(result.get(criteria.get(c)) == null) {
+						Map<Alternative, Double> minimunAlternative = new LinkedHashMap<Alternative, Double>();
+						minimunAlternative.put(alternatives.get(a1), min);
+						result.put(criteria.get(c), minimunAlternative);
+					} else {
+						Map<Alternative, Double> minimunAlternative = result.get(criteria.get(c));
+						minimunAlternative.put(alternatives.get(a1), min);
+					}
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	@Override
