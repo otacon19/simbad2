@@ -28,6 +28,7 @@ import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.AlternativesEvolutionWeigthsLineChart;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.MinimunValueBetweenAlternativesBarChart;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.SturdinessMeasureStackedChart;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SATable;
@@ -53,6 +54,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	private SturdinessMeasureStackedChart _stackedChart;
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
+	private DecisionMakingView _decisionMakingView;
 	private SensitivityAnalysisView _sensitivityAnalysisView;
 	private RankingView _rankingView;
 	
@@ -84,6 +86,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		
 		_rankingView = (RankingView) getView(RankingView.ID);
 		_sensitivityAnalysisView = (SensitivityAnalysisView) getView(SensitivityAnalysisView.ID);
+		_decisionMakingView = (DecisionMakingView) getView(DecisionMakingView.ID);
 
 		_saTable = _sensitivityAnalysisView.getSATable();
 		_saTable.addSelectionChangedListener(this);
@@ -155,8 +158,11 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				_changeChartButton.setVisible(true);
 			} else {
 				_stackedChart = new SturdinessMeasureStackedChart();
-				_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentByCriterion());
-				
+				if(_decisionMakingView.getTable().getModel().equals("MCM")) {
+					_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCMByCriterion());
+				} else {
+					_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCCByCriterion());
+				}
 				_weightSpinner.setVisible(false);
 			}
 		}
@@ -209,8 +215,11 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				
 				if(_changeChartButton.getText().equals("Sturdiness")) {
 					_stackedChart = new SturdinessMeasureStackedChart();
-					_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentByCriterion());
-					
+					if(_decisionMakingView.getTable().getModel().equals("MCM")) {
+						_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCMByCriterion());
+					} else {
+						_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCCByCriterion());
+					}
 					_weightSpinner.setVisible(false);
 					_changeChartButton.setText("Evolution");
 				} else {

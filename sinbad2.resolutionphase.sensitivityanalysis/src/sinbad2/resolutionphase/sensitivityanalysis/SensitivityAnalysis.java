@@ -801,12 +801,18 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		return absolute;
 	}
 	
-	public Map<Criterion, Map<Alternative, Double>> getMinimunPercentByCriterion() {
+	public Map<Criterion, Map<Alternative, Double>> getMinimunPercentMCMByCriterion() {
 		Map<Criterion, Map<Alternative, Double>> result = new LinkedHashMap<Criterion, Map<Alternative, Double>>();
 		
 		List<Alternative> alternatives = _elementsSet.getAlternatives();
 		List<Criterion> criteria = _elementsSet.getAllCriteria();
-		double min;
+		double min, max = Math.round(getMaximunPercentMCM());
+		
+		String numberS = Double.toString(max);
+		numberS = numberS.substring(1, numberS.indexOf('.'));
+		double units = Math.pow(10, numberS.length()) - Double.parseDouble(numberS);
+		max += units; 
+		
 		for(int c = 0; c < _numberOfCriteria; ++c) {
 			for(int a1 = 0; a1 < _numberOfAlternatives; ++a1) {
 				min = Double.MAX_VALUE;
@@ -814,6 +820,12 @@ public class SensitivityAnalysis implements IResolutionPhase {
 					if(_relativeThresholdValues[a1][a2][c] != null) {
 						if(min > Math.abs(_relativeThresholdValues[a1][a2][c])) {
 							min = Math.abs(_relativeThresholdValues[a1][a2][c]);
+						}
+					} else {
+						if(a1 != a2) {
+							if(min == Double.MAX_VALUE) {
+								min = max;
+							}
 						}
 					}
 				}
@@ -831,6 +843,84 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		}
 		
 		return result;
+	}
+	
+	public double getMaximunPercentMCM() {
+		double max = Double.MIN_VALUE;
+		for(int c = 0; c < _numberOfCriteria; ++c) {
+			for(int a1 = 0; a1 < _numberOfAlternatives; ++a1) {
+				for(int a2 = 0; a2 < _numberOfAlternatives; ++a2) {
+					if(_relativeThresholdValues[a1][a2][c] != null) {
+						if(max < Math.abs(_relativeThresholdValues[a1][a2][c])) {
+							max = Math.abs(_relativeThresholdValues[a1][a2][c]);
+						}
+					}
+				}
+			}
+		}
+		
+		return max;
+	}
+	
+	public Map<Criterion, Map<Alternative, Double>> getMinimunPercentMCCByCriterion() {
+		Map<Criterion, Map<Alternative, Double>> result = new LinkedHashMap<Criterion, Map<Alternative, Double>>();
+		
+		List<Alternative> alternatives = _elementsSet.getAlternatives();
+		List<Criterion> criteria = _elementsSet.getAllCriteria();
+		double min, max = Math.round(getMaximunPercentMCC());
+		
+		String numberS = Double.toString(max);
+		numberS = numberS.substring(1, numberS.indexOf('.'));
+		double units = Math.pow(10, numberS.length()) - Double.parseDouble(numberS);
+		max += units; 
+		
+		for(int c = 0; c < _numberOfCriteria; ++c) {
+			for(int a1 = 0; a1 < _numberOfAlternatives; ++a1) {
+				min = Double.MAX_VALUE;
+				for(int a2 = 0; a2 < _numberOfAlternatives; ++a2) {
+					if(_minimumPercentChangeInCriteriaWeights[a1][a2][c] != null) {
+						if(min > Math.abs(_minimumPercentChangeInCriteriaWeights[a1][a2][c])) {
+							min = Math.abs(_minimumPercentChangeInCriteriaWeights[a1][a2][c]);
+						}
+					} else {
+						if(a1 != a2) {
+							if(min == Double.MAX_VALUE) {
+								min = max;
+							}
+						}
+					}
+				}
+				if(min != Double.MAX_VALUE) {
+					if(result.get(criteria.get(c)) == null) {
+						Map<Alternative, Double> minimunAlternative = new LinkedHashMap<Alternative, Double>();
+						minimunAlternative.put(alternatives.get(a1), min);
+						result.put(criteria.get(c), minimunAlternative);
+					} else {
+						Map<Alternative, Double> minimunAlternative = result.get(criteria.get(c));
+						minimunAlternative.put(alternatives.get(a1), min);
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	public double getMaximunPercentMCC() {
+		double max = Double.MIN_VALUE;
+		for(int c = 0; c < _numberOfCriteria; ++c) {
+			for(int a1 = 0; a1 < _numberOfAlternatives; ++a1) {
+				for(int a2 = 0; a2 < _numberOfAlternatives; ++a2) {
+					if(_minimumPercentChangeInCriteriaWeights[a1][a2][c] != null) {
+						if(max < Math.abs(_minimumPercentChangeInCriteriaWeights[a1][a2][c])) {
+							max = Math.abs(_minimumPercentChangeInCriteriaWeights[a1][a2][c]);
+						}
+					}
+				}
+			}
+		}
+		
+		return max;
 	}
 	
 	@Override
