@@ -135,6 +135,16 @@ public class ProblemElementsSet implements Cloneable {
 		return experts;
 	}
 	
+	public Alternative getAlternative(String id) {
+		for(Alternative a: getAlternatives()) {
+			if(a.getId().equals(id)) {
+				return a;
+			}
+		}
+		return null;
+	}
+	
+	
 	public List<Alternative> getAlternatives() {
 		return _alternatives;
 	}
@@ -147,6 +157,15 @@ public class ProblemElementsSet implements Cloneable {
 		}
 		
 		return result;
+	}
+	
+	public Criterion getCriterion(String id) {
+		for(Criterion c: getAllCriteria()) {
+			if(c.getId().equals(id)) {
+				return c;
+			}
+		}
+		return null;
 	}
 	
 	public List<Criterion> getCriteria() {
@@ -230,6 +249,26 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		} else {
 			criteria.add(parent);
+		}
+		return criteria;
+	}
+	
+	public List<Criterion> getAllSubcriteria() {
+		List<Criterion> criteria = new LinkedList<Criterion>();
+		for(Criterion c: getAllCriteria()) {
+			if(!c.hasSubcriteria()) {
+				criteria.add(c);
+			}
+		}
+		return criteria;
+	}
+	
+	public List<ProblemElement> getAllSubcriteriaElement() {
+		List<ProblemElement> criteria = new LinkedList<ProblemElement>();
+		for(ProblemElement c: getAllCriteria()) {
+			if(!((Criterion) c).hasSubcriteria()) {
+				criteria.add(c);
+			}
 		}
 		return criteria;
 	}

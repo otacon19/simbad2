@@ -185,10 +185,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	public String[] getCriteriaIds() {
-		String[] criteriaIds = new String[_elementsSet.getAllCriteria().size()];
+		String[] criteriaIds = new String[_elementsSet.getAllSubcriteria().size()];
 
 		int cont = 0;
-		for (Criterion c : _elementsSet.getCriteria()) {
+		for (Criterion c : _elementsSet.getAllSubcriteria()) {
 			criteriaIds[cont] = c.getCanonicalId();
 			cont++;
 		}
@@ -199,7 +199,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	@SuppressWarnings("unchecked")
 	public void calculateDecisionMatrix(List<Double> weights, int model) {
 		_numberOfAlternatives = _elementsSet.getAlternatives().size();
-		_numberOfCriteria = _elementsSet.getAllCriteria().size();
+		_numberOfCriteria = _elementsSet.getAllSubcriteria().size();
 		_aplicatedWeights = false;
 		
 		if ((_aggregationPhase.getCriteriaOperatorWeights().get(null) != null)) {
@@ -747,7 +747,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	public double[] calculateInferWeights(Criterion criterion, double weightCriterionSelected) {
-		List<Criterion> criteria = _elementsSet.getAllCriteria();
+		List<Criterion> criteria = _elementsSet.getAllSubcriteria();
 		double[] inferWeights = new double[criteria.size()];
 		if (weightCriterionSelected == 0) {
 			int indexCriterionSelected = criteria.indexOf(criterion);
@@ -805,7 +805,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		Map<Criterion, Map<Alternative, Double>> result = new LinkedHashMap<Criterion, Map<Alternative, Double>>();
 		
 		List<Alternative> alternatives = _elementsSet.getAlternatives();
-		List<Criterion> criteria = _elementsSet.getAllCriteria();
+		List<Criterion> criteria = _elementsSet.getAllSubcriteria();
 		double min, max = Math.round(getMaximunPercentMCM());
 		
 		String numberS = Double.toString(max);
@@ -866,7 +866,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		Map<Criterion, Map<Alternative, Double>> result = new LinkedHashMap<Criterion, Map<Alternative, Double>>();
 		
 		List<Alternative> alternatives = _elementsSet.getAlternatives();
-		List<Criterion> criteria = _elementsSet.getAllCriteria();
+		List<Criterion> criteria = _elementsSet.getAllSubcriteria();
 		double min, max = Math.round(getMaximunPercentMCC());
 		
 		String numberS = Double.toString(max);

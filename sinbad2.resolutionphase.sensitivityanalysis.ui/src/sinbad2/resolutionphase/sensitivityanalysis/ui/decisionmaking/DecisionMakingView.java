@@ -97,9 +97,7 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 				Map<String, List<Double>> criteriaWeights = new HashMap<String, List<Double>>();
 				criteriaWeights.put(null, weightsList);
 
-				WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(),
-						_elementsSet.getAllElementCriterionSubcriteria(null), criteriaWeights, 1, "criterion",
-						"all criteria");
+				WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), _elementsSet.getAllSubcriteriaElement(), criteriaWeights, 1, "criterion", "all criteria");
 
 				weights = null;
 				List<Double> ws;

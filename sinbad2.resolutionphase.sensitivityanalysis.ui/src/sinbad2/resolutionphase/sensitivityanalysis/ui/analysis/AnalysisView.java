@@ -151,7 +151,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				_lineChart = new AlternativesEvolutionWeigthsLineChart();
 				_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
 				_lineChart.setCriterionSelected(_criterionSelected);
-				_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllCriteria().indexOf(_criterionSelected)]);
+				_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)]);
 				_lineChart.setModel(_rankingView.getModel());
 				
 				_weightSpinner.setVisible(true);
@@ -226,7 +226,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 					_lineChart = new AlternativesEvolutionWeigthsLineChart();
 					_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
 					_lineChart.setCriterionSelected(_criterionSelected);
-					_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllCriteria().indexOf(_criterionSelected)]);
+					_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)]);
 					_lineChart.setModel(_rankingView.getModel());
 					
 					_weightSpinner.setVisible(true);
@@ -303,7 +303,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
-		if(event.getSelection().toString().length() > 4 ) {
+		if(event.getSelection().toString().contains(",")) {
 			_typeChart = 0;
 			
 			_pairAlternatives = new Object[2];
@@ -316,10 +316,15 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		} else {
 			_typeChart = 1;
 		
-			ISelection criterion = event.getSelection();
-			String criterionNumber = criterion.toString().substring(2, 3);
-			int indexCriterion = Integer.parseInt(criterionNumber) - 1;
-			_criterionSelected = _elementsSet.getCriteria().get(indexCriterion);
+			ISelection selection = event.getSelection();
+			String stringSelection = selection.toString();
+			if(!stringSelection.contains(">")) {
+				stringSelection = stringSelection.substring(1, stringSelection.length() - 1);
+				_criterionSelected = _elementsSet.getCriterion(stringSelection);
+			} else {
+				stringSelection = stringSelection.substring(stringSelection.lastIndexOf('>') + 1, stringSelection.length() - 1);
+				_criterionSelected = _elementsSet.getCriterion(stringSelection);
+			}
 		}
 		
 		initializeChart();

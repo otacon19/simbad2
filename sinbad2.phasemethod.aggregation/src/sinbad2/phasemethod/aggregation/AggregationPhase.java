@@ -270,7 +270,6 @@ public class AggregationPhase implements IPhaseMethod {
 			}
 		}
 		
-		
 		return _aggregatedValuations;
 	}
 	
