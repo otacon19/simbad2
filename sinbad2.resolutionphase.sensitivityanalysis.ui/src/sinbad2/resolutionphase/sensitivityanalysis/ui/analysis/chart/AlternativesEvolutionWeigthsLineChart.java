@@ -178,13 +178,12 @@ public class AlternativesEvolutionWeigthsLineChart {
 				
 				for(int i = 0; i < alternatives.size(); ++i) {
 					XYSeries alternativeSerie = new XYSeries(alternatives.get(i).getId());
-					for(double j = 0; j <= 1; j += 0.01) {
-						alternativeSerie.add(j, _sensitivityAnalysis.computeAlternativeFinalPreferenceInferWeights(i, _sensitivityAnalysis.calculateInferWeights(_criterionSelected, j)));
+					for(double j = 0; j <= 1.01; j += 0.01) {
+						alternativeSerie.add(Math.round(j * 100d) / 100d, _sensitivityAnalysis.computeAlternativeFinalPreferenceInferWeights(i, _sensitivityAnalysis.calculateInferWeights(_criterionSelected, j)));
 					}
 					_dataset.addSeries(alternativeSerie);
 				}
 			} else {
-				
 				_chart.setTitle("Ratios evolution: " + _criterionSelected.getId().toUpperCase());
 				
 				if(_horizontalMarker == null) {
@@ -202,8 +201,8 @@ public class AlternativesEvolutionWeigthsLineChart {
 				for(int i = 0; i < alternatives.size() - 1; ++i) {
 					for(int j = (i + 1); j < alternatives.size(); ++j) {
 						XYSeries alternativeSerie = new XYSeries(alternatives.get(i).getId() + " - " + alternatives.get(j).getId());
-						for(double k = 0; k <= 1; k += 0.01) {
-							alternativeSerie.add(k, _sensitivityAnalysis.computeAlternativeRatioFinalPreferenceInferWeights(i, j, _sensitivityAnalysis.calculateInferWeights(_criterionSelected, k)));
+						for(double k = 0; k <= 1.01; k += 0.01) {
+							alternativeSerie.add(Math.round(k * 100d) / 100d, _sensitivityAnalysis.computeAlternativeRatioFinalPreferenceInferWeights(i, j, _sensitivityAnalysis.calculateInferWeights(_criterionSelected, k)));
 						}
 						_dataset.addSeries(alternativeSerie);
 						_chart.getXYPlot().getRenderer().setSeriesStroke(numSeries, new BasicStroke(2.0f));

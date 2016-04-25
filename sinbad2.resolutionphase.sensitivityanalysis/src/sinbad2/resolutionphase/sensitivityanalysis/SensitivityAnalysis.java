@@ -221,10 +221,18 @@ public class SensitivityAnalysis implements IResolutionPhase {
 					_w[i] = weights.get(i);
 				}
 			}  else {
-				List<Double> aggregationWeights = ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(null)).get(null);
-				_w = new double[_numberOfCriteria];
-				for (int i = 0; i < aggregationWeights.size(); ++i) {
-					_w[i] = aggregationWeights.get(i);
+				if(_aggregationPhase.getCriteriaOperatorWeights().size() == 1) {
+					List<Double> aggregationWeights = ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(null)).get(null);
+					_w = new double[_numberOfCriteria];
+					for (int i = 0; i < aggregationWeights.size(); ++i) {
+						_w[i] = aggregationWeights.get(i);
+					}
+				} else {
+					List<Double> aggregationWeights = getSubcriteriaWeights();
+					_w = new double[_numberOfCriteria];
+					for (int i = 0; i < aggregationWeights.size(); ++i) {
+						_w[i] = aggregationWeights.get(i);
+					}
 				}
 			}
 			
@@ -247,6 +255,52 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			computeWeightedProductModelCriticalCriterion();
 		} else {
 			computeAnalyticHierarchyProcessModelCriticalCriterion();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<Double> getSubcriteriaWeights() {
+		List<Double> globalWeights = ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(null)).get(null);
+		List<Double> subcriteriaWeights = new LinkedList<Double>();
+	
+		int numC = -1, cont = 0;
+		double result;
+		for(Criterion c: _elementsSet.getCriteria()) {
+			numC++;
+			if(c.hasSubcriteria()) { 
+				for(Criterion sc: c.getSubcriteria()) {
+					result = globalWeights.get(numC);
+					result *= ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(c)).get(null).get(cont);
+					result *= recursiveWeight(sc, cont);
+					cont++;
+					
+					subcriteriaWeights.add(Math.round(result * 100d) / 100d);
+				}
+			} else {
+				result = globalWeights.get(numC);
+				subcriteriaWeights.add(Math.round(result * 100d) / 100d);
+			}
+		}
+		return subcriteriaWeights;
+	}
+		
+	@SuppressWarnings("unchecked")
+	private double recursiveWeight(Criterion c, int cont) {
+		if(c.hasSubcriteria()) {
+			for(Criterion sc: c.getSubcriteria()) {
+				recursiveWeight(sc, cont);
+			}
+		}
+		
+		List<Double> weightsCriterion = null;
+		if(_aggregationPhase.getCriteriaOperatorWeights().get(c) != null) {
+			weightsCriterion = ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(c)).get(null);
+		}
+		
+		if(weightsCriterion != null) {
+			return weightsCriterion.get(cont);
+		} else {
+			return 1;
 		}
 	}
 
@@ -779,22 +833,40 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		return inferWeights;
 	}
 
-	public double[] getMinimumPercentPairAlternatives(int a1, int a2) {
+	public double[] getMinimumPercentPairAlternatives(int a1, int a2, String typeProblem) {
 		double[] percents = new double[_numberOfCriteria];
-		for (int k = 0; k < _numberOfCriteria; k++) {
-			if (_minimumPercentChangeInCriteriaWeights[a1][a2][k] != null) {
-				percents[k] = _minimumPercentChangeInCriteriaWeights[a1][a2][k];
+		
+		if(typeProblem.equals("MCC")) {
+			for (int k = 0; k < _numberOfCriteria; k++) {
+				if (_minimumPercentChangeInCriteriaWeights[a1][a2][k] != null) {
+					percents[k] = _minimumPercentChangeInCriteriaWeights[a1][a2][k];
+				}
+			}
+		} else {
+			for (int k = 0; k < _numberOfCriteria; k++) {
+				if (_relativeThresholdValues[a1][a2][k] != null) {
+					percents[k] = _relativeThresholdValues[a1][a2][k];
+				}
 			}
 		}
 
 		return percents;
 	}
 
-	public double[] getMinimumAbsolutePairAlternatives(int a1, int a2) {
+	public double[] getMinimumAbsolutePairAlternatives(int a1, int a2, String typeProblem) {
 		double[] absolute = new double[_numberOfCriteria];
-		for (int k = 0; k < _numberOfCriteria; k++) {
-			if (_minimumAbsoluteChangeInCriteriaWeights[a1][a2][k] != null) {
-				absolute[k] = _minimumAbsoluteChangeInCriteriaWeights[a1][a2][k];
+		
+		if(typeProblem.equals("MCC")) {
+			for (int k = 0; k < _numberOfCriteria; k++) {
+				if (_minimumAbsoluteChangeInCriteriaWeights[a1][a2][k] != null) {
+					absolute[k] = _minimumAbsoluteChangeInCriteriaWeights[a1][a2][k];
+				}
+			}
+		} else {
+			for (int k = 0; k < _numberOfCriteria; k++) {
+				if (_absoluteThresholdValues[a1][a2][k] != null) {
+					absolute[k] = _absoluteThresholdValues[a1][a2][k];
+				}
 			}
 		}
 

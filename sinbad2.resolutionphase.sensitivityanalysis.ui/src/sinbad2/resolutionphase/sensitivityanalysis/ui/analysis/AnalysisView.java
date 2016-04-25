@@ -158,7 +158,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				_changeChartButton.setVisible(true);
 			} else {
 				_stackedChart = new SturdinessMeasureStackedChart();
-				if(_decisionMakingView.getTable().getModel().equals("MCM")) {
+				if(_decisionMakingView.getTable().getTypeProblem().equals("MCM")) {
 					_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCMByCriterion());
 				} else {
 					_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCCByCriterion());
@@ -215,7 +215,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				
 				if(_changeChartButton.getText().equals("Sturdiness")) {
 					_stackedChart = new SturdinessMeasureStackedChart();
-					if(_decisionMakingView.getTable().getModel().equals("MCM")) {
+					if(_decisionMakingView.getTable().getTypeProblem().equals("MCM")) {
 						_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCMByCriterion());
 					} else {
 						_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCCByCriterion());
@@ -282,11 +282,11 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				_barChart.setCurrentAlternativesPair(indexes);
 				
 				if(_typeBarChart.equals("RELATIVE")) {
-					double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
+					double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index, _decisionMakingView.getTable().getTypeProblem());
 					_barChart.setValues(percents);
 					_barChart.setTypeData(_typeBarChart);
 				} else {
-					double[] absolute = _sensitivityAnalysis.getMinimumAbsolutePairAlternatives(a1Index, a2Index);
+					double[] absolute = _sensitivityAnalysis.getMinimumAbsolutePairAlternatives(a1Index, a2Index, _decisionMakingView.getTable().getTypeProblem());
 					_barChart.setValues(absolute);
 					_barChart.setTypeData(_typeBarChart);
 				}
