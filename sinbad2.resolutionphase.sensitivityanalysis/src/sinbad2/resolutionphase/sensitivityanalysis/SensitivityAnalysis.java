@@ -383,19 +383,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			for (int alternative2 = (alternative1 + 1); alternative2 < _numberOfAlternatives; alternative2++) {
 				_alternativesRatioFinalPreferences[alternative1][alternative2] = 1;
 				for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
-					if (!_aplicatedWeights) {
-						_alternativesRatioFinalPreferences[alternative1][alternative2] *= Math.pow((_decisionMatrix[criterion][alternative1] 
+					_alternativesRatioFinalPreferences[alternative1][alternative2] *= Math.pow((_decisionMatrix[criterion][alternative1] 
 								/ _decisionMatrix[criterion][alternative2]), _w[criterion]);
-					} else {
-						_alternativesRatioFinalPreferences[alternative1][alternative2] *= _decisionMatrix[criterion][alternative1] 
-								/ _decisionMatrix[criterion][alternative2];
-					}
 				}
 			}
-		}
-
-		if (_aplicatedWeights) {
-			normalize(_alternativesFinalPreferences);
 		}
 
 		computeRankingWeightedProductModel();
@@ -598,13 +589,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				if(alternative1 != alternative2) {
 					auxAlternativesRatioPreferences[alternative1][alternative2] = 1d;
 					for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
-						if (!_aplicatedWeights) {
-							auxAlternativesRatioPreferences[alternative1][alternative2] *= Math.pow((_decisionMatrix[criterion][alternative1] 
-									/ _decisionMatrix[criterion][alternative2]), _w[criterion]);
-						} else {
-							auxAlternativesRatioPreferences[alternative1][alternative2] *= _decisionMatrix[criterion][alternative1] 
-									/ _decisionMatrix[criterion][alternative2];
-						}
+						auxAlternativesRatioPreferences[alternative1][alternative2] *= Math.pow((_decisionMatrix[criterion][alternative1] 
+								/ _decisionMatrix[criterion][alternative2]), _w[criterion]);
 					}
 				}
 			}
@@ -790,11 +776,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		double alternativeRatioFinalPreference = 1;
 
 		for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
-			if (!_aplicatedWeights) {
-				alternativeRatioFinalPreference *= Math.pow((_decisionMatrix[criterion][alternativeIndex1]  / _decisionMatrix[criterion][alternativeIndex2]), w[criterion]);
-			} else {
-				alternativeRatioFinalPreference *= _decisionMatrix[criterion][alternativeIndex1] / _decisionMatrix[criterion][alternativeIndex2];
-			}
+			alternativeRatioFinalPreference *= Math.pow((_decisionMatrix[criterion][alternativeIndex1]  / _decisionMatrix[criterion][alternativeIndex2]), w[criterion]);
 		}
 
 		return alternativeRatioFinalPreference;
