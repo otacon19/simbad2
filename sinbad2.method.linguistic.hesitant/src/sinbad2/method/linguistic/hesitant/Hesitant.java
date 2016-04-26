@@ -18,7 +18,7 @@ public class Hesitant extends MethodImplementation {
 	
 	public static final String ID = "flintstones.method.linguistic.hesitant";
 	
-	private static final String MULTIPLE_HESITANT_DOMAINS = "Multiple hesitant domains";
+	private static final String MULTIPLE_DOMAINS = "Multiple domains";
 	private static final String NOT_SUPPORTED_DOMAINS = "Not supported domains";
 	private static final String NOT_HESITANT_VALUATIONS = "Not hesitant evaluations";
 	
@@ -44,7 +44,7 @@ public class Hesitant extends MethodImplementation {
 		int numDomains = domains.size();
 			
 		if(numDomains > 1) {
-			return MULTIPLE_HESITANT_DOMAINS;
+			return MULTIPLE_DOMAINS;
 		} else if(numDomains == 1) {
 			if(domains.get(0) instanceof FuzzySet) {
 				for(ValuationKey vk: _valuationSet.getValuations().keySet()) {
