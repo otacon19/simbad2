@@ -14,8 +14,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import sinbad2.aggregationoperator.WeightedAggregationOperator;
-import sinbad2.aggregationoperator.WeightedAggregationOperator.QuantificationType;
+import sinbad2.aggregationoperator.owa.YagerQuantifiers;
+import sinbad2.aggregationoperator.owa.YagerQuantifiers.QuantificationType;
 
 public class QuantifiersDialog extends Dialog {
 
@@ -60,7 +60,7 @@ public class QuantifiersDialog extends Dialog {
 		_quantifiersCombo = new Combo(container, SWT.BORDER);
 		_quantifiersCombo.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 
-		QuantificationType[] types = WeightedAggregationOperator.QuantificationType.values();
+		QuantificationType[] types = YagerQuantifiers.QuantificationType.values();
 		int length = types.length;
 		String[] items = new String[length];
 		for(int i = 0; i < length; i++) {
@@ -75,7 +75,7 @@ public class QuantifiersDialog extends Dialog {
 			double[] expected = new double[] { _alpha, _beta };
 			double[] result;
 			do {
-				result = WeightedAggregationOperator.getQuantificationParams(types[pos]);
+				result = YagerQuantifiers.getQuantificationParams(types[pos]);
 				if ((expected[0] == result[0]) && (expected[1] == result[1])) {
 					find = true;
 				} else {
@@ -125,7 +125,7 @@ public class QuantifiersDialog extends Dialog {
 
 		if (selectionIndex != -1) {
 			result = true;
-			double[] values = WeightedAggregationOperator.getQuantificationParams(QuantificationType.valueOf(_quantifiersCombo.getItem(selectionIndex)));
+			double[] values = YagerQuantifiers.getQuantificationParams(QuantificationType.valueOf(_quantifiersCombo.getItem(selectionIndex)));
 			_alpha = values[0];
 			_beta = values[1];
 		}

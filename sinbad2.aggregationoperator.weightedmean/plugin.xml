@@ -5,7 +5,8 @@
          point="flintstones.aggregationoperator">
       <aggregation_operator
             id="flintstones.aggregationoperator.weightedmean"
-            name="Weighted mean">
+            name="Weighted mean"
+            parameters="false">
          <weighted
                implementation="sinbad2.aggregationoperator.weightedmean.Weightedmean">
             <supported_types

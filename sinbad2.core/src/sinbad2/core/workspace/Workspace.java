@@ -184,6 +184,11 @@ public class Workspace implements IFileChangeListener {
 			notifyWorkspaceChange(event);
 		}
 	}
+	
+	public void updatePhases() {
+		WorkspaceChangeEvent event = new WorkspaceChangeEvent(EWorkspaceChange.ANOTHER_CHANGE, _currentHashCode, _currentHashCode);
+		notifyWorkspaceChange(event);
+	}
 
 	public void registerWorkspaceListener(IWorkspaceListener listener) {
 		_listeners.add(listener);
@@ -212,5 +217,4 @@ public class Workspace implements IFileChangeListener {
 			notifyWorkspaceChange(event);
 		}
 	}
-
 }

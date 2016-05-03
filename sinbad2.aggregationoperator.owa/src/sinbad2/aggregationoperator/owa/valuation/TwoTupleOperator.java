@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import sinbad2.aggregationoperator.WeightedAggregationOperator;
+import sinbad2.aggregationoperator.owa.YagerQuantifiers;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.valuation.Valuation;
@@ -37,7 +37,7 @@ public class TwoTupleOperator {
 			Collections.reverse(measures);
 
 			int size = measures.size();
-			double[] weights = WeightedAggregationOperator.Q(size, alphaQ, betaQ);
+			double[] weights = YagerQuantifiers.Q(size, alphaQ, betaQ);
 
 			for (int i = 0; i < size; i++) {
 				beta += weights[i] * measures.get(i);

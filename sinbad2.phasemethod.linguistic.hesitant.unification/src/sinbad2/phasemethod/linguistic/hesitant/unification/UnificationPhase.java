@@ -8,8 +8,8 @@ import java.util.Map;
 
 import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.AggregationOperatorsManager;
-import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.aggregationoperator.owa.OWA;
+import sinbad2.aggregationoperator.owa.YagerQuantifiers;
 import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
@@ -193,9 +193,9 @@ public class UnificationPhase implements IPhaseMethod {
                 lower = null;
             }
 
-            WeightedAggregationOperator.NumeredQuantificationType nqt = WeightedAggregationOperator.NumeredQuantificationType.FilevYager;
+            YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
             List<Double> weights = new LinkedList<Double>();
-			double[] auxWeights = WeightedAggregationOperator.QWeighted(nqt, g - 1, envelope, lower);
+			double[] auxWeights = YagerQuantifiers.QWeighted(nqt, g - 1, envelope, lower);
 			
 			weights.add(new Double(-1));
 			for(Double weight : auxWeights) {

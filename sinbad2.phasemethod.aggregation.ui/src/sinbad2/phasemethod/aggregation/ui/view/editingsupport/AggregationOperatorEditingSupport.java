@@ -27,6 +27,7 @@ import sinbad2.element.expert.Expert;
 import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.aggregation.ui.view.AggregationProcess;
+import sinbad2.phasemethod.aggregation.ui.view.dialog.ParametersDialog;
 import sinbad2.phasemethod.aggregation.ui.view.dialog.QuantifiersDialog;
 import sinbad2.phasemethod.aggregation.ui.view.dialog.WeightsDialog;
 
@@ -216,7 +217,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			} else {
 				elementId = element.getId();
 			}
-
+			
 			if (aggregationOperator.getName().equals("OWA")) { //$NON-NLS-1$
 				if (_weights == null) {
 					QuantifiersDialog dialog = new QuantifiersDialog(Display.getCurrent().getActiveShell(), null, null, QuantifiersDialog.SIMPLE, elementType, elementId);
@@ -239,37 +240,49 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			} else {
 				_weights = null;
 				_mapWeights = null;
-				if (aggregationOperator.getName().equals("Weighted mean")) { //$NON-NLS-1$
 					
-					ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
-					ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+				ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+				ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+				
+				ProblemElement nullElement = null;
+				ProblemElement[] secondary;
+				
+				WeightsDialog dialog; 
+				if(elementType.equals("Expert")) {
+					secondary = getLeafElements(nullElement, "criterion");
+					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+				} else {
+					secondary = getLeafElements(nullElement, "expert");
+					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+				}
 					
-					ProblemElement nullElement = null;
-					ProblemElement[] secondary;
-					
-					WeightsDialog dialog; 
-					if(elementType.equals("Expert")) {
-						secondary = getLeafElements(nullElement, "criterion");
-						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
-					} else {
-						secondary = getLeafElements(nullElement, "expert");
-						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
-					}
-						
-					int exitValue = dialog.open();
-					if(exitValue == WeightsDialog.SAVE) {
-						_mapWeights = dialog.getWeights();
-						_weights = null;
-						operator = aggregationOperator;
-					} else if(exitValue == QuantifiersDialog.CANCEL_ALL) {
-						_mapWeights = null;
-						_weights = null;
-						_abort = true;
+				int exitValue = dialog.open();
+				if(exitValue == WeightsDialog.SAVE) {
+					_mapWeights = dialog.getWeights();
+					_weights = null;
+					operator = aggregationOperator;
+				} else if(exitValue == QuantifiersDialog.CANCEL_ALL) {
+					_mapWeights = null;
+					_weights = null;
+					_abort = true;
+				}
+				
+				if(operator.hasParameters()) {
+					ParametersDialog dialogP = new ParametersDialog(Display.getCurrent().getActiveShell());
+					if(dialogP.open() == ParametersDialog.SAVE) {
+						operator.setParameters(dialogP.getParameters());
 					}
 				}
 			}
 		} else {
 			operator = aggregationOperator;
+			
+			if(operator.hasParameters()) {
+				ParametersDialog dialogP = new ParametersDialog(Display.getCurrent().getActiveShell());
+				if(dialogP.open() == ParametersDialog.SAVE) {
+					operator.setParameters(dialogP.getParameters());
+				}
+			}
 		}
 
 		if (AggregationPhase.EXPERTS.equals(_type)) {
@@ -302,7 +315,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				}
 			}
 		}
-
+		
 		return result;
 	}
 

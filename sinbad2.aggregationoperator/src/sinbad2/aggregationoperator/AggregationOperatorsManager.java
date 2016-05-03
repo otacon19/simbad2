@@ -44,6 +44,7 @@ public class AggregationOperatorsManager {
 				aggregationOperator = (AggregationOperator) implementation[0].createExecutableExtension(EAggregationOperatorElements.implementation.toString());
 				aggregationOperator.setId(extension.getAttribute(EAggregationOperatorElements.id.toString()));
 				aggregationOperator.setName(extension.getAttribute(EAggregationOperatorElements.name.toString()));
+				aggregationOperator.setHasParameters(Boolean.parseBoolean(extension.getAttribute(EAggregationOperatorElements.parameters.toString())));
 				supportedTypesConfiguration = implementation[0].getChildren(EAggregationOperatorElements.supported_types.toString());
 				supportedTypes = new HashSet<EAggregationOperatorType>();
 				for(IConfigurationElement type: supportedTypesConfiguration) {

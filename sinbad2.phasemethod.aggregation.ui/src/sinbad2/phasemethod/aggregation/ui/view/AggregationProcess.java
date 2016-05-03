@@ -730,7 +730,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 				_completed = false;
 				_loaded = true;
 				
-				Workspace.getWorkspace().updateHashCode();
+				Workspace.getWorkspace().updatePhases();
 			}
 		}
 	}

@@ -173,8 +173,7 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 
 				}
 			}
-		} else if(operator.getName().equals("Weighted mean")) { //$NON-NLS-1$
-
+		} else {
 			ProblemElement nullElement = null;
 			ProblemElement[] secondary;
 

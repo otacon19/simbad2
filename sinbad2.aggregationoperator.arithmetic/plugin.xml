@@ -5,7 +5,8 @@
          point="flintstones.aggregationoperator">
       <aggregation_operator
             id="flintstones.aggregationoperator.arithmetic"
-            name="Arithmetic mean">
+            name="Arithmetic mean"
+            parameters="false">
          <unweighted
                implementation="sinbad2.aggregationoperator.arithmetic.Arithmetic">
             <supported_types

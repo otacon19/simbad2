@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import sinbad2.aggregationoperator.WeightedAggregationOperator;
+import sinbad2.aggregationoperator.owa.YagerQuantifiers;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.valuation.Valuation;
@@ -49,7 +49,7 @@ public class UnifiedValuationOperator {
 			Collections.reverse(validValuations);
 
 			int size = validValuations.size();
-			double[] weights = WeightedAggregationOperator.Q(size, alphaQ, betaQ);
+			double[] weights = YagerQuantifiers.Q(size, alphaQ, betaQ);
 
 			for(int i = 0; i < size; i++) {
 				valuation = (UnifiedValuation) validValuations.get(i);

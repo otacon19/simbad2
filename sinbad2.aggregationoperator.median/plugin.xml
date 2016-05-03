@@ -5,7 +5,8 @@
          point="flintstones.aggregationoperator">
       <aggregation_operator
             id="flintstones.aggregationoperator.median"
-            name="Median">
+            name="Median"
+            parameters="false">
          <unweighted
                implementation="sinbad2.aggregationoperator.median.Median">
             <supported_types

@@ -8,13 +8,14 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CBanner;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -36,8 +37,11 @@ public class MultiplePerspectives implements IWorkspaceListener {
 	public ResolutionPhaseUI[] _phasesUI;
 	
 	private Map<String, Action> _actions;
+	private boolean _validAction;
 	private Map<String, ActionContributionItem> _buttons;
 	private Map<String, IConfigurationElement> _perspectives;
+	
+	private boolean _pre_workspace_close_action;
 	
 	public MultiplePerspectives(IWorkbenchWindow window, CBanner switchPerspectives, ResolutionPhaseUI[] phasesUI) {
 		_window = window;
@@ -46,6 +50,8 @@ public class MultiplePerspectives implements IWorkspaceListener {
 		
 		_actions = new HashMap<String, Action>();
 		_buttons = new HashMap<String, ActionContributionItem>();
+		
+		_pre_workspace_close_action = false;
 		
 		Workspace.getWorkspace().registerWorkspaceListener(this);
 	}
@@ -128,6 +134,7 @@ public class MultiplePerspectives implements IWorkspaceListener {
 	
 	private void makeActions() {
 		Action action;
+		_validAction = true;
 		for(final ResolutionPhaseUI phase: _phasesUI) {
 			action = new Action() {
 				private final ResolutionPhasesUIManager resolutionPhasesUIManager = ResolutionPhasesUIManager.getInstance();
@@ -139,14 +146,27 @@ public class MultiplePerspectives implements IWorkspaceListener {
 				@Override
 				public void run() {
 					String activeResolutionPhaseUI = resolutionPhasesUIManager.getActiveResolutionPhasesUI().getId();
-					
-					int state = 0 ;
+					int rc = SWT.NO;
 					if(!activeResolutionPhaseUI.equals(phaseUIId)) {
-						if(activeResolutionPhaseUI.equals("flintstones.resolutionphase.rating.ui")) {
-							MessageDialog dialog = new MessageDialog(null, "Confirm cancelation", null, "You will lose all information", MessageDialog.QUESTION, new String[] {"Yes", "No"}, 0);
-							state = dialog.open();
-						}
-						if(state == 0) {
+						if(activeResolutionPhaseUI.equals("flintstones.resolutionphase.rating.ui") && !_pre_workspace_close_action) {
+							MessageBox messageBox = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_INFORMATION | SWT.YES | SWT.NO);
+						    messageBox.setMessage("You will lose all information");
+						    rc = messageBox.open();
+						    if(rc == SWT.YES) {
+								resolutionPhasesUIManager.activate(phaseUIId);
+								try {
+									workbench.showPerspective(perspectiveId, workbenchWindow);
+								} catch (WorkbenchException e) {
+									e.printStackTrace();
+								}
+								_actions.get(activeResolutionPhaseUI).setChecked(false);
+								_actions.get(phaseUIId).setChecked(true);
+							} else {
+								_actions.get(phaseUIId).setChecked(false);
+								_validAction = false;
+							}
+						} else {
+							_pre_workspace_close_action = false;
 							resolutionPhasesUIManager.activate(phaseUIId);
 							try {
 								workbench.showPerspective(perspectiveId, workbenchWindow);
@@ -155,15 +175,12 @@ public class MultiplePerspectives implements IWorkspaceListener {
 							}
 							_actions.get(activeResolutionPhaseUI).setChecked(false);
 							_actions.get(phaseUIId).setChecked(true);
-						} else {
-							_actions.get(phaseUIId).setChecked(false);
 						}
 					}
 				}
 			};
 			_actions.put(phase.getId(), action);
 		}
-		
 		configureActions();
 		setState();
 	}
@@ -187,14 +204,13 @@ public class MultiplePerspectives implements IWorkspaceListener {
 		
 		String activeResolutionPhaseUI = ResolutionPhasesUIManager.getInstance().getActiveResolutionPhasesUI().getId();
 
-		if(!_actions.get(activeResolutionPhaseUI).isEnabled()) {
+		if(!_actions.get(activeResolutionPhaseUI).isEnabled() && _validAction) {
 			_actions.get(lastEnabled).run();
 		}
 	}
 
 	@Override
 	public void notifyWorkspaceChange(WorkspaceChangeEvent event) {
-		
 		switch(event.getWorkspaceChange()) {
 			case HASH_CODE_MODIFIED:
 				setState();
@@ -204,6 +220,9 @@ public class MultiplePerspectives implements IWorkspaceListener {
 				break;
 			case NEW_CONTENT:
 				setState();
+				break;
+			case PRE_WORKSPACE_CLOSE:
+				_pre_workspace_close_action = true;
 				break;
 				
 			default:

@@ -5,7 +5,8 @@
          point="flintstones.aggregationoperator">
       <aggregation_operator
             id="flintstones.aggregationoperator.maxMin"
-            name="MaxMin">
+            name="MaxMin"
+            parameters="false">
          <unweighted
                implementation="sinbad2.aggregationoperator.maxMin.MaxMin">
             <supported_types

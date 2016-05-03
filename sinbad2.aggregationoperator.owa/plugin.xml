@@ -5,7 +5,8 @@
          point="flintstones.aggregationoperator">
       <aggregation_operator
             id="sinbad2.aggregationoperator.owa"
-            name="OWA">
+            name="OWA"
+            parameters="true">
          <weighted
                implementation="sinbad2.aggregationoperator.owa.OWA">
             <supported_types
