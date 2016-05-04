@@ -6,7 +6,7 @@
       <resolution_phase
             id="flintstones.resolutionphase.rating"
             implementation="sinbad2.resolutionphase.rating.Rating"
-            name="Rating">
+            name="%resolution_phase.name">
       </resolution_phase>
    </extension>
 

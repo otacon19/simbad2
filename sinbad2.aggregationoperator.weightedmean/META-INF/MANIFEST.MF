@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Weightedmean
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.aggregationoperator.weightedmean;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Sinbad
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: sinbad2.aggregationoperator;bundle-version="1.0.0",
  sinbad2.valuation.twoTuple,
  sinbad2.valuation.unifiedValuation,

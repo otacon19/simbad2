@@ -75,12 +75,12 @@ public class RatingView extends ViewPart {
 	
 	private Map<CLabel, Method> _methods;
 	
-	private List<IStepStateListener> _listeners;
-	
 	private MethodsManager _methodsManager;
 	private MethodsUIManager _methodsUIManager;
 	private PhasesMethodManager _phasesMethodManager;
 	private PhaseMethodUIManager _phasesMethodUIManager;
+	
+	private List<IStepStateListener> _listeners;
 
 	public RatingView() {}
 	
@@ -203,18 +203,14 @@ public class RatingView extends ViewPart {
 		if(_numStep == 0) {
 			_backButton.setEnabled(false);
 		}
-		modifyStep(0);
+		decrementStep();
 	}
 	
-	private void modifyStep(int state) {
+	private void decrementStep() {
 		String currentStep = _stepValue.getText().substring(_stepValue.getText().indexOf("(") + 1, _stepValue.getText().indexOf("/"));
 		String totalSteps = _stepValue.getText().substring(_stepValue.getText().indexOf("/") + 1, _stepValue.getText().indexOf(")"));
 		int currentStepNum = Integer.parseInt(currentStep);
-		if(state == 0) {
-			_stepValue.setText("(" + Integer.toString(currentStepNum - 1) + "/" + totalSteps +")");
-		} else {
-			_stepValue.setText("(" + Integer.toString(currentStepNum + 1) + "/" + totalSteps +")");
-		}
+		_stepValue.setText("(" + Integer.toString(currentStepNum - 1) + "/" + totalSteps +")");
 	}
 	
 	private void getNextStep() {
@@ -227,7 +223,14 @@ public class RatingView extends ViewPart {
 		if(_numStep + 1 == _tabFolder.getItemCount()) {
 			_nextButton.setEnabled(false);
 		}
-		modifyStep(1);
+		incrementStep();
+	}
+	
+	private void incrementStep() {
+		String currentStep = _stepValue.getText().substring(_stepValue.getText().indexOf("(") + 1, _stepValue.getText().indexOf("/"));
+		String totalSteps = _stepValue.getText().substring(_stepValue.getText().indexOf("/") + 1, _stepValue.getText().indexOf(")"));
+		int currentStepNum = Integer.parseInt(currentStep);
+		_stepValue.setText("(" + Integer.toString(currentStepNum + 1) + "/" + totalSteps +")");
 	}
 
 	public void resetRating(boolean confirm) {
@@ -353,6 +356,7 @@ public class RatingView extends ViewPart {
 		composite.setLayout(layout);
 
 		_recommendedMethod = _methodsManager.getRecommendedMethod();
+		
 		for (int i = 0; i < methods.size(); i++) {
 			createMethod(composite, methods.get(i));
 		}
@@ -415,7 +419,7 @@ public class RatingView extends ViewPart {
 		
 		int numSteps = 0;
 		for(PhaseMethodUI phase: phasesMethodUI) {
-			numSteps += _phasesMethodUIManager.getSteps(phase.getId()).size();
+			numSteps += _phasesMethodUIManager.getStepsPhaseMethod(phase.getId()).size();
 		}
 		_stepValue.setText("(0/" + numSteps + ")");
 	}
@@ -434,7 +438,7 @@ public class RatingView extends ViewPart {
 			if(currentPhaseMethod.getPhaseMethod().getImplementation().validate()) {
 				_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
 				_phasesMethodUIManager.activate(currentPhaseMethod.getId());
-				step = _phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
+				step = _phasesMethodUIManager.getStepPhaseMethod(currentPhaseMethod.getId(), 0);
 			}
 		} else if(_phasesMethodUIManager.getNextStep() == null) {
 			_numPhase++;
@@ -442,7 +446,7 @@ public class RatingView extends ViewPart {
 			if(currentPhaseMethod.getPhaseMethod().getImplementation().validate()) {
 				_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
 				_phasesMethodUIManager.activate(currentPhaseMethod.getId());	
-				step = _phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 0);
+				step = _phasesMethodUIManager.getStepPhaseMethod(currentPhaseMethod.getId(), 0);
 			}
 		} else {
 			step = _phasesMethodUIManager.getNextStep();	
@@ -450,15 +454,8 @@ public class RatingView extends ViewPart {
 		
 		if(step != null) {
 			_phasesMethodUIManager.activateStep(step);
-			boolean loaded = false;
-			for(CTabItem tabItem: _tabFolder.getItems()) {
-				if(tabItem.getText().equals(step.getPartName())) {
-					loaded = true;
-					break;
-				}
-			}
-	
-			if(!loaded) {
+			
+			if(!checkLoadedStep(step)) {
 				CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, _tabFolder.getItemCount());
 				item.setText(step.getPartName());
 				item.setShowClose(false);
@@ -477,6 +474,17 @@ public class RatingView extends ViewPart {
 		}
 	}
 	
+	private boolean checkLoadedStep(ViewPart step) {
+		boolean loaded = false;
+		for(CTabItem tabItem: _tabFolder.getItems()) {
+			if(tabItem.getText().equals(step.getPartName())) {
+				loaded = true;
+				break;
+			}
+		}
+		return loaded;
+	}
+
 	private void clearMethodSteps() {
 		while(_tabFolder.getItemCount() > 1) {
 			((ViewPart) _tabFolder.getItem(1).getData("view")).dispose();
@@ -635,7 +643,7 @@ public class RatingView extends ViewPart {
 			PhaseMethodUI currentPhaseMethod = phasesMethodUI.get(_numPhase);
 			_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
 			_phasesMethodUIManager.activate(currentPhaseMethod.getId());
-			ViewPart step = _phasesMethodUIManager.getStep(currentPhaseMethod.getId(), 1);
+			ViewPart step = _phasesMethodUIManager.getStepPhaseMethod(currentPhaseMethod.getId(), 1);
 			_phasesMethodUIManager.activateStep(step);
 		}
 	}

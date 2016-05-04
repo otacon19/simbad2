@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: LH Ui
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.method.linguistic.multigranular.lh.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: sinbad2.method.linguistic.ui;visibility:=reexport

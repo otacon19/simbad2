@@ -6,7 +6,7 @@
       <resolution_phase
             id="flintstones.resolutionphase.sensitivityanalysis"
             implementation="sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis"
-            name="Sensitivity Analysis">
+            name="%resolution_phase.name">
       </resolution_phase>
    </extension>
 

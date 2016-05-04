@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: TOPSIS unification ui
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.phasemethod.topsis.unification.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.topsis.unification.ui.Activator
-Bundle-Vendor: Sinbad2
+Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: sinbad2.phasemethod.topsis.unification;bundle-version="1.0.0",
  sinbad2.phasemethod.topsis.selection.ui;bundle-version="1.0.0",
  sinbad2.resolutionphase.rating.ui;bundle-version="1.0.0",

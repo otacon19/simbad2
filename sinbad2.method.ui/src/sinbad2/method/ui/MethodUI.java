@@ -83,7 +83,7 @@ public class MethodUI {
 		List<PhaseMethodUI> phasesMethod = getPhasesUI();
 		for(PhaseMethodUI phaseMethod: phasesMethod) {
 			result += phaseMethod.getName() + '\n';
-			List<ViewPart> steps = phaseMethodUIManager.getSteps(phaseMethod.getId());
+			List<ViewPart> steps = phaseMethodUIManager.getStepsPhaseMethod(phaseMethod.getId());
 			for(ViewPart step: steps) {
 				result += "\t" + "-" + step.getPartName() + '\n';
 			}

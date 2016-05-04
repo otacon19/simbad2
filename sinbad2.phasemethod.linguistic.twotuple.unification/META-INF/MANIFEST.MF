@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Twotuple unification
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.phasemethod.linguistic.twotuple.unification;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Sinbad2
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0"
 Export-Package: sinbad2.phasemethod.linguistic.twotuple.unification

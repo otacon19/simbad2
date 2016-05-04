@@ -5,7 +5,7 @@
          point="flintstones.resolutionphase.ui">
       <ui
             id="flintstones.resolutionphase.rating.ui"
-            name="Rating"
+            name="%ui.name"
             resolution_phase="flintstones.resolutionphase.rating">
          <perspective
                id="flintstones.resolutionphase.rating.perspective">
@@ -18,7 +18,7 @@
             class="sinbad2.resolutionphase.rating.ui.RatingPerspective"
             icon="icons/rating.png"
             id="flintstones.resolutionphase.rating.perspective"
-            name="Rating">
+            name="%perspective.name">
       </perspective>
    </extension>
    <extension
@@ -43,13 +43,13 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.rating.category"
-            name="Rating">
+            name="%category.name">
       </category>
       <view
             category="flintstones.rating.category"
             class="sinbad2.resolutionphase.rating.ui.view.RatingView"
             id="flintstones.resolutionphase.rating.ui.view"
-            name="Rating"
+            name="%view.name"
             restorable="true">
       </view>
    </extension>

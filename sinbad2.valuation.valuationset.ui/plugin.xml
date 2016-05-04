@@ -5,14 +5,14 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.valuationset.category"
-            name="Valuation set">
+            name="%category.name">
       </category>
       <view
             category="flintstones.valuationset.category"
             class="sinbad2.valuation.valuationset.ui.view.ElementValuationsView"
             icon="icons/elementvaluations.png"
             id="flintstones.valuation.valuationset.ui.view.elementvaluations"
-            name="Element valuations"
+            name="%view.name"
             restorable="true">
       </view>
    </extension>
@@ -20,7 +20,7 @@
          point="org.eclipse.ui.contexts">
       <context
             id="flitstones.valuation.valuationset.ui.view.elementvaluations.elementvaluations_view"
-            name="Context element valuations"
+            name="%context.name"
             parentId="flintstones.core.ui">
       </context>
    </extension>

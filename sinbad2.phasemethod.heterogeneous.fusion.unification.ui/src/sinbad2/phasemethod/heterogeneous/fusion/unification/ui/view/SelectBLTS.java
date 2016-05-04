@@ -48,14 +48,13 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	
 	private ControlAdapter _controlListener;
 	
-	private List<Domain> _domainsBLTS;
+	private List<Domain> _BLTSDomains;
 	private DomainSet _domainSet;
-	
-	private static Domain _selectedBLTSDomain;
 	
 	private boolean _completed;
 	private boolean _loaded;
 	
+	private static Domain _BLTSDomainSelected;
 	private RatingView _ratingView;
 	
 	@Override
@@ -68,8 +67,8 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 		
 		_parent = parent;
 		
-		_domainsBLTS = new LinkedList<Domain>();
-		_selectedBLTSDomain = null;
+		_BLTSDomains = new LinkedList<Domain>();
+		_BLTSDomainSelected = null;
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		_domainSet = domainsManager.getActiveDomainSet();
 		
@@ -121,7 +120,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = _validDomainsViewer.getSelection();
-				_selectedBLTSDomain = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
+				_BLTSDomainSelected = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
 				
 				disposeFollowingPhase();
 				
@@ -163,13 +162,13 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 					FuzzySet fuzzySet = dialog.getDomain();
 
 					int count = 1;
-					for(Domain domain: _domainsBLTS) {
+					for(Domain domain: _BLTSDomains) {
 						if(domain.getId().contains("generate")) {
 							count++;
 						}
 					}
 					fuzzySet.setId("generate_" + count);
-					_domainsBLTS.add(fuzzySet);
+					_BLTSDomains.add(fuzzySet);
 					
 					_validDomainsViewer.refresh();
 					descriptionColumn.getColumn().pack();
@@ -187,12 +186,12 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 		for(Domain d: domains) {
 			if(d instanceof FuzzySet) {
 				if(((FuzzySet) d).isBLTS()) {
-					_domainsBLTS.add(d);
+					_BLTSDomains.add(d);
 				}
 			}
 		}
 		
-		_validDomainsViewer.setInput(_domainsBLTS);
+		_validDomainsViewer.setInput(_BLTSDomains);
 	}
 
 	private void createSelectedDomainPanel() {
@@ -207,7 +206,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 		removeChart();
 		_chart = new LinguisticDomainChart();
 		Point size = _selectedDomainPanel.getSize();
-		_chart.initialize(_selectedBLTSDomain, _selectedDomainPanel, size.x, size.y, SWT.BORDER);
+		_chart.initialize(_BLTSDomainSelected, _selectedDomainPanel, size.x, size.y, SWT.BORDER);
 		
 		if (_controlListener == null) {
 			_controlListener = new ControlAdapter() {
@@ -224,10 +223,6 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 		if (_chart != null) {
 			_chart.getChartComposite().dispose();
 		}
-	}
-
-	public static Domain getBLTSDomain() {
-		return _selectedBLTSDomain;
 	}
 	
 	@Override
@@ -247,8 +242,8 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 		_chart = null;
 		_completed = false;
 		_controlListener = null;
-		_domainsBLTS = null;
-		_selectedBLTSDomain = null;
+		_BLTSDomains = null;
+		_BLTSDomainSelected = null;
 	}
 
 	@Override
@@ -267,5 +262,9 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	@Override
 	public void notifyRatingView(RatingView rating) {
 		_ratingView = rating;
+	}
+	
+	public static Domain getBLTSDomain() {
+		return _BLTSDomainSelected;
 	}
 }

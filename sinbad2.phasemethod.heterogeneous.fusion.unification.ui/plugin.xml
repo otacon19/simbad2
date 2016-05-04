@@ -5,7 +5,7 @@
          point="flintstones.phasemethod.ui">
       <ui
             id="flintstones.phasemethod.heterogeneous.fusion.unification.ui"
-            name="Unification"
+            name="%ui.name"
             phasemethod="flintstones.phasemethod.heterogeneous.fusion.unification">
          <view
                step="sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view.SelectBLTS">
@@ -19,20 +19,20 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.phasemethod.heterogeneous.fusion.unification.ui.category"
-            name="Unification">
+            name="%category.name">
       </category>
       <view
             category="flintstones.phasemethod.heterogeneous.fusion.unification.ui.category"
             class="sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view.SelectBLTS"
             id="flintstones.phasemethod.heterogeneous.fusion.unification.ui.view.selectblts"
-            name="Select BLTS"
+            name="%view.name"
             restorable="true">
       </view>
       <view
             category="flintstones.phasemethod.heterogeneous.fusion.unification.ui.category"
             class="sinbad2.phasemethod.heterogeneous.fusion.unification.ui.view.Unification"
             id="flintstones.phasemethod.heterogeneous.fusion.unification.ui.view.unification"
-            name="Unification"
+            name="%view.name.0"
             restorable="true">
       </view>
    </extension>

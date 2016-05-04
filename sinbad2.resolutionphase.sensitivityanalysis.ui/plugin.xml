@@ -5,7 +5,7 @@
          point="flintstones.resolutionphase.ui">
       <ui
             id="flintstones.resolutionphase.sensitivityanalysis.ui"
-            name="Sensitivity analysis"
+            name="%ui.name"
             resolution_phase="flintstones.resolutionphase.sensitivityanalysis">
          <perspective
                id="flintstones.resolutionphase.sensitivityanalysis.perspective">
@@ -18,21 +18,21 @@
             class="sinbad2.resolutionphase.sensitivityanalysis.ui.SensitivityAnalysisPerspective"
             icon="icons/sensitivityanalysis.png"
             id="flintstones.resolutionphase.sensitivityanalysis.perspective"
-            name="Sensitivity analysis">
+            name="%perspective.name">
       </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <category
             id="flintstones.resolutionphase.sensitivityanalysis.views.category"
-            name="Sensitivity analysis">
+            name="%category.name">
       </category>
       <view
             category="flintstones.resolutionphase.sensitivityanalysis.views.category"
             class="sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView"
             icon="icons/decision_matrix_24x24.png"
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking"
-            name="Decision matrix"
+            name="%view.name"
             restorable="true">
       </view>
       <view
@@ -40,7 +40,7 @@
             class="sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView"
             icon="icons/ranking_24x24.png"
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking"
-            name="Ranking"
+            name="%view.name.0"
             restorable="true">
       </view>
       <view
@@ -48,7 +48,7 @@
             class="sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SensitivityAnalysisView"
             icon="icons/sensitivity_analysis_24x24.png"
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis"
-            name="Sensitivity analysis"
+            name="%view.name.1"
             restorable="true">
       </view>
       <view
@@ -56,7 +56,7 @@
             class="sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.AnalysisView"
             icon="icons/analysis_24x24.png"
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.analysis"
-            name="Analysis"
+            name="%view.name.2"
             restorable="true">
       </view>
    </extension>
@@ -130,22 +130,22 @@
          point="org.eclipse.ui.contexts">
       <context
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking.decisionmaking_view"
-            name="Decision making context"
+            name="%context.name"
             parentId="flintstones.core.ui">
       </context>
       <context
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking.ranking_view"
-            name="Ranking context"
+            name="%context.name.0"
             parentId="flintstones.core.ui">
       </context>
       <context
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.domain.domain_view"
-            name="Domain context"
+            name="%context.name.1"
             parentId="flintstones.core.ui">
       </context>
       <context
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.sensitivityanalysis.sensitivityanalysis_view"
-            name="Sensitivity analysis context"
+            name="%context.name.2"
             parentId="flintstones.core.ui">
       </context>
    </extension>

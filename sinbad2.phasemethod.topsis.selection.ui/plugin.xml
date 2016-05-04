@@ -5,7 +5,7 @@
          point="flintstones.phasemethod.ui">
       <ui
             id="flintstones.phasemethod.topsis.selection.ui"
-            name="Selection process"
+            name="%ui.name"
             phasemethod="flintstones.phasemethod.topsis.selection">
          <view
                step="sinbad2.phasemethod.topsis.selection.ui.view.AggregationExperts">
@@ -19,20 +19,20 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.phasemethod.topsis.selection.ui.category"
-            name="Selection">
+            name="%category.name">
       </category>
       <view
             category="flintstones.phasemethod.topsis.selection.ui.category"
             class="sinbad2.phasemethod.topsis.selection.ui.view.AggregationExperts"
             id="flintstones.phasemethod.topsis.selection.ui.view.aggregationexperts"
-            name="Aggregation experts"
+            name="%view.name"
             restorable="true">
       </view>
       <view
             category="flintstones.phasemethod.topsis.selection.ui.category"
             class="sinbad2.phasemethod.topsis.selection.ui.view.CalculateDistances"
             id="flintstones.phasemethod.topsis.selection.ui.view.calculatedistances"
-            name="Calculate distances"
+            name="%view.name.0"
             restorable="true">
       </view>
    </extension>

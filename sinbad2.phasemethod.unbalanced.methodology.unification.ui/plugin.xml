@@ -5,7 +5,7 @@
          point="flintstones.phasemethod.ui">
       <ui
             id="flintstones.phasemethod.unbalanced.methodology.unification.ui"
-            name="Unification"
+            name="%ui.name"
             phasemethod="flintstones.phasemethod.unbalanced.methodology.unification">
          <view
                step="sinbad2.phasemethod.unbalanced.methodology.unification.ui.view.GenerateLH">
@@ -19,20 +19,20 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.phasemethod.unbalanced.methodology.unification.ui.category"
-            name="Unification">
+            name="%category.name">
       </category>
       <view
             category="flintstones.phasemethod.unbalanced.methodology.unification.ui.category"
             class="sinbad2.phasemethod.unbalanced.methodology.unification.ui.view.GenerateLH"
             id="flintstones.phasemethod.unbalanced.methodology.unification.ui.generatelh"
-            name="Generate LH"
+            name="%view.name"
             restorable="true">
       </view>
       <view
             category="flintstones.phasemethod.unbalanced.methodology.unification.ui.category"
             class="sinbad2.phasemethod.unbalanced.methodology.unification.ui.view.CalculateRepresentation"
             id="flintstones.phasemethod.unbalanced.methodology.unification.ui.calculaterepresentation"
-            name="Calculate representation"
+            name="%view.name.0"
             restorable="true">
       </view>
    </extension>

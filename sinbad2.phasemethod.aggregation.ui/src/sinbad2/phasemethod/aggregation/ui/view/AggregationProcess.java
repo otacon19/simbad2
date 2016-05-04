@@ -45,6 +45,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
+import sinbad2.phasemethod.aggregation.UnbalancedUtils;
 import sinbad2.phasemethod.aggregation.listener.AggregationProcessListener;
 import sinbad2.phasemethod.aggregation.listener.AggregationProcessStateChangeEvent;
 import sinbad2.phasemethod.aggregation.ui.Images;
@@ -736,7 +737,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_aggregationResult = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 		
 		if(getDomain() instanceof Unbalanced) {
-			_aggregationResult = _aggregationPhase.transformUnbalanced(_aggregationResult, (Unbalanced) getDomain());
+			_aggregationResult = UnbalancedUtils.transformUnbalanced(_aggregationResult, (Unbalanced) getDomain());
 		}
 		
 		refreshView();	

@@ -5,7 +5,7 @@
          point="flintstones.phasemethod.ui">
       <ui
             id="flintstones.phasemethod.linguistic.hesitant.unification.ui"
-            name="Unification"
+            name="%ui.name"
             phasemethod="flintstones.phasemethod.linguistic.hesitant.unification">
          <view
                step="sinbad2.phasemethod.linguistic.hesitant.unification.ui.view.Unification">
@@ -16,13 +16,13 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.phasemethod.linguistic.hesitant.unification.ui.category"
-            name="Unification">
+            name="%category.name">
       </category>
       <view
             category="flintstones.phasemethod.linguistic.hesitant.unification.ui.category"
             class="sinbad2.phasemethod.linguistic.hesitant.unification.ui.view.Unification"
             id="flintstones.phasemethod.linguistic.hesitant.ui.view.unification"
-            name="Unification"
+            name="%view.name"
             restorable="true">
       </view>
    </extension>

@@ -1162,7 +1162,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private void copyDecisionMatrix() {
 		_decisionMatrix = new double[_numberOfCriteria][_numberOfAlternatives];
 		
-		double[][] aggregatedValuations = _aggregationPhase.getAggregatedValuationsAlternativeCriterion();
+		double[][] aggregatedValuations = _aggregationPhase.getDecisionMatrix();
 		for(int i = 0; i < _numberOfAlternatives; ++i) {
 			for(int j = 0; j < _numberOfCriteria; ++j) {
 				_decisionMatrix[j][i] = aggregatedValuations[j][i];

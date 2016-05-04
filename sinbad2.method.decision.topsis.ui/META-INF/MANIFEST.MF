@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Topsis ui
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.method.decision.topsis.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Sinbad2
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.method.linguistic.ui

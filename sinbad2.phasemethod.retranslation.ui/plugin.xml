@@ -5,7 +5,7 @@
          point="flintstones.phasemethod.ui">
       <ui
             id="flintstones.phasemethod.retranslation.ui"
-            name="Retranslation"
+            name="%ui.name"
             phasemethod="flintstones.phasemethod.retranslation">
          <view
                step="sinbad2.phasemethod.retranslation.ui.view.Retranslation">
@@ -16,13 +16,13 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.phasemethod.retranslation.ui.category"
-            name="Retranslation">
+            name="%category.name">
       </category>
       <view
             category="flintstones.phasemethod.retranslation.ui.category"
             class="sinbad2.phasemethod.retranslation.ui.view.Retranslation"
             id="flintstones.phasemethod.retranslation.ui.view.retranslation"
-            name="Retranslation"
+            name="%view.name"
             restorable="true">
       </view>
    </extension>

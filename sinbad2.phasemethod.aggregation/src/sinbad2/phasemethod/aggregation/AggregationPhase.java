@@ -12,9 +12,6 @@ import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
-import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
-import sinbad2.domain.linguistic.unbalanced.Unbalanced;
-import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
@@ -41,31 +38,27 @@ public class AggregationPhase implements IPhaseMethod {
 	public static final String CRITERIA = "CRITERIA";
 	public static final String EXPERTS = "EXPERTS";
 
-	private static final int UNBALANCED_LEFT = 0;
-	private static final int UNBALANCED_RIGHT = 1;
-
 	private Map<ProblemElement, AggregationOperator> _expertsOperators;
 	private Map<ProblemElement, Object> _expertsOperatorsWeights;
 	
 	private Map<ProblemElement, AggregationOperator> _criteriaOperators;
 	private Map<ProblemElement, Object> _criteriaOperatorsWeights;
 	
-	private Map<ValuationKey, Valuation> _unificationValues;
-	
+	private Map<ValuationKey, Valuation> _unifiedValuations;
 	private Map<ProblemElement, Valuation> _aggregatedValuations;
 	
-	private double[][] _aggregatedValuationsAlternativeCriterion;
+	private double[][] _decisionMatrix;
 	private int _numCriterion;
-	private int _numAlternative;;
+	private int _numAlternative;
 
 	private String _aggregateBy;
-
-	private List<AggregationProcessListener> _listeners;
 	
 	private Domain _unifiedDomain;
 	
 	private ProblemElementsSet _elementsSet;
 	private ValuationSet _valuationSet;
+	
+	private List<AggregationProcessListener> _listeners;
 
 	public AggregationPhase() {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
@@ -78,7 +71,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_expertsOperatorsWeights = new HashMap<ProblemElement, Object>();
 		_criteriaOperatorsWeights = new HashMap<ProblemElement, Object>();
 
-		_unificationValues = new HashMap<ValuationKey, Valuation>();
+		_unifiedValuations = new HashMap<ValuationKey, Valuation>();
 				
 		_numCriterion = 0;
 		_numAlternative = 0;
@@ -89,11 +82,11 @@ public class AggregationPhase implements IPhaseMethod {
 	}
 	
 	public Map<ValuationKey, Valuation> getUnificationValues() {
-		return _unificationValues;
+		return _unifiedValuations;
 	}
 	
 	public void setUnificationValues(Map<ValuationKey, Valuation> values) {
-		_unificationValues = values;
+		_unifiedValuations = values;
 	}
 	
 	public Map<ProblemElement, Valuation> getAggregatedValuations() {
@@ -145,8 +138,8 @@ public class AggregationPhase implements IPhaseMethod {
 		_criteriaOperatorsWeights = criteriaOperatorWeights;
 	}
 	
-	public double[][] getAggregatedValuationsAlternativeCriterion() {
-		return _aggregatedValuationsAlternativeCriterion;
+	public double[][] getDecisionMatrix() {
+		return _decisionMatrix;
 	}
 	
 	public ProblemElement[] setExpertOperator(ProblemElement expert, AggregationOperator operator, Object weights) {
@@ -254,7 +247,7 @@ public class AggregationPhase implements IPhaseMethod {
 	public Map<ProblemElement, Valuation> aggregateAlternatives(Set<ProblemElement> experts, Set<ProblemElement> alternatives, Set<ProblemElement> criteria) {
 		_aggregatedValuations = new HashMap<ProblemElement, Valuation>();
 		
-		_aggregatedValuationsAlternativeCriterion = new double[criteria.size()][alternatives.size()];
+		_decisionMatrix = new double[criteria.size()][alternatives.size()];
 		_numAlternative = 0;
 		_numCriterion = 0;
 		
@@ -322,7 +315,7 @@ public class AggregationPhase implements IPhaseMethod {
 							if (_elementsSet.getAllExpertChildren((Expert) expertParent).size() > 0) {
 								criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion, experts, criteria));
 							} else {
-								criterionValuations.add(_unificationValues.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
+								criterionValuations.add(_unifiedValuations.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
 							}
 						} else {
 							criterionValuations.add(null);
@@ -334,7 +327,7 @@ public class AggregationPhase implements IPhaseMethod {
 						if (operator instanceof UnweightedAggregationOperator) {
 							Valuation v = ((UnweightedAggregationOperator) operator).aggregate(criterionValuations);
 							alternativeValuations.add(v);
-							_aggregatedValuationsAlternativeCriterion[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
+							_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
 							_numCriterion++;
 						} else {
 							aux = getExpertOperatorWeights(expertParent);
@@ -354,7 +347,7 @@ public class AggregationPhase implements IPhaseMethod {
 								if(weights != null) {
 									Valuation v = ((WeightedAggregationOperator) operator).aggregate(criterionValuations, weights);
 									alternativeValuations.add(v);
-									_aggregatedValuationsAlternativeCriterion[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
+									_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
 									_numCriterion++;
 								} else {
 									alternativeValuations.add(null);
@@ -363,7 +356,7 @@ public class AggregationPhase implements IPhaseMethod {
 						}
 					} else {
 						alternativeValuations.add(criterionValuations.get(0));
-						_aggregatedValuationsAlternativeCriterion[_numCriterion][_numAlternative] = ((TwoTuple) criterionValuations.get(0)).calculateInverseDelta();
+						_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) criterionValuations.get(0)).calculateInverseDelta();
 						_numCriterion++;
 					}
 				}
@@ -436,7 +429,7 @@ public class AggregationPhase implements IPhaseMethod {
 							if (_elementsSet.getAllCriterionSubcriteria((Criterion) criterionParent).size() > 0) {
 								expertValuations.add(aggregateElementByCriteria(expert, alternative, criterion, experts, criteria));
 							} else {
-								expertValuations.add(_unificationValues.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
+								expertValuations.add(_unifiedValuations.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
 							}
 						} else {
 							expertValuations.add(null);
@@ -533,160 +526,6 @@ public class AggregationPhase implements IPhaseMethod {
 		
 		return data;
 	}
-	
-	public Map<ProblemElement, Valuation> transformUnbalanced(Map<ProblemElement, Valuation> problemResult, Unbalanced resultsDomain) {
-
-		_unifiedDomain = resultsDomain;
-		Map<ProblemElement, Valuation> results = null;
-
-		if(resultsDomain != null) {
-
-			results = new HashMap<ProblemElement, Valuation>();
-
-			Valuation valuation;
-			Unbalanced hgls = null;
-			LabelLinguisticDomain label, labelTest = null;
-			double alpha;
-			Map<Integer, Integer> domains = null;
-			int testPos;
-			boolean find;
-			Integer labelPos;
-			Unbalanced domainTest;
-			int domainPos;
-			int domainSize;
-
-			int size;
-			Unbalanced[] auxDomains = null;
-			LabelLinguisticDomain[] labels = null;
-			double[] alphas = null;
-			int[] sizes = null;
-
-			int[] lh = resultsDomain.getLh();
-			Map<Integer, Unbalanced> lhDomains = new HashMap<Integer, Unbalanced>();
-
-			for(int i = 0; i < lh.length; i++) {
-				lhDomains.put(lh[i], createDomain(lh[i]));
-			}
-
-			for(ProblemElement alternative : problemResult.keySet()) {
-				valuation = problemResult.get(alternative);
-				if(valuation != null) {
-					if(hgls == null) {
-						hgls = (Unbalanced) valuation.getDomain();
-					}
-					label = ((TwoTuple) valuation).getLabel();
-					alpha = ((TwoTuple) valuation).getAlpha();
-
-					find = false;
-
-					domainPos = lh.length - 1;
-					do {
-						domainSize = lh[domainPos];
-						domainTest = lhDomains.get(domainSize);
-						testPos = domainTest.getLabelSet().getPos(label);
-						labelPos = resultsDomain.labelPos(domainSize, testPos);
-						if(labelPos != null) {
-							find = true;
-							labelTest = ((Unbalanced) _unifiedDomain).getLabelSet().getLabel(labelPos);
-							domains = resultsDomain.getLabel(labelPos);
-							size = domains.size();
-							auxDomains = new Unbalanced[size];
-							labels = new LabelLinguisticDomain[size];
-							sizes = new int[size];
-							alphas = new double[size];
-							int i = 0;
-							for(Integer auxSize : domains.keySet()) {
-								auxDomains[i] = lhDomains.get(auxSize);
-								labels[i] = auxDomains[i].getLabelSet().getLabel(domains.get(auxSize));
-								sizes[i] = auxSize;
-								if (labels[i] == label) {
-									alphas[i] = alpha;
-								} else {
-									alphas[i] = ((TwoTuple) valuation).transform(auxDomains[i]).getAlpha();
-								}
-								i++;
-							}
-						} else {
-							domainPos--;
-							valuation = ((TwoTuple) valuation).transform(lhDomains.get(lh[domainPos]));
-							label = ((TwoTuple) valuation).getLabel();
-							alpha = ((TwoTuple) valuation).getAlpha();
-						}
-					} while (!find);
-
-					if((domains.size() == 1) || (alpha == 0)) {
-						valuation = transformToResultsDomain(labelTest, alphas[0]);
-					} else {
-						if(alpha > 0) {
-							if(smallSide(labelTest) == UNBALANCED_RIGHT) {
-								if (sizes[0] > sizes[1]) {
-									valuation = transformToResultsDomain(labelTest, alphas[0]);
-								} else {
-									valuation = transformToResultsDomain(labelTest, alphas[1]);
-								}
-							} else {
-								if(sizes[0] > sizes[1]) {
-									valuation = transformToResultsDomain(labelTest, alphas[1]);
-								} else {
-									valuation = transformToResultsDomain(labelTest, alphas[0]);
-								}
-							}
-						} else {
-							if (smallSide(label) == UNBALANCED_RIGHT) {
-								if (sizes[0] > sizes[1]) {
-									valuation = transformToResultsDomain(labelTest, alphas[1]);
-								} else {
-									valuation = transformToResultsDomain(labelTest, alphas[0]);
-								}
-							} else {
-								if (sizes[0] > sizes[1]) {
-									valuation = transformToResultsDomain(labelTest, alphas[0]);
-								} else {
-									valuation = transformToResultsDomain(labelTest, alphas[1]);
-								}
-							}
-						}
-					}
-				}
-
-				results.put(alternative, valuation);
-			}
-		}
-
-		return results;
-	}
-	
-	private Unbalanced createDomain(int cardinality) {
-		String[] labels = new String[cardinality];
-		for(int i = 0; i < cardinality; i++) {
-			labels[i] = Integer.toString(i);
-		}
-		
-		Unbalanced domain = new Unbalanced();
-		domain.createTrapezoidalFunction(labels);
-
-		return domain;
-	}
-	
-	private int smallSide(LabelLinguisticDomain l) {
-		NumericRealDomain center = l.getSemantic().getCenter();
-		NumericRealDomain coverage = l.getSemantic().getCoverage();
-
-		double left = center.getMin() - coverage.getMin();
-		double right = coverage.getMax() - center.getMax();
-
-		if(left > right) {
-			return UNBALANCED_RIGHT;
-		} else {
-			return UNBALANCED_LEFT;
-		}
-	}
-	
-	private Valuation transformToResultsDomain(LabelLinguisticDomain label, double alpha) {
-		TwoTuple result = new TwoTuple((FuzzySet) _unifiedDomain, label, alpha);
-		return result;
-	}
-	
 
 	@Override
 	public IPhaseMethod copyStructure() {
@@ -703,7 +542,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_expertsOperatorsWeights = aggregationPhase.getExpertsOperatorWeights();
 		_criteriaOperators = aggregationPhase.getCriteriaOperators();
 		_expertsOperators = aggregationPhase.getExpertsOperators();
-		_unificationValues = aggregationPhase.getUnificationValues();
+		_unifiedValuations = aggregationPhase.getUnificationValues();
 		_unifiedDomain = aggregationPhase.getUnifiedDomain();
 	}
 
@@ -713,7 +552,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_expertsOperatorsWeights.clear();
 		_criteriaOperators.clear();
 		_expertsOperators.clear();
-		_unificationValues.clear();
+		_unifiedValuations.clear();
 		_unifiedDomain = null;
 		_aggregateBy = "CRITERIA";
 	}

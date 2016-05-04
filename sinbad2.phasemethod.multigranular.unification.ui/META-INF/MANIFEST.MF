@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Multigranular unification ui
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.phasemethod.multigranular.fusion.unification.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sinbad2.phasemethod.multigranular.unification.ui.Activator

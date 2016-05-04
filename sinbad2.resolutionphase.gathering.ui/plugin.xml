@@ -5,7 +5,7 @@
          point="flintstones.resolutionphase.ui">
       <ui
             id="flintstones.resolutionphase.gathering.ui"
-            name="Gathering"
+            name="%ui.name"
             resolution_phase="flintstones.resolutionphase.gathering">
          <perspective
                id="flintstones.resolutionphase.gathering.perspective">
@@ -18,7 +18,7 @@
             class="sinbad2.resolutionphase.gathering.ui.GatheringPerspective"
             icon="icons/gathering.png"
             id="flintstones.resolutionphase.gathering.perspective"
-            name="Gathering">
+            name="%perspective.name">
       </perspective>
    </extension>
    <extension

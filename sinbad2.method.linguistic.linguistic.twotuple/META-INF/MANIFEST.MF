@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Twotuple
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.method.linguistic.linguistic.twotuple;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Sinbad2
+Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.method.linguistic;bundle-version="1.0.0"

@@ -6,7 +6,7 @@
       <resolution_phase
             id="flintstones.resolutionphase.gathering"
             implementation="sinbad2.resolutionphase.gathering.Gathering"
-            name="Gathering">
+            name="%resolution_phase.name">
       </resolution_phase>
    </extension>
 

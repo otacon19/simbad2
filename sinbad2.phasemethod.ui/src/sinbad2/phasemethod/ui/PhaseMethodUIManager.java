@@ -11,7 +11,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.part.ViewPart;
 
-
 public class PhaseMethodUIManager {
 	
 private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-1$
@@ -19,15 +18,16 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 	private static PhaseMethodUIManager _instance = null;
 	
 	private PhaseMethodUI _activePhaseMethodUI;
-	private ViewPart _activeStep;
 	
 	private Map<String, PhaseMethodUIRegistryExtension> _registers;
 	private Map<String, PhaseMethodUI> _phasesMethodsUIs;
 	private Map<String, List<ViewPart>> _phasesSteps;
 	
+	private ViewPart _activatedStep;
+	
 	private PhaseMethodUIManager() {
 		_activePhaseMethodUI = null;
-		_activeStep = null;
+		_activatedStep = null;
 		
 		_registers = new HashMap<String, PhaseMethodUIRegistryExtension>();
 		_phasesMethodsUIs = new HashMap<String, PhaseMethodUI>();
@@ -83,11 +83,11 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 		return _phasesSteps;
 	}
 	
-	public List<ViewPart> getSteps(String id) {
+	public List<ViewPart> getStepsPhaseMethod(String id) {
 		return _phasesSteps.get(id);
 	}
 	
-	public ViewPart getStep(String id, int numStep) {
+	public ViewPart getStepPhaseMethod(String id, int numStep) {
 		return _phasesSteps.get(id).get(numStep);
 	}
 	
@@ -122,16 +122,16 @@ private final String EXTENSION_POINT = "flintstones.phasemethod.ui"; //$NON-NLS-
 	}
 	
 	public void activateStep(ViewPart step) {
-		_activeStep = step;
+		_activatedStep = step;
 	}
 	
 	public void deactivateStep() {
-		_activeStep = null;
+		_activatedStep = null;
 	}
 	
 	public ViewPart getNextStep() {
 		List<ViewPart> steps = _phasesSteps.get(_activePhaseMethodUI.getId());
-		int currentStep = steps.indexOf(_activeStep);
+		int currentStep = steps.indexOf(_activatedStep);
 		
 		if(currentStep + 1 >= steps.size()) {
 			return null;

@@ -1,6 +1,5 @@
 package sinbad2.aggregationoperator.owa;
 
-
 public class YagerQuantifiers {
 	
 	public enum QuantificationType {

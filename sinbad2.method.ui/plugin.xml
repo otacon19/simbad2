@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="flintstones.method.ui" name="flintstones.method.ui" schema="schema/flintstones.method.ui.exsd"/>
+   <extension-point id="flintstones.method.ui" name="%extension-point.name" schema="schema/flintstones.method.ui.exsd"/>
 
 </plugin>

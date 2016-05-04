@@ -39,6 +39,7 @@ import sinbad2.method.MethodsManager;
 import sinbad2.phasemethod.PhaseMethod;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
+import sinbad2.phasemethod.aggregation.UnbalancedUtils;
 import sinbad2.phasemethod.analysis.AnalysisPhase;
 import sinbad2.phasemethod.analysis.ui.view.listener.CheckStateListener;
 import sinbad2.phasemethod.analysis.ui.view.provider.AlternativeColumnLabelProvider;
@@ -392,7 +393,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		_aggregationResult = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 		
 		if(getDomain() instanceof Unbalanced) {
-			_aggregationResult = _aggregationPhase.transformUnbalanced(_aggregationResult, (Unbalanced) getDomain());
+			_aggregationResult = UnbalancedUtils.transformUnbalanced(_aggregationResult, (Unbalanced) getDomain());
 			_rankingViewer.setInput(_aggregationResult);
 			setChart(getDomain());
 		} else {

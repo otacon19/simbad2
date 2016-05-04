@@ -5,7 +5,7 @@
          point="flintstones.phasemethod.ui">
       <ui
             id="flintstones.phasemethod.analysis.ui"
-            name="Analysis"
+            name="%ui.name"
             phasemethod="flintstones.phasemethod.analysis">
          <view
                step="sinbad2.phasemethod.analysis.ui.view.Analysis">
@@ -16,13 +16,13 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.phasemethod.analysis.ui.category"
-            name="Analysis">
+            name="%category.name">
       </category>
       <view
             category="flintstones.phasemethod.analysis.ui.category"
             class="sinbad2.phasemethod.analysis.ui.view.Analysis"
             id="flintstones.phasemethod.analysis.ui.view.analysis"
-            name="Analysis"
+            name="%view.name"
             restorable="true">
       </view>
    </extension>
