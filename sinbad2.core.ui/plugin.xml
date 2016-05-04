@@ -227,7 +227,7 @@
       </image>
       <image
             commandId="flintstones.core.ui.io.save.and.close"
-            icon="bin/save-and-close_16.png">
+            icon="icons/save-and-close_16.png">
       </image>
       <image
             commandId="org.eclipse.ui.file.exit"

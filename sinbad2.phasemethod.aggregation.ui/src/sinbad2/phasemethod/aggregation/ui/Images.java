@@ -13,6 +13,9 @@ public class Images {
 	public static final Image Edit = AbstractUIPlugin
 			.imageDescriptorFromPlugin(PLUGIN_ID, "icons/edit_22.png").createImage(); //$NON-NLS-1$
 
+	public static final Image Edit_p = AbstractUIPlugin
+			.imageDescriptorFromPlugin(PLUGIN_ID, "icons/edit_par_22.png").createImage(); //$NON-NLS-1$
+	
 	public static final Image AggregationOperator = AbstractUIPlugin
 			.imageDescriptorFromPlugin(PLUGIN_ID, "icons/aggregation_operator_22.png").createImage(); //$NON-NLS-1$
 

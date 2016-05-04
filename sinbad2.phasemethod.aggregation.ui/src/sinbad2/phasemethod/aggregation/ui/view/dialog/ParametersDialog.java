@@ -29,8 +29,23 @@ public class ParametersDialog extends Dialog {
 	
 	public ParametersDialog(Shell parentShell) {
 		super(parentShell);
+		
+		_parameters = "";
 	}
 	
+	public ParametersDialog(Shell parentShell, List<Double> parameters) {
+		super(parentShell);
+		
+		convertParametersToString(parameters);
+	}
+	
+	private void convertParametersToString(List<Double> parameters) {
+		for(double p: parameters) {
+			_parameters += Double.toString(p) + ';';
+		}
+		_parameters = _parameters.substring(0, _parameters.length() - 1);
+	}
+
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
@@ -45,6 +60,7 @@ public class ParametersDialog extends Dialog {
 
 		_parametersText = new Text(container, SWT.BORDER);
 		_parametersText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1));
+		_parametersText.setText(_parameters);
 		
 		container.pack();
 

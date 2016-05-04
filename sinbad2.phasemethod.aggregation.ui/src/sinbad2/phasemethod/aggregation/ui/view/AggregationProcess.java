@@ -50,6 +50,7 @@ import sinbad2.phasemethod.aggregation.listener.AggregationProcessStateChangeEve
 import sinbad2.phasemethod.aggregation.ui.Images;
 import sinbad2.phasemethod.aggregation.ui.view.editingsupport.AggregationOperatorEditingSupport;
 import sinbad2.phasemethod.aggregation.ui.view.editingsupport.OperatorWeightsEditingSupport;
+import sinbad2.phasemethod.aggregation.ui.view.editingsupport.ParametersEditingSupport;
 import sinbad2.phasemethod.aggregation.ui.view.provider.AggregationCriterionViewerContentProvider;
 import sinbad2.phasemethod.aggregation.ui.view.provider.AggregationExpertViewerContentProvider;
 import sinbad2.phasemethod.aggregation.ui.view.provider.AlternativeColumnLabelProvider;
@@ -89,6 +90,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	private TreeColumn _treeExpertColumn;
 	private TreeViewerColumn _treeViewerExpertOperatorWeightsColumn;
 	private TreeColumn _treeExpertOperatorWeightsColumn;
+	private TreeViewerColumn _treeViewerParameterColumn;
+	private TreeColumn _treeParameterColumn;
 	private TreeViewerColumn _treeViewerExpertOperatorColumn;
 	private TreeColumn _treeExpertOperatorColumn;
 	private TreeViewer _criteriaViewer;
@@ -283,6 +286,34 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 							}
 						}
 					});
+			
+			_treeViewerParameterColumn = new TreeViewerColumn(_expertsViewer, SWT.NONE);
+			_treeParameterColumn = _treeViewerParameterColumn.getColumn();
+			_treeParameterColumn.setAlignment(SWT.CENTER);
+			_treeParameterColumn.setWidth(45);
+			_treeParameterColumn.setText(""); //$NON-NLS-1$
+			_treeParameterColumn.setImage(Images.Edit_p);
+			_treeViewerParameterColumn.setEditingSupport(new ParametersEditingSupport(_expertsViewer, AggregationPhase.EXPERTS, _aggregationPhase));
+			_treeViewerParameterColumn.setLabelProvider(new CenterImageLabelProvider() {
+						@Override
+						public Image getImage(Object element) {
+
+							ProblemElement problemElement = null;
+							if (element instanceof ProblemElement) {
+								problemElement = (ProblemElement) element;
+							}
+
+							AggregationOperator operator = _aggregationPhase.getExpertOperator(problemElement);
+							if (operator != null) {
+								if (operator.hasParameters() && operator.getName().equals("OWA")) {
+									return Images.Edit_p;
+								}
+								return null;
+							} else {
+								return null;
+							}
+						}
+					});
 		
 			_treeViewerExpertOperatorColumn = new TreeViewerColumn(_expertsViewer, SWT.NONE);
 			_treeExpertOperatorColumn = _treeViewerExpertOperatorColumn.getColumn();
@@ -381,6 +412,34 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 							if (operator != null) {
 								if (operator instanceof WeightedAggregationOperator) {
 									return Images.Edit;
+								}
+								return null;
+							} else {
+								return null;
+							}
+						}
+					});
+			
+			_treeViewerParameterColumn = new TreeViewerColumn(_criteriaViewer, SWT.NONE);
+			_treeParameterColumn = _treeViewerParameterColumn.getColumn();
+			_treeParameterColumn.setAlignment(SWT.CENTER);
+			_treeParameterColumn.setWidth(45);
+			_treeParameterColumn.setText(""); //$NON-NLS-1$
+			_treeParameterColumn.setImage(Images.Edit_p);
+			_treeViewerParameterColumn.setEditingSupport(new ParametersEditingSupport(_criteriaViewer, AggregationPhase.CRITERIA, _aggregationPhase));
+			_treeViewerParameterColumn.setLabelProvider(new CenterImageLabelProvider() {
+						@Override
+						public Image getImage(Object element) {
+
+							ProblemElement problemElement = null;
+							if (element instanceof ProblemElement) {
+								problemElement = (ProblemElement) element;
+							}
+
+							AggregationOperator operator = _aggregationPhase.getCriterionOperator(problemElement);
+							if (operator != null) {
+								if (operator.hasParameters() && !operator.getName().equals("OWA")) {
+									return Images.Edit_p;
 								}
 								return null;
 							} else {
