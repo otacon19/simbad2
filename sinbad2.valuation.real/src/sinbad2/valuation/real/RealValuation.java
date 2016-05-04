@@ -13,6 +13,7 @@ import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.real.nls.Messages;
 
 public class RealValuation extends Valuation {
 	
@@ -77,7 +78,7 @@ public class RealValuation extends Valuation {
 		Validator.notNull(fuzzySet);
 		
 		if (!((FuzzySet) fuzzySet).isBLTS()) {
-			throw new IllegalArgumentException("Not BLTS fuzzy set.");
+			throw new IllegalArgumentException(Messages.RealValuation_Not_BLTS_fuzzy_set);
 		}
 
 		int cardinality;

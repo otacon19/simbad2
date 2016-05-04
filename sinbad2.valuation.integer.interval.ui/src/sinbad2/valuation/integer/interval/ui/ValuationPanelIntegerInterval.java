@@ -18,6 +18,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.integer.interval.IntegerIntervalValuation;
+import sinbad2.valuation.integer.interval.ui.nls.Messages;
 import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
 
 public class ValuationPanelIntegerInterval extends ValuationPanel  {
@@ -35,11 +36,11 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 		_valuationPart.setLayout(layout);
 		
 		Label label = new Label(_valuationPart, SWT.NONE);
-		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Interval evaluation");
+		label.setText(Messages.ValuationPanelIntegerInterval_Interval_evaluation);
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		Composite spinnerComposite = new Composite(_valuationPart, SWT.NONE);
@@ -55,7 +56,7 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 		 gd = new GridData(SWT.CENTER, SWT.CENTER, false, true, 1, 1);
 		_intervalLowerLabel = new Label(intervalSpinnerComposite, SWT.NONE);
 		_intervalLowerLabel.setLayoutData(gd);
-		_intervalLowerLabel.setText("Lower limit");
+		_intervalLowerLabel.setText(Messages.ValuationPanelIntegerInterval_Lower_limit);
 		_intervalLowerLabel.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		_valueSpinnerMin = new Spinner(intervalSpinnerComposite, SWT.BORDER);
@@ -66,7 +67,7 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 		
 		_intervalUpperLabel = new Label(intervalSpinnerComposite, SWT.NONE);
 		_intervalUpperLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-		_intervalUpperLabel.setText("Upper limit");
+		_intervalUpperLabel.setText(Messages.ValuationPanelIntegerInterval_Upper_limit);
 		_intervalUpperLabel.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		_valueSpinnerMax = new Spinner(intervalSpinnerComposite, SWT.BORDER);

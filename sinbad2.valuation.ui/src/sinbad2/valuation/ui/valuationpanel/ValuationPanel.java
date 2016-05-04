@@ -25,6 +25,7 @@ import sinbad2.domain.ui.jfreechart.DomainChart;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
 import sinbad2.valuation.ui.Images;
+import sinbad2.valuation.ui.nls.Messages;
 import sinbad2.valuation.ui.valuationpanel.listener.EValuationPanelEvent;
 import sinbad2.valuation.ui.valuationpanel.listener.IValuationPanelListener;
 import sinbad2.valuation.ui.valuationpanel.listener.ValuationPanelEvent;
@@ -178,13 +179,13 @@ public abstract class ValuationPanel {
 
 		_removeButton = new Button(_buttonsPart, SWT.BORDER);
 		_removeButton.setLayoutData(new GridData(SWT.CENTER, SWT.BOTTOM, true, true, 1, 1));
-		_removeButton.setText("Remove");
+		_removeButton.setText(Messages.ValuationPanel_Remove);
 		_removeButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE).createImage());
 
 		_valuateButton = new Button(_buttonsPart, SWT.BORDER);
 		_valuateButton.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, true, 1, 1));
 		_valuateButton.setImage(Images.VALUATION);
-		_valuateButton.setText("Evaluate");
+		_valuateButton.setText(Messages.ValuationPanel_Evaluate);
 		
 		Point sizeRemove = _removeButton.getSize();
 		Point sizeValuate = _valuateButton.getSize();

@@ -12,6 +12,7 @@ import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
+import sinbad2.valuation.unifiedValuation.nls.Messages;
 
 public class UnifiedValuation extends Valuation {
 
@@ -31,7 +32,7 @@ public class UnifiedValuation extends Valuation {
 		FuzzySet otherDomain = (FuzzySet) other.getDomain();
 		for (int i = 0; i < thisDomain.getLabelSet().getCardinality(); i++) {
 			if (!thisDomain.getLabelSet().getLabel(i).equals(otherDomain.getLabelSet().getLabel(i))) {
-				throw new IllegalArgumentException("Different domains");
+				throw new IllegalArgumentException(Messages.UnifiedValuation_Different_domains);
 			}
 		}
 
@@ -72,7 +73,7 @@ public class UnifiedValuation extends Valuation {
 	@Override
 	public String changeFormatValuationToString() {
 		FuzzySet domain = (FuzzySet) _domain;
-		StringBuilder result = new StringBuilder("{");
+		StringBuilder result = new StringBuilder("{"); //$NON-NLS-1$
 		List<LabelLinguisticDomain> labels = domain.getLabelSet().getLabels();
 		String name, measure;
 		
@@ -82,12 +83,12 @@ public class UnifiedValuation extends Valuation {
 			if (measure.length() > 4) {
 				measure = measure.substring(0, 4);
 			}
-			result.append("(" + name + "," + measure + ")");
+			result.append("(" + name + "," + measure + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			if ((i + 1) != labels.size()) {
-				result.append(",");
+				result.append(","); //$NON-NLS-1$
 			}
 		}
-		result.append("}");
+		result.append("}"); //$NON-NLS-1$
 		
 		return result.toString();
 	}

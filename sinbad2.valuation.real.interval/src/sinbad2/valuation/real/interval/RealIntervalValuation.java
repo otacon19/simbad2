@@ -93,7 +93,7 @@ public class RealIntervalValuation extends Valuation {
 		Validator.notNull(fuzzySet);
 
 		if (!((FuzzySet) fuzzySet).isBLTS()) {
-			throw new IllegalArgumentException("Not BLTS fuzzy set.");
+			throw new IllegalArgumentException(Messages.RealIntervalValuation_Not_BLTS_fuzzy_set);
 		}
 		
 		int cardinality;

@@ -22,6 +22,7 @@ import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.EUnaryRelationType;
 import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
+import sinbad2.valutation.hesitant.ui.nls.Messages;
 
 public class ValuationPanelHesitant extends ValuationPanel {
 	
@@ -61,11 +62,11 @@ public class ValuationPanelHesitant extends ValuationPanel {
 		_valuationPart.setLayout(layout);
 		
 		Label label = new Label(_valuationPart, SWT.NONE);
-		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, true, false, 4, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Hesitant evaluation");
+		label.setText(Messages.ValuationPanelHesitant_Hesitant_evaluation);
 		
 		Composite buttonsComposite = new Composite(_valuationPart, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 4, 1));
@@ -76,20 +77,20 @@ public class ValuationPanelHesitant extends ValuationPanel {
 		hesitantButtonsComposite.setLayout(new GridLayout(1,  false));
 		
 		_primaryButton = new Button(hesitantButtonsComposite, SWT.RADIO);
-		_primaryButton.setText("Primary");
+		_primaryButton.setText(Messages.ValuationPanelHesitant_Primary);
 		
 		_compositeButton = new Button(hesitantButtonsComposite, SWT.RADIO);
-		_compositeButton.setText("Composite");
+		_compositeButton.setText(Messages.ValuationPanelHesitant_Composite);
 		
 		_hesitantRelationshipComposite = new Composite(buttonsComposite, SWT.NONE);
 		_hesitantRelationshipComposite.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, false, 1, 1));
 		_hesitantRelationshipComposite.setLayout(new GridLayout(1,  false));
 		
 		_unaryRelationshipButton = new Button(_hesitantRelationshipComposite, SWT.RADIO);
-		_unaryRelationshipButton.setText("Unary");
+		_unaryRelationshipButton.setText(Messages.ValuationPanelHesitant_Unary);
 		
 		_binaryRelationshipButton = new Button(_hesitantRelationshipComposite, SWT.RADIO);
-		_binaryRelationshipButton.setText("Binary");
+		_binaryRelationshipButton.setText(Messages.ValuationPanelHesitant_Binary);
 		
 		_selectIndexes = new LinkedList<Integer>();
 		_binaryIndexes = new LinkedList<Integer>();
@@ -306,7 +307,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 			}
 			_betweenLabel = new Label(_hesitantValueComposite, SWT.NONE);
 			_betweenLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-			_betweenLabel.setText("Between");
+			_betweenLabel.setText(Messages.ValuationPanelHesitant_Between);
 		}
 		
 		if(hesitantCombo1) {
@@ -330,7 +331,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 			}
 			_andLabel = new Label(_hesitantValueComposite, SWT.NONE);
 			_andLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-			_andLabel.setText("and");
+			_andLabel.setText(Messages.ValuationPanelHesitant_And);
 		}
 		
 		if(hesitantCombo2) {

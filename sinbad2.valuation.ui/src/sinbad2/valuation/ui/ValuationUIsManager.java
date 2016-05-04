@@ -15,7 +15,7 @@ import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
 
 public class ValuationUIsManager {
 	
-	private final String EXTENSION_POINT = "flintstones.valuation.ui";
+	private final String EXTENSION_POINT = "flintstones.valuation.ui"; //$NON-NLS-1$
 	
 	private static ValuationUIsManager _instance;
 	

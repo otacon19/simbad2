@@ -78,7 +78,7 @@ public class LinguisticValuation extends Valuation {
 		Validator.notNull(fuzzySet);
 
 		if(!((FuzzySet) fuzzySet).isBLTS()) {
-			throw new IllegalArgumentException("Not BLTS fuzzy set.");
+			throw new IllegalArgumentException(Messages.LinguisticValuation_Not_BLTS_fuzzy_set);
 		}
 
 		int cardinality;
@@ -156,7 +156,7 @@ public class LinguisticValuation extends Valuation {
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeStartElement("labelvaluation"); //$NON-NLS-1$
 		
-		writer.writeStartElement("labelv");
+		writer.writeStartElement("labelv"); //$NON-NLS-1$
 		writer.writeAttribute("label", _label.getName()); //$NON-NLS-1$
 		_label.save(writer);
 		writer.writeEndElement();

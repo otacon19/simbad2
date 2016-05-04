@@ -15,7 +15,7 @@ import sinbad2.valuation.ui.valuationpanel.listener.IValuationPanelListener;
 
 public class ValuationPanelView extends ViewPart {
 	
-	public static final String ID = "flintstones.valuation.ui.view.valuationpanel";
+	public static final String ID = "flintstones.valuation.ui.view.valuationpanel"; //$NON-NLS-1$
 	
 	private ValuationUIsManager _valuationUIsManager;
 	private ValuationPanel _valuationPanel;

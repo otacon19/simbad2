@@ -14,6 +14,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.integer.IntegerValuation;
+import sinbad2.valuation.integer.ui.nls.Messages;
 import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
 
 public class ValuationPanelInteger extends ValuationPanel {
@@ -25,11 +26,11 @@ public class ValuationPanelInteger extends ValuationPanel {
 		_valuationPart.setLayout(new GridLayout(5, true));
 		
 		Label label = new Label(_valuationPart, SWT.NONE);
-		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 5, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Integer evaluation");
+		label.setText(Messages.ValuationPanelInteger_Integer_evaluation);
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		
 		Label value = new Label(_valuationPart, SWT.NONE);
@@ -37,7 +38,7 @@ public class ValuationPanelInteger extends ValuationPanel {
 		gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, false, 3, 1);
 		gd.verticalIndent = 15;
 		value.setLayoutData(gd);
-		value.setText("Value");
+		value.setText(Messages.ValuationPanelInteger_Value);
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationPart, SWT.NONE);
 		

@@ -15,6 +15,7 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
+import sinbad2.valuation.linguistic.ui.nls.Messages;
 import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
 
 public class ValuationPanelLinguistic extends ValuationPanel {
@@ -27,11 +28,11 @@ public class ValuationPanelLinguistic extends ValuationPanel {
 		_valuationPart.setLayout(new GridLayout(5, true));
 		
 		Label label = new Label(_valuationPart, SWT.NONE);
-		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
+		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.CENTER, SWT.CENTER, false, false, 5, 1);
 		gd.verticalIndent = 15;
 		label.setLayoutData(gd);
-		label.setText("Linguistic evaluation");
+		label.setText(Messages.ValuationPanelLinguistic_Linguistic_evaluation);
 		label.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 
 		Label value = new Label(_valuationPart, SWT.NONE);
@@ -39,7 +40,7 @@ public class ValuationPanelLinguistic extends ValuationPanel {
 		gd = new GridData(SWT.CENTER, SWT.BOTTOM, true, false, 3, 1);
 		gd.verticalIndent = 15;
 		value.setLayoutData(gd);
-		value.setText("Value");
+		value.setText(Messages.ValuationPanelLinguistic_Value);
 		value.setBackground(new Color(Display.getCurrent(), 255, 255, 255));
 		new Label(_valuationPart, SWT.NONE);
 		

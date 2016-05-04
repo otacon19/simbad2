@@ -15,6 +15,7 @@ import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.ValuationsManager;
+import sinbad2.valuation.integer.nls.Messages;
 
 public class IntegerValuation extends Valuation {
 	
@@ -79,7 +80,7 @@ public class IntegerValuation extends Valuation {
 		Validator.notNull(fuzzySet);
 		
 		if (!((FuzzySet) fuzzySet).isBLTS()) {
-			throw new IllegalArgumentException("Not BLTS fuzzy set.");
+			throw new IllegalArgumentException(Messages.IntegerValuation_Not_BLTS_fuzzy_set);
 		}
 
 		int cardinality;

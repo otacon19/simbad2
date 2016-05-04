@@ -33,7 +33,7 @@ public class NewValuationOperation extends UndoableOperation {
 	private Map<ValuationKey, Valuation> _newValuations;
 
 	public NewValuationOperation(ValuationSet valuationSet, Expert expert, Alternative alternative, Criterion criterion, Valuation valuation) {
-		super("");
+		super(""); //$NON-NLS-1$
 		
 		_valuationSet = valuationSet;
 		_expert = expert;

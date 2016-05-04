@@ -8,6 +8,7 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
+import sinbad2.valuation.twoTuple.nls.Messages;
 
 public class TwoTuple extends LinguisticValuation {
 	
@@ -42,16 +43,16 @@ public class TwoTuple extends LinguisticValuation {
 	}
 	
 	public void setAlpha(double alpha) {
-		Validator.notInvalidSize(alpha, -0.5, 0.5, "alpha");
+		Validator.notInvalidSize(alpha, -0.5, 0.5, "alpha"); //$NON-NLS-1$
 		
 		int pos = ((FuzzySet) _domain).getLabelSet().getPos(_label);
 		
 		if((pos == 0) && (alpha < 0)) {
-			throw new IllegalArgumentException("Invalid alpha value");
+			throw new IllegalArgumentException(Messages.TwoTuple_Invalid_alpha_value);
 		}
 		
 		if((pos == ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) && (alpha > 0)) {
-			throw new IllegalArgumentException("Invalid alpha value");
+			throw new IllegalArgumentException(Messages.TwoTuple_Invalid_alpha_value);
 		}
 		
 		_alpha = alpha;
@@ -100,7 +101,7 @@ public class TwoTuple extends LinguisticValuation {
 		Validator.notNull(fuzzySet);
 		
 		if (!fuzzySet.isBLTS()) {
-			throw new IllegalArgumentException("Not BLTS fuzzy set.");
+			throw new IllegalArgumentException(Messages.TwoTuple_Not_BLTS_fuzzy_set);
 		}
 		
 		int thisCardinality = ((FuzzySet) _domain).getLabelSet().getCardinality();
@@ -119,7 +120,7 @@ public class TwoTuple extends LinguisticValuation {
 	
 	@Override
 	public String toString() {
-		return ("[" + _label + ", " + _alpha + "]" + " in " + _domain);
+		return ("[" + _label + ", " + _alpha + "]" + Messages.TwoTuple_In + _domain); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	@Override
@@ -162,7 +163,7 @@ public class TwoTuple extends LinguisticValuation {
 				return aux;
 			}	
 		} else {
-			throw new IllegalArgumentException("Differents domains");
+			throw new IllegalArgumentException(Messages.TwoTuple_Different_domains);
 		}
 	}
 	

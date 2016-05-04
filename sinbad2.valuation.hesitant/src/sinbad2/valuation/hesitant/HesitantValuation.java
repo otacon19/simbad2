@@ -13,6 +13,7 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.nls.Messages;
 
 public class HesitantValuation extends Valuation {
 
@@ -70,7 +71,7 @@ public class HesitantValuation extends Valuation {
 			_label = label;
 			disableRelations();
 		} else {
-			throw new IllegalArgumentException("Label not contains in domain.");
+			throw new IllegalArgumentException(Messages.HesitantValuation_Label_not_contains_in_domain);
 		}
 	}
 
@@ -83,7 +84,7 @@ public class HesitantValuation extends Valuation {
 		Validator.notNull(term);
 
 		if (!((FuzzySet) _domain).getLabelSet().containsLabel(term)) {
-			throw new IllegalArgumentException("Label not contains in domain.");
+			throw new IllegalArgumentException(Messages.HesitantValuation_Label_not_contains_in_domain);
 		}
 
 		_unaryRelation = unaryRelation;
@@ -106,15 +107,15 @@ public class HesitantValuation extends Valuation {
 		Validator.notNull(upperTerm);
 
 		if (!((FuzzySet) _domain).getLabelSet().containsLabel(lowerTerm)) {
-			throw new IllegalArgumentException("Lower term not contains in domain.");
+			throw new IllegalArgumentException(Messages.HesitantValuation_Lower_term_not_contains_in_domain);
 		}
 
 		if (!((FuzzySet) _domain).getLabelSet().containsLabel(upperTerm)) {
-			throw new IllegalArgumentException("Upper term not contains in domain.");
+			throw new IllegalArgumentException(Messages.HesitantValuation_Upper_term_not_contains_in_domain);
 		}
 
 		if (upperTerm.compareTo(lowerTerm) <= 0) {
-			throw new IllegalArgumentException("Upper term is bigger than lower term.");
+			throw new IllegalArgumentException(Messages.HesitantValuation_Upper_term_is_bigger_than_lower_term);
 		}
 
 		_lowerTerm = lowerTerm;
@@ -131,7 +132,7 @@ public class HesitantValuation extends Valuation {
 		Validator.notNull(upperTerm);
 
 		if (upperTermPos <= lowerTermPos) {
-			throw new IllegalArgumentException("Upper term is bigger than lower term.");
+			throw new IllegalArgumentException(Messages.HesitantValuation_Upper_term_is_bigger_than_lower_term);
 		}
 
 		_lowerTerm = lowerTerm;
@@ -148,7 +149,7 @@ public class HesitantValuation extends Valuation {
 		Validator.notNull(upperTerm);
 
 		if (upperTermName.compareTo(lowerTermName) <= 0) {
-			throw new IllegalArgumentException("Upper term is bigger than lower term.");
+			throw new IllegalArgumentException(Messages.HesitantValuation_Upper_term_is_bigger_than_lower_term);
 		}
 
 		_lowerTerm = lowertTerm;
@@ -240,13 +241,13 @@ public class HesitantValuation extends Valuation {
 	@Override
 	public String toString() {
 		if (isPrimary()) {
-			return (_label + " in " + _domain.toString());
+			return (_label + Messages.HesitantValuation_In + _domain.toString());
 		} else if (isUnary()) {
-			return (_unaryRelation.toString() + " " + _term + " in " + _domain.toString());
+			return (_unaryRelation.toString() + " " + _term + Messages.HesitantValuation_In + _domain.toString()); //$NON-NLS-1$
 		} else if (isBinary()) {
-			return ("between " + _lowerTerm + " and " + _upperTerm + " in " + _domain.toString());
+			return (Messages.HesitantValuation_between + _lowerTerm + Messages.HesitantValuation_And + _upperTerm + Messages.HesitantValuation_In + _domain.toString());
 		} else {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -262,7 +263,7 @@ public class HesitantValuation extends Valuation {
 			return new HashCodeBuilder(17, 31).append(_label).append(_domain).append(_unaryRelation.toString())
 					.append(_term).append(_lowerTerm).append(_upperTerm).toHashCode();
 		} else {
-			return new HashCodeBuilder(17, 31).append(_label).append(_domain).append("").append(_term)
+			return new HashCodeBuilder(17, 31).append(_label).append(_domain).append("").append(_term) //$NON-NLS-1$
 					.append(_lowerTerm).append(_upperTerm).toHashCode();
 		}
 	}
@@ -301,7 +302,7 @@ public class HesitantValuation extends Valuation {
 				return -1;
 			}
 		} else {
-			throw new IllegalArgumentException("Different domains");
+			throw new IllegalArgumentException(Messages.HesitantValuation_Different_domains);
 		}
 	}
 
@@ -315,9 +316,9 @@ public class HesitantValuation extends Valuation {
 				String aux = getUnaryRelation().getRelationType();
 				aux = aux.toLowerCase();
 				aux = aux.substring(0, 1).toUpperCase() + aux.substring(1);
-				return aux + " " + getTerm().getName();
+				return aux + " " + getTerm().getName(); //$NON-NLS-1$
 			} else {
-				return "Between" + " " + getLowerTerm().getName() + " " + "and" + " " + getUpperTerm().getName();
+				return Messages.HesitantValuation_Between + " " + getLowerTerm().getName() + " " + Messages.HesitantValuation_and + " " + getUpperTerm().getName(); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$
 			}
 		}
 
@@ -404,15 +405,15 @@ public class HesitantValuation extends Valuation {
 					_term = new LabelLinguisticDomain();
 					_term.setName(name);
 					_term.read(reader);
-				} else if ("relation".equals(reader.getStartElementLocalPart())) {
+				} else if ("relation".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
 					String unaryRelation = reader.getStartElementAttribute("unaryRelation"); //$NON-NLS-1$
-					if (unaryRelation.contains("greater")) {
+					if (unaryRelation.contains("greater")) { //$NON-NLS-1$
 						_unaryRelation = EUnaryRelationType.GreaterThan;
-					} else if (unaryRelation.contains("lower")) {
+					} else if (unaryRelation.contains("lower")) { //$NON-NLS-1$
 						_unaryRelation = EUnaryRelationType.LowerThan;
-					} else if (unaryRelation.contains("least")) {
+					} else if (unaryRelation.contains("least")) { //$NON-NLS-1$
 						_unaryRelation = EUnaryRelationType.AtLeast;
-					} else if (unaryRelation.contains("most")) {
+					} else if (unaryRelation.contains("most")) { //$NON-NLS-1$
 						_unaryRelation = EUnaryRelationType.AtMost;
 					}
 
