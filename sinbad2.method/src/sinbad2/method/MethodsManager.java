@@ -25,6 +25,7 @@ import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
+import sinbad2.method.nls.Messages;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.valuationset.ValuationKey;
@@ -186,30 +187,30 @@ public class MethodsManager {
 		int[] cardinalities = getCardinalitiesFuzzySet();
 		
 		if(getBestConditionsHesitant()) {
-			return "Hesitant Fuzzy 2-tuple Linguistic Information";
+			return Messages.MethodsManager_Hesitant_Fuzzy_2_tuple_Linguistic_Information;
 		}
 		
 		if(cardinalities.length > 0 && bcl.size() > 0) {
 			if((bcl.get(cardinalities[0])) && _domainsSet.getDomains().size() == 1) {
-				return "2-Tuple linguistic computational model";
+				return Messages.MethodsManager_2_Tuple_linguistic_computational_model;
 			} else if(getBestConditionsNumeric()) {
-				return "Fusion approach for managing heterogeneous information";
+				return Messages.MethodsManager_Fusion_approach_for_managing_heterogeneous_information;
 			} else if(getBestConditionsUnbalanced() && _domainsSet.getDomains().size() == 1) {
-				return "Methodology to deal with unbalanced linguistic term sets";
+				return Messages.MethodsManager_Methodology_to_deal_with_unbalanced_linguistic_term_sets;
 			} else {
 				for(int i = 0; i < cardinalities.length; i++) {
 					if(!getBestConditionsLinguistic().get(cardinalities[i])) {
-						return "Fusion approach for managing multi-granular linguistic information";
+						return Messages.MethodsManager_Fusion_approach_for_managing_multi_granular_linguistic_information;
 					} else if((i + 1) < cardinalities.length) {
 						if((((cardinalities[i] -1) * 2) +1) != cardinalities[i + 1]) {
-							return "Extended Linguistic Hierarchies";
+							return Messages.MethodsManager_Extended_Linguistic_Hieratchies;
 						}
 					}
 				}
-				return "Linguistic Hierarchies";
+				return Messages.MethodsManager_Linguistic_Hierarchies;
 			}
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 	
 	public int[] getCardinalitiesFuzzySet() {

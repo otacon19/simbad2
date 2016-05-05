@@ -10,6 +10,7 @@ import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.method.MethodImplementation;
+import sinbad2.method.decision.topsis.nls.Messages;
 import sinbad2.method.state.MethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.HesitantValuation;
@@ -18,11 +19,11 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class Topsis extends MethodImplementation {
 	
-	public static final String ID = "flintstones.method.decision.topsis";
+	public static final String ID = "flintstones.method.decision.topsis"; //$NON-NLS-1$
 	
-	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignments";
-	private static final String NOT_SUPPORTED_DOMAINS = "Not supported domains";
-	private static final String HESITANT_VALUATIONS = "Hesitant evaluations";
+	private static final String NOT_SET_ALL_ASSIGNMENTS = Messages.Topsis_Not_set_all_assignments;
+	private static final String NOT_SUPPORTED_DOMAINS = Messages.Topsis_Not_supported_domains;
+	private static final String HESITANT_VALUATIONS = Messages.Topsis_Hesitant_evaluations;
 	
 	private DomainSet _domainSet;
 	private ProblemElementsSet _elementsSet;
@@ -71,6 +72,6 @@ public class Topsis extends MethodImplementation {
 				}
 			}
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 }

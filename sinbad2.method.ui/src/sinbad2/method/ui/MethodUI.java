@@ -78,14 +78,14 @@ public class MethodUI {
 
 	public String getPhasesFormat() {
 		PhaseMethodUIManager phaseMethodUIManager = PhaseMethodUIManager.getInstance();
-		String result = "";
+		String result = ""; //$NON-NLS-1$
 		
 		List<PhaseMethodUI> phasesMethod = getPhasesUI();
 		for(PhaseMethodUI phaseMethod: phasesMethod) {
 			result += phaseMethod.getName() + '\n';
 			List<ViewPart> steps = phaseMethodUIManager.getStepsPhaseMethod(phaseMethod.getId());
 			for(ViewPart step: steps) {
-				result += "\t" + "-" + step.getPartName() + '\n';
+				result += "\t" + "-" + step.getPartName() + '\n'; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		

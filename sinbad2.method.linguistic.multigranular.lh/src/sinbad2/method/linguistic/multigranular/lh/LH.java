@@ -17,6 +17,7 @@ import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.method.MethodImplementation;
+import sinbad2.method.linguistic.multigranular.lh.nls.Messages;
 import sinbad2.method.state.MethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.HesitantValuation;
@@ -25,16 +26,16 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class LH extends MethodImplementation {
 
-	public static final String ID = "flintstones.method.linguistic.multigranular.lh";
+	public static final String ID = "flintstones.method.linguistic.multigranular.lh"; //$NON-NLS-1$
 	
 	private DomainSet _domainsSet;
 	
-	private static final String EVALUATIONS_IN_NOT_BLTS_DOMAINS = "Evaluations in not BLTS domains";
-	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAIN = "Evaluations in not linguistic domain";
-	private static final String EVALUATIONS_IN_DIFFERENT_DOMAINS_WITH_THE_SAME_CARDINALITY = "Evaluations in different domains with the same cardinality";
-	private static final String IMPOSSIBLE_TO_BUILD_LINGUISTIC_HIERARCHY_TAKING_THE_DOMAINS_USED = "Impossible to build linguistic hierarchy taking the domains used";
-	private static final String HESITANT_VALUATIONS = "Hesitant evaluations";
-	private static final String NOT_SET_ALL_ASSIGNMENTS = "Not set all assignments";
+	private static final String EVALUATIONS_IN_NOT_BLTS_DOMAINS = Messages.LH_Evaluations_in_not_BLTS_domains;
+	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAIN = Messages.LH_Evaluations_in_not_linguistic_domain;
+	private static final String EVALUATIONS_IN_DIFFERENT_DOMAINS_WITH_THE_SAME_CARDINALITY = Messages.LH_Evaluations_in_different_domains_with_the_same_cardinality;
+	private static final String IMPOSSIBLE_TO_BUILD_LINGUISTIC_HIERARCHY_TAKING_THE_DOMAINS_USED = Messages.LH_Impossible_to_build_linguistic_hierarchy_taking_the_domains_used;
+	private static final String HESITANT_VALUATIONS = Messages.LH_Hesitant_evaluations;
+	private static final String NOT_SET_ALL_ASSIGNMENTS = Messages.LH_Not_set_all_assignments;
 	
 	private ProblemElementsSet _elementsSet;
 	private ValuationSet _valuationSet;
@@ -134,7 +135,7 @@ public class LH extends MethodImplementation {
 			}
 		}
 		
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 }

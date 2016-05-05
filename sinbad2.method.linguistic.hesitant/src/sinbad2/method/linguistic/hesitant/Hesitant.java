@@ -7,6 +7,7 @@ import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.method.MethodImplementation;
+import sinbad2.method.linguistic.hesitant.nls.Messages;
 import sinbad2.method.state.MethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.HesitantValuation;
@@ -16,11 +17,11 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class Hesitant extends MethodImplementation {
 	
-	public static final String ID = "flintstones.method.linguistic.hesitant";
+	public static final String ID = "flintstones.method.linguistic.hesitant"; //$NON-NLS-1$
 	
-	private static final String MULTIPLE_DOMAINS = "Multiple domains";
-	private static final String NOT_SUPPORTED_DOMAINS = "Not supported domains";
-	private static final String NOT_HESITANT_VALUATIONS = "Not hesitant evaluations";
+	private static final String MULTIPLE_DOMAINS = Messages.Hesitant_Multiple_domains;
+	private static final String NOT_SUPPORTED_DOMAINS = Messages.Hesitant_Not_supported_domains;
+	private static final String NOT_HESITANT_VALUATIONS = Messages.Hesitant_Not_hesitant_evaluations;
 	
 	private DomainSet _domainSet;
 	private ValuationSet _valuationSet;
@@ -58,7 +59,7 @@ public class Hesitant extends MethodImplementation {
 			return NOT_SUPPORTED_DOMAINS;
 		}
 		
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 	
 	@Override
