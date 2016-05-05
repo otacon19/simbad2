@@ -28,6 +28,9 @@ public class Messages extends NLS {
 	public static String CriteriaView_Cost_benefit;
 	public static String CriteriaView_Criteria;
 	public static String CriterionCostEditingSupport_Modify_criterion;
+	public static String ElementContentProvider_0;
+	public static String ElementContentProvider_1;
+	public static String ElementContentProvider_2;
 	public static String ExpertsPreferencePage_Assign_new_experts_as_members;
 	public static String ExpertsPreferencePage_Experts_preferences;
 	public static String ModifyAlternativeHandler_Insert_alternative;

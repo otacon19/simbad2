@@ -237,7 +237,7 @@ public class Unbalanced extends FuzzySet {
 				if(i < sl) {
 					leftLabels[i] = labels[i];
 				} else {
-					leftLabels[i] = "dirty label " + i;
+					leftLabels[i] = "dirty label " + i; //$NON-NLS-1$
 				}
 			}
 			FuzzySet left = new FuzzySet();
@@ -265,7 +265,7 @@ public class Unbalanced extends FuzzySet {
 					if(i < Lab_t1) {
 						sleLabels[i] = labels[i];
 					} else {
-						sleLabels[i] = "dirty label " + i;
+						sleLabels[i] = "dirty label " + i; //$NON-NLS-1$
 					}
 				}
 				sleFuzzySet = new FuzzySet(); 
@@ -287,7 +287,7 @@ public class Unbalanced extends FuzzySet {
 					if((i >= alreadyUsed) && (i < (Lab_t + alreadyUsed))) {
 						slcLabels[i] = labels[Lab_t1 + j++];
 					} else {
-						slcLabels[i] = "dirty label " + i;
+						slcLabels[i] = "dirty label " + i; //$NON-NLS-1$
 					}
 				}
 				slcFuzzySet = new FuzzySet(); 
@@ -319,7 +319,7 @@ public class Unbalanced extends FuzzySet {
 					if(i < Lab_t) {
 						sleLabels[i] = labels[i];
 					} else {
-						sleLabels[i] = "dirty label " + i;
+						sleLabels[i] = "dirty label " + i; //$NON-NLS-1$
 					}
 				}
 
@@ -342,7 +342,7 @@ public class Unbalanced extends FuzzySet {
 					if((i >= alreadyUsed) && (i < (Lab_t1 + alreadyUsed))) {
 						slcLabels[i] = labels[Lab_t + j++];
 					} else {
-						slcLabels[i] = "dirty label " + i;
+						slcLabels[i] = "dirty label " + i; //$NON-NLS-1$
 					}
 				}
 				slcFuzzySet = new FuzzySet();
@@ -390,7 +390,7 @@ public class Unbalanced extends FuzzySet {
 				if(i >= (rightCardinality - sr)) {
 					rightLabels[i] = labels[labels.length - (rightCardinality - i)];
 				} else {
-					rightLabels[i] = "dirty label " + i;
+					rightLabels[i] = "dirty label " + i; //$NON-NLS-1$
 				}
 			}
 			FuzzySet right = new FuzzySet();
@@ -428,7 +428,7 @@ public class Unbalanced extends FuzzySet {
 					if((i > (aux / 2)) && (i <= ((aux / 2) + Lab_t))) {
 						srcLabels[i] = labels[sl + 1 + j++];
 					} else {
-						srcLabels[i] = "dirty label " + i;
+						srcLabels[i] = "dirty label " + i; //$NON-NLS-1$
 					}
 				}
 
@@ -460,7 +460,7 @@ public class Unbalanced extends FuzzySet {
 					if(i >= (sreCardinality - Lab_t1)) {
 						sreLabels[i] = labels[labels.length - (sreCardinality - i)];
 					} else {
-						sreLabels[i] = "dirty label " + i;
+						sreLabels[i] = "dirty label " + i; //$NON-NLS-1$
 					}
 				}
 
@@ -491,7 +491,7 @@ public class Unbalanced extends FuzzySet {
 					if((i > aux) && i < (aux + Lab_t1)) {
 						srcLabels[i] = labels[sl + 1 + j++];
 					} else {
-						srcLabels[i] = "dirty label " + i;
+						srcLabels[i] = "dirty label " + i; //$NON-NLS-1$
 					}
 				}
 
@@ -522,7 +522,7 @@ public class Unbalanced extends FuzzySet {
 					if(i >= (sreCardinality - Lab_t - 1)) {
 						sreLabels[i] = labels[labels.length - (sreCardinality - i)];
 					} else {
-						sreLabels[i] = "dirty label " + i;
+						sreLabels[i] = "dirty label " + i; //$NON-NLS-1$
 					}
 				}
 

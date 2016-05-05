@@ -110,7 +110,7 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 			public void handleEvent(Event e) {
 				if(e.character == ' ') {
 					String before = _labelsText.getText().substring(_labelsText.getText().length() - 1);
-					if(before.equals(":")) {
+					if(before.equals(":")) { //$NON-NLS-1$
 						e.doit = false;
 						return;
 					}

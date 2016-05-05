@@ -22,13 +22,14 @@ import sinbad2.element.criterion.listener.ICriteriaChangeListener;
 import sinbad2.element.expert.Expert;
 import sinbad2.element.expert.listener.ExpertsChangeEvent;
 import sinbad2.element.expert.listener.IExpertsChangeListener;
+import sinbad2.element.ui.nls.Messages;
 
 public class ElementContentProvider implements ITreeContentProvider, IExpertsChangeListener, ICriteriaChangeListener,
 	IAlternativesChangeListener, IProblemElementsSetChangeListener {
 	
 	private static final Class<?>[] _types = new Class<?>[] { Expert.class, Alternative.class, Criterion.class };
 	
-	private static final String[] _typesToString = new String[] {"Expert", "Alternative", "Criterion"};
+	private static final String[] _typesToString = new String[] {Messages.ElementContentProvider_0, Messages.ElementContentProvider_1, Messages.ElementContentProvider_2};
 	private ProblemElementsManager _elementsManager;
 	private ProblemElementsSet _elementSet;
 	private Class<?> _type;

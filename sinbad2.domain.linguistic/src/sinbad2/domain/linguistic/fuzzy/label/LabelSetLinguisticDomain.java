@@ -134,7 +134,7 @@ public class LabelSetLinguisticDomain implements Cloneable {
 		
 		int cont = 0;
 		for(LabelLinguisticDomain label: _labels) {
-			writer.writeStartElement("label_" + cont);
+			writer.writeStartElement("label_" + cont); //$NON-NLS-1$
 			writer.writeAttribute("label", label.getName()); //$NON-NLS-1$
 			label.save(writer);
 			writer.writeEndElement();

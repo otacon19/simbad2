@@ -38,7 +38,7 @@ public class AddCriterionHandler extends AbstractHandler {
 		
 		AddCriterionInputDialog dialog = new AddCriterionInputDialog(
 				Display.getCurrent().getActiveShell(), Messages.AddCriterionHandler_Add_criterion,
-				Messages.AddCriterionHandler_Insert_criterion_id, "", new AddCriterionInputValidator(parent, elementSet), parent); //$NON-NLS-2$ //$NON-NLS-1$
+				Messages.AddCriterionHandler_Insert_criterion_id, "", new AddCriterionInputValidator(parent, elementSet), parent); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$
 		
 		if(dialog.open() == Window.OK) {
 			id = dialog.getValue();

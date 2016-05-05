@@ -11,6 +11,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.function.FragmentFunction;
+import sinbad2.domain.linguistic.fuzzy.nls.Messages;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.resolutionphase.io.XMLRead;
@@ -188,7 +189,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		if (function instanceof TrapezoidalFunction) {
 			tmf = (TrapezoidalFunction) function;
 		} else {
-			throw new IllegalArgumentException("Invalid element type.");
+			throw new IllegalArgumentException(Messages.TrapezoidalFunction_Invalid_element_type);
 		}
 
 		double values[] = new double[5];
@@ -285,7 +286,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 	@Override
 	public String toString() {
-		DecimalFormat df = new DecimalFormat("#.##");
+		DecimalFormat df = new DecimalFormat("#.##"); //$NON-NLS-1$
 		df.setRoundingMode(RoundingMode.CEILING);
 		
 		if(_b == _c) {

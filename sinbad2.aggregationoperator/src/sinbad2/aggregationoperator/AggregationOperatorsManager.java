@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.Platform;
 
 public class AggregationOperatorsManager {
 	
-	private final String EXTENSION_POINT = "flintstones.aggregationoperator";
+	private final String EXTENSION_POINT = "flintstones.aggregationoperator"; //$NON-NLS-1$
 	
 	private static AggregationOperatorsManager _instance;
 	

@@ -72,7 +72,7 @@ public class PlainFuzzySetChart extends DomainChart {
 
 
 	private JFreeChart createChart(XYSeriesCollection xySeriesCollection) {
-		JFreeChart result = ChartFactory.createXYLineChart("", "", "", xySeriesCollection, PlotOrientation.VERTICAL, false, false, false);
+		JFreeChart result = ChartFactory.createXYLineChart("", "", "", xySeriesCollection, PlotOrientation.VERTICAL, false, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		result.setBackgroundPaint(Color.white);
 		XYPlot xyplot = (XYPlot) result.getPlot();

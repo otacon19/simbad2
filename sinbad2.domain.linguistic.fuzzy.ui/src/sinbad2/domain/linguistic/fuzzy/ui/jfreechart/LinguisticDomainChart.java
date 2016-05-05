@@ -249,7 +249,7 @@ public class LinguisticDomainChart extends DomainChart {
 					_alternativesMarkers[i].setPaint(item.color);
 					_alternativesMarkers[i].setStroke(new BasicStroke(3));
 					_alternativesMarkers[i].setLabel(item.alternative);
-					_alternativesMarkers[i].setLabelFont(new Font("TimesRoman", Font.BOLD, 20));
+					_alternativesMarkers[i].setLabelFont(new Font("TimesRoman", Font.BOLD, 20)); //$NON-NLS-1$
 					_alternativesMarkers[i].setLabelPaint(item.color);
 					_alternativesMarkers[i].setLabelOffset(new RectangleInsets(offset * (i / offset), 25, 0, 0));
 					_chart.getXYPlot().addRangeMarker(0, _alternativesMarkers[i], Layer.FOREGROUND);

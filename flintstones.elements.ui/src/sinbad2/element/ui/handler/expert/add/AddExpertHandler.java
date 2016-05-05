@@ -37,7 +37,7 @@ public class AddExpertHandler extends AbstractHandler {
 		String id = null;
 		
 		AddExpertInputDialog dialog = new AddExpertInputDialog(Display.getCurrent().getActiveShell(), 
-				Messages.AddExpertHandler_Add_expert, Messages.AddExpertHandler_Insert_id_expert, "", new AddExpertInputValidator(parent, elementSet), parent); //$NON-NLS-3$ //$NON-NLS-1$ //$NON-NLS-1$
+				Messages.AddExpertHandler_Add_expert, Messages.AddExpertHandler_Insert_id_expert, "", new AddExpertInputValidator(parent, elementSet), parent); //$NON-NLS-3$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
 		
 		if(dialog.open() == Window.OK) {
 			id = dialog.getValue();

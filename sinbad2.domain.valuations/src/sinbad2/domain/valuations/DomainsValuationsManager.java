@@ -143,10 +143,10 @@ public class DomainsValuationsManager {
 		writer.writeStartElement("domain-valuation"); //$NON-NLS-1$
 		
 		for(String domainID: _supportedValuationsForSpecificDomains.keySet()) {
-			writer.writeStartElement("domain-id");
+			writer.writeStartElement("domain-id"); //$NON-NLS-1$
 			writer.writeAttribute("id", domainID); //$NON-NLS-1$
 			writer.writeEndElement();
-			writer.writeStartElement("valuation-id");
+			writer.writeStartElement("valuation-id"); //$NON-NLS-1$
 			writer.writeAttribute("id", _supportedValuationsForSpecificDomains.get(domainID)); //$NON-NLS-1$
 			writer.writeEndElement();
 			
@@ -164,14 +164,14 @@ public class DomainsValuationsManager {
 		while (reader.hasNext() && !end) {
 			event = reader.next();
 			if (event.isStartElement()) {
-				if ("domain-id".equals(reader.getStartElementLocalPart())) {
+				if ("domain-id".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
 					idDomain = reader.getStartElementAttribute("id"); //$NON-NLS-1$
-				} else if ("valuation-id".equals(reader.getStartElementLocalPart())) {
-					idValuation = reader.getStartElementAttribute("id");
+				} else if ("valuation-id".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
+					idValuation = reader.getStartElementAttribute("id"); //$NON-NLS-1$
 				}
 			} else if (event.isEndElement()) {
 				endtag = reader.getEndElementLocalPart();
-				if (endtag.equals("valuation-id")) {
+				if (endtag.equals("valuation-id")) { //$NON-NLS-1$
 					_supportedValuationsForSpecificDomains.put(idDomain, idValuation);
 				} else if (endtag.equals("domain-valuation")) { //$NON-NLS-1$
 					end = true;
