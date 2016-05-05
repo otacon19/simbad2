@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import sinbad2.phasemethod.aggregation.ui.nls.Messages;
+
 public class ParametersDialog extends Dialog {
 	
 	public static final int SAVE = 100;
@@ -30,7 +32,7 @@ public class ParametersDialog extends Dialog {
 	public ParametersDialog(Shell parentShell) {
 		super(parentShell);
 		
-		_parameters = "";
+		_parameters = ""; //$NON-NLS-1$
 	}
 	
 	public ParametersDialog(Shell parentShell, List<Double> parameters) {
@@ -55,8 +57,8 @@ public class ParametersDialog extends Dialog {
 		
 		Label titleLabel = new Label(container, SWT.NONE);
 		titleLabel.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 2, 1));
-		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 12, SWT.BOLD));
-		titleLabel.setText("Set parameters");
+		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 12, SWT.BOLD)); //$NON-NLS-1$
+		titleLabel.setText(Messages.ParametersDialog_Set_parameters);
 
 		_parametersText = new Text(container, SWT.BORDER);
 		_parametersText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1));
@@ -72,8 +74,8 @@ public class ParametersDialog extends Dialog {
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, CANCEL, "Cancel", false);		
-		createButton(parent, SAVE, "Save", true);
+		createButton(parent, CANCEL, Messages.ParametersDialog_Cancel, false);		
+		createButton(parent, SAVE, Messages.ParametersDialog_Save, true);
 		
 		validateFields(false);
 	}
@@ -136,14 +138,14 @@ public class ParametersDialog extends Dialog {
 
 		if(!_parameters.isEmpty()) {
 			double parameter;
-			String parameterS = "";
+			String parameterS = ""; //$NON-NLS-1$
 			for(int i = 0; i < _parameters.length(); ++i) {
 				if(_parameters.charAt(i) != ';') {
 					parameterS += _parameters.charAt(i);
 				} else {
 					parameter = Double.parseDouble(parameterS);
 					result.add(parameter);
-					parameterS = "";
+					parameterS = ""; //$NON-NLS-1$
 				}
 				
 				if(i == _parameters.length() - 1) {

@@ -22,6 +22,7 @@ import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.aggregation.listener.AggregationProcessListener;
 import sinbad2.phasemethod.aggregation.listener.AggregationProcessStateChangeEvent;
 import sinbad2.phasemethod.aggregation.listener.EAggregationProcessStateChange;
+import sinbad2.phasemethod.aggregation.nls.Messages;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
@@ -33,10 +34,10 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class AggregationPhase implements IPhaseMethod {
 	
-	public static final String ID = "flintstones.phasemethod.aggregation";
+	public static final String ID = "flintstones.phasemethod.aggregation"; //$NON-NLS-1$
 	
-	public static final String CRITERIA = "CRITERIA";
-	public static final String EXPERTS = "EXPERTS";
+	public static final String CRITERIA = "CRITERIA"; //$NON-NLS-1$
+	public static final String EXPERTS = "EXPERTS"; //$NON-NLS-1$
 
 	private Map<ProblemElement, AggregationOperator> _expertsOperators;
 	private Map<ProblemElement, Object> _expertsOperatorsWeights;
@@ -78,7 +79,7 @@ public class AggregationPhase implements IPhaseMethod {
 		
 		_listeners = new LinkedList<AggregationProcessListener>();
 
-		_aggregateBy = "CRITERIA";
+		_aggregateBy = "CRITERIA"; //$NON-NLS-1$
 	}
 	
 	public Map<ValuationKey, Valuation> getUnificationValues() {
@@ -143,11 +144,11 @@ public class AggregationPhase implements IPhaseMethod {
 	}
 	
 	public ProblemElement[] setExpertOperator(ProblemElement expert, AggregationOperator operator, Object weights) {
-		return setOperator(expert, operator, weights, _expertsOperatorsWeights, _expertsOperators, "experts");
+		return setOperator(expert, operator, weights, _expertsOperatorsWeights, _expertsOperators, "experts"); //$NON-NLS-1$
 	}
 
 	public ProblemElement[] setCriterionOperator(ProblemElement criterion, AggregationOperator operator, Object weights) {
-		return setOperator(criterion, operator, weights, _criteriaOperatorsWeights, _criteriaOperators, "criteria");
+		return setOperator(criterion, operator, weights, _criteriaOperatorsWeights, _criteriaOperators, "criteria"); //$NON-NLS-1$
 	}
 
 	public AggregationOperator getExpertOperator(ProblemElement expert) {
@@ -178,7 +179,7 @@ public class AggregationPhase implements IPhaseMethod {
 			notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(
 					EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
 		} else {
-			throw new IllegalArgumentException("Illegal element type.");
+			throw new IllegalArgumentException(Messages.AggregationPhase_Illegal_element_type);
 		}
 	}
 
@@ -187,7 +188,7 @@ public class AggregationPhase implements IPhaseMethod {
 		weightsMap.put(element, weights);
 		
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		if(elementType.equals("experts")) {
+		if(elementType.equals("experts")) { //$NON-NLS-1$
 			List<Expert> children = _elementsSet.getAllExpertChildren((Expert) element);
 			for(Expert child : children) {
 				if(child.hasChildren()) {
@@ -195,7 +196,7 @@ public class AggregationPhase implements IPhaseMethod {
 				}
 			}
 
-		} else if (elementType.equals("criteria")) {
+		} else if (elementType.equals("criteria")) { //$NON-NLS-1$
 			List<Criterion> subcriteria = _elementsSet.getAllCriterionSubcriteria((Criterion) element);
 			for(Criterion subcriterion : subcriteria) {
 				if(subcriterion.hasSubcriteria()) {
@@ -554,7 +555,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_expertsOperators.clear();
 		_unifiedValuations.clear();
 		_unifiedDomain = null;
-		_aggregateBy = "CRITERIA";
+		_aggregateBy = "CRITERIA"; //$NON-NLS-1$
 	}
 
 	public void addAggregationProcessListener(AggregationProcessListener listener) {

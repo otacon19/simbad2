@@ -146,7 +146,7 @@ public class CheckStateListener implements ICheckStateListener {
 	public void checkAll(String type) {
 		_treeViewer.removeCheckStateListener(this);
 		
-		if(type.equals("EXPERTS")) {
+		if(type.equals("EXPERTS")) { //$NON-NLS-1$
 			for(Expert element : _elementsSet.getAllExperts()) {
 				if(element.hasChildren()) {
 					for(Expert child: element.getChildren()) {
@@ -157,7 +157,7 @@ public class CheckStateListener implements ICheckStateListener {
 				_treeViewer.setGrayChecked(element, false);
 				_treeViewer.setChecked(element, true);
 			}
-		} else if(type.equals("ALTERNATIVES")) {
+		} else if(type.equals("ALTERNATIVES")) { //$NON-NLS-1$
 			for(Alternative element : _elementsSet.getAlternatives()) {
 				_treeViewer.setGrayChecked(element, false);
 				_treeViewer.setChecked(element, true);

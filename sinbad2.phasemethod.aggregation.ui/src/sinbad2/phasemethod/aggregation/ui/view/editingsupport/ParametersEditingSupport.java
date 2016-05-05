@@ -50,7 +50,7 @@ public class ParametersEditingSupport extends EditingSupport {
 			operator = _aggregationPhase.getCriterionOperator(problemElement);
 		}
 		if (operator != null) {
-			if (operator.hasParameters() && !operator.getName().equals("OWA")) {
+			if (operator.hasParameters() && !operator.getName().equals("OWA")) { //$NON-NLS-1$
 				return true;
 			}
 		}

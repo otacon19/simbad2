@@ -9,7 +9,7 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class AnalysisPhase implements IPhaseMethod {
 
-	public static final String ID = "flintstones.phasemethod.analysis";
+	public static final String ID = "flintstones.phasemethod.analysis"; //$NON-NLS-1$
 	
 	private Domain _domain;
 	

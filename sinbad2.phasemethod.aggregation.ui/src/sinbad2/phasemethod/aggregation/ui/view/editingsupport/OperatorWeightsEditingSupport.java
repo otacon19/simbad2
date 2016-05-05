@@ -18,6 +18,7 @@ import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
+import sinbad2.phasemethod.aggregation.ui.nls.Messages;
 import sinbad2.phasemethod.aggregation.ui.view.dialog.QuantifiersDialog;
 import sinbad2.phasemethod.aggregation.ui.view.dialog.WeightsDialog;
 
@@ -33,13 +34,13 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		if(type.equals("expert")) {
+		if(type.equals("expert")) { //$NON-NLS-1$
 			List<Expert> children = elementsSet.getAllExpertChildren((Expert) root);
 			for(Expert child : children) {
 				if(!child.hasChildren()) {
 					result.add(child);
 				} else {
-					ProblemElement[] subchildren = getLeafElements(child, "expert");
+					ProblemElement[] subchildren = getLeafElements(child, "expert"); //$NON-NLS-1$
 					for (ProblemElement subchild : subchildren) {
 						result.add(subchild);
 					}
@@ -52,7 +53,7 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 				if(!subcriterion.hasSubcriteria()) {
 					result.add(subcriterion);
 				} else {
-					ProblemElement[] sub2criteria = getLeafElements(subcriterion, "criterion");
+					ProblemElement[] sub2criteria = getLeafElements(subcriterion, "criterion"); //$NON-NLS-1$
 					for(ProblemElement sub2criterion : sub2criteria) {
 						result.add(sub2criterion);
 					}
@@ -145,16 +146,16 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 		String elementId;
 
 		if (AggregationPhase.EXPERTS.equals(_type)) {
-			elementType = "Expert";
+			elementType = "Expert"; //$NON-NLS-1$
 		} else {
-			elementType = "Criterion";
+			elementType = "Criterion"; //$NON-NLS-1$
 		}
 
 		if (problemElement == null) {
 			if (AggregationPhase.EXPERTS.equals(_type)) {
-				elementId = "all experts";
+				elementId = Messages.OperatorWeightsEditingSupport_All_experts;
 			} else {
-				elementId = "all criteria";
+				elementId = Messages.OperatorWeightsEditingSupport_All_criteria;
 			}
 		} else {
 			elementId = problemElement.getId();
@@ -181,11 +182,11 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 			ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 			
 			WeightsDialog dialog; 
-			if(elementType.equals("Expert")) {
-				secondary = getLeafElements(nullElement, "criterion");
+			if(elementType.equals("Expert")) { //$NON-NLS-1$
+				secondary = getLeafElements(nullElement, "criterion"); //$NON-NLS-1$
 				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren((Expert) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
 			} else {
-				secondary = getLeafElements(nullElement, "expert");
+				secondary = getLeafElements(nullElement, "expert"); //$NON-NLS-1$
 				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
 			}
 			

@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.element.ProblemElement;
+import sinbad2.phasemethod.aggregation.ui.nls.Messages;
 
 public class WeightsDialog extends Dialog implements PropertyChangeListener {
 
@@ -124,11 +125,11 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 			try {
 				newValue = (Double.parseDouble((String) value));
 				if((newValue < 0) || (newValue > 1)) {
-					MessageDialog.openError(null, "Invalid range", "Invalid range");
+					MessageDialog.openError(null, Messages.WeightsDialog_0, Messages.WeightsDialog_Invalid_range);
 					return;
 				}
 			} catch (Exception e) {
-				MessageDialog.openError(null, "Invalid value", "Invalid value");
+				MessageDialog.openError(null, Messages.WeightsDialog_Invalid_value, Messages.WeightsDialog_Invalid_value);
 				return;
 			}
 
@@ -139,7 +140,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 
 	private class Input {
 
-		public final static String WEIGHT = "weight";
+		public final static String WEIGHT = "weight"; //$NON-NLS-1$
 
 		private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
@@ -269,7 +270,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 		_sums = new double[_rows];
 
 		_type = type;
-		_title = "Values for" + " " + elementId + " (" + elementType + ")";
+		_title = Messages.WeightsDialog_Values_for + " " + elementId + " (" + elementType + ")"; //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	}
 
@@ -309,7 +310,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 		Label titleLabel = new Label(container, SWT.NONE);
 		GridData gridData = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
 		titleLabel.setLayoutData(gridData);
-		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
+		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
 		titleLabel.setText(_title);
 
 		_input = new Input();
@@ -330,7 +331,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 
 		_checkButton = new Button(container, SWT.CHECK);
 		_checkButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		_checkButton.setText("Simple aggregation");
+		_checkButton.setText(Messages.WeightsDialog_Simple_aggregation);
 		_checkButton.setSelection(_generalSelection);
 
 		_completeWeightsViewer = new TableViewer(container, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
@@ -490,7 +491,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 				double sum;
 				double value;
 				aux = new Object[_cols + 2];
-				aux[0] = "All";
+				aux[0] = Messages.WeightsDialog_All;
 				sum = 0;
 				for(int j = 0; j < _cols; j++) {
 					value = _weights.get(null).get(j);
@@ -535,7 +536,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 
 		col = new TableViewerColumn(viewer, SWT.CENTER);
 		col.getColumn().setWidth(70);
-		col.getColumn().setText("Sum");
+		col.getColumn().setText("Sum"); //$NON-NLS-1$
 		col.setLabelProvider(new ColumnLabelProvider() {
 		
 			@Override
@@ -566,10 +567,10 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		if (_type == COMPLEX) {
-			createButton(parent, CANCEL_ALL, "Cancel all", false);
+			createButton(parent, CANCEL_ALL, Messages.WeightsDialog_Cancel_all, false);
 		}
-		createButton(parent, CANCEL, "Cancel", false);
-		createButton(parent, SAVE, "Save", true);
+		createButton(parent, CANCEL, Messages.WeightsDialog_Cancel, false);
+		createButton(parent, SAVE, Messages.WeightsDialog_Save, true);
 	}
 
 	public Map<String, List<Double>> getWeights() {

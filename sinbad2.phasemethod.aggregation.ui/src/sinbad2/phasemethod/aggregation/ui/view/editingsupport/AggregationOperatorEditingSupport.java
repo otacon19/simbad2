@@ -26,6 +26,7 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
+import sinbad2.phasemethod.aggregation.ui.nls.Messages;
 import sinbad2.phasemethod.aggregation.ui.view.AggregationProcess;
 import sinbad2.phasemethod.aggregation.ui.view.dialog.ParametersDialog;
 import sinbad2.phasemethod.aggregation.ui.view.dialog.QuantifiersDialog;
@@ -56,13 +57,13 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		if(type.equals("expert")) {
+		if(type.equals("expert")) { //$NON-NLS-1$
 			List<Expert> children = elementsSet.getAllExpertChildren((Expert) root);
 			for(Expert child : children) {
 				if(!child.hasChildren()) {
 					result.add(child);
 				} else {
-					ProblemElement[] subchildren = getLeafElements(child, "expert");
+					ProblemElement[] subchildren = getLeafElements(child, "expert"); //$NON-NLS-1$
 					for (ProblemElement subchild : subchildren) {
 						result.add(subchild);
 					}
@@ -75,7 +76,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				if(!subcriterion.hasSubcriteria()) {
 					result.add(subcriterion);
 				} else {
-					ProblemElement[] sub2criteria = getLeafElements(subcriterion, "criterion");
+					ProblemElement[] sub2criteria = getLeafElements(subcriterion, "criterion"); //$NON-NLS-1$
 					for(ProblemElement sub2criterion : sub2criteria) {
 						result.add(sub2criterion);
 					}
@@ -124,7 +125,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			for(int i = 0; i < _aggregationOperatorsIds.size(); i++) {
 				operator = _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]);
 				if (operator instanceof WeightedAggregationOperator) {
-					_aggregationOperatorsNames.add("(W) " + _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName());
+					_aggregationOperatorsNames.add("(W) " + _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName()); //$NON-NLS-1$
 				} else {
 					_aggregationOperatorsNames.add(_aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName());
 				}
@@ -203,16 +204,16 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			String elementId;
 
 			if (AggregationPhase.EXPERTS.equals(_type)) {
-				elementType = "Expert";
+				elementType = Messages.AggregationOperatorEditingSupport_Expert;
 			} else {
-				elementType = "Criterion";
+				elementType = Messages.AggregationOperatorEditingSupport_Criterion;
 			}
 
 			if (element == null) {
 				if (AggregationPhase.EXPERTS.equals(_type)) {
-					elementId = "All experts";
+					elementId = Messages.AggregationOperatorEditingSupport_All_experts;
 				} else {
-					elementId = "All criteria";
+					elementId = Messages.AggregationOperatorEditingSupport_All_criteria;
 				}
 			} else {
 				elementId = element.getId();
@@ -248,11 +249,11 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				ProblemElement[] secondary;
 				
 				WeightsDialog dialog; 
-				if(elementType.equals("Expert")) {
-					secondary = getLeafElements(nullElement, "criterion");
+				if(elementType.equals("Expert")) { //$NON-NLS-1$
+					secondary = getLeafElements(nullElement, "criterion"); //$NON-NLS-1$
 					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
 				} else {
-					secondary = getLeafElements(nullElement, "expert");
+					secondary = getLeafElements(nullElement, "expert"); //$NON-NLS-1$
 					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
 				}
 					
@@ -300,7 +301,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 		}
 		if (result.length > 0) {
 			if (!_assignAll) {
-				MessageDialog dg = new MessageDialog(Display.getCurrent().getActiveShell(), "Assign the operator to all elements", null, "Assign the operator to all elements",
+				MessageDialog dg = new MessageDialog(Display.getCurrent().getActiveShell(), Messages.AggregationOperatorEditingSupport_Assign_the_operator_to_all_elements, null, Messages.AggregationOperatorEditingSupport_Assign_the_operator_to_all_elements,
 						MessageDialog.QUESTION_WITH_CANCEL, new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
 
 				switch (dg.open()) {

@@ -5,6 +5,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.element.ProblemElement;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
+import sinbad2.phasemethod.aggregation.ui.nls.Messages;
 
 public class OperatorColumnLabelProvider extends ColumnLabelProvider {
 
@@ -31,7 +32,7 @@ public class OperatorColumnLabelProvider extends ColumnLabelProvider {
 		}
 		
 		if (operator == null) {
-			return "Unassigned";
+			return Messages.OperatorColumnLabelProvider_Unassigned;
 		} else {
 			String name = operator.getName();
 			

@@ -16,6 +16,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.aggregationoperator.owa.YagerQuantifiers;
 import sinbad2.aggregationoperator.owa.YagerQuantifiers.QuantificationType;
+import sinbad2.phasemethod.aggregation.ui.nls.Messages;
 
 public class QuantifiersDialog extends Dialog {
 
@@ -38,7 +39,7 @@ public class QuantifiersDialog extends Dialog {
 		_alpha = alpha;
 		_beta = beta;
 		_type = type;
-		_title = "Values for" + " " + elementId + " (" + elementType + ")"; //$NON-NLS-1$
+		_title = "Values for" + " " + elementId + " (" + elementType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	@Override
@@ -50,12 +51,12 @@ public class QuantifiersDialog extends Dialog {
 
 		Label titleLabel = new Label(container, SWT.NONE);
 		titleLabel.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 2, 1));
-		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 12, SWT.BOLD));
+		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 12, SWT.BOLD)); //$NON-NLS-1$
 		titleLabel.setText(_title);
 
 		Label lblAlphaValue = new Label(container, SWT.NONE);
-		lblAlphaValue.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD));
-		lblAlphaValue.setText("Quantifier");
+		lblAlphaValue.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
+		lblAlphaValue.setText(Messages.QuantifiersDialog_Quantifier);
 
 		_quantifiersCombo = new Combo(container, SWT.BORDER);
 		_quantifiersCombo.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -67,7 +68,7 @@ public class QuantifiersDialog extends Dialog {
 			items[i] = types[i].toString();
 		}
 		_quantifiersCombo.setItems(items);
-		_quantifiersCombo.setText("Select");
+		_quantifiersCombo.setText(Messages.QuantifiersDialog_Select);
 
 		if((_alpha != null) && (_beta != null)) {
 			boolean find = false;
@@ -98,10 +99,10 @@ public class QuantifiersDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		if (_type == COMPLEX) {
-			createButton(parent, CANCEL_ALL, "Cancel all", false);
+			createButton(parent, CANCEL_ALL, Messages.QuantifiersDialog_Cancel_all, false);
 		}
-		createButton(parent, CANCEL, "Cancel", false);
-		createButton(parent, SAVE, "Save", true);
+		createButton(parent, CANCEL, Messages.QuantifiersDialog_Cancel, false);
+		createButton(parent, SAVE, Messages.QuantifiersDialog_Save, true);
 		validateFields();
 	}
 	

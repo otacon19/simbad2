@@ -41,6 +41,7 @@ import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.aggregation.UnbalancedUtils;
 import sinbad2.phasemethod.analysis.AnalysisPhase;
+import sinbad2.phasemethod.analysis.ui.nls.Messages;
 import sinbad2.phasemethod.analysis.ui.view.listener.CheckStateListener;
 import sinbad2.phasemethod.analysis.ui.view.provider.AlternativeColumnLabelProvider;
 import sinbad2.phasemethod.analysis.ui.view.provider.EvaluationColumnLabelProvider;
@@ -59,7 +60,7 @@ import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class Analysis extends ViewPart implements IStepStateListener {
 	
-	public static final String ID = "flintstones.phasemethod.heteorgeneous.fusion.analysis.ui.view.analysis";
+	public static final String ID = "flintstones.phasemethod.heteorgeneous.fusion.analysis.ui.view.analysis"; //$NON-NLS-1$
 
 	private Composite _parent;
 	private Composite _expertsComposite;
@@ -159,7 +160,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		Label label = new Label(_expertsComposite, SWT.CENTER | SWT.BORDER);
 		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		label.setText("Experts");
+		label.setText(Messages.Analysis_Experts);
 
 		_expertsCheckboxTreeViewer = new CheckboxTreeViewer(_expertsComposite, SWT.NONE);
 		_expertsCheckboxTreeViewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -177,7 +178,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		label = new Label(_alternativesComposite, SWT.CENTER | SWT.BORDER);
 		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		label.setText("Alternatives");
+		label.setText(Messages.Analysis_Alternatives);
 
 		_alternativesCheckboxTreeViewer = new CheckboxTreeViewer(_alternativesComposite, SWT.NONE);
 		_alternativesCheckboxTreeViewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -194,7 +195,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		label = new Label(_criteriaComposite, SWT.BORDER | SWT.CENTER);
 		label.setFont(SWTResourceManager.getFont("Cantarell", 11, SWT.BOLD)); //$NON-NLS-1$
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		label.setText("Criteria");
+		label.setText(Messages.Analysis_Criteria);
 
 		_criteriaCheckboxTreeViewer = new CheckboxTreeViewer(_criteriaComposite, SWT.NONE);
 		_criteriaCheckboxTreeViewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -255,13 +256,13 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		_rankingViewerAlternativeColumn = new TableViewerColumn(_rankingViewer, SWT.NONE);
 		_rankingAlternativeColumn = _rankingViewerAlternativeColumn.getColumn();
 		_rankingAlternativeColumn.setWidth(130);
-		_rankingAlternativeColumn.setText("Alternative");
+		_rankingAlternativeColumn.setText(Messages.Analysis_Alternative);
 		_rankingViewerAlternativeColumn.setLabelProvider(new AlternativeColumnLabelProvider());
 
 		_rankingViewerEvaluationColumn = new TableViewerColumn(_rankingViewer, SWT.NONE);
 		_rankingEvaluationColumn = _rankingViewerEvaluationColumn.getColumn();
 		_rankingEvaluationColumn.setWidth(130);
-		_rankingEvaluationColumn.setText("Evaluation");
+		_rankingEvaluationColumn.setText(Messages.Analysis_Evaluation);
 		_rankingViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 	}
 
@@ -437,7 +438,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 
 	@Override
 	public String getPartName() {
-		return "Analysis";
+		return Messages.Analysis_Analysis;
 	}
 	
 	public void activate() {
@@ -445,9 +446,9 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		_alternativesCheckboxTreeViewer.setInput(_elementsSet.getAlternatives());
 		_criteriaCheckboxTreeViewer.setInput(_elementsSet.getCriteria());
 
-		_expertsCheckStateListener.checkAll("EXPERTS");
-		_alternativesCheckStateListener.checkAll("ALTERNATIVES");
-		_criteriaCheckStateListener.checkAll("CRITERIA");
+		_expertsCheckStateListener.checkAll("EXPERTS"); //$NON-NLS-1$
+		_alternativesCheckStateListener.checkAll("ALTERNATIVES"); //$NON-NLS-1$
+		_criteriaCheckStateListener.checkAll("CRITERIA"); //$NON-NLS-1$
 	}
 	
 	@Override

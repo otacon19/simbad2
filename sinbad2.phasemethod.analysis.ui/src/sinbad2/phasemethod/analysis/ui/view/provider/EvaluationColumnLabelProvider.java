@@ -2,6 +2,7 @@ package sinbad2.phasemethod.analysis.ui.view.provider;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
+import sinbad2.phasemethod.analysis.ui.nls.Messages;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
@@ -20,14 +21,14 @@ public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 					alpha = "0"; //$NON-NLS-1$
 				}
 				int size = 4;
-				if (alpha.startsWith("-")) {
+				if (alpha.startsWith("-")) { //$NON-NLS-1$
 					size = 5;
 				}
 				if (alpha.length() > size) {
 					alpha = alpha.substring(0, size);
 				}
 				if (alpha.length() > 1) {
-					if (alpha.endsWith("0")) {
+					if (alpha.endsWith("0")) { //$NON-NLS-1$
 						alpha = alpha.substring(0, size - 1);
 					}
 				}
@@ -36,7 +37,7 @@ public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 				return ""; //$NON-NLS-1$
 			}
 		} else {
-			return "Not evaluate";
+			return Messages.EvaluationColumnLabelProvider_Not_evaluate;
 		}
 	}
 }

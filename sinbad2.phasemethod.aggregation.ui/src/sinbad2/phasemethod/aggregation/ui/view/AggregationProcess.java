@@ -49,6 +49,7 @@ import sinbad2.phasemethod.aggregation.UnbalancedUtils;
 import sinbad2.phasemethod.aggregation.listener.AggregationProcessListener;
 import sinbad2.phasemethod.aggregation.listener.AggregationProcessStateChangeEvent;
 import sinbad2.phasemethod.aggregation.ui.Images;
+import sinbad2.phasemethod.aggregation.ui.nls.Messages;
 import sinbad2.phasemethod.aggregation.ui.view.editingsupport.AggregationOperatorEditingSupport;
 import sinbad2.phasemethod.aggregation.ui.view.editingsupport.OperatorWeightsEditingSupport;
 import sinbad2.phasemethod.aggregation.ui.view.editingsupport.ParametersEditingSupport;
@@ -68,7 +69,7 @@ import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class AggregationProcess extends ViewPart implements AggregationProcessListener, IStepStateListener {
 	
-	public static final String ID = "flintstones.phasemethod.multigranular.elh.aggregation.ui.view.aggregationprocess";
+	public static final String ID = "flintstones.phasemethod.multigranular.elh.aggregation.ui.view.aggregationprocess"; //$NON-NLS-1$
 
 	private Composite _parent;
 	private Composite _operatorsPanel;
@@ -256,7 +257,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 
 			_treeExpertColumn = _treeViewerExpertColumn.getColumn();
 			_treeExpertColumn.setWidth(120);
-			_treeExpertColumn.setText("Expert");
+			_treeExpertColumn.setText(Messages.AggregationProcess_1);
 			_treeExpertColumn.setImage(Images.GroupOfExperts);
 			_treeViewerExpertColumn.setLabelProvider(new ElementColumnLabelProvider());
 
@@ -306,7 +307,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 
 							AggregationOperator operator = _aggregationPhase.getExpertOperator(problemElement);
 							if (operator != null) {
-								if (operator.hasParameters() && operator.getName().equals("OWA")) {
+								if (operator.hasParameters() && operator.getName().equals("OWA")) { //$NON-NLS-1$
 									return Images.Edit_p;
 								}
 								return null;
@@ -319,7 +320,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_treeViewerExpertOperatorColumn = new TreeViewerColumn(_expertsViewer, SWT.NONE);
 			_treeExpertOperatorColumn = _treeViewerExpertOperatorColumn.getColumn();
 			_treeExpertOperatorColumn.setWidth(120);
-			_treeExpertOperatorColumn.setText("Operator");
+			_treeExpertOperatorColumn.setText(Messages.AggregationProcess_Operator);
 			_treeExpertOperatorColumn.setImage(Images.AggregationOperator);
 
 			_treeViewerExpertOperatorColumn.setEditingSupport(new AggregationOperatorEditingSupport(_aggregationPhase, this, _expertsViewer, AggregationPhase.EXPERTS));
@@ -361,7 +362,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_treeViewerCriterionColumn = new TreeViewerColumn(_criteriaViewer, SWT.NONE);
 			_treeCriterionColumn = _treeViewerCriterionColumn.getColumn();
 			_treeCriterionColumn.setWidth(120);
-			_treeCriterionColumn.setText("Criterion");
+			_treeCriterionColumn.setText(Messages.AggregationProcess_Criterion);
 			_treeCriterionColumn.setImage(Images.Criterion);
 			_treeViewerCriterionColumn.setLabelProvider(new ElementColumnLabelProvider());
 			_criteriaViewer.addTreeListener(new ITreeViewerListener() {
@@ -439,7 +440,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 
 							AggregationOperator operator = _aggregationPhase.getCriterionOperator(problemElement);
 							if (operator != null) {
-								if (operator.hasParameters() && !operator.getName().equals("OWA")) {
+								if (operator.hasParameters() && !operator.getName().equals("OWA")) { //$NON-NLS-1$
 									return Images.Edit_p;
 								}
 								return null;
@@ -452,7 +453,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_treeViewerCriterionOperatorColumn = new TreeViewerColumn(_criteriaViewer, SWT.NONE);
 			_treeCriterionOperatorColumn = _treeViewerCriterionOperatorColumn.getColumn();
 			_treeCriterionOperatorColumn.setWidth(120);
-			_treeCriterionOperatorColumn.setText("Operator");
+			_treeCriterionOperatorColumn.setText(Messages.AggregationProcess_Operator);
 			_treeCriterionOperatorColumn.setImage(Images.AggregationOperator);
 
 			_treeViewerCriterionOperatorColumn.setEditingSupport(new AggregationOperatorEditingSupport(_aggregationPhase, this, _criteriaViewer, AggregationPhase.CRITERIA));
@@ -478,10 +479,10 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			orderComposite.setLayout(layout);
 
 			final Label aggregateProcess = new Label(orderComposite, SWT.LEFT);
-			aggregateProcess.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
+			aggregateProcess.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
 			gridData = new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1);
 			aggregateProcess.setLayoutData(gridData);
-			aggregateProcess.setText("Aggregate Process");
+			aggregateProcess.setText(Messages.AggregationProcess_Aggregation_Process);
 
 			Composite orderValuesComposite = new Composite(orderComposite, SWT.NONE);
 			orderValuesComposite.setLayoutData(new GridData(SWT.CENTER, SWT.END, true, false, 1, 1));
@@ -514,28 +515,28 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			elementsOrderComposite.setLayout(layout);
 
 			Label firstLabel = new Label(elementsOrderComposite, SWT.CENTER);
-			firstLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE));
+			firstLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE)); //$NON-NLS-1$
 			gridData = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
 			firstLabel.setLayoutData(gridData);
 			firstLabel.setText("1º "); //$NON-NLS-1$
 
 			final Label firstValueLabel = new Label(elementsOrderComposite, SWT.CENTER);
-			firstValueLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE));
+			firstValueLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE)); //$NON-NLS-1$
 			gridData = new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1);
 			firstValueLabel.setLayoutData(gridData);
-			firstValueLabel.setText("Experts");
+			firstValueLabel.setText(Messages.AggregationProcess_Experts);
 
 			Label secondLabel = new Label(elementsOrderComposite, SWT.CENTER);
-			secondLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE));
+			secondLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE)); //$NON-NLS-1$
 			gridData = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
 			secondLabel.setLayoutData(gridData);
 			secondLabel.setText("2º "); //$NON-NLS-1$
 
 			final Label secondValueLabel = new Label(elementsOrderComposite, SWT.CENTER);
-			secondValueLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE));
+			secondValueLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE)); //$NON-NLS-1$
 			gridData = new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1);
 			secondValueLabel.setLayoutData(gridData);
-			secondValueLabel.setText("Criteria");
+			secondValueLabel.setText(Messages.AggregationProcess_Criteria);
 
 			changeOrderLabel.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
 
@@ -604,19 +605,19 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_rankingViewerRankingColumn = new TableViewerColumn(_rankingViewer, SWT.CENTER);
 		_rankingRankingColumn = _rankingViewerRankingColumn.getColumn();
 		_rankingRankingColumn.setWidth(75);
-		_rankingRankingColumn.setText("Ranking");
+		_rankingRankingColumn.setText("Ranking"); //$NON-NLS-1$
 		_rankingViewerRankingColumn.setLabelProvider(new RankingColumnLabelProvider());
 
 		_rankingViewerAlternativeColumn = new TableViewerColumn(_rankingViewer, SWT.NONE);
 		_rankingAlternativeColumn = _rankingViewerAlternativeColumn.getColumn();
 		_rankingAlternativeColumn.setWidth(130);
-		_rankingAlternativeColumn.setText("Alternative");
+		_rankingAlternativeColumn.setText(Messages.AggregationProcess_Alternative);
 		_rankingViewerAlternativeColumn.setLabelProvider(new AlternativeColumnLabelProvider());
 
 		_rankingViewerEvaluationColumn = new TableViewerColumn(_rankingViewer, SWT.NONE);
 		_rankingEvaluationColumn = _rankingViewerEvaluationColumn.getColumn();
 		_rankingEvaluationColumn.setWidth(130);
-		_rankingEvaluationColumn.setText("Evaluation");
+		_rankingEvaluationColumn.setText(Messages.AggregationProcess_Evaluation);
 		_rankingViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 		
 		_rankingViewer.setInput(_aggregationResult);
@@ -761,7 +762,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	
 	@Override
 	public String getPartName() {
-		return "Aggregation process";
+		return Messages.AggregationProcess_Aggregation_process;
 	}
 	
 	@Override
