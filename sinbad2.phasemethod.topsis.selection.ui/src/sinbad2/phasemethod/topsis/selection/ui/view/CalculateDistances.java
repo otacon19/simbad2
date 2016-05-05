@@ -27,6 +27,7 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.topsis.selection.ui.Images;
+import sinbad2.phasemethod.topsis.selection.ui.nls.Messages;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.view.dialog.WeightsDialog;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.DistanceIdealSolutionTableViewerContentProvider;
@@ -34,7 +35,7 @@ import sinbad2.phasemethod.topsis.selection.ui.view.provider.PositiveNegativeTab
 
 public class CalculateDistances extends ViewPart {
 	
-	public static final String ID = "flintstones.phasemethod.topsis.selection.ui.view.calculatedistances";
+	public static final String ID = "flintstones.phasemethod.topsis.selection.ui.view.calculatedistances"; //$NON-NLS-1$
 	
 	private Composite _parent;
 	private Composite _distanceEditorPanel;
@@ -107,7 +108,7 @@ public class CalculateDistances extends ViewPart {
 		selectDistancePanel.setLayout(selectDistanceLayout);
 		
 		Label selectDistanceLabel = new Label(selectDistancePanel, SWT.NONE);
-		selectDistanceLabel.setText("Select distance operator");
+		selectDistanceLabel.setText(Messages.CalculateDistances_Select_distance_operator);
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1);
 		selectDistanceLabel.setLayoutData(gridData);
 		
@@ -133,7 +134,7 @@ public class CalculateDistances extends ViewPart {
 		positveNegativePanel.setLayout(positiveNegativeLayout);
 		
 		Label positiveNegativeLabel = new Label(positveNegativePanel, SWT.NONE);
-		positiveNegativeLabel.setText("Ideal solution");
+		positiveNegativeLabel.setText(Messages.CalculateDistances_Ideal_solution);
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
 		positiveNegativeLabel.setLayoutData(gridData);
 		
@@ -146,7 +147,7 @@ public class CalculateDistances extends ViewPart {
 		_tableViewerPositiveNegative.setContentProvider(_positiveNegativeProvider);
 
 		TableViewerColumn alternativeColumn = new TableViewerColumn(_tableViewerPositiveNegative, SWT.NONE);
-		alternativeColumn.getColumn().setText("Alternative");
+		alternativeColumn.getColumn().setText(Messages.CalculateDistances_Alternative);
 		alternativeColumn.getColumn().pack();
 		alternativeColumn.getColumn().setResizable(false);
 		alternativeColumn.getColumn().setMoveable(false);
@@ -159,7 +160,7 @@ public class CalculateDistances extends ViewPart {
 		});
 		
 		TableViewerColumn criterionColumn = new TableViewerColumn(_tableViewerPositiveNegative, SWT.NONE);
-		criterionColumn.getColumn().setText("Criterion");
+		criterionColumn.getColumn().setText(Messages.CalculateDistances_Criterion);
 		criterionColumn.getColumn().pack();
 		criterionColumn.getColumn().setResizable(false);
 		criterionColumn.getColumn().setMoveable(false);
@@ -172,14 +173,14 @@ public class CalculateDistances extends ViewPart {
 		});
 		
 		TableViewerColumn typeColumn = new TableViewerColumn(_tableViewerPositiveNegative, SWT.NONE);
-		typeColumn.getColumn().setText("Type");
+		typeColumn.getColumn().setText(Messages.CalculateDistances_Type);
 		typeColumn.getColumn().pack();
 		typeColumn.getColumn().setResizable(false);
 		typeColumn.getColumn().setMoveable(false);
 		typeColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 			
 			@Override
@@ -195,7 +196,7 @@ public class CalculateDistances extends ViewPart {
 		});
 		
 		TableViewerColumn positiveColumn = new TableViewerColumn(_tableViewerPositiveNegative, SWT.NONE);
-		positiveColumn.getColumn().setText("Positive distance");
+		positiveColumn.getColumn().setText(Messages.CalculateDistances_Positive_distance);
 		positiveColumn.getColumn().pack();
 		positiveColumn.getColumn().setResizable(false);
 		positiveColumn.getColumn().setMoveable(false);
@@ -212,7 +213,7 @@ public class CalculateDistances extends ViewPart {
 		
 
 		TableViewerColumn negativeColumn = new TableViewerColumn(_tableViewerPositiveNegative, SWT.NONE);
-		negativeColumn.getColumn().setText("Negative distance");
+		negativeColumn.getColumn().setText(Messages.CalculateDistances_Negative_distance);
 		negativeColumn.getColumn().pack();
 		negativeColumn.getColumn().setResizable(false);
 		negativeColumn.getColumn().setMoveable(false);
@@ -238,7 +239,7 @@ public class CalculateDistances extends ViewPart {
 		distanceIdealSolutionPanel.setLayout(distanceIdealSolutionLayout);
 		
 		Label colectiveValuationsLabel = new Label(distanceIdealSolutionPanel, SWT.NONE);
-		colectiveValuationsLabel.setText("Ideal solution distance");
+		colectiveValuationsLabel.setText(Messages.CalculateDistances_Ideal_solution_distance);
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
 		colectiveValuationsLabel.setLayoutData(gridData);
 		
@@ -251,7 +252,7 @@ public class CalculateDistances extends ViewPart {
 		_tableViewerIdealSolution.setContentProvider(_distanceIdealSolutionProvider);
 
 		TableViewerColumn ranking = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
-		ranking.getColumn().setText("Ranking");
+		ranking.getColumn().setText(Messages.CalculateDistances_Ranking);
 		ranking.getColumn().pack();
 		ranking.getColumn().setResizable(false);
 		ranking.getColumn().setMoveable(false);
@@ -264,7 +265,7 @@ public class CalculateDistances extends ViewPart {
 		});
 		
 		alternativeColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
-		alternativeColumn.getColumn().setText("Alternative");
+		alternativeColumn.getColumn().setText(Messages.CalculateDistances_Alternative);
 		alternativeColumn.getColumn().pack();
 		alternativeColumn.getColumn().setResizable(false);
 		alternativeColumn.getColumn().setMoveable(false);
@@ -277,7 +278,7 @@ public class CalculateDistances extends ViewPart {
 		});
 		
 		TableViewerColumn positiveDistanceColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
-		positiveDistanceColumn.getColumn().setText("Positive distance");
+		positiveDistanceColumn.getColumn().setText(Messages.CalculateDistances_Positive_distance);
 		positiveDistanceColumn.getColumn().pack();
 		positiveDistanceColumn.getColumn().setResizable(false);
 		positiveDistanceColumn.getColumn().setMoveable(false);
@@ -293,7 +294,7 @@ public class CalculateDistances extends ViewPart {
 		});
 		
 		TableViewerColumn negativeDistanceColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
-		negativeDistanceColumn.getColumn().setText("Negative distance");
+		negativeDistanceColumn.getColumn().setText(Messages.CalculateDistances_Negative_distance);
 		negativeDistanceColumn.getColumn().pack();
 		negativeDistanceColumn.getColumn().setResizable(false);
 		negativeDistanceColumn.getColumn().setMoveable(false);
@@ -309,7 +310,7 @@ public class CalculateDistances extends ViewPart {
 		});
 	
 		TableViewerColumn closenessCoefficient = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
-		closenessCoefficient.getColumn().setText("Closeness coefficient");
+		closenessCoefficient.getColumn().setText(Messages.CalculateDistances_Closeness_coefficient);
 		closenessCoefficient.getColumn().pack();
 		closenessCoefficient.getColumn().setResizable(false);
 		closenessCoefficient.getColumn().setMoveable(false);
@@ -327,21 +328,21 @@ public class CalculateDistances extends ViewPart {
 	}
 
 	private void fillCombo() {
-		_distanceCombo.add("Euclidean distance");
-		_distanceCombo.add("Weighted distance");
+		_distanceCombo.add(Messages.CalculateDistances_Eucliden_distance);
+		_distanceCombo.add(Messages.CalculateDistances_Weighted_distance);
 	}
 	
 	private void setDistance(String distance) {
 		Map<String, List<Double>> mapWeights;
 		List<Double> weights = null;
 		
-		if(distance.contains("Weighted")) {
+		if(distance.contains(Messages.CalculateDistances_Weighted)) {
 			ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 			ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 			
 			ProblemElement nullElement = null;
 			ProblemElement[] secondary = getLeafElements(nullElement);
-			WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria(null), secondary, null, 1, "criterion", "all criteria");
+			WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria(null), secondary, null, 1, Messages.CalculateDistances_criterion, Messages.CalculateDistances_all_criteria);
 			
 			int exitValue = dialog.open();
 			if(exitValue == WeightsDialog.SAVE) {
@@ -405,7 +406,7 @@ public class CalculateDistances extends ViewPart {
 
 	@Override
 	public String getPartName() {
-		return "Calculate distances";
+		return Messages.CalculateDistances_Calculate_distances;
 	}
 
 	@Override

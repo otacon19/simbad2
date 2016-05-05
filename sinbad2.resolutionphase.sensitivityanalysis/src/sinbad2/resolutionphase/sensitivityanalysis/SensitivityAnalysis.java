@@ -30,7 +30,7 @@ import sinbad2.resolutionphase.state.ResolutionPhaseStateChangeEvent;
 
 public class SensitivityAnalysis implements IResolutionPhase {
 
-	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis";
+	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis"; //$NON-NLS-1$
 
 	private int _numberOfAlternatives;
 	private int _numberOfCriteria;
@@ -818,7 +818,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	public double[] getMinimumPercentPairAlternatives(int a1, int a2, String typeProblem) {
 		double[] percents = new double[_numberOfCriteria];
 		
-		if(typeProblem.equals("MCC")) {
+		if(typeProblem.equals("MCC")) { //$NON-NLS-1$
 			for (int k = 0; k < _numberOfCriteria; k++) {
 				if (_minimumPercentChangeInCriteriaWeights[a1][a2][k] != null) {
 					percents[k] = _minimumPercentChangeInCriteriaWeights[a1][a2][k];
@@ -838,7 +838,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	public double[] getMinimumAbsolutePairAlternatives(int a1, int a2, String typeProblem) {
 		double[] absolute = new double[_numberOfCriteria];
 		
-		if(typeProblem.equals("MCC")) {
+		if(typeProblem.equals("MCC")) { //$NON-NLS-1$
 			for (int k = 0; k < _numberOfCriteria; k++) {
 				if (_minimumAbsoluteChangeInCriteriaWeights[a1][a2][k] != null) {
 					absolute[k] = _minimumAbsoluteChangeInCriteriaWeights[a1][a2][k];

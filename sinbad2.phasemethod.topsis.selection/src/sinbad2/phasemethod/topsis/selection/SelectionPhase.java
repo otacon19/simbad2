@@ -26,7 +26,7 @@ import sinbad2.valuation.valuationset.ValuationKey;
 
 public class SelectionPhase implements IPhaseMethod {
 	
-	public static final String ID = "flintstones.phasemethod.topsis.selection";
+	public static final String ID = "flintstones.phasemethod.topsis.selection"; //$NON-NLS-1$
 	
 	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
 	

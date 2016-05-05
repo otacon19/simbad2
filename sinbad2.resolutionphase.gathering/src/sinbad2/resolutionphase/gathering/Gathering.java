@@ -21,7 +21,7 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class Gathering implements IResolutionPhase {
 
-	public static final String ID = "flintstones.resolutionphase.gathering";
+	public static final String ID = "flintstones.resolutionphase.gathering"; //$NON-NLS-1$
 	
 	private ValuationSetManager _valuationSetManager;
 	private ValuationSet _valuationSet;

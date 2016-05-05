@@ -24,8 +24,8 @@ import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingViewManager
 
 public class DMTableContentProvider extends KTableNoScrollModel implements IDisplayRankingChangeListener {
 	
-	private static final String MOST_CRITICAL_CRITERION = "MCC";
-	private static final String MOST_CRITICAL_MEASURE = "MCM";
+	private static final String MOST_CRITICAL_CRITERION = "MCC"; //$NON-NLS-1$
+	private static final String MOST_CRITICAL_MEASURE = "MCM"; //$NON-NLS-1$
 	
 	private String[] _alternatives;
 	private String[] _criteria;
@@ -81,7 +81,7 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 	@Override
 	public Object doGetContentAt(int col, int row) {
 		if((col == 0) && (row == 0)) {
-			String type = "";
+			String type = ""; //$NON-NLS-1$
 			if(_kTableCombo.getControl() != null) {
 				CCombo combo = (CCombo) _kTableCombo.getControl();
 				type = combo.getText();
@@ -272,7 +272,7 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 	public String doGetTooltipAt(int col, int row) {
 		
 		if((col == 0) && (row == 0)) {
-			return "";
+			return ""; //$NON-NLS-1$
 		} else if(col == 0) {
 			return _criteria[row - 1];
 		} else if(row == 0) {

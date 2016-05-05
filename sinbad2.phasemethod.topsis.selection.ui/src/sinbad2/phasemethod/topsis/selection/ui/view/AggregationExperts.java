@@ -36,6 +36,7 @@ import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.Images;
+import sinbad2.phasemethod.topsis.selection.ui.nls.Messages;
 import sinbad2.phasemethod.topsis.selection.ui.view.dialog.WeightsDialog;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.ColectiveValuationsTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.IdealSolutionTableViewerContentProvider;
@@ -46,7 +47,7 @@ import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class AggregationExperts extends ViewPart implements IStepStateListener {
 
-	public static final String ID = "flintstones.phasemethod.topsis.selection.ui.view.aggregationexperts";
+	public static final String ID = "flintstones.phasemethod.topsis.selection.ui.view.aggregationexperts"; //$NON-NLS-1$
 
 	private Composite _parent;
 	private Composite _aggregationEditorPanel;
@@ -131,7 +132,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		selectOperatorPanel.setLayout(selectOperatorLayout);
 		
 		Label selectOperatorLabel = new Label(selectOperatorPanel, SWT.NONE);
-		selectOperatorLabel.setText("Select operator for experts");
+		selectOperatorLabel.setText(Messages.AggregationExperts_Select_operator_for_experts);
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1);
 		selectOperatorLabel.setLayoutData(gridData);
 		
@@ -170,7 +171,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		idealSolutionPanel.setLayout(idealSolutionLayout);
 		
 		Label idealSolutionLabel = new Label(idealSolutionPanel, SWT.NONE);
-		idealSolutionLabel.setText("Ideal solution");
+		idealSolutionLabel.setText(Messages.AggregationExperts_Ideal_solution);
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
 		idealSolutionLabel.setLayoutData(gridData);
 		
@@ -183,7 +184,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		_tableViewerIdealSolution.setContentProvider(_idealSolutionProvider);
 
 		TableViewerColumn criterionColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
-		criterionColumn.getColumn().setText("Criterion");
+		criterionColumn.getColumn().setText(Messages.AggregationExperts_Criterion);
 		criterionColumn.getColumn().pack();
 		criterionColumn.getColumn().setResizable(false);
 		criterionColumn.getColumn().setMoveable(false);
@@ -196,14 +197,14 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		});
 		
 		TableViewerColumn typeColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
-		typeColumn.getColumn().setText("Type");
+		typeColumn.getColumn().setText(Messages.AggregationExperts_Type);
 		typeColumn.getColumn().pack();
 		typeColumn.getColumn().setResizable(false);
 		typeColumn.getColumn().setMoveable(false);
 		typeColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 			
 			@Override
@@ -218,7 +219,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		});
 		
 		TableViewerColumn valuationColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
-		valuationColumn.getColumn().setText("Valuation");
+		valuationColumn.getColumn().setText(Messages.AggregationExperts_Valuation);
 		valuationColumn.getColumn().pack();
 		valuationColumn.getColumn().setResizable(false);
 		valuationColumn.getColumn().setMoveable(false);
@@ -231,12 +232,12 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 				String labelName = valuation.getLabel().getName();
 				String alpha = Double.toString(valuation.getAlpha());
 				
-				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$
+				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$ //$NON-NLS-2$
 					alpha = "0"; //$NON-NLS-1$
 				}
 
 				int size = 4;
-				if(alpha.startsWith("-")) {
+				if(alpha.startsWith("-")) { //$NON-NLS-1$
 					size = 5;
 				}
 				
@@ -245,7 +246,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 				}
 				
 				if(alpha.length() > 1) {
-					if(alpha.endsWith("0")) {
+					if(alpha.endsWith("0")) { //$NON-NLS-1$
 						alpha = alpha.substring(0, size - 1);
 					}
 				}
@@ -263,7 +264,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		noIdealSolutionPanel.setLayout(noIdealSolutionLayout);
 		
 		Label noIdealSolutionLabel = new Label(noIdealSolutionPanel, SWT.NONE);
-		noIdealSolutionLabel.setText("No ideal solution");
+		noIdealSolutionLabel.setText(Messages.AggregationExperts_No_ideal_solution);
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
 		noIdealSolutionLabel.setLayoutData(gridData);
 		
@@ -276,7 +277,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		_tableViewerNoIdealSolution.setContentProvider(_noIdealSolutionProvider);
 
 		criterionColumn = new TableViewerColumn(_tableViewerNoIdealSolution, SWT.NONE);
-		criterionColumn.getColumn().setText("Criterion");
+		criterionColumn.getColumn().setText(Messages.AggregationExperts_Criterion);
 		criterionColumn.getColumn().pack();
 		criterionColumn.getColumn().setResizable(false);
 		criterionColumn.getColumn().setMoveable(false);
@@ -289,14 +290,14 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		});
 		
 		typeColumn = new TableViewerColumn(_tableViewerNoIdealSolution, SWT.NONE);
-		typeColumn.getColumn().setText("Type");
+		typeColumn.getColumn().setText(Messages.AggregationExperts_Type);
 		typeColumn.getColumn().pack();
 		typeColumn.getColumn().setResizable(false);
 		typeColumn.getColumn().setMoveable(false);
 		typeColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 			
 			@Override
@@ -311,7 +312,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		});
 		
 		valuationColumn = new TableViewerColumn(_tableViewerNoIdealSolution, SWT.NONE);
-		valuationColumn.getColumn().setText("Valuation");
+		valuationColumn.getColumn().setText(Messages.AggregationExperts_Valuation);
 		valuationColumn.getColumn().pack();
 		valuationColumn.getColumn().setResizable(false);
 		valuationColumn.getColumn().setMoveable(false);
@@ -324,12 +325,12 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 				String labelName = valuation.getLabel().getName();
 				String alpha = Double.toString(valuation.getAlpha());
 				
-				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$
+				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$ //$NON-NLS-2$
 					alpha = "0"; //$NON-NLS-1$
 				}
 
 				int size = 4;
-				if(alpha.startsWith("-")) {
+				if(alpha.startsWith("-")) { //$NON-NLS-1$
 					size = 5;
 				}
 				
@@ -338,7 +339,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 				}
 				
 				if(alpha.length() > 1) {
-					if(alpha.endsWith("0")) {
+					if(alpha.endsWith("0")) { //$NON-NLS-1$
 						alpha = alpha.substring(0, size - 1);
 					}
 				}
@@ -356,7 +357,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		colectiveValuationsPanel.setLayout(colectiveValuationsLayout);
 		
 		Label colectiveValuationsLabel = new Label(colectiveValuationsPanel, SWT.NONE);
-		colectiveValuationsLabel.setText("Colective valuations");
+		colectiveValuationsLabel.setText(Messages.AggregationExperts_Colective_valuations);
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
 		colectiveValuationsLabel.setLayoutData(gridData);
 		
@@ -369,7 +370,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		_tableViewerColectiveValuations.setContentProvider(_colectiveValuationsProvider);
 
 		TableViewerColumn alternativeColumn = new TableViewerColumn(_tableViewerColectiveValuations, SWT.NONE);
-		alternativeColumn.getColumn().setText("Alternative");
+		alternativeColumn.getColumn().setText(Messages.AggregationExperts_Alternative);
 		alternativeColumn.getColumn().pack();
 		alternativeColumn.getColumn().setResizable(false);
 		alternativeColumn.getColumn().setMoveable(false);
@@ -382,7 +383,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		});
 		
 		criterionColumn = new TableViewerColumn(_tableViewerColectiveValuations, SWT.NONE);
-		criterionColumn.getColumn().setText("Criterion");
+		criterionColumn.getColumn().setText(Messages.AggregationExperts_Criterion);
 		criterionColumn.getColumn().pack();
 		criterionColumn.getColumn().setResizable(false);
 		criterionColumn.getColumn().setMoveable(false);
@@ -395,14 +396,14 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		});
 		
 		typeColumn = new TableViewerColumn(_tableViewerColectiveValuations, SWT.NONE);
-		typeColumn.getColumn().setText("Type");
+		typeColumn.getColumn().setText(Messages.AggregationExperts_Type);
 		typeColumn.getColumn().pack();
 		typeColumn.getColumn().setResizable(false);
 		typeColumn.getColumn().setMoveable(false);
 		typeColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 			
 			@Override
@@ -417,7 +418,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		});
 		
 		valuationColumn = new TableViewerColumn(_tableViewerColectiveValuations, SWT.NONE);
-		valuationColumn.getColumn().setText("Colective valuation");
+		valuationColumn.getColumn().setText(Messages.AggregationExperts_Colective_valuation);
 		valuationColumn.getColumn().pack();
 		valuationColumn.getColumn().setResizable(false);
 		valuationColumn.getColumn().setMoveable(false);
@@ -430,12 +431,12 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 				String labelName = valuation.getLabel().getName();
 				String alpha = Double.toString(valuation.getAlpha());
 				
-				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$
+				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$ //$NON-NLS-2$
 					alpha = "0"; //$NON-NLS-1$
 				}
 
 				int size = 4;
-				if(alpha.startsWith("-")) {
+				if(alpha.startsWith("-")) { //$NON-NLS-1$
 					size = 5;
 				}
 				
@@ -444,7 +445,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 				}
 				
 				if(alpha.length() > 1) {
-					if(alpha.endsWith("0")) {
+					if(alpha.endsWith("0")) { //$NON-NLS-1$
 						alpha = alpha.substring(0, size - 1);
 					}
 				}
@@ -472,9 +473,9 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		AggregationOperator operator;
 		for(int i = 0; i < aggregationOperatorsIds.size(); i++) {
 			operator = aggregationOperatorsManager.getAggregationOperator((String) aggregationOperatorsIds.toArray()[i]);
-			String name = "";
+			String name = ""; //$NON-NLS-1$
 			if (operator instanceof WeightedAggregationOperator) {
-				name = "(W) " + aggregationOperatorsManager.getAggregationOperator((String) aggregationOperatorsIds.toArray()[i]).getName();
+				name = "(W) " + aggregationOperatorsManager.getAggregationOperator((String) aggregationOperatorsIds.toArray()[i]).getName(); //$NON-NLS-1$
 				aggregationOperatorsNames.add(name);
 			} else {
 				name = aggregationOperatorsManager.getAggregationOperator((String) aggregationOperatorsIds.toArray()[i]).getName();
@@ -497,7 +498,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 			
 			ProblemElement nullElement = null;
 			ProblemElement[] secondary = getLeafElements(nullElement);
-			WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren(null), secondary, null, 1, "expert", "all experts");
+			WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren(null), secondary, null, 1, Messages.AggregationExperts_Expert, Messages.AggregationExperts_All_experts);
 			
 			int exitValue = dialog.open();
 			if(exitValue == WeightsDialog.SAVE) {
@@ -528,7 +529,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 	
 	@Override
 	public String getPartName() {
-		return "Aggregation experts";
+		return Messages.AggregationExperts_Aggregation_experts;
 	}
 	
 	@Override

@@ -18,7 +18,7 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class RetranslationPhase implements IPhaseMethod {
 	
-	public static final String ID = "flintstones.phasemethod.retranslation";
+	public static final String ID = "flintstones.phasemethod.retranslation"; //$NON-NLS-1$
 
 	private List<Object[]> _lhDomains;
 	

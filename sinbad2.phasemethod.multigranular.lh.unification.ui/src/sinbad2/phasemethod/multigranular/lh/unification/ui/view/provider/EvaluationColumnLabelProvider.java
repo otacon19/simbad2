@@ -2,6 +2,7 @@ package sinbad2.phasemethod.multigranular.lh.unification.ui.view.provider;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
+import sinbad2.phasemethod.multigranular.lh.unification.ui.nls.Messages;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
 
@@ -15,10 +16,10 @@ public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 				if(result instanceof LinguisticValuation) {
 					return ((LinguisticValuation) result).getLabel().getName();
 				} else {
-					return "Not evaluate";
+					return Messages.EvaluationColumnLabelProvider_Not_evaluate;
 				}
 			} else {
-				return "Not evaluate";
+				return Messages.EvaluationColumnLabelProvider_Not_evaluate;
 			}
 		} else {
 			return null;

@@ -29,6 +29,7 @@ import sinbad2.element.ProblemElementsSet;
 import sinbad2.resolutionphase.sensitivityanalysis.ISensitivityAnalysisChangeListener;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.dialog.WeightsDialog;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingViewManager;
 
@@ -83,7 +84,7 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 		_buttonComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		_changeWeightsButton = new Button(_buttonComposite, SWT.NONE);
 		_changeWeightsButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
-		_changeWeightsButton.setText("Weights");
+		_changeWeightsButton.setText(Messages.DecisionMakingView_Weights);
 		_buttonComposite.pack();
 
 		_changeWeightsButton.addSelectionListener(new SelectionAdapter() {
@@ -97,7 +98,7 @@ public class DecisionMakingView extends ViewPart implements ISensitivityAnalysis
 				Map<String, List<Double>> criteriaWeights = new HashMap<String, List<Double>>();
 				criteriaWeights.put(null, weightsList);
 
-				WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), _elementsSet.getAllSubcriteriaElement(), criteriaWeights, 1, "criterion", "all criteria");
+				WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), _elementsSet.getAllSubcriteriaElement(), criteriaWeights, 1, "criterion", "all criteria"); //$NON-NLS-1$ //$NON-NLS-2$
 
 				weights = null;
 				List<Double> ws;

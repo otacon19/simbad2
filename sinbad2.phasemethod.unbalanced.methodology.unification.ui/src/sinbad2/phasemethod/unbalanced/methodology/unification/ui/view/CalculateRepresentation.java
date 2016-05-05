@@ -25,6 +25,7 @@ import sinbad2.domain.linguistic.unbalanced.ui.jfreechart.LHChart;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.unbalanced.methodology.unification.UnificationPhase;
+import sinbad2.phasemethod.unbalanced.methodology.unification.ui.nls.Messages;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
@@ -144,7 +145,7 @@ public class CalculateRepresentation extends ViewPart implements IStepStateListe
 		
 								if(LHS == null) {
 									brid = false;
-									LHS = new StringBuilder("s" + domain.getLabel(i).get(pos) + " l(" + t + "," + pos + ")"); //$NON-NLS-1$
+									LHS = new StringBuilder("s" + domain.getLabel(i).get(pos) + " l(" + t + "," + pos + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 									other = pos;
 								} else {
 									brid = true;
@@ -155,10 +156,10 @@ public class CalculateRepresentation extends ViewPart implements IStepStateListe
 									double right = coverage.getMax() - center.getMax();
 
 									if(((left > right) && (other < pos)) || ((left < right) && (other > pos))) {
-										LHS.append(" " + "or" + " s" + domain.getLabel(i).get(pos) + " l(" + t + "," + pos + ")");
+										LHS.append(" " + "or" + " s" + domain.getLabel(i).get(pos) + " l(" + t + "," + pos + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 									} else {
 										String aux = LHS.toString();
-										LHS = new StringBuilder("s" + domain.getLabel(i).get(pos) + " l(" + t + "," + pos + ") " + "or" + " " + aux); //$NON-NLS-1$
+										LHS = new StringBuilder("s" + domain.getLabel(i).get(pos) + " l(" + t + "," + pos + ") " + "or" + " " + aux); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 									}
 								}
 							}
@@ -188,7 +189,7 @@ public class CalculateRepresentation extends ViewPart implements IStepStateListe
 
 		_labelColumn = new TableViewerColumn(_representationViewer, SWT.NONE);
 		_labelColumn.getColumn().setWidth(100);
-		_labelColumn.getColumn().setText("S");
+		_labelColumn.getColumn().setText("S"); //$NON-NLS-1$
 		_labelColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -198,7 +199,7 @@ public class CalculateRepresentation extends ViewPart implements IStepStateListe
 
 		_lhColumn = new TableViewerColumn(_representationViewer, SWT.NONE);
 		_lhColumn.getColumn().setWidth(100);
-		_lhColumn.getColumn().setText("LH_S");
+		_lhColumn.getColumn().setText("LH_S"); //$NON-NLS-1$
 		_lhColumn.getColumn().setAlignment(SWT.CENTER);
 		_lhColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -209,7 +210,7 @@ public class CalculateRepresentation extends ViewPart implements IStepStateListe
 
 		_bridColumn = new TableViewerColumn(_representationViewer, SWT.NONE);
 		_bridColumn.getColumn().setWidth(100);
-		_bridColumn.getColumn().setText("Brid");
+		_bridColumn.getColumn().setText("Brid"); //$NON-NLS-1$
 		_bridColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -299,7 +300,7 @@ public class CalculateRepresentation extends ViewPart implements IStepStateListe
 	
 	@Override
 	public String getPartName() {
-		return "Calculate representation";
+		return Messages.CalculateRepresentation_Calculate_representation;
 	}
 	
 	@Override

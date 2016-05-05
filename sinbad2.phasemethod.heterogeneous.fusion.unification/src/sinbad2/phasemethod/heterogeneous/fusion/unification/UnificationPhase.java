@@ -30,7 +30,7 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class UnificationPhase implements IPhaseMethod {
 
-	public static final String ID = "flintstones.phasemethod.heterogeneous.fusion.unification";
+	public static final String ID = "flintstones.phasemethod.heterogeneous.fusion.unification"; //$NON-NLS-1$
 	
 	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleValuationsResult;

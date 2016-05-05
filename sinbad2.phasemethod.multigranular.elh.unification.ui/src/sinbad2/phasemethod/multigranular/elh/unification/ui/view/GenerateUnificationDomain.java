@@ -18,12 +18,13 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.multigranular.elh.unification.UnificationPhase;
+import sinbad2.phasemethod.multigranular.elh.unification.ui.nls.Messages;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
 public class GenerateUnificationDomain extends ViewPart implements IStepStateListener {
 	
-	public static final String ID = "flintstones.phasemethod.multigranular.elh.unification.ui.view.generateunificationdomain";
+	public static final String ID = "flintstones.phasemethod.multigranular.elh.unification.ui.view.generateunificationdomain"; //$NON-NLS-1$
 	
 	private Composite _parent;
 	private Composite _domainInfoPanel;
@@ -79,7 +80,7 @@ public class GenerateUnificationDomain extends ViewPart implements IStepStateLis
 		Label level = new Label(_domainInfoPanel, SWT.NONE);
 		level.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
 		level.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-		level.setText("Level");
+		level.setText(Messages.GenerateUnificationDomain_Level);
 
 		_levelLabel = new Label(_domainInfoPanel, SWT.NONE);
 		_levelLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE)); //$NON-NLS-1$
@@ -88,7 +89,7 @@ public class GenerateUnificationDomain extends ViewPart implements IStepStateLis
 		Label name = new Label(_domainInfoPanel, SWT.NONE);
 		name.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
 		name.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-		name.setText("Name");
+		name.setText(Messages.GenerateUnificationDomain_Name);
 
 		_nameLabel = new Label(_domainInfoPanel, SWT.NONE);
 		_nameLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE)); //$NON-NLS-1$
@@ -97,7 +98,7 @@ public class GenerateUnificationDomain extends ViewPart implements IStepStateLis
 		Label description = new Label(_domainInfoPanel, SWT.NONE);
 		description.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
 		description.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-		description.setText("Description");
+		description.setText(Messages.GenerateUnificationDomain_Description);
 
 		_descriptionLabel = new Label(_domainInfoPanel, SWT.NONE);
 		_descriptionLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE)); //$NON-NLS-1$
@@ -167,7 +168,7 @@ public class GenerateUnificationDomain extends ViewPart implements IStepStateLis
 	
 	@Override
 	public String getPartName() {
-		return "Generate unification domain";
+		return Messages.GenerateUnificationDomain_Generate_unification_domain;
 	}
 	
 	@Override

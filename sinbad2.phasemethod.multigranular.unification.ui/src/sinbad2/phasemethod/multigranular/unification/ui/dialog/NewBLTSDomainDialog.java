@@ -25,6 +25,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
+import sinbad2.phasemethod.multigranular.unification.ui.nls.Messages;
 
 public class NewBLTSDomainDialog extends Dialog {
 
@@ -53,7 +54,7 @@ public class NewBLTSDomainDialog extends Dialog {
 		
 		Shell parent = getParent();
 		final Shell shell = new Shell(parent, SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
-		shell.setText("New BLTS domain");
+		shell.setText(Messages.NewBLTSDomainDialog_New_BLTS_domain);
 	
 		GridLayout layout = new GridLayout(3, false);
 		layout.marginLeft = 15;
@@ -65,8 +66,8 @@ public class NewBLTSDomainDialog extends Dialog {
 		shell.setLayout(layout);
 	
 		Label label = new Label(shell, SWT.NULL);
-		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
-		label.setText("Number of labels");
+		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		label.setText(Messages.NewBLTSDomainDialog_Number_of_labels);
 	
 		_spinner = new Spinner(shell, SWT.SINGLE | SWT.BORDER);
 		_spinner.setSelection(3);
@@ -90,12 +91,12 @@ public class NewBLTSDomainDialog extends Dialog {
 		_setSemanticButton = new Button(shell, SWT.NONE);
 		GridData gridData = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
 		_setSemanticButton.setLayoutData(gridData);
-		_setSemanticButton.setText("Set semantic");
+		_setSemanticButton.setText(Messages.NewBLTSDomainDialog_Set_semantic);
 	
 		ControlDecoration controlDecoration = new ControlDecoration(_setSemanticButton, SWT.LEFT | SWT.TOP);
 		FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_WARNING);
 		controlDecoration.setImage(fieldDecoration.getImage());
-		controlDecoration.setDescriptionText("If you make changes to the data the semantic will be lost");
+		controlDecoration.setDescriptionText(Messages.NewBLTSDomainDialog_If_you_make_changes_to_the_data_the_semantic_will_be_lost);
 	
 		_setSemanticButton.addSelectionListener(new SelectionAdapter() {
 	
@@ -118,8 +119,8 @@ public class NewBLTSDomainDialog extends Dialog {
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 3, 1);
 		gridData.verticalIndent = 15;
 		_previewLabel.setLayoutData(gridData);
-		_previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
-		_previewLabel.setText("Preview");
+		_previewLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
+		_previewLabel.setText(Messages.NewBLTSDomainDialog_Preview);
 	
 		_labels = new String[] { "s0", "s1", "s2" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		_domainBLTS.createTrapezoidalFunction(_labels);
@@ -137,13 +138,13 @@ public class NewBLTSDomainDialog extends Dialog {
 		new Label(buttonsBar, SWT.NONE);
 		
 		_buttonCancel = new Button(buttonsBar, SWT.PUSH);
-		_buttonCancel.setText("Cancel");
+		_buttonCancel.setText(Messages.NewBLTSDomainDialog_Cancel);
 		GridData gd__buttonCancel = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		gd__buttonCancel.horizontalAlignment = SWT.FILL;
 		_buttonCancel.setLayoutData(gd__buttonCancel);
 	
 		_buttonSave = new Button(buttonsBar, SWT.PUSH);
-		_buttonSave.setText("Save");
+		_buttonSave.setText(Messages.NewBLTSDomainDialog_Save);
 		GridData gd__buttonOK = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		gd__buttonOK.horizontalAlignment = SWT.FILL;
 		_buttonSave.setLayoutData(gd__buttonOK);

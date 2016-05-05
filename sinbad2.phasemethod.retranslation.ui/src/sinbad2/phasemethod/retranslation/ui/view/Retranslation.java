@@ -26,12 +26,13 @@ import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.analysis.AnalysisPhase;
 import sinbad2.phasemethod.retranslation.RetranslationPhase;
+import sinbad2.phasemethod.retranslation.ui.nls.Messages;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
 public class Retranslation extends ViewPart implements IStepStateListener {
 	
-public static final String ID = "flintstones.phasemethod.multigranular.lh.retranslation.ui.view.retranslation";
+public static final String ID = "flintstones.phasemethod.multigranular.lh.retranslation.ui.view.retranslation"; //$NON-NLS-1$
 	
 	private Composite _parent;
 	private Composite _validDomainsPanel;
@@ -124,7 +125,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 		
 		TableViewerColumn col = new TableViewerColumn(_validDomainsViewer, SWT.NONE);
 		col.getColumn().setWidth(100);
-		col.getColumn().setText("Name");
+		col.getColumn().setText(Messages.Retranslation_Name);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -134,7 +135,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 
 		final TableViewerColumn descriptionColumn = new TableViewerColumn(_validDomainsViewer, SWT.NONE);
 		descriptionColumn.getColumn().setWidth(100);
-		descriptionColumn.getColumn().setText("Description");
+		descriptionColumn.getColumn().setText(Messages.Retranslation_Description);
 		descriptionColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -185,7 +186,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 
 	@Override
 	public String getPartName() {
-		return "Retranslation";
+		return Messages.Retranslation_Retranslation;
 	}
 	
 	@Override

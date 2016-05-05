@@ -26,13 +26,14 @@ import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
+import sinbad2.phasemethod.topsis.unification.ui.nls.Messages;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
 
 public class SelectBLTS extends ViewPart implements IStepStateListener {
 	
-	public static final String ID = "flintstones.phasemethod.topsis.unification.ui.view.selectblts";
+	public static final String ID = "flintstones.phasemethod.topsis.unification.ui.view.selectblts"; //$NON-NLS-1$
 	
 	private Composite _parent;
 	private Composite _validDomainsPanel;
@@ -129,7 +130,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 		
 		TableViewerColumn col = new TableViewerColumn(_validDomainsViewer, SWT.NONE);
 		col.getColumn().setWidth(100);
-		col.getColumn().setText("Name");
+		col.getColumn().setText(Messages.SelectBLTS_Name);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -139,7 +140,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 
 		final TableViewerColumn descriptionColumn = new TableViewerColumn(_validDomainsViewer, SWT.NONE);
 		descriptionColumn.getColumn().setWidth(100);
-		descriptionColumn.getColumn().setText("Description");
+		descriptionColumn.getColumn().setText(Messages.SelectBLTS_Description);
 		descriptionColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -202,7 +203,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	
 	@Override
 	public String getPartName() {
-		return "Select BLTS";
+		return Messages.SelectBLTS_Select_BLTS;
 	}
 	
 	@Override

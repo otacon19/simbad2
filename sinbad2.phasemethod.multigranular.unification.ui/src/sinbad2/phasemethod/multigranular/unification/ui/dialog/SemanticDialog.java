@@ -21,6 +21,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import sinbad2.phasemethod.multigranular.unification.ui.nls.Messages;
+
 public class SemanticDialog extends Dialog {
 
 	public static final int SAVE = 100;
@@ -50,7 +52,7 @@ public class SemanticDialog extends Dialog {
 		}
 		_num = _values.size();
 		_validFields = false;
-		_title = "Semantic for domain";
+		_title = Messages.SemanticDialog_Semantic_for_domain;
 	}
 
 	@Override
@@ -62,7 +64,7 @@ public class SemanticDialog extends Dialog {
 
 		Label titleLabel = new Label(container, SWT.NONE);
 		titleLabel.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 1, 1));
-		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD));
+		titleLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
 		titleLabel.setText(_title);
 
 		ScrolledComposite scrolledComposite = new ScrolledComposite(container, SWT.H_SCROLL | SWT.V_SCROLL);
@@ -82,8 +84,8 @@ public class SemanticDialog extends Dialog {
 		ControlDecoration controlDecoration;
 		for (int i = 0; i < _num; i++) {
 			fieldLabel = new Label(labelsComposite, SWT.NONE);
-			fieldLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD));
-			fieldLabel.setText("Label" + " " + (i + 1)); //$NON-NLS-1$
+			fieldLabel.setFont(SWTResourceManager.getFont("Cantarell", 9, SWT.BOLD)); //$NON-NLS-1$
+			fieldLabel.setText("Label" + " " + (i + 1)); //$NON-NLS-1$ //$NON-NLS-2$
 
 			value = new Text(labelsComposite, SWT.BORDER);
 			gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -109,8 +111,8 @@ public class SemanticDialog extends Dialog {
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, CANCEL, "Cancel", false);
-		createButton(parent, SAVE, "Save", true);
+		createButton(parent, CANCEL, Messages.SemanticDialog_Cancel, false);
+		createButton(parent, SAVE, Messages.SemanticDialog_Save, true);
 	}
 
 	/**
@@ -189,7 +191,7 @@ public class SemanticDialog extends Dialog {
 	 */
 	private boolean validateEmptyText(Text text, ControlDecoration controlDecoration) {
 		if (text.getText().isEmpty()) {
-			return validate(controlDecoration, "Empty value");
+			return validate(controlDecoration, Messages.SemanticDialog_Empty_value);
 		} else {
 			return validate(controlDecoration, ""); //$NON-NLS-1$
 		}
@@ -209,7 +211,7 @@ public class SemanticDialog extends Dialog {
 		String textValue = text.getText();
 
 		if (textValue.contains(":")) { //$NON-NLS-1$
-			return validate(controlDecoration, "Illegal value");
+			return validate(controlDecoration, Messages.SemanticDialog_Illegal_value);
 		} else {
 			return validate(controlDecoration, ""); //$NON-NLS-1$
 		}
@@ -230,7 +232,7 @@ public class SemanticDialog extends Dialog {
 		for (int i = 0; i < _textValues.size(); i++) {
 			if (i != index) {
 				if (textValue.equals(_textValues.get(i).getText())) {
-					return validate(controlDecoration, "Duplicate value");
+					return validate(controlDecoration, Messages.SemanticDialog_Duplicated_value);
 				}
 			}
 		}

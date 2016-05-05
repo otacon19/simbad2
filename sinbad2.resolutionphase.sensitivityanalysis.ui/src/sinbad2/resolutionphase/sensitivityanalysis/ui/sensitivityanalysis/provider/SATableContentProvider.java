@@ -23,12 +23,13 @@ import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DMTable;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
 
 public class SATableContentProvider extends KTableNoScrollModel {
 	
-	private static final String RELATIVE = "RELATIVE";
-	private static final String ABSOLUTE = "ABSOLUTE";
+	private static final String RELATIVE = "RELATIVE"; //$NON-NLS-1$
+	private static final String ABSOLUTE = "ABSOLUTE"; //$NON-NLS-1$
 	
 	private String _typeDataSelected;
 	
@@ -75,7 +76,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		_criteria = criteria;
 		_values = values;
 		
-		if(_decisionMakingView.getTable().getTypeProblem().endsWith("MCC")) {
+		if(_decisionMakingView.getTable().getTypeProblem().endsWith("MCC")) { //$NON-NLS-1$
 			computePairs();
 		} else {
 			computeAllPairs();
@@ -127,7 +128,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	public Object doGetContentAt(int col, int row) {
 		
 		if((col == 0) && (row == 0)) {
-			String type = "";
+			String type = ""; //$NON-NLS-1$
 			if(_kTableCombo.getControl() != null) {
 				CCombo combo = (CCombo) _kTableCombo.getControl();
 				type = combo.getText();
@@ -138,7 +139,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 			
 			DMTable dmTable = _decisionMakingView.getTable();
 			if(_typeDataSelected.equals(ABSOLUTE)) {
-				if(dmTable.getTypeProblem().equals("MCC")) {
+				if(dmTable.getTypeProblem().equals("MCC")) { //$NON-NLS-1$
 					if(_values != _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights()) {
 						_values = _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights();
 						refreshTable();
@@ -149,8 +150,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 						refreshTable();
 					}
 				}
-			} else {
-				if(dmTable.getTypeProblem().equals("MCC")) {
+			} else if(_typeDataSelected.equals(RELATIVE)){
+				if(dmTable.getTypeProblem().equals("MCC")) { //$NON-NLS-1$
 					if(_values != _sensitivityAnalysis.getMinimumPercentChangeInCriteriaWeights()) {
 						_values = _sensitivityAnalysis.getMinimumPercentChangeInCriteriaWeights();
 						refreshTable();
@@ -184,7 +185,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 							erg = value;
 						} else {
 							double percent = Math.round((Double) erg * 1000d) / 1000d;
-							erg = Double.toString(percent) + "%";
+							erg = Double.toString(percent) + "%"; //$NON-NLS-1$
 						}
 					}
 				}
@@ -210,8 +211,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		if(col == 0 && row == 0) {
 			_kTableCombo = new  MyOwnKTableCellEditorCombo();
 			String[] valuesString = new String[2];
-			valuesString[0] = RELATIVE;
-			valuesString[1] = ABSOLUTE;
+			valuesString[0] = Messages.SATableContentProvider_relative;
+			valuesString[1] = Messages.SATableContentProvider_absolute;
 			_kTableCombo.setItems(valuesString);
 			
 			return _kTableCombo;
@@ -291,12 +292,12 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		} else {
 			if((doGetContentAt(col, row) instanceof String)) {
 				String content = (String) doGetContentAt(col, row);
-				if(content.equals("N/A")) {
+				if(content.equals("N/A")) { //$NON-NLS-1$
 					return _fixedRendererNA;
-				}else if(!content.contains("%")) {
+				}else if(!content.contains("%")) { //$NON-NLS-1$
 					return _fixedRendererHeader;
 				} else {
-					String stringWithoutPercent = content.replace("%", "");
+					String stringWithoutPercent = content.replace("%", ""); //$NON-NLS-1$ //$NON-NLS-2$
 					double value = Double.parseDouble(stringWithoutPercent);
 					if(value > 0) {
 						return _fixedRendererRed;

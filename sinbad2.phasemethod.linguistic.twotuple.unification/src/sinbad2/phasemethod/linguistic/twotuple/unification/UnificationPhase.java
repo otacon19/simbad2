@@ -21,7 +21,7 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class UnificationPhase implements IPhaseMethod {
 
-	public static final String ID = "flintstones.phasemethod.linguistic.twotuple.unification";
+	public static final String ID = "flintstones.phasemethod.linguistic.twotuple.unification"; //$NON-NLS-1$
 	
 	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleValuationsResult;

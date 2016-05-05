@@ -20,6 +20,7 @@ import sinbad2.domain.linguistic.unbalanced.ui.jfreechart.LHChart;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.unbalanced.methodology.unification.UnificationPhase;
+import sinbad2.phasemethod.unbalanced.methodology.unification.ui.nls.Messages;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
@@ -27,7 +28,7 @@ import sinbad2.valuation.valuationset.ValuationKey;
 
 public class GenerateLH extends ViewPart implements IStepStateListener {
 	
-	public static final String ID = "flintstones.phasemethod.unbalanced.methodology.unification.ui.generatelh";
+	public static final String ID = "flintstones.phasemethod.unbalanced.methodology.unification.ui.generatelh"; //$NON-NLS-1$
 	
 	private Composite _parent;
 	private Composite _infoPanel;
@@ -87,12 +88,12 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 		Label lh = new Label(_infoPanel, SWT.NONE);
 		lh.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.BOLD)); //$NON-NLS-1$
 		lh.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-		lh.setText("LH");
+		lh.setText("LH"); //$NON-NLS-1$
 
 		_lhLabel = new Label(_infoPanel, SWT.NONE);
 		_lhLabel.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NONE)); //$NON-NLS-1$
 		_lhLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		_lhLabel.setText("Empty value");
+		_lhLabel.setText(Messages.GenerateLH_Empty_value);
 
 		_chartPanel = new Composite(_parent, SWT.BORDER);
 		GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true, 1, 1);
@@ -128,14 +129,14 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 			if (_chart != null) {
 				_chart.dispose();
 				_chart = null;
-				_lhLabel.setText("Empty value");
+				_lhLabel.setText(Messages.GenerateLH_Empty_value);
 			}
 		}
 	}
 	
 	@Override
 	public String getPartName() {
-		return "Generate LH";
+		return Messages.GenerateLH_Generate_LH;
 	}
 
 	public void activate() {

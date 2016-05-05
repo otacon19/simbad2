@@ -24,6 +24,7 @@ import org.jfree.ui.TextAnchor;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 
 public class MinimunValueBetweenAlternativesBarChart {
 
@@ -116,7 +117,7 @@ public class MinimunValueBetweenAlternativesBarChart {
 		});
 
 		br.setBaseItemLabelsVisible(true);
-		br.setBaseItemLabelFont(new java.awt.Font("SansSerif", Font.PLAIN, 12));
+		br.setBaseItemLabelFont(new java.awt.Font("SansSerif", Font.PLAIN, 12)); //$NON-NLS-1$
 		ItemLabelPosition position1 = new ItemLabelPosition(ItemLabelAnchor.INSIDE6, TextAnchor.BOTTOM_CENTER);
 		br.setBasePositiveItemLabelPosition(position1);
 		ItemLabelPosition position2 = new ItemLabelPosition(ItemLabelAnchor.INSIDE6, TextAnchor.BOTTOM_CENTER);
@@ -126,16 +127,16 @@ public class MinimunValueBetweenAlternativesBarChart {
 	}
 
 	private DefaultCategoryDataset createDataset() {
-		String a1 = "", a2 = "";
+		String a1 = "", a2 = ""; //$NON-NLS-1$ //$NON-NLS-2$
 		if (_currentAlternativesPair != null) {
-			if (_type.equals("RELATIVE")) {
+			if (_type.equals(Messages.MinimunValueBetweenAlternativesBarChart_RELATIVE)) {
 				a1 = _elementsSet.getAlternatives().get(_currentAlternativesPair[0]).getId();
 				a2 = _elementsSet.getAlternatives().get(_currentAlternativesPair[1]).getId();
-				_chart.setTitle("Minimun percent " + a1 + " - " + a2);
+				_chart.setTitle(Messages.MinimunValueBetweenAlternativesBarChart_Minimun_percent + a1 + " - " + a2); //$NON-NLS-2$
 			} else {
 				a1 = _elementsSet.getAlternatives().get(_currentAlternativesPair[0]).getId();
 				a2 = _elementsSet.getAlternatives().get(_currentAlternativesPair[1]).getId();
-				_chart.setTitle("Minimun absolute " + a1 + " - " + a2);
+				_chart.setTitle(Messages.MinimunValueBetweenAlternativesBarChart_Minimun_absolute + a1 + " - " + a2); //$NON-NLS-2$
 			}
 		}
 
@@ -144,7 +145,7 @@ public class MinimunValueBetweenAlternativesBarChart {
 		List<Criterion> criteria = _elementsSet.getAllCriteria();
 		for (int i = 0; i < _values.length; ++i) {
 			if (_values[i] != 0) {
-				_dataset.setValue(_values[i], criteria.get(i), a1 + " - " + a2);
+				_dataset.setValue(_values[i], criteria.get(i), a1 + " - " + a2); //$NON-NLS-1$
 			}
 		}
 

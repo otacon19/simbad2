@@ -22,7 +22,7 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class UnificationPhase implements IPhaseMethod {
 
-	public static final String ID = "flintstones.phasemethod.unbalanced.methodology.unification";
+	public static final String ID = "flintstones.phasemethod.unbalanced.methodology.unification"; //$NON-NLS-1$
 	
 	private static final int LEFT = 0;
 	private static final int RIGHT = 1;

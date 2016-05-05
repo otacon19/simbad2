@@ -28,6 +28,7 @@ import sinbad2.core.workspace.listener.IWorkspaceListener;
 import sinbad2.core.workspace.listener.WorkspaceChangeEvent;
 import sinbad2.resolutionphase.ui.ResolutionPhaseUI;
 import sinbad2.resolutionphase.ui.ResolutionPhasesUIManager;
+import sinbad2.resolutionscheme.ui.nls.Messages;
 
 public class MultiplePerspectives implements IWorkspaceListener {
 	
@@ -148,9 +149,9 @@ public class MultiplePerspectives implements IWorkspaceListener {
 					String activeResolutionPhaseUI = resolutionPhasesUIManager.getActiveResolutionPhasesUI().getId();
 					int rc = SWT.NO;
 					if(!activeResolutionPhaseUI.equals(phaseUIId)) {
-						if(activeResolutionPhaseUI.equals("flintstones.resolutionphase.rating.ui") && !_pre_workspace_close_action) {
+						if(activeResolutionPhaseUI.equals("flintstones.resolutionphase.rating.ui") && !_pre_workspace_close_action) { //$NON-NLS-1$
 							MessageBox messageBox = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_INFORMATION | SWT.YES | SWT.NO);
-						    messageBox.setMessage("You will lose all information");
+						    messageBox.setMessage(Messages.MultiplePerspectives_You_will_lose_all_information);
 						    rc = messageBox.open();
 						    if(rc == SWT.YES) {
 								resolutionPhasesUIManager.activate(phaseUIId);
@@ -192,7 +193,7 @@ public class MultiplePerspectives implements IWorkspaceListener {
 		for(ResolutionPhaseUI resolutionPhaseUI: _phasesUI) {
 			enabled = (previousEnabled) ? resolutionPhaseUI.getResolutionPhase().getImplementation().validate() : false;
 			if(!enabled) {
-				if(firstNotValid && !resolutionPhaseUI.getResolutionPhase().getId().equals("flintstones.resolutionphase.sensitivityanalysis")) {
+				if(firstNotValid && !resolutionPhaseUI.getResolutionPhase().getId().equals("flintstones.resolutionphase.sensitivityanalysis")) { //$NON-NLS-1$
 					enabled = true;
 					lastEnabled = resolutionPhaseUI.getId();
 					firstNotValid = false;

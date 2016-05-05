@@ -27,6 +27,7 @@ import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 
 public class AlternativesEvolutionWeigthsLineChart {
 
@@ -135,7 +136,7 @@ public class AlternativesEvolutionWeigthsLineChart {
                double y = dataset.getY(series, item).doubleValue();
                String coordX = Double.toString(Math.round(x * 10000d) / 10000d);
                String coordY = Double.toString(Math.round(y * 10000d) / 10000d);
-               sb.append("(" + coordX + ", " + coordY + ")");
+               sb.append("(" + coordX + ", " + coordY + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                return sb.toString();
             }
          };
@@ -144,8 +145,8 @@ public class AlternativesEvolutionWeigthsLineChart {
          render.setBaseToolTipGenerator(xyToolTipGenerator);
         
         _currentMarker = new ValueMarker(0);
-		_currentMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
-		_currentMarker.setLabel("actual weighted");
+		_currentMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
+		_currentMarker.setLabel(Messages.AlternativesEvolutionWeigthsLineChart_actual_weighted);
 		_currentMarker.setPaint(Color.red);
 		_currentMarker.setStroke(new BasicStroke(2));
 		_currentMarker.setLabelOffset(new RectangleInsets(10, 10, 10, 50));
@@ -153,8 +154,8 @@ public class AlternativesEvolutionWeigthsLineChart {
         plot.addDomainMarker(_currentMarker);
         
         _variableMarker = new ValueMarker(0);
-		_variableMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
-		_variableMarker.setLabel("variable weighted");
+		_variableMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
+		_variableMarker.setLabel(Messages.AlternativesEvolutionWeigthsLineChart_variable_weighted);
 		_variableMarker.setPaint(Color.blue);
 		_variableMarker.setStroke(new BasicStroke(2));
 		_variableMarker.setLabelOffset(new RectangleInsets(10, 10, 10, 54));
@@ -170,7 +171,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 		if(_criterionSelected != null) {
 			List<Alternative> alternatives = _elementsSet.getAlternatives();
 			if(_model == 0 || _model == 2) {
-				_chart.setTitle("Preferences evolution: " + _criterionSelected.getId().toUpperCase());
+				_chart.setTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution + _criterionSelected.getId().toUpperCase());
 				
 				if(_horizontalMarker != null) {
 					_chart.getXYPlot().removeRangeMarker(_horizontalMarker);
@@ -184,12 +185,12 @@ public class AlternativesEvolutionWeigthsLineChart {
 					_dataset.addSeries(alternativeSerie);
 				}
 			} else {
-				_chart.setTitle("Ratios evolution: " + _criterionSelected.getId().toUpperCase());
+				_chart.setTitle(Messages.AlternativesEvolutionWeigthsLineChart_Ratios_evolution + _criterionSelected.getId().toUpperCase());
 				
 				if(_horizontalMarker == null) {
 					Stroke dashed =  new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] {10.0f}, 0.0f);
 					_horizontalMarker = new ValueMarker(1);
-					_horizontalMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12));
+					_horizontalMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
 					_horizontalMarker.setPaint(Color.red);
 					_horizontalMarker.setStroke(dashed);
 					_horizontalMarker.setLabelOffset(new RectangleInsets(10, 10, 30, 10));
@@ -200,7 +201,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 				int numSeries = 0;
 				for(int i = 0; i < alternatives.size() - 1; ++i) {
 					for(int j = (i + 1); j < alternatives.size(); ++j) {
-						XYSeries alternativeSerie = new XYSeries(alternatives.get(i).getId() + " - " + alternatives.get(j).getId());
+						XYSeries alternativeSerie = new XYSeries(alternatives.get(i).getId() + " - " + alternatives.get(j).getId()); //$NON-NLS-1$
 						for(double k = 0; k <= 1.01; k += 0.01) {
 							alternativeSerie.add(Math.round(k * 100d) / 100d, _sensitivityAnalysis.computeAlternativeRatioFinalPreferenceInferWeights(i, j, _sensitivityAnalysis.calculateInferWeights(_criterionSelected, k)));
 						}

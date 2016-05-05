@@ -18,7 +18,7 @@ public class DMTable extends KTable {
 		super(parent, SWT.NO_BACKGROUND | SWT.FLAT | SWTX.AUTO_SCROLL);
 		
 		_sensitivityAnalysis = sensitivityAnalysis;
-		_typeProblem = "MCC";
+		_typeProblem = "MCC"; //$NON-NLS-1$
 	}
 
 	public void setModel(String[] alternatives, String[] criteria, double[][] values) {

@@ -19,6 +19,7 @@ import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
+import sinbad2.phasemethod.multigranular.elh.unification.nls.Messages;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
@@ -35,7 +36,7 @@ public class UnificationPhase implements IPhaseMethod {
 		}
 	}
 	
-	public static final String ID = "flintstones.phasemethod.multigranular.elh.unification";
+	public static final String ID = "flintstones.phasemethod.multigranular.elh.unification"; //$NON-NLS-1$
 
 	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
 	
@@ -224,26 +225,26 @@ public class UnificationPhase implements IPhaseMethod {
 				oldValue = value;
 				i++;
 			}
-			entry[0] = "l(" + i + "," + value + ")";
+			entry[0] = "l(" + i + "," + value + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		
 		_elhDomains.addAll(domains);
 
-		String generate = "generate";
+		String generate = Messages.UnificationPhase_Generate;
 		domain = generateUnifiedDomain(sizes);
 		int index;
 		if(domain != null) {
 			domainName = generate;
 			index = 1;
 			while(domainsNames.contains(domainName)) {
-				domainName = generate + "_" + index++;
+				domainName = generate + "_" + index++; //$NON-NLS-1$
 			}
 			cardinality = ((FuzzySet) domain).getLabelSet().getCardinality();
 			if(cardinality != oldValue) {
 				i++;
 			}
 			
-			_elhDomains.add(new Object[] { "l(" + i + "," + cardinality + ")", domainName, domain });
+			_elhDomains.add(new Object[] { "l(" + i + "," + cardinality + ")", domainName, domain }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			domainsNames.add(domainName);
 		}
 		
@@ -269,7 +270,7 @@ public class UnificationPhase implements IPhaseMethod {
 				
 				String[] labels = new String[unifiedDomainSize];
 				for(int i = 0; i < unifiedDomainSize; i++) {
-					labels[i] = "s" + i;
+					labels[i] = "s" + i; //$NON-NLS-1$
 				}
 				result.createTrapezoidalFunction(labels);
 			}

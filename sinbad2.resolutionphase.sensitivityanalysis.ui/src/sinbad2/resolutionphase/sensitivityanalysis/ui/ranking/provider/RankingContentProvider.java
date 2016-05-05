@@ -55,16 +55,16 @@ public class RankingContentProvider implements IStructuredContentProvider {
 			}
 		} else if(model == 1){
 			for (int i = 0; i < _sensitivityAnalysis.getNumAlternatives(); i++) {
-				String ratios = "";
+				String ratios = ""; //$NON-NLS-1$
 				element = new MyElement();
 				element.alternative = _sensitivityAnalysis.getAlternativesIds()[i];
 				element.ranking = _sensitivityAnalysis.getRanking()[i];
 				for (int j = 0; j < _sensitivityAnalysis.getNumAlternatives(); j++) {
 					if(i != j && j > i) {
 						double ratio = Math.round(_sensitivityAnalysis.getAlternativesRatioFinalPreferences()[i][j] * 10000d) / 10000d;
-						ratios += "A" + (j + 1) + ": " + Double.toString(ratio);
+						ratios += "A" + (j + 1) + ": " + Double.toString(ratio); //$NON-NLS-1$ //$NON-NLS-2$
 						if(j != _sensitivityAnalysis.getNumAlternatives() - 1) {
-							ratios += ", ";
+							ratios += ", "; //$NON-NLS-1$
 						}
 					}
 				}

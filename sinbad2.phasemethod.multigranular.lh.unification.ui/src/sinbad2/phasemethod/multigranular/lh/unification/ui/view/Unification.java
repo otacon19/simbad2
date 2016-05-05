@@ -30,6 +30,7 @@ import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.multigranular.lh.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.lh.unification.ui.Images;
 import sinbad2.phasemethod.multigranular.lh.unification.ui.comparator.UnificationTreeViewerComparator;
+import sinbad2.phasemethod.multigranular.lh.unification.ui.nls.Messages;
 import sinbad2.phasemethod.multigranular.lh.unification.ui.view.provider.AlternativeColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.lh.unification.ui.view.provider.CriterionColumnLabelProvider;
 import sinbad2.phasemethod.multigranular.lh.unification.ui.view.provider.DomainColumnLabelProvider;
@@ -45,7 +46,7 @@ import sinbad2.valuation.valuationset.ValuationKey;
 
 public class Unification extends ViewPart implements IStepStateListener {
 
-public static final String ID = "flintstones.phasemethod.multigranular.unification.ui.view.unification";
+public static final String ID = "flintstones.phasemethod.multigranular.unification.ui.view.unification"; //$NON-NLS-1$
 
 	private FuzzySet _unifiedDomain;
 	private Map<ValuationKey, Valuation> _unifiedValues;
@@ -156,7 +157,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		_treeViewerUnifiedEvaluationColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
 		_treeUnifiedEvaluationColumn = _treeViewerUnifiedEvaluationColumn.getColumn();
 		_treeUnifiedEvaluationColumn.setWidth(125);
-		_treeUnifiedEvaluationColumn.setText("Unified");
+		_treeUnifiedEvaluationColumn.setText(Messages.Unification_Unified);
 		_treeUnifiedEvaluationColumn.setImage(Images.Valuation);
 		_treeUnifiedEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 5));
 		_treeViewerUnifiedEvaluationColumn.setLabelProvider(new UnifiedEvaluationColumnLabelProvider());
@@ -164,7 +165,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		_treeViewerExpertColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
 		_treeExpertColumn = _treeViewerExpertColumn.getColumn();
 		_treeExpertColumn.setWidth(125);
-		_treeExpertColumn.setText("Expert");
+		_treeExpertColumn.setText(Messages.Unification_Expert);
 		_treeExpertColumn.setImage(Images.GroupOfExperts);
 		_treeExpertColumn.addSelectionListener(getSelectionAdapter(_treeExpertColumn, 0));
 		_treeViewerExpertColumn.setLabelProvider(new ExpertColumnLabelProvider());
@@ -172,7 +173,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		_treeViewerAlternativeColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
 		_treeAlternativeColumn = _treeViewerAlternativeColumn.getColumn();
 		_treeAlternativeColumn.setWidth(125);
-		_treeAlternativeColumn.setText("Alternative");
+		_treeAlternativeColumn.setText(Messages.Unification_Alternative);
 		_treeAlternativeColumn.setImage(Images.Alternative);
 		_treeAlternativeColumn.addSelectionListener(getSelectionAdapter(_treeAlternativeColumn, 1));
 		_treeViewerAlternativeColumn.setLabelProvider(new AlternativeColumnLabelProvider());
@@ -180,7 +181,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		_treeViewerCriterionColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
 		_treeCriterionColumn = _treeViewerCriterionColumn.getColumn();
 		_treeCriterionColumn.setWidth(125);
-		_treeCriterionColumn.setText("Criterion");
+		_treeCriterionColumn.setText(Messages.Unification_Criterion);
 		_treeCriterionColumn.setImage(Images.Criteria);
 		_treeCriterionColumn.addSelectionListener(getSelectionAdapter(_treeCriterionColumn, 2));
 		_treeViewerCriterionColumn.setLabelProvider(new CriterionColumnLabelProvider());
@@ -188,7 +189,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		_treeViewerDomainColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
 		_treeDomainColumn = _treeViewerDomainColumn.getColumn();
 		_treeDomainColumn.setWidth(125);
-		_treeDomainColumn.setText("Source domain");
+		_treeDomainColumn.setText(Messages.Unification_Source_domain);
 		_treeDomainColumn.setImage(Images.Domain);
 		_treeDomainColumn.addSelectionListener(getSelectionAdapter(_treeDomainColumn, 3));
 		_treeViewerDomainColumn.setLabelProvider(new DomainColumnLabelProvider());
@@ -196,7 +197,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		_treeViewerEvaluationColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
 		_treeEvaluationColumn = _treeViewerEvaluationColumn.getColumn();
 		_treeEvaluationColumn.setWidth(125);
-		_treeEvaluationColumn.setText("Evaluation");
+		_treeEvaluationColumn.setText(Messages.Unification_Evaluation);
 		_treeEvaluationColumn.setImage(Images.Valuation);
 		_treeEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 4));
 		_treeViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
@@ -243,7 +244,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		container.setLayout(gl_container);
 		
 		_saveButton = new Button(container, SWT.PUSH);
-		_saveButton.setText("Save");
+		_saveButton.setText(Messages.Unification_Save);
 		_saveButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVE_EDIT).createImage());
 	}
 
@@ -258,7 +259,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 	
 	@Override
 	public String getPartName() {
-		return "Unification";
+		return Messages.Unification_Unification;
 	}
 	
 	@Override

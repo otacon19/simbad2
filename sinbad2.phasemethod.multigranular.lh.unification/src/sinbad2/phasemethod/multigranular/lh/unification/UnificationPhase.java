@@ -20,6 +20,7 @@ import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
+import sinbad2.phasemethod.multigranular.lh.unification.nls.Messages;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
@@ -36,7 +37,7 @@ public class UnificationPhase implements IPhaseMethod {
 		}
 	}
 	
-	public static final String ID = "flintstones.phasemethod.multigranular.lh.unification";
+	public static final String ID = "flintstones.phasemethod.multigranular.lh.unification"; //$NON-NLS-1$
 	
 	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleValuationsResult;
@@ -225,7 +226,7 @@ public class UnificationPhase implements IPhaseMethod {
 		i = 0;
 		Set<Integer> sizes = new HashSet<Integer>();
 		int oldValue = -1, currentCardinality, newLevelCardinality, index;
-		String generate = "generate";
+		String generate = Messages.UnificationPhase_Generate;
 		Object[] auxEntry;
 		for(Object[] entry : domains) {
 			currentCardinality = (Integer) entry[0];
@@ -235,17 +236,17 @@ public class UnificationPhase implements IPhaseMethod {
 				if ((newLevelCardinality == currentCardinality) || (oldValue == -1)) {
 					oldValue = currentCardinality;
 					i++;
-					entry[0] = "l(" + i + "," + currentCardinality + ")";
+					entry[0] = "l(" + i + "," + currentCardinality + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					_lhDomains.add(entry);
 				} else {
 					while(currentCardinality > newLevelCardinality) {
 						auxEntry = new Object[3];
 						i++;
-						auxEntry[0] = "l(" + i + "," + newLevelCardinality + ")";
-						domainName = "generate";
+						auxEntry[0] = "l(" + i + "," + newLevelCardinality + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						domainName = Messages.UnificationPhase_Generate;
 						index = 1;
 						while (domainsNames.contains(domainName)) {
-							domainName = generate + "_" + index++;
+							domainName = generate + "_" + index++; //$NON-NLS-1$
 						}
 						auxEntry[1] = domainName;
 						auxEntry[2] = generateNewLHDomain(newLevelCardinality);
@@ -256,7 +257,7 @@ public class UnificationPhase implements IPhaseMethod {
 					if(currentCardinality == newLevelCardinality) {
 						oldValue = currentCardinality;
 						i++;
-						entry[0] = "l(" + i + "," + currentCardinality + ")";
+						entry[0] = "l(" + i + "," + currentCardinality + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						_lhDomains.add(entry);
 					} else {
 						return null;
@@ -272,7 +273,7 @@ public class UnificationPhase implements IPhaseMethod {
 		FuzzySet result = new FuzzySet();
 		String[] labels = new String[size];
 		for (int i = 0; i < size; i++) {
-			labels[i] = "s" + i;
+			labels[i] = "s" + i; //$NON-NLS-1$
 		}
 		result.createTrapezoidalFunction(labels);
 	

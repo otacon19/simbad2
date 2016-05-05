@@ -25,6 +25,7 @@ import org.eclipse.ui.part.ViewPart;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.provider.RankingContentProvider;
 
 public class RankingView extends ViewPart implements IDisplayRankingChangeListener {
@@ -62,7 +63,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		_rankingViewer.setContentProvider(new RankingContentProvider(_sensitivityAnalysis, this));
 
 		addColumn("Ranking", 0); //$NON-NLS-1$
-		addColumn("Alternative", 1); //$NON-NLS-1$
+		addColumn(Messages.RankingView_Alternative, 1);
 		
 		TableViewerColumn tvc = new TableViewerColumn(_rankingViewer, SWT.NONE);
 		tvc.setLabelProvider(new ColumnLabelProvider() {
@@ -72,7 +73,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 			}
 		});
 		TableColumn tc = tvc.getColumn();
-		tc.setText("Value");
+		tc.setText(Messages.RankingView_Value);
 		tc.setResizable(true);
 		tc.setMoveable(true);
 		tc.setWidth(55);
@@ -83,9 +84,9 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		_sensitivityModels = new Combo(comboComposite, SWT.READ_ONLY);
 		_sensitivityModels.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
 		String[] methods = new String[3];
-		methods[0] = "Weighted sum";
-		methods[1] = "Weighted product";
-		methods[2] = "Analytic Hierarchy process";
+		methods[0] = Messages.RankingView_Weighted_sum;
+		methods[1] = Messages.RankingView_Weighted_product;
+		methods[2] = Messages.RankingView_Analytic_Hierarchy_process;
 		_sensitivityModels.setItems(methods);
 		_sensitivityModels.select(0);
 		_sensitivityModels.addSelectionListener(new SelectionAdapter() {
@@ -93,26 +94,26 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 			public void widgetSelected(SelectionEvent e) {
 				String typeProblem = _decisionMakingView.getTable().getTypeProblem();
 				if(_sensitivityModels.getSelectionIndex() == 0) {
-					if(typeProblem.equals("MCC")) {
+					if(typeProblem.equals("MCC")) { //$NON-NLS-1$
 						_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
 					} else {
 						_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
 					}
-					_rankingViewer.getTable().getColumn(2).setText("Value");
+					_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
 				} else if(_sensitivityModels.getSelectionIndex() == 1){
-					if(typeProblem.equals("MCC")) {
+					if(typeProblem.equals("MCC")) { //$NON-NLS-1$
 						_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
 					} else {
 						_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
 					}
-					_rankingViewer.getTable().getColumn(2).setText("Ratios");
+					_rankingViewer.getTable().getColumn(2).setText("Ratios"); //$NON-NLS-1$
 				} else if(_sensitivityModels.getSelectionIndex() == 2) {
-					if(typeProblem.equals("MCC")) {
+					if(typeProblem.equals("MCC")) { //$NON-NLS-1$
 						_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
 					} else {
 						_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalMeasure();
 					}
-					_rankingViewer.getTable().getColumn(2).setText("Value");
+					_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
 				}
 				_rankingViewer.getTable().getColumn(2).pack();
 			}
@@ -176,8 +177,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	
 	private IViewPart getView(String id) {
 		IViewPart view = null;
-		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.getViewReferences();
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
 		for (int i = 0; i < viewReferences.length; i++) {
 			if (id.equals(viewReferences[i].getId())) {
 				view = viewReferences[i].getView(false);

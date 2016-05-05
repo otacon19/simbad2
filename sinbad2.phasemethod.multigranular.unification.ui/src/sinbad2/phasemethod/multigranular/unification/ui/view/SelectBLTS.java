@@ -30,12 +30,13 @@ import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.phasemethod.multigranular.unification.ui.dialog.NewBLTSDomainDialog;
+import sinbad2.phasemethod.multigranular.unification.ui.nls.Messages;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
 public class SelectBLTS extends ViewPart implements IStepStateListener {
 	
-	public static final String ID = "flintstones.phasemethod.multigranular.fusion.unification.ui.view.selectblts";
+	public static final String ID = "flintstones.phasemethod.multigranular.fusion.unification.ui.view.selectblts"; //$NON-NLS-1$
 	
 	private Composite _parent;
 	private Composite _validDomainsPanel;
@@ -134,7 +135,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 		
 		TableViewerColumn col = new TableViewerColumn(_validDomainsViewer, SWT.NONE);
 		col.getColumn().setWidth(100);
-		col.getColumn().setText("Name");
+		col.getColumn().setText(Messages.SelectBLTS_Name);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -144,7 +145,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 
 		final TableViewerColumn descriptionColumn = new TableViewerColumn(_validDomainsViewer, SWT.NONE);
 		descriptionColumn.getColumn().setWidth(100);
-		descriptionColumn.getColumn().setText("Description");
+		descriptionColumn.getColumn().setText(Messages.SelectBLTS_Description);
 		descriptionColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -154,7 +155,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 
 		_createNewButton = new Button(_validDomainsPanel, SWT.PUSH);
 		_createNewButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
-		_createNewButton.setText("Create new");	
+		_createNewButton.setText(Messages.SelectBLTS_Create_new);	
 		_createNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -165,11 +166,11 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 
 					int count = 1;
 					for(Domain domain: _domainsBLTS) {
-						if(domain.getId().contains("generate")) {
+						if(domain.getId().contains(Messages.SelectBLTS_Generate)) {
 							count++;
 						}
 					}
-					fuzzySet.setId("generate_" + count);
+					fuzzySet.setId(Messages.SelectBLTS_Generate_ + count);
 					_domainsBLTS.add(fuzzySet);
 					
 					_validDomainsViewer.refresh();
@@ -233,7 +234,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	
 	@Override
 	public String getPartName() {
-		return "Select BLTS";
+		return Messages.SelectBLTS_Select_BLTS;
 	}
 	
 	@Override

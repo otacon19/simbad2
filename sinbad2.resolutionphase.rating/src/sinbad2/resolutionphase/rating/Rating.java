@@ -17,7 +17,7 @@ import sinbad2.resolutionphase.state.ResolutionPhaseStateChangeEvent;
 
 public class Rating implements IResolutionPhase {
 
-	public static final String ID = "flintstones.resolutionphase.rating";
+	public static final String ID = "flintstones.resolutionphase.rating"; //$NON-NLS-1$
 	
 	public Rating() {}
 
