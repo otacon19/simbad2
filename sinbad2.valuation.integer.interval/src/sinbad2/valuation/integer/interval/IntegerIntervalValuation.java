@@ -161,7 +161,7 @@ public class IntegerIntervalValuation extends Valuation {
 			long otherMidle = (((IntegerIntervalValuation) other)._max + ((IntegerIntervalValuation) other)._min) / 2l;
 			return Long.valueOf(middle).compareTo(Long.valueOf(otherMidle));
 		} else {
-			throw new IllegalArgumentException(Messages.IntegerInterval_Differents_domains);
+			throw new IllegalArgumentException(Messages.IntegerInterval_Different_domains);
 		}
 	}
 	

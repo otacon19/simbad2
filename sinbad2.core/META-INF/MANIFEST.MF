@@ -18,3 +18,4 @@ Export-Package:
  sinbad2.core.workspace,
  sinbad2.core.workspace.listener
 Bundle-ClassPath: .
+Bundle-Vendor: %Bundle-Vendor

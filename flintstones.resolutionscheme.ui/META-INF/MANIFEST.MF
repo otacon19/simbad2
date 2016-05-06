@@ -9,3 +9,4 @@ Require-Bundle: sinbad2.resolutionscheme;bundle-version="1.0.0";visibility:=reex
 Export-Package: sinbad2.resolutionscheme.ui,
  sinbad2.resolutionscheme.ui.perspectives
 Bundle-ClassPath: .
+Bundle-Vendor: %Bundle-Vendor

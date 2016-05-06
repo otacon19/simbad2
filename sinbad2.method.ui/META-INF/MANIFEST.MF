@@ -7,3 +7,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.method.linguistic;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.phasemethod.ui;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.method.ui
+Bundle-Vendor: %Bundle-Vendor

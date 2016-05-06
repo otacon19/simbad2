@@ -13,3 +13,4 @@ Require-Bundle: sinbad2.valuation.valuationset;bundle-version="1.0.0";visibility
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: sinbad2.valuation.valuationset.ui.view
+Bundle-Vendor: %Bundle-Vendor

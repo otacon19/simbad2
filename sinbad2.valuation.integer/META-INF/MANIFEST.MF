@@ -8,3 +8,4 @@ Require-Bundle: sinbad2.valuation;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.domain.numeric.integer;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.domain.linguistic.fuzzyset
 Export-Package: sinbad2.valuation.integer
+Bundle-Vendor: %Bundle-Vendor

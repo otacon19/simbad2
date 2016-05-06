@@ -161,7 +161,7 @@ public class RealIntervalValuation extends Valuation {
 			double otherMidle = (((RealIntervalValuation) other)._max + ((RealIntervalValuation) other)._min) / 2d;
 			return Double.compare(middle, otherMidle);	
 		} else {
-			throw new IllegalArgumentException(Messages.RealInterval_Differents_domains);
+			throw new IllegalArgumentException(Messages.RealInterval_Different_domains);
 		}
 	}
 	

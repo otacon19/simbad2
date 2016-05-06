@@ -12,3 +12,4 @@ Require-Bundle: sinbad2.aggregationoperator;bundle-version="1.0.0",
  sinbad2.valuation.twoTuple;bundle-version="1.0.0",
  sinbad2.valuation.unifiedValuation
 Export-Package: sinbad2.aggregationoperator.min
+Bundle-Vendor: %Bundle-Vendor

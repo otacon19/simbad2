@@ -9,3 +9,4 @@ Require-Bundle: sinbad2.core;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.element;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.phasemethod.aggregation
 Export-Package: sinbad2.resolutionphase.sensitivityanalysis
+Bundle-Vendor: %Bundle-Vendor

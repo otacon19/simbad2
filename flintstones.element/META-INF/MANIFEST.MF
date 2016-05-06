@@ -3,8 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.element
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
- JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: sinbad2.element,
  sinbad2.element.alternative,
  sinbad2.element.alternative.listener,
@@ -18,3 +17,4 @@ Export-Package: sinbad2.element,
  sinbad2.element.expert.listener,
  sinbad2.element.expert.operation
 Require-Bundle: sinbad2.resolutionphase;visibility:=reexport
+Bundle-Vendor: %Bundle-Vendor

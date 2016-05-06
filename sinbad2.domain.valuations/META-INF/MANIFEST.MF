@@ -6,3 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: sinbad2.domain.valuations
 Require-Bundle: sinbad2.resolutionphase;visibility:=reexport
+Bundle-Vendor: %Bundle-Vendor

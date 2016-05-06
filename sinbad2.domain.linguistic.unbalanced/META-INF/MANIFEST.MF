@@ -7,3 +7,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.domain,
  sinbad2.domain.linguistic.fuzzyset;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.domain.linguistic.unbalanced
+Bundle-Vendor: %Bundle-Vendor

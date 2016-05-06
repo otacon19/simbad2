@@ -10,3 +10,4 @@ Require-Bundle: sinbad2.core;bundle-version="1.0.0";visibility:=reexport,
 Export-Package: sinbad2.valuation.valuationset,
  sinbad2.valuation.valuationset.listener,
  sinbad2.valuation.valuationset.operation
+Bundle-Vendor: %Bundle-Vendor

@@ -9,3 +9,4 @@ Require-Bundle: sinbad2.aggregationoperator;bundle-version="1.0.0",
  sinbad2.valuation.real,
  sinbad2.valuation.twoTuple;bundle-version="1.0.0",
  sinbad2.valuation.unifiedValuation
+Bundle-Vendor: %Bundle-Vendor
