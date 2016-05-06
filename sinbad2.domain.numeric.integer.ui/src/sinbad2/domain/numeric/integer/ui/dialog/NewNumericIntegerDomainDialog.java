@@ -180,8 +180,8 @@ public class NewNumericIntegerDomainDialog extends NewDomainDialog {
 					_specificDomain.setMin(_lowerLimit);
 					_specificDomain.setMax(_upperLimit);
 					
-					_lowerLimitLabel.setText(Messages.NewNumericIntegerDomainDialog_Lower + " " + Double.toString(Double.NEGATIVE_INFINITY)); //$NON-NLS-2$ //$NON-NLS-1$
-					_upperLimitLabel.setText(Messages.NewNumericIntegerDomainDialog_Upper + " -" + Double.toString(Double.POSITIVE_INFINITY)); //$NON-NLS-2$ //$NON-NLS-1$
+					_lowerLimitLabel.setText(Messages.NewNumericIntegerDomainDialog_Lower + " " + Double.toString(Double.NEGATIVE_INFINITY)); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$
+					_upperLimitLabel.setText(Messages.NewNumericIntegerDomainDialog_Upper + " -" + Double.toString(Double.POSITIVE_INFINITY)); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$
 					
 					_specificDomain.setInRange(false);
 					

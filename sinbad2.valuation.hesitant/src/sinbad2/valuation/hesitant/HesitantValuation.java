@@ -318,7 +318,7 @@ public class HesitantValuation extends Valuation {
 				aux = aux.substring(0, 1).toUpperCase() + aux.substring(1);
 				return aux + " " + getTerm().getName(); //$NON-NLS-1$
 			} else {
-				return Messages.HesitantValuation_Between + " " + getLowerTerm().getName() + " " + Messages.HesitantValuation_and + " " + getUpperTerm().getName(); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$
+				return Messages.HesitantValuation_Between + " " + getLowerTerm().getName() + " " + Messages.HesitantValuation_and + " " + getUpperTerm().getName();  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$
 			}
 		}
 

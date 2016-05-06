@@ -28,7 +28,7 @@ public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 						aux = aux.substring(0, 1).toUpperCase() + aux.substring(1);
 						return aux + " " + valuation.getTerm().getName(); //$NON-NLS-1$
 					} else {
-						return Messages.EvaluationColumnLabelProvider_Between + " " + valuation.getLowerTerm().getName() + " " + Messages.EvaluationColumnLabelProvider_And + " " + valuation.getUpperTerm().getName(); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$
+						return Messages.EvaluationColumnLabelProvider_Between + " " + valuation.getLowerTerm().getName() + " " + Messages.EvaluationColumnLabelProvider_And + " " + valuation.getUpperTerm().getName();  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$
 					}
 				} else if(result instanceof LinguisticValuation) {
 					return ((LinguisticValuation) result).getLabel().getName();

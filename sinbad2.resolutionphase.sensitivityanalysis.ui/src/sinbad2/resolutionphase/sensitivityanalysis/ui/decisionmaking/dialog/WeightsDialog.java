@@ -206,7 +206,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 		_sumGeneral = 0;
 
 		_type = type;
-		_title = Messages.WeightsDialog_Values_for + " " + elementId + " (" + elementType + ")"; //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		_title = Messages.WeightsDialog_Values_for + " " + elementId + " (" + elementType + ")";  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	}
 

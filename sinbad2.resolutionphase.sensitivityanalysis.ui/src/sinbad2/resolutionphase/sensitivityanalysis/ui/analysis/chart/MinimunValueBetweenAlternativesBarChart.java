@@ -132,11 +132,11 @@ public class MinimunValueBetweenAlternativesBarChart {
 			if (_type.equals(Messages.MinimunValueBetweenAlternativesBarChart_RELATIVE)) {
 				a1 = _elementsSet.getAlternatives().get(_currentAlternativesPair[0]).getId();
 				a2 = _elementsSet.getAlternatives().get(_currentAlternativesPair[1]).getId();
-				_chart.setTitle(Messages.MinimunValueBetweenAlternativesBarChart_Minimun_percent + a1 + " - " + a2); //$NON-NLS-2$
+				_chart.setTitle(Messages.MinimunValueBetweenAlternativesBarChart_Minimun_percent + a1 + " - " + a2); //$NON-NLS-2$ //$NON-NLS-1$
 			} else {
 				a1 = _elementsSet.getAlternatives().get(_currentAlternativesPair[0]).getId();
 				a2 = _elementsSet.getAlternatives().get(_currentAlternativesPair[1]).getId();
-				_chart.setTitle(Messages.MinimunValueBetweenAlternativesBarChart_Minimun_absolute + a1 + " - " + a2); //$NON-NLS-2$
+				_chart.setTitle(Messages.MinimunValueBetweenAlternativesBarChart_Minimun_absolute + a1 + " - " + a2); //$NON-NLS-2$ //$NON-NLS-1$
 			}
 		}
 
