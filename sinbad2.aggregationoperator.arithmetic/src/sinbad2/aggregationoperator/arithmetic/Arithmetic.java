@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
+import sinbad2.aggregationoperator.arithmetic.nls.Messages;
 import sinbad2.aggregationoperator.arithmetic.valuation.IntegerOperator;
 import sinbad2.aggregationoperator.arithmetic.valuation.RealOperator;
 import sinbad2.aggregationoperator.arithmetic.valuation.TwoTupleOperator;
@@ -43,7 +44,7 @@ public class Arithmetic extends UnweightedAggregationOperator {
 				} else if(valuation instanceof UnifiedValuation) {
 					return UnifiedValuationOperator.aggregate(valuations);
 				} else {
-					throw new IllegalArgumentException("Not supported type");
+					throw new IllegalArgumentException(Messages.Arithmetic_Not_supported_type);
 				}
 			}
 		}

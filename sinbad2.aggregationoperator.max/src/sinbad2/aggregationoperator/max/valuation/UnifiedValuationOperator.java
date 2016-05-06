@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import sinbad2.aggregationoperator.max.nls.Messages;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.valuation.Valuation;
@@ -34,7 +35,7 @@ public class UnifiedValuationOperator {
 			} else {
 				for(int i = 0; i < cardinality; i++) {
 					if(!domain.getLabelSet().getLabel(i).equals(((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(i))) {
-						throw new IllegalArgumentException("Invalid domain");
+						throw new IllegalArgumentException(Messages.UnifiedValuationOperator_Invalid_domain);
 					}
 				}
 			}

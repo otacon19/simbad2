@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
+import sinbad2.aggregationoperator.min.nls.Messages;
 import sinbad2.aggregationoperator.min.valuation.IntegerOperator;
 import sinbad2.aggregationoperator.min.valuation.IntervalIntegerOperator;
 import sinbad2.aggregationoperator.min.valuation.IntervalRealOperator;
@@ -21,7 +22,7 @@ import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class Min extends UnweightedAggregationOperator {
 	
-	public static final String ID = "flintstones.aggregationoperator.min";
+	public static final String ID = "flintstones.aggregationoperator.min"; //$NON-NLS-1$
 	
 	@Override
 	public Valuation aggregate(List<Valuation> valuations) {
@@ -53,7 +54,7 @@ public class Min extends UnweightedAggregationOperator {
 				}  else if(valuation instanceof UnifiedValuation) {
 					return UnifiedValuationOperator.aggregate(valuations);
 				} else {
-					throw new IllegalArgumentException("Not supported type");
+					throw new IllegalArgumentException(Messages.Min_Not_supported_type);
 				}
 			}
 		}

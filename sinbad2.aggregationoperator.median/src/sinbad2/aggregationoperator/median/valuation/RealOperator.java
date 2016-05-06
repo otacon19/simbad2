@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import sinbad2.aggregationoperator.median.nls.Messages;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.valuation.Valuation;
@@ -24,7 +25,7 @@ public class RealOperator {
 			if(domain == null) {
 				domain = (NumericRealDomain) valuation.getDomain();
 			} else if(!domain.equals(valuation.getDomain())) {
-				throw new IllegalArgumentException("Invalid domain");
+				throw new IllegalArgumentException(Messages.RealOperator_Invalid_domain);
 			}
 			
 			values.add(valuation);

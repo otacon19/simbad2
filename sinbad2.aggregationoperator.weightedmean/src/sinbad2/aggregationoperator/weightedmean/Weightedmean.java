@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import sinbad2.aggregationoperator.WeightedAggregationOperator;
+import sinbad2.aggregationoperator.weightedmean.nls.Messages;
 import sinbad2.aggregationoperator.weightedmean.valuation.IntegerOperator;
 import sinbad2.aggregationoperator.weightedmean.valuation.RealOperator;
 import sinbad2.aggregationoperator.weightedmean.valuation.TwoTupleOperator;
@@ -30,7 +31,7 @@ public class Weightedmean extends WeightedAggregationOperator {
 				double sum = 0;
 				for(Double weight : weights) {
 					if(weight == null) {
-						throw new IllegalArgumentException("Null weight");
+						throw new IllegalArgumentException(Messages.Weightedmean_Null_weight);
 					}
 					sum += weight;
 				}
@@ -85,11 +86,11 @@ public class Weightedmean extends WeightedAggregationOperator {
 					} else if(valuation instanceof UnifiedValuation) {
 						return UnifiedValuationOperator.aggregate(valuations, weights);
 					} else {
-						throw new IllegalArgumentException("Not supported type.");
+						throw new IllegalArgumentException(Messages.Weightedmean_Not_supported_type);
 					}
 				}
 			} else {
-				throw new IllegalArgumentException("Illegal number of weights.");
+				throw new IllegalArgumentException(Messages.Weightedmean_Illegal_number_of_weights);
 			}
 		}
 		return null;

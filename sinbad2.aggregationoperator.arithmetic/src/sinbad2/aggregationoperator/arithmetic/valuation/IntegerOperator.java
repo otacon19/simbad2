@@ -2,9 +2,7 @@ package sinbad2.aggregationoperator.arithmetic.valuation;
 
 import java.util.List;
 
-
-
-
+import sinbad2.aggregationoperator.arithmetic.nls.Messages;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.valuation.Valuation;
@@ -26,7 +24,7 @@ public class IntegerOperator {
 			if(domain == null) {
 				domain = (NumericIntegerDomain) valuation.getDomain();
 			} else if(!domain.equals(valuation.getDomain())) {
-				throw new IllegalArgumentException("Invalid domain");
+				throw new IllegalArgumentException(Messages.IntegerOperator_Invalid_domain);
 			}
 			
 			value += (((IntegerValuation) valuation).getValue()) / size;

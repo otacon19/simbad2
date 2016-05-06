@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
+import sinbad2.aggregationoperator.median.nls.Messages;
 import sinbad2.aggregationoperator.median.valuation.IntegerOperator;
 import sinbad2.aggregationoperator.median.valuation.IntervalIntegerOperator;
 import sinbad2.aggregationoperator.median.valuation.IntervalRealOperator;
@@ -51,7 +52,7 @@ public class Median extends UnweightedAggregationOperator {
 				}  else if(valuation instanceof UnifiedValuation) {
 					return UnifiedValuationOperator.aggregate(valuations);
 				} else {
-					throw new IllegalArgumentException("Not supported type");
+					throw new IllegalArgumentException(Messages.Median_Not_supported_type);
 				}
 			}
 		}

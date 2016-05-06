@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import sinbad2.aggregationoperator.WeightedAggregationOperator;
+import sinbad2.aggregationoperator.owa.nls.Messages;
 import sinbad2.aggregationoperator.owa.valuation.IntegerOperator;
 import sinbad2.aggregationoperator.owa.valuation.RealOperator;
 import sinbad2.aggregationoperator.owa.valuation.TwoTupleOperator;
@@ -17,7 +18,7 @@ import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
 public class OWA extends WeightedAggregationOperator {
 
-	public static final String ID = "sinbad2.aggregationoperator.owa";
+	public static final String ID = "sinbad2.aggregationoperator.owa"; //$NON-NLS-1$
 	
 	@Override
 	public Valuation aggregate(List<Valuation> valuations, List<Double> weights) {
@@ -50,7 +51,7 @@ public class OWA extends WeightedAggregationOperator {
 				} else if(valuation instanceof UnifiedValuation) {
 					return UnifiedValuationOperator.aggregate(valuations, weights.get(0), weights.get(1));
 				} else {
-					throw new IllegalArgumentException("Not supported type.");
+					throw new IllegalArgumentException(Messages.OWA_Not_supported_type);
 				}
 			}
 		}

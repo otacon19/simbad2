@@ -2,6 +2,7 @@ package sinbad2.aggregationoperator.arithmetic.valuation;
 
 import java.util.List;
 
+import sinbad2.aggregationoperator.arithmetic.nls.Messages;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.valuation.Valuation;
@@ -23,7 +24,7 @@ public class TwoTupleOperator {
 			if(domain == null) {
 				domain = (FuzzySet) valuation.getDomain();
 			} else if(!domain.equals(valuation.getDomain())) {
-				throw new IllegalArgumentException("Invalid domain");
+				throw new IllegalArgumentException(Messages.TwoTupleOperator_Invalid_domain);
 			}
 
 			beta += (((TwoTuple) valuation).calculateInverseDelta());

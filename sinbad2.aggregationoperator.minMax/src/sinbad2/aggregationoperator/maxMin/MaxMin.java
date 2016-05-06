@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
+import sinbad2.aggregationoperator.maxMin.nls.Messages;
 import sinbad2.aggregationoperator.maxMin.valuation.HesitantOperator;
 import sinbad2.core.validator.Validator;
 import sinbad2.valuation.Valuation;
@@ -32,7 +33,7 @@ public class MaxMin extends UnweightedAggregationOperator {
 				if(valuation instanceof HesitantValuation) {
 					return HesitantOperator.aggregate(valuations);
 				} else {
-					throw new IllegalArgumentException("Not supported type");
+					throw new IllegalArgumentException(Messages.MaxMin_Not_supported_type);
 				}
 			}
 		}

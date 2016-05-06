@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import sinbad2.aggregationoperator.owa.YagerQuantifiers;
+import sinbad2.aggregationoperator.owa.nls.Messages;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.valuation.Valuation;
@@ -26,7 +27,7 @@ public class IntegerOperator {
 			if(domain == null) {
 				domain = (NumericIntegerDomain) valuation.getDomain();
 			} else if (!domain.equals(valuation.getDomain())) {
-				throw new IllegalArgumentException("Invalid domain");
+				throw new IllegalArgumentException(Messages.IntegerOperator_Invalid_domain);
 			}
 			
 			measures.add((double) ((IntegerValuation) valuation).getValue());

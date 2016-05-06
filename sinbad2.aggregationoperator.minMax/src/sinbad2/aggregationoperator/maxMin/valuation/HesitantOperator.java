@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import sinbad2.aggregationoperator.maxMin.nls.Messages;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.valuation.Valuation;
@@ -25,7 +26,7 @@ public class HesitantOperator {
 			if(domain == null) {
 				domain = (FuzzySet) valuation.getDomain();
 			} else if(!domain.equals(valuation.getDomain())) {
-				throw new IllegalArgumentException("Invalid domain");
+				throw new IllegalArgumentException(Messages.HesitantOperator_Invalid_domain);
 			}
 			
 			values.add(valuation);

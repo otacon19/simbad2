@@ -3,7 +3,7 @@ package sinbad2.aggregationoperator.owa;
 public class YagerQuantifiers {
 	
 	public enum QuantificationType {
-		most("most"), at_least_half("at least half"), as_many_as_possible("as_many_as_possible");
+		most("most"), at_least_half("at least half"), as_many_as_possible("as_many_as_possible"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		@SuppressWarnings("unused")
 		private String _text;
@@ -14,7 +14,7 @@ public class YagerQuantifiers {
 	}
 	
 	public enum NumeredQuantificationType {
-		FilevYager("Filev-Yager");
+		FilevYager("Filev-Yager"); //$NON-NLS-1$
 
 		private String _text;
 
