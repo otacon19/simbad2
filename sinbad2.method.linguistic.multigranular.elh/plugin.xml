@@ -5,10 +5,10 @@
          point="flintstones.method">
       <method
             category="Multi-granular framework"
-            description="M. Espinilla, J. Liu, L. Martínez, An Extended Hierarchical Linguistic Model for Decision-Making Problems. Computational Intelligence, vol. 27, issue 3, pp. 489-512, 2011."
+            description="%Method-Description"
             id="flintstones.method.linguistic.multigranular.elh"
             implementation="sinbad2.method.linguistic.multigranular.elh.ELH"
-            name="Extended Linguistic Hierarchies">
+            name="%Method-Name">
          <phasemethod
                phase="flintstones.phasemethod.multigranular.elh.unification">
          </phasemethod>

@@ -4,8 +4,16 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sinbad2.resolutionphase.rating.ui.nls.messages"; //$NON-NLS-1$
+	public static String AlgorithmDialog_2_tuple_linguistic_computational_model;
 	public static String AlgorithmDialog_Algorithm;
 	public static String AlgorithmDialog_Algorithm_instantation;
+	public static String AlgorithmDialog_Extended_linguistic_hierarchies;
+	public static String AlgorithmDialog_Fusion_approach_for_managing_heterogeneous_information;
+	public static String AlgorithmDialog_Fusion_approach_for_managing_multi_granular_linguistic_information;
+	public static String AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information;
+	public static String AlgorithmDialog_Linguistic_hierarchies;
+	public static String AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets;
+	public static String AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS;
 	public static String RatingView_All_information_will_be_lost;
 	public static String RatingView_Back;
 	public static String RatingView_Cancel_confirm;

@@ -5,10 +5,10 @@
          point="flintstones.method">
       <method
             category="Hesitant Fuzzy Linguistic Information"
-            description="Hesitant"
+            description="%Method-Description"
             id="flintstones.method.linguistic.hesitant"
             implementation="sinbad2.method.linguistic.hesitant.Hesitant"
-            name="Hesitant Fuzzy 2-tuple Linguistic Information">
+            name="%Method-Name">
          <phasemethod
                phase="flintstones.phasemethod.linguistic.hesitant.unification">
          </phasemethod>

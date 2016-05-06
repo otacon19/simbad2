@@ -41,6 +41,8 @@ public class UnificationPhase implements IPhaseMethod {
 		
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		_domainSet = domainsManager.getActiveDomainSet();
+		
+		_unifiedEvaluationsResult = new HashMap<ValuationKey, Valuation>();
 	}
 	
 	public Map<ValuationKey, Valuation> getUnifiedValuationsResult() {

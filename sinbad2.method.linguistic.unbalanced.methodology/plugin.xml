@@ -5,10 +5,10 @@
          point="flintstones.method">
       <method
             category="Unbalanced linguistic framework"
-            description="F. Herrera, E. Herrera-Viedma, L. Martínez, A Fuzzy Linguistic Methodology To Deal With Unbalanced Linguistic Term Sets. IEEE Transactions on Fuzzy Systems, vol. 16, issue 2, pp. 354-370, 2008."
+            description="%Method-Description"
             id="flintstones.method.linguistic.unbalanced.methodology"
             implementation="sinbad2.method.linguistic.unbalanced.methodology.Unbalanced"
-            name="Methodology to deal with unbalanced linguistic term sets">
+            name="%Method-Name">
          <phasemethod
                phase="flintstones.phasemethod.unbalanced.methodology.unification">
          </phasemethod>

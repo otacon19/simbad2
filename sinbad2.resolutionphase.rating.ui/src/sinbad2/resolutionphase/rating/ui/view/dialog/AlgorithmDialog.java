@@ -81,14 +81,14 @@ public class AlgorithmDialog extends Dialog {
 
 		String algorithm = ALGORITHM;
 
-		algorithm = algorithm.replace("<1>", "2-Tuple linguistic computational model"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<2>", "Fusion approach for managing multi-granular linguistic information"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<3>", "Linguistic Hierarchies"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<4>", "Extended Linguistic Hierarchies"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<5>", "Fusion approach for managing heterogeneous information"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<6>", "Methodology to deal with unbalanced linguistic term sets"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<7>", "Hesitant Fuzzy 2-tuple Linguistic Information"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<8>", "Tecnique for Order of Preference by Similarity to Ideal Solution (TOPSIS)"); //$NON-NLS-1$ //$NON-NLS-2$
+		algorithm = algorithm.replace("<1>", Messages.AlgorithmDialog_2_tuple_linguistic_computational_model); //$NON-NLS-1$
+		algorithm = algorithm.replace("<2>", Messages.AlgorithmDialog_Fusion_approach_for_managing_multi_granular_linguistic_information); //$NON-NLS-1$
+		algorithm = algorithm.replace("<3>", Messages.AlgorithmDialog_Linguistic_hierarchies); //$NON-NLS-1$
+		algorithm = algorithm.replace("<4>", Messages.AlgorithmDialog_Extended_linguistic_hierarchies); //$NON-NLS-1$
+		algorithm = algorithm.replace("<5>", Messages.AlgorithmDialog_Fusion_approach_for_managing_heterogeneous_information); //$NON-NLS-1$
+		algorithm = algorithm.replace("<6>", Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets); //$NON-NLS-1$
+		algorithm = algorithm.replace("<7>", Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information); //$NON-NLS-1$
+		algorithm = algorithm.replace("<8>", Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS); //$NON-NLS-1$
 
 		Color BLACK = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
 
@@ -267,14 +267,14 @@ public class AlgorithmDialog extends Dialog {
 		algorithm = algorithm.replace("<edLinList>", edLinListValue); //$NON-NLS-1$
 		algorithm = algorithm.replace("<edLin>", edLinValue); //$NON-NLS-1$
 
-		algorithm = algorithm.replace("<1>", "2-Tuple linguistic computational model"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<2>", "Fusion approach for managing multi-granular linguistic information"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<3>", "Linguistic Hierarchies"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<4>", "Extended Linguistic Hierarchies"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<5>", "Fusion approach for managing heterogeneous information"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<6>", "Methodology to deal with unbalanced linguistic term sets"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<7>", "Hesitant Fuzzy 2-tuple Linguistic Information"); //$NON-NLS-1$ //$NON-NLS-2$
-		algorithm = algorithm.replace("<8>", "Tecnique for Order of Preference by Similarity to Ideal Solution (TOPSIS)"); //$NON-NLS-1$ //$NON-NLS-2$
+		algorithm = algorithm.replace("<1>", Messages.AlgorithmDialog_2_tuple_linguistic_computational_model); //$NON-NLS-1$
+		algorithm = algorithm.replace("<2>", Messages.AlgorithmDialog_Fusion_approach_for_managing_multi_granular_linguistic_information); //$NON-NLS-1$
+		algorithm = algorithm.replace("<3>", Messages.AlgorithmDialog_Linguistic_hierarchies); //$NON-NLS-1$
+		algorithm = algorithm.replace("<4>", Messages.AlgorithmDialog_Extended_linguistic_hierarchies); //$NON-NLS-1$
+		algorithm = algorithm.replace("<5>", Messages.AlgorithmDialog_Fusion_approach_for_managing_heterogeneous_information); //$NON-NLS-1$
+		algorithm = algorithm.replace("<6>", Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets); //$NON-NLS-1$
+		algorithm = algorithm.replace("<7>", Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information); //$NON-NLS-1$
+		algorithm = algorithm.replace("<8>", Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS); //$NON-NLS-1$
 
 		Color DARK_BLUE = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE);
 		Color GREEN = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN);
@@ -290,27 +290,27 @@ public class AlgorithmDialog extends Dialog {
 		_recommendedMethod = _methodsManager.getRecommendedMethod();
 
 		int start = 8;
-		if("2-Tuple linguistic computational model".equals(_recommendedMethod)) { //$NON-NLS-1$
+		if(Messages.AlgorithmDialog_2_tuple_linguistic_computational_model.equals(_recommendedMethod)) {
 			textColors[start + 1] = textColors[start + 2] = GREEN;
-		} else if("Fusion approach for managing multi-granular linguistic information".equals(_recommendedMethod)) { //$NON-NLS-1$
+		} else if(Messages.AlgorithmDialog_Fusion_approach_for_managing_multi_granular_linguistic_information.equals(_recommendedMethod)) {
 			textColors[start + 1] = textColors[start + 3] = textColors[start + 5] = RED;
 			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 11] = textColors[start + 12] = GREEN;
-		} else if("Linguistic Hierarchies".equals(_recommendedMethod)) { //$NON-NLS-1$
+		} else if(Messages.AlgorithmDialog_Linguistic_hierarchies.equals(_recommendedMethod)) {
 			textColors[start + 1] = textColors[start + 3] = textColors[start + 5] = textColors[start + 11] = textColors[start + 13] = RED;
 			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 15] = textColors[start + 16] = textColors[start + 17] = textColors[start + 18] = textColors[start + 19] = GREEN;
-		} else if("Extended Linguistic Hierarchies".equals(_recommendedMethod)) { //$NON-NLS-1$
+		} else if(Messages.AlgorithmDialog_Extended_linguistic_hierarchies.equals(_recommendedMethod)) {
 			textColors[start + 1] = textColors[start + 3] = textColors[start + 5] = textColors[start + 11] = RED;
 			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 13] = textColors[start + 14] = GREEN;
-		} else if("Fusion approach for managing heterogeneous information".equals(_recommendedMethod)) { //$NON-NLS-1$
+		} else if(Messages.AlgorithmDialog_Fusion_approach_for_managing_heterogeneous_information.equals(_recommendedMethod)) {
 			textColors[start + 1] = RED;
 			textColors[start + 3] = textColors[start + 4] = GREEN;
-		} else if ("Methodology to deal with unbalanced linguistic term sets".equals(_recommendedMethod)) { //$NON-NLS-1$
+		} else if (Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets.equals(_recommendedMethod)) {
 			textColors[start + 1] = textColors[start + 3] = RED;
 			textColors[start + 5] = textColors[start + 6] = GREEN;
-		} else if ("Hesitant Fuzzy 2-tuple Linguistic Information".equals(_recommendedMethod)) { //$NON-NLS-1$
+		} else if (Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information.equals(_recommendedMethod)) {
 			textColors[start + 1] = textColors[start + 3] = RED;
 			textColors[start + 5] = textColors[start + 6] = GREEN;
-		}  else if ("Tecnique for Order of Preference by Similarity to Ideal Solution (TOPSIS)".equals(_recommendedMethod)) { //$NON-NLS-1$
+		}  else if (Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS.equals(_recommendedMethod)) {
 			textColors[start + 1] = textColors[start + 3] = textColors[start + 5] = RED;
 			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 11] = textColors[start + 12] = GREEN;
 		}

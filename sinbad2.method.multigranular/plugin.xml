@@ -5,10 +5,10 @@
          point="flintstones.method">
       <method
             category="Multi-granular framework"
-            description="F. Herrera, E. Herrera-Viedma, L. Martínez, A Fusion Approach for Managing Multi-Granularity Linguistic Term Sets in Decision Making. Fuzzy Sets and Systems, vol. 114, issue 1, pp. 43-58, 2000."
+            description="%Method-Description"
             id="flintstones.method.linguistic.multigranular.fusion"
             implementation="sinbad2.method.multigranular.Fusion"
-            name="Fusion approach for managing multi-granular linguistic information">
+            name="%Method-Name">
          <phasemethod
                phase="flintstones.phasemethod.multigranular.fusion.unification">
          </phasemethod>

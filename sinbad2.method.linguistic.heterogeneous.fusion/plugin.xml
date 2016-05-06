@@ -5,10 +5,10 @@
          point="flintstones.method">
       <method
             category="Heterogeneous framework"
-            description="F. Herrera, L. Martínez, P.J. Sánchez, Managing non-homogeneous information in group decision making. European Journal of Operational Research, vol. 166, issue 1, pp. 115-132, 2005."
+            description="%Method-Description"
             id="flintstones.method.linguistic.heterogeneous.fusion"
             implementation="sinbad2.method.linguistic.heterogeneous.fusion.Fusion"
-            name="Fusion approach for managing heterogeneous information">
+            name="%Method-Name">
          <phasemethod
                phase="flintstones.phasemethod.heterogeneous.fusion.unification">
          </phasemethod>

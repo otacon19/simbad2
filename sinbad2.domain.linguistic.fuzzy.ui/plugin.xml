@@ -12,13 +12,13 @@
    <extension
          point="flintstones.domain.ui.new.dialog">
       <dialog
-            description="Create auto-generated domain"
+            description="%Description-NewAuto"
             domain="flintstones.domain.linguistic"
             id="sinbad2.domain.linguistic.newauto"
             implementation="sinbad2.domain.linguistic.fuzzy.ui.dialog.AutoGenerateLinguisticDomainDialog">
       </dialog>
       <dialog
-            description="Manually create domain"
+            description="%Description-NewManual"
             domain="flintstones.domain.linguistic"
             id="sinbad2.domain.linguistic.newmanual"
             implementation="sinbad2.domain.linguistic.fuzzy.ui.dialog.ManualLinguisticDomainDialog">
@@ -27,7 +27,7 @@
    <extension
          point="flintstones.domain.ui.modify.dialog">
       <dialog
-            description="Manually modify dialog"
+            description="%Description-Modify"
             domain="flintstones.domain.linguistic"
             id="sinbad2.domain.linguistic.modify"
             implementation="sinbad2.domain.linguistic.fuzzy.ui.dialog.ModifyLinguisticDomainDialog">

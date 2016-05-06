@@ -5,10 +5,10 @@
          point="flintstones.method">
       <method
             category="Multi-criteria decision analysis"
-            description="TOPSIS method"
+            description="%Method-Description"
             id="flintstones.method.decision.topsis"
             implementation="sinbad2.method.decision.topsis.Topsis"
-            name="Technique for Order of Preference by Similarity to Ideal Solution (TOPSIS)">
+            name="%Method-Name">
          <phasemethod
                phase="flintstones.phasemethod.topsis.unification">
          </phasemethod>
