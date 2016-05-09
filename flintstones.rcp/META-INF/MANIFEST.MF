@@ -5,6 +5,6 @@ Bundle-SymbolicName: sinbad2.rcp;singleton:=true
 Bundle-Version: 1
 Bundle-Activator: sinbad2.rcp.Activator
 Require-Bundle: sinbad2.resolutionscheme.dm.ui;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
- JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Bundle-Vendor: %Bundle-Vendor

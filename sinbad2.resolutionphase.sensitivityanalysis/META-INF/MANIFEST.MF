@@ -4,9 +4,6 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.resolutionphase.sensitivityanalysis;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: sinbad2.core;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.resolutionphase;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.element;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.phasemethod.aggregation
+Require-Bundle: sinbad2.phasemethod.aggregation
 Export-Package: sinbad2.resolutionphase.sensitivityanalysis
 Bundle-Vendor: %Bundle-Vendor

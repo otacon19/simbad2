@@ -4,7 +4,5 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.resolutionscheme.dm.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: sinbad2.resolutionscheme.ui;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.resolutionscheme.dm;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.resolutionphase.framework.ui;bundle-version="1.0.0";visibility:=reexport
 Bundle-Vendor: %Bundle-Vendor
+Require-Bundle: sinbad2.resolutionscheme.ui;bundle-version="1.0.0";visibility:=reexport

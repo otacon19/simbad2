@@ -4,8 +4,6 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.valuation.unifiedValuation
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: sinbad2.valuation,
- sinbad2.domain.linguistic.fuzzyset,
- sinbad2.valuation.twoTuple
+Require-Bundle: sinbad2.valuation.twoTuple
 Export-Package: sinbad2.valuation.unifiedValuation
 Bundle-Vendor: %Bundle-Vendor

@@ -4,7 +4,6 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.domain.linguistic.unbalanced;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: sinbad2.domain,
- sinbad2.domain.linguistic.fuzzyset;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: sinbad2.domain.linguistic.fuzzyset;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.domain.linguistic.unbalanced
 Bundle-Vendor: %Bundle-Vendor

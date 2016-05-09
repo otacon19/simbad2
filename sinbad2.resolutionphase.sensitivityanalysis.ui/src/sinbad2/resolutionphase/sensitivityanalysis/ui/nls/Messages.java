@@ -17,7 +17,6 @@ public class Messages extends NLS {
 	public static String MinimunValueBetweenAlternativesBarChart_RELATIVE;
 	public static String RankingView_Alternative;
 	public static String RankingView_Analytic_Hierarchy_process;
-	public static String RankingView_MCC;
 	public static String RankingView_Value;
 	public static String RankingView_Weighted_product;
 	public static String RankingView_Weighted_sum;

@@ -4,8 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.resolutionphase.frameworkstructuring;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.resolutionphase.framework;bundle-version="1.0.0";visibility:=reexport
+Require-Bundle: sinbad2.resolutionphase.framework;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.resolutionphase.frameworkstructuring,
  sinbad2.resolutionphase.frameworkstructuring.domainassignments,
  sinbad2.resolutionphase.frameworkstructuring.domainassignments.listener,

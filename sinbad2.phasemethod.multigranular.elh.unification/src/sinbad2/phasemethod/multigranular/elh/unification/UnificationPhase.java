@@ -243,13 +243,12 @@ public class UnificationPhase implements IPhaseMethod {
 			if(cardinality != oldValue) {
 				i++;
 			}
-			
+
 			_elhDomains.add(new Object[] { "l(" + i + "," + cardinality + ")", domainName, domain }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			domainsNames.add(domainName);
 		}
 		
-		_unifiedDomain = (FuzzySet) _elhDomains.get(_elhDomains.size() - 1)[2];
-		
+		_unifiedDomain = (FuzzySet) ((FuzzySet) _elhDomains.get(_elhDomains.size() - 1)[2]).clone();
 		return _elhDomains;
 	}
 
