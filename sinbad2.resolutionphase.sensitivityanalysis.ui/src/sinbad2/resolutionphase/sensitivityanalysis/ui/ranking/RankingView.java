@@ -1,6 +1,5 @@
 package sinbad2.resolutionphase.sensitivityanalysis.ui.ranking;
 
-
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -33,12 +32,13 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking"; //$NON-NLS-1$
 	public static final String CONTEXT_ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking.ranking_view"; //$NON-NLS-1$
 	
-	private DecisionMatrixView _decisionMakingView;
-	private SensitivityAnalysis _sensitivityAnalysis;
-	
 	private TableViewer _rankingViewer;
 	private Combo _sensitivityModels;
-
+	
+	private DecisionMatrixView _decisionMatrixView;
+	
+	private SensitivityAnalysis _sensitivityAnalysis;
+	
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 
 	@Override
@@ -56,7 +56,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		rankingTable.setHeaderVisible(true);
 		rankingTable.setLinesVisible(true);
 
-		_decisionMakingView = (DecisionMatrixView) getView(DecisionMatrixView.ID);
+		_decisionMatrixView = (DecisionMatrixView) getView(DecisionMatrixView.ID);
 		
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 		
@@ -92,29 +92,32 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		_sensitivityModels.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String typeProblem = _decisionMakingView.getTable().getTypeProblem();
-				if(_sensitivityModels.getSelectionIndex() == 0) {
-					if(typeProblem.equals("MCC")) { //$NON-NLS-1$
+				String typeProblem = _decisionMatrixView.getTable().getTypeProblem();
+				
+				if(typeProblem.equals("MCC")) {
+					if(_sensitivityModels.getSelectionIndex() == 0) {
 						_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
-					} else {
-						_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
-					}
-					_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
-				} else if(_sensitivityModels.getSelectionIndex() == 1){
-					if(typeProblem.equals("MCC")) { //$NON-NLS-1$
+						_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
+					} else if(_sensitivityModels.getSelectionIndex() == 1) {
 						_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
+						_rankingViewer.getTable().getColumn(2).setText("Ratios"); //$NON-NLS-1$
 					} else {
-						_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
-					}
-					_rankingViewer.getTable().getColumn(2).setText("Ratios"); //$NON-NLS-1$
-				} else if(_sensitivityModels.getSelectionIndex() == 2) {
-					if(typeProblem.equals("MCC")) { //$NON-NLS-1$
 						_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
+						_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
+					}
+				} else {
+					if(_sensitivityModels.getSelectionIndex() == 0) {
+						_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
+						_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
+					} else if(_sensitivityModels.getSelectionIndex() == 1) {
+						_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
+						_rankingViewer.getTable().getColumn(2).setText("Ratios"); //$NON-NLS-1$
 					} else {
 						_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalMeasure();
+						_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
 					}
-					_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
 				}
+				
 				_rankingViewer.getTable().getColumn(2).pack();
 			}
 		});
@@ -126,6 +129,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	@Override
 	public void dispose() {
 		RankingViewManager.getInstance().unregisterDisplayRankingChangeListener(this);
+		
 		super.dispose();
 	}
 
@@ -174,7 +178,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	public void displayRankingChange(Object ranking) {
 		_rankingViewer.setInput(ranking);
 	}
-	
+
 	private IViewPart getView(String id) {
 		IViewPart view = null;
 		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();

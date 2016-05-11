@@ -55,9 +55,9 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	private SturdinessMeasureStackedChart _stackedChart;
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
-	private DecisionMatrixView _decisionMakingView;
-	private SensitivityAnalysisView _sensitivityAnalysisView;
+	private DecisionMatrixView _decisionMatrixView;
 	private RankingView _rankingView;
+	private SensitivityAnalysisView _sensitivityAnalysisView;
 	
 	private ControlAdapter _controlListener;
 	
@@ -85,13 +85,13 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 		_sensitivityAnalysis.registerSensitivityAnalysisChangeListener(this);
 		
-		_rankingView = (RankingView) getView(RankingView.ID);
 		_sensitivityAnalysisView = (SensitivityAnalysisView) getView(SensitivityAnalysisView.ID);
-		_decisionMakingView = (DecisionMatrixView) getView(DecisionMatrixView.ID);
+		_rankingView = (RankingView) getView(RankingView.ID);
+		_decisionMatrixView = (DecisionMatrixView) getView(DecisionMatrixView.ID);
 
 		_saTable = _sensitivityAnalysisView.getSATable();
 		_saTable.addSelectionChangedListener(this);
-		_saTable.getProvider().registerNotifyChangeSATableListener(this);
+		_sensitivityAnalysisView.registerNotifyChangeSATableListener(this);
 		
 		createChartComposite();
 		
@@ -159,7 +159,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				_changeChartButton.setVisible(true);
 			} else {
 				_stackedChart = new SturdinessMeasureStackedChart();
-				if(_decisionMakingView.getTable().getTypeProblem().equals("MCM")) { //$NON-NLS-1$
+				if(_decisionMatrixView.getTable().getTypeProblem().equals("MCM")) { //$NON-NLS-1$
 					_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCMByCriterion());
 				} else {
 					_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCCByCriterion());
@@ -216,7 +216,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				
 				if(_changeChartButton.getText().equals(Messages.AnalysisView_Sturdiness)) {
 					_stackedChart = new SturdinessMeasureStackedChart();
-					if(_decisionMakingView.getTable().getTypeProblem().equals("MCM")) { //$NON-NLS-1$
+					if(_decisionMatrixView.getTable().getTypeProblem().equals("MCM")) { //$NON-NLS-1$
 						_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCMByCriterion());
 					} else {
 						_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCCByCriterion());
@@ -283,11 +283,11 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				_barChart.setCurrentAlternativesPair(indexes);
 				
 				if(_typeBarChart.equals(Messages.AnalysisView_RELATIVE)) {
-					double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index, _decisionMakingView.getTable().getTypeProblem());
+					double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index, _decisionMatrixView.getTable().getTypeProblem());
 					_barChart.setValues(percents);
 					_barChart.setTypeData(_typeBarChart);
 				} else {
-					double[] absolute = _sensitivityAnalysis.getMinimumAbsolutePairAlternatives(a1Index, a2Index, _decisionMakingView.getTable().getTypeProblem());
+					double[] absolute = _sensitivityAnalysis.getMinimumAbsolutePairAlternatives(a1Index, a2Index, _decisionMatrixView.getTable().getTypeProblem());
 					_barChart.setValues(absolute);
 					_barChart.setTypeData(_typeBarChart);
 				}
@@ -346,8 +346,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	
 	private IViewPart getView(String id) {
 		IViewPart view = null;
-		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.getViewReferences();
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
 		for (int i = 0; i < viewReferences.length; i++) {
 			if (id.equals(viewReferences[i].getId())) {
 				view = viewReferences[i].getView(false);

@@ -1,13 +1,11 @@
 package sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.provider;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
 
@@ -24,7 +22,7 @@ import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DMTable;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMatrixView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SensitivityAnalysisView;
 
 public class SATableContentProvider extends KTableNoScrollModel {
 	
@@ -45,10 +43,10 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	private final FixedCellRenderer _fixedRendererRed = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	private final FixedCellRenderer _fixedRendererGreen = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	
-	private DecisionMatrixView _decisionMakingView;
-	private SensitivityAnalysis _sensitivityAnalysis;
+	private DecisionMatrixView _decisionMatrixView;
+	private SensitivityAnalysisView _sensitivityAnalysisView;
 	
-	private static List<IChangeSATableValues> _listeners = new LinkedList<IChangeSATableValues>();
+	private SensitivityAnalysis _sensitivityAnalysis;
 	
 	class MyOwnKTableCellEditorCombo extends KTableCellEditorCombo {
 		@Override
@@ -64,19 +62,16 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		
 		_table = table;
 		
-		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
-		for(int i = 0; i < viewReferences.length; i++) {
-			if(DecisionMatrixView.ID.equals(viewReferences[i].getId())) {
-				_decisionMakingView = (DecisionMatrixView) viewReferences[i].getView(false);
-			}
-		}
+		_decisionMatrixView = (DecisionMatrixView) getView(DecisionMatrixView.ID);
+		_sensitivityAnalysisView = (SensitivityAnalysisView) getView(SensitivityAnalysisView.ID);
+		
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 
 		_alternatives = alternatives;
 		_criteria = criteria;
 		_values = values;
 		
-		if(_decisionMakingView.getTable().getTypeProblem().endsWith("MCC")) { //$NON-NLS-1$
+		if(_decisionMatrixView.getTable().getTypeProblem().endsWith("MCC")) { //$NON-NLS-1$
 			computePairs();
 		} else {
 			computeAllPairs();
@@ -137,7 +132,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 				_typeDataSelected = type;	
 			}
 			
-			DMTable dmTable = _decisionMakingView.getTable();
+			DMTable dmTable = _decisionMatrixView.getTable();
 			if(_typeDataSelected.equals(ABSOLUTE)) {
 				if(dmTable.getTypeProblem().equals("MCC")) { //$NON-NLS-1$
 					if(_values != _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights()) {
@@ -149,7 +144,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 						_values = _sensitivityAnalysis.getAbsoluteThresholdValues();
 						refreshTable();
 					}
-				}
+				}	
 			} else if(_typeDataSelected.equals(RELATIVE)){
 				if(dmTable.getTypeProblem().equals("MCC")) { //$NON-NLS-1$
 					if(_values != _sensitivityAnalysis.getMinimumPercentChangeInCriteriaWeights()) {
@@ -160,13 +155,15 @@ public class SATableContentProvider extends KTableNoScrollModel {
 					if(_values != _sensitivityAnalysis.getRelativeThresholdValues()) {
 						_values = _sensitivityAnalysis.getRelativeThresholdValues();
 						refreshTable();
+						
 					}
 				}
 			}
 			
-			notifyChangeSATableListener(_typeDataSelected);
+			_sensitivityAnalysisView.notifyChangeSATableListener(_typeDataSelected);
 			
 			return _typeDataSelected;
+			
 		} else {
 			Object erg;
 
@@ -208,6 +205,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	}
 
 	public KTableCellEditor doGetCellEditor(int col, int row) {
+		
 		if(col == 0 && row == 0) {
 			_kTableCombo = new  MyOwnKTableCellEditorCombo();
 			String[] valuesString = new String[2];
@@ -345,17 +343,14 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		}
 	}
 	
-	public void registerNotifyChangeSATableListener(IChangeSATableValues listener) {
-		_listeners.add(listener);
-	}
-
-	public void unregisterNotifyChangeSATableListener(IChangeSATableValues listener) {
-		_listeners.remove(listener);
-	}
-
-	public void notifyChangeSATableListener(String type) {
-		for (IChangeSATableValues listener : _listeners) {
-			listener.notifyChangeSATableValues(type);
+	private IViewPart getView(String id) {
+		IViewPart view = null;
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+		for (int i = 0; i < viewReferences.length; i++) {
+			if (id.equals(viewReferences[i].getId())) {
+				view = viewReferences[i].getView(false);
+			}
 		}
+		return view;
 	}
 }

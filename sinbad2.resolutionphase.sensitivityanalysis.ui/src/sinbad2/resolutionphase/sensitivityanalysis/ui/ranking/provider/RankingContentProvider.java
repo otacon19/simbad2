@@ -13,6 +13,7 @@ import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 public class RankingContentProvider implements IStructuredContentProvider {	
 	
 	private RankingView _rankingView;
+	
 	private SensitivityAnalysis _sensitivityAnalysis;
 
 	class MyElement implements Comparable<MyElement> {
@@ -40,11 +41,12 @@ public class RankingContentProvider implements IStructuredContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		int model = _rankingView.getModel();
-		
 		Object[] result = null;
 		List<MyElement> elements = new LinkedList<MyElement>();
 		MyElement element = null;
+		
+		int model = _rankingView.getModel();
+		
 		if(model == 0 || model == 2) {
 			for (int i = 0; i < _sensitivityAnalysis.getNumAlternatives(); i++) {
 				element = new MyElement();
@@ -53,7 +55,7 @@ public class RankingContentProvider implements IStructuredContentProvider {
 				element.value = Math.round(_sensitivityAnalysis.getAlternativesFinalPreferences()[i] * 10000d) / 10000d;
 				elements.add(element);
 			}
-		} else if(model == 1){
+		} else if(model == 1) {
 			for (int i = 0; i < _sensitivityAnalysis.getNumAlternatives(); i++) {
 				String ratios = ""; //$NON-NLS-1$
 				element = new MyElement();
@@ -78,11 +80,7 @@ public class RankingContentProvider implements IStructuredContentProvider {
 		result = new Object[elements.size()];
 		int pos = 0;
 		for (MyElement e : elements) {
-			if(model == 0) {
-				result[pos++] = new Object[] { e.ranking, e.alternative, ((int) ((Double) e.value * 10000d)) / 10000d };
-			} else {
-				result[pos++] = new Object[] { e.ranking, e.alternative, e.value};
-			}
+			result[pos++] = new Object[] { e.ranking, e.alternative, e.value};
 		}
 
 		return result;

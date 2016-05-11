@@ -214,12 +214,14 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				alternatives.addAll(_elementsSet.getAlternatives());
 				Set<ProblemElement> criteria = new HashSet<ProblemElement>();
 				criteria.addAll(_elementsSet.getAllCriteria());
+				
 				_aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 				
 				_w = new double[_numberOfCriteria];
 				for (int i = 0; i < weights.size(); ++i) {
 					_w[i] = weights.get(i);
 				}
+				
 			}  else {
 				if(_aggregationPhase.getCriteriaOperatorWeights().size() == 1) {
 					List<Double> aggregationWeights = ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(null)).get(null);
@@ -227,6 +229,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 					for (int i = 0; i < aggregationWeights.size(); ++i) {
 						_w[i] = aggregationWeights.get(i);
 					}
+					
 				} else {
 					List<Double> aggregationWeights = getSubcriteriaWeights();
 					_w = new double[_numberOfCriteria];

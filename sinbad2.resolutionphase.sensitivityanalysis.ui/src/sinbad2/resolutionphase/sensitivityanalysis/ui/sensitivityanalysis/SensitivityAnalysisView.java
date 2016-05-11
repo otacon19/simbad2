@@ -1,5 +1,8 @@
 package sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -25,6 +28,8 @@ public class SensitivityAnalysisView extends ViewPart implements ISensitivityAna
 	
 	private SensitivityAnalysis _sensitivityAnalysis = null;
 
+	private List<IChangeSATableValues> _listeners = new LinkedList<IChangeSATableValues>();
+	
 	private static final IContextService _contextService = (IContextService) PlatformUI.getWorkbench().getService(IContextService.class);
 
 	@Override
@@ -94,6 +99,20 @@ public class SensitivityAnalysisView extends ViewPart implements ISensitivityAna
 		});
 	}
 
+	public void registerNotifyChangeSATableListener(IChangeSATableValues listener) {
+		_listeners.add(listener);
+	}
+
+	public void unregisterNotifyChangeSATableListener(IChangeSATableValues listener) {
+		_listeners.remove(listener);
+	}
+
+	public void notifyChangeSATableListener(String type) {
+		for (IChangeSATableValues listener : _listeners) {
+			listener.notifyChangeSATableValues(type);
+		}
+	}
+	
 	@Override
 	public void notifySensitivityAnalysisChange() {
 		initSATable();

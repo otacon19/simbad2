@@ -91,16 +91,17 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				double[] weights = _sensitivityAnalysis.getWeights();
+				
 				List<Double> weightsList = new LinkedList<Double>();
 				for (int i = 0; i < weights.length; ++i) {
 					weightsList.add(weights[i]);
 				}
+				
 				Map<String, List<Double>> criteriaWeights = new HashMap<String, List<Double>>();
 				criteriaWeights.put(null, weightsList);
 
 				WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), _elementsSet.getAllSubcriteriaElement(), criteriaWeights, 1, "criterion", "all criteria"); //$NON-NLS-1$ //$NON-NLS-2$
 
-				weights = null;
 				List<Double> ws;
 				if (dialog.open() == WeightsDialog.SAVE) {
 					Map<String, List<Double>> mapWeights = dialog.getWeights();
@@ -176,25 +177,23 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 
 	@Override
 	public void notifySensitivityAnalysisChange() {
+		double[] preferences = new double[0];
+		
 		refreshDMTable();
 
 		if (_rankingView == null) {
 			_rankingView = (RankingView) getView(RankingView.ID);
 		}
-
-		Object[] aggregatedValuationsData = _sensitivityAnalysis.getAggregatedValuationsPosAndAlpha();
-		RankingViewManager.getInstance().setContent(_sensitivityAnalysis.getRanking());
 	
 		if (_rankingView.getModel() != 1) {
-			DomainViewManager.getInstance().setContent(_sensitivityAnalysis.getUnifiedDomain(),
-					new Object[] { _sensitivityAnalysis.getAlternativesIds(),
-							_sensitivityAnalysis.getAlternativesFinalPreferences(), aggregatedValuationsData[0],
-							aggregatedValuationsData[1] });
-		} else {
-			DomainViewManager.getInstance().setContent(_sensitivityAnalysis.getUnifiedDomain(),
-					new Object[] { _sensitivityAnalysis.getAlternativesIds(), new double[0],
-							aggregatedValuationsData[0], aggregatedValuationsData[1] });
-		}
+			preferences = _sensitivityAnalysis.getAlternativesFinalPreferences();
+		} 
+		
+		Object[] aggregatedValuationsData = _sensitivityAnalysis.getAggregatedValuationsPosAndAlpha();
+		
+		RankingViewManager.getInstance().setContent(_sensitivityAnalysis.getRanking());
+		DomainViewManager.getInstance().setContent(_sensitivityAnalysis.getUnifiedDomain(), new Object[] { _sensitivityAnalysis.getAlternativesIds(), preferences, 
+				aggregatedValuationsData[0], aggregatedValuationsData[1] });
 	}
 
 	private IViewPart getView(String id) {
