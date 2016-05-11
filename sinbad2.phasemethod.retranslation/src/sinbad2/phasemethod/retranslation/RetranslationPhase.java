@@ -21,14 +21,16 @@ public class RetranslationPhase implements IPhaseMethod {
 	public static final String ID = "flintstones.phasemethod.retranslation"; //$NON-NLS-1$
 
 	private List<Object[]> _lhDomains;
+	private boolean _isActivated;
 	
 	private ValuationSet _valuationSet;
-	
+
 	public RetranslationPhase() {
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valuationSet = valuationSetManager.getActiveValuationSet();
 		
 		_lhDomains = new LinkedList<Object[]>();
+		_isActivated = false;
 	}
 	
 	public List<Object[]> getLHDomains() {
@@ -37,6 +39,14 @@ public class RetranslationPhase implements IPhaseMethod {
 	
 	public void setLHDomains(List<Object[]> lhDomains) {
 		_lhDomains = lhDomains;
+	}
+	
+	public boolean isActivated() {
+		return _isActivated;
+	}
+	
+	public void isActivated(boolean state) {
+		_isActivated = state;
 	}
 	
 	public Map<ProblemElement, Valuation> transform(Map<ProblemElement, Valuation> problemResult, FuzzySet resultsDomain) {
@@ -70,11 +80,13 @@ public class RetranslationPhase implements IPhaseMethod {
 		clear();
 		
 		_lhDomains = retranslationPhase.getLHDomains();
+		_isActivated = retranslationPhase.isActivated();
 	}
 	
 	@Override
 	public void clear() {
 		_lhDomains.clear();
+		_isActivated = false;
 	}
 
 	@Override
@@ -95,7 +107,9 @@ public class RetranslationPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void activate() {}
+	public void activate() {
+		_isActivated = true;
+	}	
 
 	@Override
 	public boolean validate() {

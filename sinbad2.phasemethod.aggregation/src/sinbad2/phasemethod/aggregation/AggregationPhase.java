@@ -12,6 +12,7 @@ import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
@@ -35,13 +36,11 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 public class AggregationPhase implements IPhaseMethod {
 	
 	public static final String ID = "flintstones.phasemethod.aggregation"; //$NON-NLS-1$
-	
 	public static final String CRITERIA = "CRITERIA"; //$NON-NLS-1$
 	public static final String EXPERTS = "EXPERTS"; //$NON-NLS-1$
 
 	private Map<ProblemElement, AggregationOperator> _expertsOperators;
 	private Map<ProblemElement, Object> _expertsOperatorsWeights;
-	
 	private Map<ProblemElement, AggregationOperator> _criteriaOperators;
 	private Map<ProblemElement, Object> _criteriaOperatorsWeights;
 	
@@ -51,9 +50,7 @@ public class AggregationPhase implements IPhaseMethod {
 	private double[][] _decisionMatrix;
 	private int _numCriterion;
 	private int _numAlternative;
-
 	private String _aggregateBy;
-	
 	private Domain _unifiedDomain;
 	
 	private ProblemElementsSet _elementsSet;
@@ -74,9 +71,6 @@ public class AggregationPhase implements IPhaseMethod {
 
 		_unifiedValuations = new HashMap<ValuationKey, Valuation>();
 				
-		_numCriterion = 0;
-		_numAlternative = 0;
-		
 		_listeners = new LinkedList<AggregationProcessListener>();
 
 		_aggregateBy = "CRITERIA"; //$NON-NLS-1$
@@ -176,8 +170,7 @@ public class AggregationPhase implements IPhaseMethod {
 
 		if (elementType.equals(CRITERIA) || elementType.equals(EXPERTS)) {
 			_aggregateBy = elementType;
-			notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(
-					EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
+			notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
 		} else {
 			throw new IllegalArgumentException(Messages.AggregationPhase_Illegal_element_type);
 		}
@@ -262,6 +255,10 @@ public class AggregationPhase implements IPhaseMethod {
 				_numAlternative++;
 				_numCriterion = 0;
 			}
+		}
+		
+		if(_unifiedDomain instanceof Unbalanced) {
+			return UnbalancedUtils.transformUnbalanced(_aggregatedValuations, (Unbalanced) _unifiedDomain);
 		}
 		
 		return _aggregatedValuations;
@@ -497,14 +494,14 @@ public class AggregationPhase implements IPhaseMethod {
 		} 
 	}
 	
-	public Object[]  getAggregatedValuationsPosAndAlpha() {
+	public Object[] getAggregatedValuationsPosAndAlpha() {
 		int size = _aggregatedValuations.size();
 		String[] alternatives = new String[size];
 		int[] pos = new int[size];
 		double[] alpha = new double[size];
 		Valuation valuation = null, aux;
+		
 		int i = 0;
-
 		for (ProblemElement alternative : _aggregatedValuations.keySet()) {
 			alternatives[i] = alternative.getId();
 			aux = _aggregatedValuations.get(alternative);
@@ -560,8 +557,7 @@ public class AggregationPhase implements IPhaseMethod {
 
 	public void addAggregationProcessListener(AggregationProcessListener listener) {
 		_listeners.add(listener);
-		listener.notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(
-				EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
+		listener.notifyAggregationProcessChange(new AggregationProcessStateChangeEvent(EAggregationProcessStateChange.AGGREGATION_PROCESS_CHANGE, null, null));
 	}
 
 	public void removeAggregationProcessListener(AggregationProcessListener listener) {

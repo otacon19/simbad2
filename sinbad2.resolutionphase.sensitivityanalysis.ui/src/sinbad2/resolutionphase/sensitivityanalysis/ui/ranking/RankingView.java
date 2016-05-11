@@ -24,7 +24,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMatrixView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.provider.RankingContentProvider;
 
@@ -33,7 +33,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking"; //$NON-NLS-1$
 	public static final String CONTEXT_ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.ranking.ranking_view"; //$NON-NLS-1$
 	
-	private DecisionMakingView _decisionMakingView;
+	private DecisionMatrixView _decisionMakingView;
 	private SensitivityAnalysis _sensitivityAnalysis;
 	
 	private TableViewer _rankingViewer;
@@ -56,7 +56,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		rankingTable.setHeaderVisible(true);
 		rankingTable.setLinesVisible(true);
 
-		_decisionMakingView = (DecisionMakingView) getView(DecisionMakingView.ID);
+		_decisionMakingView = (DecisionMatrixView) getView(DecisionMatrixView.ID);
 		
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 		

@@ -31,12 +31,16 @@ public class SelectionPhase implements IPhaseMethod {
 	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
 	
 	private List<Object[]> _decisionMatrix;
+	
 	private List<Object[]> _idealSolution;
 	private List<Object[]> _noIdealSolution;
+	
 	private List<Object[]> _idealDistanceByCriteria;
 	private List<Object[]> _noIdealDistanceByCriteria;
+	
 	private List<Object[]> _idealDistanceByAlternatives;
 	private List<Object[]> _noIdealDistanceByAlternatives;
+	
 	private List<Object[]> _closenessCoefficient;
 	
 	private ProblemElementsSet _elementsSet;

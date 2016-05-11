@@ -282,7 +282,7 @@ public static final String ID = "flintstones.phasemethod.linguistic.twotuple.ui.
 	}
 
 	@Override
-	public void notifyRatingView(RatingView rating) {
+	public void setRatingView(RatingView rating) {
 		_ratingView = rating;
 	}
 

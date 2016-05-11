@@ -269,7 +269,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	}
 
 	@Override
-	public void notifyRatingView(RatingView rating) {
+	public void setRatingView(RatingView rating) {
 		_ratingView = rating;
 	}
 }

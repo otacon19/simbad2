@@ -6,5 +6,5 @@ public interface IStepStateListener {
 
 	public void notifyStepStateChange();
 	
-	public void notifyRatingView(RatingView rating);
+	public void setRatingView(RatingView rating);
 }

@@ -22,7 +22,7 @@ import de.kupzog.ktable.renderers.TextCellRenderer;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DMTable;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMatrixView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
 
@@ -45,7 +45,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	private final FixedCellRenderer _fixedRendererRed = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	private final FixedCellRenderer _fixedRendererGreen = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	
-	private DecisionMakingView _decisionMakingView;
+	private DecisionMatrixView _decisionMakingView;
 	private SensitivityAnalysis _sensitivityAnalysis;
 	
 	private static List<IChangeSATableValues> _listeners = new LinkedList<IChangeSATableValues>();
@@ -66,8 +66,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		
 		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
 		for(int i = 0; i < viewReferences.length; i++) {
-			if(DecisionMakingView.ID.equals(viewReferences[i].getId())) {
-				_decisionMakingView = (DecisionMakingView) viewReferences[i].getView(false);
+			if(DecisionMatrixView.ID.equals(viewReferences[i].getId())) {
+				_decisionMakingView = (DecisionMatrixView) viewReferences[i].getView(false);
 			}
 		}
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);

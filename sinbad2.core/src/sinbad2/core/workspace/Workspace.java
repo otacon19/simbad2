@@ -186,7 +186,7 @@ public class Workspace implements IFileChangeListener {
 	}
 	
 	public void updatePhases() {
-		WorkspaceChangeEvent event = new WorkspaceChangeEvent(EWorkspaceChange.ANOTHER_CHANGE, _currentHashCode, _currentHashCode);
+		WorkspaceChangeEvent event = new WorkspaceChangeEvent(EWorkspaceChange.AGGREGATION_PHASE_CHANGED, _currentHashCode, _currentHashCode);
 		notifyWorkspaceChange(event);
 	}
 

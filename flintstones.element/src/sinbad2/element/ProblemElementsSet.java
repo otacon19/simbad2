@@ -52,26 +52,6 @@ public class ProblemElementsSet implements Cloneable {
 		return _experts;
 	}
 	
-	public List<Expert> getExpertChildren(ProblemElement parent) {
-		List<Expert> result = new LinkedList<Expert>();
-		
-		Expert auxParent;
-		for (Expert expert : _experts) {
-			auxParent = ((Expert) expert).getParent();
-			if (auxParent == null) {
-				if (parent == null) {
-					result.add(expert);
-				}
-			} else if (((Expert) expert).getParent().equals(parent)) {
-				result.add(expert);
-			}
-		}
-		
-		Collections.sort(result);
-		
-		return result;
-	}
-	
 	public List<Expert> getAllExpertChildren(ProblemElement parent) {
 		List<Expert> result = new LinkedList<Expert>();
 		
@@ -170,26 +150,6 @@ public class ProblemElementsSet implements Cloneable {
 	
 	public List<Criterion> getCriteria() {
 		return _criteria;
-	}
-	
-	public List<Criterion> getCriterionSubcriteria(ProblemElement parent) {
-		List<Criterion> result = new LinkedList<Criterion>();
-		
-		Criterion auxParent;
-		for (Criterion criterion : _criteria) {
-			auxParent = criterion.getParent();
-			if (auxParent == null) {
-				if (parent == null) {
-					result.add(criterion);
-				}
-			} else if (criterion.getParent().equals(parent)) {
-				result.add(criterion);
-			}
-		}
-		
-		Collections.sort(result);
-		
-		return result;
 	}
 	
 	public List<Criterion> getAllCriterionSubcriteria(ProblemElement parent) {

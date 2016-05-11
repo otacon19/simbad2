@@ -225,7 +225,7 @@ public class MultiplePerspectives implements IWorkspaceListener {
 			case PRE_WORKSPACE_CLOSE:
 				_pre_workspace_close_action = true;
 				break;
-			case ANOTHER_CHANGE:
+			case AGGREGATION_PHASE_CHANGED:
 				setState();
 				break;
 			default:

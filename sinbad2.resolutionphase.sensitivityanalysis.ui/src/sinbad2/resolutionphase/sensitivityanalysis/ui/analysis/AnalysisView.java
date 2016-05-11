@@ -28,7 +28,7 @@ import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.AlternativesEvolutionWeigthsLineChart;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.MinimunValueBetweenAlternativesBarChart;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.SturdinessMeasureStackedChart;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMatrixView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
@@ -55,7 +55,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	private SturdinessMeasureStackedChart _stackedChart;
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
-	private DecisionMakingView _decisionMakingView;
+	private DecisionMatrixView _decisionMakingView;
 	private SensitivityAnalysisView _sensitivityAnalysisView;
 	private RankingView _rankingView;
 	
@@ -87,7 +87,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		
 		_rankingView = (RankingView) getView(RankingView.ID);
 		_sensitivityAnalysisView = (SensitivityAnalysisView) getView(SensitivityAnalysisView.ID);
-		_decisionMakingView = (DecisionMakingView) getView(DecisionMakingView.ID);
+		_decisionMakingView = (DecisionMatrixView) getView(DecisionMatrixView.ID);
 
 		_saTable = _sensitivityAnalysisView.getSATable();
 		_saTable.addSelectionChangedListener(this);

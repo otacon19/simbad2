@@ -29,7 +29,7 @@
       </category>
       <view
             category="flintstones.resolutionphase.sensitivityanalysis.views.category"
-            class="sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMakingView"
+            class="sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMatrixView"
             icon="icons/decision_matrix_24x24.png"
             id="flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking"
             name="%view.name"

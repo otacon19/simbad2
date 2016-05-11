@@ -33,7 +33,7 @@ import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingViewManager;
 
-public class DecisionMakingView extends ViewPart implements ISensitivityAnalysisChangeListener {
+public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysisChangeListener {
 
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking"; //$NON-NLS-1$
 	public static final String CONTEXT_ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking.decisionmaking_view"; //$NON-NLS-1$

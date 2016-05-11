@@ -195,15 +195,16 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 	}
 	
 	@Override
-		public void dispose() {
-			super.dispose();
+	public void dispose() {
+		super.dispose();
 			
-			_chart = null;
-			_completed = false;
-			_controlListener = null;
-			_loaded = false;
-			_selectedLHDomain = null;
-		}
+		_chart = null;
+		_completed = false;
+		_controlListener = null;
+		_loaded = false;
+		_selectedLHDomain = null;
+		_retranslationPhase.isActivated(false);
+	}
 
 	@Override
 	public void notifyStepStateChange() {
@@ -223,7 +224,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 	}
 
 	@Override
-	public void notifyRatingView(RatingView rating) {
+	public void setRatingView(RatingView rating) {
 		_ratingView = rating;
 	}
 	

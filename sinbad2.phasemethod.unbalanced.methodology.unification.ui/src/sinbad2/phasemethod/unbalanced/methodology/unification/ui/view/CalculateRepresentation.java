@@ -327,7 +327,7 @@ public class CalculateRepresentation extends ViewPart implements IStepStateListe
 	}
 
 	@Override
-	public void notifyRatingView(RatingView rating) {
+	public void setRatingView(RatingView rating) {
 		_ratingView = rating;
 	}
 

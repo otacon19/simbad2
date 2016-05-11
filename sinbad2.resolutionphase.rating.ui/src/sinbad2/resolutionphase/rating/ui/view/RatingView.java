@@ -76,7 +76,6 @@ public class RatingView extends ViewPart {
 	
 	private Map<CLabel, Method> _methods;
 	
-	private MethodsManager _methodsManager;
 	private MethodsUIManager _methodsUIManager;
 	private PhasesMethodManager _phasesMethodManager;
 	private PhaseMethodUIManager _phasesMethodUIManager;
@@ -98,7 +97,6 @@ public class RatingView extends ViewPart {
 		
 		_parent = parent;
 		
-		_methodsManager = MethodsManager.getInstance();
 		_methodsUIManager = MethodsUIManager.getInstance();
 		_phasesMethodManager = PhasesMethodManager.getInstance();
 		_phasesMethodUIManager = PhaseMethodUIManager.getInstance();
@@ -356,7 +354,8 @@ public class RatingView extends ViewPart {
 		layout.verticalSpacing = 0;
 		composite.setLayout(layout);
 
-		_recommendedMethod = _methodsManager.getRecommendedMethod();
+		MethodsManager methodsManager = MethodsManager.getInstance();
+		_recommendedMethod = methodsManager.getRecommendedMethod();
 		
 		for (int i = 0; i < methods.size(); i++) {
 			createMethod(composite, methods.get(i));
@@ -437,16 +436,14 @@ public class RatingView extends ViewPart {
 		if(currentPhaseMethod == null) {
 			currentPhaseMethod = phasesMethodUI.get(_numPhase);
 			if(currentPhaseMethod.getPhaseMethod().getImplementation().validate()) {
-				_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
-				_phasesMethodUIManager.activate(currentPhaseMethod.getId());
+				activateCurrentPhaseMethod(currentPhaseMethod);
 				step = _phasesMethodUIManager.getStepPhaseMethod(currentPhaseMethod.getId(), 0);
 			}
 		} else if(_phasesMethodUIManager.getNextStep() == null) {
 			_numPhase++;
 			currentPhaseMethod = phasesMethodUI.get(_numPhase);
 			if(currentPhaseMethod.getPhaseMethod().getImplementation().validate()) {
-				_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
-				_phasesMethodUIManager.activate(currentPhaseMethod.getId());	
+				activateCurrentPhaseMethod(currentPhaseMethod);
 				step = _phasesMethodUIManager.getStepPhaseMethod(currentPhaseMethod.getId(), 0);
 			}
 		} else {
@@ -456,7 +453,7 @@ public class RatingView extends ViewPart {
 		if(step != null) {
 			_phasesMethodUIManager.activateStep(step);
 			
-			if(!checkLoadedStep(step)) {
+			if(!checkLoadedSteps(step)) {
 				CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, _tabFolder.getItemCount());
 				item.setText(step.getPartName());
 				item.setShowClose(false);
@@ -465,7 +462,7 @@ public class RatingView extends ViewPart {
 				Composite parent = new Composite(_tabFolder, SWT.NONE);
 				step.createPartControl(parent);
 				if(step instanceof IStepStateListener) {
-					notifyRatingView((IStepStateListener) step);
+					setRatingViewToStep((IStepStateListener) step);
 				}
 				item.setControl(parent);
 				item.setData(step);
@@ -475,7 +472,7 @@ public class RatingView extends ViewPart {
 		}
 	}
 	
-	private boolean checkLoadedStep(ViewPart step) {
+	private boolean checkLoadedSteps(ViewPart step) {
 		boolean loaded = false;
 		for(CTabItem tabItem: _tabFolder.getItems()) {
 			if(tabItem.getText().equals(step.getPartName())) {
@@ -642,11 +639,17 @@ public class RatingView extends ViewPart {
 			
 			List<PhaseMethodUI> phasesMethodUI = _methodsUIManager.getActivateMethodUI().getPhasesUI();
 			PhaseMethodUI currentPhaseMethod = phasesMethodUI.get(_numPhase);
-			_phasesMethodManager.activate(currentPhaseMethod.getPhaseMethod().getId());
-			_phasesMethodUIManager.activate(currentPhaseMethod.getId());
+			
+			activateCurrentPhaseMethod(currentPhaseMethod);
+			
 			ViewPart step = _phasesMethodUIManager.getStepPhaseMethod(currentPhaseMethod.getId(), 1);
 			_phasesMethodUIManager.activateStep(step);
 		}
+	}
+	
+	private void activateCurrentPhaseMethod(PhaseMethodUI phaseUI) {
+		_phasesMethodManager.activate(phaseUI.getPhaseMethod().getId());
+		_phasesMethodUIManager.activate(phaseUI.getId());
 	}
 	
 	public void registerStepChangeListeners(PhaseMethodUIManager phasesMethodUIManager) {
@@ -674,7 +677,7 @@ public class RatingView extends ViewPart {
 		}
 	}
 	
-	private void notifyRatingView(IStepStateListener listener) {
-		listener.notifyRatingView(this);
+	private void setRatingViewToStep(IStepStateListener listener) {
+		listener.setRatingView(this);
 	}	
 }

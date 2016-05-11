@@ -2,7 +2,6 @@ package sinbad2.phasemethod.analysis.ui.view;
 
 import java.awt.Color;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,7 +24,6 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
-import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.domain.numeric.integer.ui.jfreechart.NumericIntegerDomainChart;
 import sinbad2.domain.numeric.real.NumericRealDomain;
@@ -34,12 +32,8 @@ import sinbad2.domain.ui.jfreechart.DomainChart;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
-import sinbad2.method.Method;
-import sinbad2.method.MethodsManager;
-import sinbad2.phasemethod.PhaseMethod;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
-import sinbad2.phasemethod.aggregation.UnbalancedUtils;
 import sinbad2.phasemethod.analysis.AnalysisPhase;
 import sinbad2.phasemethod.analysis.ui.nls.Messages;
 import sinbad2.phasemethod.analysis.ui.view.listener.CheckStateListener;
@@ -94,24 +88,22 @@ public class Analysis extends ViewPart implements IStepStateListener {
 	
 	private AggregationPhase _aggregationPhase;
 	private AnalysisPhase _analysisPhase;
-	private RetranslationPhase _retranslationPhase;
 	
 	private Map<ProblemElement, Valuation> _aggregationResult;
 	
 	private ProblemElementsSet _elementsSet;
+	private PhasesMethodManager _pmm;
 	
 	@Override
 	public void createPartControl(Composite parent) {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
 		
-		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		_analysisPhase = (AnalysisPhase) pmm.getPhaseMethod(AnalysisPhase.ID).getImplementation();
-		_retranslationPhase = (RetranslationPhase) pmm.getPhaseMethod(RetranslationPhase.ID).getImplementation();
+		_pmm = PhasesMethodManager.getInstance();
+		_aggregationPhase = (AggregationPhase) _pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+		_analysisPhase = (AnalysisPhase) _pmm.getPhaseMethod(AnalysisPhase.ID).getImplementation();
 		
 		_aggregationResult = null;
-		
 		_controlListener = null;
 		
 		_parent = parent;
@@ -319,10 +311,8 @@ public class Analysis extends ViewPart implements IStepStateListener {
 				int size = _aggregationResult.size();
 				if (size > 0) {
 					String[] alternatives = new String[size];
-					int[] pos = new int[size];
-					double[] measuresReal = new double[size];
-					int[] measuresInteger = new int[size];
-					double[] alpha = new double[size];
+					int[] pos = new int[size], measuresInteger = new int[size];
+					double[] measuresReal = new double[size], alpha = new double[size];
 					Color[] colors = new Color[size];
 					Valuation valuation = null, aux;
 					int i = 0;
@@ -393,31 +383,15 @@ public class Analysis extends ViewPart implements IStepStateListener {
 
 		_aggregationResult = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 		
-		if(getDomain() instanceof Unbalanced) {
-			_aggregationResult = UnbalancedUtils.transformUnbalanced(_aggregationResult, (Unbalanced) getDomain());
+		RetranslationPhase retranslationPhase = (RetranslationPhase) _pmm.getPhaseMethod(RetranslationPhase.ID).getImplementation();
+		if(retranslationPhase.isActivated()) {
+			Domain domain = _analysisPhase.getDomain();
+			_aggregationResult = retranslationPhase.transform(_aggregationResult, (FuzzySet) domain);
+			_rankingViewer.setInput(_aggregationResult);
+			setChart(domain);
+		} else {
 			_rankingViewer.setInput(_aggregationResult);
 			setChart(getDomain());
-		} else {
-			boolean retranslation = false;
-			MethodsManager methodsManager = MethodsManager.getInstance();
-			Method method = methodsManager.getActiveMethod();
-			List<PhaseMethod> phases = method.getPhases();
-			for(PhaseMethod phase: phases) {
-				if(phase.getImplementation().equals(_retranslationPhase)) {
-					retranslation = true;
-					break;
-				}
-			}
-			
-			if(retranslation) {
-				Domain domain = _analysisPhase.getDomain();
-				_aggregationResult = _retranslationPhase.transform(_aggregationResult, (FuzzySet) domain);
-				_rankingViewer.setInput(_aggregationResult);
-				setChart(domain);
-			} else {
-				_rankingViewer.setInput(_aggregationResult);
-				setChart(getDomain());
-			}
 		}
 	}
 	
@@ -466,6 +440,6 @@ public class Analysis extends ViewPart implements IStepStateListener {
 	}
 
 	@Override
-	public void notifyRatingView(RatingView rating) {}
+	public void setRatingView(RatingView rating) {}
 }
 

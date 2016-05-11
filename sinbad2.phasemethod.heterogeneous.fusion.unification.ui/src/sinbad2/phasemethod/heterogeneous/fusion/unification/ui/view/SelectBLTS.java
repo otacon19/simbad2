@@ -56,6 +56,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	private boolean _loaded;
 	
 	private static Domain _BLTSDomainSelected;
+	
 	private RatingView _ratingView;
 	
 	@Override
@@ -70,6 +71,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 		
 		_BLTSDomains = new LinkedList<Domain>();
 		_BLTSDomainSelected = null;
+		
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		_domainSet = domainsManager.getActiveDomainSet();
 		
@@ -261,7 +263,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	}
 	
 	@Override
-	public void notifyRatingView(RatingView rating) {
+	public void setRatingView(RatingView rating) {
 		_ratingView = rating;
 	}
 	

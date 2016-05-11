@@ -300,7 +300,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 	}
 
 	@Override
-	public void notifyRatingView(RatingView rating) {
+	public void setRatingView(RatingView rating) {
 		_ratingView = rating;
 	}
 
