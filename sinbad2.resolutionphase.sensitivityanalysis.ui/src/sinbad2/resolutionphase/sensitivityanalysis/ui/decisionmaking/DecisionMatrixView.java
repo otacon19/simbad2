@@ -192,7 +192,7 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 		Object[] aggregatedValuationsData = _sensitivityAnalysis.getAggregatedValuationsPosAndAlpha();
 		
 		RankingViewManager.getInstance().setContent(_sensitivityAnalysis.getRanking());
-		DomainViewManager.getInstance().setContent(_sensitivityAnalysis.getUnifiedDomain(), new Object[] { _sensitivityAnalysis.getAlternativesIds(), preferences, 
+		DomainViewManager.getInstance().setContent(_sensitivityAnalysis.getDomain(), new Object[] { _sensitivityAnalysis.getAlternativesIds(), preferences, 
 				aggregatedValuationsData[0], aggregatedValuationsData[1] });
 	}
 

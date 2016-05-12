@@ -1227,8 +1227,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		}
 	}
 
-	
-	public Domain getUnifiedDomain() {
+	public Domain getDomain() {
 		return _aggregationPhase.getUnifiedDomain();
 	}
 	

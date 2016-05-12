@@ -35,13 +35,18 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	private String[] _alternatives;
 	private String[] _criteria;
 	private Double[][][] _values;
+	private int[] _criticalCell;
 	
 	private KTable _table;
 
 	private final FixedCellRenderer _fixedRendererHeader = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS | SWT.BOLD);
+	
 	private final FixedCellRenderer _fixedRendererNA = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
+	
 	private final FixedCellRenderer _fixedRendererRed = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	private final FixedCellRenderer _fixedRendererGreen = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
+	private final FixedCellRenderer _fixedRendererBoldRed = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS | SWT.BOLD);
+	private final FixedCellRenderer _fixedRendererBoldGreen = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS | SWT.BOLD);
 	
 	private DecisionMatrixView _decisionMatrixView;
 	private SensitivityAnalysisView _sensitivityAnalysisView;
@@ -71,6 +76,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		_criteria = criteria;
 		_values = values;
 		
+		_criticalCell = new int[2];
+		
 		if(_decisionMatrixView.getTable().getTypeProblem().endsWith("MCC")) { //$NON-NLS-1$
 			computePairs();
 		} else {
@@ -80,13 +87,21 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		initialize();
 
 		_fixedRendererHeader.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
+		
 		_fixedRendererNA.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
+		_fixedRendererNA.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		
 		_fixedRendererRed.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		Color red = new Color(Display.getCurrent(), 255, 137, 137);
 		_fixedRendererRed.setBackground(red);
 		_fixedRendererGreen.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		Color green = new Color(Display.getCurrent(), 137, 255, 176);
 		_fixedRendererGreen.setBackground(green);
+		
+		_fixedRendererBoldRed.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
+		_fixedRendererBoldRed.setBackground(red);
+		_fixedRendererBoldGreen.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
+		_fixedRendererBoldGreen.setBackground(green);
 		
 		_typeDataSelected = ABSOLUTE;
 	}
@@ -195,11 +210,23 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	}
 
 	public void refreshTable() {
+		Object value;
+		double min = Double.MAX_VALUE;
+		
 		for(int col = 1; col < getColumnCount(); ++col) {
 			for(int row = 1; row < getRowCount(); ++row) {
-				doGetContentAt(col, row);
+				value = doGetContentAt(col, row);
+				if(value instanceof Double) {
+					if(Math.abs((Double) value) < min) {
+						min = Math.abs((Double) value);
+						_criticalCell[0] = col;
+						_criticalCell[1] = row;
+					}
+				}
 			}
 		}
+		
+		
 		
 		_table.redraw();
 	}
@@ -298,17 +325,33 @@ public class SATableContentProvider extends KTableNoScrollModel {
 					String stringWithoutPercent = content.replace("%", ""); //$NON-NLS-1$ //$NON-NLS-2$
 					double value = Double.parseDouble(stringWithoutPercent);
 					if(value > 0) {
-						return _fixedRendererRed;
+						if(_criticalCell[0] == col && _criticalCell[1] == row) {
+							return _fixedRendererBoldRed;
+						} else {
+							return _fixedRendererRed;
+						}
 					} else {
-						return _fixedRendererGreen;
+						if(_criticalCell[0] == col && _criticalCell[1] == row) {
+							return _fixedRendererBoldGreen;
+						} else {
+							return _fixedRendererGreen;
+						}
 					}
 				}
 			} else {
 				double value = (Double) doGetContentAt(col, row);
 				if(value > 0) {
-					return _fixedRendererRed;
+					if(_criticalCell[0] == col && _criticalCell[1] == row) {
+						return _fixedRendererBoldRed;
+					} else {
+						return _fixedRendererRed;
+					}
 				} else {
-					return _fixedRendererGreen;
+					if(_criticalCell[0] == col && _criticalCell[1] == row) {
+						return _fixedRendererBoldGreen;
+					} else {
+						return _fixedRendererGreen;
+					}
 				}
 			}
 		}
