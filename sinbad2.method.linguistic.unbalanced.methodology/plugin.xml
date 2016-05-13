@@ -4,7 +4,7 @@
    <extension
          point="flintstones.method">
       <method
-            category="Unbalanced linguistic framework"
+            category="%Method-Category"
             description="%Method-Description"
             id="flintstones.method.linguistic.unbalanced.methodology"
             implementation="sinbad2.method.linguistic.unbalanced.methodology.Unbalanced"

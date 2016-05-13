@@ -60,28 +60,15 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="category" use="required">
+         <attribute name="category" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
             </annotation>
-            <simpleType>
-               <restriction base="string">
-                  <enumeration value="Unbalanced linguistic framework">
-                  </enumeration>
-                  <enumeration value="Heterogeneous framework">
-                  </enumeration>
-                  <enumeration value="Multi-granular framework">
-                  </enumeration>
-                  <enumeration value="Linguistic framework">
-                  </enumeration>
-                  <enumeration value="Multi-criteria decision analysis">
-                  </enumeration>
-                  <enumeration value="Hesitant Fuzzy Linguistic Information">
-                  </enumeration>
-               </restriction>
-            </simpleType>
          </attribute>
          <attribute name="description" type="string">
             <annotation>

@@ -161,6 +161,7 @@ public class RatingView extends ViewPart {
 		_resetButton = new Button(_buttonsBar, SWT.PUSH);
 		_resetButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		_resetButton.setText(Messages.RatingView_Reset);
+		_resetButton.setEnabled(false);
 		_resetButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -222,6 +223,9 @@ public class RatingView extends ViewPart {
 		if(_numStep + 1 == _tabFolder.getItemCount()) {
 			_nextButton.setEnabled(false);
 		}
+		
+		_resetButton.setEnabled(true);
+		
 		incrementStep();
 	}
 	
@@ -242,6 +246,8 @@ public class RatingView extends ViewPart {
 			_tabFolder.setSelection(0);
 			createContent();
 		}
+		
+		_resetButton.setEnabled(false);
 	}
 
 	private void createMethodSelectionStep() {
@@ -380,11 +386,9 @@ public class RatingView extends ViewPart {
 			label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN));
 			label.setImage(Images.signed_yes);
 			_nextButton.setEnabled(false);
-			_resetButton.setEnabled(false);
 		} else {	
 			label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED));
 			label.setImage(Images.signed_no);
-			_resetButton.setEnabled(true);
 		}
 		
 		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL)); //$NON-NLS-1$

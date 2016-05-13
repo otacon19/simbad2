@@ -4,7 +4,7 @@
    <extension
          point="flintstones.method">
       <method
-            category="Multi-granular framework"
+            category="%Method-Category"
             description="%Method-Description"
             id="flintstones.method.linguistic.multigranular.lh"
             implementation="sinbad2.method.linguistic.multigranular.lh.LH"

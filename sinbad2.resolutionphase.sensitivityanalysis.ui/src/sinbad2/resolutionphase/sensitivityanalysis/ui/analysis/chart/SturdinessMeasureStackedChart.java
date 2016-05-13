@@ -17,6 +17,7 @@ import org.jfree.experimental.chart.swt.ChartComposite;
 
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 
 public class SturdinessMeasureStackedChart {
 	
@@ -53,7 +54,7 @@ public class SturdinessMeasureStackedChart {
 	}
 
 	private JFreeChart createChart(DefaultCategoryDataset dataset) {
-		JFreeChart result = ChartFactory.createStackedBarChart(null, null, null, dataset, PlotOrientation.HORIZONTAL, true, true, false);
+		JFreeChart result = ChartFactory.createStackedBarChart(Messages.SturdinessMeasureStackedChart_Sturdiness_criteria, null, null, dataset, PlotOrientation.HORIZONTAL, true, true, false);
 
 		result.setBackgroundPaint(new GradientPaint(0, 0, Color.white, 1000, 0, Color.blue));
 		CategoryPlot plot = result.getCategoryPlot();

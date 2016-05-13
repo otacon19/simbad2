@@ -4,7 +4,7 @@
    <extension
          point="flintstones.method">
       <method
-            category="Heterogeneous framework"
+            category="%Method-Category"
             description="%Method-Description"
             id="flintstones.method.linguistic.heterogeneous.fusion"
             implementation="sinbad2.method.linguistic.heterogeneous.fusion.Fusion"

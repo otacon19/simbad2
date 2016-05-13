@@ -26,8 +26,8 @@ import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.Sensit
 
 public class SATableContentProvider extends KTableNoScrollModel {
 	
-	private static final String RELATIVE = "RELATIVE"; //$NON-NLS-1$
-	private static final String ABSOLUTE = "ABSOLUTE"; //$NON-NLS-1$
+	private static final String RELATIVE = Messages.SATableContentProvider_relative;
+	private static final String ABSOLUTE = Messages.SATableContentProvider_absolute;
 	
 	private String _typeDataSelected;
 	

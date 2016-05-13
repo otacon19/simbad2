@@ -94,7 +94,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 			public void widgetSelected(SelectionEvent e) {
 				String typeProblem = _decisionMatrixView.getTable().getTypeProblem();
 				
-				if(typeProblem.equals("MCC")) {
+				if(typeProblem.equals("MCC")) { //$NON-NLS-1$
 					if(_sensitivityModels.getSelectionIndex() == 0) {
 						_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
 						_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);

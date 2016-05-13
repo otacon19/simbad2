@@ -857,7 +857,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 		return absolute;
 	}
-	
 	public Map<Criterion, Map<Alternative, Double>> getMinimunPercentMCMByCriterion() {
 		Map<Criterion, Map<Alternative, Double>> result = new LinkedHashMap<Criterion, Map<Alternative, Double>>();
 		
@@ -921,6 +920,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	
 	public Map<Criterion, Map<Alternative, Double>> getMinimunPercentMCCByCriterion() {
 		Map<Criterion, Map<Alternative, Double>> result = new LinkedHashMap<Criterion, Map<Alternative, Double>>();
+		Map<Integer, Double> minimunValueAlternatives = new LinkedHashMap<Integer, Double>();
 		
 		List<Alternative> alternatives = _elementsSet.getAlternatives();
 		List<Criterion> criteria = _elementsSet.getAllSubcriteria();
@@ -932,6 +932,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		max += units; 
 		
 		for(int c = 0; c < _numberOfCriteria; ++c) {
+			minimunValueAlternatives.clear();
 			for(int a1 = 0; a1 < _numberOfAlternatives; ++a1) {
 				min = Double.MAX_VALUE;
 				for(int a2 = 0; a2 < _numberOfAlternatives; ++a2) {
@@ -942,11 +943,30 @@ public class SensitivityAnalysis implements IResolutionPhase {
 					} else {
 						if(a1 != a2) {
 							if(min == Double.MAX_VALUE) {
-								min = max;
+								if(_minimumPercentChangeInCriteriaWeights[a2][a1][c] == null) {
+									min = max;
+								} else {
+									if(minimunValueAlternatives.get(a1) != null) {
+										if(minimunValueAlternatives.get(a1) > Math.abs(_minimumPercentChangeInCriteriaWeights[a2][a1][c])) {
+											min = Math.abs(_minimumPercentChangeInCriteriaWeights[a2][a1][c]);
+										} else {
+											min = minimunValueAlternatives.get(a1);
+										}
+									} else {
+										min = Math.abs(_minimumPercentChangeInCriteriaWeights[a2][a1][c]);
+									}
+								}
+							} else {
+								if(_minimumPercentChangeInCriteriaWeights[a2][a1][c] != null) {
+									if(Math.abs(_minimumPercentChangeInCriteriaWeights[a2][a1][c]) < min) {
+										min = Math.abs(_minimumPercentChangeInCriteriaWeights[a2][a1][c]);
+									}
+								}
 							}
 						}
 					}
 				}
+				
 				if(min != Double.MAX_VALUE) {
 					if(result.get(criteria.get(c)) == null) {
 						Map<Alternative, Double> minimunAlternative = new LinkedHashMap<Alternative, Double>();
@@ -956,6 +976,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 						Map<Alternative, Double> minimunAlternative = result.get(criteria.get(c));
 						minimunAlternative.put(alternatives.get(a1), min);
 					}
+					minimunValueAlternatives.put(a1, min);
 				}
 			}
 		}

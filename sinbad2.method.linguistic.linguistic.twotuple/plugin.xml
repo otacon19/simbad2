@@ -4,7 +4,7 @@
    <extension
          point="flintstones.method">
       <method
-            category="Linguistic framework"
+            category="%Method-Category"
             description="%Method-Description"
             id="flintstones.method.linguistic.linguistic.twotuple"
             implementation="sinbad2.method.linguistic.linguistic.twotuple.TwoTuple"

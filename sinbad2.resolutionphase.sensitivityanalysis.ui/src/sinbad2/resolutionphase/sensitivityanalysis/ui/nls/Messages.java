@@ -22,6 +22,7 @@ public class Messages extends NLS {
 	public static String RankingView_Weighted_sum;
 	public static String SATableContentProvider_absolute;
 	public static String SATableContentProvider_relative;
+	public static String SturdinessMeasureStackedChart_Sturdiness_criteria;
 	public static String WeightsDialog_Cancel;
 	public static String WeightsDialog_Cancel_all;
 	public static String WeightsDialog_Invalid_range;
