@@ -111,7 +111,6 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			_aggregationOperatorsIds = new TreeSet<String>();
 			MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();	
 			Set<EAggregationOperatorType> operatorsTypes = methodsUIManager.getActivateMethodUI().getMethod().getAggregationTypesSupported();
-	
 			String[] operatorsIds;
 			for(EAggregationOperatorType operatorType: operatorsTypes) {
 				operatorsIds = _aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
@@ -341,7 +340,9 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 
 		String id = (String) _aggregationOperatorsIds.toArray()[newValue];
 		id = id.toLowerCase();
+		System.out.println(id);
 		AggregationOperator operator = _aggregationOperatorsManager.getAggregationOperator(id);
+		System.out.println(operator);
 		
 		_abort = false;
 		_assignAll = false;

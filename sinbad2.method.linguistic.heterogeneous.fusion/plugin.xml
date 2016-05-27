@@ -27,9 +27,6 @@
          <aggregation_supported
                type="Interval">
          </aggregation_supported>
-         <aggregation_supported
-               type="Hesitant">
-         </aggregation_supported>
       </method>
    </extension>
 

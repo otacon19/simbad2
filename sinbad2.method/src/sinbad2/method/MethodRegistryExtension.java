@@ -38,4 +38,23 @@ public class MethodRegistryExtension extends RegistryExtension {
 
 		return result;
 	}
+	
+	public String[] getSupportedTypes() {
+
+		String[] result = null;
+
+		if (_configuration != null) {
+			IConfigurationElement[] types = _configuration.getChildren(EMethodElements.aggregation_supported.toString());
+			if (types != null) {
+				result = new String[types.length];
+				for (int i = 0; i < types.length; ++i) {
+					result[i] = types[i].getAttribute(EMethodElements.type.toString());
+				}
+			}
+		}
+
+		return result;
+	}
+	
+	
 }

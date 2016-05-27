@@ -80,12 +80,6 @@ public class MethodsManager {
 			registry = new MethodRegistryExtension(extension);
 			_registers.put(registry.getElement(EMethodElements.id), registry);
 		}
-		
-		IConfigurationElement[] supportedTypesConfiguration = extensions[0].getChildren(EMethodElements.aggregation_supported.toString());
-		Set<EAggregationOperatorType> supportedTypes = new HashSet<EAggregationOperatorType>();
-		for(IConfigurationElement type: supportedTypesConfiguration) {
-			supportedTypes.add(EAggregationOperatorType.valueOf(type.getAttribute(EMethodElements.type.toString())));
-		}
 	}
 
 	public String[] getIdsRegisters() {
@@ -162,16 +156,12 @@ public class MethodsManager {
 		method.setCategory(methodRegistry.getElement(EMethodElements.category));
 		method.setDescription(methodRegistry.getElement(EMethodElements.description));
 		
-		IExtensionRegistry reg = Platform.getExtensionRegistry();
-		IConfigurationElement[] extensions = reg.getConfigurationElementsFor(EXTENSION_POINT);
-		
-		IConfigurationElement[] supportedTypesConfiguration = extensions[0].getChildren(EMethodElements.aggregation_supported.toString());
+		String[] supportedTypes = methodRegistry.getSupportedTypes();
 		Set<EAggregationOperatorType> types = new HashSet<EAggregationOperatorType>();
-		for(int i = 0; i < supportedTypesConfiguration.length; ++i) {
-			EAggregationOperatorType supportedType = EAggregationOperatorType.valueOf(supportedTypesConfiguration[i].getAttribute(EMethodElements.type.toString()));
-			types.add(supportedType);
+		for(String type: supportedTypes) {
+			types.add(EAggregationOperatorType.valueOf(type));
 		}
-			
+
 		method.setAggregationTypeSupported(types);
 		
 		method.setRegistry(methodRegistry);
