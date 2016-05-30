@@ -1139,6 +1139,32 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_elementsSet = elementsManager.getActiveElementSet();
 	}
 
+	public void compute() {
+		switch(_model) {
+		case WEIGHTED_SUM:
+			if(_problem == EProblem.MOST_CRITICAL_CRITERION) {
+				computeWeightedSumModelCriticalCriterion();
+			} else {
+				computeWeightedSumModelCriticalMeasure();
+			}
+			break;
+		case WEIGHTED_PRODUCT:
+			if(_problem == EProblem.MOST_CRITICAL_CRITERION) {
+				computeWeightedProductModelCriticalCriterion();
+			} else {
+				computeWeightedProductModelCriticalMeasure();
+			}
+			break;
+		case ANALYTIC_HIERARCHY_PROCESS:
+			if(_problem == EProblem.MOST_CRITICAL_CRITERION) {
+				computeAnalyticHierarchyProcessModelCriticalCriterion();
+			} else {
+				computeAnalyticHierarchyProcessModelCriticalMeasure();
+			}
+			break;
+		}
+	}
+	
 	public void computeWeightedSumModelCriticalCriterion() {
 		copyDecisionMatrix();
 		

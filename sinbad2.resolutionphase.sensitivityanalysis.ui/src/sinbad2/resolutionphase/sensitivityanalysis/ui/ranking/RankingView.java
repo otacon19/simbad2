@@ -21,7 +21,6 @@ import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.EModel;
-import sinbad2.resolutionphase.sensitivityanalysis.EProblem;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.provider.RankingContentProvider;
@@ -88,32 +87,14 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				_sensitivityAnalysis.setModel(EModel.values()[_sensitivityModels.getSelectionIndex()]);
+				_sensitivityAnalysis.setModel(EModel.values()[_sensitivityModels.getSelectionIndex()]);		
+				_sensitivityAnalysis.compute();
 				
-				EProblem typeProblem = _sensitivityAnalysis.getProblem();
-				
-				if(typeProblem == EProblem.MOST_CRITICAL_CRITERION) { //$NON-NLS-1$
-					if(_sensitivityModels.getSelectionIndex() == 0) {
-						_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
-						_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
-					} else if(_sensitivityModels.getSelectionIndex() == 1) {
-						_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
-						_rankingViewer.getTable().getColumn(2).setText("Ratios"); //$NON-NLS-1$
-					} else {
-						_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
-						_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
-					}
+				int selectedIndex = _sensitivityModels.getSelectionIndex();
+				if(selectedIndex == 0 || selectedIndex == 2) {
+					_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
 				} else {
-					if(_sensitivityModels.getSelectionIndex() == 0) {
-						_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
-						_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
-					} else if(_sensitivityModels.getSelectionIndex() == 1) {
-						_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
-						_rankingViewer.getTable().getColumn(2).setText("Ratios"); //$NON-NLS-1$
-					} else {
-						_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalMeasure();
-						_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
-					}
+					_rankingViewer.getTable().getColumn(2).setText("Ratios"); //$NON-NLS-1$
 				}
 				
 				_rankingViewer.getTable().getColumn(2).pack();

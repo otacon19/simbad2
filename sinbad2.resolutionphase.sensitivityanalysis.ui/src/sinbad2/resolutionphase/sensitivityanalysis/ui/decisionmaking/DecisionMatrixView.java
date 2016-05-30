@@ -152,6 +152,7 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 		_sensitivityAnalysis.unregisterSensitivityAnalysisChangeListener(this);
 		disposeDMTable();
 		disposeButton();
+		
 		super.dispose();
 	}
 

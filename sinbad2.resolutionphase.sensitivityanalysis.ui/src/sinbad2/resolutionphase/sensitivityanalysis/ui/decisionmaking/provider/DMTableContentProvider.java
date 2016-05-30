@@ -16,7 +16,6 @@ import de.kupzog.ktable.editors.KTableCellEditorCombo;
 import de.kupzog.ktable.editors.KTableCellEditorText;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
-import sinbad2.resolutionphase.sensitivityanalysis.EModel;
 import sinbad2.resolutionphase.sensitivityanalysis.EProblem;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.IDisplayRankingChangeListener;
@@ -75,36 +74,9 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 				CCombo combo = (CCombo) _kTableCombo.getControl();
 				combo.addSelectionListener(new SelectionAdapter() {
 					@Override
-					public void widgetSelected(SelectionEvent e) {
-						
+					public void widgetSelected(SelectionEvent e) {	
 						_sensitivityAnalysis.setProblem(EProblem.values()[((CCombo) e.widget).getSelectionIndex()]);
-						
-						EModel model = _sensitivityAnalysis.getModel();
-						if(_sensitivityAnalysis.getProblem() == EProblem.MOST_CRITICAL_CRITERION) {
-							switch(model) {
-							case WEIGHTED_SUM:
-								_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
-								break;
-							case WEIGHTED_PRODUCT:
-								_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
-								break;
-							case ANALYTIC_HIERARCHY_PROCESS:
-								_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
-								break;
-							}
-						} else {
-							switch(model) {
-							case WEIGHTED_SUM:
-								_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
-								break;
-							case WEIGHTED_PRODUCT:
-								_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
-								break;
-							case ANALYTIC_HIERARCHY_PROCESS:
-								_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalMeasure();
-								break;
-							}
-						}
+						_sensitivityAnalysis.compute();	
 					}
 				});
 			}
@@ -161,32 +133,7 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 			double v = Double.parseDouble((String) value);
 			_values[row - 1][col - 1] = v;
 			
-			EModel model = _sensitivityAnalysis.getModel();
-			if(_sensitivityAnalysis.getProblem() == EProblem.MOST_CRITICAL_CRITERION) {
-				switch(model) {
-				case WEIGHTED_SUM:
-					_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
-					break;
-				case WEIGHTED_PRODUCT:
-					_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
-					break;
-				case ANALYTIC_HIERARCHY_PROCESS:
-					_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
-					break;
-				}
-			} else {
-				switch(model) {
-				case WEIGHTED_SUM:
-					_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
-					break;
-				case WEIGHTED_PRODUCT:
-					_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
-					break;
-				case ANALYTIC_HIERARCHY_PROCESS:
-					_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalMeasure();
-					break;
-				}
-			}
+			_sensitivityAnalysis.compute();
 		}
 	}
 
