@@ -26,6 +26,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.resolutionphase.sensitivityanalysis.EModel;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 
@@ -40,7 +41,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 
 	private Criterion _criterionSelected;
 	
-	private int _model;
+	private EModel _model;
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
 	
@@ -84,11 +85,11 @@ public class AlternativesEvolutionWeigthsLineChart {
 		_variableMarker.setValue(valueMarker);
 	}
 	
-	public int getModel() {
+	public EModel getModel() {
 		return _model;
 	}
 	
-	public void setModel(int model) {
+	public void setModel(EModel model) {
 		_model = model;
 	}
 	
@@ -170,7 +171,10 @@ public class AlternativesEvolutionWeigthsLineChart {
                 
 		if(_criterionSelected != null) {
 			List<Alternative> alternatives = _elementsSet.getAlternatives();
-			if(_model == 0 || _model == 2) {
+			
+			switch(_model) {
+			case WEIGHTED_SUM:
+			case ANALYTIC_HIERARCHY_PROCESS:
 				_chart.setTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution + _criterionSelected.getId().toUpperCase());
 				
 				if(_horizontalMarker != null) {
@@ -184,7 +188,8 @@ public class AlternativesEvolutionWeigthsLineChart {
 					}
 					_dataset.addSeries(alternativeSerie);
 				}
-			} else {
+				break;
+			case WEIGHTED_PRODUCT:
 				_chart.setTitle(Messages.AlternativesEvolutionWeigthsLineChart_Ratios_evolution + _criterionSelected.getId().toUpperCase());
 				
 				if(_horizontalMarker == null) {
@@ -213,6 +218,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 				
 				NumberAxis rangeAxis = (NumberAxis) _chart.getXYPlot().getRangeAxis();
 		        rangeAxis.setRange(-10, _dataset.getRangeUpperBound(false) + 2);
+				break;
 			}
 		}
 		return _dataset;

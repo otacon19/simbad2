@@ -15,8 +15,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
@@ -26,11 +24,11 @@ import sinbad2.core.workspace.Workspace;
 import sinbad2.domain.ui.view.domain.DomainViewManager;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.resolutionphase.sensitivityanalysis.EModel;
 import sinbad2.resolutionphase.sensitivityanalysis.ISensitivityAnalysisChangeListener;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.dialog.WeightsDialog;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingViewManager;
 
 public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysisChangeListener {
@@ -38,7 +36,6 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking"; //$NON-NLS-1$
 	public static final String CONTEXT_ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.decisionmaking.decisionmaking_view"; //$NON-NLS-1$
 
-	private RankingView _rankingView;
 	private SensitivityAnalysis _sensitivityAnalysis;
 
 	private DMTable _dmTable = null;
@@ -111,7 +108,7 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 						weights[i] = ws.get(i);
 					}
 
-					_sensitivityAnalysis.calculateDecisionMatrix(ws, _rankingView.getModel());
+					_sensitivityAnalysis.calculateDecisionMatrix(ws);
 				}
 			}
 		});
@@ -180,12 +177,8 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 		double[] preferences = new double[0];
 		
 		refreshDMTable();
-
-		if (_rankingView == null) {
-			_rankingView = (RankingView) getView(RankingView.ID);
-		}
 	
-		if (_rankingView.getModel() != 1) {
+		if (_sensitivityAnalysis.getModel() != EModel.ANALYTIC_HIERARCHY_PROCESS) {
 			preferences = _sensitivityAnalysis.getAlternativesFinalPreferences();
 		} 
 		
@@ -194,16 +187,5 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 		RankingViewManager.getInstance().setContent(_sensitivityAnalysis.getRanking());
 		DomainViewManager.getInstance().setContent(_sensitivityAnalysis.getDomain(), new Object[] { _sensitivityAnalysis.getAlternativesIds(), preferences, 
 				aggregatedValuationsData[0], aggregatedValuationsData[1] });
-	}
-
-	private IViewPart getView(String id) {
-		IViewPart view = null;
-		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
-		for (int i = 0; i < viewReferences.length; i++) {
-			if (id.equals(viewReferences[i].getId())) {
-				view = viewReferences[i].getView(false);
-			}
-		}
-		return view;
 	}
 }

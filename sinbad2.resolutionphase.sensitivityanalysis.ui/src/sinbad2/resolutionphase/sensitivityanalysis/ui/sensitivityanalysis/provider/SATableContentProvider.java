@@ -18,9 +18,8 @@ import de.kupzog.ktable.editors.KTableCellEditorCombo;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
 import sinbad2.core.workspace.Workspace;
+import sinbad2.resolutionphase.sensitivityanalysis.EProblem;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DMTable;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMatrixView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SensitivityAnalysisView;
 
@@ -48,7 +47,6 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	private final FixedCellRenderer _fixedRendererBoldRed = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS | SWT.BOLD);
 	private final FixedCellRenderer _fixedRendererBoldGreen = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS | SWT.BOLD);
 	
-	private DecisionMatrixView _decisionMatrixView;
 	private SensitivityAnalysisView _sensitivityAnalysisView;
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
@@ -67,7 +65,6 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		
 		_table = table;
 		
-		_decisionMatrixView = (DecisionMatrixView) getView(DecisionMatrixView.ID);
 		_sensitivityAnalysisView = (SensitivityAnalysisView) getView(SensitivityAnalysisView.ID);
 		
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
@@ -78,7 +75,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		
 		_criticalCell = new int[2];
 		
-		if(_decisionMatrixView.getTable().getTypeProblem().endsWith("MCC")) { //$NON-NLS-1$
+		if(_sensitivityAnalysis.getProblem() == EProblem.MOST_CRITICAL_CRITERION) { //$NON-NLS-1$
 			computePairs();
 		} else {
 			computeAllPairs();
@@ -147,9 +144,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 				_typeDataSelected = type;	
 			}
 			
-			DMTable dmTable = _decisionMatrixView.getTable();
 			if(_typeDataSelected.equals(ABSOLUTE)) {
-				if(dmTable.getTypeProblem().equals("MCC")) { //$NON-NLS-1$
+				if(_sensitivityAnalysis.getProblem() == EProblem.MOST_CRITICAL_CRITERION) { //$NON-NLS-1$
 					if(_values != _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights()) {
 						_values = _sensitivityAnalysis.getMinimumAbsoluteChangeInCriteriaWeights();
 						refreshTable();
@@ -161,7 +157,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 					}
 				}	
 			} else if(_typeDataSelected.equals(RELATIVE)){
-				if(dmTable.getTypeProblem().equals("MCC")) { //$NON-NLS-1$
+				if(_sensitivityAnalysis.getProblem() == EProblem.MOST_CRITICAL_CRITERION) { //$NON-NLS-1$
 					if(_values != _sensitivityAnalysis.getMinimumPercentChangeInCriteriaWeights()) {
 						_values = _sensitivityAnalysis.getMinimumPercentChangeInCriteriaWeights();
 						refreshTable();

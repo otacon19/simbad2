@@ -14,16 +14,15 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.core.workspace.Workspace;
+import sinbad2.resolutionphase.sensitivityanalysis.EModel;
+import sinbad2.resolutionphase.sensitivityanalysis.EProblem;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMatrixView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.provider.RankingContentProvider;
 
@@ -34,8 +33,6 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	
 	private TableViewer _rankingViewer;
 	private Combo _sensitivityModels;
-	
-	private DecisionMatrixView _decisionMatrixView;
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
 	
@@ -56,11 +53,9 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		rankingTable.setHeaderVisible(true);
 		rankingTable.setLinesVisible(true);
 
-		_decisionMatrixView = (DecisionMatrixView) getView(DecisionMatrixView.ID);
-		
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 		
-		_rankingViewer.setContentProvider(new RankingContentProvider(_sensitivityAnalysis, this));
+		_rankingViewer.setContentProvider(new RankingContentProvider(_sensitivityAnalysis));
 
 		addColumn("Ranking", 0); //$NON-NLS-1$
 		addColumn(Messages.RankingView_Alternative, 1);
@@ -92,9 +87,12 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		_sensitivityModels.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String typeProblem = _decisionMatrixView.getTable().getTypeProblem();
 				
-				if(typeProblem.equals("MCC")) { //$NON-NLS-1$
+				_sensitivityAnalysis.setModel(EModel.values()[_sensitivityModels.getSelectionIndex()]);
+				
+				EProblem typeProblem = _sensitivityAnalysis.getProblem();
+				
+				if(typeProblem == EProblem.MOST_CRITICAL_CRITERION) { //$NON-NLS-1$
 					if(_sensitivityModels.getSelectionIndex() == 0) {
 						_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
 						_rankingViewer.getTable().getColumn(2).setText(Messages.RankingView_Value);
@@ -164,10 +162,6 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 			}
 		});
 	}
-	
-	public int getModel() {
-		return _sensitivityModels.getSelectionIndex();
-	}
 
 	@Override
 	public void setFocus() {
@@ -177,16 +171,5 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	@Override
 	public void displayRankingChange(Object ranking) {
 		_rankingViewer.setInput(ranking);
-	}
-
-	private IViewPart getView(String id) {
-		IViewPart view = null;
-		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
-		for (int i = 0; i < viewReferences.length; i++) {
-			if (id.equals(viewReferences[i].getId())) {
-				view = viewReferences[i].getView(false);
-			}
-		}
-		return view;
 	}
 }

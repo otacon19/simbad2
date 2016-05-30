@@ -7,12 +7,10 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import sinbad2.resolutionphase.sensitivityanalysis.EModel;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 
 public class RankingContentProvider implements IStructuredContentProvider {	
-	
-	private RankingView _rankingView;
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
 
@@ -28,8 +26,7 @@ public class RankingContentProvider implements IStructuredContentProvider {
 		}
 	}
 	
-	public RankingContentProvider(SensitivityAnalysis sensitivityAnalysis, RankingView rankingView) {
-		_rankingView = rankingView;
+	public RankingContentProvider(SensitivityAnalysis sensitivityAnalysis) {
 		_sensitivityAnalysis = sensitivityAnalysis;
 	}
 
@@ -45,9 +42,11 @@ public class RankingContentProvider implements IStructuredContentProvider {
 		List<MyElement> elements = new LinkedList<MyElement>();
 		MyElement element = null;
 		
-		int model = _rankingView.getModel();
+		EModel model = _sensitivityAnalysis.getModel();
 		
-		if(model == 0 || model == 2) {
+		switch(model) {
+		case WEIGHTED_SUM:
+		case ANALYTIC_HIERARCHY_PROCESS:
 			for (int i = 0; i < _sensitivityAnalysis.getNumAlternatives(); i++) {
 				element = new MyElement();
 				element.alternative = _sensitivityAnalysis.getAlternativesIds()[i];
@@ -55,7 +54,8 @@ public class RankingContentProvider implements IStructuredContentProvider {
 				element.value = Math.round(_sensitivityAnalysis.getAlternativesFinalPreferences()[i] * 10000d) / 10000d;
 				elements.add(element);
 			}
-		} else if(model == 1) {
+			break;
+		case WEIGHTED_PRODUCT:
 			for (int i = 0; i < _sensitivityAnalysis.getNumAlternatives(); i++) {
 				String ratios = ""; //$NON-NLS-1$
 				element = new MyElement();
@@ -73,6 +73,7 @@ public class RankingContentProvider implements IStructuredContentProvider {
 				element.value = ratios;
 				elements.add(element);
 			}
+			break;
 		}
 		
 		Collections.sort(elements);

@@ -340,9 +340,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 
 		String id = (String) _aggregationOperatorsIds.toArray()[newValue];
 		id = id.toLowerCase();
-		System.out.println(id);
 		AggregationOperator operator = _aggregationOperatorsManager.getAggregationOperator(id);
-		System.out.println(operator);
 		
 		_abort = false;
 		_assignAll = false;

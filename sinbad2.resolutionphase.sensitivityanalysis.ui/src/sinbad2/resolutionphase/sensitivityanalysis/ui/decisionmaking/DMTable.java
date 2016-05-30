@@ -10,15 +10,12 @@ import de.kupzog.ktable.SWTX;
 
 public class DMTable extends KTable {
 	
-	private String _typeProblem;
-	
 	private SensitivityAnalysis _sensitivityAnalysis;
 
 	public DMTable(Composite parent, SensitivityAnalysis sensitivityAnalysis) {
 		super(parent, SWT.NO_BACKGROUND | SWT.FLAT | SWTX.AUTO_SCROLL);
 		
 		_sensitivityAnalysis = sensitivityAnalysis;
-		_typeProblem = "MCC"; //$NON-NLS-1$
 	}
 
 	public void setModel(String[] alternatives, String[] criteria, double[][] values) {
@@ -27,13 +24,5 @@ public class DMTable extends KTable {
 		setModel(new DMTableContentProvider(this, alternatives, criteria, values, _sensitivityAnalysis));
 	
 		getParent().layout();
-	}
-	
-	public String getTypeProblem() {
-		return _typeProblem;
-	}
-	
-	public void setTypeProblem(String typeProblem) {
-		_typeProblem = typeProblem;
 	}
 }

@@ -25,7 +25,7 @@ public class SensitivityAnalysisPerspective implements IPerspectiveFactory {
 
 				if (sensitivityAnalysisActivated) {
 					SensitivityAnalysis sa = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
-					sa.calculateDecisionMatrix(null, 0);
+					sa.calculateDecisionMatrix(null);
 				}
 			}
 

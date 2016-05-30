@@ -54,6 +54,9 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private ProblemElementsSet _elementsSet;
 
 	private AggregationPhase _aggregationPhase;
+	
+	private EModel _model;
+	private EProblem _problem;
 
 	public List<ISensitivityAnalysisChangeListener> _listeners;
 
@@ -64,6 +67,9 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_absoluteAny = new LinkedList<Integer>();
 
 		_aplicatedWeights = false;
+		
+		_model = EModel.WEIGHTED_SUM;
+		_problem = EProblem.MOST_CRITICAL_CRITERION;
 
 		_listeners = new LinkedList<ISensitivityAnalysisChangeListener>();
 	}
@@ -98,6 +104,22 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 	public void setDecisionMatrix(double[][] dm) {
 		_decisionMatrix = dm;
+	}
+	
+	public EModel getModel() {
+		return _model;
+	}
+
+	public void setModel(EModel model) {
+		_model = model;
+	}
+	
+	public void setProblem(EProblem problem) {
+		_problem = problem;
+	}
+	
+	public EProblem getProblem() {
+		return _problem;
 	}
 
 	public double[] getAlternativesFinalPreferences() {
@@ -197,45 +219,26 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void calculateDecisionMatrix(List<Double> weights, int model) {
+	public void calculateDecisionMatrix(List<Double> weights) {
 		_numberOfAlternatives = _elementsSet.getAlternatives().size();
 		_numberOfCriteria = _elementsSet.getAllSubcriteria().size();
 		_aplicatedWeights = false;
 		
 		if ((_aggregationPhase.getCriteriaOperatorWeights().get(null) != null)) {
 			if(weights != null) {
-				for (Expert e : _elementsSet.getAllExperts()) {
-					_aggregationPhase.setExpertOperator(e, _aggregationPhase.getExpertOperator(e), weights);
-				}
-	
-				Set<ProblemElement> experts = new HashSet<ProblemElement>();
-				experts.addAll(_elementsSet.getAllExperts());
-				Set<ProblemElement> alternatives = new HashSet<ProblemElement>();
-				alternatives.addAll(_elementsSet.getAlternatives());
-				Set<ProblemElement> criteria = new HashSet<ProblemElement>();
-				criteria.addAll(_elementsSet.getAllCriteria());
 				
-				_aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
-				
-				_w = new double[_numberOfCriteria];
-				for (int i = 0; i < weights.size(); ++i) {
-					_w[i] = weights.get(i);
-				}
+				setOperators(weights);
+				calculateDecisionMatrixNewWeights();	
+				assignWeights(weights);
 				
 			}  else {
 				if(_aggregationPhase.getCriteriaOperatorWeights().size() == 1) {
 					List<Double> aggregationWeights = ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(null)).get(null);
-					_w = new double[_numberOfCriteria];
-					for (int i = 0; i < aggregationWeights.size(); ++i) {
-						_w[i] = aggregationWeights.get(i);
-					}
+					assignWeights(aggregationWeights);
 					
 				} else {
 					List<Double> aggregationWeights = getSubcriteriaWeights();
-					_w = new double[_numberOfCriteria];
-					for (int i = 0; i < aggregationWeights.size(); ++i) {
-						_w[i] = aggregationWeights.get(i);
-					}
+					assignWeights(aggregationWeights);
 				}
 			}
 			
@@ -243,21 +246,46 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			
 		} else {
 			if(weights != null) {
-				_w = new double[_numberOfCriteria];
-				for (int i = 0; i < weights.size(); ++i) {
-					_w[i] = weights.get(i);
-				}
+				assignWeights(weights);
 			} else {
 				createDefaultWeights();
 			}
 		}
 		
-		if(model == 0) {
+		switch(_model) {
+		case WEIGHTED_SUM:
 			computeWeightedSumModelCriticalCriterion();
-		} else if(model == 1) {
+			break;
+		case WEIGHTED_PRODUCT:
 			computeWeightedProductModelCriticalCriterion();
-		} else {
+			break;
+		case ANALYTIC_HIERARCHY_PROCESS:
 			computeAnalyticHierarchyProcessModelCriticalCriterion();
+			break;
+		}
+	}
+
+	private void setOperators(List<Double> weights) {
+		for (Expert e : _elementsSet.getAllExperts()) {
+			_aggregationPhase.setExpertOperator(e, _aggregationPhase.getExpertOperator(e), weights);
+		}
+	}
+	
+	private void calculateDecisionMatrixNewWeights() {
+		Set<ProblemElement> experts = new HashSet<ProblemElement>();
+		experts.addAll(_elementsSet.getAllExperts());
+		Set<ProblemElement> alternatives = new HashSet<ProblemElement>();
+		alternatives.addAll(_elementsSet.getAlternatives());
+		Set<ProblemElement> criteria = new HashSet<ProblemElement>();
+		criteria.addAll(_elementsSet.getAllCriteria());
+		
+		_aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
+	}
+	
+	private void assignWeights(List<Double> weights) {
+		_w = new double[_numberOfCriteria];
+		for (int i = 0; i < weights.size(); ++i) {
+			_w[i] = weights.get(i);
 		}
 	}
 	
@@ -818,41 +846,47 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		return inferWeights;
 	}
 
-	public double[] getMinimumPercentPairAlternatives(int a1, int a2, String typeProblem) {
+	public double[] getMinimumPercentPairAlternatives(int a1, int a2) {
 		double[] percents = new double[_numberOfCriteria];
 		
-		if(typeProblem.equals("MCC")) { //$NON-NLS-1$
+		switch(_problem) {
+		case MOST_CRITICAL_CRITERION:
 			for (int k = 0; k < _numberOfCriteria; k++) {
 				if (_minimumPercentChangeInCriteriaWeights[a1][a2][k] != null) {
 					percents[k] = _minimumPercentChangeInCriteriaWeights[a1][a2][k];
 				}
 			}
-		} else {
+			break;
+		case MOST_CRITICAL_MEASURE:
 			for (int k = 0; k < _numberOfCriteria; k++) {
 				if (_relativeThresholdValues[a1][a2][k] != null) {
 					percents[k] = _relativeThresholdValues[a1][a2][k];
 				}
 			}
+			break;
 		}
 
 		return percents;
 	}
 
-	public double[] getMinimumAbsolutePairAlternatives(int a1, int a2, String typeProblem) {
+	public double[] getMinimumAbsolutePairAlternatives(int a1, int a2) {
 		double[] absolute = new double[_numberOfCriteria];
 		
-		if(typeProblem.equals("MCC")) { //$NON-NLS-1$
+		switch(_problem) {
+		case MOST_CRITICAL_CRITERION:
 			for (int k = 0; k < _numberOfCriteria; k++) {
 				if (_minimumAbsoluteChangeInCriteriaWeights[a1][a2][k] != null) {
 					absolute[k] = _minimumAbsoluteChangeInCriteriaWeights[a1][a2][k];
 				}
 			}
-		} else {
+			break;
+		case MOST_CRITICAL_MEASURE:
 			for (int k = 0; k < _numberOfCriteria; k++) {
 				if (_absoluteThresholdValues[a1][a2][k] != null) {
 					absolute[k] = _absoluteThresholdValues[a1][a2][k];
 				}
 			}
+			break;
 		}
 
 		return absolute;

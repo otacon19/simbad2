@@ -23,14 +23,13 @@ import sinbad2.core.workspace.Workspace;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.resolutionphase.sensitivityanalysis.EProblem;
 import sinbad2.resolutionphase.sensitivityanalysis.ISensitivityAnalysisChangeListener;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.AlternativesEvolutionWeigthsLineChart;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.MinimunValueBetweenAlternativesBarChart;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.chart.SturdinessMeasureStackedChart;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DecisionMatrixView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.IChangeSATableValues;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SATable;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.SensitivityAnalysisView;
@@ -55,10 +54,8 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	private SturdinessMeasureStackedChart _stackedChart;
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
-	private DecisionMatrixView _decisionMatrixView;
-	private RankingView _rankingView;
 	private SensitivityAnalysisView _sensitivityAnalysisView;
-	
+
 	private ControlAdapter _controlListener;
 	
 	private String _typeBarChart = "ABSOLUTE"; //$NON-NLS-1$
@@ -86,8 +83,6 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_sensitivityAnalysis.registerSensitivityAnalysisChangeListener(this);
 		
 		_sensitivityAnalysisView = (SensitivityAnalysisView) getView(SensitivityAnalysisView.ID);
-		_rankingView = (RankingView) getView(RankingView.ID);
-		_decisionMatrixView = (DecisionMatrixView) getView(DecisionMatrixView.ID);
 
 		_saTable = _sensitivityAnalysisView.getSATable();
 		_saTable.addSelectionChangedListener(this);
@@ -153,13 +148,13 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
 				_lineChart.setCriterionSelected(_criterionSelected);
 				_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)]);
-				_lineChart.setModel(_rankingView.getModel());
+				_lineChart.setModel(_sensitivityAnalysis.getModel());
 				
 				_weightSpinner.setVisible(true);
 				_changeChartButton.setVisible(true);
 			} else {
 				_stackedChart = new SturdinessMeasureStackedChart();
-				if(_decisionMatrixView.getTable().getTypeProblem().equals("MCM")) { //$NON-NLS-1$
+				if(_sensitivityAnalysis.getProblem() == EProblem.MOST_CRITICAL_MEASURE) { //$NON-NLS-1$
 					_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCMByCriterion());
 				} else {
 					_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCCByCriterion());
@@ -216,7 +211,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				
 				if(_changeChartButton.getText().equals(Messages.AnalysisView_Sturdiness)) {
 					_stackedChart = new SturdinessMeasureStackedChart();
-					if(_decisionMatrixView.getTable().getTypeProblem().equals("MCM")) { //$NON-NLS-1$
+					if(_sensitivityAnalysis.getProblem() == EProblem.MOST_CRITICAL_MEASURE) { //$NON-NLS-1$
 						_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCMByCriterion());
 					} else {
 						_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCCByCriterion());
@@ -228,7 +223,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 					_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
 					_lineChart.setCriterionSelected(_criterionSelected);
 					_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)]);
-					_lineChart.setModel(_rankingView.getModel());
+					_lineChart.setModel(_sensitivityAnalysis.getModel());
 					
 					_weightSpinner.setVisible(true);
 					_changeChartButton.setText(Messages.AnalysisView_Sturdiness);
@@ -283,11 +278,11 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				_barChart.setCurrentAlternativesPair(indexes);
 				
 				if(_typeBarChart.equals(Messages.AnalysisView_RELATIVE)) {
-					double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index, _decisionMatrixView.getTable().getTypeProblem());
+					double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
 					_barChart.setValues(percents);
 					_barChart.setTypeData(_typeBarChart);
 				} else {
-					double[] absolute = _sensitivityAnalysis.getMinimumAbsolutePairAlternatives(a1Index, a2Index, _decisionMatrixView.getTable().getTypeProblem());
+					double[] absolute = _sensitivityAnalysis.getMinimumAbsolutePairAlternatives(a1Index, a2Index);
 					_barChart.setValues(absolute);
 					_barChart.setTypeData(_typeBarChart);
 				}

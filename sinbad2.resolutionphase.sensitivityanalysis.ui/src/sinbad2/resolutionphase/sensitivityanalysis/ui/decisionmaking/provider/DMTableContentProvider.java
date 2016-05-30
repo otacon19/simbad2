@@ -2,10 +2,10 @@ package sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.provider;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IViewReference;
-import org.eclipse.ui.PlatformUI;
 
 import de.kupzog.ktable.KTable;
 import de.kupzog.ktable.KTableCellEditor;
@@ -16,16 +16,13 @@ import de.kupzog.ktable.editors.KTableCellEditorCombo;
 import de.kupzog.ktable.editors.KTableCellEditorText;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
+import sinbad2.resolutionphase.sensitivityanalysis.EModel;
+import sinbad2.resolutionphase.sensitivityanalysis.EProblem;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.decisionmaking.DMTable;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.IDisplayRankingChangeListener;
-import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingView;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.ranking.RankingViewManager;
 
 public class DMTableContentProvider extends KTableNoScrollModel implements IDisplayRankingChangeListener {
-	
-	private static final String MOST_CRITICAL_CRITERION = "MCC"; //$NON-NLS-1$
-	private static final String MOST_CRITICAL_MEASURE = "MCM"; //$NON-NLS-1$
 	
 	private String[] _alternatives;
 	private String[] _criteria;
@@ -34,7 +31,6 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 	private KTable _table;
 	
 	private RankingViewManager _rankingViewManager;
-	private RankingView _rankingView;
 	private SensitivityAnalysis _sensitivityAnalysis;
 
 	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
@@ -58,13 +54,6 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 		_rankingViewManager = RankingViewManager.getInstance();
 		_rankingViewManager.registerDisplayRankingChangeListener(this);
 		
-		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
-		for(int i = 0; i < viewReferences.length; i++) {
-			if(RankingView.ID.equals(viewReferences[i].getId())) {
-				_rankingView = (RankingView) viewReferences[i].getView(false);
-			}
-		}
-		
 		_sensitivityAnalysis = sensitivityAnalysis;
 		
 		_alternatives = alternatives;
@@ -81,35 +70,46 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 	@Override
 	public Object doGetContentAt(int col, int row) {
 		if((col == 0) && (row == 0)) {
-			String type = ""; //$NON-NLS-1$
+			
 			if(_kTableCombo.getControl() != null) {
 				CCombo combo = (CCombo) _kTableCombo.getControl();
-				type = combo.getText();
-				((DMTable) _table).setTypeProblem(type);
+				combo.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						
+						_sensitivityAnalysis.setProblem(EProblem.values()[((CCombo) e.widget).getSelectionIndex()]);
+						
+						EModel model = _sensitivityAnalysis.getModel();
+						if(_sensitivityAnalysis.getProblem() == EProblem.MOST_CRITICAL_CRITERION) {
+							switch(model) {
+							case WEIGHTED_SUM:
+								_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
+								break;
+							case WEIGHTED_PRODUCT:
+								_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
+								break;
+							case ANALYTIC_HIERARCHY_PROCESS:
+								_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
+								break;
+							}
+						} else {
+							switch(model) {
+							case WEIGHTED_SUM:
+								_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
+								break;
+							case WEIGHTED_PRODUCT:
+								_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
+								break;
+							case ANALYTIC_HIERARCHY_PROCESS:
+								_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalMeasure();
+								break;
+							}
+						}
+					}
+				});
 			}
 			
-			if(!type.isEmpty()) {
-				int model = _rankingView.getModel();
-				if(((DMTable) _table).getTypeProblem().equals(MOST_CRITICAL_CRITERION)) {
-					if(model == 0) {
-						_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
-					} else if(model == 1) {
-						_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
-					} else {
-						_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
-					}
-				} else {
-					if(model == 0) {
-						_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
-					} else if(model == 1) {
-						_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
-					} else {
-						_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalMeasure();
-					}
-				}
-			}
-			
-			return ((DMTable) _table).getTypeProblem();
+			return _sensitivityAnalysis.getProblem().getValue();
 			
 		} else {
 			Object erg;
@@ -143,8 +143,8 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 		if(col == 0 && row == 0) {
 			_kTableCombo = new  MyOwnKTableCellEditorCombo();
 			String[] valuesString = new String[2];
-			valuesString[0] = MOST_CRITICAL_MEASURE;
-			valuesString[1] = MOST_CRITICAL_CRITERION;
+			valuesString[0] = EProblem.MOST_CRITICAL_CRITERION.getValue();
+			valuesString[1] = EProblem.MOST_CRITICAL_MEASURE.getValue();
 			_kTableCombo.setItems(valuesString);
 			
 			return _kTableCombo;
@@ -161,23 +161,30 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 			double v = Double.parseDouble((String) value);
 			_values[row - 1][col - 1] = v;
 			
-			if(_rankingView.getModel() == 0) {
-				if(((DMTable) _table).getTypeProblem().equals(MOST_CRITICAL_CRITERION)) {
+			EModel model = _sensitivityAnalysis.getModel();
+			if(_sensitivityAnalysis.getProblem() == EProblem.MOST_CRITICAL_CRITERION) {
+				switch(model) {
+				case WEIGHTED_SUM:
 					_sensitivityAnalysis.computeWeightedSumModelCriticalCriterion();
-				} else {
-					_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
-				}
-			} else if(_rankingView.getModel() == 1){
-				if(((DMTable) _table).getTypeProblem().equals(MOST_CRITICAL_CRITERION)) {
+					break;
+				case WEIGHTED_PRODUCT:
 					_sensitivityAnalysis.computeWeightedProductModelCriticalCriterion();
-				} else {
-					_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
+					break;
+				case ANALYTIC_HIERARCHY_PROCESS:
+					_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
+					break;
 				}
 			} else {
-				if(((DMTable) _table).getTypeProblem().equals(MOST_CRITICAL_CRITERION)) {
-					_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalCriterion();
-				} else {
+				switch(model) {
+				case WEIGHTED_SUM:
+					_sensitivityAnalysis.computeWeightedSumModelCriticalMeasure();
+					break;
+				case WEIGHTED_PRODUCT:
+					_sensitivityAnalysis.computeWeightedProductModelCriticalMeasure();
+					break;
+				case ANALYTIC_HIERARCHY_PROCESS:
 					_sensitivityAnalysis.computeAnalyticHierarchyProcessModelCriticalMeasure();
+					break;
 				}
 			}
 		}
