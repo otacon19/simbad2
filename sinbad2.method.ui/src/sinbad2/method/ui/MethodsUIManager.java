@@ -7,6 +7,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
+import sinbad2.method.Method;
+
 public class MethodsUIManager {
 	
 private final String EXTENSION_POINT = "flintstones.method.ui"; //$NON-NLS-1$
@@ -88,13 +90,21 @@ private final String EXTENSION_POINT = "flintstones.method.ui"; //$NON-NLS-1$
 		}
 		
 	}
+	
+	public void activate(Method method) {
+		for(String key: _methodsUIs.keySet()) {
+			MethodUI m = _methodsUIs.get(key);
+			if(m.getMethod().equals(method)) {
+				activate(m.getId());
+			}
+		}
+	}
 
 	public void deactiveCurrentActive() {
 		if(_activeMethodUI != null) {
 			_activeMethodUI.deactivate();
 			_activeMethodUI = null;
-		}
-		
+		}	
 	}
 	
 	private MethodUI initializeMethodUI(String id) {
@@ -108,7 +118,5 @@ private final String EXTENSION_POINT = "flintstones.method.ui"; //$NON-NLS-1$
 		_methodsUIs.put(id, methodUI);
 		
 		return methodUI;
-		
 	}
-	
 }

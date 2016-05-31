@@ -464,10 +464,10 @@ public class RatingView extends ViewPart {
 				item.setData("view", step); //$NON-NLS-1$
 	
 				Composite parent = new Composite(_tabFolder, SWT.NONE);
+				
 				step.createPartControl(parent);
-				if(step instanceof IStepStateListener) {
-					setRatingViewToStep((IStepStateListener) step);
-				}
+				setRatingViewToStep((IStepStateListener) step);
+				
 				item.setControl(parent);
 				item.setData(step);
 				
@@ -591,7 +591,7 @@ public class RatingView extends ViewPart {
 		_methodNameFooterText.setText(suitableLabel.getText().replace(Messages.RatingView_SUITABLE, "")); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$
 		_methodLabelSelected = suitableLabel;
 		
-		_methodsUIManager.activate(methodToSelect.getId() + ".ui"); //$NON-NLS-1$
+		_methodsUIManager.activate(methodToSelect); //$NON-NLS-1$
 		_methodUISelected = _methodsUIManager.getActivateMethodUI();
 		_stepsText.setText(_methodUISelected.getPhasesFormat());
 		
@@ -674,14 +674,12 @@ public class RatingView extends ViewPart {
 
 	private void notifyNewStep() {
 		CTabItem item = _tabFolder.getSelection();
-		for(IStepStateListener listener: _listeners) {
-			if(listener.equals(item.getData())) {
-				listener.notifyStepStateChange();
-			}
+		if(item.getData() instanceof IStepStateListener) {
+			((IStepStateListener) item.getData()).notifyStepStateChange();
 		}
 	}
 	
-	private void setRatingViewToStep(IStepStateListener listener) {
-		listener.setRatingView(this);
+	private void setRatingViewToStep(IStepStateListener step) {
+		step.setRatingView(this);
 	}	
 }
