@@ -66,6 +66,7 @@
       <plugin id="org.jfree.chart.JFreeChart"/>
       <plugin id="sinbad2.aggregationoperator"/>
       <plugin id="sinbad2.aggregationoperator.arithmeticMean"/>
+      <plugin id="sinbad2.aggregationoperator.choquetIntegral"/>
       <plugin id="sinbad2.aggregationoperator.max"/>
       <plugin id="sinbad2.aggregationoperator.maxMin"/>
       <plugin id="sinbad2.aggregationoperator.median"/>

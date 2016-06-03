@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ChoquetIntegral
+Bundle-SymbolicName: sinbad2.aggregationoperator.choquetIntegral;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Sinbad2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.aggregationoperator,
+ sinbad2.valuation.twoTuple,
+ sinbad2.valuation.unifiedValuation,
+ sinbad2.valuation.real,
+ sinbad2.valuation.integer
