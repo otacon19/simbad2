@@ -107,6 +107,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	}
 
 	protected CellEditor getCellEditor(Object element) {
+		List<String> weightedAggregationOperatorsNames = new LinkedList<String>();
 		
 		if(_aggregationOperatorsIds == null) {
 			_aggregationOperatorsIds = new TreeSet<String>();
@@ -125,12 +126,14 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			for(int i = 0; i < _aggregationOperatorsIds.size(); i++) {
 				operator = _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]);
 				if (operator instanceof WeightedAggregationOperator) {
-					_aggregationOperatorsNames.add("(W) " + _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName()); //$NON-NLS-1$
+					weightedAggregationOperatorsNames.add("(W) " + _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName()); //$NON-NLS-1$
 				} else {
 					_aggregationOperatorsNames.add(_aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName());
 				}
 			}
 		}
+		
+		_aggregationOperatorsNames.addAll(weightedAggregationOperatorsNames);
 		
 		_cellEditor = new ComboBoxCellEditor(_viewer.getTree(), _aggregationOperatorsNames.toArray(new String[0]), SWT.READ_ONLY);
 		

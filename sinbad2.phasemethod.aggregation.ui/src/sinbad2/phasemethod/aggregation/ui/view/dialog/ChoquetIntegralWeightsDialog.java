@@ -138,12 +138,13 @@ public class ChoquetIntegralWeightsDialog extends Dialog {
 
 			@Override
 			public void verifyText(VerifyEvent e) {
-				List<String> numbers = new LinkedList<String>((Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"))); 
-				
+				List<String> numbers = new LinkedList<String>((Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")));
+
 				char c = e.character;
 				String character = String.valueOf(c);
-				if(!numbers.contains(character)) {
-					if(c != ';') {
+	
+				if (!numbers.contains(character)) {
+					if (c != ';' && c != '.') {
 						e.doit = false;
 					}
 				}
