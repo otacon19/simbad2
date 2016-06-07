@@ -22,6 +22,7 @@ public class TwoTuple extends MethodImplementation {
 	
 	public static final String ID = "flintstones.method.linguistic.linguistic.twotuple"; //$NON-NLS-1$
 	
+	private static final String EVALUATIONS_IN_NOT_BLTS_DOMAINS = "Evaluations in not BLTS domain";
 	private static final String EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS = Messages.TwoTuple_Evaluations_in_not_linguistic_domain;
 	private static final String EVALUATIONS_IN_UNBALANCED_DOMAIN = Messages.TwoTuple_Evaluations_in_unbalanced_domain;
 	private static final String EVALUATIONS_IN_DIFFERENT_DOMAINS = Messages.TwoTuple_Evaluations_in_different_domains;
@@ -59,6 +60,8 @@ public class TwoTuple extends MethodImplementation {
 		for(Domain d: _domainSet.getDomains()) {
 			if(!(d instanceof FuzzySet)) {
 				return EVALUATIONS_IN_NOT_LINGUISTIC_DOMAINS;
+			} else if(!((FuzzySet) d).isBLTS()) {
+				return EVALUATIONS_IN_NOT_BLTS_DOMAINS;
 			}
 		}
 		

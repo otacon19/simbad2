@@ -38,8 +38,8 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	private CellEditor _cellEditor;
 	
 	private AggregationPhase _aggregationPhase;
+	private List<String> _aggregationOperatorsIds;
 	private List<String> _aggregationOperatorsNames;
-	private TreeSet<String> _aggregationOperatorsIds;
 	private List<Double> _weights;
 	private Map<String, List<Double>> _mapWeights;
 	private String _type;
@@ -107,33 +107,40 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	}
 
 	protected CellEditor getCellEditor(Object element) {
-		List<String> weightedAggregationOperatorsNames = new LinkedList<String>();
 		
 		if(_aggregationOperatorsIds == null) {
-			_aggregationOperatorsIds = new TreeSet<String>();
+			
+			Set<String> aOperatorsIds = new TreeSet<String>();
+			List<String> weightedAggregationOperatorsNames = new LinkedList<String>();
+			List<String> weightedAggregationOperatorsIds = new LinkedList<String>();
+			_aggregationOperatorsNames = new LinkedList<String>();
+			_aggregationOperatorsIds = new LinkedList<String>();
+			
 			MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();	
 			Set<EAggregationOperatorType> operatorsTypes = methodsUIManager.getActivateMethodUI().getMethod().getAggregationTypesSupported();
 			String[] operatorsIds;
 			for(EAggregationOperatorType operatorType: operatorsTypes) {
 				operatorsIds = _aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
 				for(String operator: operatorsIds) {
-					_aggregationOperatorsIds.add(operator);
+					aOperatorsIds.add(operator);
 				}
 			}
 			
-			_aggregationOperatorsNames = new LinkedList<String>();
 			AggregationOperator operator;
-			for(int i = 0; i < _aggregationOperatorsIds.size(); i++) {
-				operator = _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]);
+			for(int i = 0; i < aOperatorsIds.size(); i++) {
+				operator = _aggregationOperatorsManager.getAggregationOperator((String) aOperatorsIds.toArray()[i]);
 				if (operator instanceof WeightedAggregationOperator) {
-					weightedAggregationOperatorsNames.add("(W) " + _aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName()); //$NON-NLS-1$
+					weightedAggregationOperatorsNames.add("(W) " + _aggregationOperatorsManager.getAggregationOperator((String) aOperatorsIds.toArray()[i]).getName()); //$NON-NLS-1$
+					weightedAggregationOperatorsIds.add(operator.getId());
 				} else {
-					_aggregationOperatorsNames.add(_aggregationOperatorsManager.getAggregationOperator((String) _aggregationOperatorsIds.toArray()[i]).getName());
+					_aggregationOperatorsNames.add(_aggregationOperatorsManager.getAggregationOperator((String) aOperatorsIds.toArray()[i]).getName());
+					_aggregationOperatorsIds.add(operator.getId());
 				}
 			}
+			
+			_aggregationOperatorsNames.addAll(weightedAggregationOperatorsNames);
+			_aggregationOperatorsIds.addAll(weightedAggregationOperatorsIds);
 		}
-		
-		_aggregationOperatorsNames.addAll(weightedAggregationOperatorsNames);
 		
 		_cellEditor = new ComboBoxCellEditor(_viewer.getTree(), _aggregationOperatorsNames.toArray(new String[0]), SWT.READ_ONLY);
 		

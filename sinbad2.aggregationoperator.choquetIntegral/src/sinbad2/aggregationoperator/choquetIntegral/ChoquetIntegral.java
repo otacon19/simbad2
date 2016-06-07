@@ -65,7 +65,7 @@ public class ChoquetIntegral extends WeightedAggregationOperator {
 					open = true;
 				}
 			}
-
+			
 			for(Valuation valuation : valuations) {
 				if(valuation instanceof IntegerValuation) {
 					return IntegerOperator.aggregate(valuations, validWeights, assignments, rules);
