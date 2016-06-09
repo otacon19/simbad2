@@ -57,7 +57,7 @@ public class IntegerOperator {
 
 			// Establecemos la medida del resultado
 			result = (IntegerValuation) valuations.get(0).clone();
-			result.setValue((long) measure);
+			result.setValue(measure);
 		}
 
 		return result;

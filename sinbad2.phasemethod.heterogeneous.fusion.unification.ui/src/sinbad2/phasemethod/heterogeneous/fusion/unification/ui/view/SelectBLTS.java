@@ -124,7 +124,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = _validDomainsViewer.getSelection();
 				_BLTSDomainSelected = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
-				
+	
 				disposeFollowingPhase();
 				
 				_completed = true;

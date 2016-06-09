@@ -25,6 +25,7 @@ public class ChoquetIntegral extends WeightedAggregationOperator {
 
 	@Override
 	public Valuation aggregate(List<Valuation> valuations, List<Double> weights) {
+	
 		Map<Integer, Set<Integer>> rules = new HashMap<Integer, Set<Integer>>();
 		List<Set<Integer>> assignments = new LinkedList<Set<Integer>>();
 		List<Double> validWeights = new LinkedList<Double>();
@@ -34,6 +35,17 @@ public class ChoquetIntegral extends WeightedAggregationOperator {
 
 		// Controlar pesos nulos
 		Validator.notNull(weights);
+		
+		List<Valuation> auxValuations = new LinkedList<Valuation>();
+		for(Valuation valuation : valuations) {
+			if(valuation != null) {
+				auxValuations.add(valuation);
+			}
+		}
+		
+		if(auxValuations.size() != valuations.size()) {
+			valuations = auxValuations;
+		}
 
 		int valuationsSize = valuations.size();
 

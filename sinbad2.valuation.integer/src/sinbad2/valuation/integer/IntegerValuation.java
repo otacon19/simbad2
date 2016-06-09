@@ -21,19 +21,19 @@ public class IntegerValuation extends Valuation {
 	
 	public static final String ID = "flintstones.valuation.integer"; //$NON-NLS-1$
 	
-	public long _value;
+	public double _value;
 	
 	public IntegerValuation() {
 		super();
 		_value = 0;
 	}
 	
-	public IntegerValuation(NumericIntegerDomain domain, long value) {
+	public IntegerValuation(NumericIntegerDomain domain, double value) {
 		_domain = domain;
 		_value = value;
 	}
 	
-	public void setValue(Long value) {
+	public void setValue(Double value) {
 		Validator.notNull(_domain);
 		
 		if(((NumericIntegerDomain) _domain).getInRange()) {
@@ -45,7 +45,7 @@ public class IntegerValuation extends Valuation {
 		}
 	}
 	
-	public long getValue() {
+	public double getValue() {
 		return _value;
 	}
 	
@@ -61,6 +61,7 @@ public class IntegerValuation extends Valuation {
 		
 		result.setDomain(domain);
 		result.setValue(_value);
+		
 		
 		return result.normalizeRange();
 	}
@@ -144,7 +145,7 @@ public class IntegerValuation extends Valuation {
 				new String[] { Integer.class.toString() });
 		
 		if(_domain.equals(other.getDomain())) {
-			return Long.valueOf(_value).compareTo(Long.valueOf(((IntegerValuation) other)._value));
+			return Double.valueOf(_value).compareTo(Double.valueOf(((IntegerValuation) other)._value));
 		}
 		
 		return 0;
@@ -154,19 +155,19 @@ public class IntegerValuation extends Valuation {
 	public Object clone() {
 		IntegerValuation result = null;
 		result = (IntegerValuation) super.clone();
-		result._value = new Long(_value);
+		result._value = new Double(_value);
 		
 		return result;
 	}
 
 	@Override
 	public String changeFormatValuationToString() {
-		return Long.toString(_value);
+		return Double.toString(_value);
 	}
 	
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeAttribute("value", Long.toString(_value)); //$NON-NLS-1$
+		writer.writeAttribute("value", Double.toString(_value)); //$NON-NLS-1$
 	}
 
 	@Override

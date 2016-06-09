@@ -145,6 +145,7 @@ public class UnificationPhase implements IPhaseMethod {
 					if(((NumericIntegerDomain) valuation.getDomain()).getInRange()) {
 						fuzzySet = ((IntegerValuation) valuation).unification(unifiedDomain);
 						valuation = new UnifiedValuation(fuzzySet);
+						_unifiedValuationsResult.put(vk, valuation);
 					} else {
 						Object[] auxEvaluation = new Object[5];
 						auxEvaluation[0] = expert;

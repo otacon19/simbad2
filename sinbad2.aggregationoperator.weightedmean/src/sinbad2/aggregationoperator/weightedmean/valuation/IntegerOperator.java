@@ -39,7 +39,7 @@ public class IntegerOperator {
 			}
 
 			result = (IntegerValuation) valuations.get(0).clone();
-			result.setValue((long) measure);
+			result.setValue(measure);
 		}
 
 		return result;

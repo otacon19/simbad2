@@ -325,7 +325,11 @@ public class AggregationPhase implements IPhaseMethod {
 						if (operator instanceof UnweightedAggregationOperator) {
 							Valuation v = ((UnweightedAggregationOperator) operator).aggregate(criterionValuations);
 							alternativeValuations.add(v);
-							_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
+							if(v == null) {
+								_decisionMatrix[_numCriterion][_numAlternative] = -1;
+							} else {
+								_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
+							}
 							_numCriterion++;
 						} else {
 							aux = getExpertOperatorWeights(expertParent);
@@ -345,7 +349,11 @@ public class AggregationPhase implements IPhaseMethod {
 								if(weights != null) {
 									Valuation v = ((WeightedAggregationOperator) operator).aggregate(criterionValuations, weights);
 									alternativeValuations.add(v);
-									_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
+									if(v == null) {
+										_decisionMatrix[_numCriterion][_numAlternative] = -1;
+									} else {
+										_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
+									}
 									_numCriterion++;
 								} else {
 									alternativeValuations.add(null);
@@ -354,7 +362,11 @@ public class AggregationPhase implements IPhaseMethod {
 						}
 					} else {
 						alternativeValuations.add(criterionValuations.get(0));
-						_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) criterionValuations.get(0)).calculateInverseDelta();
+						if(criterionValuations.get(0) == null) {
+							_decisionMatrix[_numCriterion][_numAlternative] = -1;
+						} else {
+							_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) criterionValuations.get(0)).calculateInverseDelta();
+						}
 						_numCriterion++;
 					}
 				}

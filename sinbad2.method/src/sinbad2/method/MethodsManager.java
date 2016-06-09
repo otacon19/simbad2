@@ -173,6 +173,7 @@ public class MethodsManager {
 	}
 	
 	public String getRecommendedMethod() {
+		
 		Map<Integer, Boolean> bcl = getBestConditionsLinguistic();
 		int[] cardinalities = getCardinalitiesFuzzySet();
 		
@@ -183,8 +184,6 @@ public class MethodsManager {
 		if(cardinalities.length > 0 && bcl.size() > 0) {
 			if((bcl.get(cardinalities[0])) && _domainsSet.getDomains().size() == 1) {
 				return Messages.MethodsManager_2_Tuple_linguistic_computational_model;
-			} else if(getBestConditionsNumeric()) {
-				return Messages.MethodsManager_Fusion_approach_for_managing_heterogeneous_information;
 			} else if(getBestConditionsUnbalanced() && _domainsSet.getDomains().size() == 1) {
 				return Messages.MethodsManager_Methodology_to_deal_with_unbalanced_linguistic_term_sets;
 			} else {
@@ -193,11 +192,15 @@ public class MethodsManager {
 						return Messages.MethodsManager_Fusion_approach_for_managing_multi_granular_linguistic_information;
 					} else if((i + 1) < cardinalities.length) {
 						if((((cardinalities[i] -1) * 2) +1) != cardinalities[i + 1]) {
-							return Messages.MethodsManager_Extended_Linguistic_Hieratchies;
+							return Messages.MethodsManager_Extended_Linguistic_Hierarchies;
 						}
 					}
 				}
 				return Messages.MethodsManager_Linguistic_Hierarchies;
+			}
+		} else {
+			if(getBestConditionsNumeric()) {
+				return Messages.MethodsManager_Fusion_approach_for_managing_heterogeneous_information;
 			}
 		}
 		return ""; //$NON-NLS-1$

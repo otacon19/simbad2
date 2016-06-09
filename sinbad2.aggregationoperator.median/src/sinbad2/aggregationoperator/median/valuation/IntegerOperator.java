@@ -39,7 +39,7 @@ public class IntegerOperator {
 			
 			if((values.size() % 2) == 0) {
 				Valuation auxValuation = values.get(median - 1);
-				long value = (((IntegerValuation) result).getValue());
+				double value = (((IntegerValuation) result).getValue());
 				value += (((IntegerValuation) auxValuation).getValue());
 				((IntegerValuation) result).setValue(value);
 			}

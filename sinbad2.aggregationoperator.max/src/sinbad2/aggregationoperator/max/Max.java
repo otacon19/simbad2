@@ -26,6 +26,7 @@ public class Max extends UnweightedAggregationOperator {
 
 	@Override
 	public Valuation aggregate(List<Valuation> valuations) {
+		
 		Validator.notNull(valuations);
 		
 		List<Valuation> auxValuations = new LinkedList<Valuation>();

@@ -1,6 +1,5 @@
 package sinbad2.phasemethod.aggregation.ui.view.dialog;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,8 +7,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -96,7 +93,7 @@ public class ChoquetIntegralWeightsDialog extends Dialog {
 		}
 
 		hookValuesModifyListener();
-		hookValuesVerifyListener();
+		//hookValuesVerifyListener();
 		return container;
 	}
 
@@ -133,7 +130,7 @@ public class ChoquetIntegralWeightsDialog extends Dialog {
 		_value.addModifyListener(modifyListener);
 	}
 
-	private void hookValuesVerifyListener() {
+	/*private void hookValuesVerifyListener() {
 		VerifyListener verifyListener = new VerifyListener() {
 
 			@Override
@@ -144,7 +141,7 @@ public class ChoquetIntegralWeightsDialog extends Dialog {
 				String character = String.valueOf(c);
 	
 				if (!numbers.contains(character)) {
-					if (c != ';' && c != '.') {
+					if (c != ';' && c != '.' && e.keyCode != SWT.CR && e.keyCode != SWT.DEL) {
 						e.doit = false;
 					}
 				}
@@ -152,7 +149,7 @@ public class ChoquetIntegralWeightsDialog extends Dialog {
 		};
 
 		_value.addVerifyListener(verifyListener);
-	}
+	}*/
 
 	public List<Double> getWeights() {
 		return _weights;

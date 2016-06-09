@@ -99,7 +99,7 @@ public class ValuationPanelInteger extends ValuationPanel {
 			result = (IntegerValuation) _valuation.clone();
 		}
 		
-		result.setValue((long) _value);
+		result.setValue((double) _value);
 		
 		return result;
 	}
