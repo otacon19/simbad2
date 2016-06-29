@@ -53,6 +53,7 @@ public class ApplyDomainAssignmentsOperation extends UndoableOperation {
 		
 		setDomain(_expert, _alternative, _criterion, _domain);
 		
+		
 		if(_newDomainAssignments.size() > 0) {
 			_domainAssignments.setDomain(_oldDomainAssignments, _newDomainAssignments, _inUndoRedo);
 		}

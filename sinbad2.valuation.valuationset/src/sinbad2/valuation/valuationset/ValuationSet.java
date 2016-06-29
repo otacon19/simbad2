@@ -27,6 +27,7 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.resolutionphase.framework.Framework;
 import sinbad2.resolutionphase.frameworkstructuring.FrameworkStructuring;
+import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignmentKey;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignments;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignmentsManager;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.listener.DomainAssignmentsChangeEvent;
@@ -241,7 +242,6 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 			EDomainSetChange change = event.getChange();
 
 			if (EDomainSetChange.MODIFY_DOMAIN.equals(change)) {
-				// TODO si se puede mantener la valoración mantenerla
 				removeValuationsOperation(ERemoveValuation.DOMAIN, event.getOldValue());
 			}
 		}
@@ -258,20 +258,21 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyDomainAssignmentsChange(DomainAssignmentsChangeEvent event) {
-
+		
 		if (!event.getInUndoRedo()) {
-
-			Valuation valuation;
-			
 			List<ValuationKey> valuations = new LinkedList<ValuationKey>();
-			for (ValuationKey key : _valuations.keySet()) {
-				valuation = _valuations.get(key);
-				if(valuation == null) {
-					valuations.add(key);
+			
+			Map<DomainAssignmentKey, Domain> v = (Map<DomainAssignmentKey, Domain>) event.getOldValue();
+			for(DomainAssignmentKey dk: v.keySet()) {
+				ValuationKey vk = new ValuationKey(dk.getExpert(), dk.getAlternative(), dk.getCriterion());
+				if(_valuations.get(vk) != null) {
+					valuations.add(vk);
 				}
 			}
+				
 			removeValuationsOperation(ERemoveValuation.VALUATIONS, valuations);
 		}
 	}

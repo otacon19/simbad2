@@ -393,6 +393,7 @@ public class RatingView extends ViewPart {
 		
 		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL)); //$NON-NLS-1$
 		label.setText(currentMethod.getName());
+
 		if(currentMethod.getName().equals(_recommendedMethod) && (!label.getForeground().equals(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED)))) {
 			label.setText(label.getText() + Messages.RatingView_SUITABLE);
 		}
@@ -466,7 +467,9 @@ public class RatingView extends ViewPart {
 				Composite parent = new Composite(_tabFolder, SWT.NONE);
 				
 				step.createPartControl(parent);
-				setRatingViewToStep((IStepStateListener) step);
+				if(step instanceof IStepStateListener) {
+					setRatingViewToStep((IStepStateListener) step);
+				}
 				
 				item.setControl(parent);
 				item.setData(step);
