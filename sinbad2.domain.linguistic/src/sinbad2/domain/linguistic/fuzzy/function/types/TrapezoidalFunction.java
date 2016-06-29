@@ -169,7 +169,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	
 
 	@Override
-	public double maxMin(double min, double max) {
+	public double maxMin(double max, double min) {
 		Validator.notDisorder(new double[] { min, max }, false);
 		
 		if(( max >= _b) && (min <= _c)) {
