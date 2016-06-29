@@ -394,7 +394,6 @@ public class RatingView extends ViewPart {
 		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL)); //$NON-NLS-1$
 		label.setText(currentMethod.getName());
 		
-		System.out.println(currentMethod.getName());
 		if(currentMethod.getName().equals(_recommendedMethod) && (!label.getForeground().equals(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED)))) {
 			label.setText(label.getText() + Messages.RatingView_SUITABLE);
 		}
