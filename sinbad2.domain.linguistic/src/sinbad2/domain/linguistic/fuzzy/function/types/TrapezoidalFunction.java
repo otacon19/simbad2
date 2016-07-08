@@ -167,17 +167,16 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		return result;
 	}
 	
-
 	@Override
 	public double maxMin(double max, double min) {
 		Validator.notDisorder(new double[] { min, max }, false);
 		
-		if(( max >= _b) && (min <= _c)) {
+		if(( min >= _b) && (max <= _c)) {
 			return 1d;
-		} else if(max < _b) {
-			return getMembershipValue(max);
-		} else {
+		} else if(min < _b) {
 			return getMembershipValue(min);
+		} else {
+			return getMembershipValue(max);
 		}
 	}
 	
@@ -196,8 +195,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		double result;
 		double slopeThisAB, slopeFunctionAB, slopeThisCD, slopeFunctionCD;
 		
-		values[0] = maxMin(tmf._b, tmf._c);
-		
+		values[0] = maxMin(tmf._c, tmf._b);
 		
 		if (values[0] == 1) {
 			return 1d;

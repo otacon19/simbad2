@@ -327,6 +327,11 @@ public class RatingView extends ViewPart {
 			categoriesMethods.put(category, methods);
 		}
 
+
+		MethodsManager methodsManager = MethodsManager.getInstance();
+		_recommendedMethod = methodsManager.getRecommendedMethod();
+		System.out.println(_recommendedMethod);
+		
 		int cont = 0;
 		for(String key: categoriesMethods.keySet()) {
 			createCategoryBar(key, cont,  categoriesMethods.get(key));
@@ -359,9 +364,6 @@ public class RatingView extends ViewPart {
 		layout.marginBottom = 0;
 		layout.verticalSpacing = 0;
 		composite.setLayout(layout);
-
-		MethodsManager methodsManager = MethodsManager.getInstance();
-		_recommendedMethod = methodsManager.getRecommendedMethod();
 		
 		for (int i = 0; i < methods.size(); i++) {
 			createMethod(composite, methods.get(i));
@@ -393,7 +395,7 @@ public class RatingView extends ViewPart {
 		
 		label.setFont(SWTResourceManager.getFont("Cantarell", 10, SWT.NORMAL)); //$NON-NLS-1$
 		label.setText(currentMethod.getName());
-		
+
 		if(currentMethod.getName().equals(_recommendedMethod) && (!label.getForeground().equals(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_RED)))) {
 			label.setText(label.getText() + Messages.RatingView_SUITABLE);
 		}
