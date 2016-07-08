@@ -330,7 +330,6 @@ public class RatingView extends ViewPart {
 
 		MethodsManager methodsManager = MethodsManager.getInstance();
 		_recommendedMethod = methodsManager.getRecommendedMethod();
-		System.out.println(_recommendedMethod);
 		
 		int cont = 0;
 		for(String key: categoriesMethods.keySet()) {
