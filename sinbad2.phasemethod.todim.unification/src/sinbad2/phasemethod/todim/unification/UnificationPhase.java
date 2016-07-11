@@ -51,6 +51,7 @@ public static final String ID = "flintstones.phasemethod.todim.unification"; //$
 		
 		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
 		_twoTupleValuationsResult = new LinkedHashMap<ValuationKey, Valuation>();
+		_envelopeValuations = new HashMap<ValuationKey, TrapezoidalFunction>();
 	}
 	
 	public Map<ValuationKey, Valuation> getUnifiedValuationsResult() {

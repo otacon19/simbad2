@@ -5,11 +5,15 @@
          point="flintstones.method">
       <method
             category="%Method-Category"
+            description="%Method-Description"
             id="flintstones.method.decision.todim"
             implementation="sinbad2.method.decision.todim.TODIM"
             name="%Method-Name">
          <phasemethod
                phase="flintstones.phasemethod.todim.unification">
+         </phasemethod>
+         <phasemethod
+               phase="flintstones.phasemethod.todim.resolution">
          </phasemethod>
          <aggregation_supported
                type="Hesitant">
