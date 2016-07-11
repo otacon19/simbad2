@@ -88,6 +88,8 @@
       <plugin id="sinbad2.domain.valuations"/>
       <plugin id="sinbad2.element"/>
       <plugin id="sinbad2.element.ui"/>
+      <plugin id="sinbad2.method.decision.todim"/>
+      <plugin id="sinbad2.method.decision.todim.ui"/>
       <plugin id="sinbad2.method.decision.topsis"/>
       <plugin id="sinbad2.method.decision.topsis.ui"/>
       <plugin id="sinbad2.method.linguistic"/>
@@ -125,6 +127,8 @@
       <plugin id="sinbad2.phasemethod.multigranular.lh.unification.ui"/>
       <plugin id="sinbad2.phasemethod.retranslation"/>
       <plugin id="sinbad2.phasemethod.retranslation.ui"/>
+      <plugin id="sinbad2.phasemethod.todim.unification"/>
+      <plugin id="sinbad2.phasemethod.todim.unification.ui"/>
       <plugin id="sinbad2.phasemethod.topsis.selection"/>
       <plugin id="sinbad2.phasemethod.topsis.selection.ui"/>
       <plugin id="sinbad2.phasemethod.topsis.unification"/>
@@ -167,7 +171,6 @@
       <plugin id="sinbad2.valuation.unifiedValuation"/>
       <plugin id="sinbad2.valuation.valuationset"/>
       <plugin id="sinbad2.valuation.valuationset.ui"/>
-      <plugin id="sinbad2.valutation.hesitant.ui"/>
    </plugins>
 
 
