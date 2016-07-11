@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method.ui">
+      <method_ui
+            id="flintstones.method.decision.todim.ui"
+            method="flintstones.method.decision.todim"
+            name="TODIM">
+         <ui
+               id="flintstones.phasemethod.todim.unification.ui">
+         </ui>
+      </method_ui>
+   </extension>
+
+</plugin>

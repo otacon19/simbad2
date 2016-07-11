@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.phasemethod.ui">
+      <ui
+            id="flintstones.phasemethod.todim.unification.ui"
+            name="%ui.name"
+            phasemethod="flintstones.phasemethod.todim.unification">
+         <view
+               step="sinbad2.phasemethod.todim.unification.ui.view.SelectBLTS">
+         </view>
+         <view
+               step="sinbad2.phasemethod.todim.unification.ui.view.Unification">
+         </view>
+      </ui>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.phasemethod.todim.unification.ui.category"
+            name="%category.name">
+      </category>
+      <view
+            category="flintstones.phasemethod.todim.unification.ui.category"
+            class="sinbad2.phasemethod.todim.unification.ui.view.SelectBLTS"
+            id="flintstones.phasemethod.todim.unification.ui.view.selectblts"
+            name="%view.name"
+            restorable="true">
+      </view>
+      <view
+            category="flintstones.phasemethod.todim.unification.ui.category"
+            class="sinbad2.phasemethod.todim.unification.ui.view.Unification"
+            id="flintstones.phasemethod.todim.unification.ui.view.unification"
+            name="%view.name.0"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>

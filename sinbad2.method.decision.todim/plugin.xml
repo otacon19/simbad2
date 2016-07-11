@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method">
+      <method
+            category="%Method-Category"
+            id="flintstones.method.decision.todim"
+            implementation="sinbad2.method.decision.todim.TODIM"
+            name="%Method-Name">
+         <phasemethod
+               phase="flintstones.phasemethod.todim.unification">
+         </phasemethod>
+         <aggregation_supported
+               type="Hesitant">
+         </aggregation_supported>
+         <aggregation_supported
+               type="Linguistic">
+         </aggregation_supported>
+         <aggregation_supported
+               type="Numeric">
+         </aggregation_supported>
+         <aggregation_supported
+               type="Interval">
+         </aggregation_supported>
+      </method>
+   </extension>
+
+</plugin>

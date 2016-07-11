@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: sinbad2.phasemethod.todim.unification.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sinbad2.phasemethod.todim.unification.ui.Activator
+Require-Bundle: sinbad2.phasemethod.todim.unification;bundle-version="1.0.0",
+ sinbad2.domain.linguistic.fuzzyset.ui,
+ sinbad2.resolutionphase.rating.ui;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
