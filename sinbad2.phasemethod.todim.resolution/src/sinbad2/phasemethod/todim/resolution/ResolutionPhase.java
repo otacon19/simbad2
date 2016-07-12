@@ -14,7 +14,6 @@ import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -25,9 +24,10 @@ public class ResolutionPhase implements IPhaseMethod {
 	
 	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
 	
-	private double[][] _decisionMatrix;
-	private int _numCriteria;
+	private Valuation[][] _decisionMatrix;
+	
 	private int _numAlternatives;
+	private int _numCriteria;
 	
 	private ValuationSet _valuationSet;
 	private ProblemElementsSet _elementsSet;
@@ -40,17 +40,17 @@ public class ResolutionPhase implements IPhaseMethod {
 		_elementsSet = elementsManager.getActiveElementSet();
 	
 		_valuationsInTwoTuple = new HashMap<ValuationKey, Valuation>();
-	
-		_numCriteria = _elementsSet.getCriteria().size();
+
 		_numAlternatives = _elementsSet.getAlternatives().size();
-		_decisionMatrix = new double[_numCriteria][_numAlternatives];
+		_numCriteria = _elementsSet.getCriteria().size();
+		_decisionMatrix = new Valuation[_numAlternatives][_numCriteria];
 	}
 	
-	public void setDecisionMatrix(double[][] decisionMatrix) {
+	public void setDecisionMatrix(Valuation[][] decisionMatrix) {
 		_decisionMatrix = decisionMatrix;
 	}
 	
-	public double[][] getDecisionMatrix() {
+	public Valuation[][] getDecisionMatrix() {
 		return _decisionMatrix;
 	}
 	
@@ -62,9 +62,9 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _valuationsInTwoTuple;
 	}
 
-	public double[][] calculateDecisionMatrix(AggregationOperator operator, List<Double> weights) {
+	public Valuation[][] calculateDecisionMatrix(AggregationOperator operator, Map<String, List<Double>> weights) {
 		
-		_decisionMatrix = new double[_numCriteria][_numAlternatives];
+		_decisionMatrix = new Valuation[_numAlternatives][_numCriteria];
 		
 		for(int a = 0; a < _elementsSet.getAlternatives().size(); ++a) {
 			for(int c = 0; c < _elementsSet.getAllCriteria().size(); ++c) {
@@ -74,12 +74,18 @@ public class ResolutionPhase implements IPhaseMethod {
 			}
 		}
 		
-		normalizeDecisionMatrix();
-		
 		return _decisionMatrix;
 	}
 	
-	private void aggregateExperts(int alternative, int criterion, AggregationOperator operator, List<Double> weights) {
+	private void aggregateExperts(int alternative, int criterion, AggregationOperator operator, Map<String, List<Double>> weights) {
+		
+		List<Double> globalWeights = new LinkedList<Double>();
+		List<Double> criterionWeights = new LinkedList<Double>();
+		if(weights.size() == 1) {
+			globalWeights = weights.get(null);
+		} else if(weights.size() > 1) {
+			criterionWeights = weights.get(_elementsSet.getAllCriteria().get(criterion).getCanonicalId());
+		}
 		
 		List<Valuation> valuations = new LinkedList<Valuation>();
 		for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
@@ -92,44 +98,14 @@ public class ResolutionPhase implements IPhaseMethod {
 		if(operator instanceof UnweightedAggregationOperator) {
 			expertsColectiveValuation = ((UnweightedAggregationOperator) operator).aggregate(valuations);
 		} else if(operator instanceof WeightedAggregationOperator) {
-			expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, weights);
-		}
-		
-		_decisionMatrix[criterion][alternative] = ((TwoTuple) expertsColectiveValuation).calculateInverseDelta();
-	}
-	
-	private void normalizeDecisionMatrix() {
-		
-		if(!checkNormalizedMatrix()) {
-			double acum, noStandarizedValue;
-			for (int i = 0; i < _numCriteria; ++i) {
-				acum = sumCriteria(i);
-				for (int j = 0; j < _numAlternatives; ++j) {
-					noStandarizedValue = _decisionMatrix[i][j];
-					_decisionMatrix[i][j] = (double) Math.round((noStandarizedValue / acum) * 10000d) / 10000d;
-				}
+			if(!globalWeights.isEmpty()) {
+				expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, globalWeights);
+			} else {
+				expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, criterionWeights);
 			}
 		}
-	}
 
-	private boolean checkNormalizedMatrix() {
-		
-		for (int i = 0; i < _numCriteria; ++i) {
-			for (int j = 0; j < _numAlternatives; ++j) {
-				if(_decisionMatrix[i][j] > 1) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-	
-	private double sumCriteria(int numCriterion) {
-		double value = 0;
-		for (int j = 0; j < _numAlternatives; ++j) {
-			value += Math.pow(_decisionMatrix[numCriterion][j], 2);
-		}
-		return Math.sqrt(value);
+		_decisionMatrix[alternative][criterion] = expertsColectiveValuation;
 	}
 	
 	@Override
