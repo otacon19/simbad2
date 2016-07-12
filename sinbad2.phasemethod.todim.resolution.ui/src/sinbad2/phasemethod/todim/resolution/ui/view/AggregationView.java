@@ -3,7 +3,7 @@ package sinbad2.phasemethod.todim.resolution.ui.view;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-public class ProblemInformationView extends ViewPart {
+public class AggregationView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {

@@ -8,7 +8,7 @@
             name="%ui.name"
             phasemethod="flintstones.phasemethod.todim.resolution">
          <view
-               step="sinbad2.phasemethod.todim.resolution.ui.view.ProblemInformationView">
+               step="sinbad2.phasemethod.todim.resolution.ui.view.AggregationView">
          </view>
       </ui>
    </extension>
@@ -20,8 +20,8 @@
       </category>
       <view
             category="flintstones.phasemethod.todim.resolution.ui.category"
-            class="sinbad2.phasemethod.todim.resolution.ui.view.ProblemInformationView"
-            id="flintstones.phasemethod.todim.resolution.ui.view.criteriainformation"
+            class="sinbad2.phasemethod.todim.resolution.ui.view.AggregationView"
+            id="flintstones.phasemethod.todim.resolution.ui.view.aggregation"
             name="%view.name"
             restorable="true">
       </view>
