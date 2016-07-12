@@ -26,13 +26,14 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.method.ui.MethodsUIManager;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
 import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsDialog;
-
 
 public class AggregationView extends ViewPart {
 
 	private Composite _parent;
+	private Composite _decisionMatrixComposite;
 	private Combo _aggregationOperatorsCombo;
 	
 	private Map<String, String> _operators;
@@ -41,7 +42,15 @@ public class AggregationView extends ViewPart {
 	
 	private ResolutionPhase _resolutionPhase;
 	
+	private ProblemElementsSet _elementsSet;
+	
 	public AggregationView() {
+		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+		_elementsSet = elementsManager.getActiveElementSet();
+		
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
+		
 		_operators = new HashMap<String, String>();
 	}
 	
@@ -58,18 +67,20 @@ public class AggregationView extends ViewPart {
 		_aggregationOperatorsCombo = new Combo(aggregationOperatorsComposite, SWT.BORDER | SWT.READ_ONLY);
 		_aggregationOperatorsCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e) {
 				setOperator(_aggregationOperatorsCombo.getItem(_aggregationOperatorsCombo.getSelectionIndex()));
 			}
 		});
 		
 		fillCombo();
 		
-		Composite decisionMatrixComposite = new Composite(_parent, SWT.NONE);
-		decisionMatrixComposite.setLayout(new GridLayout(1, false));
-		decisionMatrixComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		_dmTable = new DecisionMatrixTable(decisionMatrixComposite);
-		_dmTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));		
+		_decisionMatrixComposite = new Composite(_parent, SWT.NONE);
+		_decisionMatrixComposite.setLayout(new GridLayout(1, false));
+		_decisionMatrixComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_dmTable = new DecisionMatrixTable(_decisionMatrixComposite);
+		_dmTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	
+		
+		refreshDMTable();
 	}
 
 	private void setOperator(String operator) {
@@ -78,11 +89,8 @@ public class AggregationView extends ViewPart {
 		
 		Map<String, List<Double>> mapWeights = new HashMap<String, List<Double>>();
 		if(aggregationOperator instanceof WeightedAggregationOperator) { 
-			ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
-			ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
-			
-			ProblemElement[] secondary = elementsSet.getAllCriteria().toArray(new Criterion[0]);
-			WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren(null), secondary, null, 1, "Expert", "All_experts");
+			ProblemElement[] secondary = _elementsSet.getAllCriteria().toArray(new Criterion[0]);
+			WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), _elementsSet.getAllElementExpertChildren(null), secondary, null, 1, "Expert", "All_experts");
 			
 			int exitValue = dialog.open();
 			if(exitValue == WeightsDialog.SAVE) {
@@ -130,23 +138,24 @@ public class AggregationView extends ViewPart {
 		_aggregationOperatorsCombo.setItems(aggregationOperatorsNames.toArray(new String[0]));
 	}
 	
-	private void refreshDMTable() {
-		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
-		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
-		
-		String[] alternatives = new String[elementsSet.getAlternatives().size()];
+	private void refreshDMTable() {		
+		String[] alternatives = new String[_elementsSet.getAlternatives().size()];
 		for(int a = 0; a < alternatives.length; ++a) {
-			alternatives[a] = elementsSet.getAlternatives().get(a).getId();
+			alternatives[a] = _elementsSet.getAlternatives().get(a).getId();
 		}
 		
-		String[] criteria = new String[elementsSet.getCriteria().size()];
+		String[] criteria = new String[_elementsSet.getCriteria().size()];
 		for(int c = 0; c < criteria.length; ++c) {
-			criteria[c] = elementsSet.getCriteria().get(c).getId();
+			criteria[c] = _elementsSet.getCriteria().get(c).getId();
 		}
-		
+
 		_dmTable.setModel(alternatives, criteria, _resolutionPhase.getDecisionMatrix());
 	}
 
+	@Override
+	public String getPartName() {
+		return "Aggregation";
+	}
 	
 	@Override
 	public void setFocus() {

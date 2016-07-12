@@ -10,6 +10,8 @@ import sinbad2.aggregationoperator.UnweightedAggregationOperator;
 import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.alternative.Alternative;
+import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
@@ -78,6 +80,8 @@ public class ResolutionPhase implements IPhaseMethod {
 	}
 	
 	private void aggregateExperts(int alternative, int criterion, AggregationOperator operator, Map<String, List<Double>> weights) {
+		List<Alternative> alternatives = _elementsSet.getAlternatives();
+		List<Criterion> criteria = _elementsSet.getCriteria();
 		
 		List<Double> globalWeights = new LinkedList<Double>();
 		List<Double> criterionWeights = new LinkedList<Double>();
@@ -89,11 +93,11 @@ public class ResolutionPhase implements IPhaseMethod {
 		
 		List<Valuation> valuations = new LinkedList<Valuation>();
 		for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
-			if(vk.getAlternative().equals(alternative) && vk.getCriterion().equals(criterion)) {
+			if(vk.getAlternative().equals(alternatives.get(alternative)) && vk.getCriterion().equals(criteria.get(criterion))) {
 				valuations.add(_valuationsInTwoTuple.get(vk));
 			}
 		}
-
+		
 		Valuation expertsColectiveValuation = null;
 		if(operator instanceof UnweightedAggregationOperator) {
 			expertsColectiveValuation = ((UnweightedAggregationOperator) operator).aggregate(valuations);
@@ -137,7 +141,7 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	@Override
 	public void clear() {
-		_decisionMatrix = null;
+		_decisionMatrix = new Valuation[_numAlternatives][_numCriteria];
 		_valuationsInTwoTuple.clear();
 	}
 	

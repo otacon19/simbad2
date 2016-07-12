@@ -13,6 +13,7 @@ import de.kupzog.ktable.editors.KTableCellEditorText;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class DMTableContentProvider extends KTableNoScrollModel {
 	
@@ -20,16 +21,12 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	private String[] _criteria;
 	private Valuation[][] _values;
 	
-	private KTable _table;
-	
 	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
 	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	
 	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria, Valuation[][] values) {
 		super(table);
 
-		_table = table;
-		
 		_alternatives = alternatives;
 		_criteria = criteria;
 		_values = values;
@@ -45,29 +42,26 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	public Object doGetContentAt(int col, int row) {
 	
 		Object erg;
+		
 		try {
-			if (col == 0) {
+			if(col == 0 && row == 0) {
+				erg = "Decision Matrix";
+			} else if (col == 0) {
 				erg = "C" + row; //$NON-NLS-1$
 			} else if (row == 0) {
 				erg = "A" + col; //$NON-NLS-1$
 			} else {
-				erg = _values[row - 1][col - 1];
+				if(_values[row - 1][col - 1] == null) {
+					erg = "";
+				} else {
+					erg = ((TwoTuple) _values[row - 1][col - 1]).changeFormatValuationToString();
+				}
 			}
 		} catch(Exception e) {
 			erg = null;
 		}
 		
 		return erg;
-	}
-	
-	private void refreshTable() {
-		for(int col = 1; col < getColumnCount(); ++col) {
-			for(int row = 1; row < getRowCount(); ++row) {
-				doGetContentAt(col, row);
-			}
-		}
-		
-		_table.redraw();
 	}
 
 	public KTableCellEditor doGetCellEditor(int col, int row) {
@@ -81,7 +75,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 
 	@Override
 	public int doGetRowCount() {
-		return _criteria.length + getFixedRowCount() + 1;
+		return _alternatives.length + getFixedRowCount();
 	}
 
 	@Override
@@ -91,7 +85,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 
 	@Override
 	public int doGetColumnCount() {
-		return _alternatives.length + getFixedColumnCount();
+		return _criteria.length + getFixedColumnCount();
 	}
 
 	@Override
@@ -170,11 +164,11 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		if((col == 0) && (row == 0)) {
 			return ""; //$NON-NLS-1$
 		} else if(col == 0) {
-			return _criteria[row - 1];
+			return _alternatives[row - 1];
 		} else if(row == 0) {
-			return _alternatives[col - 1];
+			return _criteria[col - 1];
 		} else {
-			return _criteria[row - 1] + "/" + _alternatives[col - 1]; //$NON-NLS-1$
+			return _alternatives[row - 1] + "/" + _criteria[col - 1]; //$NON-NLS-1$
 		}
 	}
 }

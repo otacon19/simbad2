@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
 import sinbad2.phasemethod.todim.unification.UnificationPhase;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.unification.ui.Images;
@@ -273,6 +274,10 @@ public class Unification extends ViewPart implements IStepStateListener {
 		unifiedValues.putAll(_unificationPhase.unification(_domain));
 		Map<ValuationKey, Valuation> unifiedTwoTupleValues = new HashMap<ValuationKey, Valuation>();
 		unifiedTwoTupleValues.putAll(_unificationPhase.getTwoTupleValuationsResult());
+		
+		ResolutionPhase resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
+		resolutionPhase.clear();
+		resolutionPhase.setValuationsTwoTuple(unifiedTwoTupleValues);
 		
 		_provider = new TreeViewerContentProvider(unifiedValues);
 		_treeViewer.setContentProvider(_provider);
