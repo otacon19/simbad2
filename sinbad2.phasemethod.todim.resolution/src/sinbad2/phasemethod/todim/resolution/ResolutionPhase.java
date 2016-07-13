@@ -90,6 +90,8 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	public Valuation[][] calculateDecisionMatrix(AggregationOperator operator, Map<String, List<Double>> weights) {
 		
+		_numAlternatives = _elementsSet.getAlternatives().size();
+		_numCriteria = _elementsSet.getCriteria().size();
 		_decisionMatrix = new Valuation[_numAlternatives][_numCriteria];
 		
 		for(int a = 0; a < _elementsSet.getAlternatives().size(); ++a) {

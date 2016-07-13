@@ -38,7 +38,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.element.ProblemElement;
 
-public class WeightsDialog extends Dialog implements PropertyChangeListener {
+public class WeightsCriteriaDialog extends Dialog implements PropertyChangeListener {
 
 	private final Color lightGreen = new Color(null, new RGB(230, 255, 230));
 	private final Color lightRed = new Color(null, new RGB(255, 230, 230));
@@ -258,7 +258,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 		}
 	}
 
-	public WeightsDialog(Shell parentShell, List<ProblemElement> primary, ProblemElement[] secondary, int type, String elementType, String elementId) {
+	public WeightsCriteriaDialog(Shell parentShell, List<ProblemElement> primary, ProblemElement[] secondary, int type, String elementType, String elementId) {
 		super(parentShell);
 		
 		_primary = primary;
@@ -273,7 +273,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 
 	}
 
-	public WeightsDialog(Shell parentShell, List<ProblemElement> primary, ProblemElement[] secondary, Map<String, List<Double>> weights, int type, String elementType, String elementId) {
+	public WeightsCriteriaDialog(Shell parentShell, List<ProblemElement> primary, ProblemElement[] secondary, Map<String, List<Double>> weights, int type, String elementType, String elementId) {
 		this(parentShell, primary, secondary, type, elementType, elementId);
 
 		if(weights == null) {

@@ -14,6 +14,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -30,7 +31,7 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
-import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsDialog;
+import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsCriteriaDialog;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.AggregatedValuationColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.AlternativeColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.CriterionColumnLabelProvider;
@@ -44,6 +45,7 @@ public class AggregationView extends ViewPart {
 
 	private Composite _parent;
 	private Combo _aggregationOperatorsCombo;
+	private Button _expertsWeightsButton;
 	
 	private DecisionMatrixTable _dmTable;
 	private TableViewer _distanceTableViewer;
@@ -87,16 +89,16 @@ public class AggregationView extends ViewPart {
 		fillCombo();
 		
 		Composite decisionMatrixComposite = new Composite(_parent, SWT.NONE);
-		decisionMatrixComposite.setLayout(new GridLayout(1, false));
+		decisionMatrixComposite.setLayout(new GridLayout(1, true));
 		decisionMatrixComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		_dmTable = new DecisionMatrixTable(decisionMatrixComposite);
-		_dmTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));	
+		_dmTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	
 		
 		Composite distanceComposite = new Composite(_parent, SWT.NONE);
-		distanceComposite.setLayout(new GridLayout(1, false));
-		distanceComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		distanceComposite.setLayout(new GridLayout(1, true));
+		distanceComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_distanceTableViewer = new TableViewer(distanceComposite);
-		_distanceTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		_distanceTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_distanceTableViewer.setContentProvider(new DistanceTableContentProvider());
 		_distanceTableViewer.getTable().setHeaderVisible(true);
 		
@@ -134,8 +136,17 @@ public class AggregationView extends ViewPart {
 		threshold.setLabelProvider(new ThresholdColumnLabelProvider());
 		threshold.getColumn().setText("Threshold");
 		threshold.getColumn().pack();
+	
+		Composite buttonsComposite = new Composite(distanceComposite, SWT.NONE);
+		buttonsComposite.setLayout(new GridLayout(1, true));
+		buttonsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		_expertsWeightsButton = new Button(buttonsComposite, SWT.NONE);
+		_expertsWeightsButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
+		_expertsWeightsButton.setText("Experts weights");
 		
-		refreshDMTable();
+		distanceComposite.layout();
+		
+		refreshTables();
 	}
 
 	private void setOperator(String operator) {
@@ -145,10 +156,10 @@ public class AggregationView extends ViewPart {
 		Map<String, List<Double>> mapWeights = new HashMap<String, List<Double>>();
 		if(aggregationOperator instanceof WeightedAggregationOperator) { 
 			ProblemElement[] secondary = _elementsSet.getAllCriteria().toArray(new Criterion[0]);
-			WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), _elementsSet.getAllElementExpertChildren(null), secondary, null, 1, "Expert", "All_experts");
+			WeightsCriteriaDialog dialog = new WeightsCriteriaDialog(Display.getCurrent().getActiveShell(), _elementsSet.getAllElementExpertChildren(null), secondary, null, 1, "Expert", "All_experts");
 			
 			int exitValue = dialog.open();
-			if(exitValue == WeightsDialog.SAVE) {
+			if(exitValue == WeightsCriteriaDialog.SAVE) {
 				mapWeights = dialog.getWeights();
 			} else { 
 				mapWeights = null;
@@ -157,7 +168,7 @@ public class AggregationView extends ViewPart {
 		
 		_resolutionPhase.calculateDecisionMatrix(aggregationOperator, mapWeights);
 		
-		refreshDMTable();
+		refreshTables();
 	}
 	
 	private void fillCombo() {
@@ -193,7 +204,7 @@ public class AggregationView extends ViewPart {
 		_aggregationOperatorsCombo.setItems(aggregationOperatorsNames.toArray(new String[0]));
 	}
 	
-	private void refreshDMTable() {		
+	private void refreshTables() {		
 		String[] alternatives = new String[_elementsSet.getAlternatives().size()];
 		for(int a = 0; a < alternatives.length; ++a) {
 			alternatives[a] = _elementsSet.getAlternatives().get(a).getId();
