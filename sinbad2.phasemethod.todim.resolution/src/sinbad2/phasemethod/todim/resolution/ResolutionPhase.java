@@ -1,5 +1,7 @@
 package sinbad2.phasemethod.todim.resolution;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +35,28 @@ public class ResolutionPhase implements IPhaseMethod {
 	
 	private ValuationSet _valuationSet;
 	private ProblemElementsSet _elementsSet;
+	
+	@SuppressWarnings("rawtypes")
+	public static class DataComparator implements Comparator {
+		@Override
+		public int compare(Object d1, Object d2) {
+			String e1 = ((String[]) d1)[0];
+			String e2 = ((String[]) d2)[0];
+			String a1 = ((String[]) d1)[1];
+			String a2 = ((String[]) d2)[1];
+			String c1 = ((String[]) d1)[2];
+			String c2 = ((String[]) d2)[2];
+			
+			int expertComparation = e1.compareTo(e2);
+			if(expertComparation != 0) {
+				return expertComparation;
+			} else if(a1.compareTo(a2) != 0){
+				return a1.compareTo(a2);
+			} else {
+				return c1.compareTo(c2);
+			}
+		}
+	 }
 	
 	public ResolutionPhase() {
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
@@ -110,6 +134,37 @@ public class ResolutionPhase implements IPhaseMethod {
 		}
 
 		_decisionMatrix[alternative][criterion] = expertsColectiveValuation;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String[]> calculateDistance() {
+		List<String[]> result = new LinkedList<String[]>();
+		
+		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
+		for(ValuationKey vk: valuations.keySet()) {
+			String[] data = new String[7];
+			data[0] = vk.getExpert().getId();
+			data[1] = vk.getAlternative().getId();
+			data[2] = vk.getCriterion().getId();
+			data[3] = valuations.get(vk).changeFormatValuationToString();
+			Valuation aggregatedValuation = _decisionMatrix[_elementsSet.getAlternatives().indexOf(vk.getAlternative())]
+					[_elementsSet.getCriteria().indexOf(vk.getCriterion())];
+			
+			if(aggregatedValuation == null) {
+				data[4] = "";
+			} else {
+				data[4] = aggregatedValuation.changeFormatValuationToString();
+			}
+				
+			data[5] = "";
+			data[6] = "";
+			
+			result.add(data);
+		}
+		
+		Collections.sort(result, new DataComparator());
+		
+		return result;
 	}
 	
 	@Override

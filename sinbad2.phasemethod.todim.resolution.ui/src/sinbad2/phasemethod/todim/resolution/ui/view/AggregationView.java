@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,16 +31,25 @@ import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
 import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsDialog;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.AggregatedValuationColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.AlternativeColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.CriterionColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.DistanceColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.DistanceTableContentProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.ExpertColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.ExpertValuationColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.ThresholdColumnLabelProvider;
 
 public class AggregationView extends ViewPart {
 
 	private Composite _parent;
-	private Composite _decisionMatrixComposite;
 	private Combo _aggregationOperatorsCombo;
 	
-	private Map<String, String> _operators;
-	
 	private DecisionMatrixTable _dmTable;
+	private TableViewer _distanceTableViewer;
+	
+	private Map<String, String> _operators;
+	private List<String[]> _inputDistanceTable;
 	
 	private ResolutionPhase _resolutionPhase;
 	
@@ -52,6 +63,7 @@ public class AggregationView extends ViewPart {
 		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		
 		_operators = new HashMap<String, String>();
+		_inputDistanceTable = new LinkedList<String[]>();
 	}
 	
 	@Override
@@ -74,11 +86,54 @@ public class AggregationView extends ViewPart {
 		
 		fillCombo();
 		
-		_decisionMatrixComposite = new Composite(_parent, SWT.NONE);
-		_decisionMatrixComposite.setLayout(new GridLayout(1, false));
-		_decisionMatrixComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		_dmTable = new DecisionMatrixTable(_decisionMatrixComposite);
-		_dmTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	
+		Composite decisionMatrixComposite = new Composite(_parent, SWT.NONE);
+		decisionMatrixComposite.setLayout(new GridLayout(1, false));
+		decisionMatrixComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		_dmTable = new DecisionMatrixTable(decisionMatrixComposite);
+		_dmTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));	
+		
+		Composite distanceComposite = new Composite(_parent, SWT.NONE);
+		distanceComposite.setLayout(new GridLayout(1, false));
+		distanceComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		_distanceTableViewer = new TableViewer(distanceComposite);
+		_distanceTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		_distanceTableViewer.setContentProvider(new DistanceTableContentProvider());
+		_distanceTableViewer.getTable().setHeaderVisible(true);
+		
+		TableViewerColumn expert = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
+		expert.setLabelProvider(new ExpertColumnLabelProvider());
+		expert.getColumn().setText("Expert");
+		expert.getColumn().pack();
+		
+		TableViewerColumn alternative = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
+		alternative.setLabelProvider(new AlternativeColumnLabelProvider());
+		alternative.getColumn().setText("Alternative");
+		alternative.getColumn().pack();
+		
+		TableViewerColumn criterion = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
+		criterion.setLabelProvider(new CriterionColumnLabelProvider());
+		criterion.getColumn().setText("Criterion");
+		criterion.getColumn().pack();
+		
+		TableViewerColumn expertOpinion = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
+		expertOpinion.setLabelProvider(new ExpertValuationColumnLabelProvider());
+		expertOpinion.getColumn().setText("Expert valuation");
+		expertOpinion.getColumn().pack();
+		
+		TableViewerColumn aggregatedValuation = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
+		aggregatedValuation.setLabelProvider(new AggregatedValuationColumnLabelProvider());
+		aggregatedValuation.getColumn().setText("Aggregated valuation");
+		aggregatedValuation.getColumn().pack();
+		
+		TableViewerColumn distance = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
+		distance.setLabelProvider(new DistanceColumnLabelProvider());
+		distance.getColumn().setText("Distance");
+		distance.getColumn().pack();
+		
+		TableViewerColumn threshold = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
+		threshold.setLabelProvider(new ThresholdColumnLabelProvider());
+		threshold.getColumn().setText("Threshold");
+		threshold.getColumn().pack();
 		
 		refreshDMTable();
 	}
@@ -150,8 +205,16 @@ public class AggregationView extends ViewPart {
 		}
 
 		_dmTable.setModel(alternatives, criteria, _resolutionPhase.getDecisionMatrix());
+		
+		setInputDistanceTable();
 	}
 
+	private void setInputDistanceTable() {
+		_inputDistanceTable = _resolutionPhase.calculateDistance();
+		_distanceTableViewer.setInput(_inputDistanceTable);
+		_distanceTableViewer.refresh();
+	}
+	
 	@Override
 	public String getPartName() {
 		return "Aggregation";

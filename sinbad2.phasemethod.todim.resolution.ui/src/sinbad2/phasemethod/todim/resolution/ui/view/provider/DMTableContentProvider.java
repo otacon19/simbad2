@@ -47,9 +47,9 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 			if(col == 0 && row == 0) {
 				erg = "Decision Matrix";
 			} else if (col == 0) {
-				erg = "C" + row; //$NON-NLS-1$
+				erg = "A" + row; //$NON-NLS-1$
 			} else if (row == 0) {
-				erg = "A" + col; //$NON-NLS-1$
+				erg = "C" + col; //$NON-NLS-1$
 			} else {
 				if(_values[row - 1][col - 1] == null) {
 					erg = "";
