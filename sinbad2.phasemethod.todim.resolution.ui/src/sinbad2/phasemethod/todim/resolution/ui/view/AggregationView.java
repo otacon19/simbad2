@@ -32,6 +32,7 @@ import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
 import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsCriteriaDialog;
+import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsExpertsDialog;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.AggregatedValuationColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.AlternativeColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.CriterionColumnLabelProvider;
@@ -143,6 +144,13 @@ public class AggregationView extends ViewPart {
 		_expertsWeightsButton = new Button(buttonsComposite, SWT.NONE);
 		_expertsWeightsButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
 		_expertsWeightsButton.setText("Experts weights");
+		_expertsWeightsButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				WeightsExpertsDialog dialog = new WeightsExpertsDialog(Display.getCurrent().getActiveShell());
+				dialog.open();
+			}
+		});
 		
 		distanceComposite.layout();
 		
@@ -162,7 +170,7 @@ public class AggregationView extends ViewPart {
 			if(exitValue == WeightsCriteriaDialog.SAVE) {
 				mapWeights = dialog.getWeights();
 			} else { 
-				mapWeights = null;
+				mapWeights = new HashMap<String, List<Double>>();
 			}
 		}
 		
