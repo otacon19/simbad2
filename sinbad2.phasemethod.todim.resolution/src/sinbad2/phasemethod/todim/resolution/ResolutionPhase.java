@@ -31,7 +31,6 @@ public class ResolutionPhase implements IPhaseMethod {
 	
 	private static final int P = 2;
 	private static final int M = 2;
-	private static final double C = 1.5;
 	
 	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
 	
@@ -39,7 +38,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	private Map<String, Double> _expertsWeights;
 	private Map<Alternative, Map<Criterion, TrapezoidalFunction>> _aggregatedFuzzyNumbers;
 	private Map<Alternative, Map<Criterion, TrapezoidalFunction>> _overallOpinions;
-	private Map<Alternative, Map<Criterion, Double>> _distances;
+	private Map<ValuationKey, Double> _distances;
 	
 	private int _numAlternatives;
 	private int _numCriteria;
@@ -85,7 +84,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		_expertsWeights = new HashMap<String, Double>();
 		_aggregatedFuzzyNumbers = new HashMap<Alternative, Map<Criterion, TrapezoidalFunction>>();
 		_overallOpinions = new HashMap<Alternative, Map<Criterion, TrapezoidalFunction>>();
-		_distances = new HashMap<Alternative, Map<Criterion, Double>>();
+		_distances = new HashMap<ValuationKey, Double>();
 	}
 	
 	public void setDecisionMatrix(Valuation[][] decisionMatrix) {
@@ -128,11 +127,11 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _overallOpinions;
 	}
 	
-	public void setDistances(Map<Alternative, Map<Criterion, Double>> distances) {
+	public void setDistances(Map<ValuationKey, Double> distances) {
 		_distances = distances;
 	}
 	
-	public Map<Alternative, Map<Criterion, Double>> getDistances() {
+	public Map<ValuationKey, Double> getDistances() {
 		return _distances;
 	}
 
@@ -211,7 +210,7 @@ public class ResolutionPhase implements IPhaseMethod {
 				data[4] = aggregatedValuation.changeFormatValuationToString();
 			}
 				
-			data[5] = Double.toString(Math.round(_distances.get(vk.getAlternative()).get(vk.getCriterion()) * 10000d) / 10000d);
+			data[5] = Double.toString(Math.round(_distances.get(vk) * 10000d) / 10000d);
 			data[6] = "";
 			
 			result.add(data);
@@ -333,15 +332,7 @@ public class ResolutionPhase implements IPhaseMethod {
 						double distance = Math.pow(aLimit - aOverallLimit, P) + Math.pow(bLimit - bOverallLimit, P) + 
 								Math.pow(cLimit - cOverallLimit, P) + Math.pow(dLimit - dOverallLimit, P);
 						
-						Map<Criterion, Double> criterionDistances;
-						if(_distances.get(a) != null) {
-							criterionDistances = _distances.get(a);
-						} else {
-							criterionDistances = new HashMap<Criterion, Double>();
-						}
-						
-						criterionDistances.put(c, distance);
-						_distances.put(a, criterionDistances);
+						_distances.put(vk, distance);
 					}
 				}
 			}
