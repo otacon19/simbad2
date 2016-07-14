@@ -192,6 +192,7 @@ public class HesitantValuation extends Valuation {
 			result[1] = _label;
 		} else if (isUnary()) {
 			switch (_unaryRelation) {
+			//TODO fallo si ponemos LowerThan y la primera etiqueta (se sale del rango)
 			case LowerThan:
 				pos = ((FuzzySet) _domain).getLabelSet().getPos(_term) - 1;
 				result[0] = ((FuzzySet) _domain).getLabelSet().getLabel(0);
@@ -416,7 +417,6 @@ public class HesitantValuation extends Valuation {
 					} else if (unaryRelation.contains("most")) { //$NON-NLS-1$
 						_unaryRelation = EUnaryRelationType.AtMost;
 					}
-
 				} else if ("upperTermv".equals(reader.getStartElementLocalPart())) { //$NON-NLS-1$
 					String name = reader.getStartElementAttribute("upperTerm"); //$NON-NLS-1$
 					_upperTerm = new LabelLinguisticDomain();

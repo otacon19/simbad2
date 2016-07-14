@@ -171,6 +171,7 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 				try {
 					valuation.read(reader);
 				} catch (Exception e) {
+					e.printStackTrace();
 					throw new XMLStreamException();
 				}
 

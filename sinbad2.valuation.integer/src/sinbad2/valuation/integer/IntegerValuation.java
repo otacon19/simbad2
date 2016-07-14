@@ -172,7 +172,7 @@ public class IntegerValuation extends Valuation {
 
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {
-		_value = Long.parseLong(reader.getStartElementAttribute("value"));	 //$NON-NLS-1$
+		_value = Double.parseDouble(reader.getStartElementAttribute("value"));	 //$NON-NLS-1$
 	}
 	
 	private Valuation normalizeRange() {

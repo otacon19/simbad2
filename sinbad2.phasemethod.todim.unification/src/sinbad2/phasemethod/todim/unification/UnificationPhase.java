@@ -580,8 +580,9 @@ public static final String ID = "flintstones.phasemethod.todim.unification"; //$
 		}
 		
 		Valuation unifiedValuation = new UnifiedValuation(result);
-		TwoTuple twoTuple = ((UnifiedValuation) unifiedValuation).disunification(result);
+		_unifiedValuationsResult.put(vk, unifiedValuation);
 		
+		TwoTuple twoTuple = ((UnifiedValuation) unifiedValuation).disunification(result);
 		_twoTupleValuationsResult.put(vk, twoTuple);
 	}
 

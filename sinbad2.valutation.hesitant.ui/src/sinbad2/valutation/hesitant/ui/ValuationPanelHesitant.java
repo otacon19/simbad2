@@ -130,7 +130,7 @@ public class ValuationPanelHesitant extends ValuationPanel {
 						
 						_selectIndexes.add(0);
 						_selectIndexes.add(_hesitantEvaluationCombo2.getSelectionIndex());
-						_unaryRelation = EUnaryRelationType.AtMost;
+						_unaryRelation = EUnaryRelationType.LowerThan;
 						_term = ((FuzzySet) _domain).getLabelSet().getLabel(_hesitantEvaluationCombo2.getSelectionIndex());
 						_unaryIndexes.add(_unaryRelation, _term);
 						
