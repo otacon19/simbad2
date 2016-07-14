@@ -47,6 +47,10 @@ public class WeightsExpertsDialog extends Dialog implements PropertyChangeListen
 		_elementsSet = elementsManager.getActiveElementSet();
 	}
 	
+	public WeightsExpertsEditingSupport getEditingSupport() {
+		return _editingSupport;
+	}
+	
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);

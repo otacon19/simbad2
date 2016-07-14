@@ -29,6 +29,16 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		_a = _b = _c = _d = 0d;
 	}
 	
+	public double[] getLimits() {
+		double limits[] = new double[4];
+		limits[0] = _a;
+		limits[1] = _b;
+		limits[2] = _c;
+		limits[3] = _d;
+		
+		return limits;
+	}
+	
 	public TrapezoidalFunction(double[] limits) {
 		this();
 		

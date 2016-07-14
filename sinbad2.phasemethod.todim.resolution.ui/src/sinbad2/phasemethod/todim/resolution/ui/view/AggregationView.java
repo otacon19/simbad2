@@ -148,7 +148,14 @@ public class AggregationView extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				WeightsExpertsDialog dialog = new WeightsExpertsDialog(Display.getCurrent().getActiveShell());
-				dialog.open();
+				int exitValue = dialog.open();
+				if(exitValue == 100) {
+					Map<String, Double> expertsWeights = dialog.getEditingSupport().getWeights();
+					_resolutionPhase.setExpertsWeights(expertsWeights);
+					_inputDistanceTable = _resolutionPhase.calculateDistance();
+					_distanceTableViewer.setInput(_inputDistanceTable);
+					_distanceTableViewer.refresh();
+				}
 			}
 		});
 		
@@ -224,14 +231,6 @@ public class AggregationView extends ViewPart {
 		}
 
 		_dmTable.setModel(alternatives, criteria, _resolutionPhase.getDecisionMatrix());
-		
-		setInputDistanceTable();
-	}
-
-	private void setInputDistanceTable() {
-		_inputDistanceTable = _resolutionPhase.calculateDistance();
-		_distanceTableViewer.setInput(_inputDistanceTable);
-		_distanceTableViewer.refresh();
 	}
 	
 	@Override
