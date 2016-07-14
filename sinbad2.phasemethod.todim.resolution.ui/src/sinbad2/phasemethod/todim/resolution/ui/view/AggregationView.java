@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.aggregationoperator.AggregationOperator;
@@ -46,7 +47,7 @@ public class AggregationView extends ViewPart {
 
 	private Composite _parent;
 	private Combo _aggregationOperatorsCombo;
-	private Button _expertsWeightsButton;
+	private Button _distanceButton;
 	
 	private DecisionMatrixTable _dmTable;
 	private TableViewer _distanceTableViewer;
@@ -84,6 +85,7 @@ public class AggregationView extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setOperator(_aggregationOperatorsCombo.getItem(_aggregationOperatorsCombo.getSelectionIndex()));
+				_distanceButton.setEnabled(true);
 			}
 		});
 		
@@ -141,10 +143,11 @@ public class AggregationView extends ViewPart {
 		Composite buttonsComposite = new Composite(distanceComposite, SWT.NONE);
 		buttonsComposite.setLayout(new GridLayout(1, true));
 		buttonsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		_expertsWeightsButton = new Button(buttonsComposite, SWT.NONE);
-		_expertsWeightsButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
-		_expertsWeightsButton.setText("Experts weights");
-		_expertsWeightsButton.addSelectionListener(new SelectionAdapter() {
+		_distanceButton = new Button(buttonsComposite, SWT.NONE);
+		_distanceButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
+		_distanceButton.setText("Calculate distance");
+		_distanceButton.setEnabled(false);
+		_distanceButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				WeightsExpertsDialog dialog = new WeightsExpertsDialog(Display.getCurrent().getActiveShell());
@@ -155,6 +158,8 @@ public class AggregationView extends ViewPart {
 					_inputDistanceTable = _resolutionPhase.calculateDistance();
 					_distanceTableViewer.setInput(_inputDistanceTable);
 					_distanceTableViewer.refresh();
+					
+					pack();
 				}
 			}
 		});
@@ -231,6 +236,12 @@ public class AggregationView extends ViewPart {
 		}
 
 		_dmTable.setModel(alternatives, criteria, _resolutionPhase.getDecisionMatrix());
+	}
+	
+	private void pack() {
+		for(TableColumn tc: _distanceTableViewer.getTable().getColumns()) {
+			tc.pack();
+		}
 	}
 	
 	@Override
