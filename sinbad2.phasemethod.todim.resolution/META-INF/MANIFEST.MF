@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
-Bundle-SymbolicName: sinbad2.phasemethod.todim.resolution;singleton:=true
+Bundle-SymbolicName: sinbad2.phasemethod.todim.aggregation;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0",
  sinbad2.aggregationoperator
-Export-Package: sinbad2.phasemethod.todim.resolution
+Export-Package: sinbad2.phasemethod.todim.aggregation

@@ -31,7 +31,7 @@ import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.PhasesMethodManager;
-import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
+import sinbad2.phasemethod.todim.aggregation.AggregationPhase;
 import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsCriteriaDialog;
 import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsExpertsDialog;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.AggregatedValuationColumnLabelProvider;
@@ -55,7 +55,7 @@ public class AggregationView extends ViewPart {
 	private Map<String, String> _operators;
 	private List<String[]> _inputDistanceTable;
 	
-	private ResolutionPhase _resolutionPhase;
+	private AggregationPhase _aggregationPhase;
 	
 	private ProblemElementsSet _elementsSet;
 	
@@ -64,7 +64,7 @@ public class AggregationView extends ViewPart {
 		_elementsSet = elementsManager.getActiveElementSet();
 		
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
+		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
 		
 		_operators = new HashMap<String, String>();
 		_inputDistanceTable = new LinkedList<String[]>();
@@ -154,8 +154,8 @@ public class AggregationView extends ViewPart {
 				int exitValue = dialog.open();
 				if(exitValue == 100) {
 					Map<String, Double> expertsWeights = dialog.getEditingSupport().getWeights();
-					_resolutionPhase.setExpertsWeights(expertsWeights);
-					_inputDistanceTable = _resolutionPhase.calculateDistance();
+					_aggregationPhase.setExpertsWeights(expertsWeights);
+					_inputDistanceTable = _aggregationPhase.calculateDistance();
 					_distanceTableViewer.setInput(_inputDistanceTable);
 					_distanceTableViewer.refresh();
 					
@@ -186,7 +186,7 @@ public class AggregationView extends ViewPart {
 			}
 		}
 		
-		_resolutionPhase.calculateDecisionMatrix(aggregationOperator, mapWeights);
+		_aggregationPhase.calculateDecisionMatrix(aggregationOperator, mapWeights);
 		
 		refreshTables();
 	}
@@ -235,7 +235,7 @@ public class AggregationView extends ViewPart {
 			criteria[c] = _elementsSet.getCriteria().get(c).getId();
 		}
 
-		_dmTable.setModel(alternatives, criteria, _resolutionPhase.getDecisionMatrix());
+		_dmTable.setModel(alternatives, criteria, _aggregationPhase.getDecisionMatrix());
 	}
 	
 	private void pack() {

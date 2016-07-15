@@ -1,4 +1,4 @@
-package sinbad2.phasemethod.todim.resolution;
+package sinbad2.phasemethod.todim.aggregation;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,9 +25,9 @@ import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
 
-public class ResolutionPhase implements IPhaseMethod {
+public class AggregationPhase implements IPhaseMethod {
 
-	public static final String ID = "flintstones.phasemethod.todim.resolution";
+	public static final String ID = "flintstones.phasemethod.todim.aggregation";
 	
 	private static final int P = 2;
 	private static final int M = 2;
@@ -68,7 +68,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		}
 	 }
 	
-	public ResolutionPhase() {
+	public AggregationPhase() {
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valuationSet = valuationSetManager.getActiveValuationSet();
 		
@@ -341,12 +341,12 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	@Override
 	public IPhaseMethod copyStructure() {
-		return new ResolutionPhase();
+		return new AggregationPhase();
 	}
 
 	@Override
 	public void copyData(IPhaseMethod iPhaseMethod) {
-		ResolutionPhase resolution = (ResolutionPhase) iPhaseMethod;
+		AggregationPhase resolution = (AggregationPhase) iPhaseMethod;
 		
 		clear();
 		
@@ -389,10 +389,10 @@ public class ResolutionPhase implements IPhaseMethod {
 	
 	@Override
 	public IPhaseMethod clone() {
-		ResolutionPhase result = null;
+		AggregationPhase result = null;
 
 		try {
-			result = (ResolutionPhase) super.clone();
+			result = (AggregationPhase) super.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}

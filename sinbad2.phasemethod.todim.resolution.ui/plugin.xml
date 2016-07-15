@@ -4,9 +4,9 @@
    <extension
          point="flintstones.phasemethod.ui">
       <ui
-            id="flintstones.phasemethod.todim.resolution.ui"
+            id="flintstones.phasemethod.todim.aggregation.ui"
             name="%ui.name"
-            phasemethod="flintstones.phasemethod.todim.resolution">
+            phasemethod="flintstones.phasemethod.todim.aggregation">
          <view
                step="sinbad2.phasemethod.todim.resolution.ui.view.AggregationView">
          </view>
@@ -15,13 +15,13 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            id="flintstones.phasemethod.todim.resolution.ui.category"
+            id="flintstones.phasemethod.todim.aggregation.ui.category"
             name="%category.name">
       </category>
       <view
-            category="flintstones.phasemethod.todim.resolution.ui.category"
+            category="flintstones.phasemethod.todim.aggregation.ui.category"
             class="sinbad2.phasemethod.todim.resolution.ui.view.AggregationView"
-            id="flintstones.phasemethod.todim.resolution.ui.view.aggregation"
+            id="flintstones.phasemethod.todim.aggregation.ui.view.aggregation"
             name="%view.name"
             restorable="true">
       </view>

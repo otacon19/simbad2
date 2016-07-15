@@ -4,8 +4,8 @@
    <extension
          point="flintstones.phasemethod">
       <phase
-            id="flintstones.phasemethod.todim.resolution"
-            implementation="sinbad2.phasemethod.todim.resolution.ResolutionPhase"
+            id="flintstones.phasemethod.todim.aggregation"
+            implementation="sinbad2.phasemethod.todim.aggregation.AggregationPhase"
             name="Resolution">
       </phase>
    </extension>
