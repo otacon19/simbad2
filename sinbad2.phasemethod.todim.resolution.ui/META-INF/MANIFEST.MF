@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Resolution TODIM UI
+Bundle-SymbolicName: sinbad2.phasemethod.todim.resolution.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: sinbad2.phasemethod.todim.resolution.ui.Activator
+Require-Bundle: sinbad2.phasemethod.ui;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
