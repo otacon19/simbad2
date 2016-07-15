@@ -15,6 +15,9 @@
          <phasemethod
                phase="flintstones.phasemethod.todim.aggregation">
          </phasemethod>
+         <phasemethod
+               phase="flintstones.phasemethod.todim.resolution">
+         </phasemethod>
          <aggregation_supported
                type="Hesitant">
          </aggregation_supported>
