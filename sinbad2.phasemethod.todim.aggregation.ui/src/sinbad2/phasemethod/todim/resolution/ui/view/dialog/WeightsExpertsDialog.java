@@ -88,8 +88,11 @@ public class WeightsExpertsDialog extends Dialog implements PropertyChangeListen
 
 			@Override
 			public Color getBackground(Object element) {
-				Double w = (Double) ((Object[]) element)[1];
-				return (w == 1) ? lightGreen : lightRed;
+				if(validate()) {
+					return lightGreen;
+				}
+				
+				return lightRed;
 			}
 		});
 		

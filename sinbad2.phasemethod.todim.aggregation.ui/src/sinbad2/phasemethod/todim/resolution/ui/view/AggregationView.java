@@ -32,6 +32,7 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.aggregation.AggregationPhase;
+import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
 import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsCriteriaDialog;
 import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsExpertsDialog;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.AggregatedValuationColumnLabelProvider;
@@ -42,8 +43,10 @@ import sinbad2.phasemethod.todim.resolution.ui.view.provider.DistanceTableConten
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.ExpertColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.ExpertValuationColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.ThresholdColumnLabelProvider;
+import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
+import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
-public class AggregationView extends ViewPart {
+public class AggregationView extends ViewPart implements IStepStateListener{
 
 	private Composite _parent;
 	private Combo _aggregationOperatorsCombo;
@@ -54,8 +57,12 @@ public class AggregationView extends ViewPart {
 	
 	private Map<String, String> _operators;
 	private List<String[]> _inputDistanceTable;
+	private boolean _completed;
 	
 	private AggregationPhase _aggregationPhase;
+	private ResolutionPhase _resolutionPhase;
+	
+	private RatingView _ratingView;
 	
 	private ProblemElementsSet _elementsSet;
 	
@@ -65,9 +72,11 @@ public class AggregationView extends ViewPart {
 		
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		
 		_operators = new HashMap<String, String>();
 		_inputDistanceTable = new LinkedList<String[]>();
+		_completed = false;
 	}
 	
 	@Override
@@ -160,6 +169,9 @@ public class AggregationView extends ViewPart {
 					_distanceTableViewer.refresh();
 					
 					pack();
+					
+					_completed = true;
+					notifyStepStateChange();
 				}
 			}
 		});
@@ -252,6 +264,23 @@ public class AggregationView extends ViewPart {
 	@Override
 	public void setFocus() {
 		_aggregationOperatorsCombo.setFocus();
+	}
+
+	@Override
+	public void notifyStepStateChange() {
+		
+		_resolutionPhase.clear();
+		_resolutionPhase.setGlobalWeights(_aggregationPhase.getGlobalWeights());
+		
+		if(_completed) {
+			_ratingView.loadNextStep();
+			_completed = false;
+		}
+	}
+
+	@Override
+	public void setRatingView(RatingView rating) {
+		_ratingView = rating;
 	}
 
 }

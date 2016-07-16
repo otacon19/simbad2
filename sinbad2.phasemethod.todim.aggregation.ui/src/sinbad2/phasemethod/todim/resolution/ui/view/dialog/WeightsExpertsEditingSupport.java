@@ -19,6 +19,7 @@ public class WeightsExpertsEditingSupport extends EditingSupport {
 	private final TableViewer viewer;
 	
 	private Map<String, Double> _weights;
+	private List<Expert> _experts;
 
 	private PropertyChangeSupport _changeSupport;
 	
@@ -27,8 +28,10 @@ public class WeightsExpertsEditingSupport extends EditingSupport {
 		
 		this.viewer = viewer;
 		
+		_experts = experts;
+		
 		_weights = new HashMap<String, Double>();
-		for(Expert e: experts) {
+		for(Expert e: _experts) {
 			_weights.put(e.getCanonicalId(), new Double(0));
 		}
 		
@@ -88,8 +91,8 @@ public class WeightsExpertsEditingSupport extends EditingSupport {
 		for(String expert: _weights.keySet()) {
 			acum += round(_weights.get(expert));
 		}
-		
-		if(acum == 1) {
+
+		if(acum == 1 && _weights.size() == _experts.size()) {
 			return true;
 		}
 		

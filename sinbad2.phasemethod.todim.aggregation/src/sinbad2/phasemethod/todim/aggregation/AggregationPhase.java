@@ -39,6 +39,7 @@ public class AggregationPhase implements IPhaseMethod {
 	private Map<Alternative, Map<Criterion, TrapezoidalFunction>> _aggregatedFuzzyNumbers;
 	private Map<Alternative, Map<Criterion, TrapezoidalFunction>> _overallOpinions;
 	private Map<ValuationKey, Double> _distances;
+	private List<Double> _globalWeights;
 	
 	private int _numAlternatives;
 	private int _numCriteria;
@@ -85,6 +86,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_aggregatedFuzzyNumbers = new HashMap<Alternative, Map<Criterion, TrapezoidalFunction>>();
 		_overallOpinions = new HashMap<Alternative, Map<Criterion, TrapezoidalFunction>>();
 		_distances = new HashMap<ValuationKey, Double>();
+		_globalWeights = new LinkedList<Double>();
 	}
 	
 	public void setDecisionMatrix(Valuation[][] decisionMatrix) {
@@ -135,11 +137,26 @@ public class AggregationPhase implements IPhaseMethod {
 		return _distances;
 	}
 
+	public void setGlobalWeights(List<Double> globalWeights) {
+		_globalWeights = globalWeights;
+	}
+	
+	public List<Double> getGlobalWeights() {
+		return _globalWeights;
+	}
+	
 	public Valuation[][] calculateDecisionMatrix(AggregationOperator operator, Map<String, List<Double>> weights) {
 		
 		_numAlternatives = _elementsSet.getAlternatives().size();
 		_numCriteria = _elementsSet.getCriteria().size();
 		_decisionMatrix = new Valuation[_numAlternatives][_numCriteria];
+		_globalWeights = new LinkedList<Double>();
+		
+		if(weights.isEmpty()) {
+			setDefaultWeights();
+		} else if(weights.size() == 1) {
+			_globalWeights = weights.get(null);
+		}
 		
 		for(int a = 0; a < _elementsSet.getAlternatives().size(); ++a) {
 			for(int c = 0; c < _elementsSet.getAllCriteria().size(); ++c) {
@@ -152,15 +169,18 @@ public class AggregationPhase implements IPhaseMethod {
 		return _decisionMatrix;
 	}
 	
+	private void setDefaultWeights() {
+		for(int i = 0; i < _elementsSet.getAllCriteria().size(); ++i) {
+			_globalWeights.add(1d / _elementsSet.getAllCriteria().size());
+		}
+	}
+
 	private void aggregateExperts(int alternative, int criterion, AggregationOperator operator, Map<String, List<Double>> weights) {
 		List<Alternative> alternatives = _elementsSet.getAlternatives();
 		List<Criterion> criteria = _elementsSet.getCriteria();
 		
-		List<Double> globalWeights = new LinkedList<Double>();
 		List<Double> criterionWeights = new LinkedList<Double>();
-		if(weights.size() == 1) {
-			globalWeights = weights.get(null);
-		} else if(weights.size() > 1) {
+		if(weights.size() > 1) {
 			criterionWeights = weights.get(_elementsSet.getAllCriteria().get(criterion).getCanonicalId());
 		}
 		
@@ -175,8 +195,8 @@ public class AggregationPhase implements IPhaseMethod {
 		if(operator instanceof UnweightedAggregationOperator) {
 			expertsColectiveValuation = ((UnweightedAggregationOperator) operator).aggregate(valuations);
 		} else if(operator instanceof WeightedAggregationOperator) {
-			if(!globalWeights.isEmpty()) {
-				expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, globalWeights);
+			if(!_globalWeights.isEmpty()) {
+				expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, _globalWeights);
 			} else {
 				expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, criterionWeights);
 			}
@@ -346,16 +366,17 @@ public class AggregationPhase implements IPhaseMethod {
 
 	@Override
 	public void copyData(IPhaseMethod iPhaseMethod) {
-		AggregationPhase resolution = (AggregationPhase) iPhaseMethod;
+		AggregationPhase aggregation = (AggregationPhase) iPhaseMethod;
 		
 		clear();
 		
-		_decisionMatrix = resolution.getDecisionMatrix();
-		_valuationsInTwoTuple = resolution.getValuationsTwoTuple();
-		_expertsWeights = resolution.getExpertsWeights();
-		_aggregatedFuzzyNumbers = resolution.getAggregatedFuzzyNumber();
-		_overallOpinions = resolution.getOverallOpinons();
-		_distances = resolution.getDistances();
+		_decisionMatrix = aggregation.getDecisionMatrix();
+		_valuationsInTwoTuple = aggregation.getValuationsTwoTuple();
+		_expertsWeights = aggregation.getExpertsWeights();
+		_aggregatedFuzzyNumbers = aggregation.getAggregatedFuzzyNumber();
+		_overallOpinions = aggregation.getOverallOpinons();
+		_distances = aggregation.getDistances();
+		_globalWeights = aggregation.getGlobalWeights();
 	}
 
 	@Override
@@ -378,6 +399,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_aggregatedFuzzyNumbers.clear();
 		_overallOpinions.clear();
 		_distances.clear();
+		_globalWeights.clear();
 	}
 	
 	@Override
