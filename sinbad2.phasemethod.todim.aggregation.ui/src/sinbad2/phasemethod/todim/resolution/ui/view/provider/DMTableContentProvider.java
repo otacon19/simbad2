@@ -75,7 +75,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 
 	@Override
 	public int doGetRowCount() {
-		return _alternatives.length + getFixedRowCount();
+		return _alternatives.length + 1;
 	}
 
 	@Override

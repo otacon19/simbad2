@@ -7,6 +7,7 @@ import java.util.Map;
 
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
@@ -18,18 +19,22 @@ public class ResolutionPhase implements IPhaseMethod {
 	private Double[][] _consensusMatrix;
 	private int _numAlternatives;
 	private int _numCriteria;
-	
+	private int _referenceCriterion;
 	private List<Double> _globalWeights;
+	
+	private ProblemElementsSet _elementsSet;
 	
 	public ResolutionPhase() {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
-		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+		_elementsSet = elementsManager.getActiveElementSet();
 		
-		_numAlternatives = elementsSet.getAlternatives().size();
-		_numCriteria = elementsSet.getAllCriteria().size();
+		_numAlternatives = _elementsSet.getAlternatives().size();
+		_numCriteria = _elementsSet.getAllCriteria().size();
 		
 		_consensusMatrix = new Double[_numAlternatives][_numCriteria];
 		_globalWeights = new LinkedList<Double>();
+		
+		_referenceCriterion = -1;
 	}
 	
 	public void setConsensusMatrix(Double[][] consensusMatrix) {
@@ -48,10 +53,24 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _globalWeights;
 	}
 	
+	public void setReferenceCriterion(int referenceCriterion) {
+		_referenceCriterion = referenceCriterion;
+	}
+	
+	public int getReferenceCriterion() {
+		return _referenceCriterion;
+	}
+	
 	public Map<String, Double> calculateRelativeWeights() {
 		Map<String, Double> result = new HashMap<String, Double>();
 		
-		
+		if(_referenceCriterion != -1) {
+			Double weightReference = _globalWeights.get(_referenceCriterion);
+			List<Criterion> criteria = _elementsSet.getAllCriteria();
+			for(int i = 0; i < _elementsSet.getAllCriteria().size(); ++i) {
+				result.put(criteria.get(i).getCanonicalId(), _globalWeights.get(i) / weightReference);
+			}
+		}
 		
 		return result;
 	}
@@ -69,12 +88,14 @@ public class ResolutionPhase implements IPhaseMethod {
 		
 		_consensusMatrix = resolution.getConsensusMatrix();
 		_globalWeights = resolution.getGlobalWeights();
+		_referenceCriterion = resolution.getReferenceCriterion();
 	}
 	
 	@Override
 	public void clear() {	
 		_consensusMatrix = new Double[_numAlternatives][_numCriteria];
 		_globalWeights.clear();
+		_referenceCriterion = -1;
 	}
 
 	@Override

@@ -6,6 +6,6 @@ public class RelativeWeightCriterionColumnLabelProvider extends ColumnLabelProvi
 
 	@Override
 	public String getText(Object element) {
-		return ((String[]) element)[3];
+		return ((String[]) element)[2];
 	}
 }
