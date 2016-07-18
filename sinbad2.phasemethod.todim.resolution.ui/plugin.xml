@@ -8,7 +8,7 @@
             name="%ui.name"
             phasemethod="flintstones.phasemethod.todim.resolution">
          <view
-               step="sinbad2.phasemethod.todim.resolution.ui.view.CriteriaWeightsView">
+               step="sinbad2.phasemethod.todim.resolution.ui.view.CalculateRanking">
          </view>
       </ui>
    </extension>
@@ -20,8 +20,8 @@
       </category>
       <view
             category="flintstones.phasemethod.todim.resolution.ui.category"
-            class="sinbad2.phasemethod.todim.resolution.ui.view.CriteriaWeightsView"
-            id="flintstones.phasemethod.todim.resolution.ui.view.criteriaweight"
+            class="sinbad2.phasemethod.todim.resolution.ui.view.CalculateRanking"
+            id="flintstones.phasemethod.todim.resolution.ui.view.calculateranking"
             name="%view.name"
             restorable="true">
       </view>

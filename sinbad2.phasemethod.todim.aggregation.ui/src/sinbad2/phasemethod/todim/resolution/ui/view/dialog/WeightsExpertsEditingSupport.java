@@ -92,7 +92,7 @@ public class WeightsExpertsEditingSupport extends EditingSupport {
 			acum += round(_weights.get(expert));
 		}
 
-		if(acum == 1 && _weights.size() == _experts.size()) {
+		if((acum == 1 || 1 - acum < 0.00001 ) && _weights.size() == _experts.size()) {
 			return true;
 		}
 		

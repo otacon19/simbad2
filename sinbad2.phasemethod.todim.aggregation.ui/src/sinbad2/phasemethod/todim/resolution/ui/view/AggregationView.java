@@ -108,7 +108,9 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 		
 		Composite distanceComposite = new Composite(_parent, SWT.NONE);
 		distanceComposite.setLayout(new GridLayout(1, true));
-		distanceComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		distanceComposite.setLayoutData(new GridData(SWT.CENTER, SWT.FILL, true, true, 1, 1));
+		((GridData) distanceComposite.getLayoutData()).minimumWidth = 650;
+		
 		_distanceTableViewer = new TableViewer(distanceComposite);
 		_distanceTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_distanceTableViewer.setContentProvider(new DistanceTableContentProvider());
