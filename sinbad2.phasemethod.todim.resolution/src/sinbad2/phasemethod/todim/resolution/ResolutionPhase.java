@@ -7,6 +7,7 @@ import java.util.Map;
 
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
@@ -16,11 +17,15 @@ public class ResolutionPhase implements IPhaseMethod {
 	
 	public static final String ID = "flintstones.phasemethod.todim.resolution";
 	
+	private static final Integer ATTENUATION_FACTOR = 1;
+	
 	private Double[][] _consensusMatrix;
 	private int _numAlternatives;
 	private int _numCriteria;
 	private int _referenceCriterion;
 	private List<Double> _globalWeights;
+	private Map<String, Double> _relativeWeights;
+	private Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> _dominanceDegreeByCriterion;
 	
 	private ProblemElementsSet _elementsSet;
 	
@@ -33,6 +38,8 @@ public class ResolutionPhase implements IPhaseMethod {
 		
 		_consensusMatrix = new Double[_numAlternatives][_numCriteria];
 		_globalWeights = new LinkedList<Double>();
+		_relativeWeights = new HashMap<String, Double>();
+		_dominanceDegreeByCriterion = new HashMap<Criterion, Map<Pair<Alternative, Alternative>, Double>>();
 		
 		_referenceCriterion = -1;
 	}
@@ -61,18 +68,83 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _referenceCriterion;
 	}
 	
+	public void setRelativeWeights(Map<String, Double> relativeWeights) {
+		_relativeWeights = relativeWeights;
+	}
+	
+	public Map<String, Double> getRelativeWeights() {
+		return _relativeWeights;
+	}
+	
+	public void setDominanceDegreeByCriterion(Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> dominanceDegreeByCriterion) {
+		_dominanceDegreeByCriterion = dominanceDegreeByCriterion;
+	}
+	
+	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>>  getDominanceDegreeByCriterion() {
+		return _dominanceDegreeByCriterion;
+	}
+	
 	public Map<String, Double> calculateRelativeWeights() {
-		Map<String, Double> result = new HashMap<String, Double>();
+		_relativeWeights = new HashMap<String, Double>();
 		
 		if(_referenceCriterion != -1) {
 			Double weightReference = _globalWeights.get(_referenceCriterion);
 			List<Criterion> criteria = _elementsSet.getAllCriteria();
 			for(int i = 0; i < _elementsSet.getAllCriteria().size(); ++i) {
-				result.put(criteria.get(i).getCanonicalId(), _globalWeights.get(i) / weightReference);
+				_relativeWeights.put(criteria.get(i).getCanonicalId(), _globalWeights.get(i) / weightReference);
 			}
 		}
+		return _relativeWeights;
+	}
+	
+	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> calculateDominanceDegreeByCriterion() {
+		_dominanceDegreeByCriterion = new HashMap<Criterion, Map<Pair<Alternative, Alternative>, Double>>();
 		
-		return result;
+		double acumSumRelativeWeights = getAcumSumRelativeWeights();
+		
+		int criterionIndex = 0, a1Index = 0, a2Index = 0;
+		double dominance = 0, condition = 0;
+		for(Criterion c: _elementsSet.getAllCriteria()) {
+			for(Alternative a1: _elementsSet.getAlternatives()) {
+				for(Alternative a2: _elementsSet.getAlternatives()) {
+					if(a1 != a2) {
+						
+						condition = _consensusMatrix[a1Index][criterionIndex] - _consensusMatrix[a2Index][criterionIndex];
+						if(condition > 0) {
+							dominance = Math.sqrt((condition * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
+						} else if(condition < 0) {
+							double inverse = _consensusMatrix[a1Index][criterionIndex] - _consensusMatrix[a2Index][criterionIndex];
+							dominance = (-1 / ATTENUATION_FACTOR) * Math.sqrt((inverse * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
+						} else {
+							dominance = 0;
+						}
+						
+						Pair<Alternative, Alternative> pairAlternatives = new Pair<Alternative, Alternative>(a1, a2);
+						Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance;
+						if(_dominanceDegreeByCriterion.get(c) != null) {
+							pairAlternativesDominance = _dominanceDegreeByCriterion.get(c);
+						} else {
+							pairAlternativesDominance = new HashMap<Pair<Alternative, Alternative>, Double>();
+						}
+						pairAlternativesDominance.put(pairAlternatives, dominance);
+					}
+					a2Index++;
+				}
+				a1Index++;
+			}
+			criterionIndex++;
+		}
+		
+		return _dominanceDegreeByCriterion;
+	}
+
+	private double getAcumSumRelativeWeights() {
+		double acum = 0;
+		
+		for(Criterion c: _elementsSet.getAllCriteria()) {
+			acum += _relativeWeights.get(c.getCanonicalId());
+		}
+		return acum;
 	}
 
 	@Override
@@ -89,6 +161,8 @@ public class ResolutionPhase implements IPhaseMethod {
 		_consensusMatrix = resolution.getConsensusMatrix();
 		_globalWeights = resolution.getGlobalWeights();
 		_referenceCriterion = resolution.getReferenceCriterion();
+		_relativeWeights = resolution.getRelativeWeights();
+		_dominanceDegreeByCriterion = resolution.getDominanceDegreeByCriterion();
 	}
 	
 	@Override
@@ -96,6 +170,8 @@ public class ResolutionPhase implements IPhaseMethod {
 		_consensusMatrix = new Double[_numAlternatives][_numCriteria];
 		_globalWeights.clear();
 		_referenceCriterion = -1;
+		_relativeWeights.clear();
+		_dominanceDegreeByCriterion.clear();
 	}
 
 	@Override
