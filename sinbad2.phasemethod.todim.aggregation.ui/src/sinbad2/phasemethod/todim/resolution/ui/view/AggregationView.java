@@ -190,7 +190,7 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ExcelUtil excelUtil = new ExcelUtil();
-				excelUtil.createExcelFileEmergencyProblemStructure();
+				excelUtil.createExcelFileEmergencyProblemStructure(_aggregationPhase.getValuationsTwoTuple());
 			}
 		});
 		
