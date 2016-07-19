@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Excel
+Bundle-SymbolicName: sinbad2.excel
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.apache.poi.POI;bundle-version="1.0.0",
+ sinbad2.valuation.valuationset;bundle-version="1.0.0"
+Export-Package: sinbad2.excel

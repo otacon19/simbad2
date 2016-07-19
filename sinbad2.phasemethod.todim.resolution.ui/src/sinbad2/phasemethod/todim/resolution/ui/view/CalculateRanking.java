@@ -37,7 +37,10 @@ import sinbad2.phasemethod.todim.resolution.ui.view.provider.DominanceDegreeAlte
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.DominanceDegreeAlternativesContentProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.DominanceDegreeColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.DominanceDegreeTableContentProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.GlobalDominanceDegreeColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.MainAlternativeColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.RankingColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.RankingTableContentProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RelativeWeightCriterionColumnLabelProvider;
 
 public class CalculateRanking extends ViewPart {
@@ -50,6 +53,7 @@ public class CalculateRanking extends ViewPart {
 	private TableViewer _criteriaTableViewer;
 	private TableViewer _dominanceDegreeTableViewer;
 	private TableViewer _dominanceDegreeAlternativesTableViewer;
+	private TableViewer _rankingTableViewer;
 	
 	private ResolutionPhase _resolutionPhase;
 	
@@ -94,7 +98,7 @@ public class CalculateRanking extends ViewPart {
 		_dmTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	
 		
 		Composite tablesComposite = new Composite(_parent, SWT.NONE);
-		tablesComposite.setLayout(new GridLayout(2, false));
+		tablesComposite.setLayout(new GridLayout(2, true));
 		tablesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		_criteriaTableViewer = new TableViewer(tablesComposite);
@@ -151,11 +155,8 @@ public class CalculateRanking extends ViewPart {
 		dominanceDegree.getColumn().setText("Dominance degree");
 		dominanceDegree.setLabelProvider(new DominanceDegreeColumnLabelProvider());
 		dominanceDegree.getColumn().pack();
-		
-		Composite dominanceDegreeAlternativesComposite = new Composite(_parent, SWT.NONE);
-		dominanceDegreeAlternativesComposite.setLayout(new GridLayout(1, true));
-		dominanceDegreeAlternativesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		_dominanceDegreeAlternativesTableViewer = new TableViewer(dominanceDegreeAlternativesComposite);
+
+		_dominanceDegreeAlternativesTableViewer = new TableViewer(tablesComposite);
 		_dominanceDegreeAlternativesTableViewer.setContentProvider(new DominanceDegreeAlternativesContentProvider());
 		_dominanceDegreeAlternativesTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_dominanceDegreeAlternativesTableViewer.getTable().setHeaderVisible(true);
@@ -175,6 +176,25 @@ public class CalculateRanking extends ViewPart {
 		dominanceDegreeAlternative.setLabelProvider(new DominanceDegreeAlternativesColumnLabelProvider());
 		dominanceDegreeAlternative.getColumn().pack();
 		
+		_rankingTableViewer = new TableViewer(tablesComposite);
+		_rankingTableViewer.setContentProvider(new RankingTableContentProvider());
+		_rankingTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_rankingTableViewer.getTable().setHeaderVisible(true);
+		
+		TableViewerColumn alternative = new TableViewerColumn(_rankingTableViewer, SWT.NONE);
+		alternative.getColumn().setText("Alternative");
+		alternative.setLabelProvider(new MainAlternativeColumnLabelProvider());
+		alternative.getColumn().pack();
+		
+		TableViewerColumn globalDominanceDegree = new TableViewerColumn(_rankingTableViewer, SWT.NONE);
+		globalDominanceDegree.getColumn().setText("Global dominance degree");
+		globalDominanceDegree.setLabelProvider(new GlobalDominanceDegreeColumnLabelProvider());
+		globalDominanceDegree.getColumn().pack();
+		
+		TableViewerColumn ranking = new TableViewerColumn(_rankingTableViewer, SWT.NONE);
+		ranking.getColumn().setText("Ranking");
+		ranking.setLabelProvider(new RankingColumnLabelProvider());
+		ranking.getColumn().pack();
 		
 		refreshConsensusMatrixTable();
 		
@@ -234,6 +254,7 @@ public class CalculateRanking extends ViewPart {
 		    		setInputCriteriaTable();
 		    		setInputDominanceDegreeTable();
 		    		setInputDominaceAlternativeDegreeTable();
+		    		setInputRankingTable();
 		    	}
 			});
 		}
@@ -280,6 +301,11 @@ public class CalculateRanking extends ViewPart {
 		Collections.sort(input, new DataComparator());
 		
 		_dominanceDegreeAlternativesTableViewer.setInput(input);
+	}
+	
+	private void setInputRankingTable() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	private void pack() {

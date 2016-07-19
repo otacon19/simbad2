@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.valuation.valuationset;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.valuation.twoTuple;bundle-version="1.0.0";visibility:=reexport,
- sinbad2.valuation.unifiedValuation;bundle-version="1.0.0";visibility:=reexport
+ sinbad2.valuation.unifiedValuation;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.excel;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.phasemethod,
  sinbad2.phasemethod.listener
 Bundle-Vendor: %Bundle-Vendor

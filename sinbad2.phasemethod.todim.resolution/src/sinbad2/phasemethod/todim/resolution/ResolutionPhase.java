@@ -27,6 +27,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	private Map<String, Double> _relativeWeights;
 	private Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> _dominanceDegreeByCriterion;
 	private Map<Pair<Alternative, Alternative>, Double> _dominanceDegreeAlternatives;
+	private Map<Alternative, Double> _globalDominance;
 	
 	private ProblemElementsSet _elementsSet;
 	
@@ -50,6 +51,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		_relativeWeights = new HashMap<String, Double>();
 		_dominanceDegreeByCriterion = new HashMap<Criterion, Map<Pair<Alternative, Alternative>, Double>>();
 		_dominanceDegreeAlternatives = new HashMap<Pair<Alternative, Alternative>, Double>();
+		_globalDominance = new HashMap<Alternative, Double>();
 		
 		_referenceCriterion = -1;
 	}
@@ -100,6 +102,14 @@ public class ResolutionPhase implements IPhaseMethod {
 	
 	public Map<Pair<Alternative, Alternative>, Double>  getDominanceDegreeAlternatives() {
 		return _dominanceDegreeAlternatives;
+	}
+	
+	public void setGlobalDominance(Map<Alternative, Double> globalDominance) {
+		_globalDominance = globalDominance;
+	}
+	
+	public Map<Alternative, Double> getGlobalDominance() {
+		return _globalDominance;
 	}
 	
 	public Map<String, Double> calculateRelativeWeights() {
@@ -183,6 +193,22 @@ public class ResolutionPhase implements IPhaseMethod {
 		}
 		return _dominanceDegreeAlternatives;
 	}
+	
+	public Map<Alternative, Double> calculateGlobalDominance() {
+		
+		double acum;
+		for(Alternative a: _elementsSet.getAlternatives()) {
+			acum = 0;
+			for(Pair<Alternative, Alternative> pairAlternatives: _dominanceDegreeAlternatives.keySet()) {
+				if(a.equals(pairAlternatives.getLeft())) {
+					acum += _dominanceDegreeAlternatives.get(pairAlternatives);
+				}
+			}
+			
+		}
+		
+		return _globalDominance;
+	}
 
 	private double getAcumSumRelativeWeights() {
 		double acum = 0;
@@ -210,6 +236,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		_relativeWeights = resolution.getRelativeWeights();
 		_dominanceDegreeByCriterion = resolution.getDominanceDegreeByCriterion();
 		_dominanceDegreeAlternatives = resolution.getDominanceDegreeAlternatives();
+		_globalDominance = resolution.getGlobalDominance();
 	}
 	
 	@Override
@@ -227,6 +254,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		_relativeWeights.clear();
 		_dominanceDegreeByCriterion.clear();
 		_dominanceDegreeAlternatives.clear();
+		_globalDominance.clear();
 	}
 
 	@Override

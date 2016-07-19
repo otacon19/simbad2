@@ -29,10 +29,12 @@ import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.excel.ExcelUtil;
 import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.aggregation.AggregationPhase;
 import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
+import sinbad2.phasemethod.todim.resolution.ui.Images;
 import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsCriteriaDialog;
 import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsExpertsDialog;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.AggregatedValuationColumnLabelProvider;
@@ -51,6 +53,7 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 	private Composite _parent;
 	private Combo _aggregationOperatorsCombo;
 	private Button _distanceButton;
+	private Button _excelButton;
 	
 	private DecisionMatrixTable _dmTable;
 	private TableViewer _distanceTableViewer;
@@ -152,10 +155,11 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 		threshold.getColumn().pack();
 	
 		Composite buttonsComposite = new Composite(distanceComposite, SWT.NONE);
-		buttonsComposite.setLayout(new GridLayout(1, true));
+		buttonsComposite.setLayout(new GridLayout(2, false));
 		buttonsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		
 		_distanceButton = new Button(buttonsComposite, SWT.NONE);
-		_distanceButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
+		_distanceButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1));
 		_distanceButton.setText("Calculate distance");
 		_distanceButton.setEnabled(false);
 		_distanceButton.addSelectionListener(new SelectionAdapter() {
@@ -175,6 +179,18 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 					_completed = true;
 					notifyStepStateChange();
 				}
+			}
+		});
+		
+		_excelButton = new Button(buttonsComposite, SWT.NONE);
+		_excelButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1));
+		_excelButton.setImage(Images.Excel);
+		_excelButton.setEnabled(true);
+		_excelButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ExcelUtil excelUtil = new ExcelUtil();
+				excelUtil.createExcelFileEmergencyProblemStructure();
 			}
 		});
 		

@@ -7,5 +7,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.core;visibility:=reexport,
  org.eclipse.ui;bundle-version="3.8.2";visibility:=reexport,
  org.eclipse.core.expressions;visibility:=reexport
-Export-Package: org.eclipse.wb.swt
+Export-Package: org.eclipse.wb.swt,
+ sinbad2.core.ui.shell
 Bundle-Vendor: %Bundle-Vendor
