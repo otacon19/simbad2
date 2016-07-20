@@ -304,8 +304,27 @@ public class CalculateRanking extends ViewPart {
 	}
 	
 	private void setInputRankingTable() {
-		// TODO Auto-generated method stub
+		List<String[]> inputAux = new LinkedList<String[]>();
+		List<String[]> input = new LinkedList<String[]>();
 		
+		Map<Alternative, Double> globalDominance = _resolutionPhase.calculateGlobalDominance();
+		int ranking = globalDominance.size();
+		for(Alternative a: globalDominance.keySet()) {
+			String[] data = new String[3];
+			data[0] = a.getId();
+			data[1] = Double.toString(Math.round(globalDominance.get(a) * 1000) / 1000d);
+			data[2] = Integer.toString(ranking);
+		
+			inputAux.add(data);
+			
+			ranking--;
+		}
+		
+		for(int i = inputAux.size() - 1; i >= 0; i--) {
+			input.add(inputAux.get(i));
+		}
+		
+		_rankingTableViewer.setInput(input);
 	}
 	
 	private void pack() {
