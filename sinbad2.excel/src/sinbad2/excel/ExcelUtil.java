@@ -30,10 +30,16 @@ public class ExcelUtil {
 	private XSSFWorkbook _workbook;
 	private XSSFSheet _sheet;
 
+	private CellStyle _styleExperts;
+	private CellStyle _styleAlternatives;
+	private CellStyle _styleCriteria;
+	private CellStyle _styleTitles;
+	
 	private List<Expert> _experts;
 	private List<Criterion> _criteria;
 	private List<Alternative> _alternatives;
 	private Map<ValuationKey, Valuation> _unifiedValuations;
+	private Map<String, Double> _expertsWeights;
 
 	private ProblemElementsSet _elementsSet;
 
@@ -47,6 +53,26 @@ public class ExcelUtil {
 		
 		_workbook = new XSSFWorkbook();
 		_sheet = _workbook.createSheet("Flintstones problem");
+		
+		_styleExperts = _workbook.createCellStyle();
+		_styleExperts.setFillForegroundColor(IndexedColors.RED.getIndex());
+		_styleExperts.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		
+		_styleAlternatives = _workbook.createCellStyle();
+		_styleAlternatives.setFillForegroundColor(IndexedColors.CORAL.getIndex());
+		_styleAlternatives.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		
+		_styleCriteria = _workbook.createCellStyle();
+		_styleCriteria.setFillForegroundColor(IndexedColors.AQUA.getIndex());
+		_styleCriteria.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		_styleCriteria.setAlignment(CellStyle.ALIGN_CENTER);
+		_styleCriteria.setBorderLeft(BorderStyle.THIN);
+		_styleCriteria.setBorderRight(BorderStyle.THIN);
+		
+		_styleTitles = _workbook.createCellStyle();
+		_styleTitles.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+		_styleTitles.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		_styleTitles.setAlignment(CellStyle.ALIGN_CENTER);
 	}
 
 	public void createExcelFile(Map<ValuationKey, Valuation> unifiedValuations) {
@@ -60,13 +86,14 @@ public class ExcelUtil {
 		}
 	}
 
-	public void createExcelFileEmergencyProblemStructure(Map<ValuationKey, Valuation> unifiedValuations) {
+	public void createExcelFileEmergencyProblemStructure(Map<ValuationKey, Valuation> unifiedValuations, Map<String, Double> expertsWeights) {
 
 		_unifiedValuations = unifiedValuations;
+		_expertsWeights = expertsWeights;
 		
 		createProblemInformation();
 
-		try (FileOutputStream outputStream = new FileOutputStream("C:/Users/Álvaro/Desktop/flintstones_problem.xlsx")) {
+		try (FileOutputStream outputStream = new FileOutputStream("C:/Users/Flintstones/Desktop/flintstones_problem.xlsx")) {
 			_workbook.write(outputStream);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -75,20 +102,11 @@ public class ExcelUtil {
 	}
 	private void createProblemInformation() {
 		
-		CellStyle styleExperts = _workbook.createCellStyle();
-		styleExperts.setFillForegroundColor(IndexedColors.RED.getIndex());
-		styleExperts.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		createExpertsTablesInformation();
+		createExpertsWeightsInformation();
+	}
 
-		CellStyle styleAlternatives = _workbook.createCellStyle();
-		styleAlternatives.setFillForegroundColor(IndexedColors.CORAL.getIndex());
-		styleAlternatives.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
-		CellStyle styleCriteria = _workbook.createCellStyle();
-		styleCriteria.setFillForegroundColor(IndexedColors.AQUA.getIndex());
-		styleCriteria.setFillPattern(CellStyle.SOLID_FOREGROUND);
-		styleCriteria.setAlignment(CellStyle.ALIGN_CENTER);
-		styleCriteria.setBorderLeft(BorderStyle.THIN);
-		styleCriteria.setBorderRight(BorderStyle.THIN);
+	private void createExpertsTablesInformation() {
 		
 		int rowCountExpertsCriteria = 9, rowCountAlternatives = 10, columnCountCriteria = 3, columnCountValuation = 3;
 
@@ -97,7 +115,7 @@ public class ExcelUtil {
 			Row rowExpertCriterion = _sheet.createRow(rowCountExpertsCriteria);
 			Cell cell = rowExpertCriterion.createCell(2);
 			cell.setCellValue(e.getId());
-			cell.setCellStyle(styleExperts);
+			cell.setCellStyle(_styleExperts);
 
 			rowCountAlternatives = rowCountExpertsCriteria + 1;
 
@@ -106,7 +124,7 @@ public class ExcelUtil {
 				Row rowAlternative = _sheet.createRow(rowCountAlternatives);
 				cell = rowAlternative.createCell(2);
 				cell.setCellValue(a.getId());
-				cell.setCellStyle(styleAlternatives);
+				cell.setCellStyle(_styleAlternatives);
 
 				rowCountAlternatives++;
 				
@@ -148,7 +166,7 @@ public class ExcelUtil {
 			for (Criterion c : _criteria) {
 				cell = rowExpertCriterion.createCell(columnCountCriteria);
 				cell.setCellValue(c.getId());
-				cell.setCellStyle(styleCriteria);
+				cell.setCellStyle(_styleCriteria);
 
 				CellRangeAddress cellRangeAddress = new CellRangeAddress(rowCountExpertsCriteria, rowCountExpertsCriteria, columnCountCriteria, columnCountCriteria + 3);
 				_sheet.addMergedRegion(cellRangeAddress);
@@ -158,6 +176,30 @@ public class ExcelUtil {
 
 			rowCountExpertsCriteria += _alternatives.size() + 2;
 			columnCountCriteria = 3;
+		}
+	}
+	
+	private void createExpertsWeightsInformation() {
+		
+		Row rowAggregationWeights = _sheet.createRow(1);
+		Cell cell = rowAggregationWeights.createCell(2);
+		cell.setCellStyle(_styleTitles);
+		cell.setCellValue("Aggregation weights");
+		CellRangeAddress cellRangeAddress = new CellRangeAddress(1, 1, 2, 1 + _experts.size());
+		_sheet.addMergedRegion(cellRangeAddress);
+		
+		int columnCount = 2;
+		Row rowExperts = _sheet.createRow(2);
+		Row rowWeights = _sheet.createRow(3);
+		for(int i = 0; i < _experts.size(); ++i) {
+			cell = rowExperts.createCell(columnCount);
+			cell.setCellStyle(_styleExperts);
+			cell.setCellValue(_experts.get(i).getCanonicalId());
+			
+			cell = rowWeights.createCell(columnCount);
+			cell.setCellValue(Double.toString(_expertsWeights.get(_experts.get(i).getCanonicalId())));
+			
+			columnCount++;
 		}
 	}
 }

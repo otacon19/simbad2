@@ -176,7 +176,10 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 					
 					pack();
 					
+					_excelButton.setEnabled(true);
+					
 					_completed = true;
+					
 					notifyStepStateChange();
 				}
 			}
@@ -185,12 +188,12 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 		_excelButton = new Button(buttonsComposite, SWT.NONE);
 		_excelButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1));
 		_excelButton.setImage(Images.Excel);
-		_excelButton.setEnabled(true);
+		_excelButton.setEnabled(false);
 		_excelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ExcelUtil excelUtil = new ExcelUtil();
-				excelUtil.createExcelFileEmergencyProblemStructure(_aggregationPhase.getValuationsTwoTuple());
+				excelUtil.createExcelFileEmergencyProblemStructure(_aggregationPhase.getValuationsTwoTuple(), _aggregationPhase.getExpertsWeights());
 			}
 		});
 		
