@@ -18,6 +18,7 @@ import sinbad2.valuation.real.ui.nls.Messages;
 import sinbad2.valuation.ui.valuationpanel.ValuationPanel;
 
 public class ValuationPanelReal extends ValuationPanel  {
+	
 	private Spinner _valueSpinner;
 	private double _value;
 
