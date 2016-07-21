@@ -11,6 +11,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -55,6 +57,8 @@ public class CalculateRanking extends ViewPart {
 	private TableViewer _dominanceDegreeAlternativesTableViewer;
 	private TableViewer _rankingTableViewer;
 	
+	private List<Button> _checkBoxes;
+	
 	private ResolutionPhase _resolutionPhase;
 	
 	private ProblemElementsSet _elementsSet;
@@ -83,6 +87,8 @@ public class CalculateRanking extends ViewPart {
 		
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
+		
+		_checkBoxes = new LinkedList<Button>();
 	}
 	
 	@Override
@@ -96,6 +102,20 @@ public class CalculateRanking extends ViewPart {
 		decisionMatrixComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		_dmTable = new DecisionMatrixTable(decisionMatrixComposite);
 		_dmTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	
+		_dmTable.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				if(_dmTable.isCompleted()) {
+					enabledButtons();
+				} else {
+					disabledButtons();
+				}
+			}
+		});
 		
 		Composite tablesComposite = new Composite(_parent, SWT.NONE);
 		tablesComposite.setLayout(new GridLayout(2, true));
@@ -201,6 +221,18 @@ public class CalculateRanking extends ViewPart {
 		setInputCriteriaTable();
 	}
 
+	private void enabledButtons() {
+		for(Button b: _checkBoxes) {
+			b.setEnabled(true);
+		}
+	}
+	
+	private void disabledButtons() {
+		for(Button b: _checkBoxes) {
+			b.setEnabled(false);
+		}
+	}
+	
 	private void refreshConsensusMatrixTable() {		
 		String[] alternatives = new String[_elementsSet.getAlternatives().size()];
 		for(int a = 0; a < alternatives.length; ++a) {
@@ -216,6 +248,9 @@ public class CalculateRanking extends ViewPart {
 	}
 	
 	private void setInputCriteriaTable() {
+		
+		_checkBoxes.clear();
+		
 		List<String[]> result = new LinkedList<String[]>();
 		
 		List<Double> globalWeights = _resolutionPhase.getGlobalWeights();
@@ -241,6 +276,7 @@ public class CalculateRanking extends ViewPart {
 		for(int i = 0; i < items.length; ++i) {
 			TableEditor editor = new TableEditor(_criteriaTableViewer.getTable());
 			Button button = new Button(_criteriaTableViewer.getTable(), SWT.RADIO);
+			button.setEnabled(false);
 		    button.pack();
 		    button.setData("numCriterion", i);
 		    editor.minimumWidth = button.getSize().x;
@@ -257,6 +293,8 @@ public class CalculateRanking extends ViewPart {
 		    		setInputRankingTable();
 		    	}
 			});
+		    
+		    _checkBoxes.add(button);
 		}
 		
 		pack();

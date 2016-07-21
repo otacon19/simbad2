@@ -22,7 +22,7 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	private static final Integer ATTENUATION_FACTOR = 1;
 
-	private Double[][] _consensusMatrix;
+	private Object[][] _consensusMatrix;
 	private int _numAlternatives;
 	private int _numCriteria;
 	private int _referenceCriterion;
@@ -63,13 +63,8 @@ public class ResolutionPhase implements IPhaseMethod {
 		_numAlternatives = _elementsSet.getAlternatives().size();
 		_numCriteria = _elementsSet.getAllCriteria().size();
 
-		_consensusMatrix = new Double[_numAlternatives][_numCriteria];
-		_consensusMatrix[0][0] = 0.2;
-		_consensusMatrix[0][1] = 0.5;
-		_consensusMatrix[1][0] = 0.1;
-		_consensusMatrix[1][1] = 0.1;
-		_consensusMatrix[2][0] = 0.25;
-		_consensusMatrix[2][1] = 0.3;
+		_consensusMatrix = new Object[_numAlternatives][_numCriteria];
+		initializeConsesusMatrix();
 
 		_globalWeights = new LinkedList<Double>();
 		_relativeWeights = new HashMap<String, Double>();
@@ -84,7 +79,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		_consensusMatrix = consensusMatrix;
 	}
 
-	public Double[][] getConsensusMatrix() {
+	public Object[][] getConsensusMatrix() {
 		return _consensusMatrix;
 	}
 
@@ -138,6 +133,15 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _globalDominance;
 	}
 
+	private void initializeConsesusMatrix() {
+		
+		for(int a = 0; a < _numAlternatives; ++a) {
+			for(int c = 0; c < _numCriteria; ++c) {
+				_consensusMatrix[a][c] = "(a,b,c,d)";
+			}
+		}
+	}
+	
 	public Map<String, Double> calculateRelativeWeights() {
 		_relativeWeights = new HashMap<String, Double>();
 
@@ -165,14 +169,14 @@ public class ResolutionPhase implements IPhaseMethod {
 				for (Alternative a2 : _elementsSet.getAlternatives()) {
 					if (a1 != a2) {
 
-						condition = _consensusMatrix[a1Index][criterionIndex]
-								- _consensusMatrix[a2Index][criterionIndex];
+						condition = (Double) _consensusMatrix[a1Index][criterionIndex]
+								- (Double) _consensusMatrix[a2Index][criterionIndex];
 						if (condition > 0) {
 							dominance = Math.sqrt(
 									(condition * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
 						} else if (condition < 0) {
-							double inverse = _consensusMatrix[a2Index][criterionIndex]
-									- _consensusMatrix[a1Index][criterionIndex];
+							double inverse = (Double) _consensusMatrix[a2Index][criterionIndex]
+									- (Double) _consensusMatrix[a1Index][criterionIndex];
 							dominance = (-1d / ATTENUATION_FACTOR);
 							dominance *= Math.sqrt(
 									(inverse * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
@@ -290,14 +294,9 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	@Override
 	public void clear() {
-		_consensusMatrix = new Double[_numAlternatives][_numCriteria];
-		_consensusMatrix[0][0] = 0.2;
-		_consensusMatrix[0][1] = 0.5;
-		_consensusMatrix[1][0] = 0.1;
-		_consensusMatrix[1][1] = 0.1;
-		_consensusMatrix[2][0] = 0.25;
-		_consensusMatrix[2][1] = 0.3;
-
+		_consensusMatrix = new Object[_numAlternatives][_numCriteria];
+		initializeConsesusMatrix();
+		
 		_globalWeights.clear();
 		_referenceCriterion = -1;
 		_relativeWeights.clear();
