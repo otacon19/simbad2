@@ -232,9 +232,11 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 
 		String[] operatorsIds;
 		for(EAggregationOperatorType operatorType: operatorsTypes) {
-			operatorsIds = aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
-			for(String operator: operatorsIds) {
-				aggregationOperatorsIds.add(operator);
+			if(!operatorType.toString().equals("Hesitant")) { //El MaxMin solo se puede usar si todas las valoraciones son hesitant
+				operatorsIds = aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
+				for(String operator: operatorsIds) {
+					aggregationOperatorsIds.add(operator);
+				}
 			}
 		}
 		
