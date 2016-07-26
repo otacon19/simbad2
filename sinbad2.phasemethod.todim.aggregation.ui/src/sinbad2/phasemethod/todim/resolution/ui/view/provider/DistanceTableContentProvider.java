@@ -18,4 +18,5 @@ public class DistanceTableContentProvider implements IStructuredContentProvider 
 
 	@Override
 	public void dispose() {}
+
 }
