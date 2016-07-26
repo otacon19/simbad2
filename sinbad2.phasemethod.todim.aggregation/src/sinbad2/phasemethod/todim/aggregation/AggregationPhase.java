@@ -20,6 +20,7 @@ import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.real.RealValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
@@ -215,30 +216,49 @@ public class AggregationPhase implements IPhaseMethod {
 		calculateValuationsDistance();
 		
 		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
+		Map<ValuationKey, Valuation> confidencesValuations = getConfidencesValuations(valuations);
 		for(ValuationKey vk: valuations.keySet()) {
-			String[] data = new String[7];
-			data[0] = vk.getExpert().getId();
-			data[1] = vk.getAlternative().getId();
-			data[2] = vk.getCriterion().getId();
-			data[3] = valuations.get(vk).changeFormatValuationToString();
-			Valuation aggregatedValuation = _decisionMatrix[_elementsSet.getAlternatives().indexOf(vk.getAlternative())]
-					[_elementsSet.getCriteria().indexOf(vk.getCriterion())];
-			
-			if(aggregatedValuation == null) {
-				data[4] = "";
-			} else {
-				data[4] = aggregatedValuation.changeFormatValuationToString();
-			}
+			if(!valuations.get(vk).getDomain().getId().equals("confidence")) {
+				String[] data = new String[7];
+				data[0] = vk.getExpert().getId();
+				data[1] = vk.getAlternative().getId();
+				data[2] = vk.getCriterion().getId();
+				data[3] = valuations.get(vk).changeFormatValuationToString();
+				Valuation aggregatedValuation = _decisionMatrix[_elementsSet.getAlternatives().indexOf(vk.getAlternative())][_elementsSet.getCriteria().indexOf(vk.getCriterion())];
 				
-			data[5] = Double.toString(Math.round(_distances.get(vk) * 10000d) / 10000d);
-			data[6] = "";
-			
-			result.add(data);
+				if(aggregatedValuation == null) {
+					data[4] = "";
+				} else {
+					data[4] = aggregatedValuation.changeFormatValuationToString();
+				}
+					
+				data[5] = Double.toString(Math.round(_distances.get(vk) * 10000d) / 10000d);
+				
+				if(confidencesValuations.isEmpty()) {
+					data[6] = "0";
+				} else {
+					data[6] = Double.toString(((RealValuation) confidencesValuations.get(vk)).getValue());
+				}
+				
+				result.add(data);
+			}
 		}
 		
 		Collections.sort(result, new DataComparator());
 		
 		return result;
+	}
+
+	private Map<ValuationKey, Valuation> getConfidencesValuations(Map<ValuationKey, Valuation> valuations) {
+		Map<ValuationKey, Valuation> confidencesValuations = new HashMap<ValuationKey, Valuation>();
+		for(ValuationKey vk: valuations.keySet()) {
+			Valuation v = valuations.get(vk);
+			if(v.getDomain().getId().equals("confidence")) {
+				confidencesValuations.put(vk, v);
+			}
+		}
+		
+		return confidencesValuations;
 	}
 
 	private Map<String, Double> calculateSquareValues() {
