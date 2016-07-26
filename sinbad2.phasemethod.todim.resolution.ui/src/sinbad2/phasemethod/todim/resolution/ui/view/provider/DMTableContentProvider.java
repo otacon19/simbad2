@@ -37,7 +37,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		_criteria = criteria;
 		_values = values;
 		
-		_p = Pattern.compile(("[(]\\d{1}\\.\\d+\\,\\d{1}\\.\\d+\\,\\d{1}\\.\\d+\\,\\d{1}\\.\\d+[)]"));
+		_p = Pattern.compile(("[(]\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*[)]"));
 		
 		initialize();
 

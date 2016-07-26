@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -23,6 +24,8 @@ public class ResolutionPhase implements IPhaseMethod {
 	private static final Integer ATTENUATION_FACTOR = 1;
 
 	private Object[][] _consensusMatrix;
+	private String[][] _trapezoidalConsensusMatrix;
+	
 	private int _numAlternatives;
 	private int _numCriteria;
 	private int _referenceCriterion;
@@ -64,6 +67,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		_numCriteria = _elementsSet.getAllCriteria().size();
 
 		_consensusMatrix = new Object[_numAlternatives][_numCriteria];
+		_trapezoidalConsensusMatrix = new String[_numAlternatives][_numCriteria];
 		initializeConsesusMatrix();
 
 		_globalWeights = new LinkedList<Double>();
@@ -75,12 +79,20 @@ public class ResolutionPhase implements IPhaseMethod {
 		_referenceCriterion = -1;
 	}
 
-	public void setConsensusMatrix(Double[][] consensusMatrix) {
+	public void setConsensusMatrix(Object[][] consensusMatrix) {
 		_consensusMatrix = consensusMatrix;
 	}
 
 	public Object[][] getConsensusMatrix() {
 		return _consensusMatrix;
+	}
+	
+	public void setTrapezoidalConsensusMatrix(String[][] consensusMatrix) {
+		_trapezoidalConsensusMatrix = consensusMatrix;
+	}
+
+	public String[][] getTrapezoidalConsensusMatrix() {
+		return _trapezoidalConsensusMatrix;
 	}
 
 	public void setGlobalWeights(List<Double> globalWeights) {
@@ -167,19 +179,15 @@ public class ResolutionPhase implements IPhaseMethod {
 			for (Alternative a1 : _elementsSet.getAlternatives()) {
 				a2Index = 0;
 				for (Alternative a2 : _elementsSet.getAlternatives()) {
+					
 					if (a1 != a2) {
-
-						condition = (Double) _consensusMatrix[a1Index][criterionIndex]
-								- (Double) _consensusMatrix[a2Index][criterionIndex];
+						condition = (Double) _consensusMatrix[a1Index][criterionIndex] - (Double) _consensusMatrix[a2Index][criterionIndex];
 						if (condition > 0) {
-							dominance = Math.sqrt(
-									(condition * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
+							dominance = Math.sqrt((condition * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
 						} else if (condition < 0) {
-							double inverse = (Double) _consensusMatrix[a2Index][criterionIndex]
-									- (Double) _consensusMatrix[a1Index][criterionIndex];
+							double inverse = (Double) _consensusMatrix[a2Index][criterionIndex] - (Double) _consensusMatrix[a1Index][criterionIndex];
 							dominance = (-1d / ATTENUATION_FACTOR);
-							dominance *= Math.sqrt(
-									(inverse * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
+							dominance *= Math.sqrt((inverse * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
 						} else {
 							dominance = 0;
 						}
@@ -272,6 +280,33 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _globalDominance;
 	}
 
+	public Double[][] calculateCOG() {
+		Double[][] result = new Double[_numAlternatives][_numCriteria];
+		double a, b, c, d, cog;
+		String trapezoidalNumber, limits[];
+		TrapezoidalFunction semantic;
+		
+		if(_consensusMatrix != null && _consensusMatrix[0][0] instanceof String) {
+			for(int al = 0; al < _numAlternatives; ++al) {
+				for(int cr = 0; cr < _numCriteria; ++cr) {
+					trapezoidalNumber = (String) _consensusMatrix[al][cr];
+					trapezoidalNumber = trapezoidalNumber.replace("(", "");
+					trapezoidalNumber = trapezoidalNumber.replace(")", "");
+					limits = trapezoidalNumber.split(",");
+					a = Double.parseDouble(limits[0]);
+					b = Double.parseDouble(limits[1]);
+					c = Double.parseDouble(limits[2]);
+					d = Double.parseDouble(limits[3]);
+					semantic = new TrapezoidalFunction(new double[]{a, b, c, d});
+					cog = semantic.centroid();
+					result[al][cr] = Math.round(cog * 100d) / 100d;
+				}
+			}
+		} 
+		
+		return result;
+	}
+	
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new ResolutionPhase();
@@ -290,12 +325,14 @@ public class ResolutionPhase implements IPhaseMethod {
 		_dominanceDegreeByCriterion = resolution.getDominanceDegreeByCriterion();
 		_dominanceDegreeAlternatives = resolution.getDominanceDegreeAlternatives();
 		_globalDominance = resolution.getGlobalDominance();
+		_trapezoidalConsensusMatrix = resolution.getTrapezoidalConsensusMatrix();
 	}
 
 	@Override
 	public void clear() {
 		_consensusMatrix = new Object[_numAlternatives][_numCriteria];
 		initializeConsesusMatrix();
+		_trapezoidalConsensusMatrix = new String[_numAlternatives][_numCriteria];
 		
 		_globalWeights.clear();
 		_referenceCriterion = -1;

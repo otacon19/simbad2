@@ -18,6 +18,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -50,6 +51,7 @@ public class CalculateRanking extends ViewPart {
 	public static final String ID = "flintstones.phasemethod.todim.resolution.ui.view.calculateranking";
 
 	private Composite _parent;
+	private Combo _matrixType;
 	
 	private DecisionMatrixTable _dmTable;
 	private TableViewer _criteriaTableViewer;
@@ -110,10 +112,33 @@ public class CalculateRanking extends ViewPart {
 			@Override
 			public void focusGained(FocusEvent e) {
 				if(_dmTable.isCompleted()) {
+					_resolutionPhase.setConsensusMatrix(_dmTable.getTrapezoidalConsensusMatrix());
+					_resolutionPhase.setTrapezoidalConsensusMatrix(_dmTable.getTrapezoidalConsensusMatrix());
 					enabledButtons();
 				} else {
 					disabledButtons();
 				}
+			}
+		});
+		
+		Composite comboBoxComposite = new Composite(decisionMatrixComposite, SWT.READ_ONLY);
+		comboBoxComposite.setLayout(new GridLayout(1, true));
+		comboBoxComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false, 1, 1));
+		_matrixType = new Combo(comboBoxComposite, SWT.NONE);
+		_matrixType.setItems(new String[]{"Fuzzy numbers", "Center of Gravity", "Fuzzy TODIM"});
+		_matrixType.select(0);
+		_matrixType.setEnabled(false);
+		_matrixType.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				int indexSelected = ((Combo) e.widget).getSelectionIndex();
+				if(indexSelected == 0) {
+					_resolutionPhase.setConsensusMatrix(_resolutionPhase.getTrapezoidalConsensusMatrix());
+				} else if(indexSelected == 1) {
+					_resolutionPhase.setConsensusMatrix(_resolutionPhase.calculateCOG());
+				}
+				
+				refreshConsensusMatrixTable();
 			}
 		});
 		
@@ -137,7 +162,7 @@ public class CalculateRanking extends ViewPart {
 		criterionReference.getColumn().pack();
 		
 		TableViewerColumn criterionId = new TableViewerColumn(_criteriaTableViewer, SWT.NONE);
-		criterionId.getColumn().setText("Id");
+		criterionId.getColumn().setText("Criterion");
 		criterionId.setLabelProvider(new CriterionIdColumnLabelProvider());
 		criterionId.getColumn().pack();
 		
@@ -225,12 +250,16 @@ public class CalculateRanking extends ViewPart {
 		for(Button b: _checkBoxes) {
 			b.setEnabled(true);
 		}
+		
+		_matrixType.setEnabled(true);
 	}
 	
 	private void disabledButtons() {
 		for(Button b: _checkBoxes) {
 			b.setEnabled(false);
 		}
+		
+		_matrixType.setEnabled(false);
 	}
 	
 	private void refreshConsensusMatrixTable() {		
@@ -378,7 +407,7 @@ public class CalculateRanking extends ViewPart {
 	
 	@Override
 	public String getPartName() {
-		return "Calculate ranking";
+		return "TODIM";
 	}
 
 }
