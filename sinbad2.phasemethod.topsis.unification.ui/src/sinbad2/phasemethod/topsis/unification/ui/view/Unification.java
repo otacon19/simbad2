@@ -272,6 +272,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 		_provider = new TreeViewerContentProvider(unifiedTwoTupleValues);
 		_treeViewer.setContentProvider(_provider);
 		_treeViewer.setInput(_provider.getInput());
+		compactTable();
 		
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		SelectionPhase selectionPhase = (SelectionPhase) pmm.getPhaseMethod(SelectionPhase.ID).getImplementation();

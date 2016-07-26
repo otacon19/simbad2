@@ -282,6 +282,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 		_provider = new TreeViewerContentProvider(unifiedValues);
 		_treeViewer.setContentProvider(_provider);
 		_treeViewer.setInput(_provider.getInput());
+		compactTable();
 
 		
 		if(_completed || reloaded) {
