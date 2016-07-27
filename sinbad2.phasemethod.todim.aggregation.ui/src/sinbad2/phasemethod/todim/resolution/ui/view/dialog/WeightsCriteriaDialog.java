@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.element.ProblemElement;
+import sinbad2.phasemethod.todim.resolution.ui.nls.Messages;
 
 public class WeightsCriteriaDialog extends Dialog implements PropertyChangeListener {
 
@@ -124,11 +125,11 @@ public class WeightsCriteriaDialog extends Dialog implements PropertyChangeListe
 			try {
 				newValue = (Double.parseDouble((String) value));
 				if((newValue < 0) || (newValue > 1)) {
-					MessageDialog.openError(null, "Invalid_range", "Invalid_range");
+					MessageDialog.openError(null, "Invalid_range", "Invalid_range"); //$NON-NLS-1$ //$NON-NLS-2$
 					return;
 				}
 			} catch (Exception e) {
-				MessageDialog.openError(null, "Invalid_value", "Invalid_value");
+				MessageDialog.openError(null, "Invalid_value", "Invalid_value"); //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 
@@ -330,7 +331,7 @@ public class WeightsCriteriaDialog extends Dialog implements PropertyChangeListe
 
 		_checkButton = new Button(container, SWT.CHECK);
 		_checkButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		_checkButton.setText("Simple aggregation");
+		_checkButton.setText(Messages.WeightsCriteriaDialog_Simple_aggregation);
 		_checkButton.setSelection(_generalSelection);
 
 		_completeWeightsViewer = new TableViewer(container, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
@@ -490,7 +491,7 @@ public class WeightsCriteriaDialog extends Dialog implements PropertyChangeListe
 				double sum;
 				double value;
 				aux = new Object[_cols + 2];
-				aux[0] = "All";
+				aux[0] = Messages.WeightsCriteriaDialog_All;
 				sum = 0;
 				for(int j = 0; j < _cols; j++) {
 					value = _weights.get(null).get(j);
@@ -566,10 +567,10 @@ public class WeightsCriteriaDialog extends Dialog implements PropertyChangeListe
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		if (_type == COMPLEX) {
-			createButton(parent, CANCEL_ALL, "Cancel all", false);
+			createButton(parent, CANCEL_ALL, Messages.WeightsCriteriaDialog_Cancel_all, false);
 		}
-		createButton(parent, CANCEL, "Cancel", false);
-		createButton(parent, SAVE, "Save", true);
+		createButton(parent, CANCEL, Messages.WeightsCriteriaDialog_Cancel, false);
+		createButton(parent, SAVE, Messages.WeightsCriteriaDialog_Save, true);
 	}
 
 	public Map<String, List<Double>> getWeights() {

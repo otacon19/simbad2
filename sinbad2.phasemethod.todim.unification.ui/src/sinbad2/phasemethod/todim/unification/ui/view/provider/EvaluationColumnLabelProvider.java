@@ -38,7 +38,7 @@ public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 						aux = aux.substring(0, 1).toUpperCase() + aux.substring(1);
 						return aux + " " + valuation.getTerm().getName(); //$NON-NLS-1$
 					} else {
-						return "Between" + " " + valuation.getLowerTerm().getName() + " " + "and" + " " + valuation.getUpperTerm().getName();  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+						return "Between" + " " + valuation.getLowerTerm().getName() + " " + "and" + " " + valuation.getUpperTerm().getName();  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 					}
 				} else {
 					return Messages.EvaluationColumnLabelProvider_Not_evaluate;

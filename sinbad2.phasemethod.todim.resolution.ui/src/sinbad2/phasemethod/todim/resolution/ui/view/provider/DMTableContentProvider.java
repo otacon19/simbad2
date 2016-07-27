@@ -14,6 +14,7 @@ import de.kupzog.ktable.SWTX;
 import de.kupzog.ktable.editors.KTableCellEditorText;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
+import sinbad2.phasemethod.todim.resolution.ui.nls.Messages;
 import sinbad2.phasemethod.todim.resolution.ui.view.DecisionMatrixTable;
 
 public class DMTableContentProvider extends KTableNoScrollModel {
@@ -37,7 +38,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		_criteria = criteria;
 		_values = values;
 		
-		_p = Pattern.compile(("[(]\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*[)]"));
+		_p = Pattern.compile(("[(]\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*[)]")); //$NON-NLS-1$
 		
 		initialize();
 
@@ -53,14 +54,14 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		
 		try {
 			if(col == 0 && row == 0) {
-				erg = "Consensus Matrix (N)";
+				erg = Messages.DMTableContentProvider_Consensus_matrix;
 			} else if (col == 0) {
 				erg = "A" + row; //$NON-NLS-1$
 			} else if (row == 0) {
 				erg = "C" + col; //$NON-NLS-1$
 			} else {
 				if(_values[row - 1][col - 1] == null) {
-					erg = "";
+					erg = ""; //$NON-NLS-1$
 				} else if(_values[row - 1][col - 1] instanceof Double ){
 					erg = Double.toString(((Double) _values[row - 1][col - 1]));
 				} else {
@@ -88,9 +89,9 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 			_values[row - 1][col - 1] = (Double) value;
 		} else {
 			boolean format = _p.matcher((String) value).matches(); 
-			String noParenthesis = ((String) value).replace("(", "");
-			noParenthesis = noParenthesis.replace(")", "");
-			String[] limits = noParenthesis.split(",");
+			String noParenthesis = ((String) value).replace("(", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			noParenthesis = noParenthesis.replace(")", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			String[] limits = noParenthesis.split(","); //$NON-NLS-1$
 			
 			if(format && checkLimits(limits)) {
 				_values[row - 1][col - 1] = (String) value;

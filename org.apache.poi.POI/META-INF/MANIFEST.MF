@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: POI
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.apache.poi.POI
 Bundle-Version: 1.0.0
 Bundle-ClassPath: .
-Bundle-Vendor: Apache
+Bundle-Vendor: %Bundle-Vendor
 Export-Package: com.microsoft.schemas.office.excel,
  com.microsoft.schemas.office.excel.impl,
  com.microsoft.schemas.office.office,

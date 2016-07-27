@@ -72,11 +72,11 @@ public class WeightsExpertsEditingSupport extends EditingSupport {
 		try {
 			newValue = (Double.parseDouble((String) value));
 			if((newValue < 0) || (newValue > 1)) {
-				MessageDialog.openError(null, "Invalid_range", "Invalid_range");
+				MessageDialog.openError(null, "Invalid_range", "Invalid_range"); //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 		} catch (Exception e) {
-			MessageDialog.openError(null, "Invalid_value", "Invalid_value");
+			MessageDialog.openError(null, "Invalid_value", "Invalid_value"); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
 
@@ -127,6 +127,6 @@ public class WeightsExpertsEditingSupport extends EditingSupport {
 		
 		viewer.setInput(input);
 		
-		_changeSupport.firePropertyChange("weight", null, null);
+		_changeSupport.firePropertyChange("weight", null, null); //$NON-NLS-1$
 	}
 }

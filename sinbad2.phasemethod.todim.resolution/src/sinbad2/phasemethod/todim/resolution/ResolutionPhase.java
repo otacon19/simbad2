@@ -19,7 +19,7 @@ import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 
 public class ResolutionPhase implements IPhaseMethod {
 
-	public static final String ID = "flintstones.phasemethod.todim.resolution";
+	public static final String ID = "flintstones.phasemethod.todim.resolution"; //$NON-NLS-1$
 
 	private static final Integer ATTENUATION_FACTOR = 1;
 
@@ -149,7 +149,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		
 		for(int a = 0; a < _numAlternatives; ++a) {
 			for(int c = 0; c < _numCriteria; ++c) {
-				_consensusMatrix[a][c] = "(a,b,c,d)";
+				_consensusMatrix[a][c] = "(a,b,c,d)"; //$NON-NLS-1$
 			}
 		}
 	}
@@ -290,9 +290,9 @@ public class ResolutionPhase implements IPhaseMethod {
 			for(int al = 0; al < _numAlternatives; ++al) {
 				for(int cr = 0; cr < _numCriteria; ++cr) {
 					trapezoidalNumber = (String) _consensusMatrix[al][cr];
-					trapezoidalNumber = trapezoidalNumber.replace("(", "");
-					trapezoidalNumber = trapezoidalNumber.replace(")", "");
-					limits = trapezoidalNumber.split(",");
+					trapezoidalNumber = trapezoidalNumber.replace("(", ""); //$NON-NLS-1$ //$NON-NLS-2$
+					trapezoidalNumber = trapezoidalNumber.replace(")", ""); //$NON-NLS-1$ //$NON-NLS-2$
+					limits = trapezoidalNumber.split(","); //$NON-NLS-1$
 					a = Double.parseDouble(limits[0]);
 					b = Double.parseDouble(limits[1]);
 					c = Double.parseDouble(limits[2]);

@@ -31,6 +31,7 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.resolution.Pair;
 import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
+import sinbad2.phasemethod.todim.resolution.ui.nls.Messages;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.AnotherAlternativeColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.CriteriaTableContentProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.CriterionColumnLabelProvider;
@@ -48,7 +49,7 @@ import sinbad2.phasemethod.todim.resolution.ui.view.provider.RelativeWeightCrite
 
 public class CalculateRanking extends ViewPart {
 	
-	public static final String ID = "flintstones.phasemethod.todim.resolution.ui.view.calculateranking";
+	public static final String ID = "flintstones.phasemethod.todim.resolution.ui.view.calculateranking"; //$NON-NLS-1$
 
 	private Composite _parent;
 	private Combo _matrixType;
@@ -125,7 +126,7 @@ public class CalculateRanking extends ViewPart {
 		comboBoxComposite.setLayout(new GridLayout(1, true));
 		comboBoxComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false, 1, 1));
 		_matrixType = new Combo(comboBoxComposite, SWT.NONE);
-		_matrixType.setItems(new String[]{"Fuzzy numbers", "Center of Gravity", "Fuzzy TODIM"});
+		_matrixType.setItems(new String[]{Messages.CalculateRanking_Fuzzy_numbers, Messages.CalculateRanking_Center_of_Gravity, Messages.CalculateRanking_Fuzzy_TODIM});
 		_matrixType.select(0);
 		_matrixType.setEnabled(false);
 		_matrixType.addSelectionListener(new SelectionAdapter() {
@@ -152,27 +153,27 @@ public class CalculateRanking extends ViewPart {
 		_criteriaTableViewer.getTable().setHeaderVisible(true);
 		
 		TableViewerColumn criterionReference = new TableViewerColumn(_criteriaTableViewer, SWT.NONE);
-		criterionReference.getColumn().setText("Reference criterion");
+		criterionReference.getColumn().setText(Messages.CalculateRanking_Reference_criterion);
 		criterionReference.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 		});
 		criterionReference.getColumn().pack();
 		
 		TableViewerColumn criterionId = new TableViewerColumn(_criteriaTableViewer, SWT.NONE);
-		criterionId.getColumn().setText("Criterion");
+		criterionId.getColumn().setText(Messages.CalculateRanking_Criterion);
 		criterionId.setLabelProvider(new CriterionIdColumnLabelProvider());
 		criterionId.getColumn().pack();
 		
 		TableViewerColumn criterionWeight = new TableViewerColumn(_criteriaTableViewer, SWT.NONE);
-		criterionWeight.getColumn().setText("Weight");
+		criterionWeight.getColumn().setText(Messages.CalculateRanking_Weight);
 		criterionWeight.setLabelProvider(new CriterionWeightColumnLabelProvider());
 		criterionWeight.getColumn().pack();
 		
 		TableViewerColumn relativeWeight = new TableViewerColumn(_criteriaTableViewer, SWT.NONE);
-		relativeWeight.getColumn().setText("Relative weight");
+		relativeWeight.getColumn().setText(Messages.CalculateRanking_Relative_weight);
 		relativeWeight.setLabelProvider(new RelativeWeightCriterionColumnLabelProvider());
 		relativeWeight.getColumn().pack();
 	
@@ -182,22 +183,22 @@ public class CalculateRanking extends ViewPart {
 		_dominanceDegreeTableViewer.getTable().setHeaderVisible(true);
 		
 		TableViewerColumn mainAlternative = new TableViewerColumn(_dominanceDegreeTableViewer, SWT.NONE);
-		mainAlternative.getColumn().setText("Alternative");
+		mainAlternative.getColumn().setText(Messages.CalculateRanking_Alternative);
 		mainAlternative.setLabelProvider(new MainAlternativeColumnLabelProvider());
 		mainAlternative.getColumn().pack();
 		
 		TableViewerColumn anotherAlternative = new TableViewerColumn(_dominanceDegreeTableViewer, SWT.NONE);
-		anotherAlternative.getColumn().setText("Alternative");
+		anotherAlternative.getColumn().setText(Messages.CalculateRanking_Alternative);
 		anotherAlternative.setLabelProvider(new AnotherAlternativeColumnLabelProvider());
 		anotherAlternative.getColumn().pack();
 		
 		TableViewerColumn criterion= new TableViewerColumn(_dominanceDegreeTableViewer, SWT.NONE);
-		criterion.getColumn().setText("Criterion");
+		criterion.getColumn().setText(Messages.CalculateRanking_Criterion);
 		criterion.setLabelProvider(new CriterionColumnLabelProvider());
 		criterion.getColumn().pack();
 		
 		TableViewerColumn dominanceDegree = new TableViewerColumn(_dominanceDegreeTableViewer, SWT.NONE);
-		dominanceDegree.getColumn().setText("Dominance degree");
+		dominanceDegree.getColumn().setText(Messages.CalculateRanking_Dominance_degree);
 		dominanceDegree.setLabelProvider(new DominanceDegreeColumnLabelProvider());
 		dominanceDegree.getColumn().pack();
 
@@ -207,17 +208,17 @@ public class CalculateRanking extends ViewPart {
 		_dominanceDegreeAlternativesTableViewer.getTable().setHeaderVisible(true);
 		
 		TableViewerColumn mainAlternative2 = new TableViewerColumn(_dominanceDegreeAlternativesTableViewer, SWT.NONE);
-		mainAlternative2.getColumn().setText("Alternative");
+		mainAlternative2.getColumn().setText(Messages.CalculateRanking_Alternative);
 		mainAlternative2.setLabelProvider(new MainAlternativeColumnLabelProvider());
 		mainAlternative2.getColumn().pack();
 		
 		TableViewerColumn anotherAlternative2 = new TableViewerColumn(_dominanceDegreeAlternativesTableViewer, SWT.NONE);
-		anotherAlternative2.getColumn().setText("Alternative");
+		anotherAlternative2.getColumn().setText(Messages.CalculateRanking_Alternative);
 		anotherAlternative2.setLabelProvider(new AnotherAlternativeColumnLabelProvider());
 		anotherAlternative2.getColumn().pack();
 		
 		TableViewerColumn dominanceDegreeAlternative = new TableViewerColumn(_dominanceDegreeAlternativesTableViewer, SWT.NONE);
-		dominanceDegreeAlternative.getColumn().setText("Dominance degree");
+		dominanceDegreeAlternative.getColumn().setText(Messages.CalculateRanking_Dominance_degree);
 		dominanceDegreeAlternative.setLabelProvider(new DominanceDegreeAlternativesColumnLabelProvider());
 		dominanceDegreeAlternative.getColumn().pack();
 		
@@ -227,17 +228,17 @@ public class CalculateRanking extends ViewPart {
 		_rankingTableViewer.getTable().setHeaderVisible(true);
 		
 		TableViewerColumn alternative = new TableViewerColumn(_rankingTableViewer, SWT.NONE);
-		alternative.getColumn().setText("Alternative");
+		alternative.getColumn().setText(Messages.CalculateRanking_Alternative);
 		alternative.setLabelProvider(new MainAlternativeColumnLabelProvider());
 		alternative.getColumn().pack();
 		
 		TableViewerColumn globalDominanceDegree = new TableViewerColumn(_rankingTableViewer, SWT.NONE);
-		globalDominanceDegree.getColumn().setText("Global dominance degree");
+		globalDominanceDegree.getColumn().setText(Messages.CalculateRanking_Global_dominance_degree);
 		globalDominanceDegree.setLabelProvider(new GlobalDominanceDegreeColumnLabelProvider());
 		globalDominanceDegree.getColumn().pack();
 		
 		TableViewerColumn ranking = new TableViewerColumn(_rankingTableViewer, SWT.NONE);
-		ranking.getColumn().setText("Ranking");
+		ranking.getColumn().setText(Messages.CalculateRanking_Ranking);
 		ranking.setLabelProvider(new RankingColumnLabelProvider());
 		ranking.getColumn().pack();
 		
@@ -291,7 +292,7 @@ public class CalculateRanking extends ViewPart {
 			row[0] = c.getCanonicalId();
 			row[1] = Double.toString(globalWeights.get(indexCriterion));
 			if(relativeWeights.isEmpty()) {
-				row[2] = "0";
+				row[2] = "0"; //$NON-NLS-1$
 			} else {
 				row[2] = Double.toString(relativeWeights.get(c.getCanonicalId()));
 			}
@@ -307,14 +308,14 @@ public class CalculateRanking extends ViewPart {
 			Button button = new Button(_criteriaTableViewer.getTable(), SWT.RADIO);
 			button.setEnabled(false);
 		    button.pack();
-		    button.setData("numCriterion", i);
+		    button.setData("numCriterion", i); //$NON-NLS-1$
 		    editor.minimumWidth = button.getSize().x;
 		    editor.horizontalAlignment = SWT.CENTER;
 		    editor.setEditor(button, items[i], 0);
 		    button.addSelectionListener(new SelectionAdapter() {
 		    	@Override
 		    	public void widgetSelected(SelectionEvent e) {
-		    		_resolutionPhase.setReferenceCriterion((int) ((Button) e.widget).getData("numCriterion"));
+		    		_resolutionPhase.setReferenceCriterion((int) ((Button) e.widget).getData("numCriterion")); //$NON-NLS-1$
 		    		
 		    		setInputCriteriaTable();
 		    		setInputDominanceDegreeTable();
@@ -407,7 +408,7 @@ public class CalculateRanking extends ViewPart {
 	
 	@Override
 	public String getPartName() {
-		return "TODIM";
+		return "TODIM"; //$NON-NLS-1$
 	}
 
 }

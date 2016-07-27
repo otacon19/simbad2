@@ -12,6 +12,7 @@ import de.kupzog.ktable.SWTX;
 import de.kupzog.ktable.editors.KTableCellEditorText;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
+import sinbad2.phasemethod.todim.resolution.ui.nls.Messages;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
@@ -45,14 +46,14 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		
 		try {
 			if(col == 0 && row == 0) {
-				erg = "Decision Matrix";
+				erg = Messages.DMTableContentProvider_Decision_matrix;
 			} else if (col == 0) {
 				erg = "A" + row; //$NON-NLS-1$
 			} else if (row == 0) {
 				erg = "C" + col; //$NON-NLS-1$
 			} else {
 				if(_values[row - 1][col - 1] == null) {
-					erg = "";
+					erg = ""; //$NON-NLS-1$
 				} else {
 					erg = ((TwoTuple) _values[row - 1][col - 1]).changeFormatValuationToString();
 				}

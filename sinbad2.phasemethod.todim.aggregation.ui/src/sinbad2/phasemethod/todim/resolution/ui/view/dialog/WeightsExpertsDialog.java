@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.phasemethod.todim.resolution.ui.nls.Messages;
 
 public class WeightsExpertsDialog extends Dialog implements PropertyChangeListener {
 	
@@ -63,7 +64,7 @@ public class WeightsExpertsDialog extends Dialog implements PropertyChangeListen
 		createCompleteWeightsContentProvider(_expertsWeightsViewer);
 		
 		TableViewerColumn expertsColumn = new TableViewerColumn(_expertsWeightsViewer, SWT.NONE);
-		expertsColumn.getColumn().setText("Expert");
+		expertsColumn.getColumn().setText(Messages.WeightsExpertsDialog_Expert);
 		expertsColumn.getColumn().pack();
 		expertsColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
@@ -75,7 +76,7 @@ public class WeightsExpertsDialog extends Dialog implements PropertyChangeListen
 		_editingSupport = new WeightsExpertsEditingSupport(_expertsWeightsViewer, _elementsSet.getExperts(), propertyChangeSupport);
 		
 		TableViewerColumn weightsColumn = new TableViewerColumn(_expertsWeightsViewer, SWT.NONE);
-		weightsColumn.getColumn().setText("Weight");
+		weightsColumn.getColumn().setText(Messages.WeightsExpertsDialog_Weight);
 		weightsColumn.getColumn().pack();
 		weightsColumn.setEditingSupport(_editingSupport);
 		weightsColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -96,7 +97,7 @@ public class WeightsExpertsDialog extends Dialog implements PropertyChangeListen
 			}
 		});
 		
-		addPropertyChangeListener("weight", this);
+		addPropertyChangeListener("weight", this); //$NON-NLS-1$
 		
 		setInput();
 		
@@ -165,7 +166,7 @@ public class WeightsExpertsDialog extends Dialog implements PropertyChangeListen
 			return;
 		}
 
-		if("weight".equals(evt.getPropertyName())) {
+		if("weight".equals(evt.getPropertyName())) { //$NON-NLS-1$
 			Button SaveButton = getButton(SAVE);
 			if (SaveButton != null) {
 				SaveButton.setEnabled(validate());
@@ -179,8 +180,8 @@ public class WeightsExpertsDialog extends Dialog implements PropertyChangeListen
 	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, CANCEL, "Cancel", false);
-		createButton(parent, SAVE, "Save", true);
+		createButton(parent, CANCEL, Messages.WeightsExpertsDialog_Cancel, false);
+		createButton(parent, SAVE, Messages.WeightsExpertsDialog_Save, true);
 		getButton(SAVE).setEnabled(false);;
 	}
 	

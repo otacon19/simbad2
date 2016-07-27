@@ -35,6 +35,7 @@ import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.aggregation.AggregationPhase;
 import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
 import sinbad2.phasemethod.todim.resolution.ui.Images;
+import sinbad2.phasemethod.todim.resolution.ui.nls.Messages;
 import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsCriteriaDialog;
 import sinbad2.phasemethod.todim.resolution.ui.view.dialog.WeightsExpertsDialog;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.AggregatedValuationColumnLabelProvider;
@@ -121,37 +122,37 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 		
 		TableViewerColumn expert = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
 		expert.setLabelProvider(new ExpertColumnLabelProvider());
-		expert.getColumn().setText("Expert");
+		expert.getColumn().setText(Messages.AggregationView_Expert);
 		expert.getColumn().pack();
 		
 		TableViewerColumn alternative = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
 		alternative.setLabelProvider(new AlternativeColumnLabelProvider());
-		alternative.getColumn().setText("Alternative");
+		alternative.getColumn().setText(Messages.AggregationView_Alternative);
 		alternative.getColumn().pack();
 		
 		TableViewerColumn criterion = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
 		criterion.setLabelProvider(new CriterionColumnLabelProvider());
-		criterion.getColumn().setText("Criterion");
+		criterion.getColumn().setText(Messages.AggregationView_Criterion);
 		criterion.getColumn().pack();
 		
 		TableViewerColumn expertOpinion = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
 		expertOpinion.setLabelProvider(new ExpertValuationColumnLabelProvider());
-		expertOpinion.getColumn().setText("Expert valuation");
+		expertOpinion.getColumn().setText(Messages.AggregationView_Expert_valuation);
 		expertOpinion.getColumn().pack();
 		
 		TableViewerColumn aggregatedValuation = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
 		aggregatedValuation.setLabelProvider(new AggregatedValuationColumnLabelProvider());
-		aggregatedValuation.getColumn().setText("Aggregated valuation");
+		aggregatedValuation.getColumn().setText(Messages.AggregationView_Aggregated_valuation);
 		aggregatedValuation.getColumn().pack();
 		
 		TableViewerColumn distance = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
 		distance.setLabelProvider(new DistanceColumnLabelProvider());
-		distance.getColumn().setText("Distance");
+		distance.getColumn().setText(Messages.AggregationView_Distance);
 		distance.getColumn().pack();
 		
 		TableViewerColumn threshold = new TableViewerColumn(_distanceTableViewer, SWT.NONE);
 		threshold.setLabelProvider(new ThresholdColumnLabelProvider());
-		threshold.getColumn().setText("Threshold");
+		threshold.getColumn().setText(Messages.AggregationView_Threshold);
 		threshold.getColumn().pack();
 	
 		Composite buttonsComposite = new Composite(distanceComposite, SWT.NONE);
@@ -160,7 +161,7 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 		
 		_distanceButton = new Button(buttonsComposite, SWT.NONE);
 		_distanceButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1));
-		_distanceButton.setText("Calculate distance");
+		_distanceButton.setText(Messages.AggregationView_Calculate_distance);
 		_distanceButton.setEnabled(false);
 		_distanceButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -209,7 +210,7 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 		Map<String, List<Double>> mapWeights = new HashMap<String, List<Double>>();
 		if(aggregationOperator instanceof WeightedAggregationOperator) { 
 			ProblemElement[] secondary = _elementsSet.getAllCriteria().toArray(new Criterion[0]);
-			WeightsCriteriaDialog dialog = new WeightsCriteriaDialog(Display.getCurrent().getActiveShell(), _elementsSet.getAllElementExpertChildren(null), secondary, null, 1, "Expert", "All_experts");
+			WeightsCriteriaDialog dialog = new WeightsCriteriaDialog(Display.getCurrent().getActiveShell(), _elementsSet.getAllElementExpertChildren(null), secondary, null, 1, Messages.AggregationView_Expert, Messages.AggregationView_All_experts);
 			
 			int exitValue = dialog.open();
 			if(exitValue == WeightsCriteriaDialog.SAVE) {
@@ -232,7 +233,7 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 
 		String[] operatorsIds;
 		for(EAggregationOperatorType operatorType: operatorsTypes) {
-			if(!operatorType.toString().equals("Hesitant")) { //El MaxMin solo se puede usar si todas las valoraciones son hesitant
+			if(!operatorType.toString().equals("Hesitant")) { //El MaxMin solo se puede usar si todas las valoraciones son hesitant //$NON-NLS-1$
 				operatorsIds = aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
 				for(String operator: operatorsIds) {
 					aggregationOperatorsIds.add(operator);
@@ -281,7 +282,7 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 	
 	@Override
 	public String getPartName() {
-		return "Aggregation";
+		return Messages.AggregationView_Aggregation;
 	}
 	
 	@Override

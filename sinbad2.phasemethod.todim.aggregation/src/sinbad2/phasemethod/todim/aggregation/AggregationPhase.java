@@ -28,7 +28,7 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class AggregationPhase implements IPhaseMethod {
 
-	public static final String ID = "flintstones.phasemethod.todim.aggregation";
+	public static final String ID = "flintstones.phasemethod.todim.aggregation"; //$NON-NLS-1$
 	
 	private static final int P = 2;
 	private static final int M = 2;
@@ -218,7 +218,7 @@ public class AggregationPhase implements IPhaseMethod {
 		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
 		Map<ValuationKey, Valuation> confidencesValuations = getConfidencesValuations(valuations);
 		for(ValuationKey vk: valuations.keySet()) {
-			if(!valuations.get(vk).getDomain().getId().equals("confidence")) {
+			if(!valuations.get(vk).getDomain().getId().equals("confidence")) { //$NON-NLS-1$
 				String[] data = new String[7];
 				data[0] = vk.getExpert().getId();
 				data[1] = vk.getAlternative().getId();
@@ -227,7 +227,7 @@ public class AggregationPhase implements IPhaseMethod {
 				Valuation aggregatedValuation = _decisionMatrix[_elementsSet.getAlternatives().indexOf(vk.getAlternative())][_elementsSet.getCriteria().indexOf(vk.getCriterion())];
 				
 				if(aggregatedValuation == null) {
-					data[4] = "";
+					data[4] = ""; //$NON-NLS-1$
 				} else {
 					data[4] = aggregatedValuation.changeFormatValuationToString();
 				}
@@ -235,7 +235,7 @@ public class AggregationPhase implements IPhaseMethod {
 				data[5] = Double.toString(Math.round(_distances.get(vk) * 10000d) / 10000d);
 				
 				if(confidencesValuations.isEmpty()) {
-					data[6] = "0";
+					data[6] = "0"; //$NON-NLS-1$
 				} else {
 					data[6] = Double.toString(((RealValuation) confidencesValuations.get(vk)).getValue());
 				}
@@ -253,7 +253,7 @@ public class AggregationPhase implements IPhaseMethod {
 		Map<ValuationKey, Valuation> confidencesValuations = new HashMap<ValuationKey, Valuation>();
 		for(ValuationKey vk: valuations.keySet()) {
 			Valuation v = valuations.get(vk);
-			if(v.getDomain().getId().equals("confidence")) {
+			if(v.getDomain().getId().equals("confidence")) { //$NON-NLS-1$
 				confidencesValuations.put(vk, v);
 			}
 		}
