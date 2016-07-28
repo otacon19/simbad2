@@ -4,5 +4,6 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.phasemethod.todim.resolution;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: sinbad2.phasemethod
+Require-Bundle: sinbad2.phasemethod,
+ sinbad2.phasemethod.todim.aggregation
 Export-Package: sinbad2.phasemethod.todim.resolution

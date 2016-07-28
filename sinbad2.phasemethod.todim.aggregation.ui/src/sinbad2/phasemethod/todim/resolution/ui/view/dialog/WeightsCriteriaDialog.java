@@ -19,10 +19,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
@@ -62,8 +58,6 @@ public class WeightsCriteriaDialog extends Dialog implements PropertyChangeListe
 	private double[] _sums;
 	private double _sumGeneral;
 	private TableViewer _generalWeightsViewer;
-	private TableViewer _completeWeightsViewer;
-	private Button _checkButton;
 	private boolean _generalSelection;
 
 	private static double round(double value) {
@@ -329,47 +323,11 @@ public class WeightsCriteriaDialog extends Dialog implements PropertyChangeListe
 
 		_generalWeightsViewer.setInput(_input);
 
-		_checkButton = new Button(container, SWT.CHECK);
-		_checkButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		_checkButton.setText(Messages.WeightsCriteriaDialog_Simple_aggregation);
-		_checkButton.setSelection(_generalSelection);
-
-		_completeWeightsViewer = new TableViewer(container, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
-
-		createCompleteWeightsContentProvider(_completeWeightsViewer);
-
-		createWeightsColumns(_completeWeightsViewer, _input, false);
-
-		table = _completeWeightsViewer.getTable();
-		gridData = new GridData(SWT.CENTER, SWT.TOP, false, true, 1, 1);
-		table.setLayoutData(gridData);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-
-		_completeWeightsViewer.setInput(_input);
-
 		for(TableColumn column : _generalWeightsViewer.getTable().getColumns()) {
 			column.pack();
 			if(column.getWidth() < 50) {
 				column.setWidth(50);
 			}
-		}
-		for(TableColumn column : _completeWeightsViewer.getTable().getColumns()) {
-			column.pack();
-			if(column.getWidth() < 50) {
-				column.setWidth(50);
-			}
-		}
-
-		TableColumn col1 = _generalWeightsViewer.getTable().getColumn(0);
-		TableColumn col2 = _completeWeightsViewer.getTable().getColumn(0);
-
-		if(col1.getWidth() < col2.getWidth()) {
-			col2.setWidth(col2.getWidth() + 5);
-			col1.setWidth(col2.getWidth());
-		} else {
-			col1.setWidth(col1.getWidth() + 5);
-			col2.setWidth(col1.getWidth());
 		}
 
 		int width = 0;
@@ -391,89 +349,17 @@ public class WeightsCriteriaDialog extends Dialog implements PropertyChangeListe
 					initial = false;
 				}
 			}
-			initial = true;
-			for(TableColumn column : _completeWeightsViewer.getTable().getColumns()) {
-				if(!initial) {
-					column.setWidth(column.getWidth() + toAdd);
-				} else {
-					initial = false;
-				}
-			}
 		}
 
 		_input.addPropertyChangeListener(Input.WEIGHT, this);
 
-		createCheckButtonListener();
 
 		container.pack();
-		container.addPaintListener(new PaintListener() {
 		
-			@Override
-			public void paintControl(PaintEvent e) {
-				modifySelection();
-			}
-		});
-
 		return container;
 	}
 
-	private void createCheckButtonListener() {
-		_checkButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				modifySelection();
-			}
-		});
-		modifySelection();
-
-	}
-
-	private void modifySelection() {
-		_generalSelection = _checkButton.getSelection();
-		_completeWeightsViewer.getTable().setEnabled(!_generalSelection);
-		validate();
-	}
-
-	private void createCompleteWeightsContentProvider(TableViewer viewer) {
-
-		viewer.setContentProvider(new IStructuredContentProvider() {
-
-			@Override
-			public void inputChanged(Viewer viewer, Object oldInput,
-					Object newInput) {
-			}
-
-			@Override
-			public void dispose() {}
-			
-			@Override
-			public Object[] getElements(Object inputElement) {
-				Object[] result = new Object[_rows];
-				Object[] aux;
-				double sum;
-				double value;
-				List<Double> weights;
-				for(int i = 0; i < _rows; i++) {
-					aux = new Object[_cols + 2];
-					aux[0] = _secondary[i];
-					sum = 0;
-					weights = _weights.get(_secondary[i].getCanonicalId());
-					for(int j = 0; j < _cols; j++) {
-						value = weights.get(j);
-						aux[j + 1] = Double.valueOf(value);
-						sum += value;
-					}
-					sum = round(sum);
-					aux[_cols + 1] = sum;
-					result[i] = aux;
-				}
-
-				return result;
-			}
-		});
-	}
-
+	
 	private void createGeneralWeightsContentProvider(TableViewer viewer) {
 
 		viewer.setContentProvider(new IStructuredContentProvider() {

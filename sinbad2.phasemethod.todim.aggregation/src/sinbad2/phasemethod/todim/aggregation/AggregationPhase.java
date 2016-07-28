@@ -16,6 +16,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
@@ -36,11 +37,12 @@ public class AggregationPhase implements IPhaseMethod {
 	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
 	
 	private Valuation[][] _decisionMatrix;
-	private Map<String, Double> _expertsWeights;
 	private Map<Alternative, Map<Criterion, TrapezoidalFunction>> _aggregatedFuzzyNumbers;
 	private Map<Alternative, Map<Criterion, TrapezoidalFunction>> _overallOpinions;
 	private Map<ValuationKey, Double> _distances;
+	
 	private List<Double> _globalWeights;
+	private Map<String, List<Double>> _criteriaWeights;
 	
 	private int _numAlternatives;
 	private int _numCriteria;
@@ -83,11 +85,12 @@ public class AggregationPhase implements IPhaseMethod {
 		_numCriteria = _elementsSet.getCriteria().size();
 		_decisionMatrix = new Valuation[_numAlternatives][_numCriteria];
 		
-		_expertsWeights = new HashMap<String, Double>();
+		_criteriaWeights = new HashMap<String, List<Double>>();
+		_globalWeights = new LinkedList<Double>();
+		
 		_aggregatedFuzzyNumbers = new HashMap<Alternative, Map<Criterion, TrapezoidalFunction>>();
 		_overallOpinions = new HashMap<Alternative, Map<Criterion, TrapezoidalFunction>>();
 		_distances = new HashMap<ValuationKey, Double>();
-		_globalWeights = new LinkedList<Double>();
 	}
 	
 	public void setDecisionMatrix(Valuation[][] decisionMatrix) {
@@ -106,12 +109,20 @@ public class AggregationPhase implements IPhaseMethod {
 		return _valuationsInTwoTuple;
 	}
 	
-	public void setExpertsWeights(Map<String, Double> expertsWeights) {
-		_expertsWeights = expertsWeights;
+	public void setExpertsWeights(Map<String, List<Double>> expertsWeights) {
+		_criteriaWeights = expertsWeights;
 	}
 	
-	public Map<String, Double> getExpertsWeights() {
-		return _expertsWeights;
+	public Map<String, List<Double>> getExpertsWeights() {
+		return _criteriaWeights;
+	}
+	
+	public void setExpertsWeights(List<Double> globalWeights) {
+		_globalWeights = globalWeights;
+	}
+	
+	public List<Double> getGlobalWeights() {
+		return _globalWeights;
 	}
 	
 	public void setAggregatedFuzzyNumber(Map<Alternative, Map<Criterion, TrapezoidalFunction>> aggregatedFuzzyNumber) {
@@ -137,21 +148,15 @@ public class AggregationPhase implements IPhaseMethod {
 	public Map<ValuationKey, Double> getDistances() {
 		return _distances;
 	}
-
-	public void setGlobalWeights(List<Double> globalWeights) {
-		_globalWeights = globalWeights;
-	}
-	
-	public List<Double> getGlobalWeights() {
-		return _globalWeights;
-	}
 	
 	public Valuation[][] calculateDecisionMatrix(AggregationOperator operator, Map<String, List<Double>> weights) {
 		
 		_numAlternatives = _elementsSet.getAlternatives().size();
 		_numCriteria = _elementsSet.getCriteria().size();
 		_decisionMatrix = new Valuation[_numAlternatives][_numCriteria];
+		
 		_globalWeights = new LinkedList<Double>();
+		_criteriaWeights = new HashMap<String, List<Double>>();
 		
 		if(weights.isEmpty()) {
 			setDefaultWeights();
@@ -169,10 +174,12 @@ public class AggregationPhase implements IPhaseMethod {
 		
 		return _decisionMatrix;
 	}
-	
-	private void setDefaultWeights() {
-		for(int i = 0; i < _elementsSet.getAllCriteria().size(); ++i) {
-			_globalWeights.add(1d / _elementsSet.getAllCriteria().size());
+
+	private void setDefaultWeights() {		
+		List<Expert> experts = _elementsSet.getAllExperts();
+		double weight = 1d / experts.size();
+		for(int i = 0; i < experts.size(); ++i) {
+			_globalWeights.add(weight);
 		}
 	}
 
@@ -183,6 +190,7 @@ public class AggregationPhase implements IPhaseMethod {
 		List<Double> criterionWeights = new LinkedList<Double>();
 		if(weights.size() > 1) {
 			criterionWeights = weights.get(_elementsSet.getAllCriteria().get(criterion).getCanonicalId());
+			_criteriaWeights.put(_elementsSet.getAllCriteria().get(criterion).getCanonicalId(), criterionWeights);
 		}
 		
 		List<Valuation> valuations = new LinkedList<Valuation>();
@@ -263,8 +271,12 @@ public class AggregationPhase implements IPhaseMethod {
 
 	private Map<String, Double> calculateSquareValues() {
 		Map<String, Double> result = new HashMap<String, Double>();
- 		for(String expert: _expertsWeights.keySet()) {
-			result.put(expert, Math.pow(_expertsWeights.get(expert), M));
+		int numExpert = 0;
+		
+		List<Expert> experts = _elementsSet.getAllExperts();
+ 		for(Expert expert: experts) {
+			result.put(expert.getCanonicalId(), Math.pow(_globalWeights.get(numExpert), M));
+			numExpert++;
 		}
  		
  		return result;
@@ -392,11 +404,11 @@ public class AggregationPhase implements IPhaseMethod {
 		
 		_decisionMatrix = aggregation.getDecisionMatrix();
 		_valuationsInTwoTuple = aggregation.getValuationsTwoTuple();
-		_expertsWeights = aggregation.getExpertsWeights();
+		_criteriaWeights = aggregation.getExpertsWeights();
+		_globalWeights = aggregation.getGlobalWeights();
 		_aggregatedFuzzyNumbers = aggregation.getAggregatedFuzzyNumber();
 		_overallOpinions = aggregation.getOverallOpinons();
 		_distances = aggregation.getDistances();
-		_globalWeights = aggregation.getGlobalWeights();
 	}
 
 	@Override
@@ -415,11 +427,11 @@ public class AggregationPhase implements IPhaseMethod {
 	public void clear() {
 		_decisionMatrix = new Valuation[_numAlternatives][_numCriteria];
 		_valuationsInTwoTuple.clear();
-		_expertsWeights.clear();
+		_criteriaWeights.clear();
+		_globalWeights.clear();
 		_aggregatedFuzzyNumbers.clear();
 		_overallOpinions.clear();
 		_distances.clear();
-		_globalWeights.clear();
 	}
 	
 	@Override

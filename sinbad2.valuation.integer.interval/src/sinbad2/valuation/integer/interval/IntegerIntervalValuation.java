@@ -21,8 +21,8 @@ public class IntegerIntervalValuation extends Valuation {
 
 	public static final String ID = "flintstones.valuation.integer.interval"; //$NON-NLS-1$
 	
-	public long _min;
-	public long _max;
+	public double _min;
+	public double _max;
 	
 	public IntegerIntervalValuation() {
 		super();
@@ -30,7 +30,7 @@ public class IntegerIntervalValuation extends Valuation {
 		_max = 0;
 	}
 	
-	public IntegerIntervalValuation(NumericIntegerDomain domain, long min, long max) {
+	public IntegerIntervalValuation(NumericIntegerDomain domain, double min, double max) {
 		super();
 		_domain = domain;
 		_min = min;
@@ -41,7 +41,7 @@ public class IntegerIntervalValuation extends Valuation {
 		_min = min;
 	}
 	
-	public long getMin() {
+	public double getMin() {
 		return _min;
 	}
 	
@@ -49,11 +49,11 @@ public class IntegerIntervalValuation extends Valuation {
 		_max = max;
 	}
 	
-	public long getMax() {
+	public double getMax() {
 		return _max;
 	}
 	
-	public void setMinMax(Long min, Long max) {
+	public void setMinMax(Double min, Double max) {
 		Validator.notNull(_domain);
 		Validator.notDisorder(new double[] {min,  max}, false);
 		
@@ -75,6 +75,26 @@ public class IntegerIntervalValuation extends Valuation {
 		result.setMinMax(_min, _max);
 		
 		return result.normalizeInterval();
+	}
+	
+	private Valuation normalizeInterval() {
+		IntegerIntervalValuation result = (IntegerIntervalValuation) clone();
+		
+		double min, max, intervalSize;
+		
+		min = Math.round(((NumericIntegerDomain) _domain).getMin());
+		max = Math.round(((NumericIntegerDomain) _domain).getMax());
+		intervalSize = max - min;
+		
+		max = (_max - min) / intervalSize;
+		min = (_min - min) / intervalSize;
+		
+		((NumericIntegerDomain) result._domain).setMinMax(0, 1);
+		
+		result._min = min;
+		result._max = max;
+		
+		return result;
 	}
 	
 	@Override
@@ -157,9 +177,9 @@ public class IntegerIntervalValuation extends Valuation {
 		Validator.notIllegalElementType(other, new String[] {Integer.class.toString()});
 		
 		if(_domain.equals(other.getDomain())) {
-			long middle = (_max + _min) / 2l;
-			long otherMidle = (((IntegerIntervalValuation) other)._max + ((IntegerIntervalValuation) other)._min) / 2l;
-			return Long.valueOf(middle).compareTo(Long.valueOf(otherMidle));
+			double middle = (_max + _min) / 2l;
+			double otherMidle = (((IntegerIntervalValuation) other)._max + ((IntegerIntervalValuation) other)._min) / 2l;
+			return Double.valueOf(middle).compareTo(Double.valueOf(otherMidle));
 		} else {
 			throw new IllegalArgumentException(Messages.IntegerInterval_Different_domains);
 		}
@@ -169,21 +189,21 @@ public class IntegerIntervalValuation extends Valuation {
 	public Object clone() {
 		IntegerIntervalValuation result = null;
 		result = (IntegerIntervalValuation) super.clone();
-		result._min = new Long(_min);
-		result._max = new Long(_max);
+		result._min = new Double(_min);
+		result._max = new Double(_max);
 		
 		return result;
 	}
 
 	@Override
 	public String changeFormatValuationToString() {
-		return "[" + Long.toString(_min) + ", " + Long.toString(_max) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return "[" + Long.toString((long) _min) + ", " + Long.toString((long) _max) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeAttribute("min", Long.toString(_min)); //$NON-NLS-1$
-		writer.writeAttribute("max", Long.toString(_max));	 //$NON-NLS-1$
+		writer.writeAttribute("min", Long.toString((long) _min)); //$NON-NLS-1$
+		writer.writeAttribute("max", Long.toString((long) _max));	 //$NON-NLS-1$
 	}
 
 	@Override
@@ -191,25 +211,4 @@ public class IntegerIntervalValuation extends Valuation {
 		_min = Long.parseLong(reader.getStartElementAttribute("min")); //$NON-NLS-1$
 		_max = Long.parseLong(reader.getStartElementAttribute("max")); //$NON-NLS-1$
 	}
-	
-	private Valuation normalizeInterval() {
-		IntegerIntervalValuation result = (IntegerIntervalValuation) clone();
-		
-		long min, max, intervalSize;
-		
-		min = Math.round(((NumericIntegerDomain) _domain).getMin());
-		max = Math.round(((NumericIntegerDomain) _domain).getMax());
-		intervalSize = max - min;
-		
-		max = ((long) (_max - min) / intervalSize);
-		min = ((long) (_min - min) / intervalSize);
-		
-		((NumericIntegerDomain) result._domain).setMinMax(0, 1);
-		
-		result._min = min;
-		result._max = max;
-		
-		return result;
-	}
-	
 }

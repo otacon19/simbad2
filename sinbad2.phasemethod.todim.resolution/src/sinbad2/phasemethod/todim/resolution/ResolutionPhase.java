@@ -8,14 +8,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
+import sinbad2.phasemethod.todim.aggregation.AggregationPhase;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.twoTuple.TwoTuple;
+import sinbad2.valuation.valuationset.ValuationKey;
 
 public class ResolutionPhase implements IPhaseMethod {
 
@@ -29,13 +35,18 @@ public class ResolutionPhase implements IPhaseMethod {
 	private int _numAlternatives;
 	private int _numCriteria;
 	private int _referenceCriterion;
+	
 	private List<Double> _globalWeights;
 	private Map<String, Double> _relativeWeights;
+	
 	private Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> _dominanceDegreeByCriterion;
 	private Map<Pair<Alternative, Alternative>, Double> _dominanceDegreeAlternatives;
 	private Map<Alternative, Double> _globalDominance;
+	private Map<ValuationKey, TrapezoidalFunction> _fuzzyValuations;
 
 	private ProblemElementsSet _elementsSet;
+	
+	private AggregationPhase _aggregationPhase;
 
 	private static class MapUtil {
 		
@@ -60,6 +71,9 @@ public class ResolutionPhase implements IPhaseMethod {
 	}
 
 	public ResolutionPhase() {
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+		
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
 
@@ -72,9 +86,11 @@ public class ResolutionPhase implements IPhaseMethod {
 
 		_globalWeights = new LinkedList<Double>();
 		_relativeWeights = new HashMap<String, Double>();
+		
 		_dominanceDegreeByCriterion = new HashMap<Criterion, Map<Pair<Alternative, Alternative>, Double>>();
 		_dominanceDegreeAlternatives = new HashMap<Pair<Alternative, Alternative>, Double>();
 		_globalDominance = new HashMap<Alternative, Double>();
+		_fuzzyValuations = new HashMap<ValuationKey, TrapezoidalFunction>();
 
 		_referenceCriterion = -1;
 	}
@@ -145,6 +161,14 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _globalDominance;
 	}
 
+	public void setFuzzyValuations(Map<ValuationKey, TrapezoidalFunction> fuzzyValuations) {
+		_fuzzyValuations = fuzzyValuations;
+	}
+
+	public Map<ValuationKey, TrapezoidalFunction> getFuzzyValuations() {
+		return _fuzzyValuations;
+	}
+	
 	private void initializeConsesusMatrix() {
 		
 		for(int a = 0; a < _numAlternatives; ++a) {
@@ -302,9 +326,37 @@ public class ResolutionPhase implements IPhaseMethod {
 					result[al][cr] = Math.round(cog * 100d) / 100d;
 				}
 			}
-		} 
+			
+			_consensusMatrix = result;
+		}
 		
-		return result;
+		return (Double[][]) _consensusMatrix;
+	}
+	
+	public void transformTwoTupleToFuzzy() {
+		int f, t;
+		double[] limits;
+		
+		Map<ValuationKey, Valuation> valuations = _aggregationPhase.getValuationsTwoTuple();  
+		for(ValuationKey vk: valuations.keySet()) {
+			Valuation v = valuations.get(vk);
+			t = ((FuzzySet) v.getDomain()).getLabelSet().getCardinality() - 1;
+			f = ((FuzzySet) v.getDomain()).getLabelSet().getPos(((TwoTuple) v).getLabel()); 
+			double a = (f - 1) / t > 0 ? (f - 1) / t : 0;
+			double b = f / t;
+			double c = (f + 1) / t < 1 ? (f + 1) / t : 1;
+			limits = new double[4];
+			limits[0] = a;
+			limits[1] = b;
+			limits[2] = b;
+			limits[3] = c;
+			
+			TrapezoidalFunction triangularSemantic = new TrapezoidalFunction(limits);
+			_fuzzyValuations.put(vk, triangularSemantic);
+		}
+	}
+	
+	public void aggregateWeights() {
 	}
 	
 	@Override
@@ -326,6 +378,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		_dominanceDegreeAlternatives = resolution.getDominanceDegreeAlternatives();
 		_globalDominance = resolution.getGlobalDominance();
 		_trapezoidalConsensusMatrix = resolution.getTrapezoidalConsensusMatrix();
+		_fuzzyValuations = resolution.getFuzzyValuations();
 	}
 
 	@Override
@@ -340,6 +393,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		_dominanceDegreeByCriterion.clear();
 		_dominanceDegreeAlternatives.clear();
 		_globalDominance.clear();
+		_fuzzyValuations.clear();
 	}
 
 	@Override

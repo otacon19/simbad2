@@ -39,8 +39,8 @@ public class IntervalIntegerOperator {
 			
 			if((values.size() % 2) == 0) {
 				Valuation auxValuation = values.get(median - 1);
-				long minValue = (((IntegerIntervalValuation) result).getMin()) + (((IntegerIntervalValuation) auxValuation).getMin());
-				long maxValue = (((IntegerIntervalValuation) result).getMax()) + (((IntegerIntervalValuation) auxValuation).getMax());
+				double minValue = (((IntegerIntervalValuation) result).getMin()) + (((IntegerIntervalValuation) auxValuation).getMin());
+				double maxValue = (((IntegerIntervalValuation) result).getMax()) + (((IntegerIntervalValuation) auxValuation).getMax());
 				minValue /= 2;
 				maxValue /= 2;
 				((IntegerIntervalValuation) result).setMinMax(minValue, maxValue);

@@ -39,7 +39,7 @@ public class ExcelUtil {
 	private List<Criterion> _criteria;
 	private List<Alternative> _alternatives;
 	private Map<ValuationKey, Valuation> _unifiedValuations;
-	private Map<String, Double> _expertsWeights;
+	private List<Double> _expertsWeights;
 
 	private ProblemElementsSet _elementsSet;
 
@@ -86,7 +86,7 @@ public class ExcelUtil {
 		}
 	}
 
-	public void createExcelFileEmergencyProblemStructure(Map<ValuationKey, Valuation> unifiedValuations, Map<String, Double> expertsWeights) {
+	public void createExcelFileEmergencyProblemStructure(Map<ValuationKey, Valuation> unifiedValuations, List<Double> expertsWeights) {
 
 		_unifiedValuations = unifiedValuations;
 		_expertsWeights = expertsWeights;
@@ -197,7 +197,7 @@ public class ExcelUtil {
 			cell.setCellValue(_experts.get(i).getCanonicalId());
 			
 			cell = rowWeights.createCell(columnCount);
-			cell.setCellValue(Double.toString(_expertsWeights.get(_experts.get(i).getCanonicalId())));
+			cell.setCellValue(_expertsWeights.get(i));
 			
 			columnCount++;
 		}
