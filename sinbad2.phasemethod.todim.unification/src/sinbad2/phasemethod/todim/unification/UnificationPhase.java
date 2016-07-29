@@ -151,138 +151,141 @@ public static final String ID = "flintstones.phasemethod.todim.unification"; //$
 
 			Map<ValuationKey, Valuation> valuations = _valutationSet.getValuations();
 			for(ValuationKey vk : valuations.keySet()) {
-				expert = vk.getExpert();
-				alternative = vk.getAlternative();
-				criterion = vk.getCriterion();
 				valuation = valuations.get(vk);
-				isCost = criterion.getCost();
-				
-				if(valuation instanceof IntegerValuation) {
-					if(isCost) {
-						valuation = valuation.negateValuation();
-					}
-					if(((NumericIntegerDomain) valuation.getDomain()).getInRange()) {
-						fuzzySet = ((IntegerValuation) valuation).unification(unifiedDomain);
-						valuation = new UnifiedValuation(fuzzySet);
-						_unifiedValuationsResult.put(vk, valuation);
-					} else {
-						Object[] auxEvaluation = new Object[5];
-						auxEvaluation[0] = expert;
-						auxEvaluation[1] = alternative;
-						auxEvaluation[2] = criterion;
-						auxEvaluation[3] = valuation;
-						auxEvaluation[4] = vk;
-
-						Domain domain = valuation.getDomain();
-
-						auxEvaluations = toNormalize.get(domain.getId());
-						if(auxEvaluations == null) {
-							auxEvaluations = new LinkedList<Object[]>();
-							toNormalize.put(domain.getId(), auxEvaluations);
-							domains.put(domain.getId(), domain);
-						}
-						auxEvaluations.add(auxEvaluation);
-					}
-				} else if(valuation instanceof RealValuation) {
-					if(isCost) {
-						valuation = valuation.negateValuation();
-					}
-					if(((NumericRealDomain) valuation.getDomain()).getInRange()) {
-						fuzzySet = ((RealValuation) valuation).unification(unifiedDomain);
-						valuation = new UnifiedValuation(fuzzySet);
-						_unifiedValuationsResult.put(vk, valuation);
-					} else {
-						Object[] auxEvaluation = new Object[5];
-						auxEvaluation[0] = expert;
-						auxEvaluation[1] = alternative;
-						auxEvaluation[2] = criterion;
-						auxEvaluation[3] = valuation;
-						auxEvaluation[4] = vk;
-
-						Domain domain = valuation.getDomain();
-						
-						auxEvaluations = toNormalize.get(domain.getId());
-						if(auxEvaluations == null) {
-							auxEvaluations = new LinkedList<Object[]>();
-							toNormalize.put(domain.getId(), auxEvaluations);
-							domains.put(domain.getId(), domain);
-						}
-
-						auxEvaluations.add(auxEvaluation);
-					}
-				} else if(valuation instanceof IntegerIntervalValuation) {
-					if(isCost) {
-						valuation = valuation.negateValuation();
-					}
-					if (((NumericIntegerDomain) valuation.getDomain()).getInRange()) {
-						fuzzySet = ((IntegerIntervalValuation) valuation).unification(unifiedDomain);
-						valuation = new UnifiedValuation(fuzzySet);
-						_unifiedValuationsResult.put(vk, valuation);
-					} else {
-						Object[] auxEvaluation = new Object[5];
-						auxEvaluation[0] = expert;
-						auxEvaluation[1] = alternative;
-						auxEvaluation[2] = criterion;
-						auxEvaluation[3] = valuation;
-						auxEvaluation[4] = vk;
-
-						Domain domain = valuation.getDomain();
-						
-						auxEvaluations = toNormalize.get(domain.getId());
-						if(auxEvaluations == null) {
-							auxEvaluations = new LinkedList<Object[]>();
-							toNormalize.put(domain.getId(), auxEvaluations);
-							domains.put(domain.getId(), domain);
-						}
-
-						auxEvaluations.add(auxEvaluation);
-					}
-				} else if(valuation instanceof RealIntervalValuation) {
-					if(isCost) {
-						valuation = valuation.negateValuation();
-					}
-					if (((NumericRealDomain) valuation.getDomain()).getInRange()) {
-						fuzzySet = ((RealIntervalValuation) valuation).unification(unifiedDomain);
-						valuation = new UnifiedValuation(fuzzySet);
-						_unifiedValuationsResult.put(vk, valuation);
-					} else {
-						Object[] auxEvaluation = new Object[5];
-						auxEvaluation[0] = expert;
-						auxEvaluation[1] = alternative;
-						auxEvaluation[2] = criterion;
-						auxEvaluation[3] = valuation;
-						auxEvaluation[4] = vk;
-
-						Domain domain = valuation.getDomain();
-						
-						auxEvaluations = toNormalize.get(domain.getId());
-						if(auxEvaluations == null) {
-							auxEvaluations = new LinkedList<Object[]>();
-							toNormalize.put(domain.getId(), auxEvaluations);
-							domains.put(domain.getId(), domain);
-						}
-
-						auxEvaluations.add(auxEvaluation);
-					}
-				} else if(valuation instanceof UnifiedValuation) {
-					Valuation auxValuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
-					if(isCost) {
-						auxValuation = auxValuation.negateValuation();
-					}
-					fuzzySet = ((TwoTuple) auxValuation).unification(unifiedDomain);
-					valuation = new UnifiedValuation(fuzzySet);
+				if(!valuation.getDomain().getId().equals("confidence")) {
 					
-					_unifiedValuationsResult.put(vk, valuation);
-				} else if(valuation instanceof LinguisticValuation) {
-					if(isCost) {
-						valuation = ((LinguisticValuation) valuation).negateValuation();
-					}
-					fuzzySet = ((LinguisticValuation) valuation).unification(unifiedDomain);
-					valuation = new UnifiedValuation(fuzzySet);
+					expert = vk.getExpert();
+					alternative = vk.getAlternative();
+					criterion = vk.getCriterion();
+					isCost = criterion.getCost();
 					
-					_unifiedValuationsResult.put(vk, valuation);
-				} else if(valuation instanceof HesitantValuation) {
-					calculateFuzzyEnvelope(vk, (HesitantValuation) valuation, unifiedDomain);
+					if(valuation instanceof IntegerValuation) {
+						if(isCost) {
+							valuation = valuation.negateValuation();
+						}
+						if(((NumericIntegerDomain) valuation.getDomain()).getInRange()) {
+							fuzzySet = ((IntegerValuation) valuation).unification(unifiedDomain);
+							valuation = new UnifiedValuation(fuzzySet);
+							_unifiedValuationsResult.put(vk, valuation);
+						} else {
+							Object[] auxEvaluation = new Object[5];
+							auxEvaluation[0] = expert;
+							auxEvaluation[1] = alternative;
+							auxEvaluation[2] = criterion;
+							auxEvaluation[3] = valuation;
+							auxEvaluation[4] = vk;
+	
+							Domain domain = valuation.getDomain();
+	
+							auxEvaluations = toNormalize.get(domain.getId());
+							if(auxEvaluations == null) {
+								auxEvaluations = new LinkedList<Object[]>();
+								toNormalize.put(domain.getId(), auxEvaluations);
+								domains.put(domain.getId(), domain);
+							}
+							auxEvaluations.add(auxEvaluation);
+						}
+					} else if(valuation instanceof RealValuation) {
+						if(isCost) {
+							valuation = valuation.negateValuation();
+						}
+						if(((NumericRealDomain) valuation.getDomain()).getInRange()) {
+							fuzzySet = ((RealValuation) valuation).unification(unifiedDomain);
+							valuation = new UnifiedValuation(fuzzySet);
+							_unifiedValuationsResult.put(vk, valuation);
+						} else {
+							Object[] auxEvaluation = new Object[5];
+							auxEvaluation[0] = expert;
+							auxEvaluation[1] = alternative;
+							auxEvaluation[2] = criterion;
+							auxEvaluation[3] = valuation;
+							auxEvaluation[4] = vk;
+	
+							Domain domain = valuation.getDomain();
+							
+							auxEvaluations = toNormalize.get(domain.getId());
+							if(auxEvaluations == null) {
+								auxEvaluations = new LinkedList<Object[]>();
+								toNormalize.put(domain.getId(), auxEvaluations);
+								domains.put(domain.getId(), domain);
+							}
+	
+							auxEvaluations.add(auxEvaluation);
+						}
+					} else if(valuation instanceof IntegerIntervalValuation) {
+						if(isCost) {
+							valuation = valuation.negateValuation();
+						}
+						if (((NumericIntegerDomain) valuation.getDomain()).getInRange()) {
+							fuzzySet = ((IntegerIntervalValuation) valuation).unification(unifiedDomain);
+							valuation = new UnifiedValuation(fuzzySet);
+							_unifiedValuationsResult.put(vk, valuation);
+						} else {
+							Object[] auxEvaluation = new Object[5];
+							auxEvaluation[0] = expert;
+							auxEvaluation[1] = alternative;
+							auxEvaluation[2] = criterion;
+							auxEvaluation[3] = valuation;
+							auxEvaluation[4] = vk;
+	
+							Domain domain = valuation.getDomain();
+							
+							auxEvaluations = toNormalize.get(domain.getId());
+							if(auxEvaluations == null) {
+								auxEvaluations = new LinkedList<Object[]>();
+								toNormalize.put(domain.getId(), auxEvaluations);
+								domains.put(domain.getId(), domain);
+							}
+	
+							auxEvaluations.add(auxEvaluation);
+						}
+					} else if(valuation instanceof RealIntervalValuation) {
+						if(isCost) {
+							valuation = valuation.negateValuation();
+						}
+						if (((NumericRealDomain) valuation.getDomain()).getInRange()) {
+							fuzzySet = ((RealIntervalValuation) valuation).unification(unifiedDomain);
+							valuation = new UnifiedValuation(fuzzySet);
+							_unifiedValuationsResult.put(vk, valuation);
+						} else {
+							Object[] auxEvaluation = new Object[5];
+							auxEvaluation[0] = expert;
+							auxEvaluation[1] = alternative;
+							auxEvaluation[2] = criterion;
+							auxEvaluation[3] = valuation;
+							auxEvaluation[4] = vk;
+	
+							Domain domain = valuation.getDomain();
+							
+							auxEvaluations = toNormalize.get(domain.getId());
+							if(auxEvaluations == null) {
+								auxEvaluations = new LinkedList<Object[]>();
+								toNormalize.put(domain.getId(), auxEvaluations);
+								domains.put(domain.getId(), domain);
+							}
+	
+							auxEvaluations.add(auxEvaluation);
+						}
+					} else if(valuation instanceof UnifiedValuation) {
+						Valuation auxValuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
+						if(isCost) {
+							auxValuation = auxValuation.negateValuation();
+						}
+						fuzzySet = ((TwoTuple) auxValuation).unification(unifiedDomain);
+						valuation = new UnifiedValuation(fuzzySet);
+						
+						_unifiedValuationsResult.put(vk, valuation);
+					} else if(valuation instanceof LinguisticValuation) {
+						if(isCost) {
+							valuation = ((LinguisticValuation) valuation).negateValuation();
+						}
+						fuzzySet = ((LinguisticValuation) valuation).unification(unifiedDomain);
+						valuation = new UnifiedValuation(fuzzySet);
+						
+						_unifiedValuationsResult.put(vk, valuation);
+					} else if(valuation instanceof HesitantValuation) {
+						calculateFuzzyEnvelope(vk, (HesitantValuation) valuation, unifiedDomain);
+					}
 				}
 			}
 		}

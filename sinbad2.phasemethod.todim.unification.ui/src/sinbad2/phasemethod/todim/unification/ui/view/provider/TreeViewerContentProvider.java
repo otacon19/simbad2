@@ -1,5 +1,6 @@
 package sinbad2.phasemethod.todim.unification.ui.view.provider;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -49,17 +50,19 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 
 	public Object[][] getInput() {
 		_valuations = _valutationSet.getValuations();
-		_information = new Object[_valuations.size()][6];
 
 		Expert expert;
 		Alternative alternative;
 		Criterion criterion;
 		Domain domain;
 		Valuation unifiedValuation;
-	
+		
+		Map<ValuationKey, Valuation> valuationsWithoutConfidence = getValuationsWithoutConfidence();
+		_information = new Object[valuationsWithoutConfidence.size()][6];
+		
 		int i = 0;
-		for (ValuationKey vk: _valuations.keySet()) {
-			Valuation v = _valuations.get(vk);
+		for (ValuationKey vk: valuationsWithoutConfidence.keySet()) {
+			Valuation v = valuationsWithoutConfidence.get(vk);
 			expert = vk.getExpert();
 			alternative = vk.getAlternative();
 			criterion = vk.getCriterion();
@@ -67,12 +70,13 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 		
 			unifiedValuation = null;
 			 for(ValuationKey vku: _unifiedEvaluations.keySet()) {
+				 
 				if ((vku.getExpert().equals(vk.getExpert())) && (vku.getAlternative().equals(vk.getAlternative())) && (vku.getCriterion().equals(vk.getCriterion()))) {
 					unifiedValuation = (Valuation) _unifiedEvaluations.get(vku);
 					break;
 				}
 			}
-	
+			 
 			_information[i][0] = expert.getCanonicalId();
 			_information[i][1] = alternative.getId();
 			_information[i][2] = criterion.getCanonicalId();
@@ -82,9 +86,23 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 			
 			i++;
 		}
+		
 		return _information;
 	}
-	
+
+	private Map<ValuationKey, Valuation> getValuationsWithoutConfidence() {
+		Map<ValuationKey, Valuation> result = new HashMap<ValuationKey, Valuation>();
+		
+		for(ValuationKey vk: _valuations.keySet()) {
+			Valuation v = _valuations.get(vk);
+			if(!v.getDomain().getId().equals("confidence")) {
+				result.put(vk, v);
+			}
+		}
+		
+		return result;
+	}
+
 	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof Object[]) {

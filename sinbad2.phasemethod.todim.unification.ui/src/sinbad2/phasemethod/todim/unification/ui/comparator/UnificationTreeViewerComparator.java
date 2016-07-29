@@ -40,7 +40,7 @@ public class UnificationTreeViewerComparator extends ViewerComparator {
 
 		String text1;
 		String text2;
-
+		
 		int result;
 		if (pos < 4) {
 			result = ((String) e1[pos]).compareTo((String) e2[pos]);

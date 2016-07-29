@@ -224,9 +224,8 @@ public class AggregationPhase implements IPhaseMethod {
 		calculateValuationsDistance();
 		
 		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
-		Map<ValuationKey, Valuation> confidencesValuations = getConfidencesValuations(valuations);
 		for(ValuationKey vk: valuations.keySet()) {
-			if(!valuations.get(vk).getDomain().getId().equals("confidence")) { //$NON-NLS-1$
+			if(!vk.getExpert().getId().contains("fgc")) { //$NON-NLS-1$
 				String[] data = new String[7];
 				data[0] = vk.getExpert().getId();
 				data[1] = vk.getAlternative().getId();
@@ -241,12 +240,12 @@ public class AggregationPhase implements IPhaseMethod {
 				}
 					
 				data[5] = Double.toString(Math.round(_distances.get(vk) * 10000d) / 10000d);
-				
-				if(confidencesValuations.isEmpty()) {
-					data[6] = "0"; //$NON-NLS-1$
-				} else {
-					data[6] = Double.toString(((RealValuation) confidencesValuations.get(vk)).getValue());
-				}
+		
+				Expert e = new Expert();
+				e.setId(vk.getExpert().getId() + "fgc");
+				ValuationKey vkFGC = new ValuationKey(e, vk.getAlternative(), vk.getCriterion());
+					
+				data[6] = Double.toString(((RealValuation) valuations.get(vkFGC)).getValue());
 				
 				result.add(data);
 			}
@@ -255,18 +254,6 @@ public class AggregationPhase implements IPhaseMethod {
 		Collections.sort(result, new DataComparator());
 		
 		return result;
-	}
-
-	private Map<ValuationKey, Valuation> getConfidencesValuations(Map<ValuationKey, Valuation> valuations) {
-		Map<ValuationKey, Valuation> confidencesValuations = new HashMap<ValuationKey, Valuation>();
-		for(ValuationKey vk: valuations.keySet()) {
-			Valuation v = valuations.get(vk);
-			if(v.getDomain().getId().equals("confidence")) { //$NON-NLS-1$
-				confidencesValuations.put(vk, v);
-			}
-		}
-		
-		return confidencesValuations;
 	}
 
 	private Map<String, Double> calculateSquareValues() {
