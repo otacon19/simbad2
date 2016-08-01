@@ -202,7 +202,7 @@ public class AggregationPhase implements IPhaseMethod {
 		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
 		
 		for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
-			if(!vk.getExpert().getId().contains("fgc")) { //$NON-NLS-1$
+			if(!vk.getExpert().getId().endsWith("fgc")) { //$NON-NLS-1$
 				String[] data = new String[7];
 				data[0] = vk.getExpert().getId();
 				data[1] = vk.getAlternative().getId();

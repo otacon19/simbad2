@@ -8,19 +8,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
-import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
-import sinbad2.phasemethod.todim.aggregation.AggregationPhase;
-import sinbad2.valuation.Valuation;
-import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
 
 public class ResolutionPhase implements IPhaseMethod {
@@ -45,8 +40,6 @@ public class ResolutionPhase implements IPhaseMethod {
 	private Map<ValuationKey, TrapezoidalFunction> _fuzzyValuations;
 
 	private ProblemElementsSet _elementsSet;
-	
-	private AggregationPhase _aggregationPhase;
 
 	private static class MapUtil {
 		
@@ -70,10 +63,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		}
 	}
 
-	public ResolutionPhase() {
-		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		
+	public ResolutionPhase() {		
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
 
@@ -332,30 +322,6 @@ public class ResolutionPhase implements IPhaseMethod {
 		
 		return (Double[][]) _consensusMatrix;
 	}
-	
-	public void transformTwoTupleToFuzzy() {
-		int f, t;
-		double[] limits;
-		
-		Map<ValuationKey, Valuation> valuations = _aggregationPhase.getValuationsTwoTuple();  
-		for(ValuationKey vk: valuations.keySet()) {
-			Valuation v = valuations.get(vk);
-			t = ((FuzzySet) v.getDomain()).getLabelSet().getCardinality() - 1;
-			f = ((FuzzySet) v.getDomain()).getLabelSet().getPos(((TwoTuple) v).getLabel()); 
-			double a = (f - 1) / t > 0 ? (f - 1) / t : 0;
-			double b = f / t;
-			double c = (f + 1) / t < 1 ? (f + 1) / t : 1;
-			limits = new double[4];
-			limits[0] = a;
-			limits[1] = b;
-			limits[2] = b;
-			limits[3] = c;
-			
-			TrapezoidalFunction triangularSemantic = new TrapezoidalFunction(limits);
-			_fuzzyValuations.put(vk, triangularSemantic);
-		}
-	}
-	
 	
 	@Override
 	public IPhaseMethod copyStructure() {

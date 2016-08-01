@@ -154,7 +154,7 @@ public class UnificationPhase implements IPhaseMethod {
 			
 				expert = vk.getExpert();
 				
-				if(!expert.getId().contains("fgc")) {
+				if(!expert.getId().endsWith("fgc")) {
 					valuation = valuations.get(vk);
 					alternative = vk.getAlternative();
 					criterion = vk.getCriterion();

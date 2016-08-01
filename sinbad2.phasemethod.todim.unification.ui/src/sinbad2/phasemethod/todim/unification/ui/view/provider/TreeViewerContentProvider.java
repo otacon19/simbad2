@@ -94,8 +94,8 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 		Map<ValuationKey, Valuation> result = new HashMap<ValuationKey, Valuation>();
 		
 		for(ValuationKey vk: _valuations.keySet()) {
-			Valuation v = _valuations.get(vk);
-			if(!v.getDomain().getId().equals("confidence")) {
+			if(!vk.getExpert().getId().endsWith("fgc")) {
+				Valuation v = _valuations.get(vk);
 				result.put(vk, v);
 			}
 		}
