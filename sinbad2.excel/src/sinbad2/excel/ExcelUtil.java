@@ -13,6 +13,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
@@ -26,6 +30,9 @@ import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
 
 public class ExcelUtil {
+	
+	private static final String[] FILTER_NAMES = { "Excel files (*.xlsx)" }; //$NON-NLS-1$
+	private static final String[] FILTER_EXTS = { "*.xlsx" }; //$NON-NLS-1$
 
 	private XSSFWorkbook _workbook;
 	private XSSFSheet _sheet;
@@ -79,7 +86,14 @@ public class ExcelUtil {
 
 		_unifiedValuations = unifiedValuations;
 
-		try (FileOutputStream outputStream = new FileOutputStream("C:/Users/Flintstones/Desktop/flintstones_problem.xlsx")) {
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		
+		FileDialog dlg = new FileDialog(shell, SWT.SAVE);
+		dlg.setFilterNames(FILTER_NAMES);
+		dlg.setFilterExtensions(FILTER_EXTS);
+		String fn = dlg.open();
+		
+		try (FileOutputStream outputStream = new FileOutputStream(fn)) {
 			_workbook.write(outputStream);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -92,8 +106,15 @@ public class ExcelUtil {
 		_expertsWeights = expertsWeights;
 		
 		createProblemInformation();
+		
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		
+		FileDialog dlg = new FileDialog(shell, SWT.SAVE);
+		dlg.setFilterNames(FILTER_NAMES);
+		dlg.setFilterExtensions(FILTER_EXTS);
+		String fn = dlg.open();
 
-		try (FileOutputStream outputStream = new FileOutputStream("C:/Users/Flintstones/Desktop/flintstones_problem.xlsx")) {
+		try (FileOutputStream outputStream = new FileOutputStream(fn)) {
 			_workbook.write(outputStream);
 		} catch (IOException e) {
 			e.printStackTrace();

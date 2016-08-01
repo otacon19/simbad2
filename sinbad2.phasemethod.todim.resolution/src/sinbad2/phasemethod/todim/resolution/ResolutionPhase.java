@@ -356,8 +356,6 @@ public class ResolutionPhase implements IPhaseMethod {
 		}
 	}
 	
-	public void aggregateWeights() {
-	}
 	
 	@Override
 	public IPhaseMethod copyStructure() {
