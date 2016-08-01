@@ -234,26 +234,24 @@ public class AggregationPhase implements IPhaseMethod {
 	}
 	
 	private void calculateValuationsDistance() {
+		List<Alternative> alternatives = _elementsSet.getAlternatives();
+		List<Criterion> criteria = _elementsSet.getAllCriteria();
 		
-		int numAlternative = 0, numCriterion;
-		for(Alternative a: _elementsSet.getAlternatives()) {
-			for(Criterion c: _elementsSet.getAllCriteria()) {
-				
-				numCriterion = 0;
-				
+		for(int a = 0; a < alternatives.size(); ++a) {
+			for(int c = 0; c < criteria.size(); ++c) {
 				for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
-					if(a.equals(vk.getAlternative()) && c.equals(vk.getCriterion())) {
+					if(alternatives.get(a).equals(vk.getAlternative()) && criteria.get(c).equals(vk.getCriterion())) {
 						TwoTuple v = (TwoTuple) _valuationsInTwoTuple.get(vk);
 						LabelLinguisticDomain label = v.getLabel();
 						TrapezoidalFunction semantic = (TrapezoidalFunction) label.getSemantic();
-						
+		
 						double[] limits = semantic.getLimits();
 						double aLimit = limits[0];
 						double bLimit = limits[1];
 						double cLimit = limits[2];
 						double dLimit = limits[3];
 						
-						TwoTuple overallValuation =  (TwoTuple) _decisionMatrix[numAlternative][numCriterion];
+						TwoTuple overallValuation =  (TwoTuple) _decisionMatrix[a][c];
 						double[] overallLimits = ((TrapezoidalFunction) overallValuation.getLabel().getSemantic()).getLimits();
 						double aOverallLimit = overallLimits[0];
 						double bOverallLimit = overallLimits[1];
@@ -266,9 +264,7 @@ public class AggregationPhase implements IPhaseMethod {
 						_distances.put(vk, distance);
 					}
 				}
-				numCriterion++;
 			}
-			numAlternative++;
 		}
 	}
 
