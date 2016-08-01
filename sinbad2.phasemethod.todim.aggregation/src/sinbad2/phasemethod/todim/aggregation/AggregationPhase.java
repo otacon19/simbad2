@@ -32,13 +32,10 @@ public class AggregationPhase implements IPhaseMethod {
 	public static final String ID = "flintstones.phasemethod.todim.aggregation"; //$NON-NLS-1$
 	
 	private static final int P = 2;
-	private static final int M = 2;
 	
 	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
 	
 	private Valuation[][] _decisionMatrix;
-	private Map<Alternative, Map<Criterion, TrapezoidalFunction>> _aggregatedFuzzyNumbers;
-	private Map<Alternative, Map<Criterion, TrapezoidalFunction>> _overallOpinions;
 	private Map<ValuationKey, Double> _distances;
 	
 	private List<Double> _globalWeights;
@@ -88,8 +85,6 @@ public class AggregationPhase implements IPhaseMethod {
 		_criteriaWeights = new HashMap<String, List<Double>>();
 		_globalWeights = new LinkedList<Double>();
 		
-		_aggregatedFuzzyNumbers = new HashMap<Alternative, Map<Criterion, TrapezoidalFunction>>();
-		_overallOpinions = new HashMap<Alternative, Map<Criterion, TrapezoidalFunction>>();
 		_distances = new HashMap<ValuationKey, Double>();
 	}
 	
@@ -123,22 +118,6 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	public List<Double> getGlobalWeights() {
 		return _globalWeights;
-	}
-	
-	public void setAggregatedFuzzyNumber(Map<Alternative, Map<Criterion, TrapezoidalFunction>> aggregatedFuzzyNumber) {
-		_aggregatedFuzzyNumbers = aggregatedFuzzyNumber;
-	}
-	
-	public Map<Alternative, Map<Criterion, TrapezoidalFunction>> getAggregatedFuzzyNumber() {
-		return _aggregatedFuzzyNumbers;
-	}
-	
-	public void setOverallOpinions(Map<Alternative, Map<Criterion, TrapezoidalFunction>> overallOpinions) {
-		_overallOpinions = overallOpinions;
-	}
-	
-	public Map<Alternative, Map<Criterion, TrapezoidalFunction>> getOverallOpinons() {
-		return _overallOpinions;
 	}
 	
 	public void setDistances(Map<ValuationKey, Double> distances) {
@@ -218,19 +197,17 @@ public class AggregationPhase implements IPhaseMethod {
 	public List<String[]> calculateDistance() {
 		List<String[]> result = new LinkedList<String[]>();
 		
-		Map<String, Double> square = calculateSquareValues();
-		calculateAggregatedFuzzyNumber(square);
-		calculateOverallOpinion(square);
 		calculateValuationsDistance();
 		
 		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
-		for(ValuationKey vk: valuations.keySet()) {
+		
+		for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
 			if(!vk.getExpert().getId().contains("fgc")) { //$NON-NLS-1$
 				String[] data = new String[7];
 				data[0] = vk.getExpert().getId();
 				data[1] = vk.getAlternative().getId();
 				data[2] = vk.getCriterion().getId();
-				data[3] = valuations.get(vk).changeFormatValuationToString();
+				data[3] = _valuationsInTwoTuple.get(vk).changeFormatValuationToString();
 				Valuation aggregatedValuation = _decisionMatrix[_elementsSet.getAlternatives().indexOf(vk.getAlternative())][_elementsSet.getCriteria().indexOf(vk.getCriterion())];
 				
 				if(aggregatedValuation == null) {
@@ -255,101 +232,15 @@ public class AggregationPhase implements IPhaseMethod {
 		
 		return result;
 	}
-
-	private Map<String, Double> calculateSquareValues() {
-		Map<String, Double> result = new HashMap<String, Double>();
-		int numExpert = 0;
-		
-		List<Expert> experts = _elementsSet.getAllExperts();
- 		for(Expert expert: experts) {
-			result.put(expert.getCanonicalId(), Math.pow(_globalWeights.get(numExpert), M));
-			numExpert++;
-		}
- 		
- 		return result;
-	}
-	
-	private void calculateAggregatedFuzzyNumber(Map<String, Double> square) {
-		
-		double acumA = 0, acumB = 0, acumC = 0, acumD = 0;
-		for(Alternative a: _elementsSet.getAlternatives()) {
-			for(Criterion c: _elementsSet.getAllCriteria()) {
-				acumA = 0;
-				acumB = 0;
-				acumC = 0;
-				acumD = 0;
-				for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
-					if(a.equals(vk.getAlternative()) && c.equals(vk.getCriterion())) {
-						TwoTuple v = (TwoTuple) _valuationsInTwoTuple.get(vk);
-						LabelLinguisticDomain label = v.getLabel();
-						TrapezoidalFunction semantic = (TrapezoidalFunction) label.getSemantic();
-						
-						double[] limits = semantic.getLimits();
-						acumA += limits[0] * square.get(vk.getExpert().getId());
-						acumB += limits[1] * square.get(vk.getExpert().getId());
-						acumC += limits[2] * square.get(vk.getExpert().getId());
-						acumD += limits[3] * square.get(vk.getExpert().getId());	
-					}
-				}
-				
-				double newLimits[] = new double[4];
-				newLimits[0] = acumA;
-				newLimits[1] = acumB;
-				newLimits[2] = acumC;
-				newLimits[3] = acumD;
-				TrapezoidalFunction result = new TrapezoidalFunction(newLimits);
-				
-				Map<Criterion, TrapezoidalFunction> fuzzyNumberCriterion;
-				if(_aggregatedFuzzyNumbers.get(a) !=  null) {
-					fuzzyNumberCriterion = _aggregatedFuzzyNumbers.get(a);
-				} else {
-					fuzzyNumberCriterion = new HashMap<Criterion, TrapezoidalFunction>();
-				}
-				fuzzyNumberCriterion.put(c, result);
-				_aggregatedFuzzyNumbers.put(a, fuzzyNumberCriterion);
-			}
-		}
-	}
-	
-	private void calculateOverallOpinion(Map<String, Double> square) {
-		
-		double squareAcum = 0;
-		for(String expert: square.keySet()) {
-			squareAcum += square.get(expert);
-		}
-
-		for(Alternative a: _elementsSet.getAlternatives()) {
-			Map<Criterion, TrapezoidalFunction> fuzzyNumberCriterion = _aggregatedFuzzyNumbers.get(a);
-			for(Criterion c: _elementsSet.getAllCriteria()) {
-				
-				Map<Criterion, TrapezoidalFunction> newFuzzyNumberCriterion;
-				if(_overallOpinions.get(a) != null) {
-					newFuzzyNumberCriterion = _overallOpinions.get(a);
-				} else {
-					newFuzzyNumberCriterion = new HashMap<Criterion, TrapezoidalFunction>();
-				}
-				
-				TrapezoidalFunction fuzzyNumber = fuzzyNumberCriterion.get(c);
-				double newLimits[] = new double[4];
-				double limits[] = fuzzyNumber.getLimits();
-				newLimits[0] = limits[0] * squareAcum;
-				newLimits[1]= limits[1] * squareAcum;
-				newLimits[2] = limits[2] * squareAcum;
-				newLimits[3] = limits[3] * squareAcum;
-				
-				
-				TrapezoidalFunction newFuzzyNumber = new TrapezoidalFunction(newLimits);
-				newFuzzyNumberCriterion.put(c, newFuzzyNumber);
-				_overallOpinions.put(a, newFuzzyNumberCriterion);
-			}
-		}
-		
-	}
 	
 	private void calculateValuationsDistance() {
 		
+		int numAlternative = 0, numCriterion;
 		for(Alternative a: _elementsSet.getAlternatives()) {
 			for(Criterion c: _elementsSet.getAllCriteria()) {
+				
+				numCriterion = 0;
+				
 				for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
 					if(a.equals(vk.getAlternative()) && c.equals(vk.getCriterion())) {
 						TwoTuple v = (TwoTuple) _valuationsInTwoTuple.get(vk);
@@ -362,7 +253,8 @@ public class AggregationPhase implements IPhaseMethod {
 						double cLimit = limits[2];
 						double dLimit = limits[3];
 						
-						double[] overallLimits = _overallOpinions.get(a).get(c).getLimits();
+						TwoTuple overallValuation =  (TwoTuple) _decisionMatrix[numAlternative][numCriterion];
+						double[] overallLimits = ((TrapezoidalFunction) overallValuation.getLabel().getSemantic()).getLimits();
 						double aOverallLimit = overallLimits[0];
 						double bOverallLimit = overallLimits[1];
 						double cOverallLimit = overallLimits[2];
@@ -374,7 +266,9 @@ public class AggregationPhase implements IPhaseMethod {
 						_distances.put(vk, distance);
 					}
 				}
+				numCriterion++;
 			}
+			numAlternative++;
 		}
 	}
 
@@ -393,8 +287,6 @@ public class AggregationPhase implements IPhaseMethod {
 		_valuationsInTwoTuple = aggregation.getValuationsTwoTuple();
 		_criteriaWeights = aggregation.getExpertsWeights();
 		_globalWeights = aggregation.getGlobalWeights();
-		_aggregatedFuzzyNumbers = aggregation.getAggregatedFuzzyNumber();
-		_overallOpinions = aggregation.getOverallOpinons();
 		_distances = aggregation.getDistances();
 	}
 
@@ -416,8 +308,6 @@ public class AggregationPhase implements IPhaseMethod {
 		_valuationsInTwoTuple.clear();
 		_criteriaWeights.clear();
 		_globalWeights.clear();
-		_aggregatedFuzzyNumbers.clear();
-		_overallOpinions.clear();
 		_distances.clear();
 	}
 	
