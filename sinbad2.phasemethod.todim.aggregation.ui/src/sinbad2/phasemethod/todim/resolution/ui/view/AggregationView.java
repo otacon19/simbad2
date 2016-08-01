@@ -97,6 +97,9 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 			public void widgetSelected(SelectionEvent e) {
 				setOperator(_aggregationOperatorsCombo.getItem(_aggregationOperatorsCombo.getSelectionIndex()));
 				_excelButton.setEnabled(true);
+				
+				_completed = true;
+				notifyStepStateChange();
 			}
 		});
 		
@@ -165,7 +168,7 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ExcelUtil excelUtil = new ExcelUtil();
-				excelUtil.createExcelFileEmergencyProblemStructure(_aggregationPhase.getValuationsTwoTuple(), _aggregationPhase.getGlobalWeights());
+				excelUtil.createExcelFileEmergencyProblemStructure(_aggregationPhase.getValuationsTwoTuple(), _aggregationPhase.getGlobalWeights(), _aggregationPhase.getDecisionMatrix());
 			}
 		});
 		

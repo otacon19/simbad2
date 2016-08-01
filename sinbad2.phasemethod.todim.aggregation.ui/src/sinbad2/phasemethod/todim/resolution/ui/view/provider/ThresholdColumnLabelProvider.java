@@ -24,9 +24,9 @@ public class ThresholdColumnLabelProvider extends ColumnLabelProvider {
 			double threshold = Double.parseDouble((String) ((Object[]) element)[6]);
 			double distance = Double.parseDouble((String) ((Object[]) element)[5]);
 			if(threshold - distance > 0) {
-				return lightRed;
-			} else {
 				return lightGreen;
+			} else {
+				return lightRed;
 			}
 		}
 		
