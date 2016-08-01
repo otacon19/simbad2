@@ -97,6 +97,9 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 			public void widgetSelected(SelectionEvent e) {
 				setOperator(_aggregationOperatorsCombo.getItem(_aggregationOperatorsCombo.getSelectionIndex()));
 				_excelButton.setEnabled(true);
+				
+				_completed = true;
+				notifyStepStateChange();
 			}
 		});
 		
