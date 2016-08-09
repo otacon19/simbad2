@@ -153,10 +153,10 @@ public class UnificationPhase implements IPhaseMethod {
 			for (ValuationKey vk : valuations.keySet()) {
 			
 				expert = vk.getExpert();
+				alternative = vk.getAlternative();
 				
-				if(!expert.getId().endsWith("fgc")) {
+				if(!expert.getId().endsWith("flintstones_gathering_cloud") && alternative != null) {
 					valuation = valuations.get(vk);
-					alternative = vk.getAlternative();
 					criterion = vk.getCriterion();
 					isCost = criterion.getCost();
 	

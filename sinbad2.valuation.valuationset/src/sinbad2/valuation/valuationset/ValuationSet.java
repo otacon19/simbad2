@@ -147,6 +147,7 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 		
 		boolean end = false;
 		while (reader.hasNext() && !end) {
+	
 			event = reader.next();
 
 			if (event.isStartElement()) {
@@ -164,10 +165,16 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 				if(expert == null) {
 					expert = new Expert(expertId);
 				}
+				
 				criterion = Criterion.getCriterionByCanonicalId(criteria, criterionId);
-				for (Alternative a : alternatives) {
-					if (a.getId().equals(alternativeId)) {
-						alternative = a;
+				
+				if(alternativeId.equals("null")) {
+					alternative = null;
+				} else {
+					for (Alternative a : alternatives) {
+						if (a.getId().equals(alternativeId)) {
+							alternative = a;
+						}
 					}
 				}
 				

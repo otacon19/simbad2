@@ -94,7 +94,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 		Map<ValuationKey, Valuation> result = new HashMap<ValuationKey, Valuation>();
 		
 		for(ValuationKey vk: _valuations.keySet()) {
-			if(!vk.getExpert().getId().endsWith("fgc")) {
+			if(!vk.getExpert().getId().endsWith("flintstones_gathering_cloud") && vk.getAlternative() != null) {
 				Valuation v = _valuations.get(vk);
 				result.put(vk, v);
 			}
