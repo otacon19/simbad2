@@ -198,9 +198,6 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 		_inputDistanceTable = _aggregationPhase.calculateDistance();
 		_distanceTableViewer.setInput(_inputDistanceTable);
 		
-		_completed = true;
-		notifyStepStateChange();
-		
 		refreshTables();
 	}
 	
