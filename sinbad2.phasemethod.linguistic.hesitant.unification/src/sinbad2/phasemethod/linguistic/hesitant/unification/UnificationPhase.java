@@ -136,8 +136,9 @@ public class UnificationPhase implements IPhaseMethod {
 		return true;
 	}
 
-	public Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
+	public void unification(FuzzySet unifiedDomain) {
 		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
+		_twoTupleValuationsResult = new HashMap<ValuationKey, Valuation>();
 		
 		if(unifiedDomain != null) {
 			Valuation valuation;
@@ -152,9 +153,8 @@ public class UnificationPhase implements IPhaseMethod {
 				}
 			}
 		}
-		
-		return _unifiedValuationsResult;
 	}
+	
 	/**
 	 * 
 	 * @param vk: Clave de valoración. La valoración de un experto para un criterion y alternativa determinadas
@@ -265,9 +265,10 @@ public class UnificationPhase implements IPhaseMethod {
 		}
 		
 		Valuation unifiedValuation = new UnifiedValuation(result);
-		TwoTuple twoTuple = ((UnifiedValuation) unifiedValuation).disunification(result);
+		_unifiedValuationsResult.put(vk, unifiedValuation);
 		
-		_unifiedValuationsResult.put(vk, twoTuple);
+		TwoTuple twoTuple = ((UnifiedValuation) unifiedValuation).disunification(result);
+		_twoTupleValuationsResult.put(vk, twoTuple);
 	}
 
 	public Domain getDomain() {

@@ -37,9 +37,7 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	private Valuation[][] _decisionMatrix;
 	private Map<ValuationKey, Double> _distances;
-	
-	private List<Double> _globalWeights;
-	private Map<String, List<Double>> _criteriaWeights;
+	private List<Double> _expertsWeights;
 	
 	private int _numAlternatives;
 	private int _numCriteria;
@@ -82,10 +80,9 @@ public class AggregationPhase implements IPhaseMethod {
 		_numCriteria = _elementsSet.getCriteria().size();
 		_decisionMatrix = new Valuation[_numAlternatives][_numCriteria];
 		
-		_criteriaWeights = new HashMap<String, List<Double>>();
-		_globalWeights = new LinkedList<Double>();
-		
 		_distances = new HashMap<ValuationKey, Double>();
+		
+		_expertsWeights = new LinkedList<Double>();
 	}
 	
 	public void setDecisionMatrix(Valuation[][] decisionMatrix) {
@@ -104,22 +101,6 @@ public class AggregationPhase implements IPhaseMethod {
 		return _valuationsInTwoTuple;
 	}
 	
-	public void setExpertsWeights(Map<String, List<Double>> expertsWeights) {
-		_criteriaWeights = expertsWeights;
-	}
-	
-	public Map<String, List<Double>> getExpertsWeights() {
-		return _criteriaWeights;
-	}
-	
-	public void setExpertsWeights(List<Double> globalWeights) {
-		_globalWeights = globalWeights;
-	}
-	
-	public List<Double> getGlobalWeights() {
-		return _globalWeights;
-	}
-	
 	public void setDistances(Map<ValuationKey, Double> distances) {
 		_distances = distances;
 	}
@@ -128,20 +109,19 @@ public class AggregationPhase implements IPhaseMethod {
 		return _distances;
 	}
 	
+	public void setExpertsWeights(List<Double> expertsWeights) {
+		_expertsWeights = expertsWeights;
+	}
+	
+	public List<Double> getExpertsWeights() {
+		return _expertsWeights;
+	}
+	
 	public Valuation[][] calculateDecisionMatrix(AggregationOperator operator, Map<String, List<Double>> weights) {
 		
 		_numAlternatives = _elementsSet.getAlternatives().size();
 		_numCriteria = _elementsSet.getCriteria().size();
 		_decisionMatrix = new Valuation[_numAlternatives][_numCriteria];
-		
-		_globalWeights = new LinkedList<Double>();
-		_criteriaWeights = new HashMap<String, List<Double>>();
-		
-		if(weights.isEmpty()) {
-			setDefaultWeights();
-		} else if(weights.size() == 1) {
-			_globalWeights = weights.get(null);
-		}
 		
 		for(int a = 0; a < _elementsSet.getAlternatives().size(); ++a) {
 			for(int c = 0; c < _elementsSet.getAllCriteria().size(); ++c) {
@@ -153,23 +133,17 @@ public class AggregationPhase implements IPhaseMethod {
 		
 		return _decisionMatrix;
 	}
-
-	private void setDefaultWeights() {		
-		List<Expert> experts = _elementsSet.getAllExperts();
-		double weight = 1d / experts.size();
-		for(int i = 0; i < experts.size(); ++i) {
-			_globalWeights.add(weight);
-		}
-	}
-
+	
 	private void aggregateExperts(int alternative, int criterion, AggregationOperator operator, Map<String, List<Double>> weights) {
 		List<Alternative> alternatives = _elementsSet.getAlternatives();
 		List<Criterion> criteria = _elementsSet.getCriteria();
+		_expertsWeights = new LinkedList<Double>(); 
 		
 		List<Double> criterionWeights = new LinkedList<Double>();
 		if(weights.size() > 1) {
 			criterionWeights = weights.get(_elementsSet.getAllCriteria().get(criterion).getCanonicalId());
-			_criteriaWeights.put(_elementsSet.getAllCriteria().get(criterion).getCanonicalId(), criterionWeights);
+		} else if(weights.size() == 1) {
+			_expertsWeights = weights.get(null);
 		}
 		
 		List<Valuation> valuations = new LinkedList<Valuation>();
@@ -183,8 +157,8 @@ public class AggregationPhase implements IPhaseMethod {
 		if(operator instanceof UnweightedAggregationOperator) {
 			expertsColectiveValuation = ((UnweightedAggregationOperator) operator).aggregate(valuations);
 		} else if(operator instanceof WeightedAggregationOperator) {
-			if(!_globalWeights.isEmpty()) {
-				expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, _globalWeights);
+			if(!_expertsWeights.isEmpty()) {
+				expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, _expertsWeights);
 			} else {
 				expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, criterionWeights);
 			}
@@ -192,7 +166,7 @@ public class AggregationPhase implements IPhaseMethod {
 
 		_decisionMatrix[alternative][criterion] = expertsColectiveValuation;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<String[]> calculateDistance() {
 		List<String[]> result = new LinkedList<String[]>();
@@ -281,8 +255,6 @@ public class AggregationPhase implements IPhaseMethod {
 		
 		_decisionMatrix = aggregation.getDecisionMatrix();
 		_valuationsInTwoTuple = aggregation.getValuationsTwoTuple();
-		_criteriaWeights = aggregation.getExpertsWeights();
-		_globalWeights = aggregation.getGlobalWeights();
 		_distances = aggregation.getDistances();
 	}
 
@@ -302,8 +274,6 @@ public class AggregationPhase implements IPhaseMethod {
 	public void clear() {
 		_decisionMatrix = new Valuation[_numAlternatives][_numCriteria];
 		_valuationsInTwoTuple.clear();
-		_criteriaWeights.clear();
-		_globalWeights.clear();
 		_distances.clear();
 	}
 	

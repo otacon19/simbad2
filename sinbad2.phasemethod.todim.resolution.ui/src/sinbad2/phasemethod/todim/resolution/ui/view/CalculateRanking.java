@@ -278,26 +278,25 @@ public class CalculateRanking extends ViewPart {
 	}
 	
 	private void setInputCriteriaTable() {
+		List<Criterion> criteria = _elementsSet.getAllCriteria();
 		
 		_checkBoxes.clear();
 		
 		List<String[]> result = new LinkedList<String[]>();
 		
-		List<Double> globalWeights = _resolutionPhase.getGlobalWeights();
+		Map<Criterion, Double> criteriaWeights = _resolutionPhase.getImportanceCriteriaWeights();
 		Map<String, Double> relativeWeights = _resolutionPhase.calculateRelativeWeights();
 		
-		int indexCriterion = 0;
-		for(Criterion c: _elementsSet.getAllCriteria()) {
+		for(Criterion c: criteria) {
 			String[] row = new String[4];
 			row[0] = c.getCanonicalId();
-			row[1] = Double.toString(globalWeights.get(indexCriterion));
+			row[1] = Double.toString(criteriaWeights.get(c));
 			if(relativeWeights.isEmpty()) {
 				row[2] = "0"; //$NON-NLS-1$
 			} else {
 				row[2] = Double.toString(relativeWeights.get(c.getCanonicalId()));
 			}
 			
-			indexCriterion++;
 			result.add(row);
 		}
 		_criteriaTableViewer.setInput(result);
@@ -308,14 +307,14 @@ public class CalculateRanking extends ViewPart {
 			Button button = new Button(_criteriaTableViewer.getTable(), SWT.RADIO);
 			button.setEnabled(false);
 		    button.pack();
-		    button.setData("numCriterion", i); //$NON-NLS-1$
+		    button.setData("criterion", criteria.get(i)); //$NON-NLS-1$
 		    editor.minimumWidth = button.getSize().x;
 		    editor.horizontalAlignment = SWT.CENTER;
 		    editor.setEditor(button, items[i], 0);
 		    button.addSelectionListener(new SelectionAdapter() {
 		    	@Override
 		    	public void widgetSelected(SelectionEvent e) {
-		    		_resolutionPhase.setReferenceCriterion((int) ((Button) e.widget).getData("numCriterion")); //$NON-NLS-1$
+		    		_resolutionPhase.setReferenceCriterion((Criterion) ((Button) e.widget).getData("criterion")); //$NON-NLS-1$
 		    		
 		    		setInputCriteriaTable();
 		    		setInputDominanceDegreeTable();

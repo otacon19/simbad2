@@ -7,3 +7,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.aggregationoperator;bundle-version="1.0.0",
  sinbad2.valuation.hesitant
 Bundle-Vendor: %Bundle-Vendor
+Export-Package: sinbad2.aggregationoperator.maxMin

@@ -168,7 +168,7 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ExcelUtil excelUtil = new ExcelUtil();
-				excelUtil.createExcelFileEmergencyProblemStructure(_aggregationPhase.getValuationsTwoTuple(), _aggregationPhase.getGlobalWeights(), _aggregationPhase.getDecisionMatrix());
+				excelUtil.createExcelFileEmergencyProblemStructure(_aggregationPhase.getValuationsTwoTuple(), _aggregationPhase.getExpertsWeights(), _aggregationPhase.getDecisionMatrix());
 			}
 		});
 		
@@ -275,7 +275,6 @@ public class AggregationView extends ViewPart implements IStepStateListener{
 	public void notifyStepStateChange() {
 		
 		_resolutionPhase.clear();
-		_resolutionPhase.setGlobalWeights(_aggregationPhase.getGlobalWeights());
 		
 		if(_completed) {
 			_ratingView.loadNextStep();

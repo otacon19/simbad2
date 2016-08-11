@@ -8,7 +8,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import sinbad2.aggregationoperator.AggregationOperator;
+import sinbad2.aggregationoperator.AggregationOperatorsManager;
+import sinbad2.aggregationoperator.owa.OWA;
+import sinbad2.aggregationoperator.owa.YagerQuantifiers;
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
+import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -16,7 +22,12 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.HesitantValuation;
+import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
+import sinbad2.valuation.valuationset.ValuationSet;
+import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public class ResolutionPhase implements IPhaseMethod {
 
@@ -29,15 +40,15 @@ public class ResolutionPhase implements IPhaseMethod {
 	
 	private int _numAlternatives;
 	private int _numCriteria;
-	private int _referenceCriterion;
 	
-	private List<Double> _globalWeights;
+	private Criterion _referenceCriterion;
+	
+	private Map<Criterion, Double> _criteriaWeights;
 	private Map<String, Double> _relativeWeights;
 	
 	private Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> _dominanceDegreeByCriterion;
 	private Map<Pair<Alternative, Alternative>, Double> _dominanceDegreeAlternatives;
 	private Map<Alternative, Double> _globalDominance;
-	private Map<ValuationKey, TrapezoidalFunction> _fuzzyValuations;
 
 	private ProblemElementsSet _elementsSet;
 
@@ -74,15 +85,14 @@ public class ResolutionPhase implements IPhaseMethod {
 		_trapezoidalConsensusMatrix = new String[_numAlternatives][_numCriteria];
 		initializeConsesusMatrix();
 
-		_globalWeights = new LinkedList<Double>();
+		_criteriaWeights = new HashMap<Criterion, Double>();
 		_relativeWeights = new HashMap<String, Double>();
 		
 		_dominanceDegreeByCriterion = new HashMap<Criterion, Map<Pair<Alternative, Alternative>, Double>>();
 		_dominanceDegreeAlternatives = new HashMap<Pair<Alternative, Alternative>, Double>();
 		_globalDominance = new HashMap<Alternative, Double>();
-		_fuzzyValuations = new HashMap<ValuationKey, TrapezoidalFunction>();
-
-		_referenceCriterion = -1;
+		
+		_referenceCriterion = null;
 	}
 
 	public void setConsensusMatrix(Object[][] consensusMatrix) {
@@ -101,19 +111,146 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _trapezoidalConsensusMatrix;
 	}
 
-	public void setGlobalWeights(List<Double> globalWeights) {
-		_globalWeights = globalWeights;
+	public void setCriteriaWeights(Map<Criterion, Double> criteriaWeights) {
+		_criteriaWeights = criteriaWeights;
 	}
 
-	public List<Double> getGlobalWeights() {
-		return _globalWeights;
+	public Map<Criterion, Double> getImportanceCriteriaWeights() {
+		Map<Criterion, List<TrapezoidalFunction>> expertsEnvelopeWeightsForEachCriterion = new HashMap<Criterion, List<TrapezoidalFunction>>();
+		List<TrapezoidalFunction> envelopeWeights;
+		
+		if(_criteriaWeights.isEmpty()) {
+			ValuationSetManager vsm = ValuationSetManager.getInstance();
+			ValuationSet vs = vsm.getActiveValuationSet();
+			
+			Valuation v = null;
+			Map<ValuationKey, Valuation> valuations = vs.getValuations();
+			for(ValuationKey vk: valuations.keySet()) {
+				if(vk.getAlternative() == null) {
+					if(expertsEnvelopeWeightsForEachCriterion.get(vk.getCriterion()) != null) {
+						envelopeWeights = expertsEnvelopeWeightsForEachCriterion.get(vk.getCriterion());
+					} else {
+						envelopeWeights = new LinkedList<TrapezoidalFunction>();
+					}
+					v = valuations.get(vk);
+					envelopeWeights.add(calculateFuzzyEnvelope(vk, (HesitantValuation) v, (FuzzySet) v.getDomain()));
+					expertsEnvelopeWeightsForEachCriterion.put(vk.getCriterion(), envelopeWeights);
+				}
+			}
+		}
+		
+		calculateCOG(expertsEnvelopeWeightsForEachCriterion);
+		
+		return _criteriaWeights;
 	}
 
-	public void setReferenceCriterion(int referenceCriterion) {
+	private TrapezoidalFunction calculateFuzzyEnvelope(ValuationKey vk, HesitantValuation valuation, FuzzySet domain) {	
+		double a, b, c, d;
+		int g = domain.getLabelSet().getCardinality();
+		Boolean lower = null;
+		
+		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
+		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
+		
+        if(valuation.isPrimary()) {
+            IMembershipFunction semantic = valuation.getLabel().getSemantic();
+            a = semantic.getCoverage().getMin();
+            b = semantic.getCenter().getMin();
+            c = semantic.getCenter().getMax();
+            d = semantic.getCoverage().getMax();
+        } else {
+            int envelope[] = valuation.getEnvelopeIndex();
+            if(valuation.isUnary()) {
+                switch(valuation.getUnaryRelation()) {
+                case LowerThan:
+                	lower = Boolean.valueOf(true);
+                	break;
+                case AtMost:
+                	lower = Boolean.valueOf(true);
+                	break;
+                default:
+                	lower = Boolean.valueOf(false);
+                	break;
+                }
+            } else {
+                lower = null;
+            }
+
+            YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
+            List<Double> weights = new LinkedList<Double>();
+			double[] auxWeights = YagerQuantifiers.QWeighted(nqt, g - 1, envelope, lower);
+			
+			weights.add(new Double(-1));
+			for(Double weight : auxWeights) {
+				weights.add(weight);
+			}
+            
+            if(lower == null) {
+                a = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
+                d = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
+                if(envelope[0] + 1 == envelope[1]) {
+                    b = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCenter().getMin();
+                    c = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCenter().getMax();
+                } else {
+                    int sum = envelope[1] + envelope[0];
+                    int top;
+                    if(sum % 2 == 0) {
+                        top = sum / 2;
+                    } else {
+                        top = (sum - 1) / 2;
+                    }
+                    List<Valuation> valuations = new LinkedList<Valuation>();
+                    for(int i = envelope[0]; i <= top; i++) {
+                        valuations.add(new TwoTuple(domain, domain.getLabelSet().getLabel(i)));
+                    }
+
+                    Valuation aux = ((OWA) owa).aggregate(valuations, weights);
+                    b = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
+                    c = 2D * domain.getLabelSet().getLabel(top).getSemantic().getCenter().getMin() - b;
+                }
+            } else {
+                List<Valuation> valuations = new LinkedList<Valuation>();
+                for(int i = envelope[0]; i <= envelope[1]; i++) {
+                    valuations.add(new TwoTuple(domain, domain.getLabelSet().getLabel(i)));
+                }
+
+                Valuation aux = ((OWA) owa).aggregate(valuations, weights);
+                if(lower.booleanValue()) {
+                    a = 0.0D;
+                    b = 0.0D;
+                    c = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
+                    d = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
+                } else {
+                    a = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
+                    b = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
+                    c = 1.0D;
+                    d = 1.0D;
+                }
+            }
+        }
+        
+        return new TrapezoidalFunction(new double[] {a, b, c, d});
+    
+	}
+
+	private void calculateCOG(Map<Criterion, List<TrapezoidalFunction>> expertsEnvelopeWeightsForEachCriterion) {
+		double acum;
+		
+		for(Criterion c: expertsEnvelopeWeightsForEachCriterion.keySet()) {
+			acum = 0;
+			List<TrapezoidalFunction> envelopeFunctions = expertsEnvelopeWeightsForEachCriterion.get(c);
+			for(TrapezoidalFunction envelope: envelopeFunctions) {
+				acum += envelope.centroid();
+			}
+			_criteriaWeights.put(c, acum / 2);
+		}
+	}
+	
+	public void setReferenceCriterion(Criterion referenceCriterion) {
 		_referenceCriterion = referenceCriterion;
 	}
 
-	public int getReferenceCriterion() {
+	public Criterion getReferenceCriterion() {
 		return _referenceCriterion;
 	}
 
@@ -150,14 +287,6 @@ public class ResolutionPhase implements IPhaseMethod {
 	public Map<Alternative, Double> getGlobalDominance() {
 		return _globalDominance;
 	}
-
-	public void setFuzzyValuations(Map<ValuationKey, TrapezoidalFunction> fuzzyValuations) {
-		_fuzzyValuations = fuzzyValuations;
-	}
-
-	public Map<ValuationKey, TrapezoidalFunction> getFuzzyValuations() {
-		return _fuzzyValuations;
-	}
 	
 	private void initializeConsesusMatrix() {
 		
@@ -171,11 +300,11 @@ public class ResolutionPhase implements IPhaseMethod {
 	public Map<String, Double> calculateRelativeWeights() {
 		_relativeWeights = new HashMap<String, Double>();
 
-		if (_referenceCriterion != -1) {
-			Double weightReference = _globalWeights.get(_referenceCriterion);
+		if (_referenceCriterion != null) {
+			Double weightReference = _criteriaWeights.get(_referenceCriterion);
 			List<Criterion> criteria = _elementsSet.getAllCriteria();
-			for (int i = 0; i < _elementsSet.getAllCriteria().size(); ++i) {
-				_relativeWeights.put(criteria.get(i).getCanonicalId(), _globalWeights.get(i) / weightReference);
+			for (int i = 0; i < criteria.size(); ++i) {
+				_relativeWeights.put(criteria.get(i).getCanonicalId(), _criteriaWeights.get(criteria.get(i)) / weightReference);
 			}
 		}
 		return _relativeWeights;
@@ -335,14 +464,13 @@ public class ResolutionPhase implements IPhaseMethod {
 		clear();
 
 		_consensusMatrix = resolution.getConsensusMatrix();
-		_globalWeights = resolution.getGlobalWeights();
+		_criteriaWeights = resolution.getImportanceCriteriaWeights();
 		_referenceCriterion = resolution.getReferenceCriterion();
 		_relativeWeights = resolution.getRelativeWeights();
 		_dominanceDegreeByCriterion = resolution.getDominanceDegreeByCriterion();
 		_dominanceDegreeAlternatives = resolution.getDominanceDegreeAlternatives();
 		_globalDominance = resolution.getGlobalDominance();
 		_trapezoidalConsensusMatrix = resolution.getTrapezoidalConsensusMatrix();
-		_fuzzyValuations = resolution.getFuzzyValuations();
 	}
 
 	@Override
@@ -351,13 +479,12 @@ public class ResolutionPhase implements IPhaseMethod {
 		initializeConsesusMatrix();
 		_trapezoidalConsensusMatrix = new String[_numAlternatives][_numCriteria];
 		
-		_globalWeights.clear();
-		_referenceCriterion = -1;
+		_criteriaWeights.clear();
+		_referenceCriterion = null;
 		_relativeWeights.clear();
 		_dominanceDegreeByCriterion.clear();
 		_dominanceDegreeAlternatives.clear();
 		_globalDominance.clear();
-		_fuzzyValuations.clear();
 	}
 
 	@Override

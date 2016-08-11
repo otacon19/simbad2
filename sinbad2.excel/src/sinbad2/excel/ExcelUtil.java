@@ -207,26 +207,31 @@ public class ExcelUtil {
 	}
 
 	private void createExpertsWeightsInformation() {
-
 		Row rowAggregationWeights = _sheet.createRow(1);
 		Cell cell = rowAggregationWeights.createCell(2);
 		cell.setCellStyle(_styleTitles);
-		cell.setCellValue("Aggregation weights");
+		
 		CellRangeAddress cellRangeAddress = new CellRangeAddress(1, 1, 2, 1 + _experts.size());
 		_sheet.addMergedRegion(cellRangeAddress);
+		
+		if(_expertsWeights.isEmpty()) {
+			cell.setCellValue("Aggregation operator without weights");		
+		} else {
+			cell.setCellValue("Aggregation weights");
+			
+			int columnCount = 2;
+			Row rowExperts = _sheet.createRow(2);
+			Row rowWeights = _sheet.createRow(3);
+			for (int i = 0; i < _experts.size(); ++i) {
+				cell = rowExperts.createCell(columnCount);
+				cell.setCellStyle(_styleExperts);
+				cell.setCellValue(_experts.get(i).getCanonicalId());
 
-		int columnCount = 2;
-		Row rowExperts = _sheet.createRow(2);
-		Row rowWeights = _sheet.createRow(3);
-		for (int i = 0; i < _experts.size(); ++i) {
-			cell = rowExperts.createCell(columnCount);
-			cell.setCellStyle(_styleExperts);
-			cell.setCellValue(_experts.get(i).getCanonicalId());
+				cell = rowWeights.createCell(columnCount);
+				cell.setCellValue(_expertsWeights.get(i));
 
-			cell = rowWeights.createCell(columnCount);
-			cell.setCellValue(_expertsWeights.get(i));
-
-			columnCount++;
+				columnCount++;
+			}
 		}
 	}
 

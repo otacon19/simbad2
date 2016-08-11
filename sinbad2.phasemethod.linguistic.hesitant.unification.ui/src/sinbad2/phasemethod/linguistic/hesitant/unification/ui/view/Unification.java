@@ -198,7 +198,8 @@ public static final String ID = "flintstones.phasemethod.linguistic.hesitant.ui.
 		_treeEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 4));
 		_treeViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 		
-		_unifiedValues = _unificacionPhase.unification((FuzzySet) _unificacionPhase.getDomain());
+		_unificacionPhase.unification((FuzzySet) _unificacionPhase.getDomain());
+		_unifiedValues = _unificacionPhase.getTwoTupleValuationsResult();
 		TreeViewerContentProvider provider = new TreeViewerContentProvider(_unifiedValues);
 		_treeViewer.setContentProvider(provider);
 		_treeViewer.setInput(provider.getInput());

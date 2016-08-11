@@ -12,6 +12,8 @@ import sinbad2.valuation.hesitant.HesitantValuation;
 
 public class MaxMin extends UnweightedAggregationOperator {
 
+	public static final String ID = "flintstones.aggregationoperator.maxmin";
+	
 	@Override
 	public Valuation aggregate(List<Valuation> valuations) {
 		
