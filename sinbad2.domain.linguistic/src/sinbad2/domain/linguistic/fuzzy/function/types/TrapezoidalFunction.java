@@ -275,6 +275,64 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		return result;
 	}
 	
+	public TrapezoidalFunction addition(TrapezoidalFunction tpf) {
+		
+		double[] limits = new double[]{_a + tpf._a, _b + tpf._b, _c + tpf._c, _d + tpf._d}; 
+		
+		return new TrapezoidalFunction(limits);
+	}
+	
+	public TrapezoidalFunction subtraction(TrapezoidalFunction tpf) {
+		
+		double[] limits = new double[]{_a - tpf._d, _b - tpf._c, _c - tpf._b, _d - tpf._a};
+		
+		return new TrapezoidalFunction(limits);
+	}
+	
+	public TrapezoidalFunction multiplication(TrapezoidalFunction tpf) {
+		
+		double[] limits = new double[]{_a * tpf._a, _b * tpf._b, _c * tpf._c, _d * tpf._d};
+		
+		return new TrapezoidalFunction(limits);
+	}
+	
+	public TrapezoidalFunction division(TrapezoidalFunction tpf) {
+		
+		double[] limits = new double[]{_a / tpf._d, _b / tpf._c, _c / tpf._b, _d / tpf._a};
+		
+		return new TrapezoidalFunction(limits);
+	}
+	
+	public TrapezoidalFunction multiplicationScalar(double scalar) {
+		double[] limits;
+		
+		if(scalar >= 0) {
+			limits = new double[]{_a * scalar, _b * scalar, _c * scalar, _d * scalar};
+		} else {
+			limits = new double[]{_d * scalar, _c * scalar, _b * scalar, _a * scalar};
+		}
+		
+		return new TrapezoidalFunction(limits);
+	}
+	
+	public double getSimpleDefuzzifiedValue() {
+		return (_a + _b + _c + _d) / 4;
+	}
+	
+	public double distance(TrapezoidalFunction tpf) {
+		double acum1 = 0, acum2 = 0;
+		double limits1[] = getLimits(), limits2[] = tpf.getLimits();
+		
+		for(int i = 0; i < 4; ++i) {
+			acum1 += Math.pow(limits2[i] - limits1[i], 2); 
+			if(i < 3) {
+				acum2 += limits2[i + 1] - limits1[i + 1];
+			}
+		}
+		
+		return Math.sqrt((acum1 + acum2) / 6);
+	}
+	
 	@Override
 	public void save(XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeAttribute("a",Double.toString(_a)); //$NON-NLS-1$

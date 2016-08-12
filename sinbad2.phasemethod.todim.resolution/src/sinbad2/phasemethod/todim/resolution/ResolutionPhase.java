@@ -242,7 +242,7 @@ public class ResolutionPhase implements IPhaseMethod {
 			for(TrapezoidalFunction envelope: envelopeFunctions) {
 				acum += envelope.centroid();
 			}
-			_criteriaWeights.put(c, acum / 2);
+			_criteriaWeights.put(c, Math.round((acum / 2) * 1000) / 1000d);
 		}
 	}
 	
@@ -299,18 +299,18 @@ public class ResolutionPhase implements IPhaseMethod {
 	
 	public Map<String, Double> calculateRelativeWeights() {
 		_relativeWeights = new HashMap<String, Double>();
-
+		
 		if (_referenceCriterion != null) {
 			Double weightReference = _criteriaWeights.get(_referenceCriterion);
 			List<Criterion> criteria = _elementsSet.getAllCriteria();
 			for (int i = 0; i < criteria.size(); ++i) {
-				_relativeWeights.put(criteria.get(i).getCanonicalId(), _criteriaWeights.get(criteria.get(i)) / weightReference);
+				_relativeWeights.put(criteria.get(i).getCanonicalId(), Math.round((_criteriaWeights.get(criteria.get(i)) / weightReference) * 1000) / 1000d);
 			}
 		}
 		return _relativeWeights;
 	}
 
-	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> calculateDominanceDegreeByCriterion() {
+	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> calculateDominanceDegreeByCriterionCOG() {
 		_dominanceDegreeByCriterion = new HashMap<Criterion, Map<Pair<Alternative, Alternative>, Double>>();
 
 		double acumSumRelativeWeights = getAcumSumRelativeWeights();
@@ -355,6 +355,79 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _dominanceDegreeByCriterion;
 	}
 
+	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> calculateDominanceDegreeByCriterionFuzzy() {
+		_dominanceDegreeByCriterion = new HashMap<Criterion, Map<Pair<Alternative, Alternative>, Double>>();
+
+		double acumSumRelativeWeights = getAcumSumRelativeWeights();
+
+		int criterionIndex = 0, a1Index = 0, a2Index = 0;
+		double dominance = 0, condition = 0, aT1, bT1, cT1, dT1, aT2, bT2, cT2, dT2;
+		double[] limits1, limits2;
+		String trapezoidalNumber1, trapezoidalNumber2;
+		String[] limits;
+		TrapezoidalFunction tpf1, tpf2;
+		
+		for (Criterion c : _elementsSet.getAllCriteria()) {
+			a1Index = 0;
+			for (Alternative a1 : _elementsSet.getAlternatives()) {
+				a2Index = 0;
+				for (Alternative a2 : _elementsSet.getAlternatives()) {
+					
+					if (a1 != a2) {
+						
+						trapezoidalNumber1 = (String) _consensusMatrix[a1Index][criterionIndex];
+						trapezoidalNumber1 = trapezoidalNumber1.replace("(", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						trapezoidalNumber1 = trapezoidalNumber1.replace(")", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						limits = trapezoidalNumber1.split(","); //$NON-NLS-1$
+						aT1 = Double.parseDouble(limits[0]);
+						bT1 = Double.parseDouble(limits[1]);
+						cT1 = Double.parseDouble(limits[2]);
+						dT1 = Double.parseDouble(limits[3]);
+						limits1 = new double[]{aT1, bT1, cT1, dT1};
+						tpf1 = new TrapezoidalFunction(limits1); 
+						
+						trapezoidalNumber2 = (String) _consensusMatrix[a2Index][criterionIndex];
+						trapezoidalNumber2 = trapezoidalNumber2.replace("(", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						trapezoidalNumber2 = trapezoidalNumber2.replace(")", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						limits = trapezoidalNumber2.split(","); //$NON-NLS-1$
+						aT2 = Double.parseDouble(limits[0]);
+						bT2 = Double.parseDouble(limits[1]);
+						cT2 = Double.parseDouble(limits[2]);
+						dT2 = Double.parseDouble(limits[3]);
+						limits2 = new double[]{aT2, bT2, cT2, dT2};
+						tpf2 = new TrapezoidalFunction(limits2); 
+						
+						condition = tpf1.getSimpleDefuzzifiedValue() - tpf2.getSimpleDefuzzifiedValue();
+						if (condition > 0) {
+							dominance = Math.sqrt((tpf1.distance(tpf2) * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
+						} else if (condition < 0) {
+							dominance = (-1d / ATTENUATION_FACTOR);
+							dominance *= Math.sqrt((tpf1.distance(tpf2) * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
+						} else {
+							dominance = 0;
+						}
+
+						Pair<Alternative, Alternative> pairAlternatives = new Pair<Alternative, Alternative>(a1, a2);
+						Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance;
+						if (_dominanceDegreeByCriterion.get(c) != null) {
+							pairAlternativesDominance = _dominanceDegreeByCriterion.get(c);
+						} else {
+							pairAlternativesDominance = new HashMap<Pair<Alternative, Alternative>, Double>();
+						}
+						pairAlternativesDominance.put(pairAlternatives, dominance);
+						_dominanceDegreeByCriterion.put(c, pairAlternativesDominance);
+					}
+					a2Index++;
+				}
+				a1Index++;
+			}
+			criterionIndex++;
+		}
+
+		return _dominanceDegreeByCriterion;
+	}
+
+	
 	private double getAcumSumRelativeWeights() {
 		double acum = 0;
 
@@ -442,7 +515,7 @@ public class ResolutionPhase implements IPhaseMethod {
 					d = Double.parseDouble(limits[3]);
 					semantic = new TrapezoidalFunction(new double[]{a, b, c, d});
 					cog = semantic.centroid();
-					result[al][cr] = Math.round(cog * 100d) / 100d;
+					result[al][cr] = Math.round(cog * 1000d) / 1000d;
 				}
 			}
 			

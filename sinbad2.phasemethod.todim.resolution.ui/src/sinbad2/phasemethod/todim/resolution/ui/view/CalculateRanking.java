@@ -126,7 +126,7 @@ public class CalculateRanking extends ViewPart {
 		comboBoxComposite.setLayout(new GridLayout(1, true));
 		comboBoxComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false, 1, 1));
 		_matrixType = new Combo(comboBoxComposite, SWT.NONE);
-		_matrixType.setItems(new String[]{Messages.CalculateRanking_Fuzzy_numbers, Messages.CalculateRanking_Center_of_Gravity, Messages.CalculateRanking_Fuzzy_TODIM});
+		_matrixType.setItems(new String[]{Messages.CalculateRanking_Fuzzy_TODIM, Messages.CalculateRanking_Center_of_Gravity});
 		_matrixType.select(0);
 		_matrixType.setEnabled(false);
 		_matrixType.addSelectionListener(new SelectionAdapter() {
@@ -140,6 +140,7 @@ public class CalculateRanking extends ViewPart {
 				}
 				
 				refreshConsensusMatrixTable();
+				refreshTODIMTables();
 			}
 		});
 		
@@ -276,6 +277,20 @@ public class CalculateRanking extends ViewPart {
 
 		_dmTable.setModel(alternatives, criteria, _resolutionPhase.getConsensusMatrix());
 	}
+
+	private void refreshTODIMTables() {
+		
+		setInputCriteriaTable();
+		
+		if(_matrixType.getSelectionIndex() == 1) {
+    		setInputDominanceDegreeTable(1);
+		} else {
+			setInputDominanceDegreeTable(0);
+		}
+		
+		setInputDominaceAlternativeDegreeTable();
+		setInputRankingTable();
+	}
 	
 	private void setInputCriteriaTable() {
 		List<Criterion> criteria = _elementsSet.getAllCriteria();
@@ -299,7 +314,17 @@ public class CalculateRanking extends ViewPart {
 			
 			result.add(row);
 		}
+		
 		_criteriaTableViewer.setInput(result);
+		
+		if(_checkBoxes.isEmpty()) {
+			createRadioButtons(criteria);
+		}
+		
+		pack();
+	}
+	
+	private void createRadioButtons(List<Criterion> criteria) {
 		
 		TableItem[] items = _criteriaTableViewer.getTable().getItems();
 		for(int i = 0; i < items.length; ++i) {
@@ -316,24 +341,25 @@ public class CalculateRanking extends ViewPart {
 		    	public void widgetSelected(SelectionEvent e) {
 		    		_resolutionPhase.setReferenceCriterion((Criterion) ((Button) e.widget).getData("criterion")); //$NON-NLS-1$
 		    		
-		    		setInputCriteriaTable();
-		    		setInputDominanceDegreeTable();
-		    		setInputDominaceAlternativeDegreeTable();
-		    		setInputRankingTable();
+		    		refreshTODIMTables();
 		    	}
 			});
 		    
 		    _checkBoxes.add(button);
 		}
-		
-		pack();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private void setInputDominanceDegreeTable() {
+	private void setInputDominanceDegreeTable(int mode) {
 		List<String[]> input = new LinkedList<String[]>();
 		
-		Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterion();
+		Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> dominanceDegreeByCriterion;
+		if(mode == 1) {
+			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionCOG();
+		} else {
+			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionFuzzy();
+		}
+		
 		for(Criterion c: _elementsSet.getAllCriteria()) {
 			Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance = dominanceDegreeByCriterion.get(c);
 			for(Pair<Alternative, Alternative> pair: pairAlternativesDominance.keySet()) {
