@@ -767,6 +767,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 	@Override
 	public void notifyStepStateChange() {
 		boolean notYet = false;
+		
 		if(_completed && !_loaded) {
 			for(ProblemElement alternative: _aggregationResult.keySet()) {
 				if(_aggregationResult.get(alternative) == null) {

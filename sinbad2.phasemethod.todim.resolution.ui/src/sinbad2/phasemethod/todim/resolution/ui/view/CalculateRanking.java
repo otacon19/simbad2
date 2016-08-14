@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.core.workspace.Workspace;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -46,8 +47,10 @@ import sinbad2.phasemethod.todim.resolution.ui.view.provider.MainAlternativeColu
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RankingTableContentProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RelativeWeightCriterionColumnLabelProvider;
+import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
+import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
-public class CalculateRanking extends ViewPart {
+public class CalculateRanking extends ViewPart implements IStepStateListener {
 	
 	public static final String ID = "flintstones.phasemethod.todim.resolution.ui.view.calculateranking"; //$NON-NLS-1$
 
@@ -61,6 +64,7 @@ public class CalculateRanking extends ViewPart {
 	private TableViewer _rankingTableViewer;
 	
 	private List<Button> _checkBoxes;
+	private boolean _loaded;
 	
 	private ResolutionPhase _resolutionPhase;
 	
@@ -92,6 +96,8 @@ public class CalculateRanking extends ViewPart {
 		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		
 		_checkBoxes = new LinkedList<Button>();
+		
+		_loaded = false;
 	}
 	
 	@Override
@@ -342,6 +348,8 @@ public class CalculateRanking extends ViewPart {
 		    		_resolutionPhase.setReferenceCriterion((Criterion) ((Button) e.widget).getData("criterion")); //$NON-NLS-1$
 		    		
 		    		refreshTODIMTables();
+		    		
+		    		notifyStepStateChange();
 		    	}
 			});
 		    
@@ -432,8 +440,19 @@ public class CalculateRanking extends ViewPart {
 	}
 	
 	@Override
+	public void notifyStepStateChange() {
+		if(!_loaded) {
+			_loaded = true;
+			
+			Workspace.getWorkspace().updatePhases();
+		}
+	}
+
+	@Override
+	public void setRatingView(RatingView rating) {}
+	
+	@Override
 	public String getPartName() {
 		return "TODIM"; //$NON-NLS-1$
 	}
-
 }

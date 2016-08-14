@@ -1126,7 +1126,9 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			return false;
 		}
 		
-		if (_aggregationPhase.getCriteriaOperators().isEmpty()) {
+		if(_aggregationPhase.getCriteriaOperatorWeights() == null) {
+			return false;
+		} else if (_aggregationPhase.getCriteriaOperatorWeights().isEmpty()) {
 			return false;
 		}
 

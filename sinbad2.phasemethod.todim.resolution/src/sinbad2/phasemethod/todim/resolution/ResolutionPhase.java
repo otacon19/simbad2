@@ -139,7 +139,7 @@ public class ResolutionPhase implements IPhaseMethod {
 			}
 		}
 		
-		calculateCOG(expertsEnvelopeWeightsForEachCriterion);
+		calculateWeights(expertsEnvelopeWeightsForEachCriterion);
 		
 		return _criteriaWeights;
 	}
@@ -233,7 +233,7 @@ public class ResolutionPhase implements IPhaseMethod {
     
 	}
 
-	private void calculateCOG(Map<Criterion, List<TrapezoidalFunction>> expertsEnvelopeWeightsForEachCriterion) {
+	private void calculateWeights(Map<Criterion, List<TrapezoidalFunction>> expertsEnvelopeWeightsForEachCriterion) {
 		double acum;
 		
 		for(Criterion c: expertsEnvelopeWeightsForEachCriterion.keySet()) {
@@ -242,7 +242,7 @@ public class ResolutionPhase implements IPhaseMethod {
 			for(TrapezoidalFunction envelope: envelopeFunctions) {
 				acum += envelope.centroid();
 			}
-			_criteriaWeights.put(c, Math.round((acum / 2) * 1000) / 1000d);
+			_criteriaWeights.put(c, Math.round((acum / envelopeFunctions.size()) * 1000) / 1000d);
 		}
 	}
 	
