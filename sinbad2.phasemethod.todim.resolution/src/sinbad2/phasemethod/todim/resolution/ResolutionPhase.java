@@ -12,6 +12,7 @@ import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.AggregationOperatorsManager;
 import sinbad2.aggregationoperator.owa.OWA;
 import sinbad2.aggregationoperator.owa.YagerQuantifiers;
+import sinbad2.core.utils.Pair;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;

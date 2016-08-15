@@ -1,4 +1,4 @@
-package sinbad2.valutation.hesitant.ui;
+package sinbad2.core.utils;
 
 public class Pair<L,R> {
 	

@@ -1,6 +1,5 @@
 package sinbad2.phasemethod.topsis.selection.ui.view.provider;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -9,10 +8,6 @@ import org.eclipse.jface.viewers.Viewer;
 public class ColectiveValuationsTableViewerContentProvider implements IStructuredContentProvider {
 
 	private List<Object[]> _decisionMatrix;
-	
-	public ColectiveValuationsTableViewerContentProvider() {
-		_decisionMatrix = new LinkedList<Object[]>();
-	}
 	
 	public List<Object[]> getInput() {
 		return _decisionMatrix;
@@ -24,7 +19,7 @@ public class ColectiveValuationsTableViewerContentProvider implements IStructure
 	
 	@Override
 	public void dispose() {
-		_decisionMatrix.clear();
+		_decisionMatrix = null;
 	}
 
 	@Override
@@ -35,5 +30,4 @@ public class ColectiveValuationsTableViewerContentProvider implements IStructure
 	public Object[] getElements(Object inputElement) {
 		return ((List<Object[]>) inputElement).toArray();	
 	}
-
 }

@@ -14,6 +14,7 @@ Export-Package:
  sinbad2.core.undoable,
  sinbad2.core.undoable.handler,
  sinbad2.core.undoable.listener,
+ sinbad2.core.utils,
  sinbad2.core.validator,
  sinbad2.core.workspace,
  sinbad2.core.workspace.listener

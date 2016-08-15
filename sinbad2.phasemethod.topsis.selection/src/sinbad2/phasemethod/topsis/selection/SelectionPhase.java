@@ -18,6 +18,8 @@ import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
+import sinbad2.phasemethod.PhasesMethodManager;
+import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
@@ -43,6 +45,8 @@ public class SelectionPhase implements IPhaseMethod {
 	
 	private List<Object[]> _closenessCoefficient;
 	
+	private AggregationPhase _aggregationPhase;
+	
 	private ProblemElementsSet _elementsSet;
 	
 	 private static class CoefficientComparator implements Comparator<Object[]> {
@@ -57,6 +61,9 @@ public class SelectionPhase implements IPhaseMethod {
 	public SelectionPhase() {		
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
+		
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
 		
 		_decisionMatrix = new LinkedList<Object[]>();
 		_idealSolution = new LinkedList<Object[]>();
