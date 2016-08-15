@@ -27,6 +27,7 @@ import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.AggregationOperatorsManager;
 import sinbad2.aggregationoperator.EAggregationOperatorType;
 import sinbad2.aggregationoperator.WeightedAggregationOperator;
+import sinbad2.core.utils.Pair;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
@@ -43,6 +44,7 @@ import sinbad2.phasemethod.topsis.selection.ui.view.provider.IdealSolutionTableV
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.NoIdealSolutionTableViewerContentProvider;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
+import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class AggregationExperts extends ViewPart implements IStepStateListener {
@@ -508,7 +510,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 			}
 		}
 		
-		List<Object[]> decisionMatrix = _selectionPhase.calculateDecisionMatrix(aggregationOperator, mapWeights);
+		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix = _selectionPhase.calculateDecisionMatrix(aggregationOperator, mapWeights);
 		_colectiveValuationsProvider.setInput(decisionMatrix);
 		_tableViewerColectiveValuations.setInput(_colectiveValuationsProvider.getInput());
 		

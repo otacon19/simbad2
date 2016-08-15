@@ -9,6 +9,7 @@ import java.util.Set;
 import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
 import sinbad2.aggregationoperator.WeightedAggregationOperator;
+import sinbad2.core.utils.Pair;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
@@ -46,6 +47,7 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	private Map<ValuationKey, Valuation> _unifiedValuations;
 	private Map<ProblemElement, Valuation> _aggregatedValuations;
+	private Map<Pair<Alternative, Criterion>, Valuation> _decisionM;
 	
 	private double[][] _decisionMatrix;
 	private int _numCriterion;
@@ -69,6 +71,8 @@ public class AggregationPhase implements IPhaseMethod {
 		_expertsOperatorsWeights = new HashMap<ProblemElement, Object>();
 		_criteriaOperatorsWeights = new HashMap<ProblemElement, Object>();
 
+		_decisionM = new HashMap<Pair<Alternative, Criterion>, Valuation>();
+		
 		_unifiedValuations = new HashMap<ValuationKey, Valuation>();
 				
 		_listeners = new LinkedList<AggregationProcessListener>();
@@ -91,7 +95,6 @@ public class AggregationPhase implements IPhaseMethod {
 	public void setAggregatedValuations(Map<ProblemElement, Valuation> aggregatedValuations) {
 		_aggregatedValuations = aggregatedValuations;
 	}
-	
 	
 	public Domain getUnifiedDomain() {
 		return _unifiedDomain;
@@ -135,6 +138,10 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	public double[][] getDecisionMatrix() {
 		return _decisionMatrix;
+	}
+	
+	public Map<Pair<Alternative, Criterion>, Valuation> getDecisionM() {
+		return _decisionM;
 	}
 	
 	public ProblemElement[] setExpertOperator(ProblemElement expert, AggregationOperator operator, Object weights) {
@@ -245,6 +252,11 @@ public class AggregationPhase implements IPhaseMethod {
 		_numAlternative = 0;
 		_numCriterion = 0;
 		
+		System.out.println("experts weights " + _expertsOperatorsWeights);
+		System.out.println("experts operators " + _expertsOperators);
+		System.out.println("criteria weights " + _criteriaOperatorsWeights);
+		System.out.println("criteria operators " + _criteriaOperators);
+		
 		for (ProblemElement alternative : alternatives) {
 			if (CRITERIA.equals(getAggregateBy())) {
 				_aggregatedValuations.put(alternative, aggregateAlternativeByCriteria(alternative, experts, criteria));
@@ -272,7 +284,7 @@ public class AggregationPhase implements IPhaseMethod {
 		return aggregateElementByExperts(null, alternative, null, experts, criteria);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Valuation aggregateElementByCriteria(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent, Set<ProblemElement> experts, Set<ProblemElement> criteria) {
 		AggregationOperator operator;
 		List<Valuation> alternativeValuations, criterionValuations = null;
@@ -329,6 +341,7 @@ public class AggregationPhase implements IPhaseMethod {
 								_decisionMatrix[_numCriterion][_numAlternative] = -1;
 							} else {
 								_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
+								_decisionM.put(new Pair(alternative, criterion), v);
 							}
 							_numCriterion++;
 						} else {
@@ -353,6 +366,7 @@ public class AggregationPhase implements IPhaseMethod {
 										_decisionMatrix[_numCriterion][_numAlternative] = -1;
 									} else {
 										_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
+										_decisionM.put(new Pair(alternative, criterion), v);
 									}
 									_numCriterion++;
 								} else {
@@ -366,6 +380,7 @@ public class AggregationPhase implements IPhaseMethod {
 							_decisionMatrix[_numCriterion][_numAlternative] = -1;
 						} else {
 							_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) criterionValuations.get(0)).calculateInverseDelta();
+							_decisionM.put(new Pair(alternative, criterion), criterionValuations.get(0));
 						}
 						_numCriterion++;
 					}

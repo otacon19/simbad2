@@ -3,20 +3,24 @@ package sinbad2.phasemethod.topsis.selection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.AggregationOperatorsManager;
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
-import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.aggregationoperator.max.Max;
 import sinbad2.aggregationoperator.min.Min;
+import sinbad2.core.utils.Pair;
+import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
@@ -32,7 +36,7 @@ public class SelectionPhase implements IPhaseMethod {
 	
 	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
 	
-	private List<Object[]> _decisionMatrix;
+	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
 	
 	private List<Object[]> _idealSolution;
 	private List<Object[]> _noIdealSolution;
@@ -65,7 +69,7 @@ public class SelectionPhase implements IPhaseMethod {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
 		
-		_decisionMatrix = new LinkedList<Object[]>();
+		_decisionMatrix = new HashMap<Pair<Alternative, Criterion>, Valuation>();
 		_idealSolution = new LinkedList<Object[]>();
 		_noIdealSolution = new LinkedList<Object[]>();
 		_idealDistanceByCriteria = new LinkedList<Object[]>();
@@ -85,11 +89,11 @@ public class SelectionPhase implements IPhaseMethod {
 		_valuationsInTwoTuple = valuationsInTwoTuple;
 	}
 	
-	public List<Object[]> getDecisionMatrix() {
+	public Map<Pair<Alternative, Criterion>, Valuation> getDecisionMatrix() {
 		return _decisionMatrix;
 	}
 	
-	public void setDecisionMatrix(List<Object[]> decisionMatrix) {
+	public void setDecisionMatrix(Map<Pair<Alternative, Criterion>, Valuation>  decisionMatrix) {
 		_decisionMatrix = decisionMatrix;
 	}
 	
@@ -149,55 +153,38 @@ public class SelectionPhase implements IPhaseMethod {
 		_closenessCoefficient = closenessCoeficient;
 	}
 	
-	public List<Object[]> calculateDecisionMatrix(AggregationOperator operator, Map<String, List<Double>> weights) {
+	public Map<Pair<Alternative, Criterion>, Valuation> calculateDecisionMatrix(AggregationOperator operator, Map<String, List<Double>> weights) {
+
+		_aggregationPhase.setUnificationValues(_valuationsInTwoTuple);
+	
+		System.out.println("TODIM " + weights);
 		
-		_decisionMatrix.clear();
-		
-		for(Alternative a: _elementsSet.getAlternatives()) {
-			for(Criterion c: _elementsSet.getAllCriteria()) {
-				if(!c.hasSubcriteria()) {
-					aggregateExperts(a, c, operator, weights);
-				}
+		if(weights.isEmpty()) {
+			_aggregationPhase.setExpertOperator(null, operator, weights);	
+		} else {
+			for(Expert e : _elementsSet.getAllExperts()) {
+				_aggregationPhase.setExpertOperator(e, operator, weights);
 			}
+			
+			List<Double> globalWeights = weights.get(null);
+			Map<ProblemElement, List<Double>> globalMapWeights = new HashMap<ProblemElement, List<Double>>();
+			globalMapWeights.put(null, globalWeights);
+			_aggregationPhase.getExpertsOperatorWeights().put(null, globalMapWeights);
+			
 		}
+		
+		Set<ProblemElement> experts = new HashSet<ProblemElement>();
+		experts.addAll(_elementsSet.getAllExperts());
+		Set<ProblemElement> alternatives = new HashSet<ProblemElement>();
+		alternatives.addAll(_elementsSet.getAlternatives());
+		Set<ProblemElement> criteria = new HashSet<ProblemElement>();
+		criteria.addAll(_elementsSet.getAllCriteria());
+		
+		_aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
+	
+		_decisionMatrix = _aggregationPhase.getDecisionM();
 		
 		return _decisionMatrix;
-	}
-
-	private void aggregateExperts(Alternative alternative, Criterion criterion, AggregationOperator operator, Map<String, List<Double>> weights) {
-		
-		List<Double> globalWeights = new LinkedList<Double>();
-		List<Double> criterionWeights = new LinkedList<Double>();
-		if(weights.size() == 1) {
-			globalWeights = weights.get(null);
-		} else if(weights.size() > 1) {
-			criterionWeights = weights.get(criterion.getCanonicalId());
-		}
-		
-		List<Valuation> valuations = new LinkedList<Valuation>();
-		for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
-			if(vk.getAlternative().equals(alternative) && vk.getCriterion().equals(criterion)) {
-				valuations.add(_valuationsInTwoTuple.get(vk));
-			}
-		}
-
-		Valuation expertsColectiveValuation = null;
-		if(operator instanceof UnweightedAggregationOperator) {
-			expertsColectiveValuation = ((UnweightedAggregationOperator) operator).aggregate(valuations);
-		} else if(operator instanceof WeightedAggregationOperator) {
-			if(!globalWeights.isEmpty()) {
-				expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, globalWeights);
-			} else {
-				expertsColectiveValuation = ((WeightedAggregationOperator) operator).aggregate(valuations, criterionWeights);
-			}
-		}
-		
-		Object[] data = new Object[3];
-		data[0] = alternative;
-		data[1] = criterion;
-		data[2] = expertsColectiveValuation;
-		
-		_decisionMatrix.add(data);
 	}
 	
 	public List<Object[]> calculateIdealSolution() {
@@ -210,10 +197,10 @@ public class SelectionPhase implements IPhaseMethod {
 		for(Criterion c: _elementsSet.getAllCriteria()) {
 			if(!c.hasSubcriteria()) {
 				valuationsByCriterion = new LinkedList<Valuation>();
-				for(Object[] decisionMatrixData: _decisionMatrix) {
-					Criterion decisionMatrixCriterion = (Criterion) decisionMatrixData[1];
+				for(Pair<Alternative, Criterion> pair: _decisionMatrix.keySet()) {
+					Criterion decisionMatrixCriterion = pair.getRight();
 					if(c.equals(decisionMatrixCriterion)) {
-						valuationsByCriterion.add((Valuation) decisionMatrixData[2]);
+						valuationsByCriterion.add(_decisionMatrix.get(pair));
 					}
 				}
 				Valuation idealSolutionValuation = ((UnweightedAggregationOperator) max).aggregate(valuationsByCriterion);
@@ -238,10 +225,10 @@ public class SelectionPhase implements IPhaseMethod {
 		for(Criterion c: _elementsSet.getAllCriteria()) {
 			if(!c.hasSubcriteria()) {
 				valuationsByCriterion = new LinkedList<Valuation>();
-				for(Object[] decisionMatrixData: _decisionMatrix) {
-					Criterion decisionMatrixCriterion = (Criterion) decisionMatrixData[1];
+				for(Pair<Alternative, Criterion> pair: _decisionMatrix.keySet()) {
+					Criterion decisionMatrixCriterion = pair.getRight();
 					if(c.equals(decisionMatrixCriterion)) {
-						valuationsByCriterion.add((Valuation) decisionMatrixData[2]);
+						valuationsByCriterion.add(_decisionMatrix.get(pair));
 					}
 				}
 				
@@ -263,15 +250,15 @@ public class SelectionPhase implements IPhaseMethod {
 		
 		_idealDistanceByCriteria.clear();
 		
-		Alternative alternative = (Alternative) _decisionMatrix.get(0)[0];
-		for(Object[] decisionMatrixData: _decisionMatrix) {
+		Alternative alternative = _elementsSet.getAlternatives().get(0);
+		for(Pair<Alternative, Criterion> pair: _decisionMatrix.keySet()) {
 			beta = 0;
-			if(!alternative.equals( decisionMatrixData[0])) {
+			if(!alternative.equals(pair.getLeft())) {
 				numWeight = 0;
 			}
-			TwoTuple colectiveExpertsValuation = (TwoTuple) ((TwoTuple) decisionMatrixData[2]).clone();
+			TwoTuple colectiveExpertsValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair)).clone();
 			for(Object[] idealSolutionData: _idealSolution) {
-				if(((Criterion) decisionMatrixData[1]).equals(idealSolutionData[0])) {
+				if(pair.getRight().equals(idealSolutionData[0])) {
 					TwoTuple idealValuation = (TwoTuple) ((TwoTuple) idealSolutionData[1]).clone();
 					
 					if(weights == null) {
@@ -282,8 +269,8 @@ public class SelectionPhase implements IPhaseMethod {
 					}
 
 					Object[] dataDistance = new Object[3];
-					dataDistance[0] = (Alternative) decisionMatrixData[0];
-					dataDistance[1] = (Criterion) decisionMatrixData[1];
+					dataDistance[0] = pair.getLeft();
+					dataDistance[1] = pair.getRight();
 					dataDistance[2] = beta;
 					_idealDistanceByCriteria.add(dataDistance);
  				}
@@ -304,11 +291,11 @@ public class SelectionPhase implements IPhaseMethod {
 		for(Alternative a: _elementsSet.getAlternatives()) {
 			beta = 0;
 			numWeight = 0;
-			for(Object[] decisionMatrixData: _decisionMatrix) {
-				if(decisionMatrixData[0].equals(a)) {
+			for(Pair<Alternative, Criterion> pair: _decisionMatrix.keySet()) {
+				if(pair.getLeft().equals(a)) {
 					for(Object[] idealSolutionData: _idealSolution) {
-						if(decisionMatrixData[1].equals(idealSolutionData[0])) {
-							TwoTuple expertsColectiveValuation = (TwoTuple) ((TwoTuple) decisionMatrixData[2]).clone();
+						if(pair.getRight().equals(idealSolutionData[0])) {
+							TwoTuple expertsColectiveValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair)).clone();
 							TwoTuple idealSolutionValuation = (TwoTuple) ((TwoTuple) idealSolutionData[1]).clone();
 							if(weights == null) {
 								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta() - idealSolutionValuation.calculateInverseDelta());	
@@ -333,15 +320,15 @@ public class SelectionPhase implements IPhaseMethod {
 		
 		_noIdealDistanceByCriteria.clear();
 		
-		Alternative alternative = (Alternative) _decisionMatrix.get(0)[0];
-		for(Object[] decisionMatrixData: _decisionMatrix) {
+		Alternative alternative = _elementsSet.getAlternatives().get(0);
+		for(Pair<Alternative, Criterion> pair: _decisionMatrix.keySet()) {
 			beta = 0;
-			if(!alternative.equals( decisionMatrixData[0])) {
+			if(!alternative.equals(pair.getLeft())) {
 				numWeight = 0;
 			}
-			TwoTuple colectiveExpertsValuation = (TwoTuple) ((TwoTuple) decisionMatrixData[2]).clone();
+			TwoTuple colectiveExpertsValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair)).clone();
 			for(Object[] noIdealSolutionData: _noIdealSolution) {
-				if(((Criterion) decisionMatrixData[1]).equals(noIdealSolutionData[0])) {
+				if(pair.getRight().equals(noIdealSolutionData[0])) {
 					TwoTuple noIdealValuation = (TwoTuple) ((TwoTuple) noIdealSolutionData[1]).clone();
 					
 					if(weights == null) {
@@ -352,8 +339,8 @@ public class SelectionPhase implements IPhaseMethod {
 					}
 
 					Object[] dataDistance = new Object[3];
-					dataDistance[0] = (Alternative) decisionMatrixData[0];
-					dataDistance[1] = (Criterion) decisionMatrixData[1];
+					dataDistance[0] = pair.getLeft();
+					dataDistance[1] = pair.getRight();
 					dataDistance[2] = beta;
 					_noIdealDistanceByCriteria.add(dataDistance);
  				}
@@ -374,11 +361,11 @@ public class SelectionPhase implements IPhaseMethod {
 		for(Alternative a: _elementsSet.getAlternatives()) {
 			beta = 0;
 			numWeight = 0;
-			for(Object[] decisionMatrixData: _decisionMatrix) {
-				if(decisionMatrixData[0].equals(a)) {
+			for(Pair<Alternative, Criterion> pair: _decisionMatrix.keySet()) {
+				if(pair.getLeft().equals(a)) {
 					for(Object[] noIdealSolutionData: _noIdealSolution) {
-						if(decisionMatrixData[1].equals(noIdealSolutionData[0])) {
-							TwoTuple expertsColectiveValuation = (TwoTuple) ((TwoTuple) decisionMatrixData[2]).clone();
+						if(pair.getRight().equals(noIdealSolutionData[0])) {
+							TwoTuple expertsColectiveValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair)).clone();
 							TwoTuple noIdealSolutionValuation = (TwoTuple) ((TwoTuple) noIdealSolutionData[1]).clone();
 							if(weights == null) {
 								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta() - noIdealSolutionValuation.calculateInverseDelta());
