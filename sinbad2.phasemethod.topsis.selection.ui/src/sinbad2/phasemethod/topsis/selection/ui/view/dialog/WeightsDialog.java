@@ -54,6 +54,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 	private int _type;
 	private String _title;
 	private Map<String, List<Double>> _weights;
+	private Map<ProblemElement, List<Double>> _problemElementWeights;
 	private List<ProblemElement> _primary;
 	private ProblemElement[] _secondary;
 	private int _rows;
@@ -150,12 +151,14 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 
 			if(_weights == null) {
 				_weights = new HashMap<String, List<Double>>();
+				_problemElementWeights = new HashMap<ProblemElement, List<Double>>();
 
 				auxWeights = new LinkedList<Double>();
 				for (int i = 0; i < _primary.size(); i++) {
 					auxWeights.add(new Double(0));
 				}
 				_weights.put(null, auxWeights);
+				_problemElementWeights.put(null, auxWeights);
 				_sumGeneral = 0;
 
 				for(int i = 0; i < _rows; i++) {
@@ -164,6 +167,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 						auxWeights.add(new Double(0));
 					}
 					_weights.put(_secondary[i].getCanonicalId(), auxWeights);
+					_problemElementWeights.put(_secondary[i], auxWeights);
 					_sums[i] = 0;
 				}
 
@@ -183,6 +187,7 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 							auxWeights.add(new Double(0));
 						}
 						_weights.put(_secondary[i].getCanonicalId(), auxWeights);
+						_problemElementWeights.put(_secondary[i], auxWeights);
 						_sums[i] = 0;
 					} else {
 						for(Double weight : auxWeights) {
@@ -586,6 +591,19 @@ public class WeightsDialog extends Dialog implements PropertyChangeListener {
 		return result;
 	}
 
+	public Map<ProblemElement, List<Double>> getProblemElementWeights() {
+		Map<ProblemElement, List<Double>> result;
+
+		if(_generalSelection) {
+			result = new HashMap<ProblemElement, List<Double>>();
+			result.put(null, _problemElementWeights.get(null));
+		} else {
+			result = _problemElementWeights;
+		}
+
+		return result;
+	}
+	
 	@Override
 	protected void buttonPressed(int buttonId) {
 		setReturnCode(buttonId);

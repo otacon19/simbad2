@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.core.workspace.Workspace;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
@@ -32,8 +33,10 @@ import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.view.dialog.WeightsDialog;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.DistanceIdealSolutionTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.PositiveNegativeTableViewerContentProvider;
+import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
+import sinbad2.resolutionphase.rating.ui.view.RatingView;
 
-public class CalculateDistances extends ViewPart {
+public class CalculateDistances extends ViewPart implements IStepStateListener {
 	
 	public static final String ID = "flintstones.phasemethod.topsis.selection.ui.view.calculatedistances"; //$NON-NLS-1$
 	
@@ -119,6 +122,8 @@ public class CalculateDistances extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setDistance(_distanceCombo.getItem(_distanceCombo.getSelectionIndex()));
+				
+				notifyStepStateChange();
 			}
 		});
 		
@@ -357,7 +362,7 @@ public class CalculateDistances extends ViewPart {
 					while(i < mapWeights.size()) {
 						List<Double> weightsSameCriterion = new LinkedList<Double>();
 						for(Expert expert: elementsSet.getAllExperts()) {
-							List<Double> expertWeights= mapWeights.get(expert.getId());
+							List<Double> expertWeights= mapWeights.get(expert.getCanonicalId());
 							weightByCriterion = expertWeights.get(i);
 							weightsSameCriterion.add(weightByCriterion);
 						}
@@ -413,5 +418,13 @@ public class CalculateDistances extends ViewPart {
 	public void setFocus() {
 		_distanceCombo.setFocus();
 	}
+
+	@Override
+	public void notifyStepStateChange() {
+		Workspace.getWorkspace().updatePhases();	
+	}
+
+	@Override
+	public void setRatingView(RatingView rating) {}
 
 }

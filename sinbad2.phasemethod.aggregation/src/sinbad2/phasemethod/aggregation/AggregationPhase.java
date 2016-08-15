@@ -252,11 +252,6 @@ public class AggregationPhase implements IPhaseMethod {
 		_numAlternative = 0;
 		_numCriterion = 0;
 		
-		System.out.println("experts weights " + _expertsOperatorsWeights);
-		System.out.println("experts operators " + _expertsOperators);
-		System.out.println("criteria weights " + _criteriaOperatorsWeights);
-		System.out.println("criteria operators " + _criteriaOperators);
-		
 		for (ProblemElement alternative : alternatives) {
 			if (CRITERIA.equals(getAggregateBy())) {
 				_aggregatedValuations.put(alternative, aggregateAlternativeByCriteria(alternative, experts, criteria));
@@ -334,6 +329,7 @@ public class AggregationPhase implements IPhaseMethod {
 
 					if (criterionValuations.size() > 1) {
 						operator = getExpertOperator(expertParent);
+				
 						if (operator instanceof UnweightedAggregationOperator) {
 							Valuation v = ((UnweightedAggregationOperator) operator).aggregate(criterionValuations);
 							alternativeValuations.add(v);

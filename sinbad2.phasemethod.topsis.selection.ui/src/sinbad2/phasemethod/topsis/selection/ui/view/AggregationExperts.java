@@ -493,7 +493,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 		AggregationOperatorsManager aggregationOperatorsManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator aggregationOperator = aggregationOperatorsManager.getAggregationOperator(_operators.get(operator));
 		
-		Map<String, List<Double>> mapWeights = new HashMap<String, List<Double>>();
+		Map<ProblemElement, List<Double>> mapWeights = new HashMap<ProblemElement, List<Double>>();
 		if(aggregationOperator instanceof WeightedAggregationOperator) { 
 			ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 			ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
@@ -504,7 +504,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 			
 			int exitValue = dialog.open();
 			if(exitValue == WeightsDialog.SAVE) {
-				mapWeights = dialog.getWeights();
+				mapWeights = dialog.getProblemElementWeights();
 			} else { 
 				mapWeights = null;
 			}

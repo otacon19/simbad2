@@ -29,7 +29,7 @@ public class TwoTupleOperator {
 			}
 			measures.add(((TwoTuple) valuation).calculateInverseDelta());
 		}
-
+		
 		if (domain != null) {
 			int size = measures.size();
 			for (int i = 0; i < size; i++) {

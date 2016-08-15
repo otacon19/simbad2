@@ -31,44 +31,44 @@ import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
 
 public class SelectionPhase implements IPhaseMethod {
-	
+
 	public static final String ID = "flintstones.phasemethod.topsis.selection"; //$NON-NLS-1$
-	
+
 	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
-	
+
 	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
-	
+
 	private List<Object[]> _idealSolution;
 	private List<Object[]> _noIdealSolution;
-	
+
 	private List<Object[]> _idealDistanceByCriteria;
 	private List<Object[]> _noIdealDistanceByCriteria;
-	
+
 	private List<Object[]> _idealDistanceByAlternatives;
 	private List<Object[]> _noIdealDistanceByAlternatives;
-	
+
 	private List<Object[]> _closenessCoefficient;
-	
+
 	private AggregationPhase _aggregationPhase;
-	
+
 	private ProblemElementsSet _elementsSet;
-	
-	 private static class CoefficientComparator implements Comparator<Object[]> {
-	     public int compare(Object[] cd1, Object[] cd2) {
-	         double coefficient1 = (double) cd1[3];
-	         double coefficient2 = (double) cd2[3];
-	         
-	         return Double.compare(coefficient2, coefficient1);
-	     }
-	 }
-	
-	public SelectionPhase() {		
+
+	private static class CoefficientComparator implements Comparator<Object[]> {
+		public int compare(Object[] cd1, Object[] cd2) {
+			double coefficient1 = (double) cd1[3];
+			double coefficient2 = (double) cd2[3];
+
+			return Double.compare(coefficient2, coefficient1);
+		}
+	}
+
+	public SelectionPhase() {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
-		
+
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		
+
 		_decisionMatrix = new HashMap<Pair<Alternative, Criterion>, Valuation>();
 		_idealSolution = new LinkedList<Object[]>();
 		_noIdealSolution = new LinkedList<Object[]>();
@@ -77,194 +77,202 @@ public class SelectionPhase implements IPhaseMethod {
 		_idealDistanceByAlternatives = new LinkedList<Object[]>();
 		_noIdealDistanceByAlternatives = new LinkedList<Object[]>();
 		_closenessCoefficient = new LinkedList<Object[]>();
-		
+
 		_valuationsInTwoTuple = new HashMap<ValuationKey, Valuation>();
 	}
 
 	public Map<ValuationKey, Valuation> getUnificationValues() {
 		return _valuationsInTwoTuple;
 	}
-	
+
 	public void setUnificationValues(Map<ValuationKey, Valuation> valuationsInTwoTuple) {
 		_valuationsInTwoTuple = valuationsInTwoTuple;
 	}
-	
+
 	public Map<Pair<Alternative, Criterion>, Valuation> getDecisionMatrix() {
 		return _decisionMatrix;
 	}
-	
-	public void setDecisionMatrix(Map<Pair<Alternative, Criterion>, Valuation>  decisionMatrix) {
+
+	public void setDecisionMatrix(Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix) {
 		_decisionMatrix = decisionMatrix;
 	}
-	
+
 	public List<Object[]> getIdealSolution() {
 		return _idealSolution;
 	}
-	
+
 	public void setIdealSolution(List<Object[]> idealSolution) {
 		_idealSolution = idealSolution;
 	}
-	
+
 	public List<Object[]> getNoIdealSolution() {
 		return _noIdealSolution;
 	}
-	
+
 	public void setNoIdealSolution(List<Object[]> noIdealSolution) {
 		_noIdealSolution = noIdealSolution;
 	}
-	
+
 	public List<Object[]> getIdealDistanceByCriteria() {
 		return _idealDistanceByCriteria;
 	}
-	
+
 	public void setIdealDistanceByCriteria(List<Object[]> idealDistance) {
 		_idealDistanceByCriteria = idealDistance;
 	}
-	
+
 	public List<Object[]> getNoIdealDistanceByCriteria() {
 		return _noIdealDistanceByCriteria;
 	}
-	
+
 	public void setNoIdealDistanceByCriteria(List<Object[]> noIdealDistance) {
 		_noIdealDistanceByCriteria = noIdealDistance;
 	}
-	
+
 	public List<Object[]> getIdealDistanceByAlternatives() {
 		return _idealDistanceByAlternatives;
 	}
-	
+
 	public void setIdealDistanceByAlternatives(List<Object[]> idealDistance) {
 		_idealDistanceByAlternatives = idealDistance;
 	}
-	
+
 	public List<Object[]> getNoIdealDistanceByAlternatives() {
 		return _noIdealDistanceByAlternatives;
 	}
-	
+
 	public void setNoIdealDistanceByAlternatives(List<Object[]> noIdealDistance) {
 		_noIdealDistanceByAlternatives = noIdealDistance;
 	}
-	
+
 	public List<Object[]> getClosenessCoeficient() {
 		return _closenessCoefficient;
 	}
-	
+
 	public void setClosenessCoefficient(List<Object[]> closenessCoeficient) {
 		_closenessCoefficient = closenessCoeficient;
 	}
-	
-	public Map<Pair<Alternative, Criterion>, Valuation> calculateDecisionMatrix(AggregationOperator operator, Map<String, List<Double>> weights) {
+
+	public Map<Pair<Alternative, Criterion>, Valuation> calculateDecisionMatrix(AggregationOperator operator, Map<ProblemElement, List<Double>> weights) {
 
 		_aggregationPhase.setUnificationValues(_valuationsInTwoTuple);
-	
-		System.out.println("TODIM " + weights);
-		
-		if(weights.isEmpty()) {
-			_aggregationPhase.setExpertOperator(null, operator, weights);	
-		} else {
-			for(Expert e : _elementsSet.getAllExperts()) {
-				_aggregationPhase.setExpertOperator(e, operator, weights);
-			}
-			
-			List<Double> globalWeights = weights.get(null);
-			Map<ProblemElement, List<Double>> globalMapWeights = new HashMap<ProblemElement, List<Double>>();
-			globalMapWeights.put(null, globalWeights);
-			_aggregationPhase.getExpertsOperatorWeights().put(null, globalMapWeights);
-			
+
+		for (Expert e : _elementsSet.getAllExperts()) {
+			_aggregationPhase.setExpertOperator(e, _aggregationPhase.getExpertOperator(e), weights);
 		}
-		
+
+		_aggregationPhase.setExpertOperator(null, operator, weights);
+
+		if (!weights.isEmpty()) {
+			for (Expert e : _elementsSet.getAllExperts()) {
+				_aggregationPhase.setExpertOperator(e, operator, weights);
+
+				Map<ProblemElement, List<Double>> data = new HashMap<ProblemElement, List<Double>>();
+
+				for (ProblemElement pElement : weights.keySet()) {
+					data.put(pElement, weights.get(pElement));
+				}
+
+				_aggregationPhase.getExpertsOperatorWeights().put(e, data);
+				_aggregationPhase.getExpertsOperatorWeights().put(null, data);
+			}
+		}
+
 		Set<ProblemElement> experts = new HashSet<ProblemElement>();
 		experts.addAll(_elementsSet.getAllExperts());
 		Set<ProblemElement> alternatives = new HashSet<ProblemElement>();
 		alternatives.addAll(_elementsSet.getAlternatives());
 		Set<ProblemElement> criteria = new HashSet<ProblemElement>();
 		criteria.addAll(_elementsSet.getAllCriteria());
-		
+
 		_aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
-	
+
 		_decisionMatrix = _aggregationPhase.getDecisionM();
-		
+
 		return _decisionMatrix;
 	}
-	
+
 	public List<Object[]> calculateIdealSolution() {
 		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator max = aggregationOperatorManager.getAggregationOperator(Max.ID);
-		
+
 		_idealSolution.clear();
-		
-		List<Valuation> valuationsByCriterion;	
-		for(Criterion c: _elementsSet.getAllCriteria()) {
-			if(!c.hasSubcriteria()) {
+
+		List<Valuation> valuationsByCriterion;
+		for (Criterion c : _elementsSet.getAllCriteria()) {
+			if (!c.hasSubcriteria()) {
 				valuationsByCriterion = new LinkedList<Valuation>();
-				for(Pair<Alternative, Criterion> pair: _decisionMatrix.keySet()) {
+				for (Pair<Alternative, Criterion> pair : _decisionMatrix.keySet()) {
 					Criterion decisionMatrixCriterion = pair.getRight();
-					if(c.equals(decisionMatrixCriterion)) {
+					if (c.equals(decisionMatrixCriterion)) {
 						valuationsByCriterion.add(_decisionMatrix.get(pair));
 					}
 				}
-				Valuation idealSolutionValuation = ((UnweightedAggregationOperator) max).aggregate(valuationsByCriterion);
+				Valuation idealSolutionValuation = ((UnweightedAggregationOperator) max)
+						.aggregate(valuationsByCriterion);
 				Object[] idealSolutionData = new Object[2];
 				idealSolutionData[0] = c;
 				idealSolutionData[1] = idealSolutionValuation;
 				_idealSolution.add(idealSolutionData);
 			}
 		}
-		
+
 		return _idealSolution;
-		
+
 	}
 
 	public List<Object[]> calculateNoIdealSolution() {
 		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator min = aggregationOperatorManager.getAggregationOperator(Min.ID);
-		
+
 		_noIdealSolution.clear();
-		
-		List<Valuation> valuationsByCriterion;	
-		for(Criterion c: _elementsSet.getAllCriteria()) {
-			if(!c.hasSubcriteria()) {
+
+		List<Valuation> valuationsByCriterion;
+		for (Criterion c : _elementsSet.getAllCriteria()) {
+			if (!c.hasSubcriteria()) {
 				valuationsByCriterion = new LinkedList<Valuation>();
-				for(Pair<Alternative, Criterion> pair: _decisionMatrix.keySet()) {
+				for (Pair<Alternative, Criterion> pair : _decisionMatrix.keySet()) {
 					Criterion decisionMatrixCriterion = pair.getRight();
-					if(c.equals(decisionMatrixCriterion)) {
+					if (c.equals(decisionMatrixCriterion)) {
 						valuationsByCriterion.add(_decisionMatrix.get(pair));
 					}
 				}
-				
-				Valuation noIdealSolutionValuation = ((UnweightedAggregationOperator) min).aggregate(valuationsByCriterion);
+
+				Valuation noIdealSolutionValuation = ((UnweightedAggregationOperator) min)
+						.aggregate(valuationsByCriterion);
 				Object[] noIdealSolutionData = new Object[2];
 				noIdealSolutionData[0] = c;
 				noIdealSolutionData[1] = noIdealSolutionValuation;
 				_noIdealSolution.add(noIdealSolutionData);
 			}
 		}
-		
-		
-		return _noIdealSolution;	
+
+		return _noIdealSolution;
 	}
-	
+
 	public List<Object[]> calculateIdealEuclideanDistance(List<Double> weights) {
 		double beta;
 		int numWeight = 0;
-		
+
 		_idealDistanceByCriteria.clear();
-		
+
 		Alternative alternative = _elementsSet.getAlternatives().get(0);
-		for(Pair<Alternative, Criterion> pair: _decisionMatrix.keySet()) {
+		for (Pair<Alternative, Criterion> pair : _decisionMatrix.keySet()) {
 			beta = 0;
-			if(!alternative.equals(pair.getLeft())) {
+			if (!alternative.equals(pair.getLeft())) {
 				numWeight = 0;
 			}
 			TwoTuple colectiveExpertsValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair)).clone();
-			for(Object[] idealSolutionData: _idealSolution) {
-				if(pair.getRight().equals(idealSolutionData[0])) {
+			for (Object[] idealSolutionData : _idealSolution) {
+				if (pair.getRight().equals(idealSolutionData[0])) {
 					TwoTuple idealValuation = (TwoTuple) ((TwoTuple) idealSolutionData[1]).clone();
-					
-					if(weights == null) {
-						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta() - idealValuation.calculateInverseDelta());
+
+					if (weights == null) {
+						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta()
+								- idealValuation.calculateInverseDelta());
 					} else {
-						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta() - idealValuation.calculateInverseDelta()) * weights.get(numWeight);
+						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta()
+								- idealValuation.calculateInverseDelta()) * weights.get(numWeight);
 						numWeight++;
 					}
 
@@ -273,40 +281,45 @@ public class SelectionPhase implements IPhaseMethod {
 					dataDistance[1] = pair.getRight();
 					dataDistance[2] = beta;
 					_idealDistanceByCriteria.add(dataDistance);
- 				}
+				}
 			}
 		}
-		
+
 		calculateIdealEuclideanDistanceByAlternatives(weights);
-		
+
 		return _idealDistanceByCriteria;
 	}
-	
+
 	private void calculateIdealEuclideanDistanceByAlternatives(List<Double> weights) {
 		double beta;
 		int numWeight;
-		
+
 		_idealDistanceByAlternatives.clear();
-		
-		for(Alternative a: _elementsSet.getAlternatives()) {
+
+		for (Alternative a : _elementsSet.getAlternatives()) {
 			beta = 0;
 			numWeight = 0;
-			for(Pair<Alternative, Criterion> pair: _decisionMatrix.keySet()) {
-				if(pair.getLeft().equals(a)) {
-					for(Object[] idealSolutionData: _idealSolution) {
-						if(pair.getRight().equals(idealSolutionData[0])) {
-							TwoTuple expertsColectiveValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair)).clone();
+			for (Pair<Alternative, Criterion> pair : _decisionMatrix.keySet()) {
+				if (pair.getLeft().equals(a)) {
+					for (Object[] idealSolutionData : _idealSolution) {
+						if (pair.getRight().equals(idealSolutionData[0])) {
+							TwoTuple expertsColectiveValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair))
+									.clone();
 							TwoTuple idealSolutionValuation = (TwoTuple) ((TwoTuple) idealSolutionData[1]).clone();
-							if(weights == null) {
-								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta() - idealSolutionValuation.calculateInverseDelta());	
+							if (weights == null) {
+								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta()
+										- idealSolutionValuation.calculateInverseDelta());
 							} else {
-								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta() - idealSolutionValuation.calculateInverseDelta()) * weights.get(numWeight);
+								beta += Math
+										.abs(expertsColectiveValuation.calculateInverseDelta()
+												- idealSolutionValuation.calculateInverseDelta())
+										* weights.get(numWeight);
 								numWeight++;
 							}
 						}
 					}
 				}
-			}	
+			}
 			Object[] dataDistance = new Object[2];
 			dataDistance[0] = a;
 			dataDistance[1] = beta;
@@ -314,27 +327,29 @@ public class SelectionPhase implements IPhaseMethod {
 		}
 	}
 
-	public List<Object[]> calculateNoIdealEuclideanDistance(List<Double> weights) {	
+	public List<Object[]> calculateNoIdealEuclideanDistance(List<Double> weights) {
 		double beta;
 		int numWeight = 0;
-		
+
 		_noIdealDistanceByCriteria.clear();
-		
+
 		Alternative alternative = _elementsSet.getAlternatives().get(0);
-		for(Pair<Alternative, Criterion> pair: _decisionMatrix.keySet()) {
+		for (Pair<Alternative, Criterion> pair : _decisionMatrix.keySet()) {
 			beta = 0;
-			if(!alternative.equals(pair.getLeft())) {
+			if (!alternative.equals(pair.getLeft())) {
 				numWeight = 0;
 			}
 			TwoTuple colectiveExpertsValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair)).clone();
-			for(Object[] noIdealSolutionData: _noIdealSolution) {
-				if(pair.getRight().equals(noIdealSolutionData[0])) {
+			for (Object[] noIdealSolutionData : _noIdealSolution) {
+				if (pair.getRight().equals(noIdealSolutionData[0])) {
 					TwoTuple noIdealValuation = (TwoTuple) ((TwoTuple) noIdealSolutionData[1]).clone();
-					
-					if(weights == null) {
-						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta() - noIdealValuation.calculateInverseDelta());
+
+					if (weights == null) {
+						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta()
+								- noIdealValuation.calculateInverseDelta());
 					} else {
-						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta() - noIdealValuation.calculateInverseDelta()) * weights.get(numWeight);
+						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta()
+								- noIdealValuation.calculateInverseDelta()) * weights.get(numWeight);
 						numWeight++;
 					}
 
@@ -343,34 +358,39 @@ public class SelectionPhase implements IPhaseMethod {
 					dataDistance[1] = pair.getRight();
 					dataDistance[2] = beta;
 					_noIdealDistanceByCriteria.add(dataDistance);
- 				}
+				}
 			}
 		}
-		
+
 		calculateNoIdealEuclideanDistanceByAlternatives(weights);
-		
+
 		return _noIdealDistanceByCriteria;
 	}
-	
+
 	private void calculateNoIdealEuclideanDistanceByAlternatives(List<Double> weights) {
 		double beta;
 		int numWeight;
-		
+
 		_noIdealDistanceByAlternatives.clear();
-		
-		for(Alternative a: _elementsSet.getAlternatives()) {
+
+		for (Alternative a : _elementsSet.getAlternatives()) {
 			beta = 0;
 			numWeight = 0;
-			for(Pair<Alternative, Criterion> pair: _decisionMatrix.keySet()) {
-				if(pair.getLeft().equals(a)) {
-					for(Object[] noIdealSolutionData: _noIdealSolution) {
-						if(pair.getRight().equals(noIdealSolutionData[0])) {
-							TwoTuple expertsColectiveValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair)).clone();
+			for (Pair<Alternative, Criterion> pair : _decisionMatrix.keySet()) {
+				if (pair.getLeft().equals(a)) {
+					for (Object[] noIdealSolutionData : _noIdealSolution) {
+						if (pair.getRight().equals(noIdealSolutionData[0])) {
+							TwoTuple expertsColectiveValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair))
+									.clone();
 							TwoTuple noIdealSolutionValuation = (TwoTuple) ((TwoTuple) noIdealSolutionData[1]).clone();
-							if(weights == null) {
-								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta() - noIdealSolutionValuation.calculateInverseDelta());
+							if (weights == null) {
+								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta()
+										- noIdealSolutionValuation.calculateInverseDelta());
 							} else {
-								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta() - noIdealSolutionValuation.calculateInverseDelta()) * weights.get(numWeight);
+								beta += Math
+										.abs(expertsColectiveValuation.calculateInverseDelta()
+												- noIdealSolutionValuation.calculateInverseDelta())
+										* weights.get(numWeight);
 								numWeight++;
 							}
 						}
@@ -382,21 +402,21 @@ public class SelectionPhase implements IPhaseMethod {
 			dataDistance[1] = beta;
 			_noIdealDistanceByAlternatives.add(dataDistance);
 		}
-		
+
 	}
-	
+
 	public List<Object[]> calculateClosenessCoefficient() {
-		
+
 		_closenessCoefficient.clear();
-		
-		for(int i = 0; i < _idealDistanceByAlternatives.size(); ++i) {
+
+		for (int i = 0; i < _idealDistanceByAlternatives.size(); ++i) {
 			Object[] dataIdealAlternative = _idealDistanceByAlternatives.get(i);
 			Object[] dataNoIdealAlternative = _noIdealDistanceByAlternatives.get(i);
 			double ideal = (double) dataIdealAlternative[1];
 			double noIdeal = (double) dataNoIdealAlternative[1];
-			
+
 			double coefficient = noIdeal / (ideal + noIdeal);
-			
+
 			Object[] coefficientData = new Object[5];
 			coefficientData[1] = dataIdealAlternative[0];
 			coefficientData[2] = dataIdealAlternative[1];
@@ -404,19 +424,18 @@ public class SelectionPhase implements IPhaseMethod {
 			coefficientData[4] = coefficient;
 			_closenessCoefficient.add(coefficientData);
 		}
-		
+
 		Collections.sort(_closenessCoefficient, new CoefficientComparator());
-		
+
 		int ranking = 1;
-		for(Object[] coefficientData: _closenessCoefficient) {
+		for (Object[] coefficientData : _closenessCoefficient) {
 			coefficientData[0] = Integer.toString(ranking);
 			ranking++;
 		}
-		
+
 		return _closenessCoefficient;
 	}
-	
-	
+
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new SelectionPhase();
@@ -425,9 +444,9 @@ public class SelectionPhase implements IPhaseMethod {
 	@Override
 	public void copyData(IPhaseMethod iPhaseMethod) {
 		SelectionPhase selectionPhase = (SelectionPhase) iPhaseMethod;
-		
+
 		clear();
-		
+
 		_decisionMatrix = selectionPhase.getDecisionMatrix();
 		_valuationsInTwoTuple = selectionPhase.getUnificationValues();
 		_idealSolution = selectionPhase.getIdealSolution();
@@ -440,26 +459,27 @@ public class SelectionPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void activate() {}
+	public void activate() {
+	}
 
 	@Override
 	public boolean validate() {
-		
+
 		if (_elementsSet.getExperts().isEmpty()) {
 			return false;
 		}
-		
-		if(_elementsSet.getAlternatives().isEmpty()) {
+
+		if (_elementsSet.getAlternatives().isEmpty()) {
 			return false;
 		}
-		
-		if(_elementsSet.getCriteria().isEmpty()) {
+
+		if (_elementsSet.getCriteria().isEmpty()) {
 			return false;
 		}
 
 		return true;
 	}
-	
+
 	@Override
 	public IPhaseMethod clone() {
 		SelectionPhase result = null;
@@ -472,7 +492,7 @@ public class SelectionPhase implements IPhaseMethod {
 
 		return result;
 	}
-	
+
 	@Override
 	public void clear() {
 		_decisionMatrix.clear();
@@ -488,7 +508,7 @@ public class SelectionPhase implements IPhaseMethod {
 
 	@Override
 	public void notifyPhaseMethodStateChange(PhaseMethodStateChangeEvent event) {
-		if(event.getChange().equals(EPhaseMethodStateChange.ACTIVATED)) {
+		if (event.getChange().equals(EPhaseMethodStateChange.ACTIVATED)) {
 			activate();
 		}
 	}
