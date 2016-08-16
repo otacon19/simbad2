@@ -3,11 +3,9 @@ package sinbad2.phasemethod.topsis.selection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.AggregationOperatorsManager;
@@ -15,12 +13,10 @@ import sinbad2.aggregationoperator.UnweightedAggregationOperator;
 import sinbad2.aggregationoperator.max.Max;
 import sinbad2.aggregationoperator.min.Min;
 import sinbad2.core.utils.Pair;
-import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
-import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
@@ -35,7 +31,7 @@ public class SelectionPhase implements IPhaseMethod {
 	public static final String ID = "flintstones.phasemethod.topsis.selection"; //$NON-NLS-1$
 
 	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
-
+	
 	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
 
 	private List<Object[]> _idealSolution;
@@ -88,7 +84,7 @@ public class SelectionPhase implements IPhaseMethod {
 	public void setUnificationValues(Map<ValuationKey, Valuation> valuationsInTwoTuple) {
 		_valuationsInTwoTuple = valuationsInTwoTuple;
 	}
-
+	
 	public Map<Pair<Alternative, Criterion>, Valuation> getDecisionMatrix() {
 		return _decisionMatrix;
 	}
@@ -153,42 +149,10 @@ public class SelectionPhase implements IPhaseMethod {
 		_closenessCoefficient = closenessCoeficient;
 	}
 
-	public Map<Pair<Alternative, Criterion>, Valuation> calculateDecisionMatrix(AggregationOperator operator, Map<ProblemElement, List<Double>> weights) {
+	public Map<Pair<Alternative, Criterion>, Valuation> calculateDecisionMatrix() {
 
-		_aggregationPhase.setUnificationValues(_valuationsInTwoTuple);
-
-		for (Expert e : _elementsSet.getAllExperts()) {
-			_aggregationPhase.setExpertOperator(e, _aggregationPhase.getExpertOperator(e), weights);
-		}
-
-		_aggregationPhase.setExpertOperator(null, operator, weights);
-
-		if (!weights.isEmpty()) {
-			for (Expert e : _elementsSet.getAllExperts()) {
-				_aggregationPhase.setExpertOperator(e, operator, weights);
-
-				Map<ProblemElement, List<Double>> data = new HashMap<ProblemElement, List<Double>>();
-
-				for (ProblemElement pElement : weights.keySet()) {
-					data.put(pElement, weights.get(pElement));
-				}
-
-				_aggregationPhase.getExpertsOperatorWeights().put(e, data);
-				_aggregationPhase.getExpertsOperatorWeights().put(null, data);
-			}
-		}
-
-		Set<ProblemElement> experts = new HashSet<ProblemElement>();
-		experts.addAll(_elementsSet.getAllExperts());
-		Set<ProblemElement> alternatives = new HashSet<ProblemElement>();
-		alternatives.addAll(_elementsSet.getAlternatives());
-		Set<ProblemElement> criteria = new HashSet<ProblemElement>();
-		criteria.addAll(_elementsSet.getAllCriteria());
-
-		_aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
-
-		_decisionMatrix = _aggregationPhase.getDecisionM();
-
+		_decisionMatrix = _aggregationPhase.getDecisionMatrix();
+		
 		return _decisionMatrix;
 	}
 
@@ -208,8 +172,7 @@ public class SelectionPhase implements IPhaseMethod {
 						valuationsByCriterion.add(_decisionMatrix.get(pair));
 					}
 				}
-				Valuation idealSolutionValuation = ((UnweightedAggregationOperator) max)
-						.aggregate(valuationsByCriterion);
+				Valuation idealSolutionValuation = ((UnweightedAggregationOperator) max).aggregate(valuationsByCriterion);
 				Object[] idealSolutionData = new Object[2];
 				idealSolutionData[0] = c;
 				idealSolutionData[1] = idealSolutionValuation;
@@ -238,8 +201,7 @@ public class SelectionPhase implements IPhaseMethod {
 					}
 				}
 
-				Valuation noIdealSolutionValuation = ((UnweightedAggregationOperator) min)
-						.aggregate(valuationsByCriterion);
+				Valuation noIdealSolutionValuation = ((UnweightedAggregationOperator) min).aggregate(valuationsByCriterion);
 				Object[] noIdealSolutionData = new Object[2];
 				noIdealSolutionData[0] = c;
 				noIdealSolutionData[1] = noIdealSolutionValuation;

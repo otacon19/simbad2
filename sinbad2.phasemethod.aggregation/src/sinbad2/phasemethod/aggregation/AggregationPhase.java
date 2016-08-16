@@ -47,11 +47,8 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	private Map<ValuationKey, Valuation> _unifiedValuations;
 	private Map<ProblemElement, Valuation> _aggregatedValuations;
-	private Map<Pair<Alternative, Criterion>, Valuation> _decisionM;
-	
-	private double[][] _decisionMatrix;
-	private int _numCriterion;
-	private int _numAlternative;
+	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
+
 	private String _aggregateBy;
 	private Domain _unifiedDomain;
 	
@@ -71,7 +68,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_expertsOperatorsWeights = new HashMap<ProblemElement, Object>();
 		_criteriaOperatorsWeights = new HashMap<ProblemElement, Object>();
 
-		_decisionM = new HashMap<Pair<Alternative, Criterion>, Valuation>();
+		_decisionMatrix = new HashMap<Pair<Alternative, Criterion>, Valuation>();
 		
 		_unifiedValuations = new HashMap<ValuationKey, Valuation>();
 				
@@ -136,12 +133,12 @@ public class AggregationPhase implements IPhaseMethod {
 		_criteriaOperatorsWeights = criteriaOperatorWeights;
 	}
 	
-	public double[][] getDecisionMatrix() {
+	public Map<Pair<Alternative, Criterion>, Valuation> getDecisionMatrix() {
 		return _decisionMatrix;
 	}
 	
-	public Map<Pair<Alternative, Criterion>, Valuation> getDecisionM() {
-		return _decisionM;
+	public void setDecisionMatrix(Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix) {
+		_decisionMatrix = decisionMatrix;
 	}
 	
 	public ProblemElement[] setExpertOperator(ProblemElement expert, AggregationOperator operator, Object weights) {
@@ -248,19 +245,13 @@ public class AggregationPhase implements IPhaseMethod {
 	public Map<ProblemElement, Valuation> aggregateAlternatives(Set<ProblemElement> experts, Set<ProblemElement> alternatives, Set<ProblemElement> criteria) {
 		_aggregatedValuations = new HashMap<ProblemElement, Valuation>();
 		
-		_decisionMatrix = new double[criteria.size()][alternatives.size()];
-		_numAlternative = 0;
-		_numCriterion = 0;
+		_decisionMatrix.clear();
 		
 		for (ProblemElement alternative : alternatives) {
 			if (CRITERIA.equals(getAggregateBy())) {
 				_aggregatedValuations.put(alternative, aggregateAlternativeByCriteria(alternative, experts, criteria));
-				_numAlternative++;
-				_numCriterion = 0;
 			} else {
 				_aggregatedValuations.put(alternative, aggregateAlternativeByExperts(alternative, experts, criteria));
-				_numAlternative++;
-				_numCriterion = 0;
 			}
 		}
 		
@@ -333,13 +324,9 @@ public class AggregationPhase implements IPhaseMethod {
 						if (operator instanceof UnweightedAggregationOperator) {
 							Valuation v = ((UnweightedAggregationOperator) operator).aggregate(criterionValuations);
 							alternativeValuations.add(v);
-							if(v == null) {
-								_decisionMatrix[_numCriterion][_numAlternative] = -1;
-							} else {
-								_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
-								_decisionM.put(new Pair(alternative, criterion), v);
+							if(v != null) {
+								_decisionMatrix.put(new Pair(alternative, criterion), v);
 							}
-							_numCriterion++;
 						} else {
 							aux = getExpertOperatorWeights(expertParent);
 							if(aux instanceof List<?>) {
@@ -358,13 +345,9 @@ public class AggregationPhase implements IPhaseMethod {
 								if(weights != null) {
 									Valuation v = ((WeightedAggregationOperator) operator).aggregate(criterionValuations, weights);
 									alternativeValuations.add(v);
-									if(v == null) {
-										_decisionMatrix[_numCriterion][_numAlternative] = -1;
-									} else {
-										_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) v).calculateInverseDelta();
-										_decisionM.put(new Pair(alternative, criterion), v);
+									if(v != null) {
+										_decisionMatrix.put(new Pair(alternative, criterion), v);
 									}
-									_numCriterion++;
 								} else {
 									alternativeValuations.add(null);
 								}
@@ -372,13 +355,9 @@ public class AggregationPhase implements IPhaseMethod {
 						}
 					} else {
 						alternativeValuations.add(criterionValuations.get(0));
-						if(criterionValuations.get(0) == null) {
-							_decisionMatrix[_numCriterion][_numAlternative] = -1;
-						} else {
-							_decisionMatrix[_numCriterion][_numAlternative] = ((TwoTuple) criterionValuations.get(0)).calculateInverseDelta();
-							_decisionM.put(new Pair(alternative, criterion), criterionValuations.get(0));
+						if(criterionValuations.get(0) != null) {
+							_decisionMatrix.put(new Pair(alternative, criterion), criterionValuations.get(0));
 						}
-						_numCriterion++;
 					}
 				}
 			} else {
@@ -565,6 +544,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_expertsOperators = aggregationPhase.getExpertsOperators();
 		_unifiedValuations = aggregationPhase.getUnificationValues();
 		_unifiedDomain = aggregationPhase.getUnifiedDomain();
+		_decisionMatrix = aggregationPhase.getDecisionMatrix();
 	}
 
 	@Override
@@ -575,6 +555,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_expertsOperators.clear();
 		_unifiedValuations.clear();
 		_unifiedDomain = null;
+		_decisionMatrix.clear();
 		_aggregateBy = "CRITERIA"; //$NON-NLS-1$
 	}
 

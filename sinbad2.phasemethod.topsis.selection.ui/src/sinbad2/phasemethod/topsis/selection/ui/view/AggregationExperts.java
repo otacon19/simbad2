@@ -1,59 +1,35 @@
 package sinbad2.phasemethod.topsis.selection.ui.view;
 
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 
-import sinbad2.aggregationoperator.AggregationOperator;
-import sinbad2.aggregationoperator.AggregationOperatorsManager;
-import sinbad2.aggregationoperator.EAggregationOperatorType;
-import sinbad2.aggregationoperator.WeightedAggregationOperator;
-import sinbad2.core.utils.Pair;
-import sinbad2.element.ProblemElement;
-import sinbad2.element.ProblemElementsManager;
-import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
-import sinbad2.method.ui.MethodsUIManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.Images;
 import sinbad2.phasemethod.topsis.selection.ui.nls.Messages;
-import sinbad2.phasemethod.topsis.selection.ui.view.dialog.WeightsDialog;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.ColectiveValuationsTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.IdealSolutionTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.NoIdealSolutionTableViewerContentProvider;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
-import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class AggregationExperts extends ViewPart implements IStepStateListener {
-
+	
 	public static final String ID = "flintstones.phasemethod.topsis.selection.ui.view.aggregationexperts"; //$NON-NLS-1$
 
 	private Composite _parent;
-	private Composite _aggregationEditorPanel;
-
 	private Combo _aggregationOperatorCombo;
 	
 	private TableViewer _tableViewerIdealSolution;
@@ -66,126 +42,147 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 	
 	private boolean _completed;
 	
-	private Map<String, String> _operators;
-	
 	private RatingView _ratingView;
 	
 	private SelectionPhase _selectionPhase;
-	
-	private static ProblemElement[] getLeafElements(ProblemElement root) {
-		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
-		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
-
-		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		List<Criterion> subcriteria = elementsSet.getAllCriterionSubcriteria((Criterion) root);
-		for(Criterion subcriterion : subcriteria) {
-			if(!subcriterion.hasSubcriteria()) {
-				result.add(subcriterion);
-			} else {
-				ProblemElement[] sub2criteria = getLeafElements(subcriterion);
-				for(ProblemElement sub2criterion : sub2criteria) {
-					result.add(sub2criterion);
-				}
-			}
-		}
-		
-		return result.toArray(new ProblemElement[0]);
-	}
 
 	@Override
 	public void createPartControl(Composite parent) {	
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_selectionPhase = (SelectionPhase) pmm.getPhaseMethod(SelectionPhase.ID).getImplementation();
 		
-		_completed = false;
-		
-		_operators = new HashMap<String, String>();
-		
+		_completed = true;
+
 		_parent = parent;
-
-		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		_parent.setLayoutData(gridData);
-		GridLayout layout = new GridLayout(1, true);
-		layout.horizontalSpacing = 15;
-		layout.verticalSpacing = 15;
-		_parent.setLayout(layout);
-
+		
 		createContent();
 	}
 
 	private void createContent() {
-		_aggregationEditorPanel = new Composite(_parent, SWT.NONE);
+		_parent.setLayout(new GridLayout(3, true));
+		_parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		GridLayout colectiveValuationsLayout = new GridLayout(1, true);
+		Composite colectiveValuationsPanel = new Composite(_parent, SWT.NONE);
+		colectiveValuationsPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		colectiveValuationsPanel.setLayout(colectiveValuationsLayout);
+		
+		Label colectiveValuationsLabel = new Label(colectiveValuationsPanel, SWT.NONE);
+		colectiveValuationsLabel.setText(Messages.AggregationExperts_Colective_valuations);
+		colectiveValuationsLabel.setLayoutData( new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		
+		_tableViewerColectiveValuations = new TableViewer(colectiveValuationsPanel, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		_tableViewerColectiveValuations.getTable().setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_tableViewerColectiveValuations.getTable().setHeaderVisible(true);
+		
+		_colectiveValuationsProvider = new ColectiveValuationsTableViewerContentProvider();
+		_tableViewerColectiveValuations.setContentProvider(_colectiveValuationsProvider);
 
-		GridLayout ratingEditorPanelLayout = new GridLayout(1, false);
-		ratingEditorPanelLayout.marginRight = 0;
-		ratingEditorPanelLayout.verticalSpacing = 0;
-		ratingEditorPanelLayout.marginWidth = 10;
-		ratingEditorPanelLayout.marginHeight = 10;
-		_aggregationEditorPanel.setLayout(ratingEditorPanelLayout);
-		_aggregationEditorPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		GridLayout selectOperatorLayout = new GridLayout(2, false);
-		selectOperatorLayout.marginWidth = 10;
-		selectOperatorLayout.marginHeight = 10;
-		
-		Composite selectOperatorPanel = new Composite(_aggregationEditorPanel, SWT.NONE);
-		GridData gridData = new GridData(SWT.CENTER, SWT.TOP, true, false, 1, 1);
-		selectOperatorPanel.setLayoutData(gridData);
-		selectOperatorPanel.setLayout(selectOperatorLayout);
-		
-		Label selectOperatorLabel = new Label(selectOperatorPanel, SWT.NONE);
-		selectOperatorLabel.setText(Messages.AggregationExperts_Select_operator_for_experts);
-		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1);
-		selectOperatorLabel.setLayoutData(gridData);
-		
-		_aggregationOperatorCombo = new Combo(selectOperatorPanel, SWT.READ_ONLY);
-		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1);
-		_aggregationOperatorCombo.setLayoutData(gridData);
-		_aggregationOperatorCombo.addSelectionListener(new SelectionAdapter() {
+		TableViewerColumn alternativeColumn = new TableViewerColumn(_tableViewerColectiveValuations, SWT.NONE);
+		alternativeColumn.getColumn().setText(Messages.AggregationExperts_Alternative);
+		alternativeColumn.getColumn().setResizable(false);
+		alternativeColumn.getColumn().setMoveable(false);
+		alternativeColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				setOperator(_aggregationOperatorCombo.getItem(_aggregationOperatorCombo.getSelectionIndex()));
-				
-				_completed = true;
-				
-				notifyStepStateChange();
+			public String getText(Object element) {
+				Object[] data = (Object[]) element;
+				return ((Alternative) data[0]).getId();
 			}
 		});
 		
-		fillCombo();
+		TableViewerColumn criterionColumn = new TableViewerColumn(_tableViewerColectiveValuations, SWT.NONE);
+		criterionColumn.getColumn().setText(Messages.AggregationExperts_Criterion);
+		criterionColumn.getColumn().setResizable(false);
+		criterionColumn.getColumn().setMoveable(false);
+		criterionColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				Object[] data = (Object[]) element;
+				return ((Criterion) data[1]).getCanonicalId();
+			}
+		});
 		
-		GridLayout solutionsLayout = new GridLayout(2, true);
-		solutionsLayout.marginWidth = 10;
-		solutionsLayout.marginHeight = 10;
+		TableViewerColumn typeColumn = new TableViewerColumn(_tableViewerColectiveValuations, SWT.NONE);
+		typeColumn.getColumn().setText(Messages.AggregationExperts_Type);
+		typeColumn.getColumn().setResizable(false);
+		typeColumn.getColumn().setMoveable(false);
+		typeColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return ""; //$NON-NLS-1$
+			}
+			
+			@Override
+			public Image getImage(Object element) {
+				Object[] data = (Object[]) element;
+				if(((Criterion) data[1]).getCost()) {
+					return Images.Cost;
+				} else {
+					return Images.Benefit;
+				}
+			}
+		});
 		
-		Composite solutionsPanel = new Composite(_aggregationEditorPanel, SWT.BORDER);
-		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		solutionsPanel.setLayoutData(gridData);
-		solutionsPanel.setLayout(solutionsLayout);
+		TableViewerColumn valuationColumn = new TableViewerColumn(_tableViewerColectiveValuations, SWT.NONE);
+		valuationColumn.getColumn().setText(Messages.AggregationExperts_Colective_valuation);
+		valuationColumn.getColumn().setResizable(false);
+		valuationColumn.getColumn().setMoveable(false);
+		valuationColumn.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				Object[] data = (Object[]) element;
+				TwoTuple valuation = (TwoTuple) data[2];
+
+				String labelName = valuation.getLabel().getName();
+				String alpha = Double.toString(valuation.getAlpha());
+				
+				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$ //$NON-NLS-2$
+					alpha = "0"; //$NON-NLS-1$
+				}
+
+				int size = 4;
+				if(alpha.startsWith("-")) { //$NON-NLS-1$
+					size = 5;
+				}
+				
+				if(alpha.length() > size) {
+					alpha = alpha.substring(0, size);
+				}
+				
+				if(alpha.length() > 1) {
+					if(alpha.endsWith("0")) { //$NON-NLS-1$
+						alpha = alpha.substring(0, size - 1);
+					}
+				}
+				return "(" + labelName + ", " + alpha + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+		});
 		
-		GridLayout idealSolutionLayout = new GridLayout(1, true);
-		idealSolutionLayout.marginWidth = 10;
-		idealSolutionLayout.marginHeight = 10;
+		_colectiveValuationsProvider.setInput(_selectionPhase.calculateDecisionMatrix());
+		_tableViewerColectiveValuations.setInput(_colectiveValuationsProvider.getInput());
 		
-		Composite idealSolutionPanel = new Composite(solutionsPanel, SWT.NONE);
-		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		idealSolutionPanel.setLayoutData(gridData);
-		idealSolutionPanel.setLayout(idealSolutionLayout);
+		criterionColumn.getColumn().pack();
+		alternativeColumn.getColumn().pack();
+		typeColumn.getColumn().pack();
+		valuationColumn.getColumn().pack();
 		
-		Label idealSolutionLabel = new Label(idealSolutionPanel, SWT.NONE);
+		GridLayout idealSolutionValuationsLayout = new GridLayout(1, true);
+		Composite idealSolutionComposite = new Composite(_parent, SWT.NONE);
+		idealSolutionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		idealSolutionComposite.setLayout(idealSolutionValuationsLayout);
+		
+		Label idealSolutionLabel = new Label(idealSolutionComposite, SWT.NONE);
 		idealSolutionLabel.setText(Messages.AggregationExperts_Ideal_solution);
-		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
-		idealSolutionLabel.setLayoutData(gridData);
+		idealSolutionLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		
-		_tableViewerIdealSolution = new TableViewer(idealSolutionPanel, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		_tableViewerIdealSolution.getTable().setLayoutData(gridData);
+		_tableViewerIdealSolution = new TableViewer(idealSolutionComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		_tableViewerIdealSolution.getTable().setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_tableViewerIdealSolution.getTable().setHeaderVisible(true);
 		
 		_idealSolutionProvider = new IdealSolutionTableViewerContentProvider();
 		_tableViewerIdealSolution.setContentProvider(_idealSolutionProvider);
 
-		TableViewerColumn criterionColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
+		criterionColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
 		criterionColumn.getColumn().setText(Messages.AggregationExperts_Criterion);
 		criterionColumn.getColumn().pack();
 		criterionColumn.getColumn().setResizable(false);
@@ -198,7 +195,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 			}
 		});
 		
-		TableViewerColumn typeColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
+		typeColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
 		typeColumn.getColumn().setText(Messages.AggregationExperts_Type);
 		typeColumn.getColumn().pack();
 		typeColumn.getColumn().setResizable(false);
@@ -220,7 +217,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 			}
 		});
 		
-		TableViewerColumn valuationColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
+		valuationColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
 		valuationColumn.getColumn().setText(Messages.AggregationExperts_Valuation);
 		valuationColumn.getColumn().pack();
 		valuationColumn.getColumn().setResizable(false);
@@ -256,23 +253,24 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 			}
 		});
 		
+		_tableViewerIdealSolution.setInput(_selectionPhase.calculateIdealSolution());
+		
+		criterionColumn.getColumn().pack();
+		alternativeColumn.getColumn().pack();
+		typeColumn.getColumn().pack();
+		valuationColumn.getColumn().pack();
+		
 		GridLayout noIdealSolutionLayout = new GridLayout(1, true);
-		noIdealSolutionLayout.marginWidth = 10;
-		noIdealSolutionLayout.marginHeight = 10;
+		Composite noIdealSolutionComposite = new Composite(_parent, SWT.NONE);
+		noIdealSolutionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		noIdealSolutionComposite.setLayout(noIdealSolutionLayout);
 		
-		Composite noIdealSolutionPanel = new Composite(solutionsPanel, SWT.NONE);
-		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		noIdealSolutionPanel.setLayoutData(gridData);
-		noIdealSolutionPanel.setLayout(noIdealSolutionLayout);
-		
-		Label noIdealSolutionLabel = new Label(noIdealSolutionPanel, SWT.NONE);
+		Label noIdealSolutionLabel = new Label(noIdealSolutionComposite, SWT.NONE);
 		noIdealSolutionLabel.setText(Messages.AggregationExperts_No_ideal_solution);
-		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
-		noIdealSolutionLabel.setLayoutData(gridData);
+		noIdealSolutionLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		
-		_tableViewerNoIdealSolution = new TableViewer(noIdealSolutionPanel, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		_tableViewerNoIdealSolution.getTable().setLayoutData(gridData);
+		_tableViewerNoIdealSolution = new TableViewer(noIdealSolutionComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		_tableViewerNoIdealSolution.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_tableViewerNoIdealSolution.getTable().setHeaderVisible(true);
 		
 		_noIdealSolutionProvider = new NoIdealSolutionTableViewerContentProvider();
@@ -349,189 +347,17 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 			}
 		});
 		
-		GridLayout colectiveValuationsLayout = new GridLayout(1, false);
-		colectiveValuationsLayout.marginWidth = 10;
-		colectiveValuationsLayout.marginHeight = 10;
+		_tableViewerNoIdealSolution.setInput(_selectionPhase.calculateNoIdealSolution());
 		
-		Composite colectiveValuationsPanel = new Composite(_aggregationEditorPanel, SWT.NONE);
-		gridData = new GridData(SWT.CENTER, SWT.FILL, true, true, 1, 1);
-		colectiveValuationsPanel.setLayoutData(gridData);
-		colectiveValuationsPanel.setLayout(colectiveValuationsLayout);
-		
-		Label colectiveValuationsLabel = new Label(colectiveValuationsPanel, SWT.NONE);
-		colectiveValuationsLabel.setText(Messages.AggregationExperts_Colective_valuations);
-		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
-		colectiveValuationsLabel.setLayoutData(gridData);
-		
-		_tableViewerColectiveValuations = new TableViewer(colectiveValuationsPanel, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		_tableViewerColectiveValuations.getTable().setLayoutData(gridData);
-		_tableViewerColectiveValuations.getTable().setHeaderVisible(true);
-		
-		_colectiveValuationsProvider = new ColectiveValuationsTableViewerContentProvider();
-		_tableViewerColectiveValuations.setContentProvider(_colectiveValuationsProvider);
-
-		TableViewerColumn alternativeColumn = new TableViewerColumn(_tableViewerColectiveValuations, SWT.NONE);
-		alternativeColumn.getColumn().setText(Messages.AggregationExperts_Alternative);
-		alternativeColumn.getColumn().pack();
-		alternativeColumn.getColumn().setResizable(false);
-		alternativeColumn.getColumn().setMoveable(false);
-		alternativeColumn.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				Object[] data = (Object[]) element;
-				return ((Alternative) data[0]).getId();
-			}
-		});
-		
-		criterionColumn = new TableViewerColumn(_tableViewerColectiveValuations, SWT.NONE);
-		criterionColumn.getColumn().setText(Messages.AggregationExperts_Criterion);
 		criterionColumn.getColumn().pack();
-		criterionColumn.getColumn().setResizable(false);
-		criterionColumn.getColumn().setMoveable(false);
-		criterionColumn.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				Object[] data = (Object[]) element;
-				return ((Criterion) data[1]).getCanonicalId();
-			}
-		});
-		
-		typeColumn = new TableViewerColumn(_tableViewerColectiveValuations, SWT.NONE);
-		typeColumn.getColumn().setText(Messages.AggregationExperts_Type);
+		alternativeColumn.getColumn().pack();
 		typeColumn.getColumn().pack();
-		typeColumn.getColumn().setResizable(false);
-		typeColumn.getColumn().setMoveable(false);
-		typeColumn.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				return ""; //$NON-NLS-1$
-			}
-			
-			@Override
-			public Image getImage(Object element) {
-				Object[] data = (Object[]) element;
-				if(((Criterion) data[1]).getCost()) {
-					return Images.Cost;
-				} else {
-					return Images.Benefit;
-				}
-			}
-		});
-		
-		valuationColumn = new TableViewerColumn(_tableViewerColectiveValuations, SWT.NONE);
-		valuationColumn.getColumn().setText(Messages.AggregationExperts_Colective_valuation);
 		valuationColumn.getColumn().pack();
-		valuationColumn.getColumn().setResizable(false);
-		valuationColumn.getColumn().setMoveable(false);
-		valuationColumn.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				Object[] data = (Object[]) element;
-				TwoTuple valuation = (TwoTuple) data[2];
-
-				String labelName = valuation.getLabel().getName();
-				String alpha = Double.toString(valuation.getAlpha());
-				
-				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$ //$NON-NLS-2$
-					alpha = "0"; //$NON-NLS-1$
-				}
-
-				int size = 4;
-				if(alpha.startsWith("-")) { //$NON-NLS-1$
-					size = 5;
-				}
-				
-				if(alpha.length() > size) {
-					alpha = alpha.substring(0, size);
-				}
-				
-				if(alpha.length() > 1) {
-					if(alpha.endsWith("0")) { //$NON-NLS-1$
-						alpha = alpha.substring(0, size - 1);
-					}
-				}
-				return "(" + labelName + ", " + alpha + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			}
-		});
-		
-	}
-
-	private void fillCombo() {
-		AggregationOperatorsManager aggregationOperatorsManager = AggregationOperatorsManager.getInstance();
-		TreeSet<String> aggregationOperatorsIds = new TreeSet<String>();
-		MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();	
-		Set<EAggregationOperatorType> operatorsTypes = methodsUIManager.getActivateMethodUI().getMethod().getAggregationTypesSupported();
-
-		String[] operatorsIds;
-		for(EAggregationOperatorType operatorType: operatorsTypes) {
-			operatorsIds = aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
-			for(String operator: operatorsIds) {
-				aggregationOperatorsIds.add(operator);
-			}
-		}
-		
-		List<String> aggregationOperatorsNames = new LinkedList<String>();
-		AggregationOperator operator;
-		for(int i = 0; i < aggregationOperatorsIds.size(); i++) {
-			operator = aggregationOperatorsManager.getAggregationOperator((String) aggregationOperatorsIds.toArray()[i]);
-			String name = ""; //$NON-NLS-1$
-			if (operator instanceof WeightedAggregationOperator) {
-				name = "(W) " + aggregationOperatorsManager.getAggregationOperator((String) aggregationOperatorsIds.toArray()[i]).getName(); //$NON-NLS-1$
-				aggregationOperatorsNames.add(name);
-			} else {
-				name = aggregationOperatorsManager.getAggregationOperator((String) aggregationOperatorsIds.toArray()[i]).getName();
-				aggregationOperatorsNames.add(name);
-			}
-			_operators.put(name, aggregationOperatorsIds.toArray(new String[0])[i]);
-		}
-		
-		_aggregationOperatorCombo.setItems(aggregationOperatorsNames.toArray(new String[0]));
-	}
-
-	private void setOperator(String operator) {
-		AggregationOperatorsManager aggregationOperatorsManager = AggregationOperatorsManager.getInstance();
-		AggregationOperator aggregationOperator = aggregationOperatorsManager.getAggregationOperator(_operators.get(operator));
-		
-		Map<ProblemElement, List<Double>> mapWeights = new HashMap<ProblemElement, List<Double>>();
-		if(aggregationOperator instanceof WeightedAggregationOperator) { 
-			ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
-			ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
-			
-			ProblemElement nullElement = null;
-			ProblemElement[] secondary = getLeafElements(nullElement);
-			WeightsDialog dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren(null), secondary, null, 1, Messages.AggregationExperts_Expert, Messages.AggregationExperts_All_experts);
-			
-			int exitValue = dialog.open();
-			if(exitValue == WeightsDialog.SAVE) {
-				mapWeights = dialog.getProblemElementWeights();
-			} else { 
-				mapWeights = null;
-			}
-		}
-		
-		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix = _selectionPhase.calculateDecisionMatrix(aggregationOperator, mapWeights);
-		_colectiveValuationsProvider.setInput(decisionMatrix);
-		_tableViewerColectiveValuations.setInput(_colectiveValuationsProvider.getInput());
-		
-		List<Object[]> idealSolution = _selectionPhase.calculateIdealSolution();
-		_idealSolutionProvider.setInput(idealSolution);
-		_tableViewerIdealSolution.setInput(_idealSolutionProvider.getInput());
-		
-		List<Object[]> noIdealSolution = _selectionPhase.calculateNoIdealSolution();
-		_noIdealSolutionProvider.setInput(noIdealSolution);
-		_tableViewerNoIdealSolution.setInput(_noIdealSolutionProvider.getInput());
-		
-		_tableViewerColectiveValuations.getTable().getColumn(3).pack();
-		_tableViewerIdealSolution.getTable().getColumn(0).pack();
-		_tableViewerNoIdealSolution.getTable().getColumn(0).pack();
-		_tableViewerIdealSolution.getTable().getColumn(2).pack();
-		_tableViewerNoIdealSolution.getTable().getColumn(2).pack();
 	}
 	
 	@Override
 	public String getPartName() {
-		return Messages.AggregationExperts_Aggregation_experts;
+		return Messages.AggregationExperts_Calculate_solutions;
 	}
 	
 	@Override
@@ -550,5 +376,7 @@ public class AggregationExperts extends ViewPart implements IStepStateListener {
 	@Override
 	public void setRatingView(RatingView rating) {
 		_ratingView = rating;
+		
+		notifyStepStateChange();
 	}
 }

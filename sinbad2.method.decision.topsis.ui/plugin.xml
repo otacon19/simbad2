@@ -11,6 +11,9 @@
                id="flintstones.phasemethod.topsis.unification.ui">
          </ui>
          <ui
+               id="flintstones.phasemethod.aggregation.ui">
+         </ui>
+         <ui
                id="flintstones.phasemethod.topsis.selection.ui">
          </ui>
       </method_ui>

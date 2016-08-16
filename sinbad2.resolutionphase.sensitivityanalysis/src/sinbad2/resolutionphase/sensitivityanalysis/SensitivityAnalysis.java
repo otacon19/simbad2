@@ -1,6 +1,7 @@
 package sinbad2.resolutionphase.sensitivityanalysis;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.core.utils.Pair;
 import sinbad2.core.workspace.WorkspaceContentPersistenceException;
 import sinbad2.domain.Domain;
 import sinbad2.element.ProblemElement;
@@ -27,6 +29,8 @@ import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.resolutionphase.io.XMLWriter;
 import sinbad2.resolutionphase.state.EResolutionPhaseStateChange;
 import sinbad2.resolutionphase.state.ResolutionPhaseStateChangeEvent;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class SensitivityAnalysis implements IResolutionPhase {
 
@@ -224,22 +228,22 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_numberOfCriteria = _elementsSet.getAllSubcriteria().size();
 		_aplicatedWeights = false;
 		
-		if ((_aggregationPhase.getCriteriaOperatorWeights().get(null) != null)) {
+		if ((_aggregationPhase.getCriteriaOperatorWeights().get(null) != null) || _aggregationPhase.getExpertsOperatorWeights().get(null) != null) {
 			if(weights != null) {
-				
 				setOperators(weights);
-				calculateDecisionMatrixNewWeights();	
+				aggregateValuations();	
 				assignWeights(weights);
-				
 			}  else {
+				List<Double> aggregationWeights;
 				if(_aggregationPhase.getCriteriaOperatorWeights().size() == 1) {
-					List<Double> aggregationWeights = ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(null)).get(null);
-					assignWeights(aggregationWeights);
-					
+					aggregationWeights = ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(null)).get(null);
+				} else if(_aggregationPhase.getExpertsOperatorWeights().size() == 1) {
+					aggregationWeights = ((Map<Object, List<Double>>) _aggregationPhase.getExpertsOperatorWeights().get(null)).get(null);
 				} else {
-					List<Double> aggregationWeights = getSubcriteriaWeights();
-					assignWeights(aggregationWeights);
+					aggregationWeights = getSubcriteriaWeights();	
 				}
+				
+				assignWeights(aggregationWeights);
 			}
 			
 			_aplicatedWeights = true;
@@ -271,7 +275,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		}
 	}
 	
-	private void calculateDecisionMatrixNewWeights() {
+	private void aggregateValuations() {
 		Set<ProblemElement> experts = new HashSet<ProblemElement>();
 		experts.addAll(_elementsSet.getAllExperts());
 		Set<ProblemElement> alternatives = new HashSet<ProblemElement>();
@@ -291,18 +295,39 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	
 	@SuppressWarnings("unchecked")
 	private List<Double> getSubcriteriaWeights() {
-		List<Double> globalWeights = ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(null)).get(null);
+		boolean aggregateByCriteria = true;
+		List<Double> globalWeights = new LinkedList<Double>();
+		Map<ProblemElement, Object> elementWeights = new HashMap<ProblemElement, Object>();
+		
+		if(!_aggregationPhase.getCriteriaOperatorWeights().isEmpty()) {
+			elementWeights = _aggregationPhase.getCriteriaOperatorWeights();
+			globalWeights = ((Map<Object, List<Double>>) elementWeights.get(null)).get(null);
+		} else if(!_aggregationPhase.getExpertsOperatorWeights().isEmpty()) {
+			elementWeights = _aggregationPhase.getExpertsOperatorWeights();
+			globalWeights = ((Map<Object, List<Double>>) elementWeights.get(null)).get(null);
+			aggregateByCriteria = false;
+		}
+
+		if(aggregateByCriteria) {
+			return calculateWeightsSubcriteria(globalWeights, elementWeights);
+		} else {
+			return calculateWeightsExperts(globalWeights, elementWeights);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Double> calculateWeightsSubcriteria(List<Double> globalWeights, Map<ProblemElement, Object> elementWeights) {
 		List<Double> subcriteriaWeights = new LinkedList<Double>();
-	
 		int numC = -1, cont = 0;
 		double result;
+		
 		for(Criterion c: _elementsSet.getCriteria()) {
 			numC++;
 			if(c.hasSubcriteria()) { 
 				for(Criterion sc: c.getSubcriteria()) {
 					result = globalWeights.get(numC);
-					result *= ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(c)).get(null).get(cont);
-					result *= recursiveWeight(sc, cont);
+					result *= ((Map<Object, List<Double>>) elementWeights.get(c)).get(null).get(cont);
+					result *= recursiveWeightCriterion(sc, cont);
 					cont++;
 					
 					subcriteriaWeights.add(Math.round(result * 100d) / 100d);
@@ -312,14 +337,42 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				subcriteriaWeights.add(Math.round(result * 100d) / 100d);
 			}
 		}
+		
 		return subcriteriaWeights;
 	}
-		
+	
 	@SuppressWarnings("unchecked")
-	private double recursiveWeight(Criterion c, int cont) {
+	private List<Double> calculateWeightsExperts(List<Double> globalWeights, Map<ProblemElement, Object> elementWeights) {
+		List<Double> subExpertsWeights = new LinkedList<Double>();
+		int numE = -1, cont = 0;
+		double result;
+		
+		for(Expert e: _elementsSet.getExperts()) {
+			numE++;
+			if(e.hasChildren()) { 
+				for(Expert se: e.getChildren()) {
+					result = globalWeights.get(numE);
+					result *= ((Map<Object, List<Double>>) elementWeights.get(e)).get(null).get(cont);
+					result *= recursiveWeightExpert(se, cont);
+					cont++;
+					
+					subExpertsWeights.add(Math.round(result * 100d) / 100d);
+				}
+			} else {
+				result = globalWeights.get(numE);
+				subExpertsWeights.add(Math.round(result * 100d) / 100d);
+			}
+		}
+		
+		return subExpertsWeights;
+	}
+
+	@SuppressWarnings("unchecked")
+	private double recursiveWeightCriterion(Criterion c, int cont) {
+		
 		if(c.hasSubcriteria()) {
 			for(Criterion sc: c.getSubcriteria()) {
-				recursiveWeight(sc, cont);
+				recursiveWeightCriterion(sc, cont);
 			}
 		}
 		
@@ -330,6 +383,27 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		
 		if(weightsCriterion != null) {
 			return weightsCriterion.get(cont);
+		} else {
+			return 1;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private double recursiveWeightExpert(Expert e, int cont) {
+		
+		if(e.hasChildren()) {
+			for(Expert se: e.getChildren()) {
+				recursiveWeightExpert(se, cont);
+			}
+		}
+		
+		List<Double> weightsExpert = null;
+		if(_aggregationPhase.getCriteriaOperatorWeights().get(e) != null) {
+			weightsExpert = ((Map<Object, List<Double>>) _aggregationPhase.getExpertsOperatorWeights().get(e)).get(null);
+		}
+		
+		if(weightsExpert != null) {
+			return weightsExpert.get(cont);
 		} else {
 			return 1;
 		}
@@ -1243,14 +1317,20 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		notifySensitivityAnalysisChange();
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void copyDecisionMatrix() {
 		_decisionMatrix = new double[_numberOfCriteria][_numberOfAlternatives];
 		
-		double[][] aggregatedValuations = _aggregationPhase.getDecisionMatrix();
-		for(int i = 0; i < _numberOfAlternatives; ++i) {
-			for(int j = 0; j < _numberOfCriteria; ++j) {
-				_decisionMatrix[j][i] = aggregatedValuations[j][i];
+		int i = 0, j = 0;
+		
+		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix = _aggregationPhase.getDecisionMatrix();
+		for(Alternative a: _elementsSet.getAlternatives()) {
+			j = 0;
+			for(Criterion c: _elementsSet.getAllCriteria()) {
+				_decisionMatrix[j][i] = ((TwoTuple) decisionMatrix.get(new Pair(a, c))).calculateInverseDelta();
+				j++;
 			}
+			i++;
 		}
 	}
 	

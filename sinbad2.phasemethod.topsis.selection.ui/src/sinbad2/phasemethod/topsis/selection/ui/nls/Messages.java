@@ -4,7 +4,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sinbad2.phasemethod.topsis.selection.ui.nls.messages"; //$NON-NLS-1$
-	public static String AggregationExperts_Aggregation_experts;
+	public static String AggregationExperts_Calculate_solutions;
 	public static String AggregationExperts_All_experts;
 	public static String AggregationExperts_Alternative;
 	public static String AggregationExperts_Colective_valuation;

@@ -13,6 +13,9 @@
                phase="flintstones.phasemethod.topsis.unification">
          </phasemethod>
          <phasemethod
+               phase="flintstones.phasemethod.aggregation">
+         </phasemethod>
+         <phasemethod
                phase="flintstones.phasemethod.topsis.selection">
          </phasemethod>
          <aggregation_supported

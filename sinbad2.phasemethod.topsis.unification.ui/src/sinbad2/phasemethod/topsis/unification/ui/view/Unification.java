@@ -21,9 +21,10 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.phasemethod.PhasesMethodManager;
-import sinbad2.phasemethod.topsis.selection.SelectionPhase;
+import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.topsis.unification.UnificationPhase;
 import sinbad2.phasemethod.topsis.unification.ui.Images;
 import sinbad2.phasemethod.topsis.unification.ui.comparator.UnificationTreeViewerComparator;
@@ -275,9 +276,10 @@ public class Unification extends ViewPart implements IStepStateListener {
 		compactTable();
 		
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		SelectionPhase selectionPhase = (SelectionPhase) pmm.getPhaseMethod(SelectionPhase.ID).getImplementation();
-		selectionPhase.clear();
-		selectionPhase.setUnificationValues(unifiedValues);
+		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+		aggregationPhase.clear();
+		aggregationPhase.setUnificationValues(unifiedValues);
+		aggregationPhase.setUnifiedDomain((Domain) _domain.clone());
 		
 		if(_completed) {
 			_ratingView.loadNextStep();
