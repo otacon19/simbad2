@@ -8,7 +8,7 @@
             name="%ui.name"
             phasemethod="flintstones.phasemethod.topsis.selection">
          <view
-               step="sinbad2.phasemethod.topsis.selection.ui.view.AggregationExperts">
+               step="sinbad2.phasemethod.topsis.selection.ui.view.CalculateSolutions">
          </view>
          <view
                step="sinbad2.phasemethod.topsis.selection.ui.view.CalculateDistances">
@@ -23,7 +23,7 @@
       </category>
       <view
             category="flintstones.phasemethod.topsis.selection.ui.category"
-            class="sinbad2.phasemethod.topsis.selection.ui.view.AggregationExperts"
+            class="sinbad2.phasemethod.topsis.selection.ui.view.CalculateSolutions"
             id="flintstones.phasemethod.topsis.selection.ui.view.aggregationexperts"
             name="%view.name"
             restorable="true">

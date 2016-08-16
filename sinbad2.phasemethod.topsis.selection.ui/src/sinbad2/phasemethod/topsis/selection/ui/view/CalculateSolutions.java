@@ -25,7 +25,7 @@ import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
-public class AggregationExperts extends ViewPart implements IStepStateListener {
+public class CalculateSolutions extends ViewPart implements IStepStateListener {
 	
 	public static final String ID = "flintstones.phasemethod.topsis.selection.ui.view.aggregationexperts"; //$NON-NLS-1$
 
