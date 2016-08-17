@@ -107,6 +107,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 	}
 
 	protected CellEditor getCellEditor(Object element) {
+		boolean maxMinAvailable = true;
 		
 		if(_aggregationOperatorsIds == null) {
 			
@@ -119,10 +120,21 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 			MethodsUIManager methodsUIManager = MethodsUIManager.getInstance();	
 			Set<EAggregationOperatorType> operatorsTypes = methodsUIManager.getActivateMethodUI().getMethod().getAggregationTypesSupported();
 			String[] operatorsIds;
+			
+			if(operatorsTypes.contains(EAggregationOperatorType.Hesitant) && operatorsTypes.size() > 1){
+				maxMinAvailable = false;
+			}
+			
 			for(EAggregationOperatorType operatorType: operatorsTypes) {
 				operatorsIds = _aggregationOperatorsManager.getAggregationOperatorsIdByType(operatorType);
 				for(String operator: operatorsIds) {
-					aOperatorsIds.add(operator);
+					if(operator.equals("flintstones.aggregationoperator.maxmin")) {
+						if(maxMinAvailable) {
+							aOperatorsIds.add(operator);
+						}
+					} else {
+						aOperatorsIds.add(operator);
+					}
 				}
 			}
 			

@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import sinbad2.core.utils.Pair;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.element.ProblemElementsManager;
@@ -47,7 +48,7 @@ public class ExcelUtil {
 	private List<Alternative> _alternatives;
 	private Map<ValuationKey, Valuation> _unifiedValuations;
 	private List<Double> _expertsWeights;
-	private Valuation[][] _decisionMatrix;
+	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
 
 	private ProblemElementsSet _elementsSet;
 
@@ -101,8 +102,7 @@ public class ExcelUtil {
 		}
 	}
 
-	public void createExcelFileEmergencyProblemStructure(Map<ValuationKey, Valuation> unifiedValuations,
-			List<Double> expertsWeights, Valuation[][] decisionMatrix) {
+	public void createExcelFileEmergencyProblemStructure(Map<ValuationKey, Valuation> unifiedValuations, List<Double> expertsWeights, Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix) {
 
 		_unifiedValuations = unifiedValuations;
 		_expertsWeights = expertsWeights;
@@ -235,6 +235,7 @@ public class ExcelUtil {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createOverallInformation() {
 
 		Row rowOverallOpinion = _sheet.createRow(40);
@@ -242,7 +243,7 @@ public class ExcelUtil {
 		cell.setCellValue("Overall opinion");
 		cell.setCellStyle(_styleTitles);
 
-		int rowCountAlternatives = 41, columnCountValuation = 3, numAlternative = 0;
+		int rowCountAlternatives = 41, columnCountValuation = 3;
 
 		for (Alternative a : _alternatives) {
 
@@ -253,9 +254,9 @@ public class ExcelUtil {
 
 			rowCountAlternatives++;
 
-			for (int c = 0; c < _criteria.size(); ++c) {
+			for (Criterion c: _criteria) {
 
-				TwoTuple v = (TwoTuple) _decisionMatrix[numAlternative][c];
+				TwoTuple v = (TwoTuple) _decisionMatrix.get(new Pair(a, c));
 				LabelLinguisticDomain label = v.getLabel();
 				TrapezoidalFunction semantic = (TrapezoidalFunction) label.getSemantic();
 				double limits[] = semantic.getLimits();
@@ -282,8 +283,6 @@ public class ExcelUtil {
 			}
 
 			columnCountValuation = 3;
-
-			numAlternative++;
 		}
 
 		int columnCountCriterion = 3;

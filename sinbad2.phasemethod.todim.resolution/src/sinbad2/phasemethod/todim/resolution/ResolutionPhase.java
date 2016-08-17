@@ -17,6 +17,7 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
+import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -190,6 +191,11 @@ public class ResolutionPhase implements IPhaseMethod {
 		_decisionMatrix = _aggregationPhase.getDecisionMatrix();
 		
 		return _decisionMatrix;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Double> getExpertsWeights() {
+		return (List<Double>) ((Map<ProblemElement, Object>) _aggregationPhase.getExpertsOperatorWeights().get(null)).get(null);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

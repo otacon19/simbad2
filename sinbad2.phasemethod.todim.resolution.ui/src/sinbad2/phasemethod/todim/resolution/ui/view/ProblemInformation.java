@@ -61,7 +61,7 @@ public class ProblemInformation extends ViewPart implements IStepStateListener {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		
-		_completed = false;
+		_completed = true;
 	}
 	
 	@Override
@@ -128,12 +128,12 @@ public class ProblemInformation extends ViewPart implements IStepStateListener {
 		_excelButton = new Button(buttonsComposite, SWT.NONE);
 		_excelButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1));
 		_excelButton.setImage(Images.Excel);
-		_excelButton.setEnabled(false);
+		_excelButton.setEnabled(true);
 		_excelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ExcelUtil excelUtil = new ExcelUtil();
-				//excelUtil.createExcelFileEmergencyProblemStructure(_aggregationPhase.getValuationsTwoTuple(), _aggregationPhase.getExpertsWeights(), _aggregationPhase.getDecisionMatrix());
+				excelUtil.createExcelFileEmergencyProblemStructure(_resolutionPhase.getValuationsTwoTuple(), _resolutionPhase.getExpertsWeights(), _resolutionPhase.getDecisionMatrix());
 			}
 		});
 		
