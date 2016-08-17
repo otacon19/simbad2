@@ -1,6 +1,6 @@
 package sinbad2.phasemethod.todim.resolution.ui.view.provider;
 
-import java.util.regex.Pattern;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -14,31 +14,34 @@ import de.kupzog.ktable.SWTX;
 import de.kupzog.ktable.editors.KTableCellEditorText;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
+import sinbad2.core.utils.Pair;
+import sinbad2.element.ProblemElementsManager;
+import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.alternative.Alternative;
+import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.todim.resolution.ui.nls.Messages;
-import sinbad2.phasemethod.todim.resolution.ui.view.DecisionMatrixTable;
+import sinbad2.valuation.Valuation;
+import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class DMTableContentProvider extends KTableNoScrollModel {
 	
 	private String[] _alternatives;
 	private String[] _criteria;
-	private Object[][] _values;
-	private Pattern _p;
-	
-	private KTable _table;
+	private Map<Pair<Alternative, Criterion>, Valuation> _values;
 	
 	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
 	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	
-	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria, Object[][] values) {
+	private ProblemElementsSet _elementsSet;
+	
+	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria, Map<Pair<Alternative, Criterion>, Valuation> values) {
 		super(table);
-
-		_table = table;
 		
+		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
+
 		_alternatives = alternatives;
 		_criteria = criteria;
 		_values = values;
-		
-		_p = Pattern.compile(("[(]\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*[)]")); //$NON-NLS-1$
 		
 		initialize();
 
@@ -47,6 +50,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		_fixedRenderersInTable.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Object doGetContentAt(int col, int row) {
 	
@@ -54,18 +58,18 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		
 		try {
 			if(col == 0 && row == 0) {
-				erg = Messages.DMTableContentProvider_Consensus_matrix;
+				erg = Messages.DMTableContentProvider_Decision_matrix;
 			} else if (col == 0) {
 				erg = "A" + row; //$NON-NLS-1$
 			} else if (row == 0) {
 				erg = "C" + col; //$NON-NLS-1$
 			} else {
-				if(_values[row - 1][col - 1] == null) {
+				Alternative a = _elementsSet.getAlternatives().get(row - 1);
+				Criterion c = _elementsSet.getAllCriteria().get(col - 1);
+				if(_values.get(new Pair(a, c)) == null) {
 					erg = ""; //$NON-NLS-1$
-				} else if(_values[row - 1][col - 1] instanceof Double ){
-					erg = Double.toString(((Double) _values[row - 1][col - 1]));
 				} else {
-					erg = _values[row - 1][col - 1];
+					erg = ((TwoTuple) _values.get(new Pair(a, c))).changeFormatValuationToString();
 				}
 			}
 		} catch(Exception e) {
@@ -76,58 +80,15 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	}
 
 	public KTableCellEditor doGetCellEditor(int col, int row) {
-		if(col != 0 && row != 0) {
-			return new KTableCellEditorText();
-		} else {
-			return null;
-		}
+		return new KTableCellEditorText();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void doSetContentAt(int col, int row, Object value) {
-		if(value instanceof Double) {
-			_values[row - 1][col - 1] = (Double) value;
-		} else {
-			boolean format = _p.matcher((String) value).matches(); 
-			String noParenthesis = ((String) value).replace("(", ""); //$NON-NLS-1$ //$NON-NLS-2$
-			noParenthesis = noParenthesis.replace(")", ""); //$NON-NLS-1$ //$NON-NLS-2$
-			String[] limits = noParenthesis.split(","); //$NON-NLS-1$
-			
-			if(format && checkLimits(limits)) {
-				_values[row - 1][col - 1] = (String) value;
-			}
-			
-			if(checkConsensusMatrix()) {
-				((DecisionMatrixTable) _table).setCompleted(true);
-			} else {
-				((DecisionMatrixTable) _table).setCompleted(false);
-			}
-		}
-	}
-
-	private boolean checkLimits(String[] limits) {
-		
-		for(int l1 = 0; l1 < limits.length; ++l1) {
-			for(int l2 = l1 + 1; l2 < limits.length; ++l2) {
-				if(Double.parseDouble(limits[l1]) > Double.parseDouble(limits[l2])) {
-					return false;
-				}
-			}
-		}
-		
-		return true;
-	}
-	
-	private boolean checkConsensusMatrix() {
-		
-		for(int a = 0; a < _alternatives.length; ++a) {
-			for(int c = 0; c < _criteria.length; ++c) {
-				if(!_p.matcher(((String) _values[a][c])).matches()) {
-					return false;
-				}
-			}
-		}
-		return true;
+		Alternative a = _elementsSet.getAlternatives().get(row - 1);
+		Criterion c = _elementsSet.getAllCriteria().get(col - 1);
+		_values.put(new Pair(a, c), (Valuation) value);;
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package sinbad2.phasemethod.todim.resolution.ui.view.provider;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
@@ -13,24 +15,30 @@ import de.kupzog.ktable.editors.KTableCellEditorText;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
 import sinbad2.phasemethod.todim.resolution.ui.nls.Messages;
-import sinbad2.valuation.Valuation;
-import sinbad2.valuation.twoTuple.TwoTuple;
+import sinbad2.phasemethod.todim.resolution.ui.view.DecisionMatrixEditableTable;
 
-public class DMTableContentProvider extends KTableNoScrollModel {
+public class DMEditableTableContentProvider extends KTableNoScrollModel {
 	
 	private String[] _alternatives;
 	private String[] _criteria;
-	private Valuation[][] _values;
+	private Object[][] _values;
+	private Pattern _p;
+	
+	private KTable _table;
 	
 	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
 	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	
-	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria, Valuation[][] values) {
+	public DMEditableTableContentProvider(KTable table, String[] alternatives, String[] criteria, Object[][] values) {
 		super(table);
 
+		_table = table;
+		
 		_alternatives = alternatives;
 		_criteria = criteria;
 		_values = values;
+		
+		_p = Pattern.compile(("[(]\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*[)]")); //$NON-NLS-1$
 		
 		initialize();
 
@@ -46,7 +54,7 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 		
 		try {
 			if(col == 0 && row == 0) {
-				erg = Messages.DMTableContentProvider_Decision_matrix;
+				erg = Messages.DMTableContentProvider_Consensus_matrix;
 			} else if (col == 0) {
 				erg = "A" + row; //$NON-NLS-1$
 			} else if (row == 0) {
@@ -54,8 +62,10 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 			} else {
 				if(_values[row - 1][col - 1] == null) {
 					erg = ""; //$NON-NLS-1$
+				} else if(_values[row - 1][col - 1] instanceof Double ){
+					erg = Double.toString(((Double) _values[row - 1][col - 1]));
 				} else {
-					erg = ((TwoTuple) _values[row - 1][col - 1]).changeFormatValuationToString();
+					erg = _values[row - 1][col - 1];
 				}
 			}
 		} catch(Exception e) {
@@ -66,12 +76,58 @@ public class DMTableContentProvider extends KTableNoScrollModel {
 	}
 
 	public KTableCellEditor doGetCellEditor(int col, int row) {
-		return new KTableCellEditorText();
+		if(col != 0 && row != 0) {
+			return new KTableCellEditorText();
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public void doSetContentAt(int col, int row, Object value) {
-		_values[row - 1][col - 1] = (Valuation) value;
+		if(value instanceof Double) {
+			_values[row - 1][col - 1] = (Double) value;
+		} else {
+			boolean format = _p.matcher((String) value).matches(); 
+			String noParenthesis = ((String) value).replace("(", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			noParenthesis = noParenthesis.replace(")", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			String[] limits = noParenthesis.split(","); //$NON-NLS-1$
+			
+			if(format && checkLimits(limits)) {
+				_values[row - 1][col - 1] = (String) value;
+			}
+			
+			if(checkConsensusMatrix()) {
+				((DecisionMatrixEditableTable) _table).setCompleted(true);
+			} else {
+				((DecisionMatrixEditableTable) _table).setCompleted(false);
+			}
+		}
+	}
+
+	private boolean checkLimits(String[] limits) {
+		
+		for(int l1 = 0; l1 < limits.length; ++l1) {
+			for(int l2 = l1 + 1; l2 < limits.length; ++l2) {
+				if(Double.parseDouble(limits[l1]) > Double.parseDouble(limits[l2])) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	private boolean checkConsensusMatrix() {
+		
+		for(int a = 0; a < _alternatives.length; ++a) {
+			for(int c = 0; c < _criteria.length; ++c) {
+				if(!_p.matcher(((String) _values[a][c])).matches()) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	@Override

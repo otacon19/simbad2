@@ -57,7 +57,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	private Composite _parent;
 	private Combo _matrixType;
 	
-	private DecisionMatrixTable _dmTable;
+	private DecisionMatrixEditableTable _dmTable;
 	private TableViewer _criteriaTableViewer;
 	private TableViewer _dominanceDegreeTableViewer;
 	private TableViewer _dominanceDegreeAlternativesTableViewer;
@@ -109,7 +109,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		Composite decisionMatrixComposite = new Composite(_parent, SWT.NONE);
 		decisionMatrixComposite.setLayout(new GridLayout(1, true));
 		decisionMatrixComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		_dmTable = new DecisionMatrixTable(decisionMatrixComposite);
+		_dmTable = new DecisionMatrixEditableTable(decisionMatrixComposite);
 		_dmTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	
 		_dmTable.addFocusListener(new FocusListener() {
 			

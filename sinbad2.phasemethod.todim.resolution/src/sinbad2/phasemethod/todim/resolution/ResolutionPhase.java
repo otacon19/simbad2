@@ -15,15 +15,19 @@ import sinbad2.aggregationoperator.owa.YagerQuantifiers;
 import sinbad2.core.utils.Pair;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
+import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
+import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.real.RealValuation;
 import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
@@ -35,7 +39,12 @@ public class ResolutionPhase implements IPhaseMethod {
 	public static final String ID = "flintstones.phasemethod.todim.resolution"; //$NON-NLS-1$
 
 	private static final Integer ATTENUATION_FACTOR = 1;
+	private static final int P = 2;
 
+	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
+	
+	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
+	private Map<ValuationKey, Double> _distances;
 	private Object[][] _consensusMatrix;
 	private String[][] _trapezoidalConsensusMatrix;
 	
@@ -52,7 +61,32 @@ public class ResolutionPhase implements IPhaseMethod {
 	private Map<Alternative, Double> _globalDominance;
 
 	private ProblemElementsSet _elementsSet;
+	private ValuationSet _valuationSet;
+	
+	private AggregationPhase _aggregationPhase;
 
+	@SuppressWarnings("rawtypes")
+	public static class DataComparator implements Comparator {
+		@Override
+		public int compare(Object d1, Object d2) {
+			String e1 = ((String[]) d1)[0];
+			String e2 = ((String[]) d2)[0];
+			String a1 = ((String[]) d1)[1];
+			String a2 = ((String[]) d2)[1];
+			String c1 = ((String[]) d1)[2];
+			String c2 = ((String[]) d2)[2];
+			
+			int expertComparation = e1.compareTo(e2);
+			if(expertComparation != 0) {
+				return expertComparation;
+			} else if(a1.compareTo(a2) != 0){
+				return a1.compareTo(a2);
+			} else {
+				return c1.compareTo(c2);
+			}
+		}
+	}
+	
 	private static class MapUtil {
 		
 		public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
@@ -78,13 +112,22 @@ public class ResolutionPhase implements IPhaseMethod {
 	public ResolutionPhase() {		
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
+		
+		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
+		_valuationSet = valuationSetManager.getActiveValuationSet();
 
+		_valuationsInTwoTuple = _aggregationPhase.getUnificationValues();
+		
 		_numAlternatives = _elementsSet.getAlternatives().size();
 		_numCriteria = _elementsSet.getAllCriteria().size();
 
 		_consensusMatrix = new Object[_numAlternatives][_numCriteria];
 		_trapezoidalConsensusMatrix = new String[_numAlternatives][_numCriteria];
+		
 		initializeConsesusMatrix();
+		
+		_decisionMatrix = new HashMap<Pair<Alternative, Criterion>, Valuation>();
+		_distances = new HashMap<ValuationKey, Double>();
 
 		_criteriaWeights = new HashMap<Criterion, Double>();
 		_relativeWeights = new HashMap<String, Double>();
@@ -94,6 +137,30 @@ public class ResolutionPhase implements IPhaseMethod {
 		_globalDominance = new HashMap<Alternative, Double>();
 		
 		_referenceCriterion = null;
+	}
+	
+	public void setValuationsTwoTuple(Map<ValuationKey, Valuation> valuationsInTwoTuple) {
+		_valuationsInTwoTuple = valuationsInTwoTuple;
+	}
+	
+	public Map<ValuationKey, Valuation> getValuationsTwoTuple() {
+		return _valuationsInTwoTuple;
+	}
+	
+	public void setDecisionMatrix(Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix) {
+		_decisionMatrix = decisionMatrix;
+	}
+	
+	public Map<Pair<Alternative, Criterion>, Valuation> getDecisionMatrix() {
+		return _decisionMatrix;
+	}
+	
+	public void setDistances(Map<ValuationKey, Double> distances) {
+		_distances = distances;
+	}
+	
+	public Map<ValuationKey, Double> getDistances() {
+		return _distances;
 	}
 
 	public void setConsensusMatrix(Object[][] consensusMatrix) {
@@ -114,6 +181,88 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	public void setCriteriaWeights(Map<Criterion, Double> criteriaWeights) {
 		_criteriaWeights = criteriaWeights;
+	}
+
+	public Map<Pair<Alternative, Criterion>, Valuation> calculateDecisionMatrix() {
+		_decisionMatrix = _aggregationPhase.getDecisionMatrix();
+		
+		return _decisionMatrix;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<String[]> calculateDistance() {
+		List<String[]> result = new LinkedList<String[]>();
+		
+		calculateValuationsDistance();
+		
+		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
+		
+		for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
+			if(!vk.getExpert().getId().endsWith("flintstones_gathering_cloud") && vk.getAlternative() != null) { //$NON-NLS-1$
+				String[] data = new String[7];
+				data[0] = vk.getExpert().getId();
+				data[1] = vk.getAlternative().getId();
+				data[2] = vk.getCriterion().getId();
+				data[3] = _valuationsInTwoTuple.get(vk).changeFormatValuationToString();
+				Valuation aggregatedValuation = _decisionMatrix.get(new Pair(vk.getAlternative(), vk.getCriterion()));
+				
+				if(aggregatedValuation == null) {
+					data[4] = ""; //$NON-NLS-1$
+				} else {
+					data[4] = aggregatedValuation.changeFormatValuationToString();
+				}
+					
+				data[5] = Double.toString(Math.round(_distances.get(vk) * 10000d) / 10000d);
+		
+				Expert e = new Expert();
+				e.setId(vk.getExpert().getId() + "flintstones_gathering_cloud");
+				ValuationKey vkFGC = new ValuationKey(e, vk.getAlternative(), vk.getCriterion());
+					
+				data[6] = Double.toString(((RealValuation) valuations.get(vkFGC)).getValue());
+				
+				result.add(data);
+			}
+		}
+		
+		Collections.sort(result, new DataComparator());
+		
+		return result;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void calculateValuationsDistance() {
+		List<Alternative> alternatives = _elementsSet.getAlternatives();
+		List<Criterion> criteria = _elementsSet.getAllCriteria();
+		
+		for(int a = 0; a < alternatives.size(); ++a) {
+			for(int c = 0; c < criteria.size(); ++c) {
+				for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
+					if(alternatives.get(a).equals(vk.getAlternative()) && criteria.get(c).equals(vk.getCriterion())) {
+						TwoTuple v = (TwoTuple) _valuationsInTwoTuple.get(vk);
+						LabelLinguisticDomain label = v.getLabel();
+						TrapezoidalFunction semantic = (TrapezoidalFunction) label.getSemantic();
+		
+						double[] limits = semantic.getLimits();
+						double aLimit = limits[0];
+						double bLimit = limits[1];
+						double cLimit = limits[2];
+						double dLimit = limits[3];
+						
+						TwoTuple overallValuation =  (TwoTuple) _decisionMatrix.get(new Pair(a, c));
+						double[] overallLimits = ((TrapezoidalFunction) overallValuation.getLabel().getSemantic()).getLimits();
+						double aOverallLimit = overallLimits[0];
+						double bOverallLimit = overallLimits[1];
+						double cOverallLimit = overallLimits[2];
+						double dOverallLimit = overallLimits[3];
+						
+						double distance = Math.pow(aLimit - aOverallLimit, P) + Math.pow(bLimit - bOverallLimit, P) + 
+								Math.pow(cLimit - cOverallLimit, P) + Math.pow(dLimit - dOverallLimit, P);
+						
+						_distances.put(vk, distance);
+					}
+				}
+			}
+		}
 	}
 
 	public Map<Criterion, Double> getImportanceCriteriaWeights() {
@@ -536,7 +685,10 @@ public class ResolutionPhase implements IPhaseMethod {
 		ResolutionPhase resolution = (ResolutionPhase) iPhaseMethod;
 
 		clear();
-
+		
+		_decisionMatrix = resolution.getDecisionMatrix();
+		_valuationsInTwoTuple = resolution.getValuationsTwoTuple();
+		_distances = resolution.getDistances();
 		_consensusMatrix = resolution.getConsensusMatrix();
 		_criteriaWeights = resolution.getImportanceCriteriaWeights();
 		_referenceCriterion = resolution.getReferenceCriterion();
@@ -549,6 +701,10 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	@Override
 	public void clear() {
+		
+		_decisionMatrix.clear();
+		_valuationsInTwoTuple.clear();
+		_distances.clear();
 		_consensusMatrix = new Object[_numAlternatives][_numCriteria];
 		initializeConsesusMatrix();
 		_trapezoidalConsensusMatrix = new String[_numAlternatives][_numCriteria];

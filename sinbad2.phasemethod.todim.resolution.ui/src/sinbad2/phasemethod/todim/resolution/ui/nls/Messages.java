@@ -16,6 +16,18 @@ public class Messages extends NLS {
 	public static String CalculateRanking_Relative_weight;
 	public static String CalculateRanking_Weight;
 	public static String DMTableContentProvider_Consensus_matrix;
+	public static String ProblemInformation_Aggregated_valuation;
+	public static String ProblemInformation_Aggregation;
+	public static String ProblemInformation_All_experts;
+	public static String ProblemInformation_Alternative;
+	public static String ProblemInformation_Calculate_distance;
+	public static String ProblemInformation_Criterion;
+	public static String ProblemInformation_Distance;
+	public static String ProblemInformation_Expert;
+	public static String ProblemInformation_Expert_valuation;
+	public static String ProblemInformation_Threshold;
+	public static String DMTableContentProvider_Decision_matrix;
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
