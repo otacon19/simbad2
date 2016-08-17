@@ -129,8 +129,6 @@
       <plugin id="sinbad2.phasemethod.multigranular.lh.unification.ui"/>
       <plugin id="sinbad2.phasemethod.retranslation"/>
       <plugin id="sinbad2.phasemethod.retranslation.ui"/>
-      <plugin id="sinbad2.phasemethod.todim.aggregation"/>
-      <plugin id="sinbad2.phasemethod.todim.aggregation.ui"/>
       <plugin id="sinbad2.phasemethod.todim.resolution"/>
       <plugin id="sinbad2.phasemethod.todim.resolution.ui"/>
       <plugin id="sinbad2.phasemethod.todim.unification"/>

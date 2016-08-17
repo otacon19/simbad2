@@ -23,6 +23,7 @@ import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
@@ -110,13 +111,15 @@ public class ResolutionPhase implements IPhaseMethod {
 	}
 
 	public ResolutionPhase() {		
+		_aggregationPhase = (AggregationPhase) PhasesMethodManager.getInstance().getPhaseMethod(AggregationPhase.ID).getImplementation();
+		
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
 		
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valuationSet = valuationSetManager.getActiveValuationSet();
 
-		_valuationsInTwoTuple = _aggregationPhase.getUnificationValues();
+		_valuationsInTwoTuple = new HashMap<ValuationKey, Valuation>();
 		
 		_numAlternatives = _elementsSet.getAlternatives().size();
 		_numCriteria = _elementsSet.getAllCriteria().size();
@@ -193,6 +196,8 @@ public class ResolutionPhase implements IPhaseMethod {
 	public List<String[]> calculateDistance() {
 		List<String[]> result = new LinkedList<String[]>();
 		
+		_valuationsInTwoTuple = _aggregationPhase.getUnificationValues();
+		
 		calculateValuationsDistance();
 		
 		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
@@ -248,7 +253,7 @@ public class ResolutionPhase implements IPhaseMethod {
 						double cLimit = limits[2];
 						double dLimit = limits[3];
 						
-						TwoTuple overallValuation =  (TwoTuple) _decisionMatrix.get(new Pair(a, c));
+						TwoTuple overallValuation =  (TwoTuple) _decisionMatrix.get(new Pair(alternatives.get(a), criteria.get(c)));
 						double[] overallLimits = ((TrapezoidalFunction) overallValuation.getLabel().getSemantic()).getLimits();
 						double aOverallLimit = overallLimits[0];
 						double bOverallLimit = overallLimits[1];
@@ -701,7 +706,6 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	@Override
 	public void clear() {
-		
 		_decisionMatrix.clear();
 		_valuationsInTwoTuple.clear();
 		_distances.clear();

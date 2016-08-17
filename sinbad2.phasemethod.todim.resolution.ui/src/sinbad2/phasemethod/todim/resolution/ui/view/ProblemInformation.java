@@ -1,5 +1,7 @@
 package sinbad2.phasemethod.todim.resolution.ui.view;
 
+import java.util.Map;
+
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -12,8 +14,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.core.utils.Pair;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.alternative.Alternative;
+import sinbad2.element.criterion.Criterion;
 import sinbad2.excel.ExcelUtil;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
@@ -29,9 +34,12 @@ import sinbad2.phasemethod.todim.resolution.ui.view.provider.ExpertValuationColu
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.ThresholdColumnLabelProvider;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
+import sinbad2.valuation.Valuation;
 
 public class ProblemInformation extends ViewPart implements IStepStateListener {
 
+	public static final String ID = "flintstones.phasemethod.todim.resolution.ui.view.probleminformation"; //$NON-NLS-1$
+	
 	private Composite _parent;
 	private Button _excelButton;
 	
@@ -145,9 +153,9 @@ public class ProblemInformation extends ViewPart implements IStepStateListener {
 			criteria[c] = _elementsSet.getCriteria().get(c).getId();
 		}
 
-		_dmTable.setModel(alternatives, criteria, _resolutionPhase.calculateDecisionMatrix());
-		_distanceTableViewer.refresh();
-		
+		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix = _resolutionPhase.calculateDecisionMatrix();
+		_dmTable.setModel(alternatives, criteria, decisionMatrix);
+
 		_distanceTableViewer.setInput(_resolutionPhase.calculateDistance());
 		_distanceTableViewer.refresh();
 		
@@ -170,9 +178,7 @@ public class ProblemInformation extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
-		
-		_resolutionPhase.clear();
-		
+
 		if(_completed) {
 			_ratingView.loadNextStep();
 			_completed = false;
@@ -182,6 +188,8 @@ public class ProblemInformation extends ViewPart implements IStepStateListener {
 	@Override
 	public void setRatingView(RatingView rating) {
 		_ratingView = rating;
+		
+		notifyStepStateChange();
 	}
 
 }
