@@ -47,8 +47,10 @@ import sinbad2.phasemethod.todim.resolution.ui.view.provider.MainAlternativeColu
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RankingTableContentProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RelativeWeightCriterionColumnLabelProvider;
+import sinbad2.resolutionphase.ResolutionPhasesManager;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
+import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 
 public class CalculateRanking extends ViewPart implements IStepStateListener {
 	
@@ -441,11 +443,24 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	
 	@Override
 	public void notifyStepStateChange() {
+		
 		if(!_loaded) {
 			_loaded = true;
 			
-			Workspace.getWorkspace().updatePhases();
+			SensitivityAnalysis sa = (SensitivityAnalysis) ResolutionPhasesManager.getInstance().getResolutionPhase(SensitivityAnalysis.ID).getImplementation();
+			
+			double[] w = new double[_elementsSet.getAllCriteria().size()];
+			int cont = 0;
+			for(Criterion c: _elementsSet.getAllCriteria()) {
+				w[cont] = _resolutionPhase.getImportanceCriteriaWeights().get(c);
+				cont++;
+			}
+			
+			sa.setWeights(w);
 		}
+		
+
+		Workspace.getWorkspace().updatePhases();
 	}
 
 	@Override

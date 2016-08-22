@@ -7,6 +7,7 @@ Bundle-Activator: sinbad2.phasemethod.todim.resolution.ui.Activator
 Require-Bundle: sinbad2.phasemethod.ui;bundle-version="1.0.0",
  sinbad2.phasemethod.todim.resolution;bundle-version="1.0.0",
  de.kupzog.ktable.KTable,
- sinbad2.resolutionphase.rating.ui
+ sinbad2.resolutionphase.rating.ui,
+ sinbad2.resolutionphase.sensitivityanalysis
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

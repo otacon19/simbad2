@@ -403,7 +403,22 @@ public class ResolutionPhase implements IPhaseMethod {
 			for(TrapezoidalFunction envelope: envelopeFunctions) {
 				acum += envelope.centroid();
 			}
-			_criteriaWeights.put(c, Math.round((acum / envelopeFunctions.size()) * 1000) / 1000d);
+			_criteriaWeights.put(c, Math.round((acum / envelopeFunctions.size()) * 1000d) / 1000d);
+		}
+		
+		normalizeWeights();
+	}
+	
+	private void normalizeWeights() {
+
+		double sum = 0;
+
+		for(Criterion c: _criteriaWeights.keySet()) {
+			sum += _criteriaWeights.get(c);
+		}
+
+		for(Criterion c: _criteriaWeights.keySet()) {
+			_criteriaWeights.put(c, Math.round((_criteriaWeights.get(c) / sum) * 1000d) / 1000d);
 		}
 	}
 	

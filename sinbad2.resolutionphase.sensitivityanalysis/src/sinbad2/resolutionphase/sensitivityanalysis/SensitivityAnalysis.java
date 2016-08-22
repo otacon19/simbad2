@@ -2,12 +2,10 @@ package sinbad2.resolutionphase.sensitivityanalysis;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.stream.XMLStreamWriter;
 
@@ -21,7 +19,6 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
-import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.resolutionphase.IResolutionPhase;
@@ -38,8 +35,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 	private int _numberOfAlternatives;
 	private int _numberOfCriteria;
-
-	private boolean _aplicatedWeights;
 
 	private double[] _w;
 	private double[][] _decisionMatrix;
@@ -70,8 +65,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_absoluteTop = new LinkedList<Integer>();
 		_absoluteAny = new LinkedList<Integer>();
 
-		_aplicatedWeights = false;
-		
 		_model = EModel.WEIGHTED_SUM;
 		_problem = EProblem.MOST_CRITICAL_CRITERION;
 
@@ -222,35 +215,15 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		return criteriaIds;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void calculateDecisionMatrix(List<Double> weights) {
 		_numberOfAlternatives = _elementsSet.getAlternatives().size();
 		_numberOfCriteria = _elementsSet.getAllSubcriteria().size();
-		_aplicatedWeights = false;
 		
-		if ((_aggregationPhase.getCriteriaOperatorWeights().get(null) != null) || _aggregationPhase.getExpertsOperatorWeights().get(null) != null) {
-			if(weights != null) {
-				setOperators(weights);
-				aggregateValuations();	
-				assignWeights(weights);
-			}  else {
-				List<Double> aggregationWeights;
-				if(_aggregationPhase.getCriteriaOperatorWeights().size() == 1) {
-					aggregationWeights = ((Map<Object, List<Double>>) _aggregationPhase.getCriteriaOperatorWeights().get(null)).get(null);
-				} else if(_aggregationPhase.getExpertsOperatorWeights().size() == 1) {
-					aggregationWeights = ((Map<Object, List<Double>>) _aggregationPhase.getExpertsOperatorWeights().get(null)).get(null);
-				} else {
-					aggregationWeights = getSubcriteriaWeights();	
-				}
-				
-				assignWeights(aggregationWeights);
-			}
-			
-			_aplicatedWeights = true;
-			
-		} else {
-			if(weights != null) {
-				assignWeights(weights);
+		if(weights != null) {
+			assignWeights(weights);
+		} else if(_w == null) {
+			if(!_aggregationPhase.getCriteriaOperatorWeights().isEmpty()) {
+				assignWeights(getSubcriteriaWeights());
 			} else {
 				createDefaultWeights();
 			}
@@ -268,51 +241,16 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			break;
 		}
 	}
-
-	private void setOperators(List<Double> weights) {
-		for (Expert e : _elementsSet.getAllExperts()) {
-			_aggregationPhase.setExpertOperator(e, _aggregationPhase.getExpertOperator(e), weights);
-		}
-	}
-	
-	private void aggregateValuations() {
-		Set<ProblemElement> experts = new HashSet<ProblemElement>();
-		experts.addAll(_elementsSet.getAllExperts());
-		Set<ProblemElement> alternatives = new HashSet<ProblemElement>();
-		alternatives.addAll(_elementsSet.getAlternatives());
-		Set<ProblemElement> criteria = new HashSet<ProblemElement>();
-		criteria.addAll(_elementsSet.getAllCriteria());
-		
-		_aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
-	}
-	
-	private void assignWeights(List<Double> weights) {
-		_w = new double[_numberOfCriteria];
-		for (int i = 0; i < weights.size(); ++i) {
-			_w[i] = weights.get(i);
-		}
-	}
 	
 	@SuppressWarnings("unchecked")
 	private List<Double> getSubcriteriaWeights() {
-		boolean aggregateByCriteria = true;
 		List<Double> globalWeights = new LinkedList<Double>();
-		Map<ProblemElement, Object> elementWeights = new HashMap<ProblemElement, Object>();
+		Map<ProblemElement, Object> criteriaWeights = new HashMap<ProblemElement, Object>();
 		
-		if(!_aggregationPhase.getCriteriaOperatorWeights().isEmpty()) {
-			elementWeights = _aggregationPhase.getCriteriaOperatorWeights();
-			globalWeights = ((Map<Object, List<Double>>) elementWeights.get(null)).get(null);
-		} else if(!_aggregationPhase.getExpertsOperatorWeights().isEmpty()) {
-			elementWeights = _aggregationPhase.getExpertsOperatorWeights();
-			globalWeights = ((Map<Object, List<Double>>) elementWeights.get(null)).get(null);
-			aggregateByCriteria = false;
-		}
+		criteriaWeights = _aggregationPhase.getCriteriaOperatorWeights();
+		globalWeights = ((Map<Object, List<Double>>) criteriaWeights.get(null)).get(null);
 
-		if(aggregateByCriteria) {
-			return calculateWeightsSubcriteria(globalWeights, elementWeights);
-		} else {
-			return calculateWeightsExperts(globalWeights, elementWeights);
-		}
+		return calculateWeightsSubcriteria(globalWeights, criteriaWeights);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -330,41 +268,15 @@ public class SensitivityAnalysis implements IResolutionPhase {
 					result *= recursiveWeightCriterion(sc, cont);
 					cont++;
 					
-					subcriteriaWeights.add(Math.round(result * 100d) / 100d);
+					subcriteriaWeights.add(Math.round(result * 1000d) / 1000d);
 				}
 			} else {
 				result = globalWeights.get(numC);
-				subcriteriaWeights.add(Math.round(result * 100d) / 100d);
+				subcriteriaWeights.add(Math.round(result * 1000d) / 1000d);
 			}
 		}
 		
 		return subcriteriaWeights;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private List<Double> calculateWeightsExperts(List<Double> globalWeights, Map<ProblemElement, Object> elementWeights) {
-		List<Double> subExpertsWeights = new LinkedList<Double>();
-		int numE = -1, cont = 0;
-		double result;
-		
-		for(Expert e: _elementsSet.getExperts()) {
-			numE++;
-			if(e.hasChildren()) { 
-				for(Expert se: e.getChildren()) {
-					result = globalWeights.get(numE);
-					result *= ((Map<Object, List<Double>>) elementWeights.get(e)).get(null).get(cont);
-					result *= recursiveWeightExpert(se, cont);
-					cont++;
-					
-					subExpertsWeights.add(Math.round(result * 100d) / 100d);
-				}
-			} else {
-				result = globalWeights.get(numE);
-				subExpertsWeights.add(Math.round(result * 100d) / 100d);
-			}
-		}
-		
-		return subExpertsWeights;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -388,24 +300,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	private double recursiveWeightExpert(Expert e, int cont) {
-		
-		if(e.hasChildren()) {
-			for(Expert se: e.getChildren()) {
-				recursiveWeightExpert(se, cont);
-			}
-		}
-		
-		List<Double> weightsExpert = null;
-		if(_aggregationPhase.getCriteriaOperatorWeights().get(e) != null) {
-			weightsExpert = ((Map<Object, List<Double>>) _aggregationPhase.getExpertsOperatorWeights().get(e)).get(null);
-		}
-		
-		if(weightsExpert != null) {
-			return weightsExpert.get(cont);
-		} else {
-			return 1;
+	private void assignWeights(List<Double> weights) {
+		_w = new double[_numberOfCriteria];
+		for (int i = 0; i < weights.size(); ++i) {
+			_w[i] = weights.get(i);
 		}
 	}
 
@@ -438,18 +336,12 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		for (int alternative = 0; alternative < _numberOfAlternatives; alternative++) {
 			_alternativesFinalPreferences[alternative] = 0;
 			for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
-				if (!_aplicatedWeights) {
-					_alternativesFinalPreferences[alternative] += _decisionMatrix[criterion][alternative] * _w[criterion];
-				} else {
-					_alternativesFinalPreferences[alternative] += _decisionMatrix[criterion][alternative];
-				}
+				_alternativesFinalPreferences[alternative] += _decisionMatrix[criterion][alternative] * _w[criterion];
 			}
 		}
 
-		if (_aplicatedWeights) {
-			normalize(_alternativesFinalPreferences);
-		}
-
+		normalize(_alternativesFinalPreferences);
+	
 		computeRanking();
 	}
 
@@ -634,7 +526,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 						if(_w[k] == 0) {
 							_minimumPercentChangeInCriteriaWeights[i][j][k] = null;
 						} else {
-							_minimumPercentChangeInCriteriaWeights[i][j][k] = _minimumAbsoluteChangeInCriteriaWeights[i][j][k] * (100d / _w[k]);
+							_minimumPercentChangeInCriteriaWeights[i][j][k] = _minimumAbsoluteChangeInCriteriaWeights[i][j][k] * (1000d / _w[k]);
 						}
 					} else {
 						_minimumPercentChangeInCriteriaWeights[i][j][k] = null;
@@ -676,7 +568,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 						if(_decisionMatrix[k][i] == 0) {
 							_relativeThresholdValues[i][j][k] = null;
 						} else {
-							_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * (100d / _decisionMatrix[k][i]);
+							_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * (1000d / _decisionMatrix[k][i]);
 						}
 					} else {
 						_relativeThresholdValues[i][j][k] = null;
@@ -731,7 +623,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 					if(_absoluteThresholdValues[i][j][k] == null) {
 						_relativeThresholdValues[i][j][k] = null;
 					} else {
-						_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * 100d;
+						_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * 1000d;
 					}
 				}
 			}
@@ -772,7 +664,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 						if(_decisionMatrix[k][i] == 0) {
 							_relativeThresholdValues[i][j][k] = null;
 						} else {
-							_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * (100 / _decisionMatrix[k][i]);
+							_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * (1000d / _decisionMatrix[k][i]);
 						}
 					} else {
 						_relativeThresholdValues[i][j][k] = null;
@@ -867,11 +759,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		double alternativeFinalPreference = 0;
 
 		for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
-			if (!_aplicatedWeights) {
-				alternativeFinalPreference += _decisionMatrix[criterion][alternativeIndex] * w[criterion];
-			} else {
-				alternativeFinalPreference += _decisionMatrix[criterion][alternativeIndex];
-			}
+			alternativeFinalPreference += _decisionMatrix[criterion][alternativeIndex] * w[criterion];
 		}
 
 		return alternativeFinalPreference;
@@ -1242,7 +1130,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	public void computeWeightedSumModelCriticalCriterion() {
 		copyDecisionMatrix();
 		
-		normalize(_w);
 		normalizeDecisionMatrix();
 		computeFinalPreferences();
 		computeMinimumAbsoluteChangeInCriteriaWeights();
@@ -1256,7 +1143,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	public void computeWeightedSumModelCriticalMeasure() {
 		copyDecisionMatrix();
 		
-		normalize(_w);
 		normalizeDecisionMatrix();
 		computeFinalPreferences();
 		computeAbsoluteThresholdValuesWeightedSumModel();
@@ -1268,7 +1154,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	public void computeAnalyticHierarchyProcessModelCriticalCriterion() {
 		copyDecisionMatrix();
 		
-		normalize(_w);
 		normalizeDecisionMatrixSumToOne();
 		computeFinalPreferences();
 		computeMinimumAbsoluteChangeInCriteriaWeights();
@@ -1282,7 +1167,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	public void computeAnalyticHierarchyProcessModelCriticalMeasure() {
 		copyDecisionMatrix();
 		
-		normalize(_w);
 		normalizeDecisionMatrixSumToOne();
 		computeFinalPreferences();
 		computeAbsoluteThresholdValuesAnalyticHierarchyProcess();
@@ -1294,7 +1178,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	public void computeWeightedProductModelCriticalCriterion() {
 		copyDecisionMatrix();
 		
-		normalize(_w);
 		normalizeDecisionMatrix();
 		computeFinalPreferencesWeightedProduct();
 		computeWeightedProductMinimumAbsoluteChangeInCriteriaWeights();
@@ -1308,7 +1191,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	public void computeWeightedProductModelCriticalMeasure() {
 		copyDecisionMatrix();
 		
-		normalize(_w);
 		normalizeDecisionMatrix();
 		computeFinalPreferencesWeightedProduct();
 		computeAbsoluteThresholdValuesWeightedProductModel();
