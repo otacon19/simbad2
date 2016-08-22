@@ -1097,14 +1097,20 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		if(_aggregationPhase.getCriteriaOperators().isEmpty() && _aggregationPhase.getExpertsOperators().isEmpty()) {
 			return false;
 		}
+		
+		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrixAggregation = _aggregationPhase.getDecisionMatrix();
+		for(Pair<Alternative, Criterion> pair: decisionMatrixAggregation.keySet()) {
+			if(!(decisionMatrixAggregation.get(pair) instanceof TwoTuple)) {
+				return false;
+			}
+		}
 
 		return true;
 	}
 
 	@Override
 	public void activate() {
-		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
-		_elementsSet = elementsManager.getActiveElementSet();
+		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
 	}
 
 	public void compute() {
