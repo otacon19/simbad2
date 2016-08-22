@@ -99,6 +99,8 @@
       <plugin id="sinbad2.method.linguistic.hesitant.ui"/>
       <plugin id="sinbad2.method.linguistic.heterogeneous.fusion"/>
       <plugin id="sinbad2.method.linguistic.heterogeneous.fusion.ui"/>
+      <plugin id="sinbad2.method.linguistic.hflts"/>
+      <plugin id="sinbad2.method.linguistic.hflts.ui"/>
       <plugin id="sinbad2.method.linguistic.linguistic.twotuple"/>
       <plugin id="sinbad2.method.linguistic.linguistic.twotuple.ui"/>
       <plugin id="sinbad2.method.linguistic.multigranular.elh"/>

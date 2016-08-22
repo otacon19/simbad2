@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method">
+      <method
+            category="%Method-Category"
+            description="%Method-Description"
+            id="flintstones.method.linguistic.hflts"
+            implementation="sinbad2.method.linguistic.hflts.HFLTS"
+            name="%Method-Name">
+         <phasemethod
+               phase="flintstones.phasemethod.aggregation">
+         </phasemethod>
+         <aggregation_supported
+               type="Hesitant">
+         </aggregation_supported>
+         <phasemethod
+               phase="flintstones.phasemethod.analysis">
+         </phasemethod>
+      </method>
+   </extension>
+
+</plugin>
