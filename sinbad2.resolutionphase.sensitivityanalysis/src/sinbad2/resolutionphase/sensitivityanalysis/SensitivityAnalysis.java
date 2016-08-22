@@ -215,6 +215,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		return criteriaIds;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void calculateDecisionMatrix(List<Double> weights) {
 		_numberOfAlternatives = _elementsSet.getAlternatives().size();
 		_numberOfCriteria = _elementsSet.getAllSubcriteria().size();
@@ -222,10 +223,15 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		if(weights != null) {
 			assignWeights(weights);
 		} else if(_w == null) {
-			if(!_aggregationPhase.getCriteriaOperatorWeights().isEmpty()) {
-				assignWeights(getSubcriteriaWeights());
-			} else {
-				createDefaultWeights();
+			Map<ProblemElement, Object> criteriaOperatorWeights = _aggregationPhase.getCriteriaOperatorWeights();
+			if(!criteriaOperatorWeights.isEmpty()) {
+				if(criteriaOperatorWeights.get(null) == null) {
+					createDefaultWeights();
+				} else if(criteriaOperatorWeights.size() == 1) {
+					assignWeights((List<Double>) criteriaOperatorWeights.get(null));
+				} else {
+					assignWeights(getSubcriteriaWeights());
+				}
 			}
 		}
 		

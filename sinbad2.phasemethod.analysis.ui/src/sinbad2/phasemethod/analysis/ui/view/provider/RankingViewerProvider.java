@@ -12,6 +12,7 @@ import org.eclipse.jface.viewers.Viewer;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.element.ProblemElement;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
@@ -22,7 +23,11 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 	private class MyComparator implements Comparator<Object[]> {
 		@Override
 		public int compare(Object[] o1, Object[] o2) {
-			return Double.compare((Double) o1[0], (Double) o2[0]);
+			if ((o1[0] instanceof HesitantValuation)) {
+				return ((HesitantValuation) o1[0]).compareTo((HesitantValuation)o2[0]);
+		    } else {
+		    	return Double.compare((Double) o1[0], (Double) o2[0]);
+		    }
 		}
 	}
 	
@@ -52,17 +57,19 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 				String alternativeName;
 				Valuation valuation;
 				TwoTuple twoTuple = null;
-				Object[] listEntry;
+				Object[] listEntry = null;
 				for (int i = 0; i < size; i++) {
 					alternativeName = (String) input[i][0];
 					valuation = (Valuation) input[i][1];
 					if (valuation != null) {
 						if (valuation instanceof UnifiedValuation) {
 							twoTuple = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
-						} else {
+						} else if(valuation instanceof TwoTuple) {
 							twoTuple = (TwoTuple) valuation;
+							listEntry = new Object[] {((TwoTuple) twoTuple).calculateInverseDelta(), alternativeName, twoTuple };
+						} else {
+							listEntry = new Object[] {valuation, alternativeName, valuation };
 						}
-						listEntry = new Object[] {((TwoTuple) twoTuple).calculateInverseDelta(), alternativeName, twoTuple };
 					} else {
 						listEntry = new Object[] { 0d, alternativeName, null };
 					}
@@ -75,7 +82,9 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 				int ranking = 0;
 				double previous = -1;
 				for (Object[] element : result) {
-					if ((Double) element[0] == previous) {
+					if ((element[0] instanceof HesitantValuation)) {
+						element[0] = Integer.valueOf(++ranking);
+				    } else if ((Double) element[0] == previous) {
 						element[0] = ranking;
 					} else {
 						ranking++;

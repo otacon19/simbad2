@@ -9,6 +9,7 @@ public class Messages extends NLS {
 	public static String MethodsManager_Fusion_approach_for_managing_heterogeneous_information;
 	public static String MethodsManager_Fusion_approach_for_managing_multi_granular_linguistic_information;
 	public static String MethodsManager_Hesitant_Fuzzy_2_tuple_Linguistic_Information;
+	public static String MethodsManager_Hesitant_Fuzzy_Linguistic_Term_Set;
 	public static String MethodsManager_Linguistic_Hierarchies;
 	public static String MethodsManager_Methodology_to_deal_with_unbalanced_linguistic_term_sets;
 	static {

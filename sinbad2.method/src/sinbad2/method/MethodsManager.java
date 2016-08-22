@@ -177,7 +177,11 @@ public class MethodsManager {
 		Map<Integer, Boolean> bcl = getBestConditionsLinguistic();
 		int[] cardinalities = getCardinalitiesFuzzySet();
 		if(getBestConditionsHesitant()) {
-			return Messages.MethodsManager_Hesitant_Fuzzy_2_tuple_Linguistic_Information;
+			if(_elementsSet.getAllExperts().size() == 1) {
+				return Messages.MethodsManager_Hesitant_Fuzzy_Linguistic_Term_Set;
+			} else {
+				return Messages.MethodsManager_Hesitant_Fuzzy_2_tuple_Linguistic_Information;
+			}
 		}
 		
 		if(cardinalities.length > 0 && bcl.size() > 0) {

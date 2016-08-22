@@ -257,6 +257,9 @@ public class AggregationPhase implements IPhaseMethod {
 		
 		if(_unifiedDomain instanceof Unbalanced) {
 			return UnbalancedUtils.transformUnbalanced(_aggregatedValuations, (Unbalanced) _unifiedDomain);
+		} else if(_unifiedDomain == null)  {
+			_unifiedDomain = _valuationSet.getValuations().get(new ValuationKey(_elementsSet.getExperts().get(0), _elementsSet.getAlternatives().get(0), 
+					_elementsSet.getCriteria().get(0))).getDomain();
 		}
 		
 		return _aggregatedValuations;
@@ -311,7 +314,11 @@ public class AggregationPhase implements IPhaseMethod {
 							if (_elementsSet.getAllExpertChildren((Expert) expertParent).size() > 0) {
 								criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion, experts, criteria));
 							} else {
-								criterionValuations.add(_unifiedValuations.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
+								if(!_unifiedValuations.isEmpty()) {
+									criterionValuations.add(_unifiedValuations.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
+								} else {
+									criterionValuations.add(_valuationSet.getValuations().get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
+								}
 							}
 						} else {
 							criterionValuations.add(null);
@@ -429,7 +436,11 @@ public class AggregationPhase implements IPhaseMethod {
 							if (_elementsSet.getAllCriterionSubcriteria((Criterion) criterionParent).size() > 0) {
 								expertValuations.add(aggregateElementByCriteria(expert, alternative, criterion, experts, criteria));
 							} else {
-								expertValuations.add(_unifiedValuations.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
+								if(!_unifiedValuations.isEmpty()) {
+									expertValuations.add(_unifiedValuations.get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
+								} else {
+									expertValuations.add(_valuationSet.getValuations().get(new ValuationKey((Expert) expert, (Alternative) alternative, (Criterion) criterion)));
+								}
 							}
 						} else {
 							expertValuations.add(null);

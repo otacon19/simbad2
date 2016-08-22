@@ -3,6 +3,7 @@ package sinbad2.phasemethod.aggregation.ui.view.provider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 import sinbad2.phasemethod.aggregation.ui.nls.Messages;
+import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
 
@@ -34,8 +35,10 @@ public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 					}
 				}
 				return "(" + labelName + ", " + alpha + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			} else if(((Object[]) element)[2] instanceof Valuation) {
+				return ((Valuation) ((Object[]) element)[2]).changeFormatValuationToString(); //$NON-NLS-1$
 			} else {
-				return ""; //$NON-NLS-1$
+				return "";
 			}
 		} else {
 			return Messages.EvaluationColumnLabelProvider_Not_evaluate;
