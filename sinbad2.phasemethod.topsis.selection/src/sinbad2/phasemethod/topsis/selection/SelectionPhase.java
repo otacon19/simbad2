@@ -13,6 +13,7 @@ import sinbad2.aggregationoperator.UnweightedAggregationOperator;
 import sinbad2.aggregationoperator.max.Max;
 import sinbad2.aggregationoperator.min.Min;
 import sinbad2.core.utils.Pair;
+import sinbad2.domain.Domain;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -154,6 +155,11 @@ public class SelectionPhase implements IPhaseMethod {
 		_decisionMatrix = _aggregationPhase.getDecisionMatrix();
 		
 		return _decisionMatrix;
+	}
+	
+	@Override
+	public Domain getUnifiedDomain() {
+		return null;
 	}
 
 	public List<Object[]> calculateIdealSolution() {

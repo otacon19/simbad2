@@ -1,5 +1,6 @@
 package sinbad2.phasemethod;
 
+import sinbad2.domain.Domain;
 import sinbad2.phasemethod.listener.IPhaseMethodStateListener;
 
 public interface IPhaseMethod extends IPhaseMethodStateListener {
@@ -15,5 +16,6 @@ public interface IPhaseMethod extends IPhaseMethodStateListener {
 	public void activate();
 
 	public boolean validate();
-
+	
+	public Domain getUnifiedDomain();
 }

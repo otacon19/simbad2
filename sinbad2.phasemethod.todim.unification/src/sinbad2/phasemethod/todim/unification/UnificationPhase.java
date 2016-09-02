@@ -39,6 +39,8 @@ public class UnificationPhase implements IPhaseMethod {
 
 	public static final String ID = "flintstones.phasemethod.todim.unification"; //$NON-NLS-1$
 
+	private Domain _unifiedDomain;
+	
 	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleValuationsResult;
 	private Map<ValuationKey, TrapezoidalFunction> _envelopeValuations;
@@ -77,7 +79,16 @@ public class UnificationPhase implements IPhaseMethod {
 	public void setEnvelopeValuations(Map<ValuationKey, TrapezoidalFunction> envelopeValuations) {
 		_envelopeValuations = envelopeValuations;
 	}
+	
+	@Override
+	public Domain getUnifiedDomain() {
+		return _unifiedDomain;
+	}
 
+	public void setUnifiedDomain(Domain domain) {
+		_unifiedDomain = domain;
+	}
+	
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new UnificationPhase();
@@ -135,13 +146,13 @@ public class UnificationPhase implements IPhaseMethod {
 		return true;
 	}
 
-	public Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
+	public Map<ValuationKey, Valuation> unification() {
 		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
 		Map<String, List<Object[]>> toNormalize = new HashMap<String, List<Object[]>>();
 		Map<String, Domain> domains = new HashMap<String, Domain>();
 		List<Object[]> auxEvaluations;
 
-		if (unifiedDomain != null) {
+		if (_unifiedDomain != null) {
 			Expert expert;
 			Alternative alternative;
 			Criterion criterion;
@@ -165,7 +176,7 @@ public class UnificationPhase implements IPhaseMethod {
 							valuation = valuation.negateValuation();
 						}
 						if (((NumericIntegerDomain) valuation.getDomain()).getInRange()) {
-							fuzzySet = ((IntegerValuation) valuation).unification(unifiedDomain);
+							fuzzySet = ((IntegerValuation) valuation).unification(_unifiedDomain);
 							valuation = new UnifiedValuation(fuzzySet);
 							_unifiedValuationsResult.put(vk, valuation);
 						} else {
@@ -191,7 +202,7 @@ public class UnificationPhase implements IPhaseMethod {
 							valuation = valuation.negateValuation();
 						}
 						if (((NumericRealDomain) valuation.getDomain()).getInRange()) {
-							fuzzySet = ((RealValuation) valuation).unification(unifiedDomain);
+							fuzzySet = ((RealValuation) valuation).unification(_unifiedDomain);
 							valuation = new UnifiedValuation(fuzzySet);
 							_unifiedValuationsResult.put(vk, valuation);
 						} else {
@@ -218,7 +229,7 @@ public class UnificationPhase implements IPhaseMethod {
 							valuation = valuation.negateValuation();
 						}
 						if (((NumericIntegerDomain) valuation.getDomain()).getInRange()) {
-							fuzzySet = ((IntegerIntervalValuation) valuation).unification(unifiedDomain);
+							fuzzySet = ((IntegerIntervalValuation) valuation).unification(_unifiedDomain);
 							valuation = new UnifiedValuation(fuzzySet);
 							_unifiedValuationsResult.put(vk, valuation);
 						} else {
@@ -245,7 +256,7 @@ public class UnificationPhase implements IPhaseMethod {
 							valuation = valuation.negateValuation();
 						}
 						if (((NumericRealDomain) valuation.getDomain()).getInRange()) {
-							fuzzySet = ((RealIntervalValuation) valuation).unification(unifiedDomain);
+							fuzzySet = ((RealIntervalValuation) valuation).unification(_unifiedDomain);
 							valuation = new UnifiedValuation(fuzzySet);
 							_unifiedValuationsResult.put(vk, valuation);
 						} else {
@@ -273,7 +284,7 @@ public class UnificationPhase implements IPhaseMethod {
 						if (isCost) {
 							auxValuation = auxValuation.negateValuation();
 						}
-						fuzzySet = ((TwoTuple) auxValuation).unification(unifiedDomain);
+						fuzzySet = ((TwoTuple) auxValuation).unification(_unifiedDomain);
 						valuation = new UnifiedValuation(fuzzySet);
 	
 						_unifiedValuationsResult.put(vk, valuation);
@@ -281,22 +292,22 @@ public class UnificationPhase implements IPhaseMethod {
 						if (isCost) {
 							valuation = ((LinguisticValuation) valuation).negateValuation();
 						}
-						fuzzySet = ((LinguisticValuation) valuation).unification(unifiedDomain);
+						fuzzySet = ((LinguisticValuation) valuation).unification(_unifiedDomain);
 						valuation = new UnifiedValuation(fuzzySet);
 	
 						_unifiedValuationsResult.put(vk, valuation);
 					} else if (valuation instanceof HesitantValuation) {
-						calculateFuzzyEnvelope(vk, (HesitantValuation) valuation, unifiedDomain);
+						calculateFuzzyEnvelope(vk, (HesitantValuation) valuation, (FuzzySet) _unifiedDomain);
 					}
 				}
 			}
 		}
 
 		if (toNormalize.size() > 0) {
-			normalizeValuations(toNormalize, domains, unifiedDomain);
+			normalizeValuations(toNormalize, domains, (FuzzySet) _unifiedDomain);
 		}
 
-		unifiedEvaluationToTwoTuple(unifiedDomain);
+		unifiedEvaluationToTwoTuple();
 
 		return _unifiedValuationsResult;
 	}
@@ -604,9 +615,9 @@ public class UnificationPhase implements IPhaseMethod {
 		_twoTupleValuationsResult.put(vk, twoTuple);
 	}
 
-	public Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple(FuzzySet unifiedDomain) {
+	public Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple() {
 
-		if (unifiedDomain != null) {
+		if (_unifiedDomain != null) {
 
 			Valuation valuation;
 

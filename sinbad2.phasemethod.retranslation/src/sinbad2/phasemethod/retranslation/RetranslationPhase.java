@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.element.ProblemElement;
 import sinbad2.phasemethod.IPhaseMethod;
@@ -39,6 +40,11 @@ public class RetranslationPhase implements IPhaseMethod {
 	
 	public void setLHDomains(List<Object[]> lhDomains) {
 		_lhDomains = lhDomains;
+	}
+	
+	@Override
+	public Domain getUnifiedDomain() {
+		return null;
 	}
 	
 	public boolean isActivated() {

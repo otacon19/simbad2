@@ -13,6 +13,7 @@ import sinbad2.aggregationoperator.AggregationOperatorsManager;
 import sinbad2.aggregationoperator.owa.OWA;
 import sinbad2.aggregationoperator.owa.YagerQuantifiers;
 import sinbad2.core.utils.Pair;
+import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
@@ -198,6 +199,11 @@ public class ResolutionPhase implements IPhaseMethod {
 		return (List<Double>) ((Map<ProblemElement, Object>) _aggregationPhase.getExpertsOperatorWeights().get(null)).get(null);
 	}
 
+	@Override
+	public Domain getUnifiedDomain() {
+		return null;
+	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<String[]> calculateDistance() {
 		List<String[]> result = new LinkedList<String[]>();

@@ -71,6 +71,7 @@ public class UnificationPhase implements IPhaseMethod {
 		_elhDomains = elhDomains;
 	}
 	
+	@Override
 	public FuzzySet getUnifiedDomain() {
 		return _unifiedDomain;
 	}

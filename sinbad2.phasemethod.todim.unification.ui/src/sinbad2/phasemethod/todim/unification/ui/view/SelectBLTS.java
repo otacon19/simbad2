@@ -29,6 +29,8 @@ import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
+import sinbad2.phasemethod.PhasesMethodManager;
+import sinbad2.phasemethod.todim.unification.UnificationPhase;
 import sinbad2.phasemethod.todim.unification.ui.dialog.NewBLTSDomainDialog;
 import sinbad2.phasemethod.todim.unification.ui.nls.Messages;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
@@ -55,12 +57,16 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	private boolean _completed;
 	private boolean _loaded;
 	
-	private static Domain _BLTSDomainSelected;
+	private Domain _BLTSDomainSelected;
+	
+	private UnificationPhase _unificationPhase;
 	
 	private RatingView _ratingView;
 	
 	@Override
 	public void createPartControl(Composite parent) {
+		_unificationPhase = (UnificationPhase) PhasesMethodManager.getInstance().getPhaseMethod(UnificationPhase.ID).getImplementation();
+		
 		_completed = false;
 		_loaded = false;
 		
@@ -124,6 +130,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = _validDomainsViewer.getSelection();
 				_BLTSDomainSelected = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
+				_unificationPhase.setUnifiedDomain(_BLTSDomainSelected);
 	
 				disposeFollowingPhase();
 				
@@ -265,9 +272,5 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	@Override
 	public void setRatingView(RatingView rating) {
 		_ratingView = rating;
-	}
-	
-	public static Domain getBLTSDomain() {
-		return _BLTSDomainSelected;
 	}
 }

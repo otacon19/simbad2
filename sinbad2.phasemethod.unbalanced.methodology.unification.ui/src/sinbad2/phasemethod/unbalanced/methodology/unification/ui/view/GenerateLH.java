@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.domain.linguistic.unbalanced.ui.jfreechart.LHChart;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
@@ -101,7 +100,7 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 	}
 
 	private void generateLH() {
-		_lh = _unification.getDomainLH().getLh();
+		_lh = _unification.getUnifiedDomain().getLh();
 		if(_lh != null) {
 			StringBuilder description = new StringBuilder("["); //$NON-NLS-1$
 			for(int i = 0; i < _lh.length; i++) {
@@ -166,12 +165,9 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		
-		Unbalanced unifiedDomain = (Unbalanced) _unification.getDomainLH().clone();
 		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();
-		unifiedValues.putAll(_unification.unification(unifiedDomain));
+		unifiedValues.putAll(_unification.unification());
 		aggregationPhase.setUnificationValues(unifiedValues);
-		aggregationPhase.setUnifiedDomain(unifiedDomain);
 		
 		if(_completed) {
 			_ratingView.loadNextStep();

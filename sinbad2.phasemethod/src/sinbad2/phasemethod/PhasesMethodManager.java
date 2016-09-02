@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
-
 public class PhasesMethodManager {
 	private final String EXTENSION_POINT = "flintstones.phasemethod"; //$NON-NLS-1$
 

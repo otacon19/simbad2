@@ -23,7 +23,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
@@ -206,10 +205,11 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		if (lhDomains != null) {
 			if(lhDomains.size() > 0) {
 				_unifiedDomain = ((FuzzySet) lhDomains.get(lhDomains.size() - 1)[2]);
+				_unificationPhase.setUnifiedDomain(_unifiedDomain);
 			}
 		}
 		
-		_unifiedValues = _unificationPhase.unification(_unifiedDomain);
+		_unifiedValues = _unificationPhase.unification();
 		TreeViewerContentProvider provider = new TreeViewerContentProvider(_unifiedValues);
 		_treeViewer.setContentProvider(provider);
 		_treeViewer.setInput(provider.getInput());
@@ -284,7 +284,6 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
 		aggregationPhase.setUnificationValues(unifiedValues);
-		aggregationPhase.setUnifiedDomain((Domain) _unifiedDomain.clone());
 		
 		List<Object[]> lhDomains = new LinkedList<Object[]>();
 		lhDomains.addAll(_unificationPhase.getLHDomains());

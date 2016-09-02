@@ -21,6 +21,7 @@ import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
+import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.listener.AggregationProcessListener;
 import sinbad2.phasemethod.aggregation.listener.AggregationProcessStateChangeEvent;
 import sinbad2.phasemethod.aggregation.listener.EAggregationProcessStateChange;
@@ -54,6 +55,8 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	private ProblemElementsSet _elementsSet;
 	private ValuationSet _valuationSet;
+	
+	private IPhaseMethod _unificationPhaseActivate;
 	
 	private List<AggregationProcessListener> _listeners;
 
@@ -605,10 +608,14 @@ public class AggregationPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void activate() {}
+	public void activate() {
+		_unifiedDomain = _unificationPhaseActivate.getUnifiedDomain();
+	}
 
 	@Override
 	public boolean validate() {
+		
+		_unificationPhaseActivate = PhasesMethodManager.getInstance().getActivePhaseMethod().getImplementation();
 		
 		if(_valuationSet.getValuations().isEmpty()) {
 			return false;

@@ -39,6 +39,8 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	public static final String ID = "flintstones.phasemethod.multigranular.lh.unification"; //$NON-NLS-1$
 	
+	private Domain _unifiedDomain;
+	
 	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleValuationsResult;
 	
@@ -78,6 +80,15 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	public void setLHDomains(List<Object[]> lhDomains) {
 		_lhDomains = lhDomains;
+	}
+	
+	@Override
+	public Domain getUnifiedDomain() {
+		return _unifiedDomain;
+	}
+	
+	public void setUnifiedDomain(Domain domain) {
+		_unifiedDomain = domain;
 	}
 	
 	@Override
@@ -136,10 +147,10 @@ public class UnificationPhase implements IPhaseMethod {
 		return true;
 	}
 
-	public Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
+	public Map<ValuationKey, Valuation> unification() {
 		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
 		
-		if (unifiedDomain != null) {
+		if (_unifiedDomain != null) {
 			Criterion criterion;
 			Valuation valuation;
 			Boolean isCost;
@@ -154,12 +165,12 @@ public class UnificationPhase implements IPhaseMethod {
 					if(isCost) {
 						valuation = valuation.negateValuation();
 					}
-					valuation = ((TwoTuple) valuation).transform(unifiedDomain);
+					valuation = ((TwoTuple) valuation).transform((FuzzySet) _unifiedDomain);
 				} else if(valuation instanceof LinguisticValuation) {
 					if(isCost) {
 						valuation = valuation.negateValuation();
 					}
-					valuation = new TwoTuple((FuzzySet) valuation.getDomain(), ((LinguisticValuation) valuation).getLabel()).transform(unifiedDomain);
+					valuation = new TwoTuple((FuzzySet) valuation.getDomain(), ((LinguisticValuation) valuation).getLabel()).transform((FuzzySet) _unifiedDomain);
 				} else {
 					throw new IllegalArgumentException();
 				}

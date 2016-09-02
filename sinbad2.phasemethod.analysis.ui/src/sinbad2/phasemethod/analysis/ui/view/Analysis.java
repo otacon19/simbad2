@@ -385,7 +385,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		
 		RetranslationPhase retranslationPhase = (RetranslationPhase) _pmm.getPhaseMethod(RetranslationPhase.ID).getImplementation();
 		if(retranslationPhase.isActivated()) {
-			Domain domain = _analysisPhase.getDomain();
+			Domain domain = _analysisPhase.getUnifiedDomain();
 			_aggregationResult = retranslationPhase.transform(_aggregationResult, (FuzzySet) domain);
 			_rankingViewer.setInput(_aggregationResult);
 			setChart(domain);

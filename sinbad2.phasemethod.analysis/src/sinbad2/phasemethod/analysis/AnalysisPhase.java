@@ -22,7 +22,8 @@ public class AnalysisPhase implements IPhaseMethod {
 		_domain = null;
 	}
 	
-	public Domain getDomain() {
+	@Override
+	public Domain getUnifiedDomain() {
 		return _domain;
 	}
 	
@@ -41,7 +42,7 @@ public class AnalysisPhase implements IPhaseMethod {
 		
 		clear();
 		
-		_domain = analysisPhase.getDomain();
+		_domain = analysisPhase.getUnifiedDomain();
 	}
 
 	@Override

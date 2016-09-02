@@ -238,7 +238,7 @@ public class CalculateRepresentation extends ViewPart implements IStepStateListe
 	private void calculateRepresentation() {
 		
 		if(_domain == null) {
-			_domain = _unification.getDomainLH();
+			_domain = _unification.getUnifiedDomain();
 		}
 		if(_lh == null) {
 			generateLH();

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
@@ -18,10 +19,11 @@ import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
 
-
 public class UnificationPhase implements IPhaseMethod {
 
 	public static final String ID = "flintstones.phasemethod.linguistic.twotuple.unification"; //$NON-NLS-1$
+	
+	private Domain _unifiedDomain;
 	
 	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleValuationsResult;
@@ -36,6 +38,8 @@ public class UnificationPhase implements IPhaseMethod {
 		
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		_domainsSet = domainsManager.getActiveDomainSet();
+		
+		_unifiedDomain = _domainsSet.getDomains().get(0);
 		
 		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
 		_twoTupleValuationsResult = new LinkedHashMap<ValuationKey, Valuation>();
@@ -57,8 +61,13 @@ public class UnificationPhase implements IPhaseMethod {
 		_twoTupleValuationsResult = twoTupleValuationsResult;
 	}
 	
-	public FuzzySet getDomain() {
-		return (FuzzySet) _domainsSet.getDomains().get(0);
+	@Override
+	public Domain getUnifiedDomain() {
+		return _unifiedDomain;
+	}
+	
+	public void setUnifiedDomain(Domain domain) {
+		_unifiedDomain = domain;
 	}
 	
 	@Override
@@ -119,10 +128,10 @@ public class UnificationPhase implements IPhaseMethod {
 		return true;
 	}
 
-	public Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
+	public Map<ValuationKey, Valuation> unification() {
 		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
 		
-		if (unifiedDomain != null) {
+		if (_unifiedDomain != null) {
 			Criterion criterion;
 			Valuation valuation;
 			Boolean isCost;
@@ -137,12 +146,12 @@ public class UnificationPhase implements IPhaseMethod {
 					if(isCost) {
 						valuation = valuation.negateValuation();
 					}
-					valuation = ((TwoTuple) valuation).transform(unifiedDomain);
+					valuation = ((TwoTuple) valuation).transform((FuzzySet) _unifiedDomain);
 				} else if(valuation instanceof LinguisticValuation) {
 					if(isCost) {
 						valuation = valuation.negateValuation();
 					}
-					valuation = new TwoTuple((FuzzySet) valuation.getDomain(), ((LinguisticValuation) valuation).getLabel()).transform(unifiedDomain);
+					valuation = new TwoTuple((FuzzySet) valuation.getDomain(), ((LinguisticValuation) valuation).getLabel()).transform((FuzzySet) _unifiedDomain);
 				} else {
 					throw new IllegalArgumentException();
 				}

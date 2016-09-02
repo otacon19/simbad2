@@ -29,6 +29,8 @@ import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
+import sinbad2.phasemethod.PhasesMethodManager;
+import sinbad2.phasemethod.heterogeneous.fusion.unification.UnificationPhase;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.ui.dialog.NewBLTSDomainDialog;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.ui.nls.Messages;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
@@ -49,18 +51,22 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	
 	private ControlAdapter _controlListener;
 	
+	private Domain _BLTSDomainSelected;
 	private List<Domain> _BLTSDomains;
 	private DomainSet _domainSet;
 	
 	private boolean _completed;
 	private boolean _loaded;
 	
-	private static Domain _BLTSDomainSelected;
-	
 	private RatingView _ratingView;
+	
+	private UnificationPhase _unificationPhase;
 	
 	@Override
 	public void createPartControl(Composite parent) {
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_unificationPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
+		
 		_completed = false;
 		_loaded = false;
 		
@@ -69,8 +75,8 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 		
 		_parent = parent;
 		
-		_BLTSDomains = new LinkedList<Domain>();
 		_BLTSDomainSelected = null;
+		_BLTSDomains = new LinkedList<Domain>();
 		
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		_domainSet = domainsManager.getActiveDomainSet();
@@ -124,6 +130,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = _validDomainsViewer.getSelection();
 				_BLTSDomainSelected = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
+				_unificationPhase.setUnifiedDomain(_BLTSDomainSelected);
 	
 				disposeFollowingPhase();
 				
@@ -265,9 +272,5 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	@Override
 	public void setRatingView(RatingView rating) {
 		_ratingView = rating;
-	}
-	
-	public static Domain getBLTSDomain() {
-		return _BLTSDomainSelected;
 	}
 }

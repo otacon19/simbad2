@@ -29,6 +29,8 @@ import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
+import sinbad2.phasemethod.PhasesMethodManager;
+import sinbad2.phasemethod.multigranular.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.unification.ui.dialog.NewBLTSDomainDialog;
 import sinbad2.phasemethod.multigranular.unification.ui.nls.Messages;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
@@ -52,15 +54,19 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	private List<Domain> _domainsBLTS;
 	private DomainSet _domainSet;
 	
-	private static Domain _selectedBLTSDomain;
+	private Domain _selectedBLTSDomain;
 	
 	private boolean _completed;
 	private boolean _loaded;
+	
+	private UnificationPhase _unificationPhase;
 	
 	private RatingView _ratingView;
 	
 	@Override
 	public void createPartControl(Composite parent) {
+		_unificationPhase = (UnificationPhase) PhasesMethodManager.getInstance().getPhaseMethod(UnificationPhase.ID).getImplementation();
+		
 		_completed = false;
 		_loaded = false;
 		
@@ -123,6 +129,8 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = _validDomainsViewer.getSelection();
 				_selectedBLTSDomain = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
+				_unificationPhase.setUnifiedDomain(_selectedBLTSDomain);
+				
 				_completed = true;
 				
 				disposeFollowingPhase();
@@ -228,10 +236,6 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 		}
 	}
 
-	public static Domain getBLTSDomain() {
-		return _selectedBLTSDomain;
-	}
-	
 	@Override
 	public String getPartName() {
 		return Messages.SelectBLTS_Select_BLTS;

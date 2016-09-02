@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
@@ -20,6 +21,8 @@ import sinbad2.valuation.valuationset.ValuationSetManager;
 public class UnificationPhase implements IPhaseMethod {
 
 	public static final String ID = "flintstones.phasemethod.multigranular.fusion.unification"; //$NON-NLS-1$
+	
+	private Domain _unifiedDomain;
 	
 	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleValuationsResult;
@@ -50,6 +53,15 @@ public class UnificationPhase implements IPhaseMethod {
 		_twoTupleValuationsResult = twoTupleValuationsResult;
 	}
 
+	@Override 
+	public Domain getUnifiedDomain() {
+		return _unifiedDomain;
+	}
+	
+	public void setUnifiedDomain(Domain unifiedDomain) {
+		_unifiedDomain = unifiedDomain;
+	}
+	
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new UnificationPhase();
@@ -104,10 +116,10 @@ public class UnificationPhase implements IPhaseMethod {
 		return true;
 	}
 
-	public Map<ValuationKey, Valuation> unification(FuzzySet unifiedDomain) {
+	public Map<ValuationKey, Valuation> unification() {
 		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
 		
-		if (unifiedDomain != null) {
+		if (_unifiedDomain != null) {
 			Criterion criterion;
 			Valuation valuation;
 			FuzzySet fuzzySet;
@@ -124,27 +136,27 @@ public class UnificationPhase implements IPhaseMethod {
 					if(isCost) {
 						auxValuation = auxValuation.negateValuation();
 					}
-					fuzzySet = ((TwoTuple) auxValuation).unification(unifiedDomain);
+					fuzzySet = ((TwoTuple) auxValuation).unification(_unifiedDomain);
 					valuation = new UnifiedValuation(fuzzySet);
 				} else if(valuation instanceof LinguisticValuation) {
 					if(isCost) {
 						valuation = valuation.negateValuation();
 					}
-					fuzzySet = ((LinguisticValuation) valuation).unification(unifiedDomain);
+					fuzzySet = ((LinguisticValuation) valuation).unification(_unifiedDomain);
 					valuation = new UnifiedValuation(fuzzySet);
 				}
 				_unifiedValuationsResult.put(vk, valuation);
 			}
 		}
 		
-		unifiedEvaluationToTwoTuple(unifiedDomain);
+		unifiedEvaluationToTwoTuple();
 		
 		return _unifiedValuationsResult;
 	}
 	
-	public Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple(FuzzySet unifiedDomain) {
+	public Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple() {
 		
-		if(unifiedDomain != null) {
+		if(_unifiedDomain != null) {
 		
 			Valuation valuation;
 

@@ -32,6 +32,8 @@ public class UnificationPhase implements IPhaseMethod {
 
 	public static final String ID = "flintstones.phasemethod.heterogeneous.fusion.unification"; //$NON-NLS-1$
 	
+	private Domain _unifiedDomain;
+	
 	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
 	private Map<ValuationKey, Valuation> _twoTupleValuationsResult;
 	
@@ -62,6 +64,15 @@ public class UnificationPhase implements IPhaseMethod {
 		_twoTupleValuationsResult = twoTupleValuationsResult;
 	}
 
+	@Override
+	public Domain getUnifiedDomain() {
+		return _unifiedDomain;
+	}
+	
+	public void setUnifiedDomain(Domain domain) {
+		_unifiedDomain = domain;
+	}
+	
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new UnificationPhase();

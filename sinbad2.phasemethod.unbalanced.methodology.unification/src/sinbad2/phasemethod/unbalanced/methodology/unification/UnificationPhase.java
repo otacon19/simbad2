@@ -3,6 +3,7 @@ package sinbad2.phasemethod.unbalanced.methodology.unification;
 import java.util.HashMap;
 import java.util.Map;
 
+import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
@@ -27,6 +28,7 @@ public class UnificationPhase implements IPhaseMethod {
 	private static final int LEFT = 0;
 	private static final int RIGHT = 1;
 
+	private Domain _unifiedDomain;
 	private Unbalanced _hgls;
 	
 	private Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
@@ -42,6 +44,8 @@ public class UnificationPhase implements IPhaseMethod {
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		_domainSet = domainsManager.getActiveDomainSet();
 		
+		_unifiedDomain = _domainSet.getDomains().get(0);
+		
 		_unifiedEvaluationsResult = new HashMap<ValuationKey, Valuation>();
 	}
 	
@@ -53,20 +57,25 @@ public class UnificationPhase implements IPhaseMethod {
 		_unifiedEvaluationsResult = unifiedValuationsResult;
 	}
 	
-	public Unbalanced getDomainLH() {
-		return (Unbalanced) _domainSet.getDomains().get(0);
+	@Override
+	public Unbalanced getUnifiedDomain() {
+		return (Unbalanced) _unifiedDomain;
+	}
+	
+	public void setUnifiedDomain(Domain domain) {
+		_unifiedDomain = domain;
 	}
 	
 	public Unbalanced getHGLS() {
 		return _hgls;
 	}
 	
-	public Map<ValuationKey, Valuation> unification(Unbalanced domain) {
+	public Map<ValuationKey, Valuation> unification() {
 
 		_unifiedEvaluationsResult = new HashMap<ValuationKey, Valuation>();
 
-		if(domain != null) {
-			int[] lh = domain.getLh();
+		if(_unifiedDomain != null) {
+			int[] lh = ((Unbalanced) _unifiedDomain).getLh();
 			Map<Integer, Unbalanced> lhDomains = new HashMap<Integer, Unbalanced>();
 			_hgls = null;
 
@@ -99,8 +108,8 @@ public class UnificationPhase implements IPhaseMethod {
 					throw new IllegalArgumentException();
 				}
 				
-				int pos = domain.getLabelSet().getPos(label);
-				Map<Integer, Integer> domains = domain.getLabel(pos);
+				int pos = ((Unbalanced) _unifiedDomain).getLabelSet().getPos(label);
+				Map<Integer, Integer> domains = ((Unbalanced) _unifiedDomain).getLabel(pos);
 
 				int size = domains.size();
 				Unbalanced[] auxDomains = new Unbalanced[size];
