@@ -284,7 +284,6 @@ public class Unification extends ViewPart implements IStepStateListener {
 		compactTable();
 
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		aggregationPhase.clear();
 		aggregationPhase.setUnificationValues(unifiedTwoTupleValues);
 		aggregationPhase.setUnifiedDomain((Domain) _domain.clone());
 		

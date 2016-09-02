@@ -166,7 +166,6 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		aggregationPhase.clear();
 		
 		Unbalanced unifiedDomain = (Unbalanced) _unification.getDomainLH().clone();
 		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();

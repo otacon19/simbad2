@@ -151,6 +151,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				_lineChart.setModel(_sensitivityAnalysis.getModel());
 				
 				_weightSpinner.setVisible(true);
+				_lineChart.setPositionVariableValueMarker(_weightSpinner.getSelection() / 100d);
 				_changeChartButton.setVisible(true);
 			} else {
 				_stackedChart = new SturdinessMeasureStackedChart();

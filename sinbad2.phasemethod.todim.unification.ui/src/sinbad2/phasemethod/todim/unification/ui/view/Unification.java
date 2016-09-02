@@ -277,7 +277,6 @@ public class Unification extends ViewPart implements IStepStateListener {
 		unifiedTwoTupleValues.putAll(_unificationPhase.getTwoTupleValuationsResult());
 		
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		aggregationPhase.clear();
 		aggregationPhase.setUnificationValues(unifiedTwoTupleValues);
 		aggregationPhase.setUnifiedDomain((Domain) _domain.clone());
 		

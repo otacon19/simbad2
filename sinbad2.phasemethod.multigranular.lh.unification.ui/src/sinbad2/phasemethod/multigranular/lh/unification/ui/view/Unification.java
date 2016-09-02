@@ -283,7 +283,6 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		aggregationPhase.clear();
 		aggregationPhase.setUnificationValues(unifiedValues);
 		aggregationPhase.setUnifiedDomain((Domain) _unifiedDomain.clone());
 		

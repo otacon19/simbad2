@@ -762,6 +762,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		_completed = false;
 		_controlListener = null;
 		_loaded = false;
+		
+		_aggregationPhase.clear();
 	}
 	
 	@Override

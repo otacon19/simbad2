@@ -380,7 +380,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 		Set<ProblemElement> experts = getCheckedElements(_expertsCheckboxTreeViewer);
 		Set<ProblemElement> alternatives = getCheckedElements(_alternativesCheckboxTreeViewer);
 		Set<ProblemElement> criteria = getCheckedElements(_criteriaCheckboxTreeViewer);
-
+		
 		_aggregationResult = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 		
 		RetranslationPhase retranslationPhase = (RetranslationPhase) _pmm.getPhaseMethod(RetranslationPhase.ID).getImplementation();
@@ -391,6 +391,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 			setChart(domain);
 		} else {
 			_rankingViewer.setInput(_aggregationResult);
+			_rankingViewer.refresh();
 			setChart(getDomain());
 		}
 	}
