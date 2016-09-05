@@ -8,10 +8,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.handlers.HandlerUtil;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
@@ -21,6 +19,7 @@ import sinbad2.domain.ui.DomainUIsManager;
 import sinbad2.domain.ui.dialog.modifyDialog.ModifyDomainDialog;
 import sinbad2.domain.ui.dialog.selectdialog.SelectModifyDomainDialog;
 import sinbad2.domain.ui.nls.Messages;
+import sinbad2.domain.ui.view.domain.DomainViewManager;
 import sinbad2.domain.valuations.DomainsValuationsManager;
 
 public class ModifyDomainHandler extends AbstractHandler {
@@ -30,7 +29,10 @@ public class ModifyDomainHandler extends AbstractHandler {
 	private Domain _oldDomain;
 	private String _valuationOldDomain;
 	
-	public ModifyDomainHandler() {}
+	public ModifyDomainHandler() {
+		_oldDomain = null;
+		_valuationOldDomain = "";
+	}
 	
 	public ModifyDomainHandler(Domain oldDomain) {
 		_oldDomain = oldDomain;
@@ -41,13 +43,11 @@ public class ModifyDomainHandler extends AbstractHandler {
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		DomainSet domainSet = domainsManager.getActiveDomainSet();
 		DomainsValuationsManager domainValuationsManager = DomainsValuationsManager.getInstance();
-
-		if(_oldDomain == null) {
-			IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
-			_oldDomain = (Domain) selection.getFirstElement();
-		}
+	
+		_oldDomain = DomainViewManager.getInstance().getActiveDomain();
+		
 		_valuationOldDomain = domainValuationsManager.getValuationSupportedForSpecificDomain(_oldDomain.getId());
-				
+		
 		DomainUIsManager domainUIsManager = DomainUIsManager.getInstance();
 		String valuationID = domainValuationsManager.getValuationSupportedForSpecificDomain(_oldDomain.getId());
 		
@@ -68,7 +68,7 @@ public class ModifyDomainHandler extends AbstractHandler {
 				}
 			}
 		}
-
+		
 		if(dialogIDSelected != null && !dialogIDSelected.isEmpty()) {
 			ModifyDomainDialog modifyDomainDialog = domainUIsManager.modifyDomainDialog(_oldDomain, dialogIDSelected);
 			if(modifyDomainDialog.open() == Window.OK) {

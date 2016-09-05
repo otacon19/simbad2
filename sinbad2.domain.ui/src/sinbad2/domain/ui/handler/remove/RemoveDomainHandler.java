@@ -6,14 +6,13 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.handlers.HandlerUtil;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.operation.RemoveDomainOperation;
 import sinbad2.domain.ui.nls.Messages;
+import sinbad2.domain.ui.view.domain.DomainViewManager;
 
 public class RemoveDomainHandler extends AbstractHandler {
 	
@@ -26,8 +25,7 @@ public class RemoveDomainHandler extends AbstractHandler {
 		DomainsManager domainsManager = DomainsManager.getInstance();
 		DomainSet domainSet = domainsManager.getActiveDomainSet();
 		
-		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked(event);
-		Domain domain = (Domain) selection.getFirstElement();
+		Domain domain = DomainViewManager.getInstance().getActiveDomain();
 		
 		IUndoableOperation operation = new RemoveDomainOperation(Messages.RemoveDomainHandler_Remove_domain, domain, domainSet);
 		IOperationHistory operationHistoriy = OperationHistoryFactory.getOperationHistory();

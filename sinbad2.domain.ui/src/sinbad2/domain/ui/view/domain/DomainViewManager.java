@@ -30,6 +30,10 @@ public class DomainViewManager {
 		return _instance;
 	}
 	
+	public Domain getActiveDomain() {
+		return _activeDomain;
+	}
+	
 	public void setContent(Domain domain, Object ranking) {
 		_activeDomain = domain;
 		_activeRanking = ranking;
