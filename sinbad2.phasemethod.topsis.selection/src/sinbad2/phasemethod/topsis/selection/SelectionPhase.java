@@ -218,7 +218,7 @@ public class SelectionPhase implements IPhaseMethod {
 		return _noIdealSolution;
 	}
 
-	public List<Object[]> calculateIdealEuclideanDistance(List<Double> weights) {
+	public List<Object[]> calculateIdealEuclideanDistanceByCriterion(List<Double> weights) {
 		double beta;
 		int numWeight = 0;
 
@@ -227,9 +227,11 @@ public class SelectionPhase implements IPhaseMethod {
 		Alternative alternative = _elementsSet.getAlternatives().get(0);
 		for (Pair<Alternative, Criterion> pair : _decisionMatrix.keySet()) {
 			beta = 0;
+			
 			if (!alternative.equals(pair.getLeft())) {
 				numWeight = 0;
 			}
+			
 			TwoTuple colectiveExpertsValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair)).clone();
 			for (Object[] idealSolutionData : _idealSolution) {
 				if (pair.getRight().equals(idealSolutionData[0])) {
@@ -295,7 +297,7 @@ public class SelectionPhase implements IPhaseMethod {
 		}
 	}
 
-	public List<Object[]> calculateNoIdealEuclideanDistance(List<Double> weights) {
+	public List<Object[]> calculateNoIdealEuclideanDistanceByCriterion(List<Double> weights) {
 		double beta;
 		int numWeight = 0;
 

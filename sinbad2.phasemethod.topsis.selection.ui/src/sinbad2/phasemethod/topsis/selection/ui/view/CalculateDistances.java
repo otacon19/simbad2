@@ -1,5 +1,7 @@
 package sinbad2.phasemethod.topsis.selection.ui.view;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +54,22 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 	private DistanceIdealSolutionTableViewerContentProvider _distanceIdealSolutionProvider;
 	
 	private SelectionPhase _selectionPhase;
+	
+	private static class DataComparator implements Comparator<Object[]> {
+		public int compare(Object[] d1, Object[] d2) {
+			Alternative a1 = (Alternative) d1[0];
+			Alternative a2 = (Alternative) d2[0];
+			int compare = a1.compareTo(a2);
+			
+			if(compare != 0) {
+				return compare;
+			} else {
+				Criterion c1 = (Criterion) d1[1];
+				Criterion c2 = (Criterion) d2[1];
+				return c1.compareTo(c2);
+			}
+		}
+	}
 	
 	private static ProblemElement[] getLeafElements(ProblemElement root) {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
@@ -129,12 +147,21 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 		
 		fillCombo();
 		
+		GridLayout informationLayout = new GridLayout(2, true);
+		informationLayout.marginWidth = 10;
+		informationLayout.marginHeight = 10;
+		
+		Composite informationPanel = new Composite(_distanceEditorPanel, SWT.NONE);
+		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		informationPanel.setLayoutData(gridData);
+		informationPanel.setLayout(informationLayout);
+		
 		GridLayout positiveNegativeLayout = new GridLayout(1, true);
 		positiveNegativeLayout.marginWidth = 10;
 		positiveNegativeLayout.marginHeight = 10;
 		
-		Composite positveNegativePanel = new Composite(_distanceEditorPanel, SWT.BORDER);
-		gridData = new GridData(SWT.CENTER, SWT.FILL, true, true, 1, 1);
+		Composite positveNegativePanel = new Composite(informationPanel, SWT.NONE);
+		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		positveNegativePanel.setLayoutData(gridData);
 		positveNegativePanel.setLayout(positiveNegativeLayout);
 		
@@ -238,7 +265,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 		distanceIdealSolutionLayout.marginWidth = 10;
 		distanceIdealSolutionLayout.marginHeight = 10;
 		
-		Composite distanceIdealSolutionPanel = new Composite(_distanceEditorPanel, SWT.NONE);
+		Composite distanceIdealSolutionPanel = new Composite(informationPanel, SWT.NONE);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		distanceIdealSolutionPanel.setLayoutData(gridData);
 		distanceIdealSolutionPanel.setLayout(distanceIdealSolutionLayout);
@@ -377,8 +404,8 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 			}
 		}
 		
-		List<Object[]> idealDistances = _selectionPhase.calculateIdealEuclideanDistance(weights);
-		List<Object[]> noIdealDistances = _selectionPhase.calculateNoIdealEuclideanDistance(weights);
+		List<Object[]> idealDistances = _selectionPhase.calculateIdealEuclideanDistanceByCriterion(weights);
+		List<Object[]> noIdealDistances = _selectionPhase.calculateNoIdealEuclideanDistanceByCriterion(weights);
 		List<Object[]> distances = new LinkedList<Object[]>();
 		
 		for(int i = 0; i < idealDistances.size(); ++i) {
@@ -392,6 +419,8 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 			distances.add(distanceData);
 		}
 
+		Collections.sort(distances, new DataComparator());
+		
 		_positiveNegativeProvider.setInput(distances);
 		_tableViewerPositiveNegative.setInput(_positiveNegativeProvider.getInput());
 		
