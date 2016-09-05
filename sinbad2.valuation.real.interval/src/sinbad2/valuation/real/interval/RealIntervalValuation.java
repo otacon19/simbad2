@@ -8,11 +8,13 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.Domain;
+import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.ValuationsManager;
 import sinbad2.valuation.real.interval.nls.Messages;
 
 public class RealIntervalValuation extends Valuation {
@@ -21,7 +23,6 @@ public class RealIntervalValuation extends Valuation {
 
 	public double _min;
 	public double _max;
-	
 	
 	public RealIntervalValuation() {
 		super();
@@ -60,19 +61,37 @@ public class RealIntervalValuation extends Valuation {
 		_max = max;
 	}
 	
-	public Valuation normalized() {
-		RealIntervalValuation result = (RealIntervalValuation) clone();
+	public Valuation normalize() {
+		ValuationsManager valuationsManager = ValuationsManager.getInstance();
+		RealIntervalValuation result = (RealIntervalValuation) valuationsManager.copyValuation(ID);
+		
+		DomainsManager domainsManager = DomainsManager.getInstance();
+		NumericRealDomain domain = (NumericRealDomain) domainsManager.copyDomain(NumericRealDomain.ID);
+		
+		domain.setMinMax(((NumericRealDomain) _domain).getMin(), ((NumericRealDomain) _domain).getMax());
+		domain.setInRange(((NumericRealDomain) _domain).getInRange());
+		
+		result.setDomain(domain);
+		result.setMinMax(_min, _max);
+		
+		return normalizeInterval(result);
+	}
+	
+	
+	public Valuation normalizeInterval(RealIntervalValuation result) {
 		double min, max, intervalSize;
 		
 		min = ((NumericRealDomain) _domain).getMin();
 		max = ((NumericRealDomain) _domain).getMax();
 		intervalSize = max - min;
 		
-		max = ((double) (_max - min)) / intervalSize;
-		min = ((double) (_min - min)) / intervalSize;
+		double maxNormalized = (_max - min) / intervalSize;
+		double minNormalized = (_min - min) / intervalSize;
 		
 		((NumericRealDomain) result._domain).setMinMax(0d, 1d);
-		result.setMinMax(min, max);
+		
+		result._min = minNormalized;
+		result._max = maxNormalized;
 		
 		return result;
 	}
@@ -102,7 +121,7 @@ public class RealIntervalValuation extends Valuation {
 
 		FuzzySet result = (FuzzySet) fuzzySet.clone();
 		cardinality = ((FuzzySet) fuzzySet).getLabelSet().getCardinality();
-		normalized = (RealIntervalValuation) normalized();
+		normalized = (RealIntervalValuation) normalize();
 
 		for (int i = 0; i < cardinality; i++) {
 			function = result.getLabelSet().getLabel(i).getSemantic();

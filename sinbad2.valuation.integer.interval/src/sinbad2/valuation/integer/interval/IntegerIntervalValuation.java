@@ -74,25 +74,23 @@ public class IntegerIntervalValuation extends Valuation {
 		result.setDomain(domain);
 		result.setMinMax(_min, _max);
 		
-		return result.normalizeInterval();
+		return normalizeInterval(result);
 	}
 	
-	private Valuation normalizeInterval() {
-		IntegerIntervalValuation result = (IntegerIntervalValuation) clone();
-		
+	private Valuation normalizeInterval(IntegerIntervalValuation result) {
 		double min, max, intervalSize;
 		
 		min = Math.round(((NumericIntegerDomain) _domain).getMin());
 		max = Math.round(((NumericIntegerDomain) _domain).getMax());
 		intervalSize = max - min;
 		
-		max = (_max - min) / intervalSize;
-		min = (_min - min) / intervalSize;
+		double maxNormalized = (_max - min) / intervalSize;
+		double minNormalized = (_min - min) / intervalSize;
 		
 		((NumericIntegerDomain) result._domain).setMinMax(0, 1);
 		
-		result._min = min;
-		result._max = max;
+		result._min = minNormalized;
+		result._max = maxNormalized;
 		
 		return result;
 	}
