@@ -330,7 +330,7 @@ public class MethodsManager {
 		return false;
 	}
 
-	private boolean getBestConditionsHesitant() {
+	public boolean getBestConditionsHesitant() {
 		for(ValuationKey vk: _valuationsSet.getValuations().keySet()) {
 			Valuation v = _valuationsSet.getValuations().get(vk);
 			if(!(v instanceof HesitantValuation)) {

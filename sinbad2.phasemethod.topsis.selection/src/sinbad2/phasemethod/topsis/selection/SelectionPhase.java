@@ -238,11 +238,9 @@ public class SelectionPhase implements IPhaseMethod {
 					TwoTuple idealValuation = (TwoTuple) ((TwoTuple) idealSolutionData[1]).clone();
 
 					if (weights == null) {
-						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta()
-								- idealValuation.calculateInverseDelta());
+						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta() - idealValuation.calculateInverseDelta());
 					} else {
-						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta()
-								- idealValuation.calculateInverseDelta()) * weights.get(numWeight);
+						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta() - idealValuation.calculateInverseDelta()) * weights.get(numWeight);
 						numWeight++;
 					}
 
@@ -273,16 +271,12 @@ public class SelectionPhase implements IPhaseMethod {
 				if (pair.getLeft().equals(a)) {
 					for (Object[] idealSolutionData : _idealSolution) {
 						if (pair.getRight().equals(idealSolutionData[0])) {
-							TwoTuple expertsColectiveValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair))
-									.clone();
+							TwoTuple expertsColectiveValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair)).clone();
 							TwoTuple idealSolutionValuation = (TwoTuple) ((TwoTuple) idealSolutionData[1]).clone();
 							if (weights == null) {
-								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta()
-										- idealSolutionValuation.calculateInverseDelta());
+								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta() - idealSolutionValuation.calculateInverseDelta());
 							} else {
-								beta += Math
-										.abs(expertsColectiveValuation.calculateInverseDelta()
-												- idealSolutionValuation.calculateInverseDelta())
+								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta() - idealSolutionValuation.calculateInverseDelta())
 										* weights.get(numWeight);
 								numWeight++;
 							}

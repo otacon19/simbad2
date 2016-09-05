@@ -23,7 +23,8 @@ import sinbad2.resolutionphase.rating.ui.nls.Messages;
 
 public class AlgorithmDialog extends Dialog {
 	
-	private final static String ALGORITHM = "# Require values #\nedNum = <edNum>\nedInt = <edInt>\nedLinUnb = <edLinUnb>\ntamEdLinLis = <tamEdLinLis>\nedLinList = <edLinList>\nedLin = <edLin>\n\n# Algorithm to select the suitable CWW methodology #\n 1: if (edLin[1].2T=true) and (tamEdLinLis=1) then\n 2:     return <1>\n 3: else if (edNum=true) or (edInt=true) then\n 4:     return <5>\n 5: else if (edLinUnb=true) then\n 6:     return <6>\n 7: else\n 8:     edLinListShortCard <-- short(edLinList,edLinList.card)\n 9:     i <-- 1\n10:     while i<tamEdLinLis do\n11:         if (edLinListShortCard.edLin[i].2T=false) then\n12:             return <2>\n13:         else if (edLinListShortCard[i+1].card != ((edLinListShortCard[i].card)-1)·2+1) then\n14:             return <4>\n15:         else\n16:             i <-- i+1\n17:         end if\n18:     end while\n19:     return <3>\n20: end if"; //$NON-NLS-1$
+	private final static String ALGORITHM = "# Require values #"
+			+ "\nedNum = <edNum>\nedInt = <edInt>\nedLinUnb = <edLinUnb>\ntamEdLinLis = <tamEdLinLis>\nedLinList = <edLinList>\nedLin = <edLin>\nedHesit = <edHesit>\n\n# Algorithm to select the suitable CWW methodology #\n 1: if (edLin[1].2T=true) and (tamEdLinLis=1) then\n 2:     return <1>\n 3: else if (edNum=true) or (edInt=true) then\n 4:     return <5>\n 5: else if (edLinUnb=true) then\n 6:     return <6>\n 7: else if (edHesit=true) and (ntamEdLinLis>1) then\n 8:     return <8>\n 9: else if (edHesit=true) and (tamEdLinLis=1) then\n10:     return <7>\n11: else\n12:     edLinListShortCard <-- short(edLinList,edLinList.card)\n13:     i <-- 1\n14:     while i<tamEdLinLis do\n15:         if (edLinListShortCard.edLin[i].2T=false) then\n16:             return <2>\n17:         else if (edLinListShortCard[i+1].card != ((edLinListShortCard[i].card)-1)·2+1) then\n18:             return <4>\n19:         else\n20:             i <-- i+1\n21:         end if\n22:     end while\n23:     return <3>\n24: end if"; //$NON-NLS-1$
 
 	private String _recommendedMethod;
 	private Composite _container;
@@ -40,7 +41,6 @@ public class AlgorithmDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-
 		_container = (Composite) super.createDialogArea(parent);
 		GridLayout gl__container = new GridLayout(2, true);
 		gl__container.marginRight = 10;
@@ -80,22 +80,24 @@ public class AlgorithmDialog extends Dialog {
 	private void setAlgorithm() {
 
 		String algorithm = ALGORITHM;
-
+		
 		algorithm = algorithm.replace("<1>", Messages.AlgorithmDialog_2_tuple_linguistic_computational_model); //$NON-NLS-1$
 		algorithm = algorithm.replace("<2>", Messages.AlgorithmDialog_Fusion_approach_for_managing_multi_granular_linguistic_information); //$NON-NLS-1$
 		algorithm = algorithm.replace("<3>", Messages.AlgorithmDialog_Linguistic_hierarchies); //$NON-NLS-1$
 		algorithm = algorithm.replace("<4>", Messages.AlgorithmDialog_Extended_linguistic_hierarchies); //$NON-NLS-1$
 		algorithm = algorithm.replace("<5>", Messages.AlgorithmDialog_Fusion_approach_for_managing_heterogeneous_information); //$NON-NLS-1$
 		algorithm = algorithm.replace("<6>", Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets); //$NON-NLS-1$
-		algorithm = algorithm.replace("<7>", Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information); //$NON-NLS-1$
-		algorithm = algorithm.replace("<8>", Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS); //$NON-NLS-1$
-
+		algorithm = algorithm.replace("<7>", "Hesitant Fuzzy Linguistic Term Set"); //$NON-NLS-1$
+		algorithm = algorithm.replace("<8>", Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information); //$NON-NLS-1$
+		algorithm = algorithm.replace("<9>", Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS); //$NON-NLS-1$
+		algorithm = algorithm.replace("<10>", "Interactive and multi-criteria decision-making (TODIM)"); //$NON-NLS-1$
+		
 		Color BLACK = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
 
 		Color[] textColors = new Color[] { BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
-				BLACK, BLACK, BLACK, BLACK, BLACK };
+				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK };
 
 		StyleRange[] textRanges = new StyleRange[textColors.length];
 		int lineStart = 0;
@@ -228,6 +230,7 @@ public class AlgorithmDialog extends Dialog {
 		boolean bestConditionsNumeric = _methodsManager.getBestConditionsNumeric();
 		boolean edInt = _methodsManager.getBestConditionsNumeric();
 		boolean bestConditionsUnbalanced = _methodsManager.getBestConditionsUnbalanced();
+		boolean bestConditionsHesitant = _methodsManager.getBestConditionsHesitant();
 		int[] cardinalitiesFuzzySet = _methodsManager.getCardinalitiesFuzzySet();
 		int tamEdLinList = cardinalitiesFuzzySet.length;
 		Map<Integer, Boolean> edLin = _methodsManager.getBestConditionsLinguistic();
@@ -261,6 +264,7 @@ public class AlgorithmDialog extends Dialog {
 		edLinListValue += "]"; //$NON-NLS-1$
 
 		algorithm = algorithm.replace("<edNum>", Boolean.toString(bestConditionsNumeric)); //$NON-NLS-1$
+		algorithm = algorithm.replace("<edHesit>", Boolean.toString(bestConditionsHesitant)); //$NON-NLS-1$
 		algorithm = algorithm.replace("<edInt>", Boolean.toString(edInt)); //$NON-NLS-1$
 		algorithm = algorithm.replace("<edLinUnb>", Boolean.toString(bestConditionsUnbalanced)); //$NON-NLS-1$
 		algorithm = algorithm.replace("<tamEdLinLis>", Integer.toString(tamEdLinList)); //$NON-NLS-1$
@@ -273,8 +277,10 @@ public class AlgorithmDialog extends Dialog {
 		algorithm = algorithm.replace("<4>", Messages.AlgorithmDialog_Extended_linguistic_hierarchies); //$NON-NLS-1$
 		algorithm = algorithm.replace("<5>", Messages.AlgorithmDialog_Fusion_approach_for_managing_heterogeneous_information); //$NON-NLS-1$
 		algorithm = algorithm.replace("<6>", Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets); //$NON-NLS-1$
-		algorithm = algorithm.replace("<7>", Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information); //$NON-NLS-1$
-		algorithm = algorithm.replace("<8>", Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS); //$NON-NLS-1$
+		algorithm = algorithm.replace("<7>", "Hesitant Fuzzy Linguistic Term Set"); //$NON-NLS-1$
+		algorithm = algorithm.replace("<8>", Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information); //$NON-NLS-1$
+		algorithm = algorithm.replace("<9>", Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS); //$NON-NLS-1$
+		algorithm = algorithm.replace("<10>", "Interactive and multi-criteria decision-making (TODIM)"); //$NON-NLS-1$
 
 		Color DARK_BLUE = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE);
 		Color GREEN = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN);
@@ -283,9 +289,10 @@ public class AlgorithmDialog extends Dialog {
 		Color BLACK = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
 
 		Color[] textColors = new Color[] { BLACK, MAGENTA, MAGENTA, MAGENTA, MAGENTA,
-				MAGENTA, MAGENTA, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
+				MAGENTA, MAGENTA, MAGENTA, BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
-				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK };
+				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, 
+				BLACK, BLACK, BLACK  };
 
 		_recommendedMethod = _methodsManager.getRecommendedMethod();
 
@@ -303,7 +310,7 @@ public class AlgorithmDialog extends Dialog {
 			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 13] = textColors[start + 14] = GREEN;
 		} else if(Messages.AlgorithmDialog_Fusion_approach_for_managing_heterogeneous_information.equals(_recommendedMethod)) {
 			textColors[start + 1] = RED;
-			textColors[start + 3] = textColors[start + 4] = GREEN;
+			textColors[start + 4] = GREEN;
 		} else if (Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets.equals(_recommendedMethod)) {
 			textColors[start + 1] = textColors[start + 3] = RED;
 			textColors[start + 5] = textColors[start + 6] = GREEN;
@@ -311,6 +318,12 @@ public class AlgorithmDialog extends Dialog {
 			textColors[start + 1] = textColors[start + 3] = RED;
 			textColors[start + 5] = textColors[start + 6] = GREEN;
 		}  else if (Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS.equals(_recommendedMethod)) {
+			textColors[start + 1] = textColors[start + 3] = textColors[start + 5] = RED;
+			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 11] = textColors[start + 12] = GREEN;
+		}  else if("Hesitant Fuzzy Linguistic Term Set".equals(_recommendedMethod)) {
+			textColors[start + 1] = textColors[start + 3] = RED;
+			textColors[start + 5] = textColors[start + 6] = GREEN;
+		}  else if("Interactive and multi-criteria decision-making (TODIM)".equals(_recommendedMethod)) {
 			textColors[start + 1] = textColors[start + 3] = textColors[start + 5] = RED;
 			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 11] = textColors[start + 12] = GREEN;
 		}
@@ -321,8 +334,7 @@ public class AlgorithmDialog extends Dialog {
 		String lines[] = algorithm.split("\n"); //$NON-NLS-1$
 		for(int i = 0; i < textColors.length; i++) {
 			lineLength = lines[i].length();
-			textRanges[i] = new StyleRange(lineStart, lineLength,
-					textColors[i], null);
+			textRanges[i] = new StyleRange(lineStart, lineLength, textColors[i], null);
 			lineStart += lineLength + 1;
 		}
 
@@ -363,9 +375,7 @@ public class AlgorithmDialog extends Dialog {
 			newPos = 0;
 			while (algorithm.indexOf(" end", initPos) != -1) { //$NON-NLS-1$
 				newPos = algorithm.indexOf(" end", initPos); //$NON-NLS-1$
-				_algorithmInstantationText.setStyleRange(new StyleRange(newPos,
-						4, _algorithmInstantationText
-								.getStyleRangeAtOffset(newPos).foreground,
+				_algorithmInstantationText.setStyleRange(new StyleRange(newPos, 4, _algorithmInstantationText.getStyleRangeAtOffset(newPos).foreground,
 						null, SWT.BOLD));
 				initPos = newPos + 4;
 			}
@@ -375,9 +385,7 @@ public class AlgorithmDialog extends Dialog {
 			newPos = 0;
 			while (algorithm.indexOf(" while", initPos) != -1) { //$NON-NLS-1$
 				newPos = algorithm.indexOf(" while", initPos); //$NON-NLS-1$
-				_algorithmInstantationText.setStyleRange(new StyleRange(newPos,
-						6, _algorithmInstantationText
-								.getStyleRangeAtOffset(newPos).foreground,
+				_algorithmInstantationText.setStyleRange(new StyleRange(newPos, 6, _algorithmInstantationText.getStyleRangeAtOffset(newPos).foreground,
 						null, SWT.BOLD));
 				initPos = newPos + 6;
 			}
@@ -387,9 +395,7 @@ public class AlgorithmDialog extends Dialog {
 			newPos = 0;
 			while (algorithm.indexOf(" return", initPos) != -1) { //$NON-NLS-1$
 				newPos = algorithm.indexOf(" return", initPos); //$NON-NLS-1$
-				_algorithmInstantationText.setStyleRange(new StyleRange(newPos,
-						7, _algorithmInstantationText
-								.getStyleRangeAtOffset(newPos).foreground,
+				_algorithmInstantationText.setStyleRange(new StyleRange(newPos, 7, _algorithmInstantationText.getStyleRangeAtOffset(newPos).foreground,
 						null, SWT.BOLD));
 				initPos = newPos + 7;
 			}
@@ -399,9 +405,7 @@ public class AlgorithmDialog extends Dialog {
 			newPos = 0;
 			while (algorithm.indexOf(" then", initPos) != -1) { //$NON-NLS-1$
 				newPos = algorithm.indexOf(" then", initPos); //$NON-NLS-1$
-				_algorithmInstantationText.setStyleRange(new StyleRange(newPos,
-						5, _algorithmInstantationText
-								.getStyleRangeAtOffset(newPos).foreground,
+				_algorithmInstantationText.setStyleRange(new StyleRange(newPos, 5, _algorithmInstantationText.getStyleRangeAtOffset(newPos).foreground,
 						null, SWT.BOLD));
 				initPos = newPos + 5;
 			}

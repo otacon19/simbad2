@@ -245,7 +245,9 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void activate() {}
+	public void activate() {
+		_unifiedDomain = _domainSet.getDomains().get(0);
+	}
 
 	@Override
 	public boolean validate() {
