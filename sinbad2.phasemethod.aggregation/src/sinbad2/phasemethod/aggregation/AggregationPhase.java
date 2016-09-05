@@ -259,7 +259,7 @@ public class AggregationPhase implements IPhaseMethod {
 		}
 		
 		if(_unifiedDomain instanceof Unbalanced) {
-			return UnbalancedUtils.transformUnbalanced(_aggregatedValuations, (Unbalanced) _unifiedDomain);
+			_aggregatedValuations = UnbalancedUtils.transformUnbalanced(_aggregatedValuations, (Unbalanced) _unifiedDomain);
 		} else if(_unifiedDomain == null)  {
 			_unifiedDomain = _valuationSet.getValuations().get(new ValuationKey(_elementsSet.getExperts().get(0), _elementsSet.getAlternatives().get(0), 
 					_elementsSet.getCriteria().get(0))).getDomain();

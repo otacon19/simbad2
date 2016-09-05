@@ -58,8 +58,8 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 	
 	@Override
-	public Unbalanced getUnifiedDomain() {
-		return (Unbalanced) _unifiedDomain;
+	public FuzzySet getUnifiedDomain() {
+		return (FuzzySet) _unifiedDomain;
 	}
 	
 	public void setUnifiedDomain(Domain domain) {

@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.domain.linguistic.unbalanced.ui.jfreechart.LHChart;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
@@ -100,7 +101,7 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 	}
 
 	private void generateLH() {
-		_lh = _unification.getUnifiedDomain().getLh();
+		_lh = ((Unbalanced) _unification.getUnifiedDomain()).getLh();
 		if(_lh != null) {
 			StringBuilder description = new StringBuilder("["); //$NON-NLS-1$
 			for(int i = 0; i < _lh.length; i++) {

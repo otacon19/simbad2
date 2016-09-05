@@ -728,7 +728,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		criteria.addAll(_elementsSet.getAllCriteria());
 		
 		_aggregationResult = _aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
-
+		
 		refreshView();	
 	}
 	
