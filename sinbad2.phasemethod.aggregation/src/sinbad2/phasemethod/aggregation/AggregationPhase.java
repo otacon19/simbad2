@@ -12,6 +12,8 @@ import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.core.utils.Pair;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.Domain;
+import sinbad2.domain.DomainSet;
+import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.element.ProblemElement;
@@ -55,6 +57,7 @@ public class AggregationPhase implements IPhaseMethod {
 	
 	private ProblemElementsSet _elementsSet;
 	private ValuationSet _valuationSet;
+	private DomainSet _domainSet;
 	
 	private IPhaseMethod _unificationPhaseActivate;
 	
@@ -65,6 +68,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_elementsSet = elementsManager.getActiveElementSet();
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valuationSet = valuationSetManager.getActiveValuationSet();
+		_domainSet = DomainsManager.getInstance().getActiveDomainSet();
 
 		_expertsOperators = new HashMap<ProblemElement, AggregationOperator>();
 		_criteriaOperators = new HashMap<ProblemElement, AggregationOperator>();
@@ -609,13 +613,21 @@ public class AggregationPhase implements IPhaseMethod {
 
 	@Override
 	public void activate() {
-		_unifiedDomain = _unificationPhaseActivate.getUnifiedDomain();
+		if(_unificationPhaseActivate != null) {
+			_unifiedDomain = _unificationPhaseActivate.getUnifiedDomain();
+		} else {
+			_unifiedDomain = _domainSet.getDomains().get(0);
+		}
 	}
 
 	@Override
 	public boolean validate() {
 		
-		_unificationPhaseActivate = PhasesMethodManager.getInstance().getActivePhaseMethod().getImplementation();
+		if(PhasesMethodManager.getInstance().getActivePhaseMethod() != null) {
+			_unificationPhaseActivate = PhasesMethodManager.getInstance().getActivePhaseMethod().getImplementation();
+		} else {
+			_unificationPhaseActivate = null;
+		}
 		
 		if(_valuationSet.getValuations().isEmpty()) {
 			return false;

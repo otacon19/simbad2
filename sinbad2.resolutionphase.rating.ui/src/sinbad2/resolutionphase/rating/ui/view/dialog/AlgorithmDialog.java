@@ -309,23 +309,17 @@ public class AlgorithmDialog extends Dialog {
 			textColors[start + 1] = textColors[start + 3] = textColors[start + 5] = textColors[start + 11] = RED;
 			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 13] = textColors[start + 14] = GREEN;
 		} else if(Messages.AlgorithmDialog_Fusion_approach_for_managing_heterogeneous_information.equals(_recommendedMethod)) {
-			textColors[start + 1] = RED;
 			textColors[start + 4] = GREEN;
 		} else if (Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets.equals(_recommendedMethod)) {
-			textColors[start + 1] = textColors[start + 3] = RED;
-			textColors[start + 5] = textColors[start + 6] = GREEN;
+			textColors[start + 6] = GREEN;
 		} else if (Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information.equals(_recommendedMethod)) {
-			textColors[start + 1] = textColors[start + 3] = RED;
-			textColors[start + 5] = textColors[start + 6] = GREEN;
+			textColors[start + 8] = GREEN;
 		}  else if (Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS.equals(_recommendedMethod)) {
-			textColors[start + 1] = textColors[start + 3] = textColors[start + 5] = RED;
-			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 11] = textColors[start + 12] = GREEN;
+			
 		}  else if("Hesitant Fuzzy Linguistic Term Set".equals(_recommendedMethod)) {
-			textColors[start + 1] = textColors[start + 3] = RED;
-			textColors[start + 5] = textColors[start + 6] = GREEN;
+			textColors[start + 10] = GREEN;
 		}  else if("Interactive and multi-criteria decision-making (TODIM)".equals(_recommendedMethod)) {
-			textColors[start + 1] = textColors[start + 3] = textColors[start + 5] = RED;
-			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 11] = textColors[start + 12] = GREEN;
+			
 		}
 
 		StyleRange[] textRanges = new StyleRange[textColors.length];
