@@ -18,13 +18,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import sinbad2.element.ProblemElementsManager;
 import sinbad2.method.MethodsManager;
 import sinbad2.resolutionphase.rating.ui.nls.Messages;
 
 public class AlgorithmDialog extends Dialog {
 	
 	private final static String ALGORITHM = "# Require values #"
-			+ "\nedNum = <edNum>\nedInt = <edInt>\nedLinUnb = <edLinUnb>\ntamEdLinLis = <tamEdLinLis>\nedLinList = <edLinList>\nedLin = <edLin>\nedHesit = <edHesit>\n\n# Algorithm to select the suitable CWW methodology #\n 1: if (edLin[1].2T=true) and (tamEdLinLis=1) then\n 2:     return <1>\n 3: else if (edNum=true) or (edInt=true) then\n 4:     return <5>\n 5: else if (edLinUnb=true) then\n 6:     return <6>\n 7: else if (edHesit=true) and (ntamEdLinLis>1) then\n 8:     return <8>\n 9: else if (edHesit=true) and (tamEdLinLis=1) then\n10:     return <7>\n11: else\n12:     edLinListShortCard <-- short(edLinList,edLinList.card)\n13:     i <-- 1\n14:     while i<tamEdLinLis do\n15:         if (edLinListShortCard.edLin[i].2T=false) then\n16:             return <2>\n17:         else if (edLinListShortCard[i+1].card != ((edLinListShortCard[i].card)-1)·2+1) then\n18:             return <4>\n19:         else\n20:             i <-- i+1\n21:         end if\n22:     end while\n23:     return <3>\n24: end if"; //$NON-NLS-1$
+			+ "\nnumExperts = <numExp>\nedNum = <edNum>\nedInt = <edInt>\nedLinUnb = <edLinUnb>\ntamEdLinLis = <tamEdLinLis>\nedLinList = <edLinList>\nedLin = <edLin>\nedHesit = <edHesit>\n\n# Algorithm to select the suitable CWW methodology #\n 1: if (edLin[1].2T=true) and (tamEdLinLis=1) then\n 2:     return <1>\n 3: else if (edNum=true) or (edInt=true) then\n 4:     return <5>\n 5: else if (edLinUnb=true) then\n 6:     return <6>\n 7: else if (edHesit=true) and (numExperts>1) then\n 8:     return <8>\n 9: else if (edHesit=true) and (numExperts=1) then\n10:     return <7>\n11: else\n12:     edLinListShortCard <-- short(edLinList,edLinList.card)\n13:     i <-- 1\n14:     while i<tamEdLinLis do\n15:         if (edLinListShortCard.edLin[i].2T=false) then\n16:             return <2>\n17:         else if (edLinListShortCard[i+1].card != ((edLinListShortCard[i].card)-1)·2+1) then\n18:             return <4>\n19:         else\n20:             i <-- i+1\n21:         end if\n22:     end while\n23:     return <3>\n24: end if"; //$NON-NLS-1$
 
 	private String _recommendedMethod;
 	private Composite _container;
@@ -97,7 +98,8 @@ public class AlgorithmDialog extends Dialog {
 		Color[] textColors = new Color[] { BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
-				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK };
+				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, 
+				BLACK};
 
 		StyleRange[] textRanges = new StyleRange[textColors.length];
 		int lineStart = 0;
@@ -233,6 +235,7 @@ public class AlgorithmDialog extends Dialog {
 		boolean bestConditionsHesitant = _methodsManager.getBestConditionsHesitant();
 		int[] cardinalitiesFuzzySet = _methodsManager.getCardinalitiesFuzzySet();
 		int tamEdLinList = cardinalitiesFuzzySet.length;
+		int numExp = ProblemElementsManager.getInstance().getActiveElementSet().getExperts().size();
 		Map<Integer, Boolean> edLin = _methodsManager.getBestConditionsLinguistic();
 
 		String edLinValue = "{"; //$NON-NLS-1$
@@ -263,6 +266,7 @@ public class AlgorithmDialog extends Dialog {
 		}
 		edLinListValue += "]"; //$NON-NLS-1$
 
+		algorithm = algorithm.replace("<numExp>", Integer.toString(numExp)); //$NON-NLS-1$
 		algorithm = algorithm.replace("<edNum>", Boolean.toString(bestConditionsNumeric)); //$NON-NLS-1$
 		algorithm = algorithm.replace("<edHesit>", Boolean.toString(bestConditionsHesitant)); //$NON-NLS-1$
 		algorithm = algorithm.replace("<edInt>", Boolean.toString(edInt)); //$NON-NLS-1$
@@ -289,7 +293,7 @@ public class AlgorithmDialog extends Dialog {
 		Color BLACK = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
 
 		Color[] textColors = new Color[] { BLACK, MAGENTA, MAGENTA, MAGENTA, MAGENTA,
-				MAGENTA, MAGENTA, MAGENTA, BLACK, BLACK, BLACK, BLACK, BLACK,
+				MAGENTA, MAGENTA, MAGENTA, MAGENTA, BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, 
 				BLACK, BLACK, BLACK  };
@@ -298,26 +302,29 @@ public class AlgorithmDialog extends Dialog {
 
 		int start = 8;
 		if(Messages.AlgorithmDialog_2_tuple_linguistic_computational_model.equals(_recommendedMethod)) {
-			textColors[start + 1] = textColors[start + 2] = GREEN;
+			textColors[start + 3] = GREEN;
 		} else if(Messages.AlgorithmDialog_Fusion_approach_for_managing_multi_granular_linguistic_information.equals(_recommendedMethod)) {
-			textColors[start + 1] = textColors[start + 3] = textColors[start + 5] = RED;
-			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 11] = textColors[start + 12] = GREEN;
+			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = textColors[start + 9] = textColors[start + 11];
+			textColors[start + 17] = GREEN;
 		} else if(Messages.AlgorithmDialog_Linguistic_hierarchies.equals(_recommendedMethod)) {
-			textColors[start + 1] = textColors[start + 3] = textColors[start + 5] = textColors[start + 11] = textColors[start + 13] = RED;
-			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 15] = textColors[start + 16] = textColors[start + 17] = textColors[start + 18] = textColors[start + 19] = GREEN;
+			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = textColors[start + 9] = textColors[start + 11] = textColors[start + 17] = textColors[start + 19] = RED;
 		} else if(Messages.AlgorithmDialog_Extended_linguistic_hierarchies.equals(_recommendedMethod)) {
-			textColors[start + 1] = textColors[start + 3] = textColors[start + 5] = textColors[start + 11] = RED;
-			textColors[start + 7] = textColors[start + 8] = textColors[start + 9] = textColors[start + 10] = textColors[start + 13] = textColors[start + 14] = GREEN;
+			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = textColors[start + 9] = textColors[start + 11] = textColors[start + 17] = RED;
+			textColors[start + 19] = GREEN;
 		} else if(Messages.AlgorithmDialog_Fusion_approach_for_managing_heterogeneous_information.equals(_recommendedMethod)) {
-			textColors[start + 4] = GREEN;
+			textColors[start + 3] = RED;
+			textColors[start + 5] = GREEN;
 		} else if (Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets.equals(_recommendedMethod)) {
-			textColors[start + 6] = GREEN;
+			textColors[start + 3]= textColors[start + 5] = RED;
+			textColors[start + 7] = GREEN;
 		} else if (Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information.equals(_recommendedMethod)) {
-			textColors[start + 8] = GREEN;
+			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = RED;
+			textColors[start + 9] = GREEN;
 		}  else if (Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS.equals(_recommendedMethod)) {
 			
 		}  else if("Hesitant Fuzzy Linguistic Term Set".equals(_recommendedMethod)) {
-			textColors[start + 10] = GREEN;
+			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = textColors[start + 9] = RED;
+			textColors[start + 11] = GREEN;
 		}  else if("Interactive and multi-criteria decision-making (TODIM)".equals(_recommendedMethod)) {
 			
 		}
@@ -337,8 +344,12 @@ public class AlgorithmDialog extends Dialog {
 		if(textRanges != null) {
 
 			_algorithmInstantationText.setStyleRanges(textRanges);
-			_algorithmInstantationText.setStyleRange(new StyleRange(algorithm.indexOf(_recommendedMethod), _recommendedMethod.length(), DARK_BLUE, null, SWT.BOLD));
-
+			if(_recommendedMethod.equals(Messages.AlgorithmDialog_Linguistic_hierarchies)) {
+				_algorithmInstantationText.setStyleRange(new StyleRange(algorithm.lastIndexOf(_recommendedMethod), _recommendedMethod.length(), DARK_BLUE, null, SWT.BOLD));
+			} else {
+				_algorithmInstantationText.setStyleRange(new StyleRange(algorithm.indexOf(_recommendedMethod), _recommendedMethod.length(), DARK_BLUE, null, SWT.BOLD));
+			}
+				
 			// Comments
 			int auxPos = algorithm.indexOf(" Require values "); //$NON-NLS-1$
 			_algorithmInstantationText.setStyleRange(new StyleRange(auxPos - 1, "# Require values #".length(), _algorithmInstantationText.getStyleRangeAtOffset(auxPos).foreground, null,SWT.BOLD)); //$NON-NLS-1$
