@@ -617,10 +617,10 @@ public class AggregationPhase implements IPhaseMethod {
 	public void activate() {
 		if(_unificationPhaseActivate != null) {
 			_unifiedDomain = _unificationPhaseActivate.getUnifiedDomain();
-			_unifiedValuations = _unificationPhaseActivate.getTwoTupleValuations();
+			_unifiedValuations.putAll(_unificationPhaseActivate.getTwoTupleValuations());
 		} else {
 			_unifiedDomain = _domainSet.getDomains().get(0);
-			_unifiedValuations = _valuationSet.getValuations();
+			_unifiedValuations.putAll(_valuationSet.getValuations());
 		}
 	}
 
@@ -636,7 +636,7 @@ public class AggregationPhase implements IPhaseMethod {
 		if(_valuationSet.getValuations().isEmpty()) {
 			return false;
 		}
-
+		
 		return true;
 	}
 

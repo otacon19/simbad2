@@ -92,7 +92,8 @@ public static final String ID = "flintstones.phasemethod.linguistic.hesitant.ui.
 		createEvaluationsTable();
 		createButtons();
 		compactTable();
-	}
+		
+	}	
 	
 	private void createEvaluationsTable() {
 		Composite container = new Composite(_parent, SWT.NONE);
@@ -262,7 +263,7 @@ public static final String ID = "flintstones.phasemethod.linguistic.hesitant.ui.
 
 	@Override
 	public void notifyStepStateChange() {
-		
+	
 		if(_completed) {
 			_ratingView.loadNextStep();
 			_completed = false;
@@ -272,6 +273,8 @@ public static final String ID = "flintstones.phasemethod.linguistic.hesitant.ui.
 	@Override
 	public void setRatingView(RatingView rating) {
 		_ratingView = rating;
+		
+		notifyStepStateChange();
 	}
 
 }

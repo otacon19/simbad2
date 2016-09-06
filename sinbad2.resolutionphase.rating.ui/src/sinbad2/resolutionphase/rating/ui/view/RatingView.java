@@ -262,6 +262,7 @@ public class RatingView extends ViewPart {
 		    _tabFolder.addSelectionListener(new SelectionAdapter() {
 		    	@Override
 		    	public void widgetSelected(SelectionEvent e) {
+		    		System.out.println("selection");
 		    		_numStep = _tabFolder.getSelectionIndex();
 		    		if(_numStep == 0) {
 		    			_backButton.setEnabled(false);
@@ -433,7 +434,7 @@ public class RatingView extends ViewPart {
 	public void loadNextStep() {
 		PhaseMethodUI currentPhaseMethod = _phasesMethodUIManager.getActiveResolutionPhasesUI();
 		List<PhaseMethodUI> phasesMethodUI = _methodsUIManager.getActivateMethodUI().getPhasesUI();
-		
+
 		if(_listeners.size() == 0) {
 			registerStepChangeListeners(_phasesMethodUIManager);
 		}
@@ -457,9 +458,11 @@ public class RatingView extends ViewPart {
 		}
 		
 		if(step != null) {
+			
 			_phasesMethodUIManager.activateStep(step);
 			
 			if(!checkLoadedSteps(step)) {
+				
 				CTabItem item = new CTabItem(_tabFolder, SWT.CLOSE, _tabFolder.getItemCount());
 				item.setText(step.getPartName());
 				item.setShowClose(false);
@@ -586,6 +589,7 @@ public class RatingView extends ViewPart {
 	}
 	
 	private void selectMethod(Method methodToSelect, CLabel suitableLabel) {
+		
 		_descriptionText.setText(methodToSelect.getDescription());
 		
 		if(_methodsUIManager.getActivateMethodUI() != null) {
@@ -620,7 +624,7 @@ public class RatingView extends ViewPart {
 		}
 		
 		_warningLabel.pack();
-		_warningLabel.getParent().layout();;
+		_warningLabel.getParent().layout();
 	}
 		
 	private void activateStep() {
