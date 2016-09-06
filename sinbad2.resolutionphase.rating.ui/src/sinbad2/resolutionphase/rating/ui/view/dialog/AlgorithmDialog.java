@@ -24,7 +24,7 @@ import sinbad2.resolutionphase.rating.ui.nls.Messages;
 
 public class AlgorithmDialog extends Dialog {
 	
-	private final static String ALGORITHM = "# Require values #"
+	private final static String ALGORITHM = "# Require values #" //$NON-NLS-1$
 			+ "\nnumExperts = <numExp>\nedNum = <edNum>\nedInt = <edInt>\nedLinUnb = <edLinUnb>\ntamEdLinLis = <tamEdLinLis>\nedLinList = <edLinList>\nedLin = <edLin>\nedHesit = <edHesit>\n\n# Algorithm to select the suitable CWW methodology #\n 1: if (edLin[1].2T=true) and (tamEdLinLis=1) then\n 2:     return <1>\n 3: else if (edNum=true) or (edInt=true) then\n 4:     return <5>\n 5: else if (edLinUnb=true) then\n 6:     return <6>\n 7: else if (edHesit=true) and (numExperts>1) then\n 8:     return <8>\n 9: else if (edHesit=true) and (numExperts=1) then\n10:     return <7>\n11: else\n12:     edLinListShortCard <-- short(edLinList,edLinList.card)\n13:     i <-- 1\n14:     while i<tamEdLinLis do\n15:         if (edLinListShortCard.edLin[i].2T=false) then\n16:             return <2>\n17:         else if (edLinListShortCard[i+1].card != ((edLinListShortCard[i].card)-1)·2+1) then\n18:             return <4>\n19:         else\n20:             i <-- i+1\n21:         end if\n22:     end while\n23:     return <3>\n24: end if"; //$NON-NLS-1$
 
 	private String _recommendedMethod;
@@ -88,10 +88,10 @@ public class AlgorithmDialog extends Dialog {
 		algorithm = algorithm.replace("<4>", Messages.AlgorithmDialog_Extended_linguistic_hierarchies); //$NON-NLS-1$
 		algorithm = algorithm.replace("<5>", Messages.AlgorithmDialog_Fusion_approach_for_managing_heterogeneous_information); //$NON-NLS-1$
 		algorithm = algorithm.replace("<6>", Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets); //$NON-NLS-1$
-		algorithm = algorithm.replace("<7>", "Hesitant Fuzzy Linguistic Term Set"); //$NON-NLS-1$
+		algorithm = algorithm.replace("<7>", Messages.AlgorithmDialog_Hesitant_Fuzzy_Linguistic_Term_Set); //$NON-NLS-1$
 		algorithm = algorithm.replace("<8>", Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information); //$NON-NLS-1$
 		algorithm = algorithm.replace("<9>", Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS); //$NON-NLS-1$
-		algorithm = algorithm.replace("<10>", "Interactive and multi-criteria decision-making (TODIM)"); //$NON-NLS-1$
+		algorithm = algorithm.replace("<10>", Messages.AlgorithmDialog_Interactive_and_multicriteria_decision_making); //$NON-NLS-1$
 		
 		Color BLACK = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
 
@@ -281,10 +281,10 @@ public class AlgorithmDialog extends Dialog {
 		algorithm = algorithm.replace("<4>", Messages.AlgorithmDialog_Extended_linguistic_hierarchies); //$NON-NLS-1$
 		algorithm = algorithm.replace("<5>", Messages.AlgorithmDialog_Fusion_approach_for_managing_heterogeneous_information); //$NON-NLS-1$
 		algorithm = algorithm.replace("<6>", Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets); //$NON-NLS-1$
-		algorithm = algorithm.replace("<7>", "Hesitant Fuzzy Linguistic Term Set"); //$NON-NLS-1$
+		algorithm = algorithm.replace("<7>", Messages.AlgorithmDialog_Hesitant_Fuzzy_Linguistic_Term_Set); //$NON-NLS-1$
 		algorithm = algorithm.replace("<8>", Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information); //$NON-NLS-1$
 		algorithm = algorithm.replace("<9>", Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS); //$NON-NLS-1$
-		algorithm = algorithm.replace("<10>", "Interactive and multi-criteria decision-making (TODIM)"); //$NON-NLS-1$
+		algorithm = algorithm.replace("<10>", Messages.AlgorithmDialog_Interactive_and_multicriteria_decision_making); //$NON-NLS-1$
 
 		Color DARK_BLUE = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE);
 		Color GREEN = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN);
@@ -322,10 +322,10 @@ public class AlgorithmDialog extends Dialog {
 			textColors[start + 9] = GREEN;
 		}  else if (Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS.equals(_recommendedMethod)) {
 			
-		}  else if("Hesitant Fuzzy Linguistic Term Set".equals(_recommendedMethod)) {
+		}  else if(Messages.AlgorithmDialog_Hesitant_Fuzzy_Linguistic_Term_Set.equals(_recommendedMethod)) {
 			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = textColors[start + 9] = RED;
 			textColors[start + 11] = GREEN;
-		}  else if("Interactive and multi-criteria decision-making (TODIM)".equals(_recommendedMethod)) {
+		}  else if(Messages.AlgorithmDialog_Interactive_and_multicriteria_decision_making.equals(_recommendedMethod)) {
 			
 		}
 

@@ -262,7 +262,6 @@ public class RatingView extends ViewPart {
 		    _tabFolder.addSelectionListener(new SelectionAdapter() {
 		    	@Override
 		    	public void widgetSelected(SelectionEvent e) {
-		    		System.out.println("selection");
 		    		_numStep = _tabFolder.getSelectionIndex();
 		    		if(_numStep == 0) {
 		    			_backButton.setEnabled(false);
@@ -596,7 +595,7 @@ public class RatingView extends ViewPart {
 			clearMethodSteps();
 		}
 
-		_methodNameFooterText.setText(suitableLabel.getText().replace(Messages.RatingView_SUITABLE, "")); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$
+		_methodNameFooterText.setText(suitableLabel.getText().replace(Messages.RatingView_SUITABLE, "")); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
 		_methodLabelSelected = suitableLabel;
 		
 		_methodsUIManager.activate(methodToSelect); //$NON-NLS-1$
