@@ -44,7 +44,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	private static final Integer ATTENUATION_FACTOR = 1;
 	private static final int P = 2;
 
-	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
+	private Map<ValuationKey, Valuation> _twoTupleValuations;
 	
 	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
 	private Map<ValuationKey, Double> _distances;
@@ -121,7 +121,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valuationSet = valuationSetManager.getActiveValuationSet();
 
-		_valuationsInTwoTuple = new HashMap<ValuationKey, Valuation>();
+		_twoTupleValuations = new HashMap<ValuationKey, Valuation>();
 		
 		_numAlternatives = _elementsSet.getAlternatives().size();
 		_numCriteria = _elementsSet.getAllCriteria().size();
@@ -144,12 +144,13 @@ public class ResolutionPhase implements IPhaseMethod {
 		_referenceCriterion = null;
 	}
 	
-	public void setValuationsTwoTuple(Map<ValuationKey, Valuation> valuationsInTwoTuple) {
-		_valuationsInTwoTuple = valuationsInTwoTuple;
+	public void setTwoTupleValuations(Map<ValuationKey, Valuation> twoTupleValuations) {
+		_twoTupleValuations = twoTupleValuations;
 	}
 	
-	public Map<ValuationKey, Valuation> getValuationsTwoTuple() {
-		return _valuationsInTwoTuple;
+	@Override
+	public Map<ValuationKey, Valuation> getTwoTupleValuations() {
+		return _twoTupleValuations;
 	}
 	
 	public void setDecisionMatrix(Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix) {
@@ -208,19 +209,19 @@ public class ResolutionPhase implements IPhaseMethod {
 	public List<String[]> calculateDistance() {
 		List<String[]> result = new LinkedList<String[]>();
 		
-		_valuationsInTwoTuple = _aggregationPhase.getUnificationValues();
+		_twoTupleValuations = _aggregationPhase.getTwoTupleValuations();
 		
 		calculateValuationsDistance();
 		
 		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
 		
-		for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
+		for(ValuationKey vk: _twoTupleValuations.keySet()) {
 			if(!vk.getExpert().getId().endsWith("flintstones_gathering_cloud") && vk.getAlternative() != null) { //$NON-NLS-1$
 				String[] data = new String[7];
 				data[0] = vk.getExpert().getId();
 				data[1] = vk.getAlternative().getId();
 				data[2] = vk.getCriterion().getId();
-				data[3] = _valuationsInTwoTuple.get(vk).changeFormatValuationToString();
+				data[3] = _twoTupleValuations.get(vk).changeFormatValuationToString();
 				Valuation aggregatedValuation = _decisionMatrix.get(new Pair(vk.getAlternative(), vk.getCriterion()));
 				
 				if(aggregatedValuation == null) {
@@ -253,9 +254,9 @@ public class ResolutionPhase implements IPhaseMethod {
 		
 		for(int a = 0; a < alternatives.size(); ++a) {
 			for(int c = 0; c < criteria.size(); ++c) {
-				for(ValuationKey vk: _valuationsInTwoTuple.keySet()) {
+				for(ValuationKey vk: _twoTupleValuations.keySet()) {
 					if(alternatives.get(a).equals(vk.getAlternative()) && criteria.get(c).equals(vk.getCriterion())) {
-						TwoTuple v = (TwoTuple) _valuationsInTwoTuple.get(vk);
+						TwoTuple v = (TwoTuple) _twoTupleValuations.get(vk);
 						LabelLinguisticDomain label = v.getLabel();
 						TrapezoidalFunction semantic = (TrapezoidalFunction) label.getSemantic();
 		
@@ -719,7 +720,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		clear();
 		
 		_decisionMatrix = resolution.getDecisionMatrix();
-		_valuationsInTwoTuple = resolution.getValuationsTwoTuple();
+		_twoTupleValuations = resolution.getTwoTupleValuations();
 		_distances = resolution.getDistances();
 		_consensusMatrix = resolution.getConsensusMatrix();
 		_criteriaWeights = resolution.getImportanceCriteriaWeights();
@@ -734,7 +735,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	@Override
 	public void clear() {
 		_decisionMatrix.clear();
-		_valuationsInTwoTuple.clear();
+		_twoTupleValuations.clear();
 		_distances.clear();
 		_consensusMatrix = new Object[_numAlternatives][_numCriteria];
 		initializeConsesusMatrix();

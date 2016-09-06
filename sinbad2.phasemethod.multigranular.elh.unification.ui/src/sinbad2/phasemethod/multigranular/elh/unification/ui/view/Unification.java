@@ -1,7 +1,5 @@
 package sinbad2.phasemethod.multigranular.elh.unification.ui.view;
 
-
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +22,8 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.phasemethod.PhasesMethodManager;
-import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.multigranular.elh.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.elh.unification.ui.Images;
 import sinbad2.phasemethod.multigranular.elh.unification.ui.nls.Messages;
@@ -272,14 +268,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
-		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();
-		unifiedValues.putAll(_unifiedValues);
-
-		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		aggregationPhase.setUnificationValues(unifiedValues);
-		aggregationPhase.setUnifiedDomain((Domain) _unifiedDomain.clone());
-		
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();	
 		RetranslationPhase retranslationPhase = (RetranslationPhase) pmm.getPhaseMethod(RetranslationPhase.ID).getImplementation();
 		retranslationPhase.clear();
 		List<Object[]> elhDomains = new LinkedList<Object[]>();

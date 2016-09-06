@@ -31,7 +31,7 @@ public class UnificationPhase implements IPhaseMethod {
 	private Domain _unifiedDomain;
 	private Unbalanced _hgls;
 	
-	private Map<ValuationKey, Valuation> _unifiedEvaluationsResult;
+	private Map<ValuationKey, Valuation> _twoTupleValuations;
 	
 	private ValuationSet _valutationSet;
 	
@@ -46,15 +46,16 @@ public class UnificationPhase implements IPhaseMethod {
 		
 		_unifiedDomain = _domainSet.getDomains().get(0);
 		
-		_unifiedEvaluationsResult = new HashMap<ValuationKey, Valuation>();
+		_twoTupleValuations = new HashMap<ValuationKey, Valuation>();
 	}
 	
-	public Map<ValuationKey, Valuation> getUnifiedValuationsResult() {
-		return _unifiedEvaluationsResult;
+	@Override
+	public Map<ValuationKey, Valuation> getTwoTupleValuations() {
+		return _twoTupleValuations;
 	}
 	
-	public void setUnifiedValuationsResult(Map<ValuationKey, Valuation> unifiedValuationsResult) {
-		_unifiedEvaluationsResult = unifiedValuationsResult;
+	public void setTwoTupleValuations(Map<ValuationKey, Valuation> twoTupleValuations) {
+		_twoTupleValuations = twoTupleValuations;
 	}
 	
 	@Override
@@ -72,7 +73,7 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	public Map<ValuationKey, Valuation> unification() {
 
-		_unifiedEvaluationsResult = new HashMap<ValuationKey, Valuation>();
+		_twoTupleValuations = new HashMap<ValuationKey, Valuation>();
 
 		if(_unifiedDomain != null) {
 			int[] lh = ((Unbalanced) _unifiedDomain).getLh();
@@ -130,11 +131,11 @@ public class UnificationPhase implements IPhaseMethod {
 					valuation = ((TwoTuple) valuation).negateValuation();
 				}
 				
-				_unifiedEvaluationsResult.put(vk, valuation);
+				_twoTupleValuations.put(vk, valuation);
 			}
 		}
 		
-		return _unifiedEvaluationsResult;
+		return _twoTupleValuations;
 	}
 	
 	private Unbalanced createDomain(int cardinality) {
@@ -234,13 +235,13 @@ public class UnificationPhase implements IPhaseMethod {
 		
 		clear();
 		
-		_unifiedEvaluationsResult = unification.getUnifiedValuationsResult();
+		_twoTupleValuations = unification.getTwoTupleValuations();
 		_hgls = unification.getHGLS();
 	}
 	
 	@Override
 	public void clear() {
-		_unifiedEvaluationsResult.clear();
+		_twoTupleValuations.clear();
 		_hgls = null;
 	}
 

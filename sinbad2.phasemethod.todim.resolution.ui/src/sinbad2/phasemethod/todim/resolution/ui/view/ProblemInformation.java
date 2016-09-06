@@ -133,7 +133,7 @@ public class ProblemInformation extends ViewPart implements IStepStateListener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ExcelUtil excelUtil = new ExcelUtil();
-				excelUtil.createExcelFileEmergencyProblemStructure(_resolutionPhase.getValuationsTwoTuple(), _resolutionPhase.getExpertsWeights(), _resolutionPhase.getDecisionMatrix());
+				excelUtil.createExcelFileEmergencyProblemStructure(_resolutionPhase.getTwoTupleValuations(), _resolutionPhase.getExpertsWeights(), _resolutionPhase.getDecisionMatrix());
 			}
 		});
 		

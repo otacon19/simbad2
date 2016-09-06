@@ -22,7 +22,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.phasemethod.PhasesMethodManager;
-import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.UnificationPhase;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.ui.Images;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.ui.comparator.UnificationTreeViewerComparator;
@@ -266,16 +265,11 @@ public class Unification extends ViewPart implements IStepStateListener {
 		
 		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();
 		unifiedValues.putAll(_unificationPhase.unification());
-		Map<ValuationKey, Valuation> unifiedTwoTupleValues = new HashMap<ValuationKey, Valuation>();
-		unifiedTwoTupleValues.putAll(_unificationPhase.getTwoTupleValuationsResult());
 		
 		_provider = new TreeViewerContentProvider(unifiedValues);
 		_treeViewer.setContentProvider(_provider);
 		_treeViewer.setInput(_provider.getInput());
 		compactTable();
-	
-		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		aggregationPhase.setUnificationValues(unifiedTwoTupleValues);
 		
 		if(_completed || reloaded) {
 			_ratingView.loadNextStep();

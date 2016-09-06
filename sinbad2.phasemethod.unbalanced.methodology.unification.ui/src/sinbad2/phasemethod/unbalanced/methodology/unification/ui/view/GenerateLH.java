@@ -1,8 +1,5 @@
 package sinbad2.phasemethod.unbalanced.methodology.unification.ui.view;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -18,13 +15,10 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.domain.linguistic.unbalanced.ui.jfreechart.LHChart;
 import sinbad2.phasemethod.PhasesMethodManager;
-import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.unbalanced.methodology.unification.UnificationPhase;
 import sinbad2.phasemethod.unbalanced.methodology.unification.ui.nls.Messages;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
-import sinbad2.valuation.Valuation;
-import sinbad2.valuation.valuationset.ValuationKey;
 
 public class GenerateLH extends ViewPart implements IStepStateListener {
 	
@@ -163,12 +157,7 @@ public class GenerateLH extends ViewPart implements IStepStateListener {
 	
 	@Override
 	public void notifyStepStateChange() {
-		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		
-		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();
-		unifiedValues.putAll(_unification.unification());
-		aggregationPhase.setUnificationValues(unifiedValues);
+		_unification.unification();
 		
 		if(_completed) {
 			_ratingView.loadNextStep();

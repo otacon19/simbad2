@@ -232,6 +232,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				} else {
 					assignWeights(getSubcriteriaWeights());
 				}
+			} else {
+				createDefaultWeights();
 			}
 		}
 		

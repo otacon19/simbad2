@@ -14,6 +14,7 @@ import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
+import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
 
@@ -44,6 +45,11 @@ public class RetranslationPhase implements IPhaseMethod {
 	
 	@Override
 	public Domain getUnifiedDomain() {
+		return null;
+	}
+	
+	@Override
+	public Map<ValuationKey, Valuation> getTwoTupleValuations() {
 		return null;
 	}
 	

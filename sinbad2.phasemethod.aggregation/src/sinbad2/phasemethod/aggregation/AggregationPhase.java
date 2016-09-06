@@ -84,12 +84,13 @@ public class AggregationPhase implements IPhaseMethod {
 		_aggregateBy = "CRITERIA"; //$NON-NLS-1$
 	}
 	
-	public Map<ValuationKey, Valuation> getUnificationValues() {
+	@Override
+	public Map<ValuationKey, Valuation> getTwoTupleValuations() {
 		return _unifiedValuations;
 	}
 	
-	public void setUnificationValues(Map<ValuationKey, Valuation> values) {
-		_unifiedValuations = values;
+	public void setUnifiedValuations(Map<ValuationKey, Valuation> valuations) {
+		_unifiedValuations = valuations;
 	}
 	
 	public Map<ProblemElement, Valuation> getAggregatedValuations() {
@@ -100,6 +101,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_aggregatedValuations = aggregatedValuations;
 	}
 	
+	@Override
 	public Domain getUnifiedDomain() {
 		return _unifiedDomain;
 	}
@@ -559,7 +561,7 @@ public class AggregationPhase implements IPhaseMethod {
 		_expertsOperatorsWeights = aggregationPhase.getExpertsOperatorWeights();
 		_criteriaOperators = aggregationPhase.getCriteriaOperators();
 		_expertsOperators = aggregationPhase.getExpertsOperators();
-		_unifiedValuations = aggregationPhase.getUnificationValues();
+		_unifiedValuations = aggregationPhase.getTwoTupleValuations();
 		_unifiedDomain = aggregationPhase.getUnifiedDomain();
 		_decisionMatrix = aggregationPhase.getDecisionMatrix();
 	}
@@ -615,8 +617,10 @@ public class AggregationPhase implements IPhaseMethod {
 	public void activate() {
 		if(_unificationPhaseActivate != null) {
 			_unifiedDomain = _unificationPhaseActivate.getUnifiedDomain();
+			_unifiedValuations = _unificationPhaseActivate.getTwoTupleValuations();
 		} else {
 			_unifiedDomain = _domainSet.getDomains().get(0);
+			_unifiedValuations = _valuationSet.getValuations();
 		}
 	}
 

@@ -26,7 +26,6 @@ public class SATable extends KTable implements ISelectionProvider {
 	}
 
 	public void setModel(String[] alternatives, String[] criteria, Double[][][] values, double[][] dm, double[] w) {
-		
 		setNumRowsVisibleInPreferredSize(alternatives.length + 1);
 		setNumColsVisibleInPreferredSize(criteria.length + 1);
 		_provider = new SATableContentProvider(this, alternatives, criteria, values);

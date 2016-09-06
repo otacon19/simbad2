@@ -21,9 +21,8 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-import sinbad2.phasemethod.todim.unification.UnificationPhase;
 import sinbad2.phasemethod.PhasesMethodManager;
-import sinbad2.phasemethod.aggregation.AggregationPhase;
+import sinbad2.phasemethod.todim.unification.UnificationPhase;
 import sinbad2.phasemethod.todim.unification.ui.Images;
 import sinbad2.phasemethod.todim.unification.ui.comparator.UnificationTreeViewerComparator;
 import sinbad2.phasemethod.todim.unification.ui.nls.Messages;
@@ -266,11 +265,6 @@ public class Unification extends ViewPart implements IStepStateListener {
 		
 		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();
 		unifiedValues.putAll(_unificationPhase.unification());
-		Map<ValuationKey, Valuation> unifiedTwoTupleValues = new HashMap<ValuationKey, Valuation>();
-		unifiedTwoTupleValues.putAll(_unificationPhase.getTwoTupleValuationsResult());
-		
-		AggregationPhase aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-		aggregationPhase.setUnificationValues(unifiedTwoTupleValues);
 		
 		_provider = new TreeViewerContentProvider(unifiedValues);
 		_treeViewer.setContentProvider(_provider);

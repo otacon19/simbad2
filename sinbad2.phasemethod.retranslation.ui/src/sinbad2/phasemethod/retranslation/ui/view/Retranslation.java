@@ -213,7 +213,7 @@ public static final String ID = "flintstones.phasemethod.multigranular.lh.retran
 		AnalysisPhase analysis = (AnalysisPhase) pmm.getPhaseMethod(AnalysisPhase.ID).getImplementation();
 		analysis.clear();
 		if(_selectedLHDomain != null) {
-			analysis.setDomain((Domain) _selectedLHDomain.clone());
+			analysis.setUnifiedDomain((Domain) _selectedLHDomain.clone());
 		}
 		
 		if(_completed && !_loaded) {

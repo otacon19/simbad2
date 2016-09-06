@@ -31,7 +31,7 @@ public class SelectionPhase implements IPhaseMethod {
 
 	public static final String ID = "flintstones.phasemethod.topsis.selection"; //$NON-NLS-1$
 
-	private Map<ValuationKey, Valuation> _valuationsInTwoTuple;
+	private Map<ValuationKey, Valuation> _twoTupleValuations;
 	
 	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
 
@@ -75,15 +75,16 @@ public class SelectionPhase implements IPhaseMethod {
 		_noIdealDistanceByAlternatives = new LinkedList<Object[]>();
 		_closenessCoefficient = new LinkedList<Object[]>();
 
-		_valuationsInTwoTuple = new HashMap<ValuationKey, Valuation>();
+		_twoTupleValuations = new HashMap<ValuationKey, Valuation>();
 	}
 
-	public Map<ValuationKey, Valuation> getUnificationValues() {
-		return _valuationsInTwoTuple;
+	@Override
+	public Map<ValuationKey, Valuation> getTwoTupleValuations() {
+		return _twoTupleValuations;
 	}
 
-	public void setUnificationValues(Map<ValuationKey, Valuation> valuationsInTwoTuple) {
-		_valuationsInTwoTuple = valuationsInTwoTuple;
+	public void setTwoTupleValuations(Map<ValuationKey, Valuation> twoTupleValuations) {
+		_twoTupleValuations = twoTupleValuations;
 	}
 	
 	public Map<Pair<Alternative, Criterion>, Valuation> getDecisionMatrix() {
@@ -412,7 +413,7 @@ public class SelectionPhase implements IPhaseMethod {
 		clear();
 
 		_decisionMatrix = selectionPhase.getDecisionMatrix();
-		_valuationsInTwoTuple = selectionPhase.getUnificationValues();
+		_twoTupleValuations = selectionPhase.getTwoTupleValuations();
 		_idealSolution = selectionPhase.getIdealSolution();
 		_noIdealSolution = selectionPhase.getNoIdealSolution();
 		_idealDistanceByCriteria = selectionPhase.getIdealDistanceByCriteria();
@@ -460,7 +461,7 @@ public class SelectionPhase implements IPhaseMethod {
 	@Override
 	public void clear() {
 		_decisionMatrix.clear();
-		_valuationsInTwoTuple.clear();
+		_twoTupleValuations.clear();
 		_idealSolution.clear();
 		_noIdealSolution.clear();
 		_idealDistanceByCriteria.clear();

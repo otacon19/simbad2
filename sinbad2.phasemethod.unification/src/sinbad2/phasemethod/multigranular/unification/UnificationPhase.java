@@ -24,8 +24,8 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	private Domain _unifiedDomain;
 	
-	private Map<ValuationKey, Valuation> _unifiedValuationsResult;
-	private Map<ValuationKey, Valuation> _twoTupleValuationsResult;
+	private Map<ValuationKey, Valuation> _unifiedValuations;
+	private Map<ValuationKey, Valuation> _twoTupleValuations;
 	
 	private ValuationSet _valutationSet;
 	
@@ -33,24 +33,25 @@ public class UnificationPhase implements IPhaseMethod {
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = valuationSetManager.getActiveValuationSet();
 		
-		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
-		_twoTupleValuationsResult = new LinkedHashMap<ValuationKey, Valuation>();
+		_unifiedValuations = new HashMap<ValuationKey, Valuation>();
+		_twoTupleValuations = new LinkedHashMap<ValuationKey, Valuation>();
 	}
 	
-	public Map<ValuationKey, Valuation> getUnifiedValuationsResult() {
-		return _unifiedValuationsResult;
+	public Map<ValuationKey, Valuation> getUnifiedValuations() {
+		return _unifiedValuations;
 	}
 	
-	public void setUnifiedValuationsResult(Map<ValuationKey, Valuation> unifiedValuationsResult ) {
-		_unifiedValuationsResult = unifiedValuationsResult;
+	public void setUnifiedValuations(Map<ValuationKey, Valuation> unifiedValuations ) {
+		_unifiedValuations = unifiedValuations;
 	}
 	
-	public Map<ValuationKey, Valuation> getTwoTupleValuationsResult() {
-		return _twoTupleValuationsResult;
+	@Override
+	public Map<ValuationKey, Valuation> getTwoTupleValuations() {
+		return _twoTupleValuations;
 	}
 	
-	public void setTwoTupleValuationsResult(Map<ValuationKey, Valuation> twoTupleValuationsResult ) {
-		_twoTupleValuationsResult = twoTupleValuationsResult;
+	public void setTwoTupleValuations(Map<ValuationKey, Valuation> twoTupleValuations ) {
+		_twoTupleValuations = twoTupleValuations;
 	}
 
 	@Override 
@@ -73,14 +74,14 @@ public class UnificationPhase implements IPhaseMethod {
 
 		clear();
 
-		_unifiedValuationsResult = unification.getUnifiedValuationsResult();
-		_twoTupleValuationsResult = unification.getTwoTupleValuationsResult();
+		_unifiedValuations = unification.getUnifiedValuations();
+		_twoTupleValuations = unification.getTwoTupleValuations();
 	}
 
 	@Override
 	public void clear() {
-		_unifiedValuationsResult.clear();
-		_twoTupleValuationsResult.clear();
+		_unifiedValuations.clear();
+		_twoTupleValuations.clear();
 	}
 
 	@Override
@@ -117,7 +118,7 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 
 	public Map<ValuationKey, Valuation> unification() {
-		_unifiedValuationsResult = new HashMap<ValuationKey, Valuation>();
+		_unifiedValuations = new HashMap<ValuationKey, Valuation>();
 		
 		if (_unifiedDomain != null) {
 			Criterion criterion;
@@ -145,13 +146,13 @@ public class UnificationPhase implements IPhaseMethod {
 					fuzzySet = ((LinguisticValuation) valuation).unification(_unifiedDomain);
 					valuation = new UnifiedValuation(fuzzySet);
 				}
-				_unifiedValuationsResult.put(vk, valuation);
+				_unifiedValuations.put(vk, valuation);
 			}
 		}
 		
 		unifiedEvaluationToTwoTuple();
 		
-		return _unifiedValuationsResult;
+		return _unifiedValuations;
 	}
 	
 	public Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple() {
@@ -160,17 +161,17 @@ public class UnificationPhase implements IPhaseMethod {
 		
 			Valuation valuation;
 
-			for(ValuationKey key : _unifiedValuationsResult.keySet()) {
-				valuation = _unifiedValuationsResult.get(key);
+			for(ValuationKey key : _unifiedValuations.keySet()) {
+				valuation = _unifiedValuations.get(key);
 				if(valuation instanceof UnifiedValuation) {
 					valuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
 				} else if(!(valuation instanceof TwoTuple)) {
 					valuation = null;
 				}
-				_twoTupleValuationsResult.put(key, valuation);
+				_twoTupleValuations.put(key, valuation);
 			}
 		}
 
-		return _twoTupleValuationsResult;
+		return _twoTupleValuations;
 	}
 }
