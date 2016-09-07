@@ -168,8 +168,8 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 				
 				criterion = Criterion.getCriterionByCanonicalId(criteria, criterionId);
 				
-				if(alternativeId.equals("null")) {
-					alternative = null;
+				if(alternativeId.equals("null_importance") || alternativeId.equals("null_threshold")) {
+					alternative = new Alternative(alternativeId);
 				} else {
 					for (Alternative a : alternatives) {
 						if (a.getId().equals(alternativeId)) {

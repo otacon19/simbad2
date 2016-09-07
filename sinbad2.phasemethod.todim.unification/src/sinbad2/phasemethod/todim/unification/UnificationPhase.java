@@ -167,7 +167,7 @@ public class UnificationPhase implements IPhaseMethod {
 				expert = vk.getExpert();
 				alternative = vk.getAlternative();
 				
-				if(!expert.getId().endsWith("flintstones_gathering_cloud") && alternative != null) {
+				if(!alternative.getId().contains("null_")) {
 					valuation = valuations.get(vk);
 					criterion = vk.getCriterion();
 					isCost = criterion.getCost();
@@ -307,7 +307,7 @@ public class UnificationPhase implements IPhaseMethod {
 		if (toNormalize.size() > 0) {
 			normalizeValuations(toNormalize, domains, (FuzzySet) _unifiedDomain);
 		}
-
+		
 		unifiedEvaluationToTwoTuple();
 
 		return _unifiedValuations;
@@ -594,10 +594,10 @@ public class UnificationPhase implements IPhaseMethod {
 		TrapezoidalFunction tmf = new TrapezoidalFunction(new double[] { a, b, c, d });
 		_envelopeValuations.put(vk, tmf);
 
-		transformToTwoTuple(vk, tmf, domain);
+		transformEnvelopeToTwoTuple(vk, tmf, domain);
 	}
 
-	private void transformToTwoTuple(ValuationKey vk, TrapezoidalFunction tmf, Domain domain) {
+	private void transformEnvelopeToTwoTuple(ValuationKey vk, TrapezoidalFunction tmf, Domain domain) {
 		IMembershipFunction function;
 		FuzzySet result;
 

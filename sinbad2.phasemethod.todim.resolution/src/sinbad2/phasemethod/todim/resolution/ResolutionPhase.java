@@ -23,15 +23,14 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
-import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.real.RealValuation;
 import sinbad2.valuation.hesitant.HesitantValuation;
+import sinbad2.valuation.linguistic.LinguisticValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
@@ -232,11 +231,29 @@ public class ResolutionPhase implements IPhaseMethod {
 					
 				data[5] = Double.toString(Math.round(_distances.get(vk) * 10000d) / 10000d);
 		
-				Expert e = new Expert();
-				e.setId(vk.getExpert().getId() + "flintstones_gathering_cloud");
-				ValuationKey vkFGC = new ValuationKey(e, vk.getAlternative(), vk.getCriterion());
-					
-				data[6] = Double.toString(((RealValuation) valuations.get(vkFGC)).getValue());
+				Alternative aFGC = new Alternative("null_threshold");
+				ValuationKey vkFGC = new ValuationKey(vk.getExpert(), aFGC, vk.getCriterion());
+				LinguisticValuation v = (LinguisticValuation) valuations.get(vkFGC);
+				FuzzySet knowledgeDomain = (FuzzySet) v.getDomain();
+				
+				double knowledge = 0;
+				if(knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 0) {
+					knowledge = 0.013;
+				} else if(knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 1) {
+					knowledge = 0.011;
+				} else if(knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 2) {
+					knowledge = 0.009;
+				} else if(knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 3) {
+					knowledge = 0.007;
+				} else if(knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 4) {
+					knowledge = 0.005;
+				} else if(knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 5) {
+					knowledge = 0.003;
+				} else {
+					knowledge = 0.001;
+				}
+				
+				data[6] = Double.toString(knowledge);
 				
 				result.add(data);
 			}
@@ -294,7 +311,7 @@ public class ResolutionPhase implements IPhaseMethod {
 			Valuation v = null;
 			Map<ValuationKey, Valuation> valuations = vs.getValuations();
 			for(ValuationKey vk: valuations.keySet()) {
-				if(vk.getAlternative() == null) {
+				if(vk.getAlternative().getId().equals("null_importance")) {
 					if(expertsEnvelopeWeightsForEachCriterion.get(vk.getCriterion()) != null) {
 						envelopeWeights = expertsEnvelopeWeightsForEachCriterion.get(vk.getCriterion());
 					} else {

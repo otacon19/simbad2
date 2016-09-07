@@ -57,7 +57,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 		Domain domain;
 		Valuation unifiedValuation;
 		
-		Map<ValuationKey, Valuation> valuationsWithoutConfidence = getValuationsWithoutConfidence();
+		Map<ValuationKey, Valuation> valuationsWithoutConfidence = getValuationsWithoutImportanceAndKnowledge();
 		_information = new Object[valuationsWithoutConfidence.size()][6];
 		
 		int i = 0;
@@ -90,11 +90,11 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 		return _information;
 	}
 
-	private Map<ValuationKey, Valuation> getValuationsWithoutConfidence() {
+	private Map<ValuationKey, Valuation> getValuationsWithoutImportanceAndKnowledge() {
 		Map<ValuationKey, Valuation> result = new HashMap<ValuationKey, Valuation>();
 		
 		for(ValuationKey vk: _valuations.keySet()) {
-			if(!vk.getExpert().getId().endsWith("flintstones_gathering_cloud") && vk.getAlternative() != null) {
+			if(!vk.getAlternative().getId().contains("null_")) {
 				Valuation v = _valuations.get(vk);
 				result.put(vk, v);
 			}
