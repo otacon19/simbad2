@@ -23,6 +23,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
@@ -61,6 +62,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	private Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> _dominanceDegreeByCriterion;
 	private Map<Pair<Alternative, Alternative>, Double> _dominanceDegreeAlternatives;
 	private Map<Alternative, Double> _globalDominance;
+	private Map<Pair<Expert, Criterion>, Double> _thresholdValues;
 
 	private ProblemElementsSet _elementsSet;
 	private ValuationSet _valuationSet;
@@ -139,6 +141,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		_dominanceDegreeByCriterion = new HashMap<Criterion, Map<Pair<Alternative, Alternative>, Double>>();
 		_dominanceDegreeAlternatives = new HashMap<Pair<Alternative, Alternative>, Double>();
 		_globalDominance = new HashMap<Alternative, Double>();
+		_thresholdValues = new HashMap<Pair<Expert, Criterion>, Double>();
 		
 		_referenceCriterion = null;
 	}
@@ -194,9 +197,21 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _decisionMatrix;
 	}
 	
+	public Map<Pair<Expert, Criterion>, Double> getThresholdValues() {
+		return _thresholdValues;
+	}
+	
+	public void setThresholdValues(Map<Pair<Expert, Criterion>, Double> thresholdValues) {
+		_thresholdValues = thresholdValues;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Double> getExpertsWeights() {
-		return (List<Double>) ((Map<ProblemElement, Object>) _aggregationPhase.getExpertsOperatorWeights().get(null)).get(null);
+		if( _aggregationPhase.getExpertsOperatorWeights().get(null) == null) {
+			return new LinkedList<Double>();
+		} else {
+			return (List<Double>) ((Map<ProblemElement, Object>) _aggregationPhase.getExpertsOperatorWeights().get(null)).get(null);
+		}
 	}
 
 	@Override
@@ -207,6 +222,8 @@ public class ResolutionPhase implements IPhaseMethod {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<String[]> calculateDistance() {
 		List<String[]> result = new LinkedList<String[]>();
+		
+		_thresholdValues.clear();
 		
 		_twoTupleValuations = _aggregationPhase.getTwoTupleValuations();
 		
@@ -252,6 +269,8 @@ public class ResolutionPhase implements IPhaseMethod {
 				} else {
 					knowledge = 0.001;
 				}
+				
+				_thresholdValues.put(new Pair(vk.getExpert(), vk.getCriterion()), knowledge);
 				
 				data[6] = Double.toString(knowledge);
 				
@@ -746,6 +765,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		_dominanceDegreeByCriterion = resolution.getDominanceDegreeByCriterion();
 		_dominanceDegreeAlternatives = resolution.getDominanceDegreeAlternatives();
 		_globalDominance = resolution.getGlobalDominance();
+		_thresholdValues = resolution.getThresholdValues();
 		_trapezoidalConsensusMatrix = resolution.getTrapezoidalConsensusMatrix();
 	}
 
@@ -764,6 +784,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		_dominanceDegreeByCriterion.clear();
 		_dominanceDegreeAlternatives.clear();
 		_globalDominance.clear();
+		_thresholdValues.clear();
 	}
 
 	@Override

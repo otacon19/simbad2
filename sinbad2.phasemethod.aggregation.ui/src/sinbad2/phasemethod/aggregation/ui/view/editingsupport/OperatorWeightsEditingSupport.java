@@ -35,7 +35,7 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
 		if(type.equals("expert")) { //$NON-NLS-1$
-			List<Expert> children = elementsSet.getAllExpertChildren((Expert) root);
+			List<Expert> children = elementsSet.getAllExpertsAndChildren((Expert) root);
 			for(Expert child : children) {
 				if(!child.hasChildren()) {
 					result.add(child);
@@ -184,7 +184,7 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 			WeightsDialog dialog; 
 			if(elementType.equals("Expert")) { //$NON-NLS-1$
 				secondary = getLeafElements(nullElement, "criterion"); //$NON-NLS-1$
-				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren((Expert) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
+				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
 			} else {
 				secondary = getLeafElements(nullElement, "expert"); //$NON-NLS-1$
 				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);

@@ -1,6 +1,7 @@
 package sinbad2.element;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,7 +36,19 @@ public class ProblemElementsSet implements Cloneable {
 	private List<IExpertsChangeListener> _expertsListener;
 	private List<IAlternativesChangeListener> _alternativesListener;
 	private List<ICriteriaChangeListener> _criteriaListener;
+	
+	private static class ElementComparator implements Comparator<ProblemElement> {
 
+		@Override
+		 public int compare(ProblemElement pe1, ProblemElement pe2) {
+	        return extractInt(pe1.getId()) - extractInt(pe2.getId());
+	    }
+
+	    int extractInt(String s) {
+	        String num = s.replaceAll("\\D", "");
+	        return num.isEmpty() ? 0 : Integer.parseInt(num);
+	    }
+	}
 	
 	public ProblemElementsSet(){
 		_experts = new LinkedList<Expert>();
@@ -52,7 +65,7 @@ public class ProblemElementsSet implements Cloneable {
 		return _experts;
 	}
 	
-	public List<Expert> getAllExpertChildren(ProblemElement parent) {
+	public List<Expert> getAllExpertsAndChildren(ProblemElement parent) {
 		List<Expert> result = new LinkedList<Expert>();
 		
 		Expert auxParent;
@@ -72,7 +85,7 @@ public class ProblemElementsSet implements Cloneable {
 		return result;
 	}
 	
-	public List<ProblemElement> getAllElementExpertChildren(ProblemElement parent) {
+	public List<ProblemElement> getAllElementExpertsAndChildren(ProblemElement parent) {
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
 		
 		Expert auxParent;
@@ -262,7 +275,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 		if(!hasParent) {
 			_experts.add(expert);
-			Collections.sort(_experts);
+			Collections.sort(_experts, new ElementComparator());
 		}
 		
 		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.ADD_EXPERT, null, expert, inUndoRedo));
@@ -272,7 +285,7 @@ public class ProblemElementsSet implements Cloneable {
 	public void addAlternative(Alternative alternative, boolean inUndoRedo) {
 		
 		_alternatives.add(alternative);
-		Collections.sort(_alternatives);
+		Collections.sort(_alternatives, new ElementComparator());
 		
 		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_ALTERNATIVE, null, alternative, inUndoRedo));
 		
@@ -282,7 +295,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 		if(!hasParent) {
 			_criteria.add(criterion);
-			Collections.sort(_criteria);
+			Collections.sort(_criteria, new ElementComparator());
 		}
 		
 		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.ADD_CRITERION, null, criterion, inUndoRedo));
@@ -345,7 +358,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 		}
 		
-		Collections.sort(_alternatives);
+		Collections.sort(_alternatives, new ElementComparator());
 		
 		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.ADD_MULTIPLE_ALTERNATIVES, null, insertAlternatives, 
 				inUndoRedo));
@@ -371,7 +384,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 		if(!hasParent) {
 			_experts.remove(expert);
-			Collections.sort(_experts);
+			Collections.sort(_experts, new ElementComparator());
 		}
 		
 		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.REMOVE_EXPERT, expert, null, inUndoRedo));
@@ -381,7 +394,7 @@ public class ProblemElementsSet implements Cloneable {
 	public void removeAlternative(Alternative alternative, boolean inUndoRedo) {
 		
 		_alternatives.remove(alternative);
-		Collections.sort(_alternatives);
+		Collections.sort(_alternatives, new ElementComparator());
 		
 		notifyAlternativesChanges(new AlternativesChangeEvent(EAlternativesChange.REMOVE_ALTERNATIVE, alternative, null, inUndoRedo));
 		
@@ -391,7 +404,7 @@ public class ProblemElementsSet implements Cloneable {
 		
 		if(!hasParent) {
 			_criteria.remove(criterion);
-			Collections.sort(_criteria);
+			Collections.sort(_criteria, new ElementComparator());
 		}
 		
 		notifyCriteriaChanges(new CriteriaChangeEvent(ECriteriaChange.REMOVE_CRITERION, criterion, null, inUndoRedo));
@@ -591,7 +604,7 @@ public class ProblemElementsSet implements Cloneable {
 					expert = parent;
 				} else if ("experts".equals(reader.getEndElementLocalPart())) { //$NON-NLS-1$
 					end = true;
-					Collections.sort(_experts);
+					Collections.sort(_experts, new ElementComparator());
 				}
 			}
 		}
@@ -613,7 +626,7 @@ public class ProblemElementsSet implements Cloneable {
 			} else if (event.isEndElement()) {
 				if ("alternatives".equals(reader.getEndElementLocalPart())) { //$NON-NLS-1$
 					end = true;
-					Collections.sort(_alternatives);
+					Collections.sort(_alternatives, new ElementComparator());
 				}
 			}
 		}
@@ -656,7 +669,7 @@ public class ProblemElementsSet implements Cloneable {
 					criterion = parent;
 				} else if ("criteria".equals(reader.getEndElementLocalPart())) { //$NON-NLS-1$
 					end = true;
-					Collections.sort(_criteria);
+					Collections.sort(_criteria, new ElementComparator());
 				}
 			}
 		}

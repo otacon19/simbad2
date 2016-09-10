@@ -59,7 +59,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
 		if(type.equals("expert")) { //$NON-NLS-1$
-			List<Expert> children = elementsSet.getAllExpertChildren((Expert) root);
+			List<Expert> children = elementsSet.getAllExpertsAndChildren((Expert) root);
 			for(Expert child : children) {
 				if(!child.hasChildren()) {
 					result.add(child);
@@ -268,7 +268,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 					
 					ChoquetIntegralWeightsDialog dialog;
 					if(elementType.equals("Expert")) { //$NON-NLS-1$
-						dialog = new ChoquetIntegralWeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren((Expert) element),
+						dialog = new ChoquetIntegralWeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) element),
 								ChoquetIntegralWeightsDialog.SIMPLE, elementType, elementId);
 					} else {
 						dialog = new ChoquetIntegralWeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element),
@@ -298,7 +298,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 					WeightsDialog dialog; 
 					if(elementType.equals("Expert")) { //$NON-NLS-1$
 						secondary = getLeafElements(nullElement, "criterion"); //$NON-NLS-1$
-						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
 					} else {
 						secondary = getLeafElements(nullElement, "expert"); //$NON-NLS-1$
 						dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);

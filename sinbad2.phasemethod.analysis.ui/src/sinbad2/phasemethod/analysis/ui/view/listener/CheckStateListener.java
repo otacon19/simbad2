@@ -61,7 +61,7 @@ public class CheckStateListener implements ICheckStateListener {
 		List<ProblemElement> sons;
 		
 		if(element instanceof Expert) {
-			sons = _elementsSet.getAllElementExpertChildren(element);
+			sons = _elementsSet.getAllElementExpertsAndChildren(element);
 		} else if(element instanceof Criterion) {
 			sons = _elementsSet.getAllElementCriterionSubcriteria(element);
 		} else {
@@ -97,7 +97,7 @@ public class CheckStateListener implements ICheckStateListener {
 		List<ProblemElement> sons = new LinkedList<ProblemElement>();
 		
 		if(element instanceof Expert) {
-			sons = _elementsSet.getAllElementExpertChildren(element);
+			sons = _elementsSet.getAllElementExpertsAndChildren(element);
 		} else if(element instanceof Criterion) {
 			sons = _elementsSet.getAllElementCriterionSubcriteria(element);
 		}
@@ -131,7 +131,7 @@ public class CheckStateListener implements ICheckStateListener {
 		List<ProblemElement> sons = new LinkedList<ProblemElement>();
 		
 		if(element instanceof Expert) {
-			sons = _elementsSet.getAllElementExpertChildren(null);
+			sons = _elementsSet.getAllElementExpertsAndChildren(null);
 		} else if(element instanceof Criterion) {
 			sons = _elementsSet.getAllElementCriterionSubcriteria(null);
 		}

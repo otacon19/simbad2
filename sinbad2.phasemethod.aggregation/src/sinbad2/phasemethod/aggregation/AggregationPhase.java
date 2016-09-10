@@ -195,7 +195,7 @@ public class AggregationPhase implements IPhaseMethod {
 		
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
 		if(elementType.equals("experts")) { //$NON-NLS-1$
-			List<Expert> children = _elementsSet.getAllExpertChildren((Expert) element);
+			List<Expert> children = _elementsSet.getAllExpertsAndChildren((Expert) element);
 			for(Expert child : children) {
 				if(child.hasChildren()) {
 					result.add(child);
@@ -319,7 +319,7 @@ public class AggregationPhase implements IPhaseMethod {
 					criterionValuations = new LinkedList<Valuation>();
 					for (ProblemElement expert : experts1) {
 						if(experts.contains(expert)) {
-							if (_elementsSet.getAllExpertChildren((Expert) expertParent).size() > 0) {
+							if (_elementsSet.getAllExpertsAndChildren((Expert) expertParent).size() > 0) {
 								criterionValuations.add(aggregateElementByExperts(expert, alternative, criterion, experts, criteria));
 							} else {
 								if(!_unifiedValuations.isEmpty()) {
@@ -435,7 +435,7 @@ public class AggregationPhase implements IPhaseMethod {
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement expert : experts1) {
 			if(experts.contains(expert)) {
-				if (_elementsSet.getAllExpertChildren((Expert) expertParent).size() > 0) {
+				if (_elementsSet.getAllExpertsAndChildren((Expert) expertParent).size() > 0) {
 					alternativeValuations.add(aggregateElementByExperts(expert, alternative, criterionParent, experts, criteria));
 				} else {
 					expertValuations = new LinkedList<Valuation>();

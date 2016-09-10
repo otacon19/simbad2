@@ -76,7 +76,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 		ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		List<Expert> children = elementsSet.getAllExpertChildren((Expert) root);
+		List<Expert> children = elementsSet.getAllExpertsAndChildren((Expert) root);
 		for(Expert child : children) {
 			if(!child.hasChildren()) {
 				result.add(child);

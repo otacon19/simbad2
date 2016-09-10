@@ -41,7 +41,7 @@ public class AggregationExpertViewerContentProvider implements ITreeContentProvi
 		}
 
 		List<ProblemElement> result = new LinkedList<ProblemElement>();
-		for (ProblemElement son : _elementsSet.getAllElementExpertChildren(element)) {
+		for (ProblemElement son : _elementsSet.getAllElementExpertsAndChildren(element)) {
 			if (((Expert) son).hasChildren()) {
 				result.add(son);
 			}
@@ -70,7 +70,7 @@ public class AggregationExpertViewerContentProvider implements ITreeContentProvi
 			problemElement = (ProblemElement) element;
 		}
 
-		for (ProblemElement son : _elementsSet.getAllElementExpertChildren(problemElement)) {
+		for (ProblemElement son : _elementsSet.getAllElementExpertsAndChildren(problemElement)) {
 			if (((Expert) son).hasChildren()) {
 				return true;
 			}

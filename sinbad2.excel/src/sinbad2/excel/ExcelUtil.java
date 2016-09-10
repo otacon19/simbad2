@@ -49,6 +49,7 @@ public class ExcelUtil {
 	private Map<ValuationKey, Valuation> _unifiedValuations;
 	private List<Double> _expertsWeights;
 	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
+	private Map<Pair<Expert, Criterion>, Double> _thresholdValues;
 
 	private ProblemElementsSet _elementsSet;
 
@@ -102,11 +103,12 @@ public class ExcelUtil {
 		}
 	}
 
-	public void createExcelFileEmergencyProblemStructure(Map<ValuationKey, Valuation> unifiedValuations, List<Double> expertsWeights, Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix) {
+	public void createExcelFileEmergencyProblemStructure(Map<ValuationKey, Valuation> unifiedValuations, List<Double> expertsWeights, Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix, Map<Pair<Expert, Criterion>, Double> thresholdValues) {
 
 		_unifiedValuations = unifiedValuations;
 		_expertsWeights = expertsWeights;
 		_decisionMatrix = decisionMatrix;
+		_thresholdValues = thresholdValues;
 
 		createProblemInformation();
 		
@@ -130,6 +132,7 @@ public class ExcelUtil {
 		createExpertsTablesInformation();
 		createExpertsWeightsInformation();
 		createOverallInformation();
+		createThresholdValues();
 	}
 
 	private void createExpertsTablesInformation() {
@@ -200,6 +203,7 @@ public class ExcelUtil {
 
 				columnCountCriteria += 4;
 			}
+			
 
 			rowCountExpertsCriteria += _alternatives.size() + 2;
 			columnCountCriteria = 3;
@@ -238,13 +242,16 @@ public class ExcelUtil {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createOverallInformation() {
 
-		Row rowOverallOpinion = _sheet.createRow(40);
+		int rowCountAlternatives = 10 + _elementsSet.getAllExperts().size() * 2 + _elementsSet.getAllExperts().size() * _elementsSet.getAlternatives().size() ,
+				columnCountValuation = 3;
+		
+		Row rowOverallOpinion = _sheet.createRow(rowCountAlternatives);
 		Cell cell = rowOverallOpinion.createCell(2);
 		cell.setCellValue("Overall opinion");
 		cell.setCellStyle(_styleTitles);
 
-		int rowCountAlternatives = 41, columnCountValuation = 3;
-
+		rowCountAlternatives++;
+		
 		for (Alternative a : _alternatives) {
 
 			Row rowAlternative = _sheet.createRow(rowCountAlternatives);
@@ -284,16 +291,51 @@ public class ExcelUtil {
 
 			columnCountValuation = 3;
 		}
+		
+		rowCountAlternatives = 10 + _elementsSet.getAllExperts().size() * 2 + _elementsSet.getAllExperts().size() * _elementsSet.getAlternatives().size();
 
 		int columnCountCriterion = 3;
 		for (Criterion c : _criteria) {
 			cell = rowOverallOpinion.createCell(columnCountCriterion);
 			cell.setCellValue(c.getCanonicalId());
 			cell.setCellStyle(_styleCriteria);
-			CellRangeAddress cellRangeAddress = new CellRangeAddress(40, 40, columnCountCriterion, columnCountCriterion + 3);
+			CellRangeAddress cellRangeAddress = new CellRangeAddress(rowCountAlternatives, rowCountAlternatives, columnCountCriterion, columnCountCriterion + 3);
 			_sheet.addMergedRegion(cellRangeAddress);
 
 			columnCountCriterion += 4;
 		}
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void createThresholdValues() {
+		int thresholdTitleRow = 96, thresholdTitleColumn = 2, thresholdCriterionColumn = 3;
+		
+		for(Expert e: _experts) {
+			Row thresholdTitle = _sheet.createRow(thresholdTitleRow);
+			Cell cell = thresholdTitle.createCell(thresholdTitleColumn);
+			cell.setCellStyle(_styleTitles);
+			cell.setCellValue("Threshold values");
+			
+			Row thresholdValues = _sheet.createRow(thresholdTitleRow + 1);
+			for(Criterion criterion: _criteria) {
+				cell = thresholdTitle.createCell(thresholdCriterionColumn);
+				cell.setCellStyle(_styleCriteria);
+				cell.setCellValue(criterion.getId());
+				
+				cell = thresholdValues.createCell(thresholdCriterionColumn);
+				cell.setCellValue(Double.toString(_thresholdValues.get(new Pair(e, criterion))));
+				
+				thresholdCriterionColumn++;
+			}
+			
+			thresholdTitleRow ++;
+			cell = thresholdValues.createCell(thresholdTitleColumn);
+			cell.setCellStyle(_styleExperts);
+			cell.setCellValue(e.getId());
+			
+			thresholdTitleRow += 3; 
+			thresholdCriterionColumn = 3;
+		}
+		
 	}
 }
