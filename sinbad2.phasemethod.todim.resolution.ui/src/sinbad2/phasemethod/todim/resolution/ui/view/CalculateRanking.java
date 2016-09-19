@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
@@ -223,7 +222,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		});
 
 		Composite tablesComposite = new Composite(_parent, SWT.NONE);
-		tablesComposite.setLayout(new GridLayout(2, true));
+		tablesComposite.setLayout(new GridLayout(4, true));
 		tablesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		_criteriaTableViewer = new TableViewer(tablesComposite);
@@ -396,8 +395,6 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		if (_checkBoxes.isEmpty()) {
 			createRadioButtons(criteria);
 		}
-
-		pack();
 	}
 
 	private void createRadioButtons(List<Criterion> criteria) {
@@ -482,6 +479,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		List<String[]> input = new LinkedList<String[]>();
 
 		Map<Alternative, Double> globalDominance = _resolutionPhase.calculateGlobalDominance();
+	
 		int ranking = globalDominance.size();
 		for (Alternative a : globalDominance.keySet()) {
 			String[] data = new String[3];
@@ -499,12 +497,6 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		}
 
 		_rankingTableViewer.setInput(input);
-	}
-
-	private void pack() {
-		for (TableColumn tc : _criteriaTableViewer.getTable().getColumns()) {
-			tc.pack();
-		}
 	}
 
 	@Override

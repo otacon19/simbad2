@@ -1,8 +1,10 @@
 package sinbad2.phasemethod.todim.resolution;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,7 +71,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	private AggregationPhase _aggregationPhase;
 
 	@SuppressWarnings("rawtypes")
-	public static class DataComparator implements Comparator {
+	private static class DataComparator implements Comparator {
 		@Override
 		public int compare(Object d1, Object d2) {
 			String e1 = ((String[]) d1)[0];
@@ -95,26 +97,32 @@ public class ResolutionPhase implements IPhaseMethod {
 	    }
 	}
 	
-	private static class MapUtil {
-		
-		public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
-			List<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>(map.entrySet());
-			
-			Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
-				
-				public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
-					return (o1.getValue()).compareTo(o2.getValue());
-				}
-			});
+	public LinkedHashMap<Alternative, Double> sortHashMapByValues(HashMap<Alternative, Double> passedMap) {
+	    List<Alternative> mapKeys = new ArrayList<>(passedMap.keySet());
+	    List<Double> mapValues = new ArrayList<>(passedMap.values());
+	    Collections.sort(mapValues);
+	    Collections.sort(mapKeys);
 
-			Map<K, V> result = new LinkedHashMap<K, V>();
-			for (Map.Entry<K, V> entry : list) {
-				result.put(entry.getKey(), entry.getValue());
-				
-			}
-			
-			return result;
-		}
+	    LinkedHashMap<Alternative, Double> sortedMap = new LinkedHashMap<>();
+
+	    Iterator<Double> valueIt = mapValues.iterator();
+	    while (valueIt.hasNext()) {
+	        Double val = valueIt.next();
+	        Iterator<Alternative> keyIt = mapKeys.iterator();
+
+	        while (keyIt.hasNext()) {
+	            Alternative key = keyIt.next();
+	            Double comp1 = passedMap.get(key);
+	            Double comp2 = val;
+
+	            if (comp1.equals(comp2)) {
+	                keyIt.remove();
+	                sortedMap.put(key, val);
+	                break;
+	            }
+	        }
+	    }
+	    return sortedMap;
 	}
 
 	public ResolutionPhase() {		
@@ -684,7 +692,8 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _dominanceDegreeAlternatives;
 	}
 
-	public Map<Alternative, Double> calculateGlobalDominance() {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public LinkedHashMap<Alternative, Double> calculateGlobalDominance() {
 		Map<Alternative, Double> acumDominanceDegreeAlternatives = new HashMap<Alternative, Double>();
 
 		double acum, max = Double.MIN_VALUE, min = Double.MAX_VALUE;
@@ -713,9 +722,8 @@ public class ResolutionPhase implements IPhaseMethod {
 			_globalDominance.put(a, dominance);
 		}
 
-		MapUtil.sortByValue(_globalDominance);
 		
-		return _globalDominance;
+		return sortHashMapByValues((HashMap) _globalDominance);
 	}
 
 	public Double[][] calculateCOG() {
