@@ -567,12 +567,7 @@ public class ResolutionPhase implements IPhaseMethod {
 						}
 
 						Pair<Alternative, Alternative> pairAlternatives = new Pair<Alternative, Alternative>(a1, a2);
-						Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance;
-						if (_dominanceDegreeByCriterion.get(c) != null) {
-							pairAlternativesDominance = _dominanceDegreeByCriterion.get(c);
-						} else {
-							pairAlternativesDominance = new HashMap<Pair<Alternative, Alternative>, Double>();
-						}
+						Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance = new HashMap<Pair<Alternative, Alternative>, Double>();
 						pairAlternativesDominance.put(pairAlternatives, dominance);
 						_dominanceDegreeByCriterion.put(c, pairAlternativesDominance);
 					}
