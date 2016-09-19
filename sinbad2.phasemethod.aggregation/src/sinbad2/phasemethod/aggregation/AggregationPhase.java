@@ -310,6 +310,7 @@ public class AggregationPhase implements IPhaseMethod {
 		} else {
 			experts1 = _elementsSet.getExperts();
 		}
+		
 		alternativeValuations = new LinkedList<Valuation>();
 		for (ProblemElement criterion : criteria1) {
 			if(criteria.contains(criterion)) {
@@ -335,7 +336,6 @@ public class AggregationPhase implements IPhaseMethod {
 
 					if (criterionValuations.size() > 1) {
 						operator = getExpertOperator(expertParent);
-						
 						if (operator instanceof UnweightedAggregationOperator) {
 							Valuation v = ((UnweightedAggregationOperator) operator).aggregate(criterionValuations);
 							alternativeValuations.add(v);

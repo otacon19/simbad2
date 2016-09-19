@@ -41,20 +41,20 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	public static final String ID = "flintstones.phasemethod.todim.resolution"; //$NON-NLS-1$
 
-	private static final Integer ATTENUATION_FACTOR = 1;
+	private static final int ATTENUATION_FACTOR = 1;
 	private static final int P = 2;
 
-	private Map<ValuationKey, Valuation> _twoTupleValuations;
-	
-	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
-	private Map<ValuationKey, Double> _distances;
-	private Object[][] _consensusMatrix;
-	private String[][] _trapezoidalConsensusMatrix;
-	
 	private int _numAlternatives;
 	private int _numCriteria;
 	
 	private Criterion _referenceCriterion;
+	
+	private Map<ValuationKey, Valuation> _twoTupleValuations;
+	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
+	private Object[][] _consensusMatrix;
+	private String[][] _trapezoidalConsensusMatrix;
+	private Map<ValuationKey, Double> _distances;
+	private Map<Pair<Expert, Criterion>, Double> _thresholdValues;
 	
 	private Map<Criterion, Double> _criteriaWeights;
 	private Map<String, Double> _relativeWeights;
@@ -62,7 +62,6 @@ public class ResolutionPhase implements IPhaseMethod {
 	private Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> _dominanceDegreeByCriterion;
 	private Map<Pair<Alternative, Alternative>, Double> _dominanceDegreeAlternatives;
 	private Map<Alternative, Double> _globalDominance;
-	private Map<Pair<Expert, Criterion>, Double> _thresholdValues;
 
 	private ProblemElementsSet _elementsSet;
 	private ValuationSet _valuationSet;
@@ -80,15 +79,20 @@ public class ResolutionPhase implements IPhaseMethod {
 			String c1 = ((String[]) d1)[2];
 			String c2 = ((String[]) d2)[2];
 			
-			int expertComparation = e1.compareTo(e2);
+			int expertComparation = extractInt(e1) - extractInt(e2);
 			if(expertComparation != 0) {
 				return expertComparation;
-			} else if(a1.compareTo(a2) != 0){
-				return a1.compareTo(a2);
+			} else if(extractInt(a1) - (extractInt(a2)) != 0){
+				return extractInt(a1) - extractInt(a2);
 			} else {
-				return c1.compareTo(c2);
+				return extractInt(c1) - extractInt(c2);
 			}
 		}
+		
+	    int extractInt(String s) {
+	        String num = s.replaceAll("\\D", "");
+	        return num.isEmpty() ? 0 : Integer.parseInt(num);
+	    }
 	}
 	
 	private static class MapUtil {
@@ -232,7 +236,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
 		
 		for(ValuationKey vk: _twoTupleValuations.keySet()) {
-			if(!vk.getExpert().getId().endsWith("flintstones_gathering_cloud") && vk.getAlternative() != null) { //$NON-NLS-1$
+			if(!vk.getExpert().getId().endsWith("flintstones_gathering_cloud") && !vk.getAlternative().getId().contains("null")) { //$NON-NLS-1$
 				String[] data = new String[7];
 				data[0] = vk.getExpert().getId();
 				data[1] = vk.getAlternative().getId();
@@ -255,19 +259,19 @@ public class ResolutionPhase implements IPhaseMethod {
 				
 				double knowledge = 0;
 				if(knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 0) {
-					knowledge = 0.013;
+					knowledge = 1.3;
 				} else if(knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 1) {
-					knowledge = 0.011;
+					knowledge = 1.1;
 				} else if(knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 2) {
-					knowledge = 0.009;
+					knowledge = 0.9;
 				} else if(knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 3) {
-					knowledge = 0.007;
+					knowledge = 0.7;
 				} else if(knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 4) {
-					knowledge = 0.005;
+					knowledge = 0.5;
 				} else if(knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 5) {
-					knowledge = 0.003;
+					knowledge = 0.3;
 				} else {
-					knowledge = 0.001;
+					knowledge = 0.1;
 				}
 				
 				_thresholdValues.put(new Pair(vk.getExpert(), vk.getCriterion()), knowledge);
@@ -666,8 +670,7 @@ public class ResolutionPhase implements IPhaseMethod {
 				acum = 0;
 				if (a1 != a2) {
 					for (Criterion c : _dominanceDegreeByCriterion.keySet()) {
-						Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance = _dominanceDegreeByCriterion
-								.get(c);
+						Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance = _dominanceDegreeByCriterion.get(c);
 						for (Pair<Alternative, Alternative> pair : pairAlternativesDominance.keySet()) {
 							if (a1.equals(pair.getLeft()) && a2.equals(pair.getRight())) {
 								acum += pairAlternativesDominance.get(pair);
