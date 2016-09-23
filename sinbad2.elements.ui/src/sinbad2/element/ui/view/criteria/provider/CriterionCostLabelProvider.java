@@ -15,7 +15,7 @@ public class CriterionCostLabelProvider extends ColumnLabelProvider {
 	
 	@Override
 	public Image getImage(Object obj) {
-		if(((Criterion) obj).getCost()) {
+		if(((Criterion) obj).isCost()) {
 			return Images.Cost;
 		} else {
 			return Images.Benefit;

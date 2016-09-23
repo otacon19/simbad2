@@ -25,7 +25,7 @@ public class SATable extends KTable implements ISelectionProvider {
 		super(parent, SWT.NO_BACKGROUND | SWT.FLAT | SWTX.AUTO_SCROLL);
 	}
 
-	public void setModel(String[] alternatives, String[] criteria, Double[][][] values, double[][] dm, double[] w) {
+	public void setModel(String[] alternatives, String[] criteria, Double[][][] values, Double[][] dm, Double[] w) {
 		setNumRowsVisibleInPreferredSize(alternatives.length + 1);
 		setNumColsVisibleInPreferredSize(criteria.length + 1);
 		_provider = new SATableContentProvider(this, alternatives, criteria, values);

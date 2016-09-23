@@ -219,7 +219,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 			public Image getImage(Object element) {
 				Object[] data = (Object[]) element;
 				
-				if(((Criterion) data[1]).getCost()) {
+				if(((Criterion) data[1]).isCost()) {
 					return Images.Cost;
 				} else {
 					return Images.Benefit;

@@ -95,7 +95,7 @@ public class UnificationPhase implements IPhaseMethod {
 			for(ValuationKey vk: unifiedEvaluations.keySet()) {
 				criterion = vk.getCriterion();
 				valuation = unifiedEvaluations.get(vk);
-				isCost = criterion.getCost();
+				isCost = criterion.isCost();
 	
 				LabelLinguisticDomain label = null;
 				double alpha = 0;

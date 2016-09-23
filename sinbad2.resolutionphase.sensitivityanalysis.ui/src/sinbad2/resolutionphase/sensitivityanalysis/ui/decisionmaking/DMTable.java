@@ -18,7 +18,7 @@ public class DMTable extends KTable {
 		_sensitivityAnalysis = sensitivityAnalysis;
 	}
 
-	public void setModel(String[] alternatives, String[] criteria, double[][] values) {
+	public void setModel(String[] alternatives, String[] criteria, Double[][] values) {
 		setNumRowsVisibleInPreferredSize(alternatives.length + 1);
 		setNumColsVisibleInPreferredSize(criteria.length + 1);
 		setModel(new DMTableContentProvider(this, alternatives, criteria, values, _sensitivityAnalysis));

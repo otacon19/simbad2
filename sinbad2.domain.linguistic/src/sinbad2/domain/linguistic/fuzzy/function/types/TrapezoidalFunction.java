@@ -319,12 +319,12 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		return (_a + (2 * _b) + (2 * _c) + _d) / 6;
 	}
 	
-	public double distance(TrapezoidalFunction tpf) {
+	public double distance(TrapezoidalFunction tpf, double P) {
 		double acum = 0;
 		double limits1[] = getLimits(), limits2[] = tpf.getLimits();
 		
 		for(int i = 0; i < 4; ++i) {
-			acum += Math.pow(limits2[i] - limits1[i], 2); 
+			acum += Math.pow(limits2[i] - limits1[i], P); 
 		}
 		
 		return Math.sqrt(acum);

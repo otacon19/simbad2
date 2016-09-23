@@ -32,7 +32,7 @@ public class ModifyCriterionOperation extends UndoableOperation {
 		_newId = newId;
 		_newCost = newCost;
 		_oldId = _modifyCriterion.getId();
-		_oldCost = _modifyCriterion.getCost();
+		_oldCost = _modifyCriterion.isCost();
 		
 		Criterion parent = _modifyCriterion.getParent();
 		if(parent != null) {
@@ -43,7 +43,7 @@ public class ModifyCriterionOperation extends UndoableOperation {
 	}
 	
 	public ModifyCriterionOperation(String label, Criterion modifyCriterion, String newId, ProblemElementsSet elementSet) {
-		this(label, modifyCriterion, newId, modifyCriterion.getCost(), elementSet);
+		this(label, modifyCriterion, newId, modifyCriterion.isCost(), elementSet);
 	}
 	
 	public ModifyCriterionOperation(String label, Criterion modifyCriterion, Boolean newCost, ProblemElementsSet elementSet) {

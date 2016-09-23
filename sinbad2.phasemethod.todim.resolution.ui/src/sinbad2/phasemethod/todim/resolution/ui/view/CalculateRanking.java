@@ -79,6 +79,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	private boolean _loaded;
 
 	private ResolutionPhase _resolutionPhase;
+	private SensitivityAnalysis _sensitivityAnalysis;
 
 	private ProblemElementsSet _elementsSet;
 
@@ -106,6 +107,8 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
+		
+		_sensitivityAnalysis = (SensitivityAnalysis) ResolutionPhasesManager.getInstance().getResolutionPhase(SensitivityAnalysis.ID).getImplementation();
 
 		_checkBoxes = new LinkedList<Button>();
 
@@ -156,9 +159,9 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 				if (indexSelected == 0) {
 					_resolutionPhase.setConsensusMatrix(_resolutionPhase.getTrapezoidalConsensusMatrix());
 				} else if (indexSelected == 1) {
-					_resolutionPhase.setConsensusMatrix(_resolutionPhase.calculateCOG());
+					_resolutionPhase.setConsensusMatrix(_resolutionPhase.calculateConsensusMatrixCenterOfGravity());
 				}
-
+				
 				refreshConsensusMatrixTable();
 				refreshTODIMTables();
 			}
@@ -413,10 +416,13 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					_resolutionPhase.setReferenceCriterion((Criterion) ((Button) e.widget).getData("criterion")); //$NON-NLS-1$
-
+					
 					refreshTODIMTables();
 
 					notifyStepStateChange();
+					
+					_sensitivityAnalysis.setDecisionMatrix(_resolutionPhase.calculateConsensusMatrixCenterOfGravity(new Double[_elementsSet.getAlternatives().size()]
+							[_elementsSet.getAllCriteria().size()]));
 					
 					_matrixType.setEnabled(true);
 				}
@@ -432,9 +438,9 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 
 		Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> dominanceDegreeByCriterion;
 		if (mode == 1) {
-			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionCOG();
+			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionCenterOfGravity();
 		} else {
-			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionFuzzy();
+			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionFuzzyNumber();
 		}
 
 		for (Criterion c : _elementsSet.getAllCriteria()) {
@@ -458,8 +464,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	private void setInputDominaceAlternativeDegreeTable() {
 		List<String[]> input = new LinkedList<String[]>();
 
-		Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance = _resolutionPhase
-				.calculateDominaceDegreeAlternatives();
+		Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance = _resolutionPhase.calculateDominaceDegreeAlternatives();
 		for (Pair<Alternative, Alternative> pair : pairAlternativesDominance.keySet()) {
 			String[] data = new String[3];
 			data[0] = pair.getLeft().getCanonicalId();
@@ -510,17 +515,14 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		if (!_loaded) {
 			_loaded = true;
 
-			SensitivityAnalysis sa = (SensitivityAnalysis) ResolutionPhasesManager.getInstance()
-					.getResolutionPhase(SensitivityAnalysis.ID).getImplementation();
-
-			double[] w = new double[_elementsSet.getAllCriteria().size()];
+			Double[] w = new Double[_elementsSet.getAllCriteria().size()];
 			int cont = 0;
 			for (Criterion c : _elementsSet.getAllCriteria()) {
 				w[cont] = _resolutionPhase.getImportanceCriteriaWeights().get(c);
 				cont++;
 			}
 
-			sa.setWeights(w);
+			_sensitivityAnalysis.setWeights(w);
 		}
 
 		Workspace.getWorkspace().updatePhases();

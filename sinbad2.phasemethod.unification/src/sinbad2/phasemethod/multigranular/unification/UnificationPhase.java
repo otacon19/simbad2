@@ -130,7 +130,7 @@ public class UnificationPhase implements IPhaseMethod {
 			for(ValuationKey vk : valuations.keySet()) {
 				criterion = vk.getCriterion();
 				valuation = valuations.get(vk);
-				isCost = criterion.getCost();
+				isCost = criterion.isCost();
 
 				if(valuation instanceof UnifiedValuation) {
 					Valuation auxValuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());

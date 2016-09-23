@@ -38,12 +38,12 @@ public class CriterionCostEditingSupport extends EditingSupport {
 
 	@Override
 	protected Object getValue(Object element) {
-		return ((Criterion) element).getCost();
+		return ((Criterion) element).isCost();
 	}
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		boolean oldValue = (Boolean) ((Criterion) element).getCost();
+		boolean oldValue = (Boolean) ((Criterion) element).isCost();
 		boolean newValue = (Boolean) value;
 		
 		if(newValue = oldValue) {

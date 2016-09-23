@@ -115,7 +115,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 			@Override
 			public Image getImage(Object element) {
 				Object[] data = (Object[]) element;
-				if(((Criterion) data[1]).getCost()) {
+				if(((Criterion) data[1]).isCost()) {
 					return Images.Cost;
 				} else {
 					return Images.Benefit;
@@ -209,7 +209,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 			@Override
 			public Image getImage(Object element) {
 				Object[] data = (Object[]) element;
-				if(((Criterion) data[0]).getCost()) {
+				if(((Criterion) data[0]).isCost()) {
 					return Images.Cost;
 				} else {
 					return Images.Benefit;
@@ -303,7 +303,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 			@Override
 			public Image getImage(Object element) {
 				Object[] data = (Object[]) element;
-				if(((Criterion) data[0]).getCost()) {
+				if(((Criterion) data[0]).isCost()) {
 					return Images.Cost;
 				} else {
 					return Images.Benefit;

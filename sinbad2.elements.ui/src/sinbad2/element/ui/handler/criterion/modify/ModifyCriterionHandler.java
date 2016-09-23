@@ -49,11 +49,11 @@ public class ModifyCriterionHandler extends AbstractHandler {
 		boolean doit = true;
 		String oldId = criterion.getId();
 		String newId = null;
-		boolean oldCost = criterion.getCost();
+		boolean oldCost = criterion.isCost();
 		boolean newCost = false;
 		
 		ModifyCriterionInputDialog dialog = new ModifyCriterionInputDialog(Display.getCurrent().getActiveShell(), Messages.ModifyCriterionHandler_Modify_criterion, 
-				Messages.ModifyCriterionHandler_Insert_criterion_id, criterion.getId(), criterion.getCost(), new ModifyCriterionInputValidator(parent, 
+				Messages.ModifyCriterionHandler_Insert_criterion_id, criterion.getId(), criterion.isCost(), new ModifyCriterionInputValidator(parent, 
 						criterion.getId(), elementSet));
 		
 		if(dialog.open() == Window.OK) {

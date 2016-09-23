@@ -87,7 +87,7 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 		_changeWeightsButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				double[] weights = _sensitivityAnalysis.getWeights();
+				Double[] weights = _sensitivityAnalysis.getWeights();
 				
 				List<Double> weightsList = new LinkedList<Double>();
 				for (int i = 0; i < weights.length; ++i) {
@@ -103,7 +103,7 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 				if (dialog.open() == WeightsDialog.SAVE) {
 					Map<String, List<Double>> mapWeights = dialog.getWeights();
 					ws = mapWeights.get(null);
-					weights = new double[ws.size()];
+					weights = new Double[ws.size()];
 					for (int i = 0; i < weights.length; ++i) {
 						weights[i] = ws.get(i);
 					}
@@ -175,7 +175,7 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 
 	@Override
 	public void notifySensitivityAnalysisChange() {
-		double[] preferences = new double[0];
+		Double[] preferences = new Double[0];
 		
 		refreshDMTable();
 	

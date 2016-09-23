@@ -147,7 +147,7 @@ public class UnificationPhase implements IPhaseMethod {
 				alternative = vk.getAlternative();
 				criterion = vk.getCriterion();
 				valuation = valuations.get(vk);
-				isCost = criterion.getCost();
+				isCost = criterion.isCost();
 				
 				if(valuation instanceof IntegerValuation) {
 					if(isCost) {

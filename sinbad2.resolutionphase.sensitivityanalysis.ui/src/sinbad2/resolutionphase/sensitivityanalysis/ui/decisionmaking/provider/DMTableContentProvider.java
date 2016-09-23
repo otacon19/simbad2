@@ -25,7 +25,7 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 	
 	private String[] _alternatives;
 	private String[] _criteria;
-	private double[][] _values;
+	private Double[][] _values;
 	
 	private KTable _table;
 	
@@ -45,7 +45,7 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 	private MyOwnKTableCellEditorCombo _kTableCombo = new MyOwnKTableCellEditorCombo();
 
 	
-	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria, double[][] values, SensitivityAnalysis sensitivityAnalysis) {
+	public DMTableContentProvider(KTable table, String[] alternatives, String[] criteria, Double[][] values, SensitivityAnalysis sensitivityAnalysis) {
 		super(table);
 
 		_table = table;
@@ -236,7 +236,7 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 		}
 	}
 	
-	public double[][] getValues() {
+	public Double[][] getValues() {
 		return _values;
 	}
 	

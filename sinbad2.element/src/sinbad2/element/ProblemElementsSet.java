@@ -758,7 +758,7 @@ public class ProblemElementsSet implements Cloneable {
 		for (Criterion criterion : criteria) {
 			writer.writeStartElement("criterion"); //$NON-NLS-1$
 			writer.writeAttribute("id", criterion.getId()); //$NON-NLS-1$
-			writer.writeAttribute("cost", Boolean.toString(criterion.getCost())); //$NON-NLS-1$
+			writer.writeAttribute("cost", Boolean.toString(criterion.isCost())); //$NON-NLS-1$
 			if (criterion.hasSubcriteria()) {
 				saveCriteria(criterion.getSubcriteria(), writer);
 			}

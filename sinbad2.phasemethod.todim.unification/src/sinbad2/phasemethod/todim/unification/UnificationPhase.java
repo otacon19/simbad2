@@ -170,7 +170,7 @@ public class UnificationPhase implements IPhaseMethod {
 				if(!alternative.getId().contains("null_")) {
 					valuation = valuations.get(vk);
 					criterion = vk.getCriterion();
-					isCost = criterion.getCost();
+					isCost = criterion.isCost();
 	
 					if (valuation instanceof IntegerValuation) {
 						if (isCost) {

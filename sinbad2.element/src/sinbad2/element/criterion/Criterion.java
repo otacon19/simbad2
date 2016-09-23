@@ -53,7 +53,7 @@ public class Criterion extends ProblemElement {
 		_cost = cost;
 	}
 	
-	public boolean getCost() {
+	public boolean isCost() {
 		return _cost;
 	}
 	
@@ -154,7 +154,7 @@ public class Criterion extends ProblemElement {
 				hcb.append(criterion);
 			}
 		}
-		hcb.append(getCost());
+		hcb.append(isCost());
 		return hcb.toHashCode();
 	}
 	

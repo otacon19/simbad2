@@ -42,7 +42,7 @@ public class CriterionTest {
 		Criterion clone = (Criterion) _tester.clone();
 		
 		assertThat(_tester.getParent() == clone.getParent(), is(true));
-		assertThat(_tester.getCost() == clone.getCost(), is(true));
+		assertThat(_tester.isCost() == clone.isCost(), is(true));
 		assertThat(_tester.getSubcriteria() == clone.getSubcriteria(), is(true));
 	}
 

@@ -157,7 +157,7 @@ public class ProblemInformation extends ViewPart implements IStepStateListener {
 		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix = _resolutionPhase.calculateDecisionMatrix();
 		_dmTable.setModel(alternatives, criteria, decisionMatrix);
 
-		_distanceTableViewer.setInput(_resolutionPhase.calculateDistance());
+		_distanceTableViewer.setInput(_resolutionPhase.calculateDataProblem());
 		_distanceTableViewer.refresh();
 		
 		pack();

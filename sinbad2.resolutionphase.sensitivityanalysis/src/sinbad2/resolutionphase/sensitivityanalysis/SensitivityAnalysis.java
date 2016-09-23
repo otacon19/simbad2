@@ -36,13 +36,13 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private int _numberOfAlternatives;
 	private int _numberOfCriteria;
 
-	private double[] _w;
-	private double[][] _decisionMatrix;
+	private Double[] _w;
+	private Double[][] _decisionMatrix;
 
-	private double[] _alternativesFinalPreferences;
-	private double[][] _alternativesRatioFinalPreferences;
+	private Double[] _alternativesFinalPreferences;
+	private Double[][] _alternativesRatioFinalPreferences;
 
-	private int[] _ranking;
+	private Integer[] _ranking;
 	private Double[][][] _minimumAbsoluteChangeInCriteriaWeights;
 	private Double[][][] _minimumPercentChangeInCriteriaWeights;
 	private Double[][][] _absoluteThresholdValues;
@@ -87,19 +87,19 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_numberOfCriteria = numberOfCriteria;
 	}
 
-	public double[] getWeights() {
+	public Double[] getWeights() {
 		return _w;
 	}
 
-	public void setWeights(double[] w) {
+	public void setWeights(Double[] w) {
 		_w = w;
 	}
 
-	public double[][] getDecisionMatrix() {
+	public Double[][] getDecisionMatrix() {
 		return _decisionMatrix;
 	}
 
-	public void setDecisionMatrix(double[][] dm) {
+	public void setDecisionMatrix(Double[][] dm) {
 		_decisionMatrix = dm;
 	}
 	
@@ -119,27 +119,27 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		return _problem;
 	}
 
-	public double[] getAlternativesFinalPreferences() {
+	public Double[] getAlternativesFinalPreferences() {
 		return _alternativesFinalPreferences;
 	}
 
-	public void setAlternativesFinalPreferences(double[] alternativesFinalPreferences) {
+	public void setAlternativesFinalPreferences(Double[] alternativesFinalPreferences) {
 		_alternativesFinalPreferences = alternativesFinalPreferences;
 	}
 	
-	public double[][] getAlternativesRatioFinalPreferences() {
+	public Double[][] getAlternativesRatioFinalPreferences() {
 		return _alternativesRatioFinalPreferences;
 	}
 
-	public void setAlternativesRationFinalPreferences(double[][] alternativesRatioFinalPreferences) {
+	public void setAlternativesRationFinalPreferences(Double[][] alternativesRatioFinalPreferences) {
 		_alternativesRatioFinalPreferences = alternativesRatioFinalPreferences;
 	}
 
-	public int[] getRanking() {
+	public Integer[] getRanking() {
 		return _ranking;
 	}
 
-	public void setRanking(int[] ranking) {
+	public void setRanking(Integer[] ranking) {
 		_ranking = ranking;
 	}
 
@@ -309,21 +309,21 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	private void assignWeights(List<Double> weights) {
-		_w = new double[_numberOfCriteria];
+		_w = new Double[_numberOfCriteria];
 		for (int i = 0; i < weights.size(); ++i) {
 			_w[i] = weights.get(i);
 		}
 	}
 
 	private void createDefaultWeights() {
-		_w = new double[_numberOfCriteria];
+		_w = new Double[_numberOfCriteria];
 		double tempW = 1d / (double) _numberOfCriteria;
 		for (int i = 0; i < _numberOfCriteria; i++) {
 			_w[i] = tempW;
 		}
 	}
 
-	private void normalize(double[] values) {
+	private void normalize(Double[] values) {
 
 		double sum = 0;
 
@@ -339,10 +339,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	private void computeFinalPreferences() {
-		_alternativesFinalPreferences = new double[_numberOfAlternatives];
+		_alternativesFinalPreferences = new Double[_numberOfAlternatives];
 
 		for (int alternative = 0; alternative < _numberOfAlternatives; alternative++) {
-			_alternativesFinalPreferences[alternative] = 0;
+			_alternativesFinalPreferences[alternative] = 0d;
 			for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
 				_alternativesFinalPreferences[alternative] += _decisionMatrix[criterion][alternative] * _w[criterion];
 			}
@@ -355,7 +355,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 	private void computeRanking() {
 
-		_ranking = new int[_numberOfAlternatives];
+		_ranking = new Integer[_numberOfAlternatives];
 
 		List<Double> preferences = new LinkedList<Double>();
 		for (double preference : _alternativesFinalPreferences) {
@@ -382,11 +382,11 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	private void computeFinalPreferencesWeightedProduct() {
-		_alternativesRatioFinalPreferences = new double[_numberOfAlternatives][_numberOfAlternatives];
+		_alternativesRatioFinalPreferences = new Double[_numberOfAlternatives][_numberOfAlternatives];
 
 		for (int alternative1 = 0; alternative1 < _numberOfAlternatives - 1; alternative1++) {
 			for (int alternative2 = (alternative1 + 1); alternative2 < _numberOfAlternatives; alternative2++) {
-				_alternativesRatioFinalPreferences[alternative1][alternative2] = 1;
+				_alternativesRatioFinalPreferences[alternative1][alternative2] = 1d;
 				for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
 					_alternativesRatioFinalPreferences[alternative1][alternative2] *= Math.pow((_decisionMatrix[criterion][alternative1] 
 								/ _decisionMatrix[criterion][alternative2]), _w[criterion]);
@@ -399,7 +399,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 	private void computeRankingWeightedProductModel() {
 
-		_ranking = new int[_numberOfAlternatives];
+		_ranking = new Integer[_numberOfAlternatives];
 		
 		for(int i = 0; i < _ranking.length; ++i) {
 			_ranking[i] = i + 1;
@@ -1116,6 +1116,9 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	public void compute() {
+		
+		readDecisionMatrix();
+		
 		switch(_model) {
 		case WEIGHTED_SUM:
 			if(_problem == EProblem.MOST_CRITICAL_CRITERION) {
@@ -1142,9 +1145,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	public void computeWeightedSumModelCriticalCriterion() {
-		copyDecisionMatrix();
-		
 		normalizeDecisionMatrix();
+		
 		computeFinalPreferences();
 		computeMinimumAbsoluteChangeInCriteriaWeights();
 		computeMinimumPercentChangeInCriteriaWeights();
@@ -1155,9 +1157,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	public void computeWeightedSumModelCriticalMeasure() {
-		copyDecisionMatrix();
-		
 		normalizeDecisionMatrix();
+		
 		computeFinalPreferences();
 		computeAbsoluteThresholdValuesWeightedSumModel();
 		computeRelativeThresholdValuesWeightedSumModel();
@@ -1166,9 +1167,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	public void computeAnalyticHierarchyProcessModelCriticalCriterion() {
-		copyDecisionMatrix();
-		
 		normalizeDecisionMatrixSumToOne();
+		
 		computeFinalPreferences();
 		computeMinimumAbsoluteChangeInCriteriaWeights();
 		computeMinimumPercentChangeInCriteriaWeights();
@@ -1179,9 +1179,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	public void computeAnalyticHierarchyProcessModelCriticalMeasure() {
-		copyDecisionMatrix();
-		
 		normalizeDecisionMatrixSumToOne();
+		
 		computeFinalPreferences();
 		computeAbsoluteThresholdValuesAnalyticHierarchyProcess();
 		computeRelativeThresholdValuesAnalyticHierarchyProcess();
@@ -1190,9 +1189,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	public void computeWeightedProductModelCriticalCriterion() {
-		copyDecisionMatrix();
-		
 		normalizeDecisionMatrix();
+		
 		computeFinalPreferencesWeightedProduct();
 		computeWeightedProductMinimumAbsoluteChangeInCriteriaWeights();
 		computeWeightedProductMinimumPercentChangeInCriteriaWeights();
@@ -1203,9 +1201,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	public void computeWeightedProductModelCriticalMeasure() {
-		copyDecisionMatrix();
-		
 		normalizeDecisionMatrix();
+		
 		computeFinalPreferencesWeightedProduct();
 		computeAbsoluteThresholdValuesWeightedProductModel();
 		computeRelativeThresholdValuesWeightedProductModel();
@@ -1214,19 +1211,23 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void copyDecisionMatrix() {
-		_decisionMatrix = new double[_numberOfCriteria][_numberOfAlternatives];
+	private void readDecisionMatrix() {
 		
-		int i = 0, j = 0;
+		if(_decisionMatrix == null) {
 		
-		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix = _aggregationPhase.getDecisionMatrix();
-		for(Alternative a: _elementsSet.getAlternatives()) {
-			j = 0;
-			for(Criterion c: _elementsSet.getAllCriteria()) {
-				_decisionMatrix[j][i] = ((TwoTuple) decisionMatrix.get(new Pair(a, c))).calculateInverseDelta();
-				j++;
+			_decisionMatrix = new Double[_numberOfCriteria][_numberOfAlternatives];
+			
+			int i = 0, j = 0;
+			
+			Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix = _aggregationPhase.getDecisionMatrix();
+			for(Alternative a: _elementsSet.getAlternatives()) {
+				j = 0;
+				for(Criterion c: _elementsSet.getAllCriteria()) {
+					_decisionMatrix[j][i] = ((TwoTuple) decisionMatrix.get(new Pair(a, c))).calculateInverseDelta();
+					j++;
+				}
+				i++;
 			}
-			i++;
 		}
 	}
 	
