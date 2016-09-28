@@ -21,6 +21,9 @@ public class Images {
 	
 	public static final Image Domain = AbstractUIPlugin
 			.imageDescriptorFromPlugin(PLUGIN_ID, "icons/domain.png").createImage(); //$NON-NLS-1$
+	
+	public static final Image Excel = AbstractUIPlugin
+			.imageDescriptorFromPlugin(PLUGIN_ID, "icons/excel_23x23.png").createImage(); //$NON-NLS-1$
 
 	private Images() {
 	}

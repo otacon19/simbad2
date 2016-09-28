@@ -16,8 +16,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.phasemethod.PhasesMethodManager;
@@ -229,7 +227,7 @@ public static final String ID = "flintstones.phasemethod.linguistic.twotuple.ui.
 		
 		_saveButton = new Button(container, SWT.PUSH);
 		_saveButton.setText(Messages.Unification_Save);
-		_saveButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVE_EDIT).createImage());
+		_saveButton.setImage(Images.Excel);
 	}
 
 	private void compactTable() {
