@@ -49,6 +49,10 @@ public class RetranslationPhase implements IPhaseMethod {
 	}
 	
 	@Override
+	public void setUnifiedDomain(Domain domain) {
+	}
+	
+	@Override
 	public Map<ValuationKey, Valuation> getTwoTupleValuations() {
 		return null;
 	}

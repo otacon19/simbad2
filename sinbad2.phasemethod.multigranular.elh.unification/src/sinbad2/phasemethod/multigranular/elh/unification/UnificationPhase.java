@@ -77,8 +77,9 @@ public class UnificationPhase implements IPhaseMethod {
 		return _unifiedDomain;
 	}
 	
-	public void setUnifiedDomain(FuzzySet unifiedDomain) {
-		_unifiedDomain = unifiedDomain;
+	@Override
+	public void setUnifiedDomain(Domain domain) {
+		_unifiedDomain = (FuzzySet) domain;
 	}
 	
 	@Override

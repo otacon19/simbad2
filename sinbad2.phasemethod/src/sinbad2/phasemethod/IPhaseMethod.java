@@ -21,6 +21,8 @@ public interface IPhaseMethod extends IPhaseMethodStateListener {
 
 	public boolean validate();
 	
+	public void setUnifiedDomain(Domain domain);
+	
 	public Domain getUnifiedDomain();
 
 	public Map<ValuationKey, Valuation> getTwoTupleValuations();

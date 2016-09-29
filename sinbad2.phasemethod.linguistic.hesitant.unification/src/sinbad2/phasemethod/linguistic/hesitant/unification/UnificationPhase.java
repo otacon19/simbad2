@@ -85,6 +85,12 @@ public class UnificationPhase implements IPhaseMethod {
 	}
 	
 	@Override
+	public void setUnifiedDomain(Domain domain) {
+		_unifiedDomain = domain;
+	}
+	
+	
+	@Override
 	public IPhaseMethod copyStructure() {
 		return new UnificationPhase();
 	}

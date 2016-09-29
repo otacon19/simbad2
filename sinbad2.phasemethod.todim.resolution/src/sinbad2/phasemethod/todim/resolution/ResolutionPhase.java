@@ -284,6 +284,9 @@ public class ResolutionPhase implements IPhaseMethod {
 	public Domain getUnifiedDomain() {
 		return null;
 	}
+	
+	@Override 
+	public void setUnifiedDomain(Domain domain) {}
 
 	public Double[][] calculateConsensusMatrixCenterOfGravity() {
 		Double[][] result = new Double[_numAlternatives][_numCriteria];

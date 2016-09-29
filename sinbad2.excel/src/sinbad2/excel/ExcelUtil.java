@@ -120,6 +120,9 @@ public class ExcelUtil {
 			_sheet = _workbook.createSheet(e.getCanonicalId());
 			createExpertAssessments(e, valuations);
 		}
+		
+		_sheet = _workbook.createSheet("Unification");
+		createUnificationAssessments();
 	}
 
 	private void createExpertAssessments(Expert e, Map<ValuationKey, Valuation> valuations) {
@@ -190,6 +193,60 @@ public class ExcelUtil {
 
 			columnCountCriteria++;
 		}
+	}
+	
+	private void createUnificationAssessments() {
+		int rowCountExpertsCriteria = 2, rowCountAlternatives = 3, columnCountCriteria = 3, columnCountValuation = 3;
+
+		for (Expert e : _experts) {
+
+			Row rowExpertCriterion = _sheet.createRow(rowCountExpertsCriteria);
+			Cell cell = rowExpertCriterion.createCell(2);
+			cell.setCellValue(e.getId());
+			cell.setCellStyle(_styleExperts);
+
+			rowCountAlternatives = rowCountExpertsCriteria + 1;
+
+			for (Alternative a : _alternatives) {
+
+				Row rowAlternative = _sheet.createRow(rowCountAlternatives);
+				cell = rowAlternative.createCell(2);
+				cell.setCellValue(a.getId());
+				cell.setCellStyle(_styleAlternatives);
+
+
+
+				for (Criterion c : _criteria) {
+					for (ValuationKey vk : _unifiedValuations.keySet()) {
+						if (vk.getExpert().equals(e) && vk.getAlternative().equals(a) && vk.getCriterion().equals(c)) {
+
+							TwoTuple v = (TwoTuple) _unifiedValuations.get(vk);
+						
+							cell = rowAlternative.createCell(columnCountValuation);
+							cell.setCellValue(v.changeFormatValuationToString());
+
+							columnCountValuation++;
+						}
+					}
+				}
+
+				columnCountValuation = 3;
+				
+				rowCountAlternatives++;
+			}
+
+			for (Criterion c : _criteria) {
+				cell = rowExpertCriterion.createCell(columnCountCriteria);
+				cell.setCellValue(c.getId());
+				cell.setCellStyle(_styleCriteria);
+
+				columnCountCriteria ++;
+			}
+
+			rowCountExpertsCriteria += _alternatives.size() + 2;
+			columnCountCriteria = 3;
+		}
+		
 	}
 
 	public void createExcelFileEmergencyProblemStructure(Map<ValuationKey, Valuation> unifiedValuations,

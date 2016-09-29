@@ -162,6 +162,9 @@ public class SelectionPhase implements IPhaseMethod {
 	public Domain getUnifiedDomain() {
 		return null;
 	}
+	
+	@Override
+	public void setUnifiedDomain(Domain domain) {}
 
 	public List<Object[]> calculateIdealSolution() {
 		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
