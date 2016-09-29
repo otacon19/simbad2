@@ -301,7 +301,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 					}
 					AggregationOperator operator = _aggregationPhase.getExpertOperator(problemElement);
 					if (operator != null) {
-						if (operator.hasParameters() && operator.getName().equals("OWA")) { //$NON-NLS-1$
+						if (operator.hasParameters()) { //$NON-NLS-1$
 							return Images.Edit_p;
 						}
 						return null;
@@ -432,7 +432,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 					
 					AggregationOperator operator = _aggregationPhase.getCriterionOperator(problemElement);
 					if (operator != null) {
-						if (operator.hasParameters() && !operator.getName().equals("OWA")) { //$NON-NLS-1$
+						if (operator.hasParameters()) { //$NON-NLS-1$
 							return Images.Edit_p;
 						}
 						return null;

@@ -6,7 +6,7 @@
       <aggregation_operator
             id="sinbad2.aggregationoperator.owa"
             name="OWA"
-            parameters="true">
+            parameters="false">
          <weighted
                implementation="sinbad2.aggregationoperator.owa.OWA">
             <supported_types
