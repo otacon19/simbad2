@@ -494,6 +494,7 @@ public class RatingView extends ViewPart {
 	}
 
 	private void clearMethodSteps() {
+		
 		while(_tabFolder.getItemCount() > 1) {
 			((ViewPart) _tabFolder.getItem(1).getData("view")).dispose(); //$NON-NLS-1$
 			_tabFolder.getItem(1).dispose();
@@ -507,6 +508,7 @@ public class RatingView extends ViewPart {
 		_methodNameFooterText.setText(Messages.RatingView_Unselected);
 		_stepValue.setText("(0/0)"); //$NON-NLS-1$
 		
+		_phasesMethodManager.clearPhases();
 		_methodsUIManager.deactiveCurrentActive();
 		
 		_methodUISelected = null;

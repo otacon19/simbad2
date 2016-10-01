@@ -129,4 +129,11 @@ public class PhasesMethodManager {
 			}
 		}
 	}
+	
+	public void clearPhases() {
+		for(String id: getIDs()) {
+			PhaseMethod pm = getPhaseMethod(id);
+			pm.getImplementation().clear();
+		}
+	}
 }

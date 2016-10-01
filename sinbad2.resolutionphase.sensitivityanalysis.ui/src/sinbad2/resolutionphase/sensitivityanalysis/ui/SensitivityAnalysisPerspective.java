@@ -30,7 +30,8 @@ public class SensitivityAnalysisPerspective implements IPerspectiveFactory {
 			}
 
 			@Override
-			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {}
+			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
+			}
 		});
 	}
 }

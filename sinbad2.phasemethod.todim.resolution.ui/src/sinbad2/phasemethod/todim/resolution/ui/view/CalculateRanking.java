@@ -109,7 +109,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		
 		_sensitivityAnalysis = (SensitivityAnalysis) ResolutionPhasesManager.getInstance().getResolutionPhase(SensitivityAnalysis.ID).getImplementation();
-
+		
 		_checkBoxes = new LinkedList<Button>();
 
 		_loaded = false;
@@ -479,6 +479,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		_dominanceDegreeAlternativesTableViewer.setInput(input);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void setInputRankingTable() {
 		List<String[]> inputAux = new LinkedList<String[]>();
 		List<String[]> input = new LinkedList<String[]>();
@@ -502,6 +503,28 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		}
 
 		_rankingTableViewer.setInput(input);
+		
+		Double[] dominances = new Double[globalDominance.size()];
+		int alternative = 0;
+		for(Alternative a: _elementsSet.getAlternatives()) {
+			dominances[alternative] = globalDominance.get(a);
+			alternative++;
+		}
+		
+		_sensitivityAnalysis.setAlternativesFinalPreferences(dominances);
+		
+		Map<Pair<Alternative, Alternative>, Double> dominancePairAlternatives = _resolutionPhase.getDominanceDegreeAlternatives();
+		List<Alternative> alternatives = _elementsSet.getAlternatives();
+		Double[][] dominancesPair = new Double[alternatives.size()][alternatives.size()];
+		for(int i = 0; i < alternatives.size() - 1; ++i) {
+			for(int j = i + 1; j < alternatives.size(); ++j) {
+				dominancesPair[i][j] = dominancePairAlternatives.get(new Pair(alternatives.get(i), alternatives.get(j)));
+			}
+		}
+		
+		_sensitivityAnalysis.setAlternativesRatioFinalPreferences(dominancesPair);
+		
+		notifyStepStateChange();
 	}
 
 	@Override
@@ -521,7 +544,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 				w[cont] = _resolutionPhase.getImportanceCriteriaWeights().get(c);
 				cont++;
 			}
-
+			
 			_sensitivityAnalysis.setWeights(w);
 		}
 

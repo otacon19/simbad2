@@ -149,7 +149,8 @@ public class MultiplePerspectives implements IWorkspaceListener {
 					String activeResolutionPhaseUI = resolutionPhasesUIManager.getActiveResolutionPhasesUI().getId();
 					int rc = SWT.NO;
 					if(!activeResolutionPhaseUI.equals(phaseUIId)) {
-						if(activeResolutionPhaseUI.equals("flintstones.resolutionphase.rating.ui") && !_pre_workspace_close_action) { //$NON-NLS-1$
+						
+						if((activeResolutionPhaseUI.equals("flintstones.resolutionphase.rating.ui") || activeResolutionPhaseUI.equals("flintstones.resolutionphase.sensitivityanalysis.ui")) && !_pre_workspace_close_action) { //$NON-NLS-1$
 							MessageBox messageBox = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_INFORMATION | SWT.YES | SWT.NO);
 						    messageBox.setMessage(Messages.MultiplePerspectives_You_will_lose_all_information);
 						    rc = messageBox.open();
@@ -166,6 +167,12 @@ public class MultiplePerspectives implements IWorkspaceListener {
 								_actions.get(phaseUIId).setChecked(false);
 								_validAction = false;
 							}
+						    
+						    if(activeResolutionPhaseUI.equals("flintstones.resolutionphase.sensitivityanalysis.ui")) {
+						    	_actions.get(activeResolutionPhaseUI).setEnabled(false);
+						    	resolutionPhasesUIManager.getUI(activeResolutionPhaseUI).getResolutionPhase().getImplementation().clear();
+						    }
+						    
 						} else {
 							_pre_workspace_close_action = false;
 							resolutionPhasesUIManager.activate(phaseUIId);

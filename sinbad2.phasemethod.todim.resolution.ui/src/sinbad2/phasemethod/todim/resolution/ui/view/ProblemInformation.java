@@ -60,8 +60,6 @@ public class ProblemInformation extends ViewPart implements IStepStateListener {
 		
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
-		
-		_completed = true;
 	}
 	
 	@Override
@@ -141,6 +139,8 @@ public class ProblemInformation extends ViewPart implements IStepStateListener {
 		distanceComposite.layout();
 		
 		refreshTables();
+		
+		_completed = true;
 	}
 	
 	private void refreshTables() {		
@@ -179,7 +179,7 @@ public class ProblemInformation extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
-
+		
 		if(_completed) {
 			_ratingView.loadNextStep();
 			_completed = false;

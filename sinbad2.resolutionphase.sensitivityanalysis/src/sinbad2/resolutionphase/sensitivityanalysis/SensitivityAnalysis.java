@@ -19,6 +19,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.method.MethodsManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.resolutionphase.IResolutionPhase;
@@ -35,6 +36,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 	private int _numberOfAlternatives;
 	private int _numberOfCriteria;
+	private boolean _preferencesAlreadyCalculated;
 
 	private Double[] _w;
 	private Double[][] _decisionMatrix;
@@ -61,6 +63,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 	public SensitivityAnalysis() {
 		_w = null;
+		
+		_preferencesAlreadyCalculated = false;
 
 		_absoluteTop = new LinkedList<Integer>();
 		_absoluteAny = new LinkedList<Integer>();
@@ -125,13 +129,15 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 	public void setAlternativesFinalPreferences(Double[] alternativesFinalPreferences) {
 		_alternativesFinalPreferences = alternativesFinalPreferences;
+		
+		_preferencesAlreadyCalculated = true;
 	}
 	
 	public Double[][] getAlternativesRatioFinalPreferences() {
 		return _alternativesRatioFinalPreferences;
 	}
 
-	public void setAlternativesRationFinalPreferences(Double[][] alternativesRatioFinalPreferences) {
+	public void setAlternativesRatioFinalPreferences(Double[][] alternativesRatioFinalPreferences) {
 		_alternativesRatioFinalPreferences = alternativesRatioFinalPreferences;
 	}
 
@@ -237,17 +243,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			}
 		}
 		
-		switch(_model) {
-		case WEIGHTED_SUM:
-			computeWeightedSumModelCriticalCriterion();
-			break;
-		case WEIGHTED_PRODUCT:
-			computeWeightedProductModelCriticalCriterion();
-			break;
-		case ANALYTIC_HIERARCHY_PROCESS:
-			computeAnalyticHierarchyProcessModelCriticalCriterion();
-			break;
-		}
+		compute();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -339,12 +335,16 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	private void computeFinalPreferences() {
-		_alternativesFinalPreferences = new Double[_numberOfAlternatives];
-
-		for (int alternative = 0; alternative < _numberOfAlternatives; alternative++) {
-			_alternativesFinalPreferences[alternative] = 0d;
-			for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
-				_alternativesFinalPreferences[alternative] += _decisionMatrix[criterion][alternative] * _w[criterion];
+		
+		if(!_preferencesAlreadyCalculated) {
+		
+			_alternativesFinalPreferences = new Double[_numberOfAlternatives];
+	
+			for (int alternative = 0; alternative < _numberOfAlternatives; alternative++) {
+				_alternativesFinalPreferences[alternative] = 0d;
+				for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
+					_alternativesFinalPreferences[alternative] += _decisionMatrix[criterion][alternative] * _w[criterion];
+				}
 			}
 		}
 
@@ -382,18 +382,24 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	private void computeFinalPreferencesWeightedProduct() {
-		_alternativesRatioFinalPreferences = new Double[_numberOfAlternatives][_numberOfAlternatives];
-
-		for (int alternative1 = 0; alternative1 < _numberOfAlternatives - 1; alternative1++) {
-			for (int alternative2 = (alternative1 + 1); alternative2 < _numberOfAlternatives; alternative2++) {
-				_alternativesRatioFinalPreferences[alternative1][alternative2] = 1d;
-				for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
-					_alternativesRatioFinalPreferences[alternative1][alternative2] *= Math.pow((_decisionMatrix[criterion][alternative1] 
-								/ _decisionMatrix[criterion][alternative2]), _w[criterion]);
+		
+		if(!_preferencesAlreadyCalculated) {
+		
+			_alternativesRatioFinalPreferences = new Double[_numberOfAlternatives][_numberOfAlternatives];
+	
+			for (int alternative1 = 0; alternative1 < _numberOfAlternatives - 1; alternative1++) {
+				for (int alternative2 = (alternative1 + 1); alternative2 < _numberOfAlternatives; alternative2++) {
+					_alternativesRatioFinalPreferences[alternative1][alternative2] = 1d;
+					for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
+						_alternativesRatioFinalPreferences[alternative1][alternative2] *= Math.pow((_decisionMatrix[criterion][alternative1] 
+									/ _decisionMatrix[criterion][alternative2]), _w[criterion]);
+					}
 				}
 			}
 		}
 
+		
+		
 		computeRankingWeightedProductModel();
 	}
 
@@ -494,10 +500,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				}
 			}
 		}
-
+		
 		double numerator, denominator, total;
-		for (int i = 0; i < (_numberOfAlternatives - 1); i++) {
-			for (int j = (i + 1); j < _numberOfAlternatives; j++) {
+		for (int i = 0; i < _numberOfAlternatives - 1; i++) {
+			for (int j = i + 1; j < _numberOfAlternatives; j++) {
 				for (int k = 0; k < _numberOfCriteria; k++) {
 					numerator = Math.log(_alternativesRatioFinalPreferences[i][j]);
 					if(_decisionMatrix[k][j] == 0) {
@@ -506,11 +512,13 @@ public class SensitivityAnalysis implements IResolutionPhase {
 						denominator = Math.log(_decisionMatrix[k][i] / _decisionMatrix[k][j]);
 						if(denominator != 0) {
 							total = numerator / denominator;
+							/*System.out.println("Numerator " + numerator);
+							System.out.println("Denominator " + numerator);
+							System.out.println("Total = " + total);*/
 							if(total > _w[k]) {
-								_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;	
+								_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;
 							} else {
 								_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = total;
-								
 								if (_minimumAbsoluteChangeInCriteriaWeights[i][j][k] > _w[k]) {
 									_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;
 								}
@@ -1004,116 +1012,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		
 		return max;
 	}
-	
-	@Override
-	public void notifyResolutionPhaseStateChange(ResolutionPhaseStateChangeEvent event) {
-
-		if (event.getChange().equals(EResolutionPhaseStateChange.ACTIVATED)) {
-			activate();
-		}
-	}
-
-	@Override
-	public IResolutionPhase copyStructure() {
-		return new SensitivityAnalysis();
-	}
-
-	@Override
-	public void copyData(IResolutionPhase iResolutionPhase) {
-		SensitivityAnalysis sa = (SensitivityAnalysis) iResolutionPhase;
-
-		clear();
-
-		_absoluteAny = sa.getAbsoluteAny();
-		_absoluteTop = sa.getAbsoluteTop();
-		_alternativesFinalPreferences = sa.getAlternativesFinalPreferences();
-		_decisionMatrix = sa.getDecisionMatrix();
-		_minimumAbsoluteChangeInCriteriaWeights = sa.getMinimumAbsoluteChangeInCriteriaWeights();
-		_minimumPercentChangeInCriteriaWeights = sa.getMinimumPercentChangeInCriteriaWeights();
-		_numberOfAlternatives = sa.getNumAlternatives();
-		_numberOfCriteria = sa.getNumCriteria();
-		_ranking = sa.getRanking();
-		_w = sa.getWeights();
-	}
-
-	@Override
-	public void clear() {
-		_absoluteAny.clear();
-		_absoluteTop.clear();
-		_alternativesFinalPreferences = null;
-		_decisionMatrix = null;
-		_minimumAbsoluteChangeInCriteriaWeights = null;
-		_minimumPercentChangeInCriteriaWeights = null;
-		_numberOfAlternatives = -1;
-		_numberOfCriteria = -1;
-		_ranking = null;
-		_w = null;
-	}
-
-	@Override
-	public void save(XMLWriter writer) throws WorkspaceContentPersistenceException {
-		@SuppressWarnings("unused")
-		XMLStreamWriter streamWriter = writer.getStreamWriter();
-	}
-
-	@Override
-	public void read(XMLRead reader, Map<String, IResolutionPhase> buffer) throws WorkspaceContentPersistenceException {}
-
-	@Override
-	public int hashCode() {
-		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
-
-		return hcb.toHashCode();
-	}
-
-	@Override
-	public IResolutionPhase clone() {
-		SensitivityAnalysis result = null;
-
-		try {
-			result = (SensitivityAnalysis) super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-
-		return result;
-	}
-
-	@Override
-	public boolean validate() {
-		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
-
-		if (_elementsSet.getAlternatives().isEmpty()) {
-			return false;
-		}
-
-		if (_elementsSet.getCriteria().isEmpty()) {
-			return false;
-		}
-
-		if (_elementsSet.getExperts().isEmpty()) {
-			return false;
-		}
-		
-		if(_aggregationPhase.getCriteriaOperators().isEmpty() && _aggregationPhase.getExpertsOperators().isEmpty()) {
-			return false;
-		}
-		
-		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrixAggregation = _aggregationPhase.getDecisionMatrix();
-		for(Pair<Alternative, Criterion> pair: decisionMatrixAggregation.keySet()) {
-			if(!(decisionMatrixAggregation.get(pair) instanceof TwoTuple)) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	@Override
-	public void activate() {
-		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
-	}
 
 	public void compute() {
 		
@@ -1305,5 +1203,122 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		for (ISensitivityAnalysisChangeListener listener : _listeners) {
 			listener.notifySensitivityAnalysisChange();
 		}
+	}
+	
+	@Override
+	public void notifyResolutionPhaseStateChange(ResolutionPhaseStateChangeEvent event) {
+
+		if (event.getChange().equals(EResolutionPhaseStateChange.ACTIVATED)) {
+			activate();
+		}
+	}
+
+	@Override
+	public IResolutionPhase copyStructure() {
+		return new SensitivityAnalysis();
+	}
+
+	@Override
+	public void copyData(IResolutionPhase iResolutionPhase) {
+		SensitivityAnalysis sa = (SensitivityAnalysis) iResolutionPhase;
+
+		clear();
+
+		_absoluteAny = sa.getAbsoluteAny();
+		_absoluteTop = sa.getAbsoluteTop();
+		_alternativesFinalPreferences = sa.getAlternativesFinalPreferences();
+		_decisionMatrix = sa.getDecisionMatrix();
+		_minimumAbsoluteChangeInCriteriaWeights = sa.getMinimumAbsoluteChangeInCriteriaWeights();
+		_minimumPercentChangeInCriteriaWeights = sa.getMinimumPercentChangeInCriteriaWeights();
+		_numberOfAlternatives = sa.getNumAlternatives();
+		_numberOfCriteria = sa.getNumCriteria();
+		_ranking = sa.getRanking();
+		_w = sa.getWeights();
+	}
+
+	@Override
+	public void clear() {
+		_absoluteAny.clear();
+		_absoluteTop.clear();
+		_alternativesFinalPreferences = null;
+		_decisionMatrix = null;
+		_minimumAbsoluteChangeInCriteriaWeights = null;
+		_minimumPercentChangeInCriteriaWeights = null;
+		_numberOfAlternatives = -1;
+		_numberOfCriteria = -1;
+		_preferencesAlreadyCalculated = false;
+		_ranking = null;
+		_w = null;
+	}
+
+	@Override
+	public void save(XMLWriter writer) throws WorkspaceContentPersistenceException {
+		@SuppressWarnings("unused")
+		XMLStreamWriter streamWriter = writer.getStreamWriter();
+	}
+
+	@Override
+	public void read(XMLRead reader, Map<String, IResolutionPhase> buffer) throws WorkspaceContentPersistenceException {}
+
+	@Override
+	public int hashCode() {
+		HashCodeBuilder hcb = new HashCodeBuilder(17, 31);
+
+		return hcb.toHashCode();
+	}
+
+	@Override
+	public IResolutionPhase clone() {
+		SensitivityAnalysis result = null;
+
+		try {
+			result = (SensitivityAnalysis) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	@Override
+	public boolean validate() {
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		_aggregationPhase = (AggregationPhase) pmm.getPhaseMethod(AggregationPhase.ID).getImplementation();
+
+		if (_elementsSet.getAlternatives().isEmpty()) {
+			return false;
+		}
+
+		if (_elementsSet.getCriteria().isEmpty()) {
+			return false;
+		}
+
+		if (_elementsSet.getExperts().isEmpty()) {
+			return false;
+		}
+		
+		if(_aggregationPhase.getCriteriaOperators().isEmpty() && _aggregationPhase.getExpertsOperators().isEmpty()) {
+			return false;
+		}
+		
+		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrixAggregation = _aggregationPhase.getDecisionMatrix();
+		for(Pair<Alternative, Criterion> pair: decisionMatrixAggregation.keySet()) {
+			if(!(decisionMatrixAggregation.get(pair) instanceof TwoTuple)) {
+				return false;
+			}
+		}
+		
+		if(MethodsManager.getInstance().getActiveMethod().getId().contains("todim")) {
+			if(_alternativesFinalPreferences == null) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public void activate() {
+		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
 	}
 }
