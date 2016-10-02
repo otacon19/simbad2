@@ -22,6 +22,7 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.method.MethodsManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
+import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
 import sinbad2.resolutionphase.IResolutionPhase;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.resolutionphase.io.XMLWriter;
@@ -226,26 +227,63 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_numberOfAlternatives = _elementsSet.getAlternatives().size();
 		_numberOfCriteria = _elementsSet.getAllSubcriteria().size();
 		
-		if(weights != null) {
+		if(MethodsManager.getInstance().getActiveMethod().getId().contains("todim") && weights != null) {
+			computeTODIM(weights);
 			assignWeights(weights);
-		} else if(_w == null) {
-			Map<ProblemElement, Object> criteriaOperatorWeights = _aggregationPhase.getCriteriaOperatorWeights();
-			if(!criteriaOperatorWeights.isEmpty()) {
-				if(criteriaOperatorWeights.get(null) == null) {
-					createDefaultWeights();
-				} else if(criteriaOperatorWeights.size() == 1) {
-					assignWeights((List<Double>) criteriaOperatorWeights.get(null));
+		} else {
+			if(weights != null) {
+				assignWeights(weights);
+			} else if(_w == null) {
+				Map<ProblemElement, Object> criteriaOperatorWeights = _aggregationPhase.getCriteriaOperatorWeights();
+				if(!criteriaOperatorWeights.isEmpty()) {
+					if(criteriaOperatorWeights.get(null) == null) {
+						createDefaultWeights();
+					} else if(criteriaOperatorWeights.size() == 1) {
+						assignWeights((List<Double>) criteriaOperatorWeights.get(null));
+					} else {
+						assignWeights(getSubcriteriaWeights());
+					}
 				} else {
-					assignWeights(getSubcriteriaWeights());
+					createDefaultWeights();
 				}
-			} else {
-				createDefaultWeights();
 			}
 		}
 		
 		compute();
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void computeTODIM(List<Double> weights) {
+		int numWeight = 0;
+		
+		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
+		todimPhase.setConsensusMatrix(_decisionMatrix);
+		
+		Map<Criterion, Double> criteriaWeights = new HashMap<Criterion, Double>();
+		for(Criterion c: _elementsSet.getAllCriteria()) {
+			criteriaWeights.put(c, weights.get(numWeight));
+			numWeight++;
+		}
+		
+		todimPhase.setCriteriaWeights(criteriaWeights);
+		todimPhase.calculateRelativeWeights();
+		todimPhase.calculateDominanceDegreeByCriterionCenterOfGravity();
+		Map<Pair<Alternative, Alternative>, Double> dominancePairAlternatives = todimPhase.calculateDominaceDegreeAlternatives();
+		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
+		int alternative = 0;
+		for(Alternative a: _elementsSet.getAlternatives()) {
+			_alternativesFinalPreferences[alternative] = globalDominance.get(a);
+			alternative++;
+		}
+		
+		List<Alternative> alternatives = _elementsSet.getAlternatives();
+		for(int i = 0; i < alternatives.size() - 1; ++i) {
+			for(int j = i + 1; j < alternatives.size(); ++j) {
+				_alternativesRatioFinalPreferences[i][j] = dominancePairAlternatives.get(new Pair(alternatives.get(i), alternatives.get(j)));
+			}
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	private List<Double> getSubcriteriaWeights() {
 		List<Double> globalWeights = new LinkedList<Double>();
@@ -337,7 +375,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private void computeFinalPreferences() {
 		
 		if(!_preferencesAlreadyCalculated) {
-		
+	
 			_alternativesFinalPreferences = new Double[_numberOfAlternatives];
 	
 			for (int alternative = 0; alternative < _numberOfAlternatives; alternative++) {
@@ -346,9 +384,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 					_alternativesFinalPreferences[alternative] += _decisionMatrix[criterion][alternative] * _w[criterion];
 				}
 			}
+			
+			normalize(_alternativesFinalPreferences);
 		}
 
-		normalize(_alternativesFinalPreferences);
 	
 		computeRanking();
 	}
@@ -774,11 +813,26 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	public double computeAlternativeFinalPreferenceInferWeights(int alternativeIndex, double[] w) {
 		double alternativeFinalPreference = 0;
 
-		for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
-			alternativeFinalPreference += _decisionMatrix[criterion][alternativeIndex] * w[criterion];
+		if(MethodsManager.getInstance().getActiveMethod().getId().contains("todim")) {
+			
+			List<Double> weights = new LinkedList<Double>();
+			for(double we: w) {
+				weights.add(we);
+			}
+			
+			System.out.println(weights);
+			
+			computeTODIM(weights);
+			
+			return _alternativesFinalPreferences[alternativeIndex];
+			
+		} else {
+			for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
+				alternativeFinalPreference += _decisionMatrix[criterion][alternativeIndex] * w[criterion];
+			}
+			
+			return alternativeFinalPreference;
 		}
-
-		return alternativeFinalPreference;
 	}
 	
 	public double computeAlternativeRatioFinalPreferenceInferWeights(int alternativeIndex1, int alternativeIndex2, double[] w) {
@@ -794,6 +848,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	public double[] calculateInferWeights(Criterion criterion, double weightCriterionSelected) {
 		List<Criterion> criteria = _elementsSet.getAllSubcriteria();
 		double[] inferWeights = new double[criteria.size()];
+		
+		weightCriterionSelected = Math.round(weightCriterionSelected * 1000000d) / 1000000d;
 		if (weightCriterionSelected == 0) {
 			int indexCriterionSelected = criteria.indexOf(criterion);
 			inferWeights[indexCriterionSelected] = 0;
@@ -814,13 +870,14 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			int indexCriterionSelected = criteria.indexOf(criterion);
 			inferWeights[indexCriterionSelected] = weightCriterionSelected;
 			double proportion = _w[indexCriterionSelected] - weightCriterionSelected;
-			proportion /= _w.length - 1;
+			proportion /= (_w.length - 1);
 			for (int i = 0; i < criteria.size(); ++i) {
 				if (i != indexCriterionSelected) {
 					inferWeights[i] = _w[i] + proportion;
 				}
 			}
 		}
+		
 		return inferWeights;
 	}
 
@@ -1111,7 +1168,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void readDecisionMatrix() {
 		
-		if(_decisionMatrix == null) {
+		if(!MethodsManager.getInstance().getActiveMethod().getId().contains("todim")) {
 		
 			_decisionMatrix = new Double[_numberOfCriteria][_numberOfAlternatives];
 			
