@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
@@ -181,15 +182,24 @@ public class AlternativesEvolutionWeigthsLineChart {
 					_chart.getXYPlot().removeRangeMarker(_horizontalMarker);
 				}
 				
+				List<XYSeries> alternativesSeries = new LinkedList<XYSeries>();
 				for(int i = 0; i < alternatives.size(); ++i) {
-					XYSeries alternativeSerie = new XYSeries(alternatives.get(i).getId());
-					for(double j = 0.01; j <= 1.0; j += 0.01) {
-						alternativeSerie.add(Math.round(j * 100d) / 100d,
-								_sensitivityAnalysis.computeAlternativeFinalPreferenceInferWeights(i, 
-										_sensitivityAnalysis.calculateInferWeights(_criterionSelected, j)));
-					}
-					_dataset.addSeries(alternativeSerie);
+					alternativesSeries.add(new XYSeries(alternatives.get(i).getId()));
 				}
+				
+				Double[] alternativePreferences;
+				for(double j = 0.01; j <= 1.0; j += 0.01) {
+					alternativePreferences = _sensitivityAnalysis.computeAlternativesFinalPreferenceInferWeights(_sensitivityAnalysis.calculateInferWeights(_criterionSelected, j));
+					for(int s = 0; s < alternativesSeries.size(); ++s) {
+						XYSeries serie = alternativesSeries.get(s);
+						serie.add(Math.round(j * 100d) / 100d, alternativePreferences[s]);
+					}
+				}
+				
+				for(XYSeries se: alternativesSeries) {
+					_dataset.addSeries(se);
+				}
+				
 				break;
 			case WEIGHTED_PRODUCT:
 				_chart.setTitle(Messages.AlternativesEvolutionWeigthsLineChart_Ratios_evolution + _criterionSelected.getId().toUpperCase());

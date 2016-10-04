@@ -205,6 +205,10 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _trapezoidalConsensusMatrix;
 	}
 
+	public Map<Criterion, Double> getCriteriaWeights() {
+		return _criteriaWeights;
+	}
+	
 	public void setCriteriaWeights(Map<Criterion, Double> criteriaWeights) {
 		_criteriaWeights = criteriaWeights;
 	}

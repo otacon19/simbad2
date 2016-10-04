@@ -252,7 +252,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		compute();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void computeTODIM(List<Double> weights) {
 		int numWeight = 0;
 
@@ -268,21 +267,40 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		todimPhase.setCriteriaWeights(criteriaWeights);
 		todimPhase.calculateRelativeWeights();
 		todimPhase.calculateDominanceDegreeByCriterionCenterOfGravity();
-		Map<Pair<Alternative, Alternative>, Double> dominancePairAlternatives = todimPhase.calculateDominaceDegreeAlternatives();
+		todimPhase.calculateDominaceDegreeAlternatives();
 		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
 		int alternative = 0;
 		for (Alternative a : _elementsSet.getAlternatives()) {
 			_alternativesFinalPreferences[alternative] = globalDominance.get(a);
 			alternative++;
 		}
+	}
+	
+	private Double[] computeTODIMInference(List<Double> weights) {
+		int numWeight = 0;
 
-		List<Alternative> alternatives = _elementsSet.getAlternatives();
-		for (int i = 0; i < alternatives.size() - 1; ++i) {
-			for (int j = i + 1; j < alternatives.size(); ++j) {
-				_alternativesRatioFinalPreferences[i][j] = dominancePairAlternatives
-						.get(new Pair(alternatives.get(i), alternatives.get(j)));
-			}
+		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
+		todimPhase.setConsensusMatrix(_decisionMatrix);
+
+		Map<Criterion, Double> criteriaWeights = new HashMap<Criterion, Double>();
+		for (Criterion c : _elementsSet.getAllCriteria()) {
+			criteriaWeights.put(c, weights.get(numWeight));
+			numWeight++;
 		}
+
+		todimPhase.setCriteriaWeights(criteriaWeights);
+		todimPhase.calculateRelativeWeights();
+		todimPhase.calculateDominanceDegreeByCriterionCenterOfGravity();
+		todimPhase.calculateDominaceDegreeAlternatives();
+		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
+		int alternative = 0;
+		Double[] alternativesFinalPreferences = new Double[_numberOfAlternatives];
+		for (Alternative a : _elementsSet.getAlternatives()) {
+			alternativesFinalPreferences[alternative] = globalDominance.get(a);
+			alternative++;
+		}
+		
+		return alternativesFinalPreferences;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -815,8 +833,9 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		}
 	}
 
-	public double computeAlternativeFinalPreferenceInferWeights(int alternativeIndex, double[] ws) {
-
+	public Double[] computeAlternativesFinalPreferenceInferWeights(double[] ws) {
+		Double[] alternativeFinalPreferences = new Double[_numberOfAlternatives];
+		
 		if (MethodsManager.getInstance().getActiveMethod().getId().contains("todim")) {
 
 			List<Double> weights = new LinkedList<Double>();
@@ -824,18 +843,19 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				weights.add(w);
 			}
 
-			computeTODIM(weights);
+			alternativeFinalPreferences = computeTODIMInference(weights);
 			
-			return _alternativesFinalPreferences[alternativeIndex];
-
 		} else {
-			double alternativeFinalPreference = 0;
-			for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
-				alternativeFinalPreference += _decisionMatrix[criterion][alternativeIndex] * ws[criterion];
+			
+			for(int alternative = 0; alternative < _numberOfAlternatives; ++alternative) {
+				alternativeFinalPreferences[alternative] = 0d;
+				for (int criterion = 0; criterion < _numberOfCriteria; criterion++) {
+					alternativeFinalPreferences[alternative] += _decisionMatrix[criterion][alternative] * ws[criterion];
+				}
 			}
-
-			return alternativeFinalPreference;
 		}
+		
+		return alternativeFinalPreferences;
 	}
 
 	public double computeAlternativeRatioFinalPreferenceInferWeights(int alternativeIndex1, int alternativeIndex2, double[] w) {

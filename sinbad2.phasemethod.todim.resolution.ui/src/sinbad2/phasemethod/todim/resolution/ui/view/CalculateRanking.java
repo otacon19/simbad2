@@ -423,7 +423,6 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		_dominanceDegreeAlternativesTableViewer.setInput(input);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void setInputRankingTable() {
 		List<String[]> inputAux = new LinkedList<String[]>();
 		List<String[]> input = new LinkedList<String[]>();
@@ -456,17 +455,6 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		}
 		
 		_sensitivityAnalysis.setAlternativesFinalPreferences(dominances);
-		
-		Map<Pair<Alternative, Alternative>, Double> dominancePairAlternatives = _resolutionPhase.getDominanceDegreeAlternatives();
-		List<Alternative> alternatives = _elementsSet.getAlternatives();
-		Double[][] dominancesPair = new Double[alternatives.size()][alternatives.size()];
-		for(int i = 0; i < alternatives.size() - 1; ++i) {
-			for(int j = i + 1; j < alternatives.size(); ++j) {
-				dominancesPair[i][j] = dominancePairAlternatives.get(new Pair(alternatives.get(i), alternatives.get(j)));
-			}
-		}
-		
-		_sensitivityAnalysis.setAlternativesRatioFinalPreferences(dominancesPair);
 		
 		notifyStepStateChange();
 	}
