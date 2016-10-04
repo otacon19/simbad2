@@ -183,8 +183,10 @@ public class AlternativesEvolutionWeigthsLineChart {
 				
 				for(int i = 0; i < alternatives.size(); ++i) {
 					XYSeries alternativeSerie = new XYSeries(alternatives.get(i).getId());
-					for(double j = 0; j <= 1.01; j += 0.01) {
-						alternativeSerie.add(Math.round(j * 100d) / 100d, _sensitivityAnalysis.computeAlternativeFinalPreferenceInferWeights(i, _sensitivityAnalysis.calculateInferWeights(_criterionSelected, j)));
+					for(double j = 0.01; j <= 1.0; j += 0.01) {
+						alternativeSerie.add(Math.round(j * 100d) / 100d,
+								_sensitivityAnalysis.computeAlternativeFinalPreferenceInferWeights(i, 
+										_sensitivityAnalysis.calculateInferWeights(_criterionSelected, j)));
 					}
 					_dataset.addSeries(alternativeSerie);
 				}

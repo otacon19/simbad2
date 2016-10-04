@@ -16,7 +16,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="sinbad2.rcp.application"
-            name="%product.name.2">
+            name="flintstones">
          <property
                name="appName"
                value="flintstones">

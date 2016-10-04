@@ -20,6 +20,7 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.core.workspace.Workspace;
+import sinbad2.method.MethodsManager;
 import sinbad2.resolutionphase.sensitivityanalysis.EModel;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.nls.Messages;
@@ -100,6 +101,12 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 				_rankingViewer.getTable().getColumn(2).pack();
 			}
 		});
+		
+		if(MethodsManager.getInstance().getActiveMethod().getId().contains("todim")) {
+			_sensitivityModels.setEnabled(false);
+		} else {
+			_sensitivityModels.setEnabled(true);
+		}
 		
 		RankingViewManager.getInstance().registerDisplayRankingChangeListener(this);
 		hookFocusListener();

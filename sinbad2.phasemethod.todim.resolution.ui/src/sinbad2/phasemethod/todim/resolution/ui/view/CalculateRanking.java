@@ -9,11 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -25,7 +23,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
@@ -74,8 +71,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	private TableViewer _dominanceDegreeTableViewer;
 	private TableViewer _dominanceDegreeAlternativesTableViewer;
 	private TableViewer _rankingTableViewer;
-
-	private List<Button> _checkBoxes;
+	
 	private boolean _loaded;
 
 	private ResolutionPhase _resolutionPhase;
@@ -109,9 +105,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		
 		_sensitivityAnalysis = (SensitivityAnalysis) ResolutionPhasesManager.getInstance().getResolutionPhase(SensitivityAnalysis.ID).getImplementation();
-		
-		_checkBoxes = new LinkedList<Button>();
-
+	
 		_loaded = false;
 	}
 
@@ -137,9 +131,14 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 				if (_dmTable.isCompleted()) {
 					_resolutionPhase.setConsensusMatrix(_dmTable.getTrapezoidalConsensusMatrix());
 					_resolutionPhase.setTrapezoidalConsensusMatrix(_dmTable.getTrapezoidalConsensusMatrix());
-					enabledButtons();
-				} else {
-					disabledButtons();
+					
+					refreshTODIMTables();
+
+					notifyStepStateChange();
+					
+					_sensitivityAnalysis.setDecisionMatrix(_resolutionPhase.calculateConsensusMatrixCenterOfGravity(new Double[_elementsSet.getAlternatives().size()][_elementsSet.getAllCriteria().size()]));
+					
+					_matrixType.setEnabled(true);
 				}
 			}
 		});
@@ -178,8 +177,18 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 				dlg.setFilterNames(FILTER_NAMES);
 				dlg.setFilterExtensions(FILTER_EXTS);
 				String fn = dlg.open();
-
-				readFuzzyNumbers(fn);
+				
+				if(fn != null) {
+					readFuzzyNumbers(fn);
+					
+					refreshTODIMTables();
+					
+					_sensitivityAnalysis.setDecisionMatrix(_resolutionPhase.calculateConsensusMatrixCenterOfGravity(new Double[_elementsSet.getAlternatives().size()][_elementsSet.getAllCriteria().size()]));
+					
+					_matrixType.setEnabled(true);
+					
+					notifyStepStateChange();
+				}
 			}
 
 			private void readFuzzyNumbers(String path) {
@@ -213,9 +222,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 						_resolutionPhase.setConsensusMatrix(trapezoidalMatrix);
 						_resolutionPhase.setTrapezoidalConsensusMatrix(trapezoidalMatrix);
 						refreshConsensusMatrixTable();
-						
-						enabledButtons();
-						
+			
 						br.close();
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -232,16 +239,6 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		_criteriaTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_criteriaTableViewer.setContentProvider(new CriteriaTableContentProvider());
 		_criteriaTableViewer.getTable().setHeaderVisible(true);
-
-		TableViewerColumn criterionReference = new TableViewerColumn(_criteriaTableViewer, SWT.NONE);
-		criterionReference.getColumn().setText(Messages.CalculateRanking_Reference_criterion);
-		criterionReference.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				return ""; //$NON-NLS-1$
-			}
-		});
-		criterionReference.getColumn().pack();
 
 		TableViewerColumn criterionId = new TableViewerColumn(_criteriaTableViewer, SWT.NONE);
 		criterionId.getColumn().setText(Messages.CalculateRanking_Criterion);
@@ -328,20 +325,6 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		setInputCriteriaTable();
 	}
 
-	private void enabledButtons() {
-		for (Button b : _checkBoxes) {
-			b.setEnabled(true);
-		}
-	}
-
-	private void disabledButtons() {
-		for (Button b : _checkBoxes) {
-			b.setEnabled(false);
-		}
-
-		_matrixType.setEnabled(false);
-	}
-
 	private void refreshConsensusMatrixTable() {
 		String[] alternatives = new String[_elementsSet.getAlternatives().size()];
 		for (int a = 0; a < alternatives.length; ++a) {
@@ -372,9 +355,6 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 
 	private void setInputCriteriaTable() {
 		List<Criterion> criteria = _elementsSet.getAllCriteria();
-
-		_checkBoxes.clear();
-
 		List<String[]> result = new LinkedList<String[]>();
 
 		Map<Criterion, Double> criteriaWeights = _resolutionPhase.getImportanceCriteriaWeights();
@@ -394,42 +374,6 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		}
 
 		_criteriaTableViewer.setInput(result);
-
-		if (_checkBoxes.isEmpty()) {
-			createRadioButtons(criteria);
-		}
-	}
-
-	private void createRadioButtons(List<Criterion> criteria) {
-
-		TableItem[] items = _criteriaTableViewer.getTable().getItems();
-		for (int i = 0; i < items.length; ++i) {
-			TableEditor editor = new TableEditor(_criteriaTableViewer.getTable());
-			Button button = new Button(_criteriaTableViewer.getTable(), SWT.RADIO);
-			button.setEnabled(false);
-			button.pack();
-			button.setData("criterion", criteria.get(i)); //$NON-NLS-1$
-			editor.minimumWidth = button.getSize().x;
-			editor.horizontalAlignment = SWT.CENTER;
-			editor.setEditor(button, items[i], 0);
-			button.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					_resolutionPhase.setReferenceCriterion((Criterion) ((Button) e.widget).getData("criterion")); //$NON-NLS-1$
-					
-					refreshTODIMTables();
-
-					notifyStepStateChange();
-					
-					_sensitivityAnalysis.setDecisionMatrix(_resolutionPhase.calculateConsensusMatrixCenterOfGravity(new Double[_elementsSet.getAlternatives().size()]
-							[_elementsSet.getAllCriteria().size()]));
-					
-					_matrixType.setEnabled(true);
-				}
-			});
-
-			_checkBoxes.add(button);
-		}
 	}
 
 	@SuppressWarnings("unchecked")

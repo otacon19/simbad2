@@ -147,7 +147,9 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				_lineChart = new AlternativesEvolutionWeigthsLineChart();
 				_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
 				_lineChart.setCriterionSelected(_criterionSelected);
-				_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)]);
+				if(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)] != -1 ) {
+					_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)]);
+				}
 				_lineChart.setModel(_sensitivityAnalysis.getModel());
 				
 				_weightSpinner.setVisible(true);
