@@ -36,6 +36,8 @@ import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.Sensit
 
 public class AnalysisView extends ViewPart implements ISelectionChangedListener, IChangeSATableValues, ISensitivityAnalysisChangeListener {
 	
+	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.analysis";
+	
 	private Composite _parent;
 	private Composite _chartComposite;
 	private Composite _componentsComposite;
@@ -147,9 +149,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				_lineChart = new AlternativesEvolutionWeigthsLineChart();
 				_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
 				_lineChart.setCriterionSelected(_criterionSelected);
-				if(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)] != -1 ) {
-					_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)]);
-				}
+				_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)]);
 				_lineChart.setModel(_sensitivityAnalysis.getModel());
 				
 				_weightSpinner.setVisible(true);
@@ -271,6 +271,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	}
 	
 	private void refreshChart() {
+		
 		if(_typeChart == 0) {
 			if(_pairAlternatives != null) {
 				int a1Index = Integer.parseInt((String) _pairAlternatives[0]);
@@ -298,7 +299,8 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	}
 	
 	@Override
-	public void setFocus() {}
+	public void setFocus() {
+	}
 	
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
@@ -351,5 +353,10 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 			}
 		}
 		return view;
+	}
+	
+	public void clear() {
+		_typeBarChart = "ABSOLUTE"; //$NON-NLS-1$
+		_typeChart = 0;
 	}
 }

@@ -72,8 +72,6 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	private TableViewer _dominanceDegreeAlternativesTableViewer;
 	private TableViewer _rankingTableViewer;
 	
-	private boolean _loaded;
-
 	private ResolutionPhase _resolutionPhase;
 	private SensitivityAnalysis _sensitivityAnalysis;
 
@@ -105,8 +103,6 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		
 		_sensitivityAnalysis = (SensitivityAnalysis) ResolutionPhasesManager.getInstance().getResolutionPhase(SensitivityAnalysis.ID).getImplementation();
-	
-		_loaded = false;
 	}
 
 	@Override
@@ -183,9 +179,18 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 					
 					refreshTODIMTables();
 					
+					Double[] w = new Double[_elementsSet.getAllCriteria().size()];
+					int cont = 0;
+					for (Criterion c : _elementsSet.getAllCriteria()) {
+						w[cont] = _resolutionPhase.getImportanceCriteriaWeights().get(c);
+						cont++;
+					}
+					
 					_sensitivityAnalysis.setDecisionMatrix(_resolutionPhase.calculateConsensusMatrixCenterOfGravity(new Double[_elementsSet.getAlternatives().size()][_elementsSet.getAllCriteria().size()]));
+					_sensitivityAnalysis.setWeights(w);
 					
 					_matrixType.setEnabled(true);
+					
 					
 					notifyStepStateChange();
 				}
@@ -466,20 +471,6 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
-
-		if (!_loaded) {
-			_loaded = true;
-
-			Double[] w = new Double[_elementsSet.getAllCriteria().size()];
-			int cont = 0;
-			for (Criterion c : _elementsSet.getAllCriteria()) {
-				w[cont] = _resolutionPhase.getImportanceCriteriaWeights().get(c);
-				cont++;
-			}
-			
-			_sensitivityAnalysis.setWeights(w);
-		}
-
 		Workspace.getWorkspace().updatePhases();
 	}
 
