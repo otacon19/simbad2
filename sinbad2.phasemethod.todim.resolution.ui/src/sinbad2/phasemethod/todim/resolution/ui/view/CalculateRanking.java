@@ -387,9 +387,9 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 
 		Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> dominanceDegreeByCriterion;
 		if (mode == 1) {
-			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionCenterOfGravity();
+			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionCenterOfGravity(1);
 		} else {
-			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionFuzzyNumber();
+			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionFuzzyNumber(1);
 		}
 
 		for (Criterion c : _elementsSet.getAllCriteria()) {

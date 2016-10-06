@@ -293,7 +293,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 		todimPhase.setCriteriaWeights(criteriaWeights);
 		todimPhase.calculateRelativeWeights();
-		todimPhase.calculateDominanceDegreeByCriterionCenterOfGravity();
+		todimPhase.calculateDominanceDegreeByCriterionCenterOfGravity(1);
 		todimPhase.calculateDominaceDegreeAlternatives();
 		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
 		int alternative = 0;
@@ -330,7 +330,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		}
 	}
 
-	private Double[] computeTODIMInference(double[] weights) {
+	private Double[] computeTODIMWeightsInference(double[] weights) {
 		int numWeight = 0;
 
 		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
@@ -344,7 +344,34 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 		todimPhase.setCriteriaWeights(criteriaWeights);
 		todimPhase.calculateRelativeWeights();
-		todimPhase.calculateDominanceDegreeByCriterionCenterOfGravity();
+		todimPhase.calculateDominanceDegreeByCriterionCenterOfGravity(1);
+		todimPhase.calculateDominaceDegreeAlternatives();
+		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
+		int alternative = 0;
+		Double[] alternativesFinalPreferences = new Double[_numberOfAlternatives];
+		for (Alternative a : _elementsSet.getAlternatives()) {
+			alternativesFinalPreferences[alternative] = globalDominance.get(a);
+			alternative++;
+		}
+
+		return alternativesFinalPreferences;
+	}
+	
+	private Double[] computeTODIMAttenuationFactorInference(double attenuationFactor) {
+		int numWeight = 0;
+
+		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
+		todimPhase.setConsensusMatrix(_decisionMatrix);
+
+		Map<Criterion, Double> criteriaWeights = new HashMap<Criterion, Double>();
+		for (Criterion c : _elementsSet.getAllCriteria()) {
+			criteriaWeights.put(c, _w[numWeight]);
+			numWeight++;
+		}
+
+		todimPhase.setCriteriaWeights(criteriaWeights);
+		todimPhase.calculateRelativeWeights();
+		todimPhase.calculateDominanceDegreeByCriterionCenterOfGravity(attenuationFactor);
 		todimPhase.calculateDominaceDegreeAlternatives();
 		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
 		int alternative = 0;
@@ -908,7 +935,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		String activatedMethodId = MethodsManager.getInstance().getActiveMethod().getId();
 		if (activatedMethodId.contains("todim")) {
 
-			alternativeFinalPreferences = computeTODIMInference(ws);
+			alternativeFinalPreferences = computeTODIMWeightsInference(ws);
 			
 		} else if(activatedMethodId.contains("topsis")) {
 			
@@ -927,6 +954,11 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		return alternativeFinalPreferences;
 	}
 
+	public Double[] computeAlternativesPreferenceInferAttenuationFactor(double attenuationFactor) {
+		
+		return computeTODIMAttenuationFactorInference(attenuationFactor);
+	}
+	
 	public double computeAlternativeRatioFinalPreferenceInferWeights(int alternativeIndex1, int alternativeIndex2, double[] w) {
 		double alternativeRatioFinalPreference = 1;
 
@@ -1205,11 +1237,27 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		normalizeDecisionMatrix();
 
 		computeRanking();
-		computeMinimumAbsoluteChangeInCriteriaWeights();
-		computeMinimumPercentChangeInCriteriaWeights();
-		computeAbsoluteTopCriticalCriterion();
-		computeAbsoluteAnyCriticalCriterion();
+		
+		_minimumAbsoluteChangeInCriteriaWeights = new Double[_numberOfAlternatives][_numberOfAlternatives][_numberOfCriteria];
 
+		for (int i = 0; i < _numberOfAlternatives; i++) {
+			for (int j = 0; j < _numberOfAlternatives; j++) {
+				for (int k = 0; k < _numberOfCriteria; k++) {
+					_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = Double.MAX_VALUE;
+				}
+			}
+		}
+		
+		_minimumPercentChangeInCriteriaWeights = new Double[_numberOfAlternatives][_numberOfAlternatives][_numberOfCriteria];
+
+		for (int i = 0; i < _numberOfAlternatives; i++) {
+			for (int j = 0; j < _numberOfAlternatives; j++) {
+				for (int k = 0; k < _numberOfCriteria; k++) {
+					_minimumPercentChangeInCriteriaWeights[i][j][k] = Double.MAX_VALUE;
+				}
+			}
+		}
+	
 		notifySensitivityAnalysisChange();
 	}
 

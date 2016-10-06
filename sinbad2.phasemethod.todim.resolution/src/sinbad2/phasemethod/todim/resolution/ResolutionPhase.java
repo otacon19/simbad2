@@ -43,7 +43,6 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	public static final String ID = "flintstones.phasemethod.todim.resolution"; //$NON-NLS-1$
 
-	private static final int ATTENUATION_FACTOR = 1;
 	private static final int P = 2;
 
 	private int _numAlternatives;
@@ -575,7 +574,7 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	}
 
-	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> calculateDominanceDegreeByCriterionCenterOfGravity() {
+	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> calculateDominanceDegreeByCriterionCenterOfGravity(double attenuationFactor) {
 		_dominanceDegreeByCriterion = new HashMap<Criterion, Map<Pair<Alternative, Alternative>, Double>>();
 
 
@@ -594,7 +593,7 @@ public class ResolutionPhase implements IPhaseMethod {
 						if(c.isCost()) {
 							if(condition > 0) {
 								double inverse = (Double) _consensusMatrix[a2Index][criterionIndex] - (Double) _consensusMatrix[a1Index][criterionIndex];
-								dominance = (-1d / ATTENUATION_FACTOR);
+								dominance = (-1d / attenuationFactor);
 								dominance *= Math.sqrt((inverse * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
 							} else if(condition < 0) {
 								dominance = Math.sqrt((condition * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
@@ -606,7 +605,7 @@ public class ResolutionPhase implements IPhaseMethod {
 								dominance = Math.sqrt((condition * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
 							} else if (condition < 0) {
 								double inverse = (Double) _consensusMatrix[a2Index][criterionIndex] - (Double) _consensusMatrix[a1Index][criterionIndex];
-								dominance = (-1d / ATTENUATION_FACTOR);
+								dominance = (-1d / attenuationFactor);
 								dominance *= Math.sqrt((inverse * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
 							} else {
 								dominance = 0;
@@ -643,7 +642,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		return acum;
 	}
 
-	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> calculateDominanceDegreeByCriterionFuzzyNumber() {
+	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> calculateDominanceDegreeByCriterionFuzzyNumber(double attenuationFactor) {
 		_dominanceDegreeByCriterion = new HashMap<Criterion, Map<Pair<Alternative, Alternative>, Double>>();
 
 		double acumSumRelativeWeights = getAcumSumRelativeWeights();
@@ -670,7 +669,7 @@ public class ResolutionPhase implements IPhaseMethod {
 						condition = tpf1.getSimpleDefuzzifiedValue() - tpf2.getSimpleDefuzzifiedValue();
 						if (c.isCost()) {
 							if (condition > 0) {
-								dominance = (-1d / ATTENUATION_FACTOR);
+								dominance = (-1d / attenuationFactor);
 								dominance *= Math.sqrt((tpf1.distance(tpf2, P) * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
 							} else if (condition <= 0) {
 								dominance = Math.sqrt((tpf1.distance(tpf2, P) * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
@@ -679,7 +678,7 @@ public class ResolutionPhase implements IPhaseMethod {
 							if (condition >= 0) {
 								dominance = Math.sqrt((tpf1.distance(tpf2, P) * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
 							} else if (condition < 0) {
-								dominance = (-1d / ATTENUATION_FACTOR);
+								dominance = (-1d / attenuationFactor);
 								dominance *= Math.sqrt((tpf1.distance(tpf2, P) * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
 							}
 						}

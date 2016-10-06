@@ -28,27 +28,24 @@ public class SATableContentProvider extends KTableNoScrollModel {
 	private static final String RELATIVE = Messages.SATableContentProvider_relative;
 	private static final String ABSOLUTE = Messages.SATableContentProvider_absolute;
 	
-	private String _typeDataSelected;
-	
 	private int[][] _pairs;
 	private String[] _alternatives;
 	private String[] _criteria;
 	private Double[][][] _values;
 	private int[] _criticalCell;
+	private String _typeDataSelected;
 	
 	private KTable _table;
 
 	private final FixedCellRenderer _fixedRendererHeader = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS | SWT.BOLD);
-	
+	private final FixedCellRenderer _fixedRendererNoCalculated = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT);
 	private final FixedCellRenderer _fixedRendererNA = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
-	
 	private final FixedCellRenderer _fixedRendererRed = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	private final FixedCellRenderer _fixedRendererGreen = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	private final FixedCellRenderer _fixedRendererBoldRed = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS | SWT.BOLD);
 	private final FixedCellRenderer _fixedRendererBoldGreen = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS | SWT.BOLD);
 	
 	private SensitivityAnalysisView _sensitivityAnalysisView;
-	
 	private SensitivityAnalysis _sensitivityAnalysis;
 	
 	class MyOwnKTableCellEditorCombo extends KTableCellEditorCombo {
@@ -84,6 +81,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		initialize();
 
 		_fixedRendererHeader.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
+		_fixedRendererNoCalculated.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		
 		_fixedRendererNA.setAlignment(SWTX.ALIGN_HORIZONTAL_CENTER | SWTX.ALIGN_VERTICAL_CENTER);
 		_fixedRendererNA.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
@@ -187,6 +185,8 @@ public class SATableContentProvider extends KTableNoScrollModel {
 					erg = _values[_pairs[row - 1][0]][_pairs[row - 1][1]][col - 1];
 					if(erg == null) {
 						erg = "N/A"; //$NON-NLS-1$
+					} else if((Double) erg == Double.MAX_VALUE) {
+						erg = "";
 					} else {
 						if(_typeDataSelected.equals(ABSOLUTE)) {
 							double value = Math.round((Double) erg * 1000d) / 1000d;
@@ -222,8 +222,6 @@ public class SATableContentProvider extends KTableNoScrollModel {
 			}
 		}
 		
-		
-		
 		_table.redraw();
 	}
 
@@ -257,7 +255,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 
 	@Override
 	public int doGetColumnCount() {
-		return _criteria.length + getFixedColumnCount() + 1;
+		return _criteria.length + getFixedColumnCount() + getFixedHeaderColumnCount();
 	}
 
 	@Override
@@ -315,7 +313,9 @@ public class SATableContentProvider extends KTableNoScrollModel {
 				String content = (String) doGetContentAt(col, row);
 				if(content.equals("N/A")) { //$NON-NLS-1$
 					return _fixedRendererNA;
-				}else if(!content.contains("%")) { //$NON-NLS-1$
+				} else if(content.equals("")) {
+					return _fixedRendererNoCalculated;
+				} else if(!content.contains("%")) { //$NON-NLS-1$
 					return _fixedRendererHeader;
 				} else {
 					String stringWithoutPercent = content.replace("%", ""); //$NON-NLS-1$ //$NON-NLS-2$
