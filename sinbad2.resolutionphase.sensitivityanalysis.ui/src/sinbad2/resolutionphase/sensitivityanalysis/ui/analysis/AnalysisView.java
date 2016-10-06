@@ -113,6 +113,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	}
 	
 	private void initializeChart() {
+		boolean activatedStackedChart = _stackedChart != null ? true: false; //Cuando se seleccionen los criterios mientras estás en el stackedChart no debe de cambiarse el gráfico
 		
 		removeChart();
 		
@@ -130,8 +131,12 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				if(_isTODIM) {
 					initializeLineChart(1);
 				} else {
-					initializeLineChart(null);
-				}
+					if(activatedStackedChart) {
+						initializeStackedChart();
+					} else {
+						initializeLineChart(null);
+					}
+				}	
 			} else {
 				_isTODIM = false;
 				initializeStackedChart();
@@ -183,7 +188,9 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		} else {
 			_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCCByCriterion());
 		}
+		
 		_weightSpinner.setVisible(false);
+		_changeChartButton.setVisible(true);
 	}
 	
 	private void addControlListener() {

@@ -210,7 +210,9 @@ public class AlternativesEvolutionWeigthsLineChart {
 					removeMarker(_horizontalMarker);
 					
 					List<XYSeries> alternativesSeries;
-					if (_typeTODIMChart == 0 || _typeTODIMChart == null) {	
+					if (_typeTODIMChart == null) {	
+						alternativesSeries = computeEvolutionWeights();	
+					} else if(_typeTODIMChart == 0) {
 						alternativesSeries = computeEvolutionWeights();	
 					} else {
 						setRangeAxis(_chart.getXYPlot().getRangeAxis(), -1, 2);
