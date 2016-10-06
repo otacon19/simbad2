@@ -50,12 +50,12 @@ public class SelectionPhase implements IPhaseMethod {
 
 	private ProblemElementsSet _elementsSet;
 
-	private static class CoefficientComparator implements Comparator<Object[]> {
+	private static class RankingComparator implements Comparator<Object[]> {
 		public int compare(Object[] cd1, Object[] cd2) {
-			double coefficient1 = (double) cd1[3];
-			double coefficient2 = (double) cd2[3];
+			int coefficient1 = (int) cd1[0];
+			int coefficient2 = (int) cd2[0];
 
-			return Double.compare(coefficient2, coefficient1);
+			return Integer.compare(coefficient1, coefficient2);
 		}
 	}
 
@@ -313,11 +313,9 @@ public class SelectionPhase implements IPhaseMethod {
 					TwoTuple noIdealValuation = (TwoTuple) ((TwoTuple) noIdealSolutionData[1]).clone();
 
 					if (weights == null) {
-						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta()
-								- noIdealValuation.calculateInverseDelta());
+						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta() - noIdealValuation.calculateInverseDelta());
 					} else {
-						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta()
-								- noIdealValuation.calculateInverseDelta()) * weights.get(numWeight);
+						beta = Math.abs(colectiveExpertsValuation.calculateInverseDelta() - noIdealValuation.calculateInverseDelta()) * weights.get(numWeight);
 						numWeight++;
 					}
 
@@ -348,17 +346,14 @@ public class SelectionPhase implements IPhaseMethod {
 				if (pair.getLeft().equals(a)) {
 					for (Object[] noIdealSolutionData : _noIdealSolution) {
 						if (pair.getRight().equals(noIdealSolutionData[0])) {
-							TwoTuple expertsColectiveValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair))
-									.clone();
+							TwoTuple expertsColectiveValuation = (TwoTuple) ((TwoTuple) _decisionMatrix.get(pair)).clone();
 							TwoTuple noIdealSolutionValuation = (TwoTuple) ((TwoTuple) noIdealSolutionData[1]).clone();
 							if (weights == null) {
 								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta()
 										- noIdealSolutionValuation.calculateInverseDelta());
 							} else {
-								beta += Math
-										.abs(expertsColectiveValuation.calculateInverseDelta()
-												- noIdealSolutionValuation.calculateInverseDelta())
-										* weights.get(numWeight);
+								beta += Math.abs(expertsColectiveValuation.calculateInverseDelta()
+										- noIdealSolutionValuation.calculateInverseDelta()) * weights.get(numWeight);
 								numWeight++;
 							}
 						}
@@ -377,15 +372,17 @@ public class SelectionPhase implements IPhaseMethod {
 
 		_closenessCoefficient.clear();
 
+		Object[] dataIdealAlternative, dataNoIdealAlternative, coefficientData;
+		double ideal, noIdeal, coefficient;
 		for (int i = 0; i < _idealDistanceByAlternatives.size(); ++i) {
-			Object[] dataIdealAlternative = _idealDistanceByAlternatives.get(i);
-			Object[] dataNoIdealAlternative = _noIdealDistanceByAlternatives.get(i);
-			double ideal = (double) dataIdealAlternative[1];
-			double noIdeal = (double) dataNoIdealAlternative[1];
+			dataIdealAlternative = _idealDistanceByAlternatives.get(i);
+			dataNoIdealAlternative = _noIdealDistanceByAlternatives.get(i);
+			ideal = (double) dataIdealAlternative[1];
+			noIdeal = (double) dataNoIdealAlternative[1];
 
-			double coefficient = noIdeal / (ideal + noIdeal);
+			coefficient = noIdeal / (ideal + noIdeal);
 
-			Object[] coefficientData = new Object[5];
+			coefficientData = new Object[5];
 			coefficientData[1] = dataIdealAlternative[0];
 			coefficientData[2] = dataIdealAlternative[1];
 			coefficientData[3] = dataNoIdealAlternative[1];
@@ -393,17 +390,38 @@ public class SelectionPhase implements IPhaseMethod {
 			_closenessCoefficient.add(coefficientData);
 		}
 
-		Collections.sort(_closenessCoefficient, new CoefficientComparator());
-
-		int ranking = 1;
-		for (Object[] coefficientData : _closenessCoefficient) {
-			coefficientData[0] = Integer.toString(ranking);
-			ranking++;
-		}
+		computeRanking();
 
 		return _closenessCoefficient;
 	}
 
+	private void computeRanking() {
+		List<Double> coefficients = new LinkedList<Double>();
+		for (Object[] coefficient : _closenessCoefficient) {
+			coefficients.add(new Double((double) coefficient[4]));
+		}
+
+		Collections.sort(coefficients);
+		Collections.reverse(coefficients);
+
+		int rankingPos = 0;
+		double previousCoefficient = 0;
+
+		for (double coefficient : coefficients) {
+			if (coefficient != previousCoefficient) {
+				rankingPos++;
+				for (int alternative = 0; alternative < _closenessCoefficient.size(); alternative++) {
+					if ((double) _closenessCoefficient.get(alternative)[4] == coefficient) {
+						_closenessCoefficient.get(alternative)[0] = rankingPos;
+					}
+				}
+				previousCoefficient = coefficient;
+			}
+		}
+		
+		Collections.sort(_closenessCoefficient, new RankingComparator());
+	}
+	
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new SelectionPhase();

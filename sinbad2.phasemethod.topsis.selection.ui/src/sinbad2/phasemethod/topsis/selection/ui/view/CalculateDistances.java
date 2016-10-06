@@ -35,8 +35,10 @@ import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.view.dialog.WeightsDialog;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.DistanceIdealSolutionTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.PositiveNegativeTableViewerContentProvider;
+import sinbad2.resolutionphase.ResolutionPhasesManager;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
+import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 
 public class CalculateDistances extends ViewPart implements IStepStateListener {
 	
@@ -53,7 +55,10 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 	private PositiveNegativeTableViewerContentProvider _positiveNegativeProvider;
 	private DistanceIdealSolutionTableViewerContentProvider _distanceIdealSolutionProvider;
 	
+	private ProblemElementsSet _elementsSet;
+	
 	private SelectionPhase _selectionPhase;
+	private SensitivityAnalysis _sensitivityAnalysis;
 	
 	private static class DataComparator implements Comparator<Object[]> {
 		public int compare(Object[] d1, Object[] d2) {
@@ -95,6 +100,9 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 	public void createPartControl(Composite parent) {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_selectionPhase = (SelectionPhase) pmm.getPhaseMethod(SelectionPhase.ID).getImplementation();
+		_sensitivityAnalysis = (SensitivityAnalysis) ResolutionPhasesManager.getInstance().getResolutionPhase(SensitivityAnalysis.ID).getImplementation();
+		
+		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
 		
 		_parent = parent;
 
@@ -292,7 +300,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 			@Override
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
-				return ((String) data[0]);
+				return (Integer.toString((int) data[0]));
 			}
 		});
 		
@@ -319,7 +327,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
 				double distance = (double) data[2];
-				double rounded = Math.floor(100 * distance + 0.5) / 100;
+				double rounded = Math.floor(10000d * distance) / 10000d;
 				
 				return Double.toString(rounded);
 			}
@@ -335,7 +343,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
 				double distance = (double) data[3];
-				double rounded = Math.floor(100 * distance + 0.5) / 100;
+				double rounded = Math.round(10000d * distance) / 10000d;
 				
 				return Double.toString(rounded);
 			}
@@ -351,7 +359,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
 				double coefficient = (double) data[4];
-				double rounded = Math.floor(100 * coefficient + 0.5) / 100;
+				double rounded = Math.round(10000d * coefficient) / 10000d;
 				
 				return Double.toString(rounded);
 			}
@@ -401,6 +409,13 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 						weights.add(calculateArithmeticMean(weightCriterion));
 					}
 				}
+				
+				Double[] saWeights = new Double[weights.size()];
+				for(int w = 0; w < weights.size(); ++w) {
+					saWeights[w] = weights.get(w);
+				}
+				
+				_sensitivityAnalysis.setWeights(saWeights);
 			}
 		}
 		
@@ -427,6 +442,19 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 		List<Object[]> coefficients = _selectionPhase.calculateClosenessCoefficient();
 		_distanceIdealSolutionProvider.setInput(coefficients);
 		_tableViewerIdealSolution.setInput(_distanceIdealSolutionProvider.getInput());
+		
+		int alternative = 0;
+		Double[] preferences = new Double[_elementsSet.getAlternatives().size()];
+ 		for(Alternative a: _elementsSet.getAlternatives()) {
+ 			for(Object[] coefficent: coefficients) {
+ 				if(a.equals(coefficent[1])) {
+ 					preferences[alternative] = (Double) coefficent[4];
+ 				}
+ 			}
+ 			alternative++;
+		}
+ 		
+		_sensitivityAnalysis.setAlternativesFinalPreferences(preferences);
 	}
 	
 	private Double calculateArithmeticMean(List<Double> weightCriterion) {
