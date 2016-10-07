@@ -184,9 +184,9 @@ public class SATableContentProvider extends KTableNoScrollModel {
 				} else {
 					erg = _values[_pairs[row - 1][0]][_pairs[row - 1][1]][col - 1];
 					if(erg == null) {
-						erg = "N/A"; //$NON-NLS-1$
+						erg = "N/F"; //$NON-NLS-1$
 					} else if((Double) erg == Double.MAX_VALUE) {
-						erg = "";
+						erg = "-"; //$NON-NLS-1$
 					} else {
 						if(_typeDataSelected.equals(ABSOLUTE)) {
 							double value = Math.round((Double) erg * 1000d) / 1000d;
@@ -311,9 +311,9 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		} else {
 			if((doGetContentAt(col, row) instanceof String)) {
 				String content = (String) doGetContentAt(col, row);
-				if(content.equals("N/A")) { //$NON-NLS-1$
+				if(content.equals("N/F")) { //$NON-NLS-1$
 					return _fixedRendererNA;
-				} else if(content.equals("")) {
+				} else if(content.equals("")) { //$NON-NLS-1$
 					return _fixedRendererNoCalculated;
 				} else if(!content.contains("%")) { //$NON-NLS-1$
 					return _fixedRendererHeader;

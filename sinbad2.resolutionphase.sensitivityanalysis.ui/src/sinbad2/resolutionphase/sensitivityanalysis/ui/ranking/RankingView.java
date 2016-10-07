@@ -102,8 +102,8 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 			}
 		});
 		
-		String activatedMethodId = MethodsManager.getInstance().getActiveMethod().getId();
-		if(activatedMethodId.contains("todim") || activatedMethodId.contains("topsis")) {
+		String categoryMethod = MethodsManager.getInstance().getActiveMethod().getCategory();
+		if(categoryMethod.contains(Messages.RankingView_Multi_criteria_decision_analysis)) {
 			_sensitivityModels.setEnabled(false);
 		} else {
 			_sensitivityModels.setEnabled(true);

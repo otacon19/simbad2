@@ -152,7 +152,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 
 	private void setDefaultRanges(XYPlot plot) {
 		NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-		setRangeAxis(rangeAxis, 0, 1);
+		setRangeAxis(rangeAxis, -1, 2);
 
 		NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
 		setRangeAxis(domainAxis, 0, 1);
@@ -215,11 +215,10 @@ public class AlternativesEvolutionWeigthsLineChart {
 					} else if(_typeTODIMChart == 0) {
 						alternativesSeries = computeEvolutionWeights();	
 					} else {
-						setRangeAxis(_chart.getXYPlot().getRangeAxis(), -1, 2);
-						setRangeAxis(_chart.getXYPlot().getDomainAxis(), 1, 5);
-						setChartTitle("Attenuation factor evolution");
-						
 						alternativesSeries = computeAttenuationFactorEvolution();
+						
+						setRangeAxis(_chart.getXYPlot().getDomainAxis(), 1, 5);
+						setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Attenuation_factor_evolution);
 					}
 	
 					for (XYSeries se : alternativesSeries) {

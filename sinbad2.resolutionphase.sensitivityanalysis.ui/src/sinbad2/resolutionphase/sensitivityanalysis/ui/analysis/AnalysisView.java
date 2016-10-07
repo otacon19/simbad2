@@ -37,7 +37,7 @@ import sinbad2.resolutionphase.sensitivityanalysis.ui.sensitivityanalysis.Sensit
 
 public class AnalysisView extends ViewPart implements ISelectionChangedListener, IChangeSATableValues, ISensitivityAnalysisChangeListener {
 	
-	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.analysis";
+	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.ui.views.analysis"; //$NON-NLS-1$
 	
 	private Composite _parent;
 	private Composite _chartComposite;
@@ -124,7 +124,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 			if(text.equals(Messages.AnalysisView_Sturdiness)) { 
 				_isTODIM = false;
 				initializeLineChart(null);
-			} else if(text.equals("Attenuation factor")) {
+			} else if(text.equals(Messages.AnalysisView_Attenuation_factor)) {
 				_isTODIM = true;
 				initializeLineChart(0);
 			} else if(text.equals(Messages.AnalysisView_Evolution)) {
@@ -268,9 +268,9 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_changeChartButton.setLayoutData(new GridData(SWT.RIGHT, SWT.RIGHT, true, true, 1, 1));
 		
 		String activatedMethod = MethodsManager.getInstance().getActiveMethod().getId();
-		if(activatedMethod.contains("todim")) {
-			_changeChartButton.setText("Attenuation factor");
-		} else if(activatedMethod.contains("topsis")) {
+		if(activatedMethod.contains("todim")) { //$NON-NLS-1$
+			_changeChartButton.setText(Messages.AnalysisView_Attenuation_factor);
+		} else if(activatedMethod.contains("topsis")) { //$NON-NLS-1$
 			_changeChartButton.setEnabled(false);
 		} else {
 			_changeChartButton.setText(Messages.AnalysisView_Sturdiness);
@@ -284,13 +284,13 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				if(_changeChartButton.getText().equals(Messages.AnalysisView_Sturdiness)) {
 					initializeStackedChart();
 					_changeChartButton.setText(Messages.AnalysisView_Evolution);
-				} else if(_changeChartButton.getText().equals("Attenuation factor")) {
+				} else if(_changeChartButton.getText().equals(Messages.AnalysisView_Attenuation_factor)) {
 					initializeLineChart(1);
 					_changeChartButton.setText(Messages.AnalysisView_Evolution);	
 				} else {
 					if(_isTODIM) {
 						initializeLineChart(0);
-						_changeChartButton.setText("Attenuation factor");
+						_changeChartButton.setText(Messages.AnalysisView_Attenuation_factor);
 					} else {
 						initializeLineChart(null);
 						_changeChartButton.setText(Messages.AnalysisView_Sturdiness);

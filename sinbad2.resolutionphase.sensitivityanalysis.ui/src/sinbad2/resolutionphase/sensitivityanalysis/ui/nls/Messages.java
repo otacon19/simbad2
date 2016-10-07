@@ -5,18 +5,22 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sinbad2.resolutionphase.sensitivityanalysis.ui.nls.messages"; //$NON-NLS-1$
 	public static String AlternativesEvolutionWeigthsLineChart_actual_weighted;
+	public static String AlternativesEvolutionWeigthsLineChart_Attenuation_factor_evolution;
 	public static String AlternativesEvolutionWeigthsLineChart_Preferences_evolution;
 	public static String AlternativesEvolutionWeigthsLineChart_Ratios_evolution;
 	public static String AlternativesEvolutionWeigthsLineChart_variable_weighted;
+	public static String AnalysisView_Attenuation_factor;
 	public static String AnalysisView_Evolution;
 	public static String AnalysisView_RELATIVE;
 	public static String AnalysisView_Sturdiness;
 	public static String DecisionMakingView_Weights;
+	public static String DecisionMatrixView_Multi_criteria_decision_analysis;
 	public static String MinimunValueBetweenAlternativesBarChart_Minimun_absolute;
 	public static String MinimunValueBetweenAlternativesBarChart_Minimun_percent;
 	public static String MinimunValueBetweenAlternativesBarChart_RELATIVE;
 	public static String RankingView_Alternative;
 	public static String RankingView_Analytic_Hierarchy_process;
+	public static String RankingView_Multi_criteria_decision_analysis;
 	public static String RankingView_Value;
 	public static String RankingView_Weighted_product;
 	public static String RankingView_Weighted_sum;
