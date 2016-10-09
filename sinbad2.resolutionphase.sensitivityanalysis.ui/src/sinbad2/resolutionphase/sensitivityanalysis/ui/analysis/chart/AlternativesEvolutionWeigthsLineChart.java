@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 	private ValueMarker _horizontalMarker;
 
 	private List<Alternative> _alternatives;
+	private List<Criterion> _criteria;
 	private Criterion _criterionSelected;
 
 	private Integer _typeTODIMChart;
@@ -51,6 +53,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 
 	public AlternativesEvolutionWeigthsLineChart() {
 		_alternatives = ProblemElementsManager.getInstance().getActiveElementSet().getAlternatives();
+		_criteria = ProblemElementsManager.getInstance().getActiveElementSet().getAllCriteria();
 
 		_chart = null;
 		_chartComposite = null;
@@ -141,11 +144,8 @@ public class AlternativesEvolutionWeigthsLineChart {
 		XYLineAndShapeRenderer render = (XYLineAndShapeRenderer) plot.getRenderer();
 		render.setBaseToolTipGenerator(createToolTipGenerator());
 		
-		createCurrentMarker();
-		createVariableMarker();
-		
-		plot.addDomainMarker(_currentMarker);
-		plot.addDomainMarker(_variableMarker);
+		createCurrentMarker(plot);
+		createVariableMarker(plot);
 
 		return result;
 	}
@@ -178,7 +178,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 		return xyToolTipGenerator;
 	}
 
-	private void createCurrentMarker() {
+	private void createCurrentMarker(XYPlot plot) {
 		_currentMarker = new ValueMarker(0);
 		_currentMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
 		_currentMarker.setLabel(Messages.AlternativesEvolutionWeigthsLineChart_actual_weighted);
@@ -186,16 +186,18 @@ public class AlternativesEvolutionWeigthsLineChart {
 		_currentMarker.setStroke(new BasicStroke(2));
 		_currentMarker.setLabelOffset(new RectangleInsets(10, 10, 10, 50));
 		_currentMarker.setLabelAnchor(RectangleAnchor.TOP_RIGHT);
+		plot.addDomainMarker(_currentMarker);
 	}
 	
-	private void createVariableMarker() {
+	private void createVariableMarker(XYPlot plot) {
 		_variableMarker = new ValueMarker(0);
 		_variableMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
 		_variableMarker.setLabel(Messages.AlternativesEvolutionWeigthsLineChart_variable_weighted);
 		_variableMarker.setPaint(Color.blue);
 		_variableMarker.setStroke(new BasicStroke(2));
 		_variableMarker.setLabelOffset(new RectangleInsets(10, 10, 10, 54));
-		_variableMarker.setLabelAnchor(RectangleAnchor.TOP_RIGHT);	
+		_variableMarker.setLabelAnchor(RectangleAnchor.TOP_LEFT);	
+		plot.addDomainMarker(_variableMarker);
 	}
 	
 	private XYDataset createDataset() {
@@ -205,19 +207,19 @@ public class AlternativesEvolutionWeigthsLineChart {
 			switch (_model) {
 				case WEIGHTED_SUM:
 				case ANALYTIC_HIERARCHY_PROCESS:
-					
-					setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution + _criterionSelected.getId().toUpperCase());
+				
 					removeMarker(_horizontalMarker);
 					
 					List<XYSeries> alternativesSeries;
 					if (_typeTODIMChart == null) {	
-						alternativesSeries = computeEvolutionWeights();	
+						setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution + _criterionSelected.getId().toUpperCase());
+						alternativesSeries = computeEvolutionWeights();
 					} else if(_typeTODIMChart == 0) {
-						alternativesSeries = computeEvolutionWeights();	
+						setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution);
+						alternativesSeries = computeTODIMEvolutionWeights();	
 					} else {
 						alternativesSeries = computeAttenuationFactorEvolution();
-						
-						setRangeAxis(_chart.getXYPlot().getDomainAxis(), 1, 5);
+						setRangeAxis(_chart.getXYPlot().getDomainAxis(), 1, 15);
 						setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Attenuation_factor_evolution);
 					}
 	
@@ -230,9 +232,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 					
 					setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Ratios_evolution + _criterionSelected.getId().toUpperCase());
 	
-					if (_horizontalMarker == null) {
-						createHorizontalMarker();
-					}
+					createHorizontalMarker();
 	
 					int numSeries = 0;
 					for (int i = 0; i < _alternatives.size() - 1; ++i) {
@@ -263,6 +263,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 	private void removeMarker(ValueMarker marker) {
 		if (marker != null) {
 			_chart.getXYPlot().removeRangeMarker(marker);
+			_chart.getXYPlot().removeDomainMarker(marker);
 		}
 	}
 
@@ -278,7 +279,6 @@ public class AlternativesEvolutionWeigthsLineChart {
 	}
 	
 	private List<XYSeries> computeEvolutionWeights() {
-
 		List<XYSeries> alternativesSeries = new LinkedList<XYSeries>();
 		for (int i = 0; i < _alternatives.size(); ++i) {
 			alternativesSeries.add(new XYSeries(_alternatives.get(i).getId()));
@@ -296,6 +296,47 @@ public class AlternativesEvolutionWeigthsLineChart {
 		return alternativesSeries;
 	}
 	
+	private List<XYSeries> computeTODIMEvolutionWeights() {
+		
+		List<XYSeries> alternativesSeries = new LinkedList<XYSeries>();
+		for (int i = 0; i < _alternatives.size(); ++i) {
+			alternativesSeries.add(new XYSeries(_alternatives.get(i).getId()));
+		}
+		
+		double max = Double.MIN_VALUE;
+		int mostImportantCriterionPos = 0;
+		List<Double> weights = new LinkedList<Double>();
+		Double[] ws = _sensitivityAnalysis.getWeights();
+		for(int w = 0; w < ws.length; ++w) {
+			weights.add(ws[w]);
+			
+			if(ws[w] > max) {
+				max = ws[w];
+				mostImportantCriterionPos = w;
+			}
+		}
+
+		Collections.sort(weights);
+		Collections.reverse(weights);
+		Double secondMaxWeight = Math.round(weights.get(1) * 1000d) / 1000d + 0.01;
+		
+		Double[] alternativePreferences;
+		for (double j = secondMaxWeight; j <= 1.0; j += 0.01) {
+			alternativePreferences = _sensitivityAnalysis.computeAlternativesFinalPreferenceInferWeights(_sensitivityAnalysis.calculateInferWeights(_criteria.get(mostImportantCriterionPos), j));
+			for (int s = 0; s < alternativesSeries.size(); ++s) {
+				XYSeries serie = alternativesSeries.get(s);
+				serie.add(Math.round(j * 1000d) / 1000d, alternativePreferences[s]);
+			}
+		}
+		
+		_currentMarker.setValue(weights.get(0));
+		_variableMarker.setLabel("minimum value");
+		_variableMarker.setValue(secondMaxWeight);
+		_variableMarker.setLabelOffset(new RectangleInsets(10, 50, 100, 0));
+		
+		return alternativesSeries;
+	}
+	
 	private List<XYSeries> computeAttenuationFactorEvolution() {
 		
 		List<XYSeries> alternativesSeries = new LinkedList<XYSeries>();
@@ -304,7 +345,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 		}
 		
 		Double[] alternativePreferences;
-		for (int j = 1; j <= 5; j++) {
+		for (int j = 1; j <= 15; j++) {
 			alternativePreferences = _sensitivityAnalysis.computeAlternativesPreferenceInferAttenuationFactor(j);
 			for (int s = 0; s < alternativesSeries.size(); ++s) {
 				XYSeries serie = alternativesSeries.get(s);

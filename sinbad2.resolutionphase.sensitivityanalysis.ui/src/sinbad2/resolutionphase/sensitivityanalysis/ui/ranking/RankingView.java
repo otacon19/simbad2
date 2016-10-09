@@ -33,6 +33,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	
 	private TableViewer _rankingViewer;
 	private Combo _sensitivityModels;
+	private Composite _parent;
 	
 	private SensitivityAnalysis _sensitivityAnalysis;
 	
@@ -40,10 +41,11 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 
 	@Override
 	public void createPartControl(Composite parent) {
-		parent.setLayout(new GridLayout());
-		parent.setLayoutData(new GridData(GridData.FILL_BOTH));
+		_parent = parent;
+		_parent.setLayout(new GridLayout());
+		_parent.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		Composite rankingComposite = new Composite(parent, SWT.NONE);
+		Composite rankingComposite = new Composite(_parent, SWT.NONE);
 		rankingComposite.setLayout(new GridLayout());
 		rankingComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_rankingViewer = new TableViewer(rankingComposite, SWT.BORDER | SWT.MULTI| SWT.FULL_SELECTION | SWT.NO_FOCUS | SWT.HIDE_SELECTION);
@@ -73,7 +75,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 		tc.setMoveable(true);
 		tc.setWidth(55);
 
-		Composite comboComposite = new Composite(parent, SWT.NONE);
+		Composite comboComposite = new Composite(_parent, SWT.NONE);
 		comboComposite.setLayout(new GridLayout());
 		comboComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		_sensitivityModels = new Combo(comboComposite, SWT.READ_ONLY);
@@ -115,9 +117,9 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	
 	@Override
 	public void dispose() {
-		RankingViewManager.getInstance().unregisterDisplayRankingChangeListener(this);
-		
 		super.dispose();
+		
+		RankingViewManager.getInstance().unregisterDisplayRankingChangeListener(this);
 	}
 
 	private void addColumn(String text, final int pos) {

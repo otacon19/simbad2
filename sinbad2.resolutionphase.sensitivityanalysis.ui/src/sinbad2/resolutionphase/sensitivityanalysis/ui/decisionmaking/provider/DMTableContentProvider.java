@@ -101,12 +101,12 @@ public class DMTableContentProvider extends KTableNoScrollModel implements IDisp
 	}
 	
 	private void refreshTable() {
+		
 		for(int col = 1; col < getColumnCount(); ++col) {
 			for(int row = 1; row < getRowCount(); ++row) {
 				doGetContentAt(col, row);
 			}
 		}
-		
 		_table.redraw();
 	}
 

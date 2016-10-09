@@ -72,9 +72,11 @@ public class SensitivityAnalysisView extends ViewPart implements ISensitivityAna
 
 	@Override
 	public void dispose() {
-		_sensitivityAnalysis.unregisterSensitivityAnalysisChangeListener(this);
-		disposeSATable();
 		super.dispose();
+		
+		_sensitivityAnalysis.unregisterSensitivityAnalysisChangeListener(this);
+		
+		disposeSATable();
 	}
 	
 	@Override
@@ -118,4 +120,6 @@ public class SensitivityAnalysisView extends ViewPart implements ISensitivityAna
 		initSATable();
 		_saTable.getProvider().refreshTable();
 	}
+	
+	
 }

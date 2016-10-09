@@ -4,7 +4,6 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IPerspectiveListener;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -12,6 +11,7 @@ import org.eclipse.ui.PlatformUI;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.resolutionphase.sensitivityanalysis.ui.analysis.AnalysisView;
+
 public class SensitivityAnalysisPerspective implements IPerspectiveFactory {
 	
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis.perspective"; //$NON-NLS-1$
@@ -28,16 +28,13 @@ public class SensitivityAnalysisPerspective implements IPerspectiveFactory {
 				boolean sensitivityAnalysisActivated = ID.equals(perspective.getId());
 
 				if (sensitivityAnalysisActivated) {
-					
-					IViewPart view = null;
+
 					IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
 					for (int i = 0; i < viewReferences.length; i++) {
 						if (AnalysisView.ID.equals(viewReferences[i].getId())) {
-							view = viewReferences[i].getView(false);
+							((AnalysisView) viewReferences[i].getView(false)).clear();
 						}
 					}
-					
-					((AnalysisView) view).clear();
 					
 					SensitivityAnalysis sa = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 					sa.calculateDecisionMatrix(null);

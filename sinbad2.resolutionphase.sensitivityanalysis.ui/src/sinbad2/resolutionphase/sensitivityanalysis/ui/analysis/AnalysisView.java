@@ -1,5 +1,9 @@
 package sinbad2.resolutionphase.sensitivityanalysis.ui.analysis;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -117,6 +121,8 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		
 		removeChart();
 		
+		setTextButton();
+		
 		if(_typeChart == 0) {
 			initializeBarChart();
 		} else {
@@ -161,23 +167,39 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		
 		if(typeTODIMChart == null) {
 			_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
+			
 			_weightSpinner.setValues(0, 0, 100, 2, 1, 1);
+			_weightSpinner.setVisible(true);
 		} else {	
 			_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis, typeTODIMChart);
 			
 			if(typeTODIMChart == 0) {
-				_weightSpinner.setValues(0, 0, 100, 2, 1, 1);
+				
+				List<Double> weights = new LinkedList<Double>();
+				Double[] ws = _sensitivityAnalysis.getWeights();
+				for(int w = 0; w < ws.length; ++w) {
+					weights.add(ws[w]);
+				}
+				
+				Collections.sort(weights);
+				Collections.reverse(weights);
+				Double secondMaxWeight = Math.round(weights.get(1) * 1000d) / 1000d + 0.01;
+				
+				_weightSpinner.setValues((int) (secondMaxWeight * 100), 0, 100, 2, 1, 1);
+				_weightSpinner.setVisible(false);
 			} else {
 				_weightSpinner.setValues(100, 100, 500, 2, 10, 10);
+				_weightSpinner.setVisible(true);
 			}
 		}
 		
-		_lineChart.setCriterionSelected(_criterionSelected);
-		_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)]);
-		_lineChart.setModel(_sensitivityAnalysis.getModel());
-		_lineChart.setPositionVariableValueMarker(_weightSpinner.getSelection() / 100d);
+		if(_criterionSelected != null) {
+			_lineChart.setCriterionSelected(_criterionSelected);
+			_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)]);
+			_lineChart.setModel(_sensitivityAnalysis.getModel());
+			_lineChart.setPositionVariableValueMarker(_weightSpinner.getSelection() / 100d);
+		}
 		
-		_weightSpinner.setVisible(true);
 		_changeChartButton.setVisible(true);	
 	}
 
@@ -267,14 +289,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_changeChartButton = new Button(_buttonComposite, SWT.BORDER);
 		_changeChartButton.setLayoutData(new GridData(SWT.RIGHT, SWT.RIGHT, true, true, 1, 1));
 		
-		String activatedMethod = MethodsManager.getInstance().getActiveMethod().getId();
-		if(activatedMethod.contains("todim")) { //$NON-NLS-1$
-			_changeChartButton.setText(Messages.AnalysisView_Attenuation_factor);
-		} else if(activatedMethod.contains("topsis")) { //$NON-NLS-1$
-			_changeChartButton.setEnabled(false);
-		} else {
-			_changeChartButton.setText(Messages.AnalysisView_Sturdiness);
-		}
+		setTextButton();
 		
 		_changeChartButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -304,6 +319,22 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_changeChartButton.pack();
 	}
 	
+	private void setTextButton() {
+		
+		if(_changeChartButton != null) {
+			String activatedMethod = MethodsManager.getInstance().getActiveMethod().getId();
+			if(activatedMethod.contains("todim")) { //$NON-NLS-1$
+				_changeChartButton.setText(Messages.AnalysisView_Attenuation_factor);
+				_typeChart = 1;
+			} else if(activatedMethod.contains("topsis")) { //$NON-NLS-1$
+				_changeChartButton.setEnabled(false);
+				_typeChart = 1;
+			} else {
+				_changeChartButton.setText(Messages.AnalysisView_Sturdiness);
+			}
+		}
+	}
+
 	private void removeButton() {
 		if(_changeChartButton != null) {
 			if(!_changeChartButton.isDisposed()) {
@@ -410,9 +441,16 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		}
 		return view;
 	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+	}
 	
 	public void clear() {
 		_typeBarChart = "ABSOLUTE"; //$NON-NLS-1$
 		_typeChart = 0;
+		_isTODIM = false;
+		_criterionSelected = null;
 	}
 }

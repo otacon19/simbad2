@@ -74,6 +74,7 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 		_tableComposite = new Composite(_container, SWT.NONE);
 		_tableComposite.setLayout(new GridLayout());
 		_tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
 		_dmTable = new DMTable(_tableComposite, _sensitivityAnalysis);
 		_dmTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
@@ -155,11 +156,12 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 
 	@Override
 	public void dispose() {
+		super.dispose();
+
 		_sensitivityAnalysis.unregisterSensitivityAnalysisChangeListener(this);
+		
 		disposeDMTable();
 		disposeButton();
-		
-		super.dispose();
 	}
 
 	private void hookFocusListener() {

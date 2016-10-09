@@ -535,7 +535,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				inferWeights[i] = ((1 - weightCriterionSelected) / (1 - _w[indexCriterionSelected])) * _w[i];
 			}
 		}
-
+		
 		return inferWeights;
 	}
 
