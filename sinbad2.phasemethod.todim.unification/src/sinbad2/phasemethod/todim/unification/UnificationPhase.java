@@ -1,7 +1,6 @@
 package sinbad2.phasemethod.todim.unification;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,8 @@ import sinbad2.aggregationoperator.AggregationOperatorsManager;
 import sinbad2.aggregationoperator.owa.OWA;
 import sinbad2.aggregationoperator.owa.YagerQuantifiers;
 import sinbad2.domain.Domain;
+import sinbad2.domain.DomainSet;
+import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
@@ -18,7 +19,6 @@ import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
-import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
@@ -30,7 +30,6 @@ import sinbad2.valuation.linguistic.LinguisticValuation;
 import sinbad2.valuation.real.RealValuation;
 import sinbad2.valuation.real.interval.RealIntervalValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
-import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -41,44 +40,30 @@ public class UnificationPhase implements IPhaseMethod {
 
 	private Domain _unifiedDomain;
 	
-	private Map<ValuationKey, Valuation> _unifiedValuations;
-	private Map<ValuationKey, Valuation> _twoTupleValuations;
-	private Map<ValuationKey, TrapezoidalFunction> _envelopeValuations;
+	private Map<ValuationKey, TrapezoidalFunction> _fuzzyValuations;
 
 	private ValuationSet _valutationSet;
-
+	private DomainSet _domainSet;
+	
 	public UnificationPhase() {
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = valuationSetManager.getActiveValuationSet();
+		_domainSet = DomainsManager.getInstance().getActiveDomainSet();
 
-		_unifiedValuations = new HashMap<ValuationKey, Valuation>();
-		_twoTupleValuations = new LinkedHashMap<ValuationKey, Valuation>();
-		_envelopeValuations = new HashMap<ValuationKey, TrapezoidalFunction>();
-	}
-
-	public Map<ValuationKey, Valuation> getUnifiedValuations() {
-		return _unifiedValuations;
-	}
-
-	public void setUnifiedValuations(Map<ValuationKey, Valuation> unifiedValuations) {
-		_unifiedValuations = unifiedValuations;
+		_fuzzyValuations = new HashMap<ValuationKey, TrapezoidalFunction>();
 	}
 
 	@Override
 	public Map<ValuationKey, Valuation> getTwoTupleValuations() {
-		return _twoTupleValuations;
+		return null;
 	}
-
-	public void setTwoTupleValuations(Map<ValuationKey, Valuation> twoTupleValuations) {
-		_twoTupleValuations = twoTupleValuations;
-	}
-
+	
 	public Map<ValuationKey, TrapezoidalFunction> getEnvelopeValuations() {
-		return _envelopeValuations;
+		return _fuzzyValuations;
 	}
 
 	public void setEnvelopeValuations(Map<ValuationKey, TrapezoidalFunction> envelopeValuations) {
-		_envelopeValuations = envelopeValuations;
+		_fuzzyValuations = envelopeValuations;
 	}
 	
 	@Override
@@ -101,16 +86,12 @@ public class UnificationPhase implements IPhaseMethod {
 
 		clear();
 
-		_unifiedValuations = unification.getUnifiedValuations();
-		_twoTupleValuations = unification.getTwoTupleValuations();
-		_envelopeValuations = unification.getEnvelopeValuations();
+		_fuzzyValuations = unification.getEnvelopeValuations();
 	}
 
 	@Override
 	public void clear() {
-		_unifiedValuations.clear();
-		_twoTupleValuations.clear();
-		_envelopeValuations.clear();
+		_fuzzyValuations.clear();
 	}
 
 	@Override
@@ -147,26 +128,21 @@ public class UnificationPhase implements IPhaseMethod {
 		return true;
 	}
 
-	public Map<ValuationKey, Valuation> unification() {
-		_unifiedValuations = new HashMap<ValuationKey, Valuation>();
-		Map<String, List<Object[]>> toNormalize = new HashMap<String, List<Object[]>>();
-		Map<String, Domain> domains = new HashMap<String, Domain>();
-		List<Object[]> auxEvaluations;
+	public Map<ValuationKey, TrapezoidalFunction> unification() {
+		Map<ValuationKey, Valuation> numericalIntegerValuesToNormalized = new HashMap<ValuationKey, Valuation>();
+		Map<ValuationKey, Valuation> numericalRealValuesToNormalized = new HashMap<ValuationKey, Valuation>();
+		Map<ValuationKey, Valuation> intervalIntegerValuesToNormalized = new HashMap<ValuationKey, Valuation>();
+		Map<ValuationKey, Valuation> intervalRealValuesToNormalized = new HashMap<ValuationKey, Valuation>();
 
 		if (_unifiedDomain != null) {
-			Expert expert;
 			Alternative alternative;
 			Criterion criterion;
 			Valuation valuation;
-			FuzzySet fuzzySet;
 			Boolean isCost;
 
 			Map<ValuationKey, Valuation> valuations = _valutationSet.getValuations();
 			for (ValuationKey vk : valuations.keySet()) {
-			
-				expert = vk.getExpert();
-				alternative = vk.getAlternative();
-				
+				alternative = vk.getAlternative();			
 				if(!alternative.getId().contains("null_")) {
 					valuation = valuations.get(vk);
 					criterion = vk.getCriterion();
@@ -177,126 +153,34 @@ public class UnificationPhase implements IPhaseMethod {
 							valuation = valuation.negateValuation();
 						}
 						if (((NumericIntegerDomain) valuation.getDomain()).getInRange()) {
-							fuzzySet = ((IntegerValuation) valuation).unification(_unifiedDomain);
-							valuation = new UnifiedValuation(fuzzySet);
-							_unifiedValuations.put(vk, valuation);
-						} else {
-							Object[] auxEvaluation = new Object[5];
-							auxEvaluation[0] = expert;
-							auxEvaluation[1] = alternative;
-							auxEvaluation[2] = criterion;
-							auxEvaluation[3] = valuation;
-							auxEvaluation[4] = vk;
-	
-							Domain domain = valuation.getDomain();
-	
-							auxEvaluations = toNormalize.get(domain.getId());
-							if (auxEvaluations == null) {
-								auxEvaluations = new LinkedList<Object[]>();
-								toNormalize.put(domain.getId(), auxEvaluations);
-								domains.put(domain.getId(), domain);
-							}
-							auxEvaluations.add(auxEvaluation);
+							numericalIntegerValuesToNormalized.put(vk, valuation);
 						}
 					} else if (valuation instanceof RealValuation) {
 						if (isCost) {
 							valuation = valuation.negateValuation();
 						}
 						if (((NumericRealDomain) valuation.getDomain()).getInRange()) {
-							fuzzySet = ((RealValuation) valuation).unification(_unifiedDomain);
-							valuation = new UnifiedValuation(fuzzySet);
-							_unifiedValuations.put(vk, valuation);
-						} else {
-							Object[] auxEvaluation = new Object[5];
-							auxEvaluation[0] = expert;
-							auxEvaluation[1] = alternative;
-							auxEvaluation[2] = criterion;
-							auxEvaluation[3] = valuation;
-							auxEvaluation[4] = vk;
-	
-							Domain domain = valuation.getDomain();
-	
-							auxEvaluations = toNormalize.get(domain.getId());
-							if (auxEvaluations == null) {
-								auxEvaluations = new LinkedList<Object[]>();
-								toNormalize.put(domain.getId(), auxEvaluations);
-								domains.put(domain.getId(), domain);
-							}
-	
-							auxEvaluations.add(auxEvaluation);
+							numericalRealValuesToNormalized.put(vk, valuation);
 						}
 					} else if (valuation instanceof IntegerIntervalValuation) {
 						if (isCost) {
 							valuation = valuation.negateValuation();
 						}
 						if (((NumericIntegerDomain) valuation.getDomain()).getInRange()) {
-							fuzzySet = ((IntegerIntervalValuation) valuation).unification(_unifiedDomain);
-							valuation = new UnifiedValuation(fuzzySet);
-							_unifiedValuations.put(vk, valuation);
-						} else {
-							Object[] auxEvaluation = new Object[5];
-							auxEvaluation[0] = expert;
-							auxEvaluation[1] = alternative;
-							auxEvaluation[2] = criterion;
-							auxEvaluation[3] = valuation;
-							auxEvaluation[4] = vk;
-	
-							Domain domain = valuation.getDomain();
-	
-							auxEvaluations = toNormalize.get(domain.getId());
-							if (auxEvaluations == null) {
-								auxEvaluations = new LinkedList<Object[]>();
-								toNormalize.put(domain.getId(), auxEvaluations);
-								domains.put(domain.getId(), domain);
-							}
-	
-							auxEvaluations.add(auxEvaluation);
+							intervalIntegerValuesToNormalized.put(vk, valuation);
 						}
 					} else if (valuation instanceof RealIntervalValuation) {
 						if (isCost) {
 							valuation = valuation.negateValuation();
 						}
 						if (((NumericRealDomain) valuation.getDomain()).getInRange()) {
-							fuzzySet = ((RealIntervalValuation) valuation).unification(_unifiedDomain);
-							valuation = new UnifiedValuation(fuzzySet);
-							_unifiedValuations.put(vk, valuation);
-						} else {
-							Object[] auxEvaluation = new Object[5];
-							auxEvaluation[0] = expert;
-							auxEvaluation[1] = alternative;
-							auxEvaluation[2] = criterion;
-							auxEvaluation[3] = valuation;
-							auxEvaluation[4] = vk;
-	
-							Domain domain = valuation.getDomain();
-	
-							auxEvaluations = toNormalize.get(domain.getId());
-							if (auxEvaluations == null) {
-								auxEvaluations = new LinkedList<Object[]>();
-								toNormalize.put(domain.getId(), auxEvaluations);
-								domains.put(domain.getId(), domain);
-							}
-	
-							auxEvaluations.add(auxEvaluation);
+							intervalRealValuesToNormalized.put(vk, valuation);
 						}
-					} else if (valuation instanceof UnifiedValuation) {
-						Valuation auxValuation = ((UnifiedValuation) valuation)
-								.disunification((FuzzySet) valuation.getDomain());
-						if (isCost) {
-							auxValuation = auxValuation.negateValuation();
-						}
-						fuzzySet = ((TwoTuple) auxValuation).unification(_unifiedDomain);
-						valuation = new UnifiedValuation(fuzzySet);
-	
-						_unifiedValuations.put(vk, valuation);
 					} else if (valuation instanceof LinguisticValuation) {
 						if (isCost) {
 							valuation = ((LinguisticValuation) valuation).negateValuation();
 						}
-						fuzzySet = ((LinguisticValuation) valuation).unification(_unifiedDomain);
-						valuation = new UnifiedValuation(fuzzySet);
-	
-						_unifiedValuations.put(vk, valuation);
+						_fuzzyValuations.put(vk, (TrapezoidalFunction) ((LinguisticValuation) valuation).getLabel().getSemantic());
 					} else if (valuation instanceof HesitantValuation) {
 						calculateFuzzyEnvelope(vk, (HesitantValuation) valuation, (FuzzySet) _unifiedDomain);
 					}
@@ -304,200 +188,23 @@ public class UnificationPhase implements IPhaseMethod {
 			}
 		}
 
-		if (toNormalize.size() > 0) {
-			normalizeValuations(toNormalize, domains, (FuzzySet) _unifiedDomain);
+		if (numericalIntegerValuesToNormalized.size() > 0) {
+			createIntegerNumericalValuesFuzzyNumber(numericalIntegerValuesToNormalized);
 		}
 		
-		unifiedEvaluationToTwoTuple();
-
-		return _unifiedValuations;
-	}
-
-	private void normalizeValuations(Map<String, List<Object[]>> toNormalize, Map<String, Domain> domains,
-			FuzzySet unifiedDomain) {
-		NumericIntegerDomain auxNumericIntegerDomain;
-		NumericRealDomain auxNumericRealDomain;
-		Valuation auxValuation;
-		FuzzySet fuzzySet;
-		double min, max, measure, minMeasure, maxMeasure;
-
-		int cont = 0;
-		for (String domainID : toNormalize.keySet()) {
-
-			Domain d = domains.get(domainID);
-
-			if (d instanceof NumericIntegerDomain) {
-				min = -1;
-				max = -1;
-				List<Object[]> values = toNormalize.get(d.getId());
-				Valuation v = (Valuation) values.get(cont)[3];
-
-				if (v != null) {
-					if (v instanceof IntegerValuation) {
-						for (Object[] evaluation : toNormalize.get(d.getId())) {
-							auxValuation = (Valuation) evaluation[3];
-							measure = ((IntegerValuation) auxValuation).getValue();
-							if (min == -1) {
-								min = measure;
-								max = measure;
-							} else {
-								if (measure < min) {
-									min = measure;
-								}
-								if (measure > max) {
-									max = measure;
-								}
-							}
-						}
-						if (min != -1) {
-							auxNumericIntegerDomain = new NumericIntegerDomain();
-							auxNumericIntegerDomain.setMinMax((int) min, (int) max);
-							auxNumericIntegerDomain.setType(((NumericIntegerDomain) d).getType());
-							for (Object[] evaluation : toNormalize.get(d.getId())) {
-								auxValuation = (Valuation) evaluation[3];
-								ValuationKey vk = (ValuationKey) evaluation[4];
-								auxValuation = new IntegerValuation(auxNumericIntegerDomain,
-										((IntegerValuation) auxValuation).getValue());
-
-								fuzzySet = ((IntegerValuation) auxValuation).unification(unifiedDomain);
-								UnifiedValuation valuation = new UnifiedValuation(fuzzySet);
-
-								_unifiedValuations.put(vk, valuation);
-							}
-						}
-					} else if (v instanceof IntegerIntervalValuation) {
-						min = -1;
-						max = -1;
-						for (Object[] evaluation : toNormalize.get(d.getId())) {
-							auxValuation = (Valuation) evaluation[3];
-							minMeasure = ((IntegerIntervalValuation) auxValuation).getMin();
-
-							if (min == -1) {
-								min = minMeasure;
-								max = minMeasure;
-							}
-							if (minMeasure < min) {
-								min = minMeasure;
-							}
-							if (minMeasure > max) {
-								max = minMeasure;
-							}
-							maxMeasure = ((IntegerIntervalValuation) auxValuation).getMax();
-							if (maxMeasure < min) {
-								min = maxMeasure;
-							}
-							if (maxMeasure > max) {
-								max = maxMeasure;
-							}
-						}
-						if (min != -1) {
-							auxNumericIntegerDomain = new NumericIntegerDomain();
-							auxNumericIntegerDomain.setMinMax((int) min, (int) max);
-							auxNumericIntegerDomain.setType(((NumericIntegerDomain) d).getType());
-							for (Object[] evaluation : toNormalize.get(d.getId())) {
-								auxValuation = (Valuation) evaluation[3];
-								ValuationKey vk = (ValuationKey) evaluation[4];
-								auxValuation = new IntegerIntervalValuation(auxNumericIntegerDomain,
-										((IntegerIntervalValuation) auxValuation).getMin(),
-										((IntegerIntervalValuation) auxValuation).getMax());
-
-								fuzzySet = ((IntegerIntervalValuation) auxValuation).unification(unifiedDomain);
-								UnifiedValuation valuation = new UnifiedValuation(fuzzySet);
-
-								_unifiedValuations.put(vk, valuation);
-							}
-						}
-					}
-				}
-			} else if (d instanceof NumericRealDomain) {
-				min = -1;
-				max = -1;
-
-				List<Object[]> values = toNormalize.get(d.getId());
-				Valuation v = (Valuation) values.get(cont)[3];
-
-				if (v != null) {
-					if (v instanceof RealValuation) {
-						for (Object[] evaluation : toNormalize.get(d.getId())) {
-							auxValuation = (Valuation) evaluation[3];
-							measure = ((RealValuation) auxValuation).getValue();
-							if (min == -1) {
-								min = measure;
-								max = measure;
-							} else {
-								if (measure < min) {
-									min = measure;
-								}
-								if (measure > max) {
-									max = measure;
-								}
-							}
-						}
-						if (min != -1) {
-							auxNumericRealDomain = new NumericRealDomain();
-							auxNumericRealDomain.setMinMax(min, max);
-							auxNumericRealDomain.setType(((NumericRealDomain) d).getType());
-							for (Object[] evaluation : toNormalize.get(d.getId())) {
-								auxValuation = (Valuation) evaluation[3];
-								ValuationKey vk = (ValuationKey) evaluation[4];
-								auxValuation = new RealValuation(auxNumericRealDomain,
-										((RealValuation) auxValuation).getValue());
-
-								fuzzySet = ((RealValuation) auxValuation).unification(unifiedDomain);
-								UnifiedValuation valuation = new UnifiedValuation(fuzzySet);
-
-								_unifiedValuations.put(vk, valuation);
-							}
-						}
-					} else if (v instanceof RealIntervalValuation) {
-						min = -1;
-						max = -1;
-
-						for (Object[] evaluation : toNormalize.get(d.getId())) {
-							auxValuation = (Valuation) evaluation[3];
-							minMeasure = ((RealIntervalValuation) auxValuation).getMin();
-
-							if (min == -1) {
-								min = minMeasure;
-								max = minMeasure;
-							}
-							if (minMeasure < min) {
-								min = minMeasure;
-							}
-							if (minMeasure > max) {
-								max = minMeasure;
-							}
-							maxMeasure = ((RealIntervalValuation) auxValuation).getMax();
-							if (maxMeasure < min) {
-								min = maxMeasure;
-							}
-							if (maxMeasure > max) {
-								max = maxMeasure;
-							}
-						}
-						if (min != -1) {
-							auxNumericRealDomain = new NumericRealDomain();
-							auxNumericRealDomain.setMinMax(min, max);
-							auxNumericRealDomain.setType(((NumericRealDomain) d).getType());
-
-							for (Object[] evaluation : toNormalize.get(d.getId())) {
-								auxValuation = (Valuation) evaluation[3];
-								ValuationKey vk = (ValuationKey) evaluation[4];
-								auxValuation = new RealIntervalValuation(auxNumericRealDomain,
-										((RealIntervalValuation) auxValuation).getMin(),
-										((RealIntervalValuation) auxValuation).getMax());
-
-								fuzzySet = ((RealIntervalValuation) auxValuation).unification(unifiedDomain);
-								UnifiedValuation valuation = new UnifiedValuation(fuzzySet);
-
-								_unifiedValuations.put(vk, valuation);
-							}
-						}
-					}
-				}
-			}
-			cont++;
+		if (numericalRealValuesToNormalized.size() > 0) {
+			createRealNumericalValuesFuzzyNumber(numericalRealValuesToNormalized);
 		}
+		
+		if(intervalIntegerValuesToNormalized.size() > 0) {
+			createIntervalIntegerValuesFuzzyNumber(intervalIntegerValuesToNormalized);
+		}
+		
+		if(intervalRealValuesToNormalized.size() > 0) {
+			createIntervalRealValuesFuzzyNumber(intervalRealValuesToNormalized);
+		}
+		
+		return _fuzzyValuations;
 	}
 
 	private void calculateFuzzyEnvelope(ValuationKey vk, HesitantValuation valuation, FuzzySet domain) {
@@ -592,48 +299,117 @@ public class UnificationPhase implements IPhaseMethod {
 		}
 
 		TrapezoidalFunction tmf = new TrapezoidalFunction(new double[] { a, b, c, d });
-		_envelopeValuations.put(vk, tmf);
-
-		transformEnvelopeToTwoTuple(vk, tmf, domain);
+		_fuzzyValuations.put(vk, tmf);
 	}
-
-	private void transformEnvelopeToTwoTuple(ValuationKey vk, TrapezoidalFunction tmf, Domain domain) {
-		IMembershipFunction function;
-		FuzzySet result;
-
-		result = (FuzzySet) ((FuzzySet) domain).clone();
-		int g = result.getLabelSet().getCardinality();
-
-		for (int i = 0; i < g; i++) {
-			function = result.getLabelSet().getLabel(i).getSemantic();
-			result.setValue(i, function.maxMin(tmf));
-		}
-
-		Valuation unifiedValuation = new UnifiedValuation(result);
-		_unifiedValuations.put(vk, unifiedValuation);
-
-		TwoTuple twoTuple = ((UnifiedValuation) unifiedValuation).disunification(result);
-		_twoTupleValuations.put(vk, twoTuple);
-	}
-
-	public Map<ValuationKey, Valuation> unifiedEvaluationToTwoTuple() {
-
-		if (_unifiedDomain != null) {
-
-			Valuation valuation;
-
-			for (ValuationKey key : _unifiedValuations.keySet()) {
-				valuation = _unifiedValuations.get(key);
-				if (valuation instanceof UnifiedValuation) {
-					valuation = ((UnifiedValuation) valuation).disunification((FuzzySet) valuation.getDomain());
-				} else if (!(valuation instanceof TwoTuple)) {
-					valuation = null;
+	
+	private void createIntegerNumericalValuesFuzzyNumber(Map<ValuationKey, Valuation> numericalIntegerValuesToNormalized) {
+		double normalizedValue = 0;
+		
+		Map<String, Double> maxValueForEachDomain = getIntegerValuationsMaxValue(numericalIntegerValuesToNormalized);
+		
+		for(Domain domain: _domainSet.getDomains()) {
+			for(ValuationKey vk: numericalIntegerValuesToNormalized.keySet()) {
+				IntegerValuation v = (IntegerValuation) numericalIntegerValuesToNormalized.get(vk);
+				if(v.getDomain().getId().equals(domain.getId())) {
+					normalizedValue = v.getValue() / maxValueForEachDomain.get(domain.getId());
+					createNumericFuzzyNumber(vk, normalizedValue);
 				}
-				_twoTupleValuations.put(key, valuation);
 			}
 		}
-
-		return _twoTupleValuations;
+	}
+	
+	private Map<String, Double> getIntegerValuationsMaxValue(Map<ValuationKey, Valuation> numericalIntegerValuesToNormalized) {
+		Map<String, Double> maxValuesForEachDomains = new HashMap<String, Double>();
+		double max = Double.MIN_VALUE;
+		
+		for(Domain domain: _domainSet.getDomains()) {
+			for(ValuationKey vk: numericalIntegerValuesToNormalized.keySet()) {
+				IntegerValuation v = (IntegerValuation) numericalIntegerValuesToNormalized.get(vk);
+				if(v.getDomain().getId().equals(domain.getId())) {
+					if(v.getValue() > max) {
+						max = v.getValue();
+					}
+				}
+			}
+			maxValuesForEachDomains.put(domain.getId(), max);
+		}
+		return maxValuesForEachDomains;
+	}
+	
+	private void createNumericFuzzyNumber(ValuationKey vk, double normalizedValue) {
+		TrapezoidalFunction tpf = new TrapezoidalFunction(new double[]{normalizedValue, normalizedValue, normalizedValue, normalizedValue});
+		_fuzzyValuations.put(vk, tpf);
+	}
+	
+	private void createRealNumericalValuesFuzzyNumber(Map<ValuationKey, Valuation> numericalRealValuesToNormalized) {
+		double normalizedValue = 0;
+		
+		Map<String, Double> maxValueForEachDomain = getRealValuationsMaxValue(numericalRealValuesToNormalized);
+		
+		for(Domain domain: _domainSet.getDomains()) {
+			for(ValuationKey vk: numericalRealValuesToNormalized.keySet()) {
+				RealValuation v = (RealValuation) numericalRealValuesToNormalized.get(vk);
+				if(v.getDomain().getId().equals(domain.getId())) {
+					normalizedValue = v.getValue() / maxValueForEachDomain.get(domain.getId());
+					createNumericFuzzyNumber(vk, normalizedValue);
+				}
+			}
+		}
+	}
+	
+	private Map<String, Double> getRealValuationsMaxValue(Map<ValuationKey, Valuation> numericalRealValuesToNormalized) {
+		Map<String, Double> maxValuesForEachDomains = new HashMap<String, Double>();
+		double max = Double.MIN_VALUE;
+		
+		for(Domain domain: _domainSet.getDomains()) {
+			for(ValuationKey vk: numericalRealValuesToNormalized.keySet()) {
+				RealValuation v = (RealValuation) numericalRealValuesToNormalized.get(vk);
+				if(v.getDomain().getId().equals(domain.getId())) {
+					if(v.getValue() > max) {
+						max = v.getValue();
+					}
+				}
+			}
+			maxValuesForEachDomains.put(domain.getId(), max);
+		}
+		return maxValuesForEachDomains;
+	}
+	
+	private void createIntervalIntegerValuesFuzzyNumber(Map<ValuationKey, Valuation> numericalRealValuesToNormalized) {
+	
+		for(Domain domain: _domainSet.getDomains()) {
+			for(ValuationKey vk: numericalRealValuesToNormalized.keySet()) {
+				IntegerIntervalValuation v = (IntegerIntervalValuation) numericalRealValuesToNormalized.get(vk);
+				if(v.getDomain().getId().equals(domain.getId())) {
+					createIntervalIntegerFuzzyNumber(domain, vk, v);
+				}
+			}
+		}
 	}
 
+	private void createIntervalIntegerFuzzyNumber(Domain domain, ValuationKey vk, IntegerIntervalValuation v) {	
+		double lower = (v.getMin() - ((NumericIntegerDomain) domain).getMin()) / (((NumericIntegerDomain) domain).getMax() - ((NumericIntegerDomain) domain).getMin());
+		double upper = (v.getMax() - ((NumericIntegerDomain) domain).getMin()) / (((NumericIntegerDomain) domain).getMax() - ((NumericIntegerDomain) domain).getMin());
+
+		_fuzzyValuations.put(vk, new TrapezoidalFunction(new double[]{lower, lower, upper, upper}));
+	}
+	
+	private void createIntervalRealValuesFuzzyNumber(Map<ValuationKey, Valuation> numericalRealValuesToNormalized) {
+		
+		for(Domain domain: _domainSet.getDomains()) {
+			for(ValuationKey vk: numericalRealValuesToNormalized.keySet()) {
+				RealIntervalValuation v = (RealIntervalValuation) numericalRealValuesToNormalized.get(vk);
+				if(v.getDomain().getId().equals(domain.getId())) {
+					createIntervalRealFuzzyNumber(domain, vk, v);
+				}
+			}
+		}
+	}
+
+	private void createIntervalRealFuzzyNumber(Domain domain, ValuationKey vk, RealIntervalValuation v) {		
+		double lower = (v.getMin() - ((NumericRealDomain) domain).getMin()) / (((NumericRealDomain) domain).getMax() - ((NumericRealDomain) domain).getMin());
+		double upper = (v.getMax() - ((NumericRealDomain) domain).getMin()) / (((NumericRealDomain) domain).getMax() - ((NumericRealDomain) domain).getMin());
+		
+		_fuzzyValuations.put(vk, new TrapezoidalFunction(new double[]{lower, lower, upper, upper}));
+	}
 }

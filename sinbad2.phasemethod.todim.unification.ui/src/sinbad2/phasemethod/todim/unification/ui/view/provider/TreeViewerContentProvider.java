@@ -7,12 +7,11 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import sinbad2.domain.Domain;
-import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -22,19 +21,19 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 	private ValuationSet _valutationSet;
 	private Map<ValuationKey, Valuation> _valuations;
 	private Object[][] _information;
-	private Map<ValuationKey, Valuation> _unifiedEvaluations;
+	private Map<ValuationKey, TrapezoidalFunction> _unificationFuzzyNumbers;
 	
 	public TreeViewerContentProvider() {
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = valuationSetManager.getActiveValuationSet();
 	}
 	
-	public TreeViewerContentProvider(Map<ValuationKey, Valuation> unifiedEvaluations) {
+	public TreeViewerContentProvider(Map<ValuationKey, TrapezoidalFunction> unificationFuzzyNumbers) {
 		this();
 		
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = valuationSetManager.getActiveValuationSet();
-		_unifiedEvaluations = unifiedEvaluations;
+		_unificationFuzzyNumbers = unificationFuzzyNumbers;
 	}
 	
 	@Override
@@ -55,7 +54,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 		Alternative alternative;
 		Criterion criterion;
 		Domain domain;
-		Valuation unifiedValuation;
+		TrapezoidalFunction tpf;
 		
 		Map<ValuationKey, Valuation> valuationsWithoutConfidence = getValuationsWithoutImportanceAndKnowledge();
 		_information = new Object[valuationsWithoutConfidence.size()][6];
@@ -68,11 +67,11 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 			criterion = vk.getCriterion();
 			domain = v.getDomain();
 		
-			unifiedValuation = null;
-			 for(ValuationKey vku: _unifiedEvaluations.keySet()) {
+			tpf = null;
+			 for(ValuationKey vku: _unificationFuzzyNumbers.keySet()) {
 				 
 				if ((vku.getExpert().equals(vk.getExpert())) && (vku.getAlternative().equals(vk.getAlternative())) && (vku.getCriterion().equals(vk.getCriterion()))) {
-					unifiedValuation = (Valuation) _unifiedEvaluations.get(vku);
+					tpf = _unificationFuzzyNumbers.get(vku);
 					break;
 				}
 			}
@@ -82,7 +81,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 			_information[i][2] = criterion.getCanonicalId();
 			_information[i][3] = domain.getId();
 			_information[i][4] = v;
-			_information[i][5] = unifiedValuation;
+			_information[i][5] = tpf.toString();
 			
 			i++;
 		}
@@ -104,45 +103,17 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 	}
 
 	@Override
-	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof Object[]) {
-			Valuation valuation = (Valuation) ((Object[]) parentElement)[5];
-			if (valuation instanceof UnifiedValuation) {
-				FuzzySet domain = (FuzzySet) valuation.getDomain();
-				int size = domain.getLabelSet().getCardinality();
-				String[] result = new String[size];
-				String labelName, measure;
-				for (int i = 0; i < size; i++) {
-					labelName = domain.getLabelSet().getLabel(i).getName();
-					measure = Double.toString(domain.getValue(i));
-					if (measure.length() > 5) {
-						measure = measure.substring(0, 5);
-					}
-					result[i] = labelName + "/" + measure; //$NON-NLS-1$
-				}		
-				return result;
-			} else {
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
-
-	@Override
 	public Object getParent(Object element) {
+		return null;
+	}
+	
+	@Override
+	public Object[] getChildren(Object parentElement) {
 		return null;
 	}
 
 	@Override
 	public boolean hasChildren(Object element) {
-		
-		if (element instanceof Object[]) {
-			if (((Object[]) element)[5] instanceof UnifiedValuation) {
-				return true;
-			}
-		}
-
 		return false;
 	}
 }

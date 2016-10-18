@@ -248,17 +248,14 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	private void computeTODIM() {
-
-		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
-		todimPhase.setConsensusMatrix(_decisionMatrix);
-
 		Map<Criterion, Double> criteriaWeights = new HashMap<Criterion, Double>();
 		criteriaWeights = transformWeightsMap(_w);
 		
+		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		todimPhase.setCriteriaWeights(criteriaWeights);
 		todimPhase.calculateRelativeWeights();
-		todimPhase.calculateDominanceDegreeByCriterionCenterOfGravity(1);
-		todimPhase.calculateDominaceDegreeAlternatives();
+		todimPhase.calculateDominanceDegreeByCriterionFuzzyNumber(1);
+		todimPhase.calculateDominaceDegreeOverAlternatives();
 		
 		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
 		int alternative = 0;
@@ -440,16 +437,14 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	private Double[] computeTODIMWeightsInference(Double[] weights) {
-		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
-		todimPhase.setConsensusMatrix(_decisionMatrix);
-		
 		Map<Criterion, Double> criteriaWeights;
 		criteriaWeights = transformWeightsMap(weights);
 
+		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		todimPhase.setCriteriaWeights(criteriaWeights);
 		todimPhase.calculateRelativeWeights();
-		todimPhase.calculateDominanceDegreeByCriterionCenterOfGravity(1);
-		todimPhase.calculateDominaceDegreeAlternatives();
+		todimPhase.calculateDominanceDegreeByCriterionFuzzyNumber(1);
+		todimPhase.calculateDominaceDegreeOverAlternatives();
 		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
 		
 		int alternative = 0;
@@ -489,16 +484,14 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	public Double[] computeAlternativesPreferenceInferAttenuationFactor(double attenuationFactor) {
-		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
-		todimPhase.setConsensusMatrix(_decisionMatrix);
-
 		Map<Criterion, Double> criteriaWeights = new HashMap<Criterion, Double>();
 		criteriaWeights = transformWeightsMap(_w);
 
+		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		todimPhase.setCriteriaWeights(criteriaWeights);
 		todimPhase.calculateRelativeWeights();
-		todimPhase.calculateDominanceDegreeByCriterionCenterOfGravity(attenuationFactor);
-		todimPhase.calculateDominaceDegreeAlternatives();
+		todimPhase.calculateDominanceDegreeByCriterionFuzzyNumber(attenuationFactor);
+		todimPhase.calculateDominaceDegreeOverAlternatives();
 		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
 		
 		int alternative = 0;

@@ -124,8 +124,8 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 
 			@Override
 			public void focusGained(FocusEvent e) {
+				
 				if (_dmTable.isCompleted()) {
-					_resolutionPhase.setConsensusMatrix(_dmTable.getTrapezoidalConsensusMatrix());
 					_resolutionPhase.setTrapezoidalConsensusMatrix(_dmTable.getTrapezoidalConsensusMatrix());
 					
 					refreshTODIMTables();
@@ -151,10 +151,8 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int indexSelected = ((Combo) e.widget).getSelectionIndex();
-				if (indexSelected == 0) {
-					_resolutionPhase.setConsensusMatrix(_resolutionPhase.getTrapezoidalConsensusMatrix());
-				} else if (indexSelected == 1) {
-					_resolutionPhase.setConsensusMatrix(_resolutionPhase.calculateConsensusMatrixCenterOfGravity());
+				if (indexSelected == 1) {
+					_resolutionPhase.calculateConsensusMatrixCenterOfGravity();
 				}
 				
 				refreshConsensusMatrixTable();
@@ -224,7 +222,6 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 							numAlternative++;
 						}
 						
-						_resolutionPhase.setConsensusMatrix(trapezoidalMatrix);
 						_resolutionPhase.setTrapezoidalConsensusMatrix(trapezoidalMatrix);
 						refreshConsensusMatrixTable();
 			
@@ -341,7 +338,11 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 			criteria[c] = _elementsSet.getCriteria().get(c).getId();
 		}
 
-		_dmTable.setModel(alternatives, criteria, _resolutionPhase.getConsensusMatrix());
+		if(_matrixType.getSelectionIndex() == 0) {
+			_dmTable.setModel(alternatives, criteria, _resolutionPhase.getTrapezoidalConsensusMatrix());
+		} else {
+			_dmTable.setModel(alternatives, criteria, _resolutionPhase.getCenterOfGravityConsesusMatrix());
+		}
 	}
 
 	private void refreshTODIMTables() {
@@ -413,7 +414,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	private void setInputDominaceAlternativeDegreeTable() {
 		List<String[]> input = new LinkedList<String[]>();
 
-		Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance = _resolutionPhase.calculateDominaceDegreeAlternatives();
+		Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance = _resolutionPhase.calculateDominaceDegreeOverAlternatives();
 		for (Pair<Alternative, Alternative> pair : pairAlternativesDominance.keySet()) {
 			String[] data = new String[3];
 			data[0] = pair.getLeft().getCanonicalId();

@@ -37,12 +37,12 @@ public class IntegerValuation extends Valuation {
 		Validator.notNull(_domain);
 		
 		if(((NumericIntegerDomain) _domain).getInRange()) {
-			Validator.inRange(value, ((NumericIntegerDomain) _domain).getMin(), 
-					((NumericIntegerDomain) _domain).getMax());
+			Validator.inRange(value, ((NumericIntegerDomain) _domain).getMin(), ((NumericIntegerDomain) _domain).getMax());
 			_value = value;
 		} else {
 			_value = value;
 		}
+		System.out.println("cambia3");
 	}
 	
 	public double getValue() {

@@ -188,7 +188,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				_weightSpinner.setValues((int) (secondMaxWeight * 100), 0, 100, 2, 1, 1);
 				_weightSpinner.setVisible(false);
 			} else {
-				_weightSpinner.setValues(100, 100, 500, 2, 10, 10);
+				_weightSpinner.setValues(100, 100, 1500, 2, 10, 10);
 				_weightSpinner.setVisible(true);
 			}
 		}

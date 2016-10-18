@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.excel.ExcelUtil;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.unification.UnificationPhase;
@@ -31,10 +32,9 @@ import sinbad2.phasemethod.todim.unification.ui.view.provider.DomainColumnLabelP
 import sinbad2.phasemethod.todim.unification.ui.view.provider.EvaluationColumnLabelProvider;
 import sinbad2.phasemethod.todim.unification.ui.view.provider.ExpertColumnLabelProvider;
 import sinbad2.phasemethod.todim.unification.ui.view.provider.TreeViewerContentProvider;
-import sinbad2.phasemethod.todim.unification.ui.view.provider.UnifiedEvaluationColumnLabelProvider;
+import sinbad2.phasemethod.todim.unification.ui.view.provider.UnifiedTrapezoidalColumnLabelProvider;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
-import sinbad2.valuation.Valuation;
 import sinbad2.valuation.valuationset.ValuationKey;
 
 public class Unification extends ViewPart implements IStepStateListener {
@@ -150,7 +150,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 		_treeUnifiedEvaluationColumn.setText(Messages.Unification_Unified);
 		_treeUnifiedEvaluationColumn.setImage(Images.Valuation);
 		_treeUnifiedEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 5));
-		_treeViewerUnifiedEvaluationColumn.setLabelProvider(new UnifiedEvaluationColumnLabelProvider());
+		_treeViewerUnifiedEvaluationColumn.setLabelProvider(new UnifiedTrapezoidalColumnLabelProvider());
 
 		_treeViewerExpertColumn = new TreeViewerColumn(_treeViewer, SWT.NONE);
 		_treeExpertColumn = _treeViewerExpertColumn.getColumn();
@@ -269,10 +269,10 @@ public class Unification extends ViewPart implements IStepStateListener {
 			reloaded = true;
 		}
 		
-		Map<ValuationKey, Valuation> unifiedValues = new HashMap<ValuationKey, Valuation>();
-		unifiedValues.putAll(_unificationPhase.unification());
+		Map<ValuationKey, TrapezoidalFunction> unificationFuzzyNumbers = new HashMap<ValuationKey, TrapezoidalFunction>();
+		unificationFuzzyNumbers.putAll(_unificationPhase.unification());
 		
-		_provider = new TreeViewerContentProvider(unifiedValues);
+		_provider = new TreeViewerContentProvider(unificationFuzzyNumbers);
 		_treeViewer.setContentProvider(_provider);
 		_treeViewer.setInput(_provider.getInput());
 		compactTable();
