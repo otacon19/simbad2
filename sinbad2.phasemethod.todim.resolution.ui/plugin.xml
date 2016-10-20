@@ -8,9 +8,6 @@
             name="%ui.name"
             phasemethod="flintstones.phasemethod.todim.resolution">
          <view
-               step="sinbad2.phasemethod.todim.resolution.ui.view.ProblemInformation">
-         </view>
-         <view
                step="sinbad2.phasemethod.todim.resolution.ui.view.CalculateRanking">
          </view>
       </ui>
@@ -21,13 +18,6 @@
             id="flintstones.phasemethod.todim.resolution.ui.category"
             name="%category.name">
       </category>
-      <view
-            category="flintstones.phasemethod.todim.resolution.ui.category"
-            class="sinbad2.phasemethod.todim.resolution.ui.view.ProblemInformation"
-            id="flintstones.phasemethod.todim.resolution.ui.view.probleminformation"
-            name="%view.name2"
-            restorable="true">
-      </view>
       <view
             category="flintstones.phasemethod.todim.resolution.ui.category"
             class="sinbad2.phasemethod.todim.resolution.ui.view.CalculateRanking"

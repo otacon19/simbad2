@@ -32,6 +32,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.excel.ExcelUtil;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
 import sinbad2.phasemethod.todim.resolution.ui.Images;
@@ -65,6 +66,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	private Composite _parent;
 	private Combo _matrixType;
 	private Button _loadFuzzyNumbers;
+	private Button _excelButton;
 
 	private DecisionMatrixEditableTable _dmTable;
 	private TableViewer _criteriaTableViewer;
@@ -140,7 +142,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		});
 
 		Composite buttonsComposite = new Composite(decisionMatrixComposite, SWT.READ_ONLY);
-		buttonsComposite.setLayout(new GridLayout(2, false));
+		buttonsComposite.setLayout(new GridLayout(3, false));
 		buttonsComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false, 1, 1));
 
 		_matrixType = new Combo(buttonsComposite, SWT.NONE);
@@ -230,6 +232,18 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 						e.printStackTrace();
 					}
 				}
+			}
+		});
+		
+		_excelButton = new Button(buttonsComposite, SWT.NONE);
+		_excelButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, false, 1, 1));
+		_excelButton.setImage(Images.Excel);
+		_excelButton.setEnabled(true);
+		_excelButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ExcelUtil excelUtil = new ExcelUtil();
+				excelUtil.createExcelFileEmergencyProblemStructure(_resolutionPhase.getFuzzyValuations(), _resolutionPhase.getCriteriaWeights(), _resolutionPhase.calculateThresholdValues());
 			}
 		});
 

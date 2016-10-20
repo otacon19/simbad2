@@ -25,7 +25,6 @@ import org.eclipse.ui.PlatformUI;
 
 import sinbad2.core.utils.Pair;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
-import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -40,11 +39,11 @@ public class ExcelUtil {
 
 	private static final String[] FILTER_NAMES = { "Excel files (*.xlsx)" }; //$NON-NLS-1$
 	private static final String[] FILTER_EXTS = { "*.xlsx" }; //$NON-NLS-1$
-	
-	private static final String FUZZY =  "Fuzzy"; //$NON-NLS-1$
-	private static final String NUMERIC_INTEGER =  "Integer numeric"; //$NON-NLS-1$
-	private static final String NUMERIC_REAL =  "Real numeric"; //$NON-NLS-1$
-	
+
+	private static final String FUZZY = "Fuzzy"; //$NON-NLS-1$
+	private static final String NUMERIC_INTEGER = "Integer numeric"; //$NON-NLS-1$
+	private static final String NUMERIC_REAL = "Real numeric"; //$NON-NLS-1$
+
 	private XSSFWorkbook _workbook;
 	private XSSFSheet _sheet;
 
@@ -57,8 +56,8 @@ public class ExcelUtil {
 	private List<Criterion> _criteria;
 	private List<Alternative> _alternatives;
 	private Map<ValuationKey, Valuation> _unifiedValuations;
-	private List<Double> _expertsWeights;
-	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
+	private Map<ValuationKey, TrapezoidalFunction> _fuzzyValuations;
+	private Map<Criterion, Double> _criteriaWeights;
 	private Map<Pair<Expert, Criterion>, Double> _thresholdValues;
 
 	private ProblemElementsSet _elementsSet;
@@ -99,7 +98,7 @@ public class ExcelUtil {
 		_unifiedValuations = unifiedValuations;
 
 		createProblemInformation();
-
+		
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
 		FileDialog dlg = new FileDialog(shell, SWT.SAVE);
@@ -120,7 +119,7 @@ public class ExcelUtil {
 			_sheet = _workbook.createSheet(e.getCanonicalId());
 			createExpertAssessments(e, valuations);
 		}
-		
+
 		_sheet = _workbook.createSheet("Unification");
 		createUnificationAssessments();
 	}
@@ -136,7 +135,7 @@ public class ExcelUtil {
 		rowCountAlternatives = rowCountExpertsCriteria + 1;
 
 		CreationHelper factory = _workbook.getCreationHelper();
-		
+
 		for (Alternative a : _alternatives) {
 
 			Row rowAlternative = _sheet.createRow(rowCountAlternatives);
@@ -160,21 +159,20 @@ public class ExcelUtil {
 						anchor.setCol2(cell.getColumnIndex() + 4);
 						anchor.setRow1(rowAlternative.getRowNum());
 						anchor.setRow2(rowAlternative.getRowNum() + 4);
-						
+
 						String type = v.getDomain().getType();
-						if(type.contains("linguistic")) {
+						if (type.contains("linguistic")) {
 							type = FUZZY;
-						} else if(type.contains("integer")) {
+						} else if (type.contains("integer")) {
 							type = NUMERIC_INTEGER;
 						} else {
 							type = NUMERIC_REAL;
 						}
-						
-					    Comment comment = drawing.createCellComment(anchor);
-					    RichTextString str = factory.createRichTextString("Domain: " + v.getDomain().getId() + "\n" +
-					    		"Domain type: " + type);
-					    comment.setString(str);
-					    comment.setAuthor("Flintstones");
+
+						Comment comment = drawing.createCellComment(anchor);
+						RichTextString str = factory.createRichTextString("Domain: " + v.getDomain().getId() + "\n" + "Domain type: " + type);
+						comment.setString(str);
+						comment.setAuthor("Flintstones");
 
 						columnCountValuation++;
 					}
@@ -194,7 +192,7 @@ public class ExcelUtil {
 			columnCountCriteria++;
 		}
 	}
-	
+
 	private void createUnificationAssessments() {
 		int rowCountExpertsCriteria = 2, rowCountAlternatives = 3, columnCountCriteria = 3, columnCountValuation = 3;
 
@@ -214,14 +212,12 @@ public class ExcelUtil {
 				cell.setCellValue(a.getId());
 				cell.setCellStyle(_styleAlternatives);
 
-
-
 				for (Criterion c : _criteria) {
 					for (ValuationKey vk : _unifiedValuations.keySet()) {
 						if (vk.getExpert().equals(e) && vk.getAlternative().equals(a) && vk.getCriterion().equals(c)) {
 
 							TwoTuple v = (TwoTuple) _unifiedValuations.get(vk);
-						
+
 							cell = rowAlternative.createCell(columnCountValuation);
 							cell.setCellValue(v.changeFormatValuationToString());
 
@@ -231,7 +227,7 @@ public class ExcelUtil {
 				}
 
 				columnCountValuation = 3;
-				
+
 				rowCountAlternatives++;
 			}
 
@@ -240,26 +236,24 @@ public class ExcelUtil {
 				cell.setCellValue(c.getId());
 				cell.setCellStyle(_styleCriteria);
 
-				columnCountCriteria ++;
+				columnCountCriteria++;
 			}
 
 			rowCountExpertsCriteria += _alternatives.size() + 2;
 			columnCountCriteria = 3;
 		}
-		
+
 	}
 
-	public void createExcelFileEmergencyProblemStructure(Map<ValuationKey, Valuation> unifiedValuations,
-			List<Double> expertsWeights, Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix,
+	public void createExcelFileEmergencyProblemStructure(Map<ValuationKey, TrapezoidalFunction> fuzzyValuations, Map<Criterion, Double> crieriaWeights,
 			Map<Pair<Expert, Criterion>, Double> thresholdValues) {
 
-		_unifiedValuations = unifiedValuations;
-		_expertsWeights = expertsWeights;
-		_decisionMatrix = decisionMatrix;
+		_fuzzyValuations = fuzzyValuations;
+		_criteriaWeights = crieriaWeights;
 		_thresholdValues = thresholdValues;
 
 		_sheet = _workbook.createSheet("Flintstones problem");
-
+		
 		createEmergencyProblemInformation();
 
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
@@ -274,20 +268,18 @@ public class ExcelUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void createEmergencyProblemInformation() {
 
 		createExpertsTablesInformation();
-		createExpertsWeightsInformation();
-		createEmergencyProblemOverallInformation();
+		createCriteriaWeightsInformation();
 		createThresholdValues();
 	}
 
 	private void createExpertsTablesInformation() {
 
-		int rowCountExpertsCriteria = 9, rowCountAlternatives = 10, columnCountCriteria = 3, columnCountValuation = 3;
+		int rowCountExpertsCriteria = 5, rowCountAlternatives = 6, columnCountCriteria = 3, columnCountValuation = 3;
 
 		for (Expert e : _experts) {
 
@@ -308,12 +300,10 @@ public class ExcelUtil {
 				rowCountAlternatives++;
 
 				for (Criterion c : _criteria) {
-					for (ValuationKey vk : _unifiedValuations.keySet()) {
+					for (ValuationKey vk : _fuzzyValuations.keySet()) {
 						if (vk.getExpert().equals(e) && vk.getAlternative().equals(a) && vk.getCriterion().equals(c)) {
 
-							TwoTuple v = (TwoTuple) _unifiedValuations.get(vk);
-							LabelLinguisticDomain label = v.getLabel();
-							TrapezoidalFunction semantic = (TrapezoidalFunction) label.getSemantic();
+							TrapezoidalFunction semantic = _fuzzyValuations.get(vk);
 							double limits[] = semantic.getLimits();
 
 							cell = rowAlternative.createCell(columnCountValuation);
@@ -347,8 +337,7 @@ public class ExcelUtil {
 				cell.setCellValue(c.getId());
 				cell.setCellStyle(_styleCriteria);
 
-				CellRangeAddress cellRangeAddress = new CellRangeAddress(rowCountExpertsCriteria,
-						rowCountExpertsCriteria, columnCountCriteria, columnCountCriteria + 3);
+				CellRangeAddress cellRangeAddress = new CellRangeAddress(rowCountExpertsCriteria, rowCountExpertsCriteria, columnCountCriteria, columnCountCriteria + 3);
 				_sheet.addMergedRegion(cellRangeAddress);
 
 				columnCountCriteria += 4;
@@ -359,107 +348,34 @@ public class ExcelUtil {
 		}
 	}
 
-	private void createExpertsWeightsInformation() {
+	private void createCriteriaWeightsInformation() {
 		Row rowAggregationWeights = _sheet.createRow(1);
 		Cell cell = rowAggregationWeights.createCell(2);
 		cell.setCellStyle(_styleTitles);
 
-		CellRangeAddress cellRangeAddress = new CellRangeAddress(1, 1, 2, 1 + _experts.size());
+		CellRangeAddress cellRangeAddress = new CellRangeAddress(1, 1, 2, 1 + _criteria.size());
 		_sheet.addMergedRegion(cellRangeAddress);
 
-		if (_expertsWeights.isEmpty()) {
-			cell.setCellValue("Aggregation operator without weights");
-		} else {
-			cell.setCellValue("Aggregation weights");
+		cell.setCellValue("Criteria weights");
 
-			int columnCount = 2;
-			Row rowExperts = _sheet.createRow(2);
-			Row rowWeights = _sheet.createRow(3);
-			for (int i = 0; i < _experts.size(); ++i) {
-				cell = rowExperts.createCell(columnCount);
-				cell.setCellStyle(_styleExperts);
-				cell.setCellValue(_experts.get(i).getCanonicalId());
-
-				cell = rowWeights.createCell(columnCount);
-				cell.setCellValue(_expertsWeights.get(i));
-
-				columnCount++;
-			}
-		}
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void createEmergencyProblemOverallInformation() {
-
-		int rowCountAlternatives = 10 + _elementsSet.getAllExperts().size() * 2
-				+ _elementsSet.getAllExperts().size() * _elementsSet.getAlternatives().size(), columnCountValuation = 3;
-
-		Row rowOverallOpinion = _sheet.createRow(rowCountAlternatives);
-		Cell cell = rowOverallOpinion.createCell(2);
-		cell.setCellValue("Overall opinion");
-		cell.setCellStyle(_styleTitles);
-
-		rowCountAlternatives++;
-
-		for (Alternative a : _alternatives) {
-
-			Row rowAlternative = _sheet.createRow(rowCountAlternatives);
-			cell = rowAlternative.createCell(2);
-			cell.setCellValue(a.getId());
-			cell.setCellStyle(_styleAlternatives);
-
-			rowCountAlternatives++;
-
-			for (Criterion c : _criteria) {
-
-				TwoTuple v = (TwoTuple) _decisionMatrix.get(new Pair(a, c));
-				LabelLinguisticDomain label = v.getLabel();
-				TrapezoidalFunction semantic = (TrapezoidalFunction) label.getSemantic();
-				double limits[] = semantic.getLimits();
-
-				cell = rowAlternative.createCell(columnCountValuation);
-				cell.setCellValue(Double.toString(limits[0]));
-
-				columnCountValuation++;
-
-				cell = rowAlternative.createCell(columnCountValuation);
-				cell.setCellValue(Double.toString(limits[1]));
-
-				columnCountValuation++;
-
-				cell = rowAlternative.createCell(columnCountValuation);
-				cell.setCellValue(Double.toString(limits[2]));
-
-				columnCountValuation++;
-
-				cell = rowAlternative.createCell(columnCountValuation);
-				cell.setCellValue(Double.toString(limits[3]));
-
-				columnCountValuation++;
-			}
-
-			columnCountValuation = 3;
-		}
-
-		rowCountAlternatives = 10 + _elementsSet.getAllExperts().size() * 2
-				+ _elementsSet.getAllExperts().size() * _elementsSet.getAlternatives().size();
-
-		int columnCountCriterion = 3;
-		for (Criterion c : _criteria) {
-			cell = rowOverallOpinion.createCell(columnCountCriterion);
-			cell.setCellValue(c.getCanonicalId());
+		int columnCount = 2;
+		Row rowExperts = _sheet.createRow(2);
+		Row rowWeights = _sheet.createRow(3);
+		for (int i = 0; i < _criteria.size(); ++i) {
+			cell = rowExperts.createCell(columnCount);
 			cell.setCellStyle(_styleCriteria);
-			CellRangeAddress cellRangeAddress = new CellRangeAddress(rowCountAlternatives, rowCountAlternatives,
-					columnCountCriterion, columnCountCriterion + 3);
-			_sheet.addMergedRegion(cellRangeAddress);
+			cell.setCellValue(_criteria.get(i).getCanonicalId());
 
-			columnCountCriterion += 4;
+			cell = rowWeights.createCell(columnCount);
+			cell.setCellValue(_criteriaWeights.get(_criteria.get(i)));
+
+			columnCount++;
 		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createThresholdValues() {
-		int thresholdTitleRow = 96, thresholdTitleColumn = 2, thresholdCriterionColumn = 3;
+		int thresholdTitleRow =  5 + _experts.size() + ( _experts.size() * (_alternatives.size() + 1)), thresholdTitleColumn = 2, thresholdCriterionColumn = 3;
 
 		for (Expert e : _experts) {
 			Row thresholdTitle = _sheet.createRow(thresholdTitleRow);
@@ -487,6 +403,6 @@ public class ExcelUtil {
 			thresholdTitleRow += 3;
 			thresholdCriterionColumn = 3;
 		}
-
 	}
+	
 }

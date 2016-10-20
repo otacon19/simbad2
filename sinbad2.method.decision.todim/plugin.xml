@@ -13,9 +13,6 @@
                phase="flintstones.phasemethod.todim.unification">
          </phasemethod>
          <phasemethod
-               phase="flintstones.phasemethod.aggregation">
-         </phasemethod>
-         <phasemethod
                phase="flintstones.phasemethod.todim.resolution">
          </phasemethod>
          <aggregation_supported

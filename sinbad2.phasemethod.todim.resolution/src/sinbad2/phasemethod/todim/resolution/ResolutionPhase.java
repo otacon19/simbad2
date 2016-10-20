@@ -2,7 +2,6 @@ package sinbad2.phasemethod.todim.resolution;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -18,9 +17,7 @@ import sinbad2.core.utils.Pair;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
-import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
-import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -28,9 +25,9 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.PhasesMethodManager;
-import sinbad2.phasemethod.aggregation.AggregationPhase;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
+import sinbad2.phasemethod.todim.unification.UnificationPhase;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
@@ -48,7 +45,6 @@ public class ResolutionPhase implements IPhaseMethod {
 	private int _numAlternatives;
 	private int _numCriteria;
 
-	private Map<ValuationKey, Valuation> _twoTupleValuations;
 	private Map<Pair<Alternative, Criterion>, Valuation> _decisionMatrix;
 	private Double[][] _centerOfGravityConsensusMatrix;
 	private String[][] _trapezoidalConsensusMatrix;
@@ -65,34 +61,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	private ProblemElementsSet _elementsSet;
 	private ValuationSet _valuationSet;
 
-	private AggregationPhase _aggregationPhase;
-
-	@SuppressWarnings("rawtypes")
-	private static class DataComparator implements Comparator {
-		@Override
-		public int compare(Object d1, Object d2) {
-			String e1 = ((String[]) d1)[0];
-			String e2 = ((String[]) d2)[0];
-			String a1 = ((String[]) d1)[1];
-			String a2 = ((String[]) d2)[1];
-			String c1 = ((String[]) d1)[2];
-			String c2 = ((String[]) d2)[2];
-
-			int expertComparation = extractInt(e1) - extractInt(e2);
-			if (expertComparation != 0) {
-				return expertComparation;
-			} else if (extractInt(a1) - (extractInt(a2)) != 0) {
-				return extractInt(a1) - extractInt(a2);
-			} else {
-				return extractInt(c1) - extractInt(c2);
-			}
-		}
-
-		int extractInt(String s) {
-			String num = s.replaceAll("\\D", "");
-			return num.isEmpty() ? 0 : Integer.parseInt(num);
-		}
-	}
+	private UnificationPhase _unificationPhase;
 
 	public LinkedHashMap<Alternative, Double> sortHashMapByValues(HashMap<Alternative, Double> passedMap) {
 		List<Alternative> mapKeys = new ArrayList<>(passedMap.keySet());
@@ -123,12 +92,10 @@ public class ResolutionPhase implements IPhaseMethod {
 	}
 
 	public ResolutionPhase() {
-		_aggregationPhase = (AggregationPhase) PhasesMethodManager.getInstance().getPhaseMethod(AggregationPhase.ID)
+		_unificationPhase = (UnificationPhase) PhasesMethodManager.getInstance().getPhaseMethod(UnificationPhase.ID)
 				.getImplementation();
 
 		initializeConsesusMatrix();
-		
-		_twoTupleValuations = new HashMap<ValuationKey, Valuation>();
 
 		_decisionMatrix = new HashMap<Pair<Alternative, Criterion>, Valuation>();
 		_trapezoidalConsensusMatrix = new String[_numAlternatives][_numCriteria];
@@ -142,20 +109,17 @@ public class ResolutionPhase implements IPhaseMethod {
 		_globalDominance = new HashMap<Alternative, Double>();
 		_thresholdValues = new HashMap<Pair<Expert, Criterion>, Double>();
 	}
-	
-	private void initializeConsesusMatrix() {
-		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
-		_elementsSet = elementsManager.getActiveElementSet();
 
-		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
-		_valuationSet = valuationSetManager.getActiveValuationSet();
+	private void initializeConsesusMatrix() {
+		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
+		_valuationSet = ValuationSetManager.getInstance().getActiveValuationSet();
 
 		_numAlternatives = _elementsSet.getAlternatives().size();
 		_numCriteria = _elementsSet.getAllCriteria().size();
 
 		_centerOfGravityConsensusMatrix = new Double[_numAlternatives][_numCriteria];
 		_trapezoidalConsensusMatrix = new String[_numAlternatives][_numCriteria];
-		
+
 		for (int a = 0; a < _numAlternatives; ++a) {
 			for (int c = 0; c < _numCriteria; ++c) {
 				_trapezoidalConsensusMatrix[a][c] = "(a,b,c,d)"; //$NON-NLS-1$
@@ -163,14 +127,13 @@ public class ResolutionPhase implements IPhaseMethod {
 		}
 	}
 
-
-	public void setTwoTupleValuations(Map<ValuationKey, Valuation> twoTupleValuations) {
-		_twoTupleValuations = twoTupleValuations;
-	}
-
 	@Override
 	public Map<ValuationKey, Valuation> getTwoTupleValuations() {
-		return _twoTupleValuations;
+		return null;
+	}
+
+	public Map<ValuationKey, TrapezoidalFunction> getFuzzyValuations() {
+		return _unificationPhase.getFuzzyValuations();
 	}
 
 	public void setDecisionMatrix(Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix) {
@@ -208,15 +171,9 @@ public class ResolutionPhase implements IPhaseMethod {
 	public Map<Criterion, Double> getCriteriaWeights() {
 		return _criteriaWeights;
 	}
-	
+
 	public void setCriteriaWeights(Map<Criterion, Double> criteriaWeights) {
 		_criteriaWeights = criteriaWeights;
-	}
-
-	public Map<Pair<Alternative, Criterion>, Valuation> calculateDecisionMatrix() {
-		_decisionMatrix = _aggregationPhase.getDecisionMatrix();
-
-		return _decisionMatrix;
 	}
 
 	public Map<Pair<Expert, Criterion>, Double> getThresholdValues() {
@@ -261,25 +218,54 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _globalDominance;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Double> getExpertsWeights() {
-		if (_aggregationPhase.getExpertsOperatorWeights().get(null) == null) {
-			return new LinkedList<Double>();
-		} else {
-			return (List<Double>) ((Map<ProblemElement, Object>) _aggregationPhase.getExpertsOperatorWeights()
-					.get(null)).get(null);
-		}
-	}
-
 	@Override
 	public Domain getUnifiedDomain() {
 		return null;
 	}
-	
-	@Override 
-	public void setUnifiedDomain(Domain domain) {}
 
-	public Double[][] calculateConsensusMatrixCenterOfGravity() {;
+	@Override
+	public void setUnifiedDomain(Domain domain) {
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Map<Pair<Expert, Criterion>, Double> calculateThresholdValues() {
+
+		_thresholdValues.clear();
+
+		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
+		Map<ValuationKey, TrapezoidalFunction> fuzzyValuations = getFuzzyValuations();
+		for (ValuationKey vk : fuzzyValuations.keySet()) {
+
+			Alternative aFGC = new Alternative("null_threshold");
+			ValuationKey vkFGC = new ValuationKey(vk.getExpert(), aFGC, vk.getCriterion());
+			LinguisticValuation v = (LinguisticValuation) valuations.get(vkFGC);
+			FuzzySet knowledgeDomain = (FuzzySet) v.getDomain();
+
+			double knowledge = 0;
+			if (knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 0) {
+				knowledge = 1.3;
+			} else if (knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 1) {
+				knowledge = 1.1;
+			} else if (knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 2) {
+				knowledge = 0.9;
+			} else if (knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 3) {
+				knowledge = 0.7;
+			} else if (knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 4) {
+				knowledge = 0.5;
+			} else if (knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 5) {
+				knowledge = 0.3;
+			} else {
+				knowledge = 0.1;
+			}
+
+			_thresholdValues.put(new Pair(vk.getExpert(), vk.getCriterion()), knowledge);
+		}
+		
+		return _thresholdValues;
+	}
+
+	public Double[][] calculateConsensusMatrixCenterOfGravity() {
+		;
 		Double cog;
 		String trapezoidalNumber;
 
@@ -311,94 +297,6 @@ public class ResolutionPhase implements IPhaseMethod {
 		}
 
 		return (Double[][]) result;
-	}
-
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<String[]> calculateDataProblem() {
-		List<String[]> result = new LinkedList<String[]>();
-		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
-
-		_thresholdValues.clear();
-
-		calculateDistances();
-
-		for (ValuationKey vk : _twoTupleValuations.keySet()) {
-			if (!vk.getExpert().getId().endsWith("flintstones_gathering_cloud") //$NON-NLS-1$
-					&& !vk.getAlternative().getId().contains("null")) {
-				String[] data = new String[7];
-				data[0] = vk.getExpert().getId();
-				data[1] = vk.getAlternative().getId();
-				data[2] = vk.getCriterion().getId();
-				data[3] = _twoTupleValuations.get(vk).changeFormatValuationToString();
-				Valuation aggregatedValuation = _decisionMatrix.get(new Pair(vk.getAlternative(), vk.getCriterion()));
-
-				if (aggregatedValuation == null) {
-					data[4] = ""; //$NON-NLS-1$
-				} else {
-					data[4] = aggregatedValuation.changeFormatValuationToString();
-				}
-
-				data[5] = Double.toString(Math.round(_distances.get(vk) * 10000d) / 10000d);
-
-				Alternative aFGC = new Alternative("null_threshold");
-				ValuationKey vkFGC = new ValuationKey(vk.getExpert(), aFGC, vk.getCriterion());
-				LinguisticValuation v = (LinguisticValuation) valuations.get(vkFGC);
-				FuzzySet knowledgeDomain = (FuzzySet) v.getDomain();
-
-				double knowledge = 0;
-				if (knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 0) {
-					knowledge = 1.3;
-				} else if (knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 1) {
-					knowledge = 1.1;
-				} else if (knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 2) {
-					knowledge = 0.9;
-				} else if (knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 3) {
-					knowledge = 0.7;
-				} else if (knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 4) {
-					knowledge = 0.5;
-				} else if (knowledgeDomain.getLabelSet().getPos(v.getLabel()) == 5) {
-					knowledge = 0.3;
-				} else {
-					knowledge = 0.1;
-				}
-
-				_thresholdValues.put(new Pair(vk.getExpert(), vk.getCriterion()), knowledge);
-
-				data[6] = Double.toString(knowledge);
-
-				result.add(data);
-			}
-		}
-
-		Collections.sort(result, new DataComparator());
-
-		return result;
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void calculateDistances() {
-		List<Alternative> alternatives = _elementsSet.getAlternatives();
-		List<Criterion> criteria = _elementsSet.getAllCriteria();
-
-		_twoTupleValuations = _aggregationPhase.getTwoTupleValuations();
-
-		for (int a = 0; a < alternatives.size(); ++a) {
-			for (int c = 0; c < criteria.size(); ++c) {
-				for (ValuationKey vk : _twoTupleValuations.keySet()) {
-					if (alternatives.get(a).equals(vk.getAlternative()) && criteria.get(c).equals(vk.getCriterion())) {
-
-						TwoTuple v = (TwoTuple) _twoTupleValuations.get(vk);
-						LabelLinguisticDomain label = v.getLabel();
-						TrapezoidalFunction semanticExpertValuation = (TrapezoidalFunction) label.getSemantic();
-						TwoTuple overallValuation = (TwoTuple) _decisionMatrix.get(new Pair(alternatives.get(a), criteria.get(c)));
-						TrapezoidalFunction semanticOverallValuation = (TrapezoidalFunction) overallValuation.getLabel().getSemantic();
-
-						_distances.put(vk, semanticExpertValuation.distance(semanticOverallValuation, P));
-					}
-				}
-			}
-		}
 	}
 
 	public Map<Criterion, Double> getImportanceCriteriaWeights() {
@@ -457,23 +355,24 @@ public class ResolutionPhase implements IPhaseMethod {
 			_criteriaWeights.put(c, Math.round((_criteriaWeights.get(c) / sum) * 1000d) / 1000d);
 		}
 	}
-	
+
 	public Map<String, Double> calculateRelativeWeights() {
 		_relativeWeights = new HashMap<String, Double>();
-		
+
 		double weightReference = Double.MIN_VALUE, weight;
-		for(Criterion c: _criteriaWeights.keySet()) {
+		for (Criterion c : _criteriaWeights.keySet()) {
 			weight = _criteriaWeights.get(c);
-			if(weight > weightReference) {
+			if (weight > weightReference) {
 				weightReference = weight;
 			}
 		}
-		
+
 		List<Criterion> criteria = _elementsSet.getAllCriteria();
 		for (int i = 0; i < criteria.size(); ++i) {
-			_relativeWeights.put(criteria.get(i).getCanonicalId(), Math.round((_criteriaWeights.get(criteria.get(i)) / weightReference) * 1000d) / 1000d);
+			_relativeWeights.put(criteria.get(i).getCanonicalId(),
+					Math.round((_criteriaWeights.get(criteria.get(i)) / weightReference) * 1000d) / 1000d);
 		}
-		
+
 		return _relativeWeights;
 	}
 
@@ -572,7 +471,8 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	}
 
-	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> calculateDominanceDegreeByCriterionCenterOfGravity(double attenuationFactor) {
+	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> calculateDominanceDegreeByCriterionCenterOfGravity(
+			double attenuationFactor) {
 		_dominanceDegreeByCriterion = new HashMap<Criterion, Map<Pair<Alternative, Alternative>, Double>>();
 
 		double acumSumRelativeWeights = getAcumSumRelativeWeights();
@@ -585,24 +485,31 @@ public class ResolutionPhase implements IPhaseMethod {
 				a2Index = 0;
 				for (Alternative a2 : _elementsSet.getAlternatives()) {
 					if (a1 != a2) {
-						condition = (Double) _centerOfGravityConsensusMatrix[a1Index][criterionIndex] - (Double) _centerOfGravityConsensusMatrix[a2Index][criterionIndex];
-						if(c.isCost()) {
-							if(condition > 0) {
-								double inverse = (Double) _centerOfGravityConsensusMatrix[a2Index][criterionIndex] - (Double) _centerOfGravityConsensusMatrix[a1Index][criterionIndex];
+						condition = (Double) _centerOfGravityConsensusMatrix[a1Index][criterionIndex]
+								- (Double) _centerOfGravityConsensusMatrix[a2Index][criterionIndex];
+						if (c.isCost()) {
+							if (condition > 0) {
+								double inverse = (Double) _centerOfGravityConsensusMatrix[a2Index][criterionIndex]
+										- (Double) _centerOfGravityConsensusMatrix[a1Index][criterionIndex];
 								dominance = (-1d / attenuationFactor);
-								dominance *= Math.sqrt((inverse * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
-							} else if(condition < 0) {
-								dominance = Math.sqrt((condition * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
+								dominance *= Math.sqrt(
+										(inverse * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
+							} else if (condition < 0) {
+								dominance = Math.sqrt((condition * _relativeWeights.get(c.getCanonicalId()))
+										/ acumSumRelativeWeights);
 							} else {
 								dominance = 0;
 							}
 						} else {
 							if (condition > 0) {
-								dominance = Math.sqrt((condition * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
+								dominance = Math.sqrt((condition * _relativeWeights.get(c.getCanonicalId()))
+										/ acumSumRelativeWeights);
 							} else if (condition < 0) {
-								double inverse = (Double) _centerOfGravityConsensusMatrix[a2Index][criterionIndex] - (Double) _centerOfGravityConsensusMatrix[a1Index][criterionIndex];
+								double inverse = (Double) _centerOfGravityConsensusMatrix[a2Index][criterionIndex]
+										- (Double) _centerOfGravityConsensusMatrix[a1Index][criterionIndex];
 								dominance = (-1d / attenuationFactor);
-								dominance *= Math.sqrt((inverse * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
+								dominance *= Math.sqrt(
+										(inverse * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
 							} else {
 								dominance = 0;
 							}
@@ -628,7 +535,7 @@ public class ResolutionPhase implements IPhaseMethod {
 
 		return _dominanceDegreeByCriterion;
 	}
-	
+
 	private double getAcumSumRelativeWeights() {
 		double acum = 0;
 
@@ -638,7 +545,8 @@ public class ResolutionPhase implements IPhaseMethod {
 		return acum;
 	}
 
-	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> calculateDominanceDegreeByCriterionFuzzyNumber(double attenuationFactor) {
+	public Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> calculateDominanceDegreeByCriterionFuzzyNumber(
+			double attenuationFactor) {
 		_dominanceDegreeByCriterion = new HashMap<Criterion, Map<Pair<Alternative, Alternative>, Double>>();
 
 		double acumSumRelativeWeights = getAcumSumRelativeWeights();
@@ -666,16 +574,22 @@ public class ResolutionPhase implements IPhaseMethod {
 						if (c.isCost()) {
 							if (condition > 0) {
 								dominance = (-1d / attenuationFactor);
-								dominance *= Math.sqrt((tpf1.distance(tpf2, P) * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
+								dominance *= Math.sqrt((tpf1.distance(tpf2, P) * acumSumRelativeWeights)
+										/ _relativeWeights.get(c.getCanonicalId()));
 							} else if (condition <= 0) {
-								dominance = Math.sqrt((tpf1.distance(tpf2, P) * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
+								dominance = Math
+										.sqrt((tpf1.distance(tpf2, P) * _relativeWeights.get(c.getCanonicalId()))
+												/ acumSumRelativeWeights);
 							}
 						} else {
 							if (condition >= 0) {
-								dominance = Math.sqrt((tpf1.distance(tpf2, P) * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
+								dominance = Math
+										.sqrt((tpf1.distance(tpf2, P) * _relativeWeights.get(c.getCanonicalId()))
+												/ acumSumRelativeWeights);
 							} else if (condition < 0) {
 								dominance = (-1d / attenuationFactor);
-								dominance *= Math.sqrt((tpf1.distance(tpf2, P) * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
+								dominance *= Math.sqrt((tpf1.distance(tpf2, P) * acumSumRelativeWeights)
+										/ _relativeWeights.get(c.getCanonicalId()));
 							}
 						}
 
@@ -722,7 +636,8 @@ public class ResolutionPhase implements IPhaseMethod {
 				acum = 0;
 				if (a1 != a2) {
 					for (Criterion c : _dominanceDegreeByCriterion.keySet()) {
-						Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance = _dominanceDegreeByCriterion.get(c);
+						Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance = _dominanceDegreeByCriterion
+								.get(c);
 						for (Pair<Alternative, Alternative> pair : pairAlternativesDominance.keySet()) {
 							if (a1.equals(pair.getLeft()) && a2.equals(pair.getRight())) {
 								acum += pairAlternativesDominance.get(pair);
@@ -739,7 +654,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public LinkedHashMap<Alternative, Double> calculateGlobalDominance() {
 		Map<Alternative, Double> acumDominanceDegreeAlternatives = new HashMap<Alternative, Double>();
-		
+
 		double acum, max = Double.MIN_VALUE, min = Double.MAX_VALUE;
 		for (Alternative a : _elementsSet.getAlternatives()) {
 			acum = 0;
@@ -768,7 +683,7 @@ public class ResolutionPhase implements IPhaseMethod {
 
 		return sortHashMapByValues((HashMap) _globalDominance);
 	}
-	
+
 	@Override
 	public IPhaseMethod copyStructure() {
 		return new ResolutionPhase();
@@ -781,7 +696,6 @@ public class ResolutionPhase implements IPhaseMethod {
 		clear();
 
 		_decisionMatrix = resolution.getDecisionMatrix();
-		_twoTupleValuations = resolution.getTwoTupleValuations();
 		_distances = resolution.getDistances();
 		_centerOfGravityConsensusMatrix = resolution.getCenterOfGravityConsesusMatrix();
 		_criteriaWeights = resolution.getImportanceCriteriaWeights();
@@ -796,7 +710,6 @@ public class ResolutionPhase implements IPhaseMethod {
 	@Override
 	public void clear() {
 		_decisionMatrix.clear();
-		_twoTupleValuations.clear();
 		_distances.clear();
 		_centerOfGravityConsensusMatrix = new Double[_numAlternatives][_numCriteria];
 		_trapezoidalConsensusMatrix = new String[_numAlternatives][_numCriteria];

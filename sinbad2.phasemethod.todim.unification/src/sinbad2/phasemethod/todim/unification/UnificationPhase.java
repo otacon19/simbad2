@@ -66,6 +66,10 @@ public class UnificationPhase implements IPhaseMethod {
 		_fuzzyValuations = envelopeValuations;
 	}
 	
+	public Map<ValuationKey, TrapezoidalFunction> getFuzzyValuations() {
+		return _fuzzyValuations;
+	}
+	
 	@Override
 	public Domain getUnifiedDomain() {
 		return _unifiedDomain;
