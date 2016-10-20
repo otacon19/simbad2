@@ -515,34 +515,39 @@ public class AggregationPhase implements IPhaseMethod {
 	}
 	
 	public Object[] getAggregatedValuationsPosAndAlpha() {
-		int size = _aggregatedValuations.size();
-		String[] alternatives = new String[size];
-		int[] pos = new int[size];
-		double[] alpha = new double[size];
-		Valuation valuation = null, aux;
 		
-		int i = 0;
-		for (ProblemElement alternative : _aggregatedValuations.keySet()) {
-			alternatives[i] = alternative.getId();
-			aux = _aggregatedValuations.get(alternative);
-			if (aux instanceof UnifiedValuation) {
-				valuation = ((UnifiedValuation) aux).disunification((FuzzySet) aux.getDomain());
-			} else {
-				valuation = aux;
+		if(_aggregatedValuations != null) {
+			int size = _aggregatedValuations.size();
+			String[] alternatives = new String[size];
+			int[] pos = new int[size];
+			double[] alpha = new double[size];
+			Valuation valuation = null, aux;
+			
+			int i = 0;
+			for (ProblemElement alternative : _aggregatedValuations.keySet()) {
+				alternatives[i] = alternative.getId();
+				aux = _aggregatedValuations.get(alternative);
+				if (aux instanceof UnifiedValuation) {
+					valuation = ((UnifiedValuation) aux).disunification((FuzzySet) aux.getDomain());
+				} else {
+					valuation = aux;
+				}
+	
+				if (valuation instanceof TwoTuple) {
+					pos[i] = ((FuzzySet) _unifiedDomain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
+					alpha[i] = ((TwoTuple) valuation).getAlpha();
+					i++;
+				}
 			}
-
-			if (valuation instanceof TwoTuple) {
-				pos[i] = ((FuzzySet) _unifiedDomain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
-				alpha[i] = ((TwoTuple) valuation).getAlpha();
-				i++;
-			}
+			
+			Object[] data = new Object[2];
+			data[0] = pos;
+			data[1] = alpha;
+			
+			return data;
+		} else {
+			return new Object[2];
 		}
-		
-		Object[] data = new Object[2];
-		data[0] = pos;
-		data[1] = alpha;
-		
-		return data;
 	}
 
 	@Override

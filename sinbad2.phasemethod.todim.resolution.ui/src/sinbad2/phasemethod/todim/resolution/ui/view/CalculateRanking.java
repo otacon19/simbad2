@@ -212,8 +212,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		
 							String[] trapezoidalNumbers = line.split(" ");
 							for(int i = 0; i < trapezoidalNumbers.length; i+=4) {
-								trapezoidalMatrix[numAlternative][numCriterion] = "(" + trapezoidalNumbers[i] + "," +
-										trapezoidalNumbers[i + 1] + "," + trapezoidalNumbers[i + 2] + "," + trapezoidalNumbers[i + 3] + ")";
+								trapezoidalMatrix[numAlternative][numCriterion] = "(" + trapezoidalNumbers[i] + "," + trapezoidalNumbers[i + 1] + "," + trapezoidalNumbers[i + 2] + "," + trapezoidalNumbers[i + 3] + ")";
 								
 								numCriterion++;
 							}

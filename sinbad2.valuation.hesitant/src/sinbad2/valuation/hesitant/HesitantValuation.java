@@ -195,6 +195,9 @@ public class HesitantValuation extends Valuation {
 			//TODO fallo si ponemos LowerThan y la primera etiqueta (se sale del rango)
 			case LowerThan:
 				pos = ((FuzzySet) _domain).getLabelSet().getPos(_term) - 1;
+				if(pos == -1) {
+					pos = 0;
+				}
 				result[0] = ((FuzzySet) _domain).getLabelSet().getLabel(0);
 				result[1] = ((FuzzySet) _domain).getLabelSet().getLabel(pos);
 				break;

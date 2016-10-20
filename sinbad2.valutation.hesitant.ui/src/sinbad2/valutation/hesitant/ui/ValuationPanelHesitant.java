@@ -412,19 +412,19 @@ public class ValuationPanelHesitant extends ValuationPanel {
 				} else if(((HesitantValuation) _valuation).isUnary()) {
 					switch(((HesitantValuation) _valuation).getUnaryRelation()) {
 					case AtLeast:
-						_hesitantEvaluationCombo1.select(1);
+						_hesitantEvaluationCombo1.select(2);
 						_hesitantEvaluationCombo2.select(pos[0]);
 						break;
 					case AtMost:
-						_hesitantEvaluationCombo1.select(0);
+						_hesitantEvaluationCombo1.select(3);
 						_hesitantEvaluationCombo2.select(pos[1]);
 						break;
 					case GreaterThan:
-						_hesitantEvaluationCombo1.select(3);
+						_hesitantEvaluationCombo1.select(1);
 						_hesitantEvaluationCombo2.select(pos[0] - 1);
 						break;
 					case LowerThan:
-						_hesitantEvaluationCombo1.select(2);
+						_hesitantEvaluationCombo1.select(0);
 						_hesitantEvaluationCombo2.select(pos[1] + 1);
 						break;
 					default:

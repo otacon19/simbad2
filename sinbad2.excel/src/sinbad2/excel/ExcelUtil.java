@@ -106,10 +106,12 @@ public class ExcelUtil {
 		dlg.setFilterExtensions(FILTER_EXTS);
 		String fn = dlg.open();
 
-		try (FileOutputStream outputStream = new FileOutputStream(fn)) {
-			_workbook.write(outputStream);
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(fn != null) {
+			try (FileOutputStream outputStream = new FileOutputStream(fn)) {
+				_workbook.write(outputStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -262,11 +264,13 @@ public class ExcelUtil {
 		dlg.setFilterNames(FILTER_NAMES);
 		dlg.setFilterExtensions(FILTER_EXTS);
 		String fn = dlg.open();
-
-		try (FileOutputStream outputStream = new FileOutputStream(fn)) {
-			_workbook.write(outputStream);
-		} catch (IOException e) {
-			e.printStackTrace();
+		
+		if(fn != null) {
+			try (FileOutputStream outputStream = new FileOutputStream(fn)) {
+				_workbook.write(outputStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

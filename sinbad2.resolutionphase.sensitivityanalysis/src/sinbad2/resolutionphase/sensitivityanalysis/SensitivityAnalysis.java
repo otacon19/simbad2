@@ -21,6 +21,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.method.Method;
 import sinbad2.method.MethodsManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
@@ -1497,7 +1498,19 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		if (_elementsSet.getExperts().isEmpty()) {
 			return false;
 		}
-
+		
+		Method activatedMethod = MethodsManager.getInstance().getActiveMethod();
+		if(activatedMethod != null) {
+			String categoryMethod = activatedMethod.getCategory();
+			if(categoryMethod.contains(Messages.SensitivityAnalysis_Multi_criteria_decision_analysis)) {
+				if (_alternativesFinalPreferences == null) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		}
+		
 		if (_aggregationPhase.getCriteriaOperators().isEmpty() && _aggregationPhase.getExpertsOperators().isEmpty()) {
 			return false;
 		}
@@ -1509,12 +1522,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			}
 		}
 
-		String categoryMethod = MethodsManager.getInstance().getActiveMethod().getCategory();
-		if(categoryMethod.contains(Messages.SensitivityAnalysis_Multi_criteria_decision_analysis)) {
-			if (_alternativesFinalPreferences == null) {
-				return false;
-			}
-		}
 
 		return true;
 	}

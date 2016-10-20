@@ -18,7 +18,6 @@ import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.element.alternative.Alternative;
-import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
@@ -140,50 +139,31 @@ public class UnificationPhase implements IPhaseMethod {
 
 		if (_unifiedDomain != null) {
 			Alternative alternative;
-			Criterion criterion;
 			Valuation valuation;
-			Boolean isCost;
-
+			
 			Map<ValuationKey, Valuation> valuations = _valutationSet.getValuations();
 			for (ValuationKey vk : valuations.keySet()) {
 				alternative = vk.getAlternative();			
 				if(!alternative.getId().contains("null_")) {
 					valuation = valuations.get(vk);
-					criterion = vk.getCriterion();
-					isCost = criterion.isCost();
 	
 					if (valuation instanceof IntegerValuation) {
-						if (isCost) {
-							valuation = valuation.negateValuation();
-						}
 						if (((NumericIntegerDomain) valuation.getDomain()).getInRange()) {
 							numericalIntegerValuesToNormalized.put(vk, valuation);
 						}
 					} else if (valuation instanceof RealValuation) {
-						if (isCost) {
-							valuation = valuation.negateValuation();
-						}
 						if (((NumericRealDomain) valuation.getDomain()).getInRange()) {
 							numericalRealValuesToNormalized.put(vk, valuation);
 						}
 					} else if (valuation instanceof IntegerIntervalValuation) {
-						if (isCost) {
-							valuation = valuation.negateValuation();
-						}
 						if (((NumericIntegerDomain) valuation.getDomain()).getInRange()) {
 							intervalIntegerValuesToNormalized.put(vk, valuation);
 						}
 					} else if (valuation instanceof RealIntervalValuation) {
-						if (isCost) {
-							valuation = valuation.negateValuation();
-						}
 						if (((NumericRealDomain) valuation.getDomain()).getInRange()) {
 							intervalRealValuesToNormalized.put(vk, valuation);
 						}
 					} else if (valuation instanceof LinguisticValuation) {
-						if (isCost) {
-							valuation = ((LinguisticValuation) valuation).negateValuation();
-						}
 						_fuzzyValuations.put(vk, (TrapezoidalFunction) ((LinguisticValuation) valuation).getLabel().getSemantic());
 					} else if (valuation instanceof HesitantValuation) {
 						calculateFuzzyEnvelope(vk, (HesitantValuation) valuation, (FuzzySet) _unifiedDomain);
