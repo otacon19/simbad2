@@ -51,6 +51,7 @@ import sinbad2.phasemethod.todim.resolution.ui.view.provider.MainAlternativeColu
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RankingTableContentProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RelativeWeightCriterionColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.WeightEditingSupport;
 import sinbad2.resolutionphase.ResolutionPhasesManager;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
@@ -67,7 +68,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	private Combo _matrixType;
 	private Button _loadFuzzyNumbers;
 	private Button _excelButton;
-
+	
 	private DecisionMatrixEditableTable _dmTable;
 	private TableViewer _criteriaTableViewer;
 	private TableViewer _dominanceDegreeTableViewer;
@@ -100,7 +101,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	public CalculateRanking() {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
-
+		
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_resolutionPhase = (ResolutionPhase) pmm.getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		
@@ -250,7 +251,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		tablesComposite.setLayout(new GridLayout(4, true));
 		tablesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		_criteriaTableViewer = new TableViewer(tablesComposite);
+		_criteriaTableViewer = new TableViewer(tablesComposite, SWT.BORDER | SWT.FULL_SELECTION);
 		_criteriaTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_criteriaTableViewer.setContentProvider(new CriteriaTableContentProvider());
 		_criteriaTableViewer.getTable().setHeaderVisible(true);
@@ -264,6 +265,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		criterionWeight.getColumn().setText(Messages.CalculateRanking_Weight);
 		criterionWeight.setLabelProvider(new CriterionWeightColumnLabelProvider());
 		criterionWeight.getColumn().pack();
+		criterionWeight.setEditingSupport(new WeightEditingSupport(_criteriaTableViewer, 1, _resolutionPhase, _elementsSet, this));
 
 		TableViewerColumn relativeWeight = new TableViewerColumn(_criteriaTableViewer, SWT.NONE);
 		relativeWeight.getColumn().setText(Messages.CalculateRanking_Relative_weight);
@@ -358,7 +360,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		}
 	}
 
-	private void refreshTODIMTables() {
+	public void refreshTODIMTables() {
 
 		setInputCriteriaTable();
 
@@ -489,8 +491,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	}
 
 	@Override
-	public void setRatingView(RatingView rating) {
-	}
+	public void setRatingView(RatingView rating) {}
 
 	@Override
 	public String getPartName() {

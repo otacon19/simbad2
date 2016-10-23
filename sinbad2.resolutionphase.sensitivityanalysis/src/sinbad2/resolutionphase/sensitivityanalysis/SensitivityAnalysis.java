@@ -438,8 +438,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	private Double[] computeTODIMWeightsInference(Double[] weights) {
-		Map<Criterion, Double> criteriaWeights;
-		criteriaWeights = transformWeightsMap(weights);
+		Map<Criterion, Double> criteriaWeights = transformWeightsMap(weights);
 
 		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		todimPhase.setCriteriaWeights(criteriaWeights);
@@ -578,7 +577,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	public double getMaximunPercentMCM() {
-		double max = Double.MIN_VALUE;
+		double max = Double.NEGATIVE_INFINITY;
 		for (int c = 0; c < _numCriteria; ++c) {
 			for (int a1 = 0; a1 < _numAlternatives; ++a1) {
 				for (int a2 = 0; a2 < _numAlternatives; ++a2) {
@@ -623,8 +622,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 									min = max;
 								} else {
 									if (minimunValueAlternatives.get(a1) != null) {
-										if (minimunValueAlternatives.get(a1) > Math
-												.abs(_minimumPercentChangeInCriteriaWeights[a2][a1][c])) {
+										if (minimunValueAlternatives.get(a1) > Math.abs(_minimumPercentChangeInCriteriaWeights[a2][a1][c])) {
 											min = Math.abs(_minimumPercentChangeInCriteriaWeights[a2][a1][c]);
 										} else {
 											min = minimunValueAlternatives.get(a1);
@@ -685,7 +683,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	public double getMaximunPercentMCC() {
-		double max = Double.MIN_VALUE;
+		double max = Double.NEGATIVE_INFINITY;
 		for (int c = 0; c < _numCriteria; ++c) {
 			for (int a1 = 0; a1 < _numAlternatives; ++a1) {
 				for (int a2 = 0; a2 < _numAlternatives; ++a2) {

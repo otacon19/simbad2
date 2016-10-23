@@ -55,6 +55,8 @@ public class AlternativesEvolutionWeigthsLineChart {
 		_alternatives = ProblemElementsManager.getInstance().getActiveElementSet().getAlternatives();
 		_criteria = ProblemElementsManager.getInstance().getActiveElementSet().getAllCriteria();
 
+		_model = EModel.WEIGHTED_SUM;
+		
 		_chart = null;
 		_chartComposite = null;
 	}
@@ -204,25 +206,14 @@ public class AlternativesEvolutionWeigthsLineChart {
 		_dataset = new XYSeriesCollection();
 
 		if (_criterionSelected != null) {
+			
 			switch (_model) {
 				case WEIGHTED_SUM:
 				case ANALYTIC_HIERARCHY_PROCESS:
 				
 					removeMarker(_horizontalMarker);
-					
-					List<XYSeries> alternativesSeries;
-					if (_typeTODIMChart == null) {	
-						setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution + _criterionSelected.getId().toUpperCase());
-						alternativesSeries = computeEvolutionWeights();
-					} else if(_typeTODIMChart == 0) {
-						setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution);
-						alternativesSeries = computeTODIMEvolutionWeights();	
-					} else {
-						alternativesSeries = computeAttenuationFactorEvolution();
-						setRangeAxis(_chart.getXYPlot().getDomainAxis(), 1, 15);
-						setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Attenuation_factor_evolution);
-					}
-	
+
+					List<XYSeries> alternativesSeries = computeLineChart();
 					for (XYSeries se : alternativesSeries) {
 						_dataset.addSeries(se);
 					}
@@ -233,29 +224,53 @@ public class AlternativesEvolutionWeigthsLineChart {
 					setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Ratios_evolution + _criterionSelected.getId().toUpperCase());
 	
 					createHorizontalMarker();
-	
-					int numSeries = 0;
-					for (int i = 0; i < _alternatives.size() - 1; ++i) {
-						for (int j = (i + 1); j < _alternatives.size(); ++j) {
-							XYSeries alternativeSerie = new XYSeries(_alternatives.get(i).getId() + " - " + _alternatives.get(j).getId()); //$NON-NLS-1$
-							for (double k = 0; k <= 1.01; k += 0.01) {
-								alternativeSerie.add(Math.round(k * 100d) / 100d, _sensitivityAnalysis.computeAlternativeRatioFinalPreferenceInferWeights(i, j,
-												_sensitivityAnalysis.calculateInferWeights(_criterionSelected, k)));
-							}
-							
-							_dataset.addSeries(alternativeSerie);
-							_chart.getXYPlot().getRenderer().setSeriesStroke(numSeries, new BasicStroke(2.0f));
-							numSeries++;
-						}
-					}
-
+					
+					computeWeightedProductLineChart();
+					
 					setRangeAxis(_chart.getXYPlot().getRangeAxis(), -10, _dataset.getRangeUpperBound(false) + 2);
+					
 					break;
 			}
+		} else {			
+			createDefaultDataset();
 		}
+		
 		return _dataset;
 	}
 
+	private List<XYSeries> computeLineChart() {
+		List<XYSeries> alternativesSeries;
+		if (_typeTODIMChart == null) {	
+			setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution + _criterionSelected.getId().toUpperCase());
+			alternativesSeries = computeEvolutionWeights();
+		} else if(_typeTODIMChart == 0) {
+			setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution);
+			alternativesSeries = computeTODIMEvolutionWeights();	
+		} else {
+			alternativesSeries = computeAttenuationFactorEvolution();
+			setRangeAxis(_chart.getXYPlot().getDomainAxis(), 1, 15);
+			setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Attenuation_factor_evolution);
+		}
+		
+		return alternativesSeries;
+	}
+	
+	private void computeWeightedProductLineChart() {
+		int numSeries = 0;
+		for (int i = 0; i < _alternatives.size() - 1; ++i) {
+			for (int j = (i + 1); j < _alternatives.size(); ++j) {
+				XYSeries alternativeSerie = new XYSeries(_alternatives.get(i).getId() + " - " + _alternatives.get(j).getId()); //$NON-NLS-1$
+				for (double k = 0; k <= 1.01; k += 0.01) {
+					alternativeSerie.add(Math.round(k * 100d) / 100d, _sensitivityAnalysis.computeAlternativeRatioFinalPreferenceInferWeights(i, j, _sensitivityAnalysis.calculateInferWeights(_criterionSelected, k)));
+				}
+				
+				_dataset.addSeries(alternativeSerie);
+				_chart.getXYPlot().getRenderer().setSeriesStroke(numSeries, new BasicStroke(2.0f));
+				numSeries++;
+			}
+		}
+	}
+	
 	private void setChartTitle(String title) {
 		_chart.setTitle(title);
 	}
@@ -281,7 +296,9 @@ public class AlternativesEvolutionWeigthsLineChart {
 	private List<XYSeries> computeEvolutionWeights() {
 		List<XYSeries> alternativesSeries = new LinkedList<XYSeries>();
 		for (int i = 0; i < _alternatives.size(); ++i) {
-			alternativesSeries.add(new XYSeries(_alternatives.get(i).getId()));
+			XYSeries serie = new XYSeries(_alternatives.get(i).getId());
+			serie.add(0, 0);
+			alternativesSeries.add(serie);
 		}
 		
 		Double[] alternativePreferences;
@@ -303,7 +320,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 			alternativesSeries.add(new XYSeries(_alternatives.get(i).getId()));
 		}
 		
-		double max = Double.MIN_VALUE;
+		double max = Double.NEGATIVE_INFINITY;
 		int mostImportantCriterionPos = 0;
 		List<Double> weights = new LinkedList<Double>();
 		Double[] ws = _sensitivityAnalysis.getWeights();
@@ -321,7 +338,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 		Double secondMaxWeight = Math.round(weights.get(1) * 1000d) / 1000d + 0.01;
 		
 		Double[] alternativePreferences;
-		for (double j = secondMaxWeight; j <= 1.0; j += 0.01) {
+		for (double j = secondMaxWeight; j <= 1; j += 0.01) {
 			alternativePreferences = _sensitivityAnalysis.computeAlternativesFinalPreferenceInferWeights(_sensitivityAnalysis.calculateInferWeights(_criteria.get(mostImportantCriterionPos), j));
 			for (int s = 0; s < alternativesSeries.size(); ++s) {
 				XYSeries serie = alternativesSeries.get(s);
@@ -354,5 +371,13 @@ public class AlternativesEvolutionWeigthsLineChart {
 		}
 		
 		return alternativesSeries;
+	}
+	
+	private void createDefaultDataset() {
+		for(Alternative a: _alternatives) {
+			XYSeries alternativeSerie = new XYSeries(a.getId()); //$NON-NLS-1$
+			alternativeSerie.add(0, 0);
+			_dataset.addSeries(alternativeSerie);
+		}
 	}
 }

@@ -67,7 +67,10 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	
 	private String _typeBarChart = "ABSOLUTE"; //$NON-NLS-1$
 	private int _typeChart = 0;
+	
 	private boolean _isTODIM = false;
+	private boolean _isTOPSIS = false;
+	private int _typeTODIMChart;
 	
 	private ProblemElementsSet _elementsSet;
 
@@ -87,6 +90,13 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
 		
+		loadChangeListeners();
+			
+		createChartComposite();
+		createComponents();
+	}
+
+	private void loadChangeListeners() {
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
 		_sensitivityAnalysis.registerSensitivityAnalysisChangeListener(this);
 		
@@ -94,18 +104,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 
 		_saTable = _sensitivityAnalysisView.getSATable();
 		_saTable.addSelectionChangedListener(this);
-		_sensitivityAnalysisView.registerNotifyChangeSATableListener(this);
-		
-		createChartComposite();
-		
-		_componentsComposite = new Composite(_parent, SWT.NONE);
-		_componentsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		layout = new GridLayout(2, false);
-		_componentsComposite.setLayout(layout);
-		_componentsComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		
-		createSpinnerComposite();
-		createButtonComposite();
+		_sensitivityAnalysisView.registerNotifyChangeSATableListener(this);	
 	}
 
 	private void createChartComposite() {
@@ -116,36 +115,20 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		initializeChart();
 	}
 	
-	private void initializeChart() {
-		boolean activatedStackedChart = _stackedChart != null ? true: false; //Cuando se seleccionen los criterios mientras estás en el stackedChart no debe de cambiarse el gráfico
+	private void initializeChart() {//Hay que ver como asignar el texto a los botones
+		_isTODIM = MethodsManager.getInstance().getActiveMethod().getId().contains("todim");
+		_isTOPSIS = MethodsManager.getInstance().getActiveMethod().getId().contains("topsis");
 		
 		removeChart();
 		
-		setTextButton();
-		
-		if(_typeChart == 0) {
+		if(!_isTODIM && !_isTOPSIS) {
 			initializeBarChart();
 		} else {
-			String text = _changeChartButton.getText();
-			if(text.equals(Messages.AnalysisView_Sturdiness)) { 
-				_isTODIM = false;
-				initializeLineChart(null);
-			} else if(text.equals(Messages.AnalysisView_Attenuation_factor)) {
-				_isTODIM = true;
-				initializeLineChart(0);
-			} else if(text.equals(Messages.AnalysisView_Evolution)) {
-				if(_isTODIM) {
-					initializeLineChart(1);
-				} else {
-					if(activatedStackedChart) {
-						initializeStackedChart();
-					} else {
-						initializeLineChart(null);
-					}
-				}	
+			if(_isTODIM) {
+				_typeTODIMChart = 0;
+				initializeLineTODIMChart();
 			} else {
-				_isTODIM = false;
-				initializeStackedChart();
+				initializeLineChart();
 			}
 		}
 			
@@ -161,58 +144,51 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 			_changeChartButton.setVisible(false);
 		}
 	}
-
-	private void initializeLineChart(Integer typeTODIMChart) {
+	
+	private void initializeLineTODIMChart() {
 		_lineChart = new AlternativesEvolutionWeigthsLineChart();
+		_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis, _typeTODIMChart);
 		
-		if(typeTODIMChart == null) {
-			_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
-			
-			_weightSpinner.setValues(0, 0, 100, 2, 1, 1);
-			_weightSpinner.setVisible(true);
-		} else {	
-			_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis, typeTODIMChart);
-			
-			if(typeTODIMChart == 0) {
-				
-				List<Double> weights = new LinkedList<Double>();
-				Double[] ws = _sensitivityAnalysis.getWeights();
-				for(int w = 0; w < ws.length; ++w) {
-					weights.add(ws[w]);
-				}
-				
-				Collections.sort(weights);
-				Collections.reverse(weights);
-				Double secondMaxWeight = Math.round(weights.get(1) * 1000d) / 1000d + 0.01;
-				
-				_weightSpinner.setValues((int) (secondMaxWeight * 100), 0, 100, 2, 1, 1);
-				_weightSpinner.setVisible(false);
-			} else {
-				_weightSpinner.setValues(100, 100, 1500, 2, 10, 10);
-				_weightSpinner.setVisible(true);
-			}
+		assignModelLineChart();
+		
+		if(_weightSpinner != null) {
+			assignSpinnerInitialValues();
 		}
+	}
+	
+	private void assignModelLineChart() {
 		
 		if(_criterionSelected != null) {
 			_lineChart.setCriterionSelected(_criterionSelected);
 			_lineChart.setPositionCurrentValueMarker(_sensitivityAnalysis.getWeights()[_elementsSet.getAllSubcriteria().indexOf(_criterionSelected)]);
 			_lineChart.setModel(_sensitivityAnalysis.getModel());
 			_lineChart.setPositionVariableValueMarker(_weightSpinner.getSelection() / 100d);
+			_lineChart.refreshChart();
 		}
-		
-		_changeChartButton.setVisible(true);	
 	}
 
-	private void initializeStackedChart() {
-		_stackedChart = new SturdinessMeasureStackedChart();
-		if(_sensitivityAnalysis.getProblem() == EProblem.MOST_CRITICAL_MEASURE) { //$NON-NLS-1$
-			_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCMByCriterion());
-		} else {
-			_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCCByCriterion());
+	private List<Double> transformWeightsToList() {
+		List<Double> weights = new LinkedList<Double>();
+		Double[] ws = _sensitivityAnalysis.getWeights();
+		for(int w = 0; w < ws.length; ++w) {
+			weights.add(ws[w]);
 		}
 		
-		_weightSpinner.setVisible(false);
-		_changeChartButton.setVisible(true);
+		Collections.sort(weights);
+		Collections.reverse(weights);
+		
+		return weights;
+	}
+
+	private void initializeLineChart() {
+		_lineChart = new AlternativesEvolutionWeigthsLineChart();
+		_lineChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis);
+			
+		assignModelLineChart();
+		
+		if(_weightSpinner != null) {
+			assignSpinnerInitialValues();
+		}
 	}
 	
 	private void addControlListener() {
@@ -228,7 +204,18 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 			_chartComposite.addControlListener(_controlListener);
 		}	
 	}
+
 	
+	private void createComponents() {
+		_componentsComposite = new Composite(_parent, SWT.NONE);
+		_componentsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		GridLayout layout = new GridLayout(2, false);
+		_componentsComposite.setLayout(layout);
+		_componentsComposite.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		
+		createSpinnerComposite();
+		createButtonComposite();
+	}
 	
 	private void createSpinnerComposite() {
 		_spinnerComposite = new Composite(_componentsComposite, SWT.NONE);
@@ -261,9 +248,28 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 			}
 		});
 		
+		assignSpinnerInitialValues();
+		
 		_spinnerComposite.pack();
 	}
 	
+	private void assignSpinnerInitialValues() {
+		if(!_isTODIM) {
+			_weightSpinner.setValues(0, 0, 100, 2, 1, 1);
+			_weightSpinner.setVisible(true);
+		} else {
+			if(_typeTODIMChart == 0) {
+				List<Double> weights = transformWeightsToList();
+				Double secondMaxWeight = Math.round(weights.get(1) * 1000d) / 1000d + 0.01;
+				_weightSpinner.setValues((int) (secondMaxWeight * 100), 0, 100, 2, 1, 1);
+				_weightSpinner.setVisible(false);
+			} else {
+				_weightSpinner.setValues(100, 100, 1500, 2, 10, 10);
+				_weightSpinner.setVisible(true);
+			}
+		}
+	}
+
 	private void removeSpinner() {
 		if(_weightSpinner != null) {
 			if(!_weightSpinner.isDisposed()) {
@@ -289,7 +295,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_changeChartButton = new Button(_buttonComposite, SWT.BORDER);
 		_changeChartButton.setLayoutData(new GridData(SWT.RIGHT, SWT.RIGHT, true, true, 1, 1));
 		
-		setTextButton();
+		initializeTextButton();
 		
 		_changeChartButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -300,14 +306,16 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 					initializeStackedChart();
 					_changeChartButton.setText(Messages.AnalysisView_Evolution);
 				} else if(_changeChartButton.getText().equals(Messages.AnalysisView_Attenuation_factor)) {
-					initializeLineChart(1);
+					_typeTODIMChart = 1;
+					initializeLineTODIMChart();
 					_changeChartButton.setText(Messages.AnalysisView_Evolution);	
-				} else {
+				} else if(_changeChartButton.getText().equals(Messages.AnalysisView_Evolution)){
 					if(_isTODIM) {
-						initializeLineChart(0);
+						_typeTODIMChart = 0;
+						initializeLineTODIMChart();
 						_changeChartButton.setText(Messages.AnalysisView_Attenuation_factor);
 					} else {
-						initializeLineChart(null);
+						initializeLineChart();
 						_changeChartButton.setText(Messages.AnalysisView_Sturdiness);
 					}
 				}
@@ -319,28 +327,38 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_changeChartButton.pack();
 	}
 	
-	private void setTextButton() {
-		
-		if(_changeChartButton != null) {
-			String activatedMethod = MethodsManager.getInstance().getActiveMethod().getId();
-			if(activatedMethod.contains("todim")) { //$NON-NLS-1$
-				_changeChartButton.setText(Messages.AnalysisView_Attenuation_factor);
-				_typeChart = 1;
-			} else if(activatedMethod.contains("topsis")) { //$NON-NLS-1$
-				_changeChartButton.setEnabled(false);
-				_typeChart = 1;
-			} else {
-				_changeChartButton.setText(Messages.AnalysisView_Sturdiness);
-			}
-		}
-	}
-
 	private void removeButton() {
 		if(_changeChartButton != null) {
 			if(!_changeChartButton.isDisposed()) {
 				_changeChartButton.dispose();
 			}
 		}
+	}
+	
+	private void initializeTextButton() {
+		
+		if(_changeChartButton != null) {
+			String activatedMethod = MethodsManager.getInstance().getActiveMethod().getId();
+			if(activatedMethod.contains("todim")) { //$NON-NLS-1$
+				_changeChartButton.setText(Messages.AnalysisView_Attenuation_factor);
+			} else if(activatedMethod.contains("topsis")) { //$NON-NLS-1$
+				_changeChartButton.setVisible(false);
+			} else {
+				_changeChartButton.setText(Messages.AnalysisView_Sturdiness);
+			}
+		}
+	}
+
+	private void initializeStackedChart() {
+		_stackedChart = new SturdinessMeasureStackedChart();
+		if(_sensitivityAnalysis.getProblem() == EProblem.MOST_CRITICAL_MEASURE) { //$NON-NLS-1$
+			_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCMByCriterion());
+		} else {
+			_stackedChart.initialize(_chartComposite, _chartComposite.getSize().x, _chartComposite.getSize().y, SWT.NONE, _sensitivityAnalysis.getMinimunPercentMCCByCriterion());
+		}
+		
+		_weightSpinner.setVisible(false);
+		_changeChartButton.setVisible(true);
 	}
 	
 	private void removeChart() {
@@ -360,64 +378,73 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	private void refreshChart() {
 		
 		if(_typeChart == 0) {
-			if(_pairAlternatives != null) {
-				int a1Index = Integer.parseInt((String) _pairAlternatives[0]);
-				int a2Index = Integer.parseInt((String) _pairAlternatives[1]);
-				int[] indexes = new int[2];
-				indexes[0] = a1Index;
-				indexes[1] = a2Index;
-				_barChart.setCurrentAlternativesPair(indexes);
-				
-				if(_typeBarChart.equals(Messages.AnalysisView_RELATIVE)) {
-					double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
-					_barChart.setValues(percents);
-					_barChart.setTypeData(_typeBarChart);
-				} else {
-					double[] absolute = _sensitivityAnalysis.getMinimumAbsolutePairAlternatives(a1Index, a2Index);
-					_barChart.setValues(absolute);
-					_barChart.setTypeData(_typeBarChart);
-				}
-				
+			if(_pairAlternatives != null && !_isTODIM && !_isTOPSIS) {
+				setTypeDataBarChart();		
 				_barChart.refreshChart();
 			}
 		} else {
-			_lineChart.refreshChart();
+			assignModelLineChart();
 		}
 	}
 	
-	@Override
-	public void setFocus() {
+	private void setTypeDataBarChart() {
+		int a1Index = Integer.parseInt((String) _pairAlternatives[0]);
+		int a2Index = Integer.parseInt((String) _pairAlternatives[1]);
+		int[] indexes = new int[2];
+		indexes[0] = a1Index;
+		indexes[1] = a2Index;
+		_barChart.setCurrentAlternativesPair(indexes);
+		
+		if(_typeBarChart.equals(Messages.AnalysisView_RELATIVE)) {
+			double[] percents = _sensitivityAnalysis.getMinimumPercentPairAlternatives(a1Index, a2Index);
+			_barChart.setValues(percents);
+			_barChart.setTypeData(_typeBarChart);
+		} else {
+			double[] absolute = _sensitivityAnalysis.getMinimumAbsolutePairAlternatives(a1Index, a2Index);
+			_barChart.setValues(absolute);
+			_barChart.setTypeData(_typeBarChart);
+		}
 	}
+
+	@Override
+	public void setFocus() {}
 	
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
+		
 		if(event.getSelection().toString().contains(",")) { //$NON-NLS-1$
 			_typeChart = 0;
-			
-			_pairAlternatives = new Object[2];
-			
-			ISelection pairAlternatives = event.getSelection();
-			String alternative1 = pairAlternatives.toString().substring(1, 2);
-			String alternative2 = pairAlternatives.toString().substring(4, pairAlternatives.toString().length() - 1);
-			_pairAlternatives[0] = alternative1;
-			_pairAlternatives[1] = alternative2;
+			setPairAlternatives(event);	
 		} else {
 			_typeChart = 1;
-		
-			ISelection selection = event.getSelection();
-			String stringSelection = selection.toString();
-			if(!stringSelection.contains(">")) { //$NON-NLS-1$
-				stringSelection = stringSelection.substring(1, stringSelection.length() - 1);
-				_criterionSelected = _elementsSet.getCriterion(stringSelection);
-			} else {
-				stringSelection = stringSelection.substring(stringSelection.lastIndexOf('>') + 1, stringSelection.length() - 1);
-				_criterionSelected = _elementsSet.getCriterion(stringSelection);
-			}
+			setCriterionSelected(event);
 		}
 		
-		initializeChart();
 		refreshChart();
 	}
+	
+	private void setPairAlternatives(SelectionChangedEvent event) {
+		_pairAlternatives = new Object[2];
+		
+		ISelection pairAlternatives = event.getSelection();
+		String alternative1 = pairAlternatives.toString().substring(1, 2);
+		String alternative2 = pairAlternatives.toString().substring(4, pairAlternatives.toString().length() - 1);
+		_pairAlternatives[0] = alternative1;
+		_pairAlternatives[1] = alternative2;
+	}
+	
+	private void setCriterionSelected(SelectionChangedEvent event) {
+		ISelection selection = event.getSelection();
+		String stringSelection = selection.toString();
+		if(!stringSelection.contains(">")) { //$NON-NLS-1$
+			stringSelection = stringSelection.substring(1, stringSelection.length() - 1);
+			_criterionSelected = _elementsSet.getCriterion(stringSelection);
+		} else {
+			stringSelection = stringSelection.substring(stringSelection.lastIndexOf('>') + 1, stringSelection.length() - 1);
+			_criterionSelected = _elementsSet.getCriterion(stringSelection);
+		}
+	}
+
 
 	@Override
 	public void notifyChangeSATableValues(String type) {
@@ -427,7 +454,6 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 
 	@Override
 	public void notifySensitivityAnalysisChange() {
-		initializeChart();
 		refreshChart();
 	}
 	

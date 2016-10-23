@@ -255,7 +255,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 
 	@Override
 	public int doGetColumnCount() {
-		return _criteria.length + getFixedColumnCount() + getFixedHeaderColumnCount();
+		return _criteria.length + getFixedColumnCount() + getFixedHeaderColumnCount() + 1;
 	}
 
 	@Override

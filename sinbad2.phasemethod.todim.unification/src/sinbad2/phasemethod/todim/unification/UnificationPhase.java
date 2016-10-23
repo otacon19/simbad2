@@ -304,7 +304,7 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	private Map<String, Double> getIntegerValuationsMaxValue(Map<ValuationKey, Valuation> numericalIntegerValuesToNormalized) {
 		Map<String, Double> maxValuesForEachDomains = new HashMap<String, Double>();
-		double max = Double.MIN_VALUE;
+		double max = Double.NEGATIVE_INFINITY;
 		
 		for(Domain domain: _domainSet.getDomains()) {
 			for(ValuationKey vk: numericalIntegerValuesToNormalized.keySet()) {
@@ -343,7 +343,7 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	private Map<String, Double> getRealValuationsMaxValue(Map<ValuationKey, Valuation> numericalRealValuesToNormalized) {
 		Map<String, Double> maxValuesForEachDomains = new HashMap<String, Double>();
-		double max = Double.MIN_VALUE;
+		double max = Double.NEGATIVE_INFINITY;
 		
 		for(Domain domain: _domainSet.getDomains()) {
 			for(ValuationKey vk: numericalRealValuesToNormalized.keySet()) {
