@@ -190,11 +190,8 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 		if (_sensitivityAnalysis.getModel() != EModel.ANALYTIC_HIERARCHY_PROCESS) {
 			preferences = _sensitivityAnalysis.getAlternativesFinalPreferences();
 		} 
-		
-		Object[] aggregatedValuationsData = _sensitivityAnalysis.getAggregatedValuationsPosAndAlpha();
-		
+
 		RankingViewManager.getInstance().setContent(_sensitivityAnalysis.getRanking());
-		DomainViewManager.getInstance().setContent(_sensitivityAnalysis.getDomain(), new Object[] { _sensitivityAnalysis.getAlternativesIds(), preferences, 
-				aggregatedValuationsData[0], aggregatedValuationsData[1] });
+		DomainViewManager.getInstance().setContent(_sensitivityAnalysis.getDomain(), new Object[] { _sensitivityAnalysis.getAlternativesIds(), preferences});
 	}
 }

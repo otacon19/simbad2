@@ -18,18 +18,6 @@
                panel="sinbad2.valutation.hesitant.ui.ValuationPanelHesitant">
          </valuation_panel>
       </valuation_ui>
-      <valuation_ui
-            valuation="flintstones.valuation.hesitantU">
-         <new_domain_dialog
-               dialog="sinbad2.domain.linguistic.newU">
-         </new_domain_dialog>
-         <modify_domain_dialog
-               dialog="sinbad2.domain.linguistic.modifyU">
-         </modify_domain_dialog>
-         <valuation_panel
-               panel="sinbad2.valutation.hesitant.ui.ValuationPanelHesitant">
-         </valuation_panel>
-      </valuation_ui>
    </extension>
 
 </plugin>

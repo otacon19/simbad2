@@ -50,7 +50,7 @@ public class TODIM extends MethodImplementation {
 	public String isAvailable() {
 		
 		for(Domain d: _domainSet.getDomains()) {
-			if(d instanceof Unbalanced) {
+			if(d instanceof Unbalanced) {	
 				return NOT_SUPPORTED_DOMAINS;
 			}
 		}

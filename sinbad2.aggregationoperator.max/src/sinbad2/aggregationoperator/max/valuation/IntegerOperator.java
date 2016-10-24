@@ -36,7 +36,7 @@ public class IntegerOperator {
 			result = values.get(values.size() - 1);
 			result = (Valuation) result.clone();
 		}
-		System.out.println(result);
+		
 		return result;
 	}
 }

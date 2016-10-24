@@ -11,6 +11,7 @@ import sinbad2.core.validator.Validator;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
+import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.nls.Messages;
@@ -42,7 +43,7 @@ public class HesitantValuation extends Valuation {
 	@Override
 	public void setDomain(Domain domain) {
 		Validator.notNull(domain);
-		Validator.notIllegalElementType(domain, new String[] { FuzzySet.class.toString() });
+		Validator.notIllegalElementType(domain, new String[] { FuzzySet.class.toString(), Unbalanced.class.toString() });
 		Validator.notEmpty(((FuzzySet) domain).getLabelSet().getLabels().toArray());
 
 		_domain = (FuzzySet) domain;

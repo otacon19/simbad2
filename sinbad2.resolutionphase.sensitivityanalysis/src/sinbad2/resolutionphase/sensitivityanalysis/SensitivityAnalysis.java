@@ -1387,10 +1387,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		return _aggregationPhase.getUnifiedDomain();
 	}
 
-	public Object[] getAggregatedValuationsPosAndAlpha() {
-		return _aggregationPhase.getAggregatedValuationsPosAndAlpha();
-	}
-
 	public void registerSensitivityAnalysisChangeListener(ISensitivityAnalysisChangeListener listener) {
 		_listeners.add(listener);
 	}

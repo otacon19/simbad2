@@ -14,7 +14,6 @@ import sinbad2.core.validator.Validator;
 import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
-import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
@@ -31,8 +30,6 @@ import sinbad2.phasemethod.aggregation.nls.Messages;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.twoTuple.TwoTuple;
-import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -512,42 +509,6 @@ public class AggregationPhase implements IPhaseMethod {
 		} else {
 			return alternativeValuations.get(0);
 		} 
-	}
-	
-	public Object[] getAggregatedValuationsPosAndAlpha() {
-		
-		if(_aggregatedValuations != null) {
-			int size = _aggregatedValuations.size();
-			String[] alternatives = new String[size];
-			int[] pos = new int[size];
-			double[] alpha = new double[size];
-			Valuation valuation = null, aux;
-			
-			int i = 0;
-			for (ProblemElement alternative : _aggregatedValuations.keySet()) {
-				alternatives[i] = alternative.getId();
-				aux = _aggregatedValuations.get(alternative);
-				if (aux instanceof UnifiedValuation) {
-					valuation = ((UnifiedValuation) aux).disunification((FuzzySet) aux.getDomain());
-				} else {
-					valuation = aux;
-				}
-	
-				if (valuation instanceof TwoTuple) {
-					pos[i] = ((FuzzySet) _unifiedDomain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
-					alpha[i] = ((TwoTuple) valuation).getAlpha();
-					i++;
-				}
-			}
-			
-			Object[] data = new Object[2];
-			data[0] = pos;
-			data[1] = alpha;
-			
-			return data;
-		} else {
-			return new Object[2];
-		}
 	}
 
 	@Override

@@ -210,14 +210,14 @@ public class AlternativesEvolutionWeigthsLineChart {
 			switch (_model) {
 				case WEIGHTED_SUM:
 				case ANALYTIC_HIERARCHY_PROCESS:
-				
+
 					removeMarker(_horizontalMarker);
 
 					List<XYSeries> alternativesSeries = computeLineChart();
 					for (XYSeries se : alternativesSeries) {
 						_dataset.addSeries(se);
 					}
-	
+					
 					break;
 				case WEIGHTED_PRODUCT:
 					

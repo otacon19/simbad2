@@ -11,14 +11,6 @@
                implementation="sinbad2.valuation.hesitant.HesitantValuation">
          </type>
       </valuation>
-      <valuation
-            domain="flintstones.domain.linguistic.unbalanced"
-            id="flintstones.valuation.hesitantU"
-            name="%valuation.hesitant.unbalanced">
-         <type
-               implementation="sinbad2.valuation.hesitant.HesitantValuation">
-         </type>
-      </valuation>
    </extension>
 
 </plugin>

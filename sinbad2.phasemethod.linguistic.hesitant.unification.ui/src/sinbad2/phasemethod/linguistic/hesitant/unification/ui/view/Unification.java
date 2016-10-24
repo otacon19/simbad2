@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.excel.ExcelUtil;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.linguistic.hesitant.unification.UnificationPhase;
 import sinbad2.phasemethod.linguistic.hesitant.unification.ui.Images;
@@ -66,12 +67,12 @@ public static final String ID = "flintstones.phasemethod.linguistic.hesitant.ui.
 	
 	private RatingView _ratingView;
 	
-	private UnificationPhase _unificacionPhase;
+	private UnificationPhase _unificationPhase;
 	
 	@Override
 	public void createPartControl(Composite parent) {	
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		_unificacionPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
+		_unificationPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
 		
 		_completed = true;
 		
@@ -192,8 +193,8 @@ public static final String ID = "flintstones.phasemethod.linguistic.hesitant.ui.
 		_treeEvaluationColumn.addSelectionListener(getSelectionAdapter(_treeEvaluationColumn, 4));
 		_treeViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 		
-		_unificacionPhase.unification();
-		_unifiedValues = _unificacionPhase.getTwoTupleValuations();
+		_unificationPhase.unification();
+		_unifiedValues = _unificationPhase.getTwoTupleValuations();
 		TreeViewerContentProvider provider = new TreeViewerContentProvider(_unifiedValues);
 		_treeViewer.setContentProvider(provider);
 		_treeViewer.setInput(provider.getInput());
@@ -230,6 +231,13 @@ public static final String ID = "flintstones.phasemethod.linguistic.hesitant.ui.
 		_saveButton = new Button(container, SWT.PUSH);
 		_saveButton.setText(Messages.Unification_Save);
 		_saveButton.setImage(Images.Excel);
+		_saveButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ExcelUtil excelUtil = new ExcelUtil();
+				excelUtil.createExcelFile(_unificationPhase.getTwoTupleValuations());
+			}
+		});
 	}
 
 	private void compactTable() {

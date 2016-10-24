@@ -42,7 +42,6 @@ public class IntegerValuation extends Valuation {
 		} else {
 			_value = value;
 		}
-		System.out.println("cambia3");
 	}
 	
 	public double getValue() {

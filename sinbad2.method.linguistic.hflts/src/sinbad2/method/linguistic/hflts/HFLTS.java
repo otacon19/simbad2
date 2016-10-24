@@ -6,6 +6,7 @@ import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.expert.Expert;
@@ -58,7 +59,9 @@ public static final String ID = "flintstones.method.linguistic.hesitant"; //$NON
 		} else if(numDomains > 1) {
 			return MULTIPLE_DOMAINS;
 		} else if(numDomains == 1) {
-			if(domains.get(0) instanceof FuzzySet) {
+			if(domains.get(0) instanceof Unbalanced) {
+				return NOT_SUPPORTED_DOMAINS;
+			} else if(domains.get(0) instanceof FuzzySet) {
 				for(ValuationKey vk: _valuationSet.getValuations().keySet()) {
 					Valuation v = _valuationSet.getValuations().get(vk);
 					if(!(v instanceof HesitantValuation)) {

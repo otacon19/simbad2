@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.excel.ExcelUtil;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.multigranular.lh.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.lh.unification.ui.Images;
@@ -242,6 +243,13 @@ public static final String ID = "flintstones.phasemethod.multigranular.unificati
 		_saveButton = new Button(container, SWT.PUSH);
 		_saveButton.setText(Messages.Unification_Save);
 		_saveButton.setImage(Images.Excel);
+		_saveButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ExcelUtil excelUtil = new ExcelUtil();
+				excelUtil.createExcelFile(_unificationPhase.getTwoTupleValuations());
+			}
+		});
 	}
 
 	private void compactTable() {

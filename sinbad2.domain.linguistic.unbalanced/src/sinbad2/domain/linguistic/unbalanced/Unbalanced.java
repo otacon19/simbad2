@@ -32,6 +32,7 @@ public class Unbalanced extends FuzzySet {
 	public Unbalanced() {
 		super();
 		_labels = new HashMap<Integer, Map<Integer,Integer>>();
+		setType(ID);
 	}
 	
 	public int[] getLh() {

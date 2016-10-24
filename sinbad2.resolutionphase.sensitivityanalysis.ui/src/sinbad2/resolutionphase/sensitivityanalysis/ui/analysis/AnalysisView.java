@@ -70,7 +70,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	
 	private boolean _isTODIM = false;
 	private boolean _isTOPSIS = false;
-	private int _typeTODIMChart;
+	private int _typeTODIMChart = 0;
 	
 	private ProblemElementsSet _elementsSet;
 
@@ -115,17 +115,26 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		initializeChart();
 	}
 	
-	private void initializeChart() {//Hay que ver como asignar el texto a los botones
+	private void initializeChart() {
 		_isTODIM = MethodsManager.getInstance().getActiveMethod().getId().contains("todim");
 		_isTOPSIS = MethodsManager.getInstance().getActiveMethod().getId().contains("topsis");
 		
 		removeChart();
 		
 		if(!_isTODIM && !_isTOPSIS) {
-			initializeBarChart();
+			if(_typeChart == 0) {
+				initializeBarChart();
+				if(_changeChartButton != null) {
+					_changeChartButton.setText(Messages.AnalysisView_Evolution);
+				}
+			} else {
+				initializeLineChart();
+				if(_changeChartButton != null) {
+					_changeChartButton.setText(Messages.AnalysisView_Sturdiness);
+				}
+			}
 		} else {
 			if(_isTODIM) {
-				_typeTODIMChart = 0;
 				initializeLineTODIMChart();
 			} else {
 				initializeLineChart();
@@ -142,6 +151,10 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		if(_weightSpinner != null) {
 			_weightSpinner.setVisible(false);
 			_changeChartButton.setVisible(false);
+		}
+		
+		if(_pairAlternatives != null) {
+			setTypeDataBarChart();
 		}
 	}
 	
@@ -164,6 +177,27 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 			_lineChart.setModel(_sensitivityAnalysis.getModel());
 			_lineChart.setPositionVariableValueMarker(_weightSpinner.getSelection() / 100d);
 			_lineChart.refreshChart();
+			
+			if(!_isTODIM) {
+				_weightSpinner.setVisible(true);
+				if(_isTOPSIS) {
+					_changeChartButton.setVisible(false);
+				} else {
+					_changeChartButton.setVisible(true);
+				}
+			} else {
+				if(_typeTODIMChart == 0) {
+					_weightSpinner.setVisible(false);
+				} else {
+					_weightSpinner.setVisible(true);
+				}
+				_changeChartButton.setVisible(true);
+			}
+		} else {
+			if(_weightSpinner != null) {
+				_weightSpinner.setVisible(false);
+				_changeChartButton.setVisible(false);
+			}
 		}
 	}
 
@@ -188,6 +222,11 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		
 		if(_weightSpinner != null) {
 			assignSpinnerInitialValues();
+			if(!_isTOPSIS) {
+				_changeChartButton.setVisible(true);
+			} else {
+				_changeChartButton.setVisible(false);
+			}
 		}
 	}
 	
@@ -198,7 +237,6 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 				@Override
 				public void controlResized(ControlEvent e) {
 					initializeChart();
-					refreshChart();
 				}
 			};
 			_chartComposite.addControlListener(_controlListener);
@@ -238,6 +276,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		_weightSpinner.setMinimum(0);
 		_weightSpinner.setDigits(2);
 		_weightSpinner.setIncrement(1);
+		_weightSpinner.setVisible(false);
 		
 		_weightSpinner.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -256,16 +295,13 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	private void assignSpinnerInitialValues() {
 		if(!_isTODIM) {
 			_weightSpinner.setValues(0, 0, 100, 2, 1, 1);
-			_weightSpinner.setVisible(true);
 		} else {
 			if(_typeTODIMChart == 0) {
 				List<Double> weights = transformWeightsToList();
 				Double secondMaxWeight = Math.round(weights.get(1) * 1000d) / 1000d + 0.01;
 				_weightSpinner.setValues((int) (secondMaxWeight * 100), 0, 100, 2, 1, 1);
-				_weightSpinner.setVisible(false);
 			} else {
 				_weightSpinner.setValues(100, 100, 1500, 2, 10, 10);
-				_weightSpinner.setVisible(true);
 			}
 		}
 	}
@@ -319,8 +355,6 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 						_changeChartButton.setText(Messages.AnalysisView_Sturdiness);
 					}
 				}
-				
-				refreshChart();
 			}
 		});
 		
@@ -337,16 +371,17 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	
 	private void initializeTextButton() {
 		
-		if(_changeChartButton != null) {
-			String activatedMethod = MethodsManager.getInstance().getActiveMethod().getId();
-			if(activatedMethod.contains("todim")) { //$NON-NLS-1$
-				_changeChartButton.setText(Messages.AnalysisView_Attenuation_factor);
-			} else if(activatedMethod.contains("topsis")) { //$NON-NLS-1$
-				_changeChartButton.setVisible(false);
-			} else {
-				_changeChartButton.setText(Messages.AnalysisView_Sturdiness);
-			}
+		String activatedMethod = MethodsManager.getInstance().getActiveMethod().getId();
+		if(activatedMethod.contains("todim")) { //$NON-NLS-1$
+			_changeChartButton.setText(Messages.AnalysisView_Attenuation_factor);
+		} else if(activatedMethod.contains("topsis")) { //$NON-NLS-1$
+			_changeChartButton.setText(Messages.AnalysisView_Attenuation_factor); //Para controlar el tamaño del botón
+			_changeChartButton.setVisible(false);
+		} else {
+			_changeChartButton.setText(Messages.AnalysisView_Sturdiness);
 		}
+
+		_changeChartButton.pack();
 	}
 
 	private void initializeStackedChart() {
@@ -375,18 +410,6 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 		}
 	}
 	
-	private void refreshChart() {
-		
-		if(_typeChart == 0) {
-			if(_pairAlternatives != null && !_isTODIM && !_isTOPSIS) {
-				setTypeDataBarChart();		
-				_barChart.refreshChart();
-			}
-		} else {
-			assignModelLineChart();
-		}
-	}
-	
 	private void setTypeDataBarChart() {
 		int a1Index = Integer.parseInt((String) _pairAlternatives[0]);
 		int a2Index = Integer.parseInt((String) _pairAlternatives[1]);
@@ -404,6 +427,8 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 			_barChart.setValues(absolute);
 			_barChart.setTypeData(_typeBarChart);
 		}
+		
+		_barChart.refreshChart();
 	}
 
 	@Override
@@ -420,7 +445,7 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 			setCriterionSelected(event);
 		}
 		
-		refreshChart();
+		initializeChart();
 	}
 	
 	private void setPairAlternatives(SelectionChangedEvent event) {
@@ -449,12 +474,12 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	@Override
 	public void notifyChangeSATableValues(String type) {
 		_typeBarChart = type;
-		refreshChart();
+		initializeChart();
 	}
 
 	@Override
 	public void notifySensitivityAnalysisChange() {
-		refreshChart();
+		initializeChart();
 	}
 	
 	private IViewPart getView(String id) {
@@ -476,7 +501,12 @@ public class AnalysisView extends ViewPart implements ISelectionChangedListener,
 	public void clear() {
 		_typeBarChart = "ABSOLUTE"; //$NON-NLS-1$
 		_typeChart = 0;
-		_isTODIM = false;
+		_typeTODIMChart = 0;
 		_criterionSelected = null;
+		_pairAlternatives = null;
+		
+		removeChart();
+		initializeChart();
+		initializeTextButton();
 	}
 }

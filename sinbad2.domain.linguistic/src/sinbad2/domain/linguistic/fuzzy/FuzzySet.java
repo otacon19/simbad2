@@ -36,6 +36,7 @@ public class FuzzySet extends Linguistic {
 		
 		_labelSet = new LabelSetLinguisticDomain();
 		_values = new LinkedList<Double>();
+		setType(ID);
 	}
 	
 	public FuzzySet(List<LabelLinguisticDomain> labels) {
@@ -256,7 +257,7 @@ public class FuzzySet extends Linguistic {
 			}
 		}
 		
-		setType(ID);
+		//TODO setType(ID);
 	}
 	
 	
