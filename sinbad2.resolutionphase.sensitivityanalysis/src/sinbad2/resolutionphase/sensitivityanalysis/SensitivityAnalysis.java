@@ -255,7 +255,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		todimPhase.setCriteriaWeights(criteriaWeights);
 		todimPhase.calculateRelativeWeights();
-		todimPhase.calculateDominanceDegreeByCriterionFuzzyNumber(1);
+		todimPhase.calculateDominanceDegreeByCriterionFuzzyNumber(1.0);
 		todimPhase.calculateDominaceDegreeOverAlternatives();
 		
 		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
@@ -270,7 +270,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		int numWeight = 0;
 		
 		Map<Criterion, Double> criteriaWeights = new HashMap<Criterion, Double>();
-		for (Criterion c : _elementsSet.getAllCriteria()) {
+		for (Criterion c : _elementsSet.getAllSubcriteria()) {
 			criteriaWeights.put(c, weights[numWeight]);
 			numWeight++;
 		}
@@ -443,7 +443,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		todimPhase.setCriteriaWeights(criteriaWeights);
 		todimPhase.calculateRelativeWeights();
-		todimPhase.calculateDominanceDegreeByCriterionFuzzyNumber(1);
+		todimPhase.calculateDominanceDegreeByCriterionFuzzyNumber(1.0);
 		todimPhase.calculateDominaceDegreeOverAlternatives();
 		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
 		
@@ -1301,7 +1301,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		int i = 0, j = 0;
 		for (Alternative a : _elementsSet.getAlternatives()) {
 			j = 0;
-			for (Criterion c : _elementsSet.getAllCriteria()) {
+			for (Criterion c : _elementsSet.getAllSubcriteria()) {
 				_decisionMatrix[j][i] = ((TwoTuple) decisionMatrix.get(new Pair(a, c))).calculateInverseDelta();
 				j++;
 			}
@@ -1312,7 +1312,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private void aggregateAlternativesNewWeights() {
 		
 		List<Double> w = new LinkedList<Double>();
-		for(int i = 0; i < _elementsSet.getAllCriteria().size(); ++i) {
+		for(int i = 0; i < _elementsSet.getAllSubcriteria().size(); ++i) {
 			w.add(_w[i]);
 		}
 		

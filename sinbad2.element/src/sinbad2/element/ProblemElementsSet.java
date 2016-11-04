@@ -208,17 +208,17 @@ public class ProblemElementsSet implements Cloneable {
 	public List<Criterion> getAllCriteria() {
 		List<Criterion> result = new LinkedList<Criterion>();
 		for(Criterion c: _criteria) {
-			result.addAll(getAllSubcriteria(c));
+			result.addAll(getAllParentSubcriteria(c));
 		}
 		return result;
 	}
 	
-	public List<Criterion> getAllSubcriteria(Criterion parent) {
+	public List<Criterion> getAllParentSubcriteria(Criterion parent) {
 		List<Criterion> criteria = new LinkedList<Criterion>();
 		if(parent.hasSubcriteria()) {
 			criteria.add(parent);
 			for(Criterion subcriterion: parent.getSubcriteria()) {
-				criteria.addAll(getAllSubcriteria(subcriterion));
+				criteria.addAll(getAllParentSubcriteria(subcriterion));
 			}
 		} else {
 			criteria.add(parent);
@@ -245,6 +245,17 @@ public class ProblemElementsSet implements Cloneable {
 		}
 		return criteria;
 	}
+	
+	public List<Criterion> getAbsoluteParentsCriteria() {
+		List<Criterion> absoluteParents = new LinkedList<Criterion>();
+		for(Criterion c: _criteria) {
+			if(c.hasSubcriteria() && c.getParent() == null) {
+				absoluteParents.add(c);
+			}
+		}
+		return absoluteParents;
+	}
+	
 	
 	public void setExperts(List<Expert> experts) {
 		Validator.notNull(experts);

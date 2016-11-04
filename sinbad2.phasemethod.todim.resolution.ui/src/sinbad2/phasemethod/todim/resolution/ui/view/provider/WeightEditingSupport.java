@@ -98,6 +98,7 @@ public class WeightEditingSupport extends EditingSupport{
 	
 	private Object setNewWeights(int row, double newValue) {
 		List<Double> weights = _resolutionPhase.transformWeightsToList();
+		weights.remove(row);
 		weights.add(row, newValue);
 		
 		Map<Criterion, Double> mapWeigths = new HashMap<Criterion, Double>();

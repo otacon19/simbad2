@@ -33,6 +33,10 @@ public class SATable extends KTable implements ISelectionProvider {
 
 		getParent().layout();
 
+		super.setSelection(1, 0, false);
+		String criterion = (String) _provider.doGetTooltipAt(1, 0);
+		setSelection(new StructuredSelection(criterion));
+		
 		super.addCellSelectionListener(new KTableCellSelectionListener() {
 
 			@Override

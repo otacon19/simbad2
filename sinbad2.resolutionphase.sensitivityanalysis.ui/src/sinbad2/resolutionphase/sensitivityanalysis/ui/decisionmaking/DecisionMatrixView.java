@@ -24,7 +24,6 @@ import sinbad2.core.workspace.Workspace;
 import sinbad2.domain.ui.view.domain.DomainViewManager;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
-import sinbad2.method.MethodsManager;
 import sinbad2.resolutionphase.sensitivityanalysis.EModel;
 import sinbad2.resolutionphase.sensitivityanalysis.ISensitivityAnalysisChangeListener;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
@@ -86,10 +85,10 @@ public class DecisionMatrixView extends ViewPart implements ISensitivityAnalysis
 		_changeWeightsButton.setText(Messages.DecisionMakingView_Weights);
 		_buttonComposite.pack();
 		
-		String categoryMethod = MethodsManager.getInstance().getActiveMethod().getCategory();
-		if(categoryMethod.contains(Messages.DecisionMatrixView_Multi_criteria_decision_analysis)) {
-			_changeWeightsButton.setEnabled(false);
-		}
+		//String categoryMethod = MethodsManager.getInstance().getActiveMethod().getCategory();
+		//if(categoryMethod.contains(Messages.DecisionMatrixView_Multi_criteria_decision_analysis)) {
+		//	_changeWeightsButton.setEnabled(false);
+		//}
 
 		_changeWeightsButton.addSelectionListener(new SelectionAdapter() {
 			@Override

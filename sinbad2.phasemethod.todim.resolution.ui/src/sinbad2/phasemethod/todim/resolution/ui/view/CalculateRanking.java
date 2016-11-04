@@ -363,15 +363,17 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	public void refreshTODIMTables() {
 
 		setInputCriteriaTable();
+		
+		if(!_resolutionPhase.getTrapezoidalConsensusMatrix()[0][0].contains("a")) {
+			if (_matrixType.getSelectionIndex() == 1) {
+				setInputDominanceDegreeTable(1);
+			} else {
+				setInputDominanceDegreeTable(0);
+			}
 
-		if (_matrixType.getSelectionIndex() == 1) {
-			setInputDominanceDegreeTable(1);
-		} else {
-			setInputDominanceDegreeTable(0);
+			setInputDominaceAlternativeDegreeTable();
+			setInputRankingTable();
 		}
-
-		setInputDominaceAlternativeDegreeTable();
-		setInputRankingTable();
 	}
 
 	private void setInputCriteriaTable() {
@@ -403,9 +405,9 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 
 		Map<Criterion, Map<Pair<Alternative, Alternative>, Double>> dominanceDegreeByCriterion;
 		if (mode == 1) {
-			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionCenterOfGravity(1);
+			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionCenterOfGravity(1.0);
 		} else {
-			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionFuzzyNumber(1);
+			dominanceDegreeByCriterion = _resolutionPhase.calculateDominanceDegreeByCriterionFuzzyNumber(1.0);
 		}
 
 		for (Criterion c : _elementsSet.getAllCriteria()) {
