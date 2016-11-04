@@ -14,7 +14,7 @@ public class Messages extends NLS {
 	public static String AnalysisView_RELATIVE;
 	public static String AnalysisView_Sturdiness;
 	public static String DecisionMakingView_Weights;
-	public static String DecisionMatrixView_Multi_criteria_decision_analysis;
+	public static String DecisionMatrixView_Multi_criteria_decision_analysis_TOPSIS;
 	public static String MinimunValueBetweenAlternativesBarChart_Minimun_absolute;
 	public static String MinimunValueBetweenAlternativesBarChart_Minimun_percent;
 	public static String MinimunValueBetweenAlternativesBarChart_RELATIVE;
