@@ -68,12 +68,17 @@
       <plugin id="sinbad2.aggregationoperator"/>
       <plugin id="sinbad2.aggregationoperator.arithmeticMean"/>
       <plugin id="sinbad2.aggregationoperator.choquetIntegral"/>
+      <plugin id="sinbad2.aggregationoperator.geometricMean"/>
+      <plugin id="sinbad2.aggregationoperator.harmonicMean"/>
       <plugin id="sinbad2.aggregationoperator.max"/>
       <plugin id="sinbad2.aggregationoperator.maxMin"/>
       <plugin id="sinbad2.aggregationoperator.median"/>
       <plugin id="sinbad2.aggregationoperator.min"/>
       <plugin id="sinbad2.aggregationoperator.owa"/>
+      <plugin id="sinbad2.aggregationoperator.weightedgeometric"/>
+      <plugin id="sinbad2.aggregationoperator.weightedharmonic"/>
       <plugin id="sinbad2.aggregationoperator.weightedmean"/>
+      <plugin id="sinbad2.aggregationoperator.weightedmeanmodified"/>
       <plugin id="sinbad2.core"/>
       <plugin id="sinbad2.core.ui"/>
       <plugin id="sinbad2.domain"/>

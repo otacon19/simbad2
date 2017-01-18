@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.aggregationoperator">
+      <aggregation_operator
+            id="flintstones.aggregationoperator.weightedgeometric"
+            name="Weighted geometric"
+            parameters="false">
+         <weighted
+               implementation="sinbad2.aggregationoperator.weightedgeometric.Weightedgeometric">
+            <supported_types
+                  type="TwoTuple">
+            </supported_types>
+            <supported_types
+                  type="Numeric">
+            </supported_types>
+         </weighted>
+      </aggregation_operator>
+   </extension>
+
+</plugin>

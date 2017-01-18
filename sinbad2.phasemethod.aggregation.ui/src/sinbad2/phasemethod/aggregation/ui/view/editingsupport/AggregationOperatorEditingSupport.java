@@ -241,7 +241,116 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				elementId = element.getId();
 			}
 			
-			if (aggregationOperator.getName().equals("OWA")) { //$NON-NLS-1$
+			if (aggregationOperator.getName().equals("Weighted mean")) { //$NON-NLS-1$
+				
+				ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+				ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+				
+				ProblemElement nullElement = null;
+				ProblemElement[] secondary;
+				
+				WeightsDialog dialog; 
+				if(elementType.equals("Expert")) {
+					secondary = getLeafElements(nullElement, "criterion");
+					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+				} else {
+					secondary = getLeafElements(nullElement, "expert");
+					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+				}
+					
+				int exitValue = dialog.open();
+				if(exitValue == WeightsDialog.SAVE) {
+					_mapWeights = dialog.getWeights();
+					_weights = null;
+					operator = aggregationOperator;
+				} else if(exitValue == QuantifiersDialog.CANCEL_ALL) {
+					_mapWeights = null;
+					_weights = null;
+					_abort = true;
+				}
+			
+			} else if(aggregationOperator.getName().equals("Weighted geometric")) {
+				ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+				ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+				
+				ProblemElement nullElement = null;
+				ProblemElement[] secondary;
+				
+				WeightsDialog dialog; 
+				if(elementType.equals("Expert")) {
+					secondary = getLeafElements(nullElement, "criterion");
+					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+				} else {
+					secondary = getLeafElements(nullElement, "expert");
+					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+				}
+					
+				int exitValue = dialog.open();
+				if(exitValue == WeightsDialog.SAVE) {
+					_mapWeights = dialog.getWeights();
+					_weights = null;
+					operator = aggregationOperator;
+				} else if(exitValue == QuantifiersDialog.CANCEL_ALL) {
+					_mapWeights = null;
+					_weights = null;
+					_abort = true;
+				}
+				
+			} else if (aggregationOperator.getName().equals("Weighted mean modified")) { //$NON-NLS-1$
+				
+				ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+				ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+				
+				ProblemElement nullElement = null;
+				ProblemElement[] secondary;
+				
+				WeightsDialog dialog; 
+				if(elementType.equals("Expert")) {
+					secondary = getLeafElements(nullElement, "criterion");
+					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+				} else {
+					secondary = getLeafElements(nullElement, "expert");
+					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+				}
+					
+				int exitValue = dialog.open();
+				if(exitValue == WeightsDialog.SAVE) {
+					_mapWeights = dialog.getWeights();
+					_weights = null;
+					operator = aggregationOperator;
+				} else if(exitValue == QuantifiersDialog.CANCEL_ALL) {
+					_mapWeights = null;
+					_weights = null;
+					_abort = true;
+				}
+			} else if (aggregationOperator.getName().equals("Weighted harmonic")) { //$NON-NLS-1$
+				
+				ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+				ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+				
+				ProblemElement nullElement = null;
+				ProblemElement[] secondary;
+				
+				WeightsDialog dialog; 
+				if(elementType.equals("Expert")) {
+					secondary = getLeafElements(nullElement, "criterion");
+					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+				} else {
+					secondary = getLeafElements(nullElement, "expert");
+					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
+				}
+					
+				int exitValue = dialog.open();
+				if(exitValue == WeightsDialog.SAVE) {
+					_mapWeights = dialog.getWeights();
+					_weights = null;
+					operator = aggregationOperator;
+				} else if(exitValue == QuantifiersDialog.CANCEL_ALL) {
+					_mapWeights = null;
+					_weights = null;
+					_abort = true;
+				}
+			} else if (aggregationOperator.getName().equals("OWA")) { //$NON-NLS-1$
 				if (_weights == null) {
 					QuantifiersDialog dialog = new QuantifiersDialog(Display.getCurrent().getActiveShell(), null, null, QuantifiersDialog.SIMPLE, elementType, elementId);
 
@@ -260,32 +369,31 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 				} else {
 					operator = aggregationOperator;
 				}
-			} else {
-				if(aggregationOperator.getName().equals("Choquet integral")) {
+			} else if(aggregationOperator.getName().equals("Choquet integral")) {
 					
-					ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
-					ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+				ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+				ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
 					
-					ChoquetIntegralWeightsDialog dialog;
-					if(elementType.equals("Expert")) { //$NON-NLS-1$
-						dialog = new ChoquetIntegralWeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) element),
-								ChoquetIntegralWeightsDialog.SIMPLE, elementType, elementId);
-					} else {
-						dialog = new ChoquetIntegralWeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element),
-								ChoquetIntegralWeightsDialog.SIMPLE, elementType, elementId);
-					}
-
-					int exitValue = dialog.open();
-					if (exitValue == ChoquetIntegralWeightsDialog.SAVE) {
-						_mapWeights = null;
-						_weights = dialog.getWeights();
-						operator = aggregationOperator;
-					} else if (exitValue == ChoquetIntegralWeightsDialog.CANCEL_ALL) {
-						_weights = null;
-						_mapWeights = null;
-						_abort = true;
-					}
+				ChoquetIntegralWeightsDialog dialog;
+				if(elementType.equals("Expert")) { //$NON-NLS-1$
+					dialog = new ChoquetIntegralWeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) element),
+							ChoquetIntegralWeightsDialog.SIMPLE, elementType, elementId);
 				} else {
+					dialog = new ChoquetIntegralWeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element),
+							ChoquetIntegralWeightsDialog.SIMPLE, elementType, elementId);
+				}
+
+				int exitValue = dialog.open();
+				if (exitValue == ChoquetIntegralWeightsDialog.SAVE) {
+					_mapWeights = null;
+					_weights = dialog.getWeights();
+					operator = aggregationOperator;
+				} else if (exitValue == ChoquetIntegralWeightsDialog.CANCEL_ALL) {
+					_weights = null;
+					_mapWeights = null;
+					_abort = true;
+				}
+			} else {
 					_weights = null;
 					_mapWeights = null;
 						
@@ -322,7 +430,6 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 						operator.setParameters(dialogP.getParameters());
 					}
 				}
-			}
 		} else {
 			operator = aggregationOperator;
 			

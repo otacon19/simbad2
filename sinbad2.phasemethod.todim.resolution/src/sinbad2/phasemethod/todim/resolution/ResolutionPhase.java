@@ -41,7 +41,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	public static final String ID = "flintstones.phasemethod.todim.resolution"; //$NON-NLS-1$
 
 	private static final int P = 2;
-
+	
 	private int _numAlternatives;
 	private int _numCriteria;
 
@@ -115,7 +115,7 @@ public class ResolutionPhase implements IPhaseMethod {
 
 		_numAlternatives = _elementsSet.getAlternatives().size();
 		_numCriteria = _elementsSet.getAllCriteria().size();
-
+		
 		_centerOfGravityConsensusMatrix = new Double[_numAlternatives][_numCriteria];
 		_trapezoidalConsensusMatrix = new String[_numAlternatives][_numCriteria];
 
@@ -264,7 +264,6 @@ public class ResolutionPhase implements IPhaseMethod {
 	}
 
 	public Double[][] calculateConsensusMatrixCenterOfGravity() {
-		;
 		Double cog;
 		String trapezoidalNumber;
 

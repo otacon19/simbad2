@@ -174,6 +174,106 @@ public class OperatorWeightsEditingSupport extends EditingSupport {
 
 				}
 			}
+		} else if(operator.getName().equals("Weighted mean")) { //$NON-NLS-1$
+
+			ProblemElement nullElement = null;
+			ProblemElement[] secondary;
+
+			ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+			ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+			
+			WeightsDialog dialog; 
+			if(elementType.equals("Expert")) {
+				secondary = getLeafElements(nullElement, "criterion");
+				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
+			} else {
+				secondary = getLeafElements(nullElement, "expert");
+				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
+			}
+			
+			if(dialog.open() == QuantifiersDialog.SAVE) {
+				mapWeights = dialog.getWeights();
+				if (AggregationPhase.EXPERTS.equals(_type)) {
+					_aggregationPhase.setExpertOperator(problemElement, operator, mapWeights);
+				} else {
+					_aggregationPhase.setCriterionOperator(problemElement, operator, mapWeights);
+				}
+			}
+		} else if(operator.getName().equals("Weighted geometric")) { //$NON-NLS-1$
+
+			ProblemElement nullElement = null;
+			ProblemElement[] secondary;
+
+			ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+			ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+			
+			WeightsDialog dialog; 
+			if(elementType.equals("Expert")) {
+				secondary = getLeafElements(nullElement, "criterion");
+				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
+			} else {
+				secondary = getLeafElements(nullElement, "expert");
+				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
+			}
+			
+			if(dialog.open() == QuantifiersDialog.SAVE) {
+				mapWeights = dialog.getWeights();
+				if (AggregationPhase.EXPERTS.equals(_type)) {
+					_aggregationPhase.setExpertOperator(problemElement, operator, mapWeights);
+				} else {
+					_aggregationPhase.setCriterionOperator(problemElement, operator, mapWeights);
+				}
+			}
+		} else if(operator.getName().equals("Weighted mean modified")) { //$NON-NLS-1$
+
+			ProblemElement nullElement = null;
+			ProblemElement[] secondary;
+
+			ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+			ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+			
+			WeightsDialog dialog; 
+			if(elementType.equals("Expert")) {
+				secondary = getLeafElements(nullElement, "criterion");
+				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
+			} else {
+				secondary = getLeafElements(nullElement, "expert");
+				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
+			}
+			
+			if(dialog.open() == QuantifiersDialog.SAVE) {
+				mapWeights = dialog.getWeights();
+				if (AggregationPhase.EXPERTS.equals(_type)) {
+					_aggregationPhase.setExpertOperator(problemElement, operator, mapWeights);
+				} else {
+					_aggregationPhase.setCriterionOperator(problemElement, operator, mapWeights);
+				}
+			}
+		} else if(operator.getName().equals("Weighted harmonic")) { //$NON-NLS-1$
+
+			ProblemElement nullElement = null;
+			ProblemElement[] secondary;
+
+			ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
+			ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
+			
+			WeightsDialog dialog; 
+			if(elementType.equals("Expert")) {
+				secondary = getLeafElements(nullElement, "criterion");
+				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
+			} else {
+				secondary = getLeafElements(nullElement, "expert");
+				dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) problemElement), secondary, mapWeights, QuantifiersDialog.SIMPLE, elementType, elementId);
+			}
+			
+			if(dialog.open() == QuantifiersDialog.SAVE) {
+				mapWeights = dialog.getWeights();
+				if (AggregationPhase.EXPERTS.equals(_type)) {
+					_aggregationPhase.setExpertOperator(problemElement, operator, mapWeights);
+				} else {
+					_aggregationPhase.setCriterionOperator(problemElement, operator, mapWeights);
+				}
+			}
 		} else {
 			ProblemElement nullElement = null;
 			ProblemElement[] secondary;
