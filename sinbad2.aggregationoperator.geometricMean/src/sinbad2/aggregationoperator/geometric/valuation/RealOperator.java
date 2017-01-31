@@ -13,7 +13,7 @@ public class RealOperator {
 	
 	public static Valuation aggregate(List<Valuation> valuations) {
 		RealValuation result = null;
-		double value = 0, aux = 0;
+		double value = 1, aux = 0;
 		int size = valuations.size();
 		NumericRealDomain domain = null;
 		
@@ -29,7 +29,7 @@ public class RealOperator {
 			value *= ((RealValuation) valuation).getValue();
 		}
 		
-		aux = Math.pow(value,1/size);
+		aux = Math.pow(value, 1d / size);
 		value = aux;
 		
 		if(domain != null) {

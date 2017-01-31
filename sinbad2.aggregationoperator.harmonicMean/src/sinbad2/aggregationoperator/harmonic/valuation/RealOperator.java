@@ -26,7 +26,7 @@ public class RealOperator {
 				throw new IllegalArgumentException("Invalid domain");
 			}
 			
-			value += (1/((RealValuation) valuation).getValue());
+			value += (1d / ((RealValuation) valuation).getValue());
 		}
 		
 		aux = size / value;

@@ -14,7 +14,7 @@ public class TwoTupleOperator {
 
 	public static Valuation aggregate(List<Valuation> valuations, List<Double> weights) {
 		TwoTuple result = null;
-		double beta = 0;
+		double beta = 1;
 		List<Double> measures = new LinkedList<Double>();
 		FuzzySet domain = null;
 

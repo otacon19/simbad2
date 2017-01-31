@@ -14,7 +14,7 @@ public class IntegerOperator {
 	
 	public static Valuation aggregate(List<Valuation> valuations, List<Double> weights) {
 		IntegerValuation result = null;
-		double measure = 0;
+		double measure = 1;
 		List<Double> measures = new LinkedList<Double>();
 		NumericIntegerDomain domain = null;
 

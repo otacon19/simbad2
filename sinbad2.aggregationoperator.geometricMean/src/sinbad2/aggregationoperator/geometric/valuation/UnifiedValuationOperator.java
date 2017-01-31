@@ -46,7 +46,7 @@ public class UnifiedValuationOperator {
 		}
 
 		if (domain != null) {
-			aux = Math.pow(domain.getValue(size), 1 /(double) size);
+			aux = Math.pow(domain.getValue(size), 1d / (double) size);
 			domain.setValue(size, aux);
 			result = new UnifiedValuation(domain);
 		}

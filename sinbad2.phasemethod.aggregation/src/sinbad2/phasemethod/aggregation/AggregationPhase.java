@@ -350,6 +350,7 @@ public class AggregationPhase implements IPhaseMethod {
 							} else {
 								weights = null;
 							}
+
 							if(operator == null) {
 								alternativeValuations.add(null);
 							} else {

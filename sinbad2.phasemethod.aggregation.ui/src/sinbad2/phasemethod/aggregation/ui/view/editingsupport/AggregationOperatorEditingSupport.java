@@ -294,35 +294,7 @@ public class AggregationOperatorEditingSupport extends EditingSupport {
 					_mapWeights = null;
 					_weights = null;
 					_abort = true;
-				}
-				
-			} else if (aggregationOperator.getName().equals("Weighted mean modified")) { //$NON-NLS-1$
-				
-				ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
-				ProblemElementsSet elementsSet = elementsManager.getActiveElementSet();
-				
-				ProblemElement nullElement = null;
-				ProblemElement[] secondary;
-				
-				WeightsDialog dialog; 
-				if(elementType.equals("Expert")) {
-					secondary = getLeafElements(nullElement, "criterion");
-					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementExpertsAndChildren((Expert) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
-				} else {
-					secondary = getLeafElements(nullElement, "expert");
-					dialog = new WeightsDialog(Display.getCurrent().getActiveShell(), elementsSet.getAllElementCriterionSubcriteria((Criterion) element), secondary, null, QuantifiersDialog.SIMPLE, elementType, elementId);
-				}
-					
-				int exitValue = dialog.open();
-				if(exitValue == WeightsDialog.SAVE) {
-					_mapWeights = dialog.getWeights();
-					_weights = null;
-					operator = aggregationOperator;
-				} else if(exitValue == QuantifiersDialog.CANCEL_ALL) {
-					_mapWeights = null;
-					_weights = null;
-					_abort = true;
-				}
+				}			
 			} else if (aggregationOperator.getName().equals("Weighted harmonic")) { //$NON-NLS-1$
 				
 				ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();

@@ -15,8 +15,7 @@ public class TwoTupleOperator {
 		TwoTuple result = null;
 		double beta = 0, aux =0;
 		FuzzySet domain = null;
-		int size = valuations.size();
-
+	
 		for(Valuation valuation : valuations) {
 			Validator.notIllegalElementType(valuation, new String[] { TwoTuple.class.toString() });
 
@@ -26,10 +25,10 @@ public class TwoTupleOperator {
 				throw new IllegalArgumentException("Invalid domain");
 			}
 
-			beta += (1/((TwoTuple) valuation).calculateInverseDelta());
+			beta += ((TwoTuple) valuation).calculateInverseDelta();
 		}
 
-		aux = size / beta;
+		aux = 1f / beta;
 		beta = aux;
 		
 		if (domain != null) {

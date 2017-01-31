@@ -13,7 +13,7 @@ public class TwoTupleOperator {
 	
 	public static Valuation aggregate(List<Valuation> valuations) {
 		TwoTuple result = null;
-		double beta = 0, aux = 0;
+		double beta = 1, aux = 0;
 		FuzzySet domain = null;
 		int size = valuations.size();
 
@@ -29,7 +29,7 @@ public class TwoTupleOperator {
 			beta *= (((TwoTuple) valuation).calculateInverseDelta());
 		}
 
-		aux = Math.pow(beta, 1/size);
+		aux = Math.pow(beta, 1d / size);
 		beta = aux;
 		
 		if (domain != null) {

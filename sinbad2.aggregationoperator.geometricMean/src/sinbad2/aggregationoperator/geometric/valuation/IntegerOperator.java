@@ -16,7 +16,7 @@ public class IntegerOperator {
 	
 	public static Valuation aggregate(List<Valuation> valuations) {
 		IntegerValuation result = null;
-		double value = 0;
+		double value = 1;
 		double aux = 0;
 		int size = valuations.size();
 		NumericIntegerDomain domain = null;

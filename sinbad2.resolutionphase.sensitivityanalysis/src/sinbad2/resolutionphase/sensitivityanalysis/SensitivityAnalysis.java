@@ -324,7 +324,11 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				if (criteriaOperatorWeights.get(null) == null) {
 					createDefaultWeights();
 				} else if (criteriaOperatorWeights.size() == 1) {
-					assignWeights((List<Double>) criteriaOperatorWeights.get(null));
+					if(criteriaOperatorWeights.get(null) instanceof List<?>) {
+						assignWeights((List<Double>) criteriaOperatorWeights.get(null));
+					} else {
+						assignWeights(((Map<Object, List<Double>>) criteriaOperatorWeights.get(null)).get(null));
+					}
 				} else {
 					assignWeights(getSubcriteriaWeights());
 				}
@@ -391,7 +395,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			return 1;
 		}
 	}
-
+	
 	private void assignWeights(List<Double> weights) {
 		_w = new Double[_numCriteria];
 		for (int i = 0; i < weights.size(); ++i) {
@@ -775,7 +779,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		for (double preference : _alternativesFinalPreferences) {
 			preferences.add(new Double(preference));
 		}
-
 		Collections.sort(preferences);
 		Collections.reverse(preferences);
 
@@ -787,10 +790,16 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				rankingPos++;
 				for (int alternative = 0; alternative < _numAlternatives; alternative++) {
 					if (_alternativesFinalPreferences[alternative] == preference) {
-						_ranking[alternative] = rankingPos;
+						_ranking[alternative] = rankingPos;	
 					}
 				}
 				previousPreference = preference;
+			}
+		}
+		
+		if(_ranking[0] == null) {
+			for (int alternative = 0; alternative < _numAlternatives; alternative++) {
+				_ranking[alternative] = 1;	
 			}
 		}
 	}
@@ -1129,6 +1138,12 @@ public class SensitivityAnalysis implements IResolutionPhase {
 						}
 					}
 				}
+			}
+		}
+		
+		if(_ranking[0] == null) {
+			for (int alternative = 0; alternative < _numAlternatives; alternative++) {
+				_ranking[alternative] = 1;	
 			}
 		}
 	}

@@ -14,7 +14,7 @@ public class RealOperator {
 	
 	public static Valuation aggregate(List<Valuation> valuations, List<Double> weights) {
 		RealValuation result = null;
-		double measure = 0;
+		double measure = 1;
 		List<Double> measures = new LinkedList<Double>();
 		NumericRealDomain domain = null;
 
