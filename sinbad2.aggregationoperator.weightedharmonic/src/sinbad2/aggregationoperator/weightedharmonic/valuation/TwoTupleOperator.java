@@ -34,7 +34,7 @@ public class TwoTupleOperator {
 			for (int i = 0; i < size; i++) {
 				beta += weights.get(i) / measures.get(i);
 			}
-			beta = 1f / beta;
+			beta = 1d / beta;
 			result = (TwoTuple) valuations.get(0).clone();
 			result.calculateDelta(beta);
 		}

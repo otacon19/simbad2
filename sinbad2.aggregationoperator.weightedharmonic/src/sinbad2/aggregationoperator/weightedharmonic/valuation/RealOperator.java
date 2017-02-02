@@ -36,9 +36,9 @@ public class RealOperator {
 			for (int i = 0; i < size; i++) {
 				measure += weights.get(i) / measures.get(i);
 			}
-			measure = 1/measure;
+			measure = (1d / measure) * valuations.size();
 			result = (RealValuation) valuations.get(0).clone();
-			result.setValue( measure);
+			result.setValue(measure);
 		}
 
 		return result;

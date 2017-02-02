@@ -25,10 +25,10 @@ public class TwoTupleOperator {
 				throw new IllegalArgumentException("Invalid domain");
 			}
 
-			beta += ((TwoTuple) valuation).calculateInverseDelta();
+			beta += 1d / ((TwoTuple) valuation).calculateInverseDelta();
 		}
 
-		aux = 1f / beta;
+		aux = valuations.size() / beta;
 		beta = aux;
 		
 		if (domain != null) {
