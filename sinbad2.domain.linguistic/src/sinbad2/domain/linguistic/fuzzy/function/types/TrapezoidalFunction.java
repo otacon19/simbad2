@@ -316,7 +316,11 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	}
 	
 	public double getSimpleDefuzzifiedValue() {
-		return (_a + (2 * _b) + (2 * _c) + _d) / 6;
+		return (_a + (2d * _b) + (2d * _c) + _d) / 6d;
+	}
+	
+	public double similarity(TrapezoidalFunction tpf, double P, double u) {
+		return 1d - ((1d / (4d * Math.pow(u, P))) * Math.pow(distance(tpf, P), P)); 
 	}
 	
 	public double distance(TrapezoidalFunction tpf, double P) {
@@ -324,10 +328,10 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		double limits1[] = getLimits(), limits2[] = tpf.getLimits();
 		
 		for(int i = 0; i < 4; ++i) {
-			acum += Math.pow(limits2[i] - limits1[i], P); 
+			acum += Math.pow(Math.abs(limits1[i] - limits2[i]), P); 
 		}
 		
-		return Math.sqrt(acum);
+		return Math.pow(acum, 1 / P);
 	}
 	
 	@Override

@@ -218,7 +218,7 @@ public class UnificationPhase implements IPhaseMethod {
 				weights.add(weight);
 			}
             
-            if(lower == null) {
+            if(lower == null) { //Relación binaria
                 a = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
                 d = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
                 if(envelope[0] + 1 == envelope[1]) {

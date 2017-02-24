@@ -79,6 +79,7 @@
       <plugin id="sinbad2.aggregationoperator.weightedharmonic"/>
       <plugin id="sinbad2.aggregationoperator.weightedmean"/>
       <plugin id="sinbad2.aggregationoperator.weightedmeanmodified"/>
+      <plugin id="sinbad2.choco.solver"/>
       <plugin id="sinbad2.core"/>
       <plugin id="sinbad2.core.ui"/>
       <plugin id="sinbad2.domain"/>
