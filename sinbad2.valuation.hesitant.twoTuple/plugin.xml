@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.valuation">
+      <valuation
+            domain="flintstones.domain.linguistic"
+            id="flintstones.valuation.hesitant.twoTuple"
+            name="%valuation.name">
+         <type
+               implementation="sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation">
+         </type>
+      </valuation>
+   </extension>
+
+</plugin>

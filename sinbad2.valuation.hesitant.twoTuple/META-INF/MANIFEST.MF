@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name
+Bundle-SymbolicName: sinbad2.valuation.hesitant.twoTuple;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: %Bundle-Vendor
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.valuation.twoTuple;bundle-version="1.0.0";visibility:=reexport,
+ sinbad2.domain.linguistic.unbalanced;bundle-version="1.0.0"
