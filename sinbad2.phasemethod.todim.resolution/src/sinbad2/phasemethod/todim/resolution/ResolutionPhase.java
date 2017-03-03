@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.rosuda.JRI.Rengine;
+
 import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.AggregationOperatorsManager;
 import sinbad2.aggregationoperator.owa.OWA;
@@ -775,8 +777,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void activate() {
-	}
+	public void activate() {}
 
 	@Override
 	public IPhaseMethod clone() {
@@ -792,7 +793,25 @@ public class ResolutionPhase implements IPhaseMethod {
 	}
 
 	private void computeLinearProgramming() {
-	
+		// Create an R vector in the form of a string.
+        String javaVector = "c(1,2,3,4,5)";
+
+        // Start Rengine.
+        Rengine engine = new Rengine(new String[] { "--no-save" }, false, null);
+
+        // The vector that was created in JAVA context is stored in 'rVector' which is a variable in R context.
+        engine.eval("rVector=" + javaVector);
+        
+        //Calculate MEAN of vector using R syntax.
+        engine.eval("meanVal=mean(rVector)");
+        
+        //Retrieve MEAN value
+        double mean = engine.eval("meanVal").asDouble();
+        
+        //Print output values
+        System.out.println("Mean of given vector is=" + mean);
+        
+        engine.end();
 	}
 
 	private double[] computeExpertsWeights() {

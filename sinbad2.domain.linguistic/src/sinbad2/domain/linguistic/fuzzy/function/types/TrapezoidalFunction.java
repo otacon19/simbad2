@@ -181,7 +181,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	public double maxMin(double max, double min) {
 		Validator.notDisorder(new double[] { min, max }, false);
 		
-		if(( max >= _b) && (min <= _c)) {
+		if(( min >= _b) && (max <= _c)) {
 			return 1d;
 		} else if(max < _b) {
 			return getMembershipValue(max);

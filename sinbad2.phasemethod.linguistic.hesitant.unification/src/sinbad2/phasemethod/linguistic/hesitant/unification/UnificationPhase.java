@@ -265,6 +265,8 @@ public class UnificationPhase implements IPhaseMethod {
         TrapezoidalFunction tmf = new TrapezoidalFunction(new double[] {a, b, c, d});
         _envelopeValuations.put(vk, tmf);
         
+        System.out.println(_envelopeValuations);
+        
         transformToTwoTuple(vk, tmf, domain);
 	}
 	
@@ -280,6 +282,11 @@ public class UnificationPhase implements IPhaseMethod {
 			result.setValue(i, function.maxMin(tmf));
 		}
 		
+		if(vk.getExpert().getId().equals("Helen") && vk.getAlternative().getId().equals("a1") && vk.getCriterion().getId().equals("c2")) {
+			System.out.println(domain);
+			System.out.println(result);
+		}
+			
 		Valuation unifiedValuation = new UnifiedValuation(result);
 		_unifiedValuations.put(vk, unifiedValuation);
 		
