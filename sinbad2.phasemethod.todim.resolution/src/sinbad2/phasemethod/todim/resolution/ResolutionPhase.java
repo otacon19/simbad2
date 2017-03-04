@@ -792,7 +792,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		return result;
 	}
 
-	private void computeLinearProgramming() {
+	public void computeLinearProgramming() {
 		// Create an R vector in the form of a string.
         String javaVector = "c(1,2,3,4,5)";
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method">
+      <method
+            category="Hesitant Fuzzy Linguistic Information"
+            description="Method which uses hesitant complex terms which are represented by means of 2-tuple"
+            id="flintstones.method.linguistic.hesitant.twotuple"
+            implementation="sinbad2.method.linguistic.hesitant.twotuple.HesitantTwoTuple"
+            name="Complex 2-tuple Hesitant Linguistic Information ">
+         <aggregation_supported
+               type="Hesitant">
+         </aggregation_supported>
+      </method>
+   </extension>
+
+</plugin>
