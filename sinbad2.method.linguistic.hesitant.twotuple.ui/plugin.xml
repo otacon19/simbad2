@@ -7,6 +7,9 @@
             id="flintstones.method.linguistic.hesitant.twotuple.ui"
             method="flintstones.method.linguistic.hesitant.twotuple"
             name="Complex 2-tuple Hesitant Linguistic Information ">
+         <ui
+               id="flintstones.phasemethod.linguistic.hesitant.twotuple.unification.ui">
+         </ui>
       </method_ui>
    </extension>
 

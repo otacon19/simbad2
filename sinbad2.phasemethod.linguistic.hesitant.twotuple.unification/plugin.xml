@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.phasemethod">
+      <phase
+            id="flintstones.phasemethod.linguistic.hesitant.twotuple.unification"
+            implementation="sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.UnificationPhase"
+            name="Unification">
+      </phase>
+   </extension>
+
+</plugin>
