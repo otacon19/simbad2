@@ -1,20 +1,13 @@
 package sinbad2.phasemethod.todim.unification;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
-import sinbad2.aggregationoperator.AggregationOperator;
-import sinbad2.aggregationoperator.AggregationOperatorsManager;
-import sinbad2.aggregationoperator.owa.OWA;
-import sinbad2.aggregationoperator.owa.YagerQuantifiers;
 import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
-import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.domain.numeric.real.NumericRealDomain;
 import sinbad2.element.alternative.Alternative;
@@ -28,7 +21,6 @@ import sinbad2.valuation.integer.interval.IntegerIntervalValuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
 import sinbad2.valuation.real.RealValuation;
 import sinbad2.valuation.real.interval.RealIntervalValuation;
-import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -166,7 +158,7 @@ public class UnificationPhase implements IPhaseMethod {
 					} else if (valuation instanceof LinguisticValuation) {
 						_fuzzyValuations.put(vk, (TrapezoidalFunction) ((LinguisticValuation) valuation).getLabel().getSemantic());
 					} else if (valuation instanceof HesitantValuation) {
-						calculateFuzzyEnvelope(vk, (HesitantValuation) valuation, (FuzzySet) _unifiedDomain);
+						_fuzzyValuations.put(vk, ((HesitantValuation) valuation).calculateFuzzyEnvelope((FuzzySet) _unifiedDomain));
 					}
 				}
 			}
@@ -189,101 +181,6 @@ public class UnificationPhase implements IPhaseMethod {
 		}
 		
 		return _fuzzyValuations;
-	}
-
-	private void calculateFuzzyEnvelope(ValuationKey vk, HesitantValuation valuation, FuzzySet domain) {
-		double a, b, c, d;
-		int g = domain.getLabelSet().getCardinality();
-		Boolean lower = null;
-
-		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
-		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
-
-		if (valuation.isPrimary()) {
-			IMembershipFunction semantic = valuation.getLabel().getSemantic();
-			a = semantic.getCoverage().getMin();
-			b = semantic.getCenter().getMin();
-			c = semantic.getCenter().getMax();
-			d = semantic.getCoverage().getMax();
-		} else {
-			int envelope[] = valuation.getEnvelopeIndex();
-			if (valuation.isUnary()) {
-				switch (valuation.getUnaryRelation()) {
-				case LowerThan:
-					lower = Boolean.valueOf(true);
-					break;
-				case AtMost:
-					lower = Boolean.valueOf(true);
-					break;
-				default:
-					lower = Boolean.valueOf(false);
-					break;
-				}
-			} else {
-				lower = null;
-			}
-
-			YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
-			List<Double> weights = new LinkedList<Double>();
-			double[] auxWeights = YagerQuantifiers.QWeighted(nqt, g - 1, envelope, lower);
-
-			weights.add(new Double(-1));
-			for (Double weight : auxWeights) {
-				weights.add(weight);
-			}
-
-			if (lower == null) {
-				a = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage()
-						.getMin();
-				d = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage()
-						.getMax();
-				if (envelope[0] + 1 == envelope[1]) {
-					b = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCenter()
-							.getMin();
-					c = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCenter()
-							.getMax();
-				} else {
-					int sum = envelope[1] + envelope[0];
-					int top;
-					if (sum % 2 == 0) {
-						top = sum / 2;
-					} else {
-						top = (sum - 1) / 2;
-					}
-					List<Valuation> valuations = new LinkedList<Valuation>();
-					for (int i = envelope[0]; i <= top; i++) {
-						valuations.add(new TwoTuple(domain, domain.getLabelSet().getLabel(i)));
-					}
-
-					Valuation aux = ((OWA) owa).aggregate(valuations, weights);
-					b = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
-					c = 2D * domain.getLabelSet().getLabel(top).getSemantic().getCenter().getMin() - b;
-				}
-			} else {
-				List<Valuation> valuations = new LinkedList<Valuation>();
-				for (int i = envelope[0]; i <= envelope[1]; i++) {
-					valuations.add(new TwoTuple(domain, domain.getLabelSet().getLabel(i)));
-				}
-
-				Valuation aux = ((OWA) owa).aggregate(valuations, weights);
-				if (lower.booleanValue()) {
-					a = 0.0D;
-					b = 0.0D;
-					c = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
-					d = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic()
-							.getCoverage().getMax();
-				} else {
-					a = ((FuzzySet) valuation.getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic()
-							.getCoverage().getMin();
-					b = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
-					c = 1.0D;
-					d = 1.0D;
-				}
-			}
-		}
-
-		TrapezoidalFunction tmf = new TrapezoidalFunction(new double[] { a, b, c, d });
-		_fuzzyValuations.put(vk, tmf);
 	}
 	
 	private void createIntegerNumericalValuesFuzzyNumber(Map<ValuationKey, Valuation> numericalIntegerValuesToNormalized) {

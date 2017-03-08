@@ -4,7 +4,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.nls.Messages;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.linguistic.LinguisticValuation;
+import sinbad2.valuation.hesitant.HesitantValuation;
 
 public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 
@@ -13,8 +13,8 @@ public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 		if(element instanceof Object[]) {
 			Valuation result = (Valuation) ((Object[]) element)[4];
 			if(result != null) {
-				if(result instanceof LinguisticValuation) {
-					return ((LinguisticValuation) result).getLabel().getName();
+				if(result instanceof HesitantValuation) {
+					return ((HesitantValuation) result).changeFormatValuationToString();
 				} else {
 					return Messages.EvaluationColumnLabelProvider_Not_evaluated;
 				}

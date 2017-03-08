@@ -11,6 +11,7 @@ import java.util.Set;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -21,7 +22,9 @@ import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.nls.Messages
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.linguistic.LinguisticValuation;
+import sinbad2.valuation.hesitant.EUnaryRelationType;
+import sinbad2.valuation.hesitant.HesitantValuation;
+import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
@@ -142,27 +145,32 @@ public class UnificationPhase implements IPhaseMethod {
 		_twoTupleValuations = new HashMap<ValuationKey, Valuation>();
 		
 		if (unifiedDomain != null) {
-			Criterion criterion;
 			Valuation valuation;
-			Boolean isCost;
+			TwoTuple valuationTwoTuple, valuationTwoTupleLower, valuationTwoTupleUpper;
 
 			Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
 			for(ValuationKey vk : valuations.keySet()) {
-				criterion = vk.getCriterion();
 				valuation = valuations.get(vk);
-				isCost = criterion.isCost();
 
-				if(valuation instanceof TwoTuple) {
-					if(isCost) {
-						valuation = valuation.negateValuation();
+				if(valuation instanceof HesitantValuation) {
+					if(((HesitantValuation) valuation).isPrimary()) {
+						valuationTwoTuple = new TwoTuple((FuzzySet) valuation.getDomain(), ((HesitantValuation) valuation).getLabel()).transform(unifiedDomain);
+						valuation = new HesitantTwoTupleValuation((FuzzySet) valuationTwoTuple.getDomain());
+						((HesitantTwoTupleValuation) valuation).setTwoTupleLabel(valuationTwoTuple);
+					} else if(((HesitantValuation) valuation).isUnary()){
+						LabelLinguisticDomain term = ((HesitantValuation) valuation).getTerm();
+						EUnaryRelationType unary = ((HesitantValuation) valuation).getUnaryRelation();
+						valuationTwoTuple = new TwoTuple((FuzzySet) valuation.getDomain(), term).transform(unifiedDomain);
+						valuation = new HesitantTwoTupleValuation((FuzzySet) valuationTwoTuple.getDomain());
+						((HesitantTwoTupleValuation) valuation).setUnaryRelation(unary, valuationTwoTuple);
+					} else {
+						LabelLinguisticDomain lowerTerm = ((HesitantValuation) valuation).getLowerTerm();
+						LabelLinguisticDomain upperTerm = ((HesitantValuation) valuation).getUpperTerm();
+						valuationTwoTupleLower = new TwoTuple((FuzzySet) valuation.getDomain(), lowerTerm).transform(unifiedDomain);
+						valuationTwoTupleUpper = new TwoTuple((FuzzySet) valuation.getDomain(), upperTerm).transform(unifiedDomain);
+						valuation = new HesitantTwoTupleValuation((FuzzySet) valuationTwoTupleLower.getDomain());
+						((HesitantTwoTupleValuation) valuation).setBinaryRelation(valuationTwoTupleLower, valuationTwoTupleUpper);
 					}
-					valuation = ((TwoTuple) valuation).transform(unifiedDomain);
-				} else if(valuation instanceof LinguisticValuation) {
-					if(isCost) {
-						valuation = valuation.negateValuation();
-					}
-	
-					valuation = new TwoTuple((FuzzySet) valuation.getDomain(), ((LinguisticValuation) valuation).getLabel()).transform(unifiedDomain);
 				} else {
 					throw new IllegalArgumentException();
 				}

@@ -13,6 +13,7 @@ import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.EUnaryRelationType;
 import sinbad2.valuation.hesitant.twoTuple.nls.Messages;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
@@ -229,18 +230,17 @@ public class HesitantTwoTupleValuation extends Valuation {
 	public String changeFormatValuationToString() {
 
 		if (isPrimary()) {
-			return _label.getName();
+			return _label.changeFormatValuationToString();
 		} else {
 			if (isUnary()) {
 				String aux = getUnaryRelation().getRelationType();
 				aux = aux.toLowerCase();
 				aux = aux.substring(0, 1).toUpperCase() + aux.substring(1);
-				return aux + " " + getTwoTupleTerm().changeFormatValuationToString(); //$NON-NLS-1$
+				return aux + " " + getTwoTupleTerm().prettyFormat(); //$NON-NLS-1$
 			} else {
-				return "Between" + " " + getTwoTupleLowerTerm().changeFormatValuationToString() + " " + Messages.HesitantTwoTupleValuation_and + " " + getTwoTupleUpperTerm().changeFormatValuationToString();  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$
+				return "Between" + " " + getTwoTupleLowerTerm().prettyFormat() + " " + Messages.HesitantTwoTupleValuation_and + " " + getTwoTupleUpperTerm().prettyFormat();  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$
 			}
 		}
-
 	}
 
 	@Override

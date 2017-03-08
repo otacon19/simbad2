@@ -67,9 +67,7 @@ public class TwoTuple extends LinguisticValuation {
 		setLabel(labelIndex);
 		
 		double alpha = beta - labelIndex;
-		alpha *= 100;
-		alpha = Math.round(alpha);
-		alpha /= 100;
+		alpha = Math.round(alpha * 100d) / 100d;
 		
 		if(alpha == 0.5) {
 			labelIndex++;
@@ -122,6 +120,10 @@ public class TwoTuple extends LinguisticValuation {
 	@Override
 	public String toString() {
 		return ("[" + _label + ", " + _alpha + "]" + Messages.TwoTuple_In + _domain); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+	
+	public String prettyFormat() {
+		return ("(" + _label + ", " + _alpha + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	@Override

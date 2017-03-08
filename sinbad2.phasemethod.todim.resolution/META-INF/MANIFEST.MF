@@ -5,11 +5,7 @@ Bundle-SymbolicName: sinbad2.phasemethod.todim.resolution;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.phasemethod,
- sinbad2.valuation.real;bundle-version="1.0.0",
- sinbad2.valuation.hesitant,
  sinbad2.aggregationoperator,
- sinbad2.aggregationoperator.owa,
- sinbad2.aggregationoperator.maxMin,
  sinbad2.phasemethod.todim.unification,
  org.engine.R;bundle-version="1.0.0"
 Export-Package: sinbad2.phasemethod.todim.resolution;uses:="sinbad2.domain,sinbad2.phasemethod,sinbad2.phasemethod.listener"
