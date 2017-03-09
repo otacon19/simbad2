@@ -7,7 +7,7 @@ public class DomainColumnLabelProvider extends ColumnLabelProvider {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof Object[]) {
-			return (String) ((Object[]) element)[3];
+			return (String) ((Object[]) element)[1];
 		} else {
 			return null;
 		}

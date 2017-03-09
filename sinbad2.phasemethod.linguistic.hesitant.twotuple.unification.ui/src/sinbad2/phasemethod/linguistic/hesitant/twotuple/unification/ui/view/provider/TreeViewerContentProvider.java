@@ -7,11 +7,9 @@ import org.eclipse.jface.viewers.Viewer;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
-import sinbad2.element.alternative.Alternative;
-import sinbad2.element.criterion.Criterion;
-import sinbad2.element.expert.Expert;
+import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.unifiedValuation.UnifiedValuation;
+import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -22,18 +20,20 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 	private Map<ValuationKey, Valuation> _valuations;
 	private Object[][] _information;
 	private Map<ValuationKey, Valuation> _unifiedEvaluations;
+	private Map<ValuationKey, TrapezoidalFunction> _fuzzyNumbers;
 	
 	public TreeViewerContentProvider() {
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = valuationSetManager.getActiveValuationSet();
 	}
 	
-	public TreeViewerContentProvider(Map<ValuationKey, Valuation> unifiedEvaluations) {
+	public TreeViewerContentProvider(Map<ValuationKey, Valuation> unifiedEvaluations, Map<ValuationKey, TrapezoidalFunction> fuzzyNumbers) {
 		this();
 		
 		ValuationSetManager valuationSetManager = ValuationSetManager.getInstance();
 		_valutationSet = valuationSetManager.getActiveValuationSet();
 		_unifiedEvaluations = unifiedEvaluations;
+		_fuzzyNumbers = fuzzyNumbers;
 	}
 	
 	@Override
@@ -49,20 +49,14 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 
 	public Object[][] getInput() {
 		_valuations = _valutationSet.getValuations();
-		_information = new Object[_valuations.size()][6];
+		_information = new Object[_valuations.size()][5];
 
-		Expert expert;
-		Alternative alternative;
-		Criterion criterion;
 		Domain domain;
 		Valuation unifiedValuation;
 		
 		int i = 0;
 		for (ValuationKey vk: _valuations.keySet()) {
 			Valuation v = _valuations.get(vk);
-			expert = vk.getExpert();
-			alternative = vk.getAlternative();
-			criterion = vk.getCriterion();
 			domain = v.getDomain();
 		
 			unifiedValuation = null;
@@ -73,12 +67,11 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 				}
 			}
 			
-			_information[i][0] = expert.getCanonicalId();
-			_information[i][1] = alternative.getId();
-			_information[i][2] = criterion.getCanonicalId();
-			_information[i][3] = domain.getId();
-			_information[i][4] = v;
-			_information[i][5] = unifiedValuation;
+			_information[i][0] = vk;
+			_information[i][1] = domain.getId();
+			_information[i][2] = v;
+			_information[i][3] = unifiedValuation;
+			_information[i][4] = ((HesitantTwoTupleValuation) unifiedValuation).calculateFuzzyEnvelopeWithoutDisplacement((FuzzySet) unifiedValuation.getDomain());
 			
 			i++;
 		}
@@ -87,25 +80,10 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 	
 	@Override
 	public Object[] getChildren(Object parentElement) {
+		Object[] result = new Object[1];
 		if (parentElement instanceof Object[]) {
-			Valuation valuation = (Valuation) ((Object[]) parentElement)[5];
-			if (valuation instanceof UnifiedValuation) {
-				FuzzySet domain = (FuzzySet) valuation.getDomain();
-				int size = domain.getLabelSet().getCardinality();
-				String[] result = new String[size];
-				String labelName, measure;
-				for (int i = 0; i < size; i++) {
-					labelName = domain.getLabelSet().getLabel(i).getName();
-					measure = Double.toString(domain.getValue(i));
-					if (measure.length() > 5) {
-						measure = measure.substring(0, 5);
-					}
-					result[i] = labelName + "/" + measure; //$NON-NLS-1$
-				}		
-				return result;
-			} else {
-				return null;
-			}
+			result[0] = _fuzzyNumbers.get(((Object[]) parentElement)[0]) .toString();		
+			return result;		
 		} else {
 			return null;
 		}
@@ -120,7 +98,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 	public boolean hasChildren(Object element) {
 		
 		if (element instanceof Object[]) {
-			if (((Object[]) element)[5] instanceof UnifiedValuation) {
+			if (((Object[]) element)[4] instanceof TrapezoidalFunction) {
 				return true;
 			}
 		}

@@ -11,6 +11,7 @@ import java.util.Set;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
@@ -35,6 +36,7 @@ public class UnificationPhase implements IPhaseMethod {
 	public static final String ID = "flintstones.phasemethod.linguistic.hesitant.twotuple.unification"; //$NON-NLS-1$
 
 	private Map<ValuationKey, Valuation> _twoTupleValuations;
+	private Map<ValuationKey, TrapezoidalFunction> _fuzzyNumbers;
 	
 	private List<Object[]> _elhDomains;
 	
@@ -54,6 +56,8 @@ public class UnificationPhase implements IPhaseMethod {
 		_valuationSet = valuationSetManager.getActiveValuationSet();
 		
 		_twoTupleValuations = new HashMap<ValuationKey, Valuation>();
+		_fuzzyNumbers = new HashMap<ValuationKey, TrapezoidalFunction>();
+		
 		_elhDomains = new LinkedList<Object[]>();
 		_unifiedDomain = null;	
 	}
@@ -65,6 +69,14 @@ public class UnificationPhase implements IPhaseMethod {
 	
 	public void setTwoTupleValuations(Map<ValuationKey, Valuation> unifiedValuations) {
 		_twoTupleValuations = unifiedValuations;
+	}
+	
+	public Map<ValuationKey, TrapezoidalFunction> getFuzzyNumbers() {
+		return _fuzzyNumbers;
+	}
+	
+	public void setFuzzyNumbers(Map<ValuationKey, TrapezoidalFunction> fuzzy_numbers) {
+		_fuzzyNumbers = fuzzy_numbers;
 	}
 	
 	public List<Object[]> getELHDomains() {
@@ -99,6 +111,7 @@ public class UnificationPhase implements IPhaseMethod {
 		_elhDomains = unification.getELHDomains();
 		_unifiedDomain = unification.getUnifiedDomain();
 		_twoTupleValuations = unification.getTwoTupleValuations();
+		_fuzzyNumbers = unification.getFuzzyNumbers();
 	}
 
 	@Override
@@ -106,6 +119,7 @@ public class UnificationPhase implements IPhaseMethod {
 		_elhDomains.clear();
 		_unifiedDomain = null;
 		_twoTupleValuations.clear();
+		_fuzzyNumbers.clear();
 	}
 
 	@Override
@@ -176,6 +190,7 @@ public class UnificationPhase implements IPhaseMethod {
 				}
 				
 				_twoTupleValuations.put(vk, valuation);
+				_fuzzyNumbers.put(vk, ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelopeWithoutDisplacement(unifiedDomain));
 			}
 		}
 		return _twoTupleValuations;

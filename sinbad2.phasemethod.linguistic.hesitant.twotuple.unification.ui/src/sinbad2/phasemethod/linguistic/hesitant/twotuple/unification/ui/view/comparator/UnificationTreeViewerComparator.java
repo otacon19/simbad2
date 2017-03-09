@@ -5,6 +5,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 
 import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.provider.EvaluationColumnLabelProvider;
+import sinbad2.valuation.valuationset.ValuationKey;
 
 
 public class UnificationTreeViewerComparator extends ViewerComparator {
@@ -43,7 +44,13 @@ public class UnificationTreeViewerComparator extends ViewerComparator {
 
 		int result;
 		if (pos < 4) {
-			result = ((String) e1[pos]).compareTo((String) e2[pos]);
+			if(pos == 1) {
+				result = (((ValuationKey) e1[0]).getExpert().getCanonicalId()).compareTo(((ValuationKey) e2[0]).getExpert().getCanonicalId());
+			} else if(pos == 2) {
+				result = (((ValuationKey) e1[0]).getAlternative().getCanonicalId()).compareTo(((ValuationKey) e2[0]).getAlternative().getCanonicalId());
+			} else {
+				result = (((ValuationKey) e1[0]).getCriterion().getCanonicalId()).compareTo(((ValuationKey) e2[0]).getCriterion().getCanonicalId());
+			}
 		} else if (pos == 4) {
 			result = compare(e1, e2, 5);
 		} else if (pos == 5) {

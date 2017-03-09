@@ -7,5 +7,7 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.valuation.twoTuple;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.valuation.hesitant;bundle-version="1.0.0",
- sinbad2.domain.linguistic.unbalanced;bundle-version="1.0.0"
+ sinbad2.domain.linguistic.unbalanced;bundle-version="1.0.0",
+ sinbad2.aggregationoperator,
+ sinbad2.aggregationoperator.owa
 Export-Package: sinbad2.valuation.hesitant.twoTuple

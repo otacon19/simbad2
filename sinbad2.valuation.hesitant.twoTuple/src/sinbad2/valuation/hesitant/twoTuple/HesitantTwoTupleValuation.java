@@ -1,15 +1,24 @@
 package sinbad2.valuation.hesitant.twoTuple;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import sinbad2.aggregationoperator.AggregationOperator;
+import sinbad2.aggregationoperator.AggregationOperatorsManager;
+import sinbad2.aggregationoperator.owa.OWA;
+import sinbad2.aggregationoperator.owa.YagerQuantifiers;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
+import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
@@ -194,6 +203,152 @@ public class HesitantTwoTupleValuation extends Valuation {
 
 	public boolean isBinary() {
 		return ((_lowerTerm != null) && (_upperTerm != null));
+	}
+	
+	public TrapezoidalFunction calculateFuzzyEnvelopeWithoutDisplacement(FuzzySet domain) {	
+		double a, b, c, d;
+		int g = domain.getLabelSet().getCardinality();
+		Boolean lower = null;
+		
+		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
+		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
+
+        if(isPrimary()) {
+            IMembershipFunction semantic = getTwoTupleLabel().getLabel().getSemantic();
+            a = semantic.getCoverage().getMin();
+            b = semantic.getCenter().getMin();
+            c = semantic.getCenter().getMax();
+            d = semantic.getCoverage().getMax();
+        } else {
+            int envelope[] = getEnvelopeIndex();
+            if(isUnary()) {
+                switch(getUnaryRelation()) {
+                case LowerThan:
+                	lower = Boolean.valueOf(true);
+                	break;
+                case AtMost:
+                	lower = Boolean.valueOf(true);
+                	break;
+                default:
+                	lower = Boolean.valueOf(false);
+                	break;
+                }
+            } else {
+                lower = null;
+            }
+
+            YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
+            List<Double> weights = new LinkedList<Double>();
+			double[] auxWeights = YagerQuantifiers.QWeighted(nqt, g - 1, envelope, lower);
+			
+			weights.add(new Double(-1));
+			for(Double weight : auxWeights) {
+				weights.add(weight);
+			}
+            
+            if(lower == null) {
+                a = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
+                d = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
+                if(envelope[0] + 1 == envelope[1]) {
+                    b = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCenter().getMin();
+                    c = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCenter().getMax();
+                } else {
+                    int sum = envelope[1] + envelope[0];
+                    int top;
+                    if(sum % 2 == 0) {
+                        top = sum / 2;
+                    } else {
+                        top = (sum - 1) / 2;
+                    }
+                    List<Valuation> valuations = new LinkedList<Valuation>();
+                    for(int i = envelope[0]; i <= top; i++) {
+                        valuations.add(new TwoTuple(domain, domain.getLabelSet().getLabel(i)));
+                    }
+                    
+                    Valuation aux = ((OWA) owa).aggregate(valuations, weights);         
+                    b = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
+                    c = 2D * domain.getLabelSet().getLabel(top).getSemantic().getCenter().getMin() - b;
+                }
+            } else {
+                List<Valuation> valuations = new LinkedList<Valuation>();
+                for(int i = envelope[0]; i <= envelope[1]; i++) {
+                    valuations.add(new TwoTuple(domain, domain.getLabelSet().getLabel(i)));
+                }
+
+                Valuation aux = ((OWA) owa).aggregate(valuations, weights);
+                if(lower.booleanValue()) {
+                    a = 0.0D;
+                    b = 0.0D;
+                    c = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
+                    d = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
+                } else {
+                    a = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
+                    b = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
+                    c = 1.0D;
+                    d = 1.0D;
+                }
+            }
+        }
+   
+        return new TrapezoidalFunction(new double[] {a, b, c, d});
+	}
+	
+	public int[] getEnvelopeIndex() {
+		int[] result = null;
+		LabelLinguisticDomain[] envelope = getEnvelopeWithoutDisplacement();
+
+		if (envelope != null) {
+			result = new int[2];
+			result[0] = ((FuzzySet) _domain).getLabelSet().getPos(envelope[0]);
+			result[1] = ((FuzzySet) _domain).getLabelSet().getPos(envelope[1]);
+		}
+
+		return result;
+	}
+	
+	public LabelLinguisticDomain[] getEnvelopeWithoutDisplacement() {
+		LabelLinguisticDomain[] result = new LabelLinguisticDomain[2];
+		int pos, cardinality;
+
+		if (isPrimary()) {
+			result[0] = _label.getLabel();
+			result[1] = _label.getLabel();
+		} else if (isUnary()) {
+			switch (_unaryRelation) {
+			case LowerThan:
+				pos = ((FuzzySet) _domain).getLabelSet().getPos(_term.getLabel()) - 1;
+				if(pos == -1) {
+					pos = 0;
+				}
+				result[0] = ((FuzzySet) _domain).getLabelSet().getLabel(0);
+				result[1] = ((FuzzySet) _domain).getLabelSet().getLabel(pos);
+				break;
+			case GreaterThan:
+				cardinality = ((FuzzySet) _domain).getLabelSet().getCardinality();
+				pos = ((FuzzySet) _domain).getLabelSet().getPos(_term.getLabel()) + 1;
+				result[0] = ((FuzzySet) _domain).getLabelSet().getLabel(pos);
+				result[1] = ((FuzzySet) _domain).getLabelSet().getLabel(cardinality - 1);
+				break;
+			case AtLeast:
+				cardinality = ((FuzzySet) _domain).getLabelSet().getCardinality();
+				result[0] = _term.getLabel();
+				result[1] = ((FuzzySet) _domain).getLabelSet().getLabel(cardinality - 1);
+				break;
+			case AtMost:
+				result[0] = ((FuzzySet) _domain).getLabelSet().getLabel(0);
+				result[1] = _term.getLabel();
+				break;
+			default:
+				result = null;
+			}
+		} else if (isBinary()) {
+			result[0] = _lowerTerm.getLabel();
+			result[1] = _upperTerm.getLabel();
+		} else {
+			result = null;
+		}
+
+		return result;
 	}
 
 	@Override

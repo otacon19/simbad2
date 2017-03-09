@@ -11,7 +11,7 @@ public class EvaluationColumnLabelProvider extends ColumnLabelProvider {
 	@Override
 	public String getText(Object element) {
 		if(element instanceof Object[]) {
-			Valuation result = (Valuation) ((Object[]) element)[4];
+			Valuation result = (Valuation) ((Object[]) element)[2];
 			if(result != null) {
 				if(result instanceof HesitantValuation) {
 					return ((HesitantValuation) result).changeFormatValuationToString();

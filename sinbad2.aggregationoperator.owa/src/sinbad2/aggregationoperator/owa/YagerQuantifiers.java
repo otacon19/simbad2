@@ -63,21 +63,45 @@ public class YagerQuantifiers {
 		double[] result = null;
 		
 		if (type == NumeredQuantificationType.FilevYager) {
-			if (lower == null) {
+			int values;
+			double alpha;
+			if (lower == null) { //Between
 				if (envelope[0] == envelope[1]) {
 					result = new double[1];
 					result[0] = 1;
 				} else {
-					result = new double[2];
-					result[0] = 0.5;
-					result[1] = 0.5;
+					if((envelope[0] + envelope[1]) % 2 == 0) {
+						values = (envelope[1] - envelope[0] + 2) / 2;
+						result = new double[values];
+						alpha = envelope[0] / g;
+						for(int i = 0; i < values; ++i) {
+							if(i == 0) {
+								result[i] = Math.pow(alpha, (envelope[1] - envelope[0] / 2d));
+							} else if(i == values - 1) {
+								result[i] = 1 - alpha;
+							} else {
+								result[i] = (1 - alpha) * Math.pow(alpha, (envelope[1] - envelope[0] - (i + 1)) / 2d);
+							}
+						}	
+					} else {
+						values = (envelope[1] - envelope[0] + 1) / 2;
+						result = new double[values];
+						alpha = envelope[0] / g;
+						for(int i = 0; i < values; ++i) {
+							if(i == 0) {
+								result[i] = Math.pow(alpha, (envelope[1] - envelope[0] - 1 / 2d));
+							} else if(i == values - 1) {
+								result[i] = 1 - alpha;
+							} else {
+								result[i] = (1 - alpha) * Math.pow(alpha, (envelope[1] - envelope[0] - (i + 2)) / 2d);
+							}
+						}	
+					}
 				}
 			} else {
-				int values;
 				int aux;
-				double alpha;
 
-				if(lower) {
+				if(lower) {//At most and Lower than
 					values = envelope[1] + 1;
 					aux = values - 1;
 
@@ -91,7 +115,7 @@ public class YagerQuantifiers {
 							result[i] = alpha * Math.pow(1d - alpha, i);
 						}
 					}
-				} else {
+				} else { //At least and Greater than
 					values = (envelope[1] - envelope[0]) + 1;
 					aux = values - 1;
 

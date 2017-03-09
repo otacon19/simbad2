@@ -11,7 +11,7 @@ public class UnifiedEvaluationColumnLabelProvider extends ColumnLabelProvider {
 	public String getText(Object element) {
 		
 		if (element instanceof Object[]) {
-			Valuation result = (Valuation) ((Object[]) element)[5];
+			Valuation result = (Valuation) ((Object[]) element)[3];
 			if (result != null) {
 					if(result instanceof HesitantTwoTupleValuation) {
 						return ((HesitantTwoTupleValuation) result).changeFormatValuationToString();
