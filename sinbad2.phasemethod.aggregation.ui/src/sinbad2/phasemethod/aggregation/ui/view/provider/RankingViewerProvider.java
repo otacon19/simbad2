@@ -13,6 +13,7 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.element.ProblemElement;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.HesitantValuation;
+import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
@@ -75,14 +76,17 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 				result.add(listEntry);
 			}
 	
-			Collections.sort(result, new MyComparator());
-			Collections.reverse(result);
+			//Collections.sort(result, new MyComparator());
+			//Collections.reverse(result);
 			
 			int ranking = 0;
 			double previous = -1;
 			for (Object[] element : result) {
 				if ((element[0] instanceof HesitantValuation)) {
 					element[0] = Integer.valueOf(++ranking);
+				} else if(element[0] instanceof HesitantTwoTupleValuation) {
+					ranking++;
+					element[0] = ranking;
 			    } else if ((Double) element[0] == previous) {
 					element[0] = ranking;
 				} else {

@@ -447,10 +447,14 @@ public class RatingView extends ViewPart {
 			}
 		} else if(_phasesMethodUIManager.getNextStep() == null) {
 			_numPhase++;
-			currentPhaseMethod = phasesMethodUI.get(_numPhase);
-			if(currentPhaseMethod.getPhaseMethod().getImplementation().validate()) {
-				activateCurrentPhaseMethod(currentPhaseMethod);
-				step = _phasesMethodUIManager.getStepPhaseMethod(currentPhaseMethod.getId(), 0);
+			if(_numPhase == phasesMethodUI.size()) {
+				step = null;
+			} else {
+				currentPhaseMethod = phasesMethodUI.get(_numPhase);
+				if(currentPhaseMethod.getPhaseMethod().getImplementation().validate()) {
+					activateCurrentPhaseMethod(currentPhaseMethod);
+					step = _phasesMethodUIManager.getStepPhaseMethod(currentPhaseMethod.getId(), 0);
+				}
 			}
 		} else {
 			step = _phasesMethodUIManager.getNextStep();	

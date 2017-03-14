@@ -133,6 +133,8 @@
                   </enumeration>
                   <enumeration value="Hesitant">
                   </enumeration>
+                  <enumeration value="HesitantTwoTuple">
+                  </enumeration>
                </restriction>
             </simpleType>
          </attribute>

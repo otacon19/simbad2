@@ -71,7 +71,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 			_information[i][1] = domain.getId();
 			_information[i][2] = v;
 			_information[i][3] = unifiedValuation;
-			_information[i][4] = ((HesitantTwoTupleValuation) unifiedValuation).calculateFuzzyEnvelopeWithoutDisplacement((FuzzySet) unifiedValuation.getDomain());
+			_information[i][4] = ((HesitantTwoTupleValuation) unifiedValuation).calculateFuzzyEnvelope((FuzzySet) unifiedValuation.getDomain());
 			
 			i++;
 		}

@@ -56,7 +56,7 @@ public class AggregationPhase implements IPhaseMethod {
 	private ValuationSet _valuationSet;
 	private DomainSet _domainSet;
 	
-	private IPhaseMethod _unificationPhaseActivate;
+	private IPhaseMethod _unificationPhaseActivated;
 	
 	private List<AggregationProcessListener> _listeners;
 
@@ -581,9 +581,9 @@ public class AggregationPhase implements IPhaseMethod {
 
 	@Override
 	public void activate() {
-		if(_unificationPhaseActivate != null) {
-			_unifiedDomain = _unificationPhaseActivate.getUnifiedDomain();
-			_unifiedValuations.putAll(_unificationPhaseActivate.getTwoTupleValuations());
+		if(_unificationPhaseActivated != null) {
+			_unifiedDomain = _unificationPhaseActivated.getUnifiedDomain();
+			_unifiedValuations.putAll(_unificationPhaseActivated.getTwoTupleValuations());
 		} else {
 			_unifiedDomain = _domainSet.getDomains().get(0);
 			_unifiedValuations.putAll(_valuationSet.getValuations());
@@ -594,9 +594,9 @@ public class AggregationPhase implements IPhaseMethod {
 	public boolean validate() {
 		
 		if(PhasesMethodManager.getInstance().getActivePhaseMethod() != null) {
-			_unificationPhaseActivate = PhasesMethodManager.getInstance().getActivePhaseMethod().getImplementation();
+			_unificationPhaseActivated = PhasesMethodManager.getInstance().getActivePhaseMethod().getImplementation();
 		} else {
-			_unificationPhaseActivate = null;
+			_unificationPhaseActivated = null;
 		}
 		
 		if(_valuationSet.getValuations().isEmpty()) {

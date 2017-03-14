@@ -324,4 +324,32 @@ public class LinguisticDomainChart extends DomainChart {
 			}
 		}
 	}
+	
+	public void displayAlternatives(String[] alternatives, TrapezoidalFunction[] fuzzyNumbers) {
+		int size = fuzzyNumbers.length;
+		XYSeries alternativeSeries = null;
+
+		for(int i = 0; i < size; i++) {
+			alternativeSeries = new XYSeries(alternatives[i]);
+			alternativeSeries.add(fuzzyNumbers[i].getLimits()[0], 0);
+			alternativeSeries.add(fuzzyNumbers[i].getLimits()[1], 1);
+			alternativeSeries.add(fuzzyNumbers[i].getLimits()[2], 1);
+			alternativeSeries.add(fuzzyNumbers[i].getLimits()[3], 0);
+			
+			_dataset.addSeries(alternativeSeries);
+		}
+		
+		_chart.getXYPlot().setDataset(_dataset);
+		
+		XYPlot xyplot = (XYPlot) _chart.getPlot();
+		XYItemRenderer renderer = xyplot.getRenderer(0);
+		for (int i = 0; i < xyplot.getSeriesCount(); i++) {
+			if (i >= ((FuzzySet) _domain).getLabelSet().getCardinality()) {
+				renderer.setSeriesStroke(i, new BasicStroke(3));
+			} else {
+				renderer.setSeriesStroke(i, new BasicStroke(1));
+				renderer.setSeriesPaint(i, colorForEachLabel(i));
+			}
+		}
+	}
 }

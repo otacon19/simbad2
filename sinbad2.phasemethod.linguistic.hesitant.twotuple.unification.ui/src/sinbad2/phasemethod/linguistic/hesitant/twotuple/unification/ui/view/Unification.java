@@ -278,12 +278,12 @@ public class Unification extends ViewPart implements IStepStateListener {
 		retranslationPhase.clear();
 		List<Object[]> elhDomains = new LinkedList<Object[]>();
 		elhDomains.addAll(_unificationPhase.getELHDomains());
-		retranslationPhase.setLHDomains(elhDomains);
+		retranslationPhase.setLHDomains(elhDomains);*/
 		
 		if(_completed) {
 			_ratingView.loadNextStep();
 			_completed = false;
-		}*/
+		}
 	}
 
 	@Override

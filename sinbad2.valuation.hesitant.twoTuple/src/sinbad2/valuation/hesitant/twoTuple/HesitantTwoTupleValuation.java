@@ -35,14 +35,18 @@ public class HesitantTwoTupleValuation extends Valuation {
 	private TwoTuple _upperTerm;
 	private TwoTuple _lowerTerm;
 	private TwoTuple _label;
-
+	
+	private TrapezoidalFunction _fuzzyNumber;
+	
 	public HesitantTwoTupleValuation() {
 		super();
+		
 		_unaryRelation = null;
 		_term = null;
 		_upperTerm = null;
 		_lowerTerm = null;
 		_label = null;
+		_fuzzyNumber = null;
 	}
 
 	public HesitantTwoTupleValuation(FuzzySet domain) {
@@ -96,11 +100,31 @@ public class HesitantTwoTupleValuation extends Valuation {
 			throw new IllegalArgumentException(Messages.HesitantTwoTupleValuation_Hesitant_valuation_label_not_contained_in_domain);
 		}
 	}
-
+	
 	public TwoTuple getTwoTupleLabel() {
 		return _label;
 	}
+	
+	public TwoTuple getTwoTupleTerm() {
+		return _term;
+	}
 
+	public TwoTuple getTwoTupleLowerTerm() {
+		return _lowerTerm;
+	}
+
+	public TwoTuple getTwoTupleUpperTerm() {
+		return _upperTerm;
+	}
+	
+	public void setFuzzyNumber(TrapezoidalFunction fuzzyNumber) {
+		_fuzzyNumber = fuzzyNumber;
+	}
+	
+	public TrapezoidalFunction getFuzzyNumber() {
+		return _fuzzyNumber;
+	}
+	
 	public void setUnaryRelation(EUnaryRelationType unaryRelation, TwoTuple term) {
 		Validator.notNull(unaryRelation);
 		Validator.notNull(term);
@@ -118,10 +142,6 @@ public class HesitantTwoTupleValuation extends Valuation {
 
 	public EUnaryRelationType getUnaryRelation() {
 		return _unaryRelation;
-	}
-
-	public TwoTuple getTwoTupleTerm() {
-		return _term;
 	}
 
 	public void setBinaryRelation(TwoTuple lowerTerm, TwoTuple upperTerm) {
@@ -180,15 +200,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 		disablePrimary();
 		disableUnary();
 	}
-
-	public TwoTuple getTwoTupleLowerTerm() {
-		return _lowerTerm;
-	}
-
-	public TwoTuple getTwoTupleUpperTerm() {
-		return _upperTerm;
-	}
-
+	
 	public boolean isPrimary() {
 		return (_label != null);
 	}
@@ -205,11 +217,11 @@ public class HesitantTwoTupleValuation extends Valuation {
 		return ((_lowerTerm != null) && (_upperTerm != null));
 	}
 	
-	public TrapezoidalFunction calculateFuzzyEnvelopeWithoutDisplacement(FuzzySet domain) {	
+	public TrapezoidalFunction calculateFuzzyEnvelope(FuzzySet domain) {	
 		double a, b, c, d;
 		int g = domain.getLabelSet().getCardinality();
 		Boolean lower = null;
-		
+	
 		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
 
@@ -290,7 +302,9 @@ public class HesitantTwoTupleValuation extends Valuation {
             }
         }
    
-        return new TrapezoidalFunction(new double[] {a, b, c, d});
+        _fuzzyNumber = new TrapezoidalFunction(new double[] {a, b, c, d});
+        
+        return _fuzzyNumber;
 	}
 	
 	public int[] getEnvelopeIndex() {

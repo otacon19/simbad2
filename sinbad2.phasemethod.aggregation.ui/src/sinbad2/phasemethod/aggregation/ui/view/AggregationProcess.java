@@ -38,6 +38,7 @@ import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.element.ProblemElement;
 import sinbad2.element.ProblemElementsManager;
@@ -62,6 +63,7 @@ import sinbad2.phasemethod.aggregation.ui.view.provider.RankingViewerProvider;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
@@ -662,13 +664,17 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 				if (size > 0) {
 					String[] alternatives = new String[size];
 					int[] pos = new int[size];
+					int i = 0;
 					double[] alpha = new double[size];
 					Valuation valuation = null, aux;
-					int i = 0;
+					
+					TrapezoidalFunction[] fuzzyNumbers = new TrapezoidalFunction[size];
 	
 					for (ProblemElement alternative : _aggregationResult.keySet()) {
 						alternatives[i] = alternative.getId();
+						
 						aux = _aggregationResult.get(alternative);
+						
 						if (aux instanceof UnifiedValuation) {
 							valuation = ((UnifiedValuation) aux).disunification((FuzzySet) aux.getDomain());
 						} else {
@@ -679,12 +685,20 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 							pos[i] = ((FuzzySet) domain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
 							alpha[i] = ((TwoTuple) valuation).getAlpha();
 							i++;
+						} else if(valuation instanceof HesitantTwoTupleValuation) {
+							fuzzyNumbers[i] = ((HesitantTwoTupleValuation) valuation).getFuzzyNumber();
+							i++;
 						} else {
 							alternatives[i] = null;
 						}
 					}
+					
 					if (_chart instanceof LinguisticDomainChart) {
-						((LinguisticDomainChart) _chart).displayAlternatives(alternatives, pos, alpha);
+						if(fuzzyNumbers[0] != null) {
+							((LinguisticDomainChart) _chart).displayAlternatives(alternatives, fuzzyNumbers);
+						} else {
+							((LinguisticDomainChart) _chart).displayAlternatives(alternatives, pos, alpha);
+						}
 					}
 				}
 			}

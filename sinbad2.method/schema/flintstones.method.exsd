@@ -132,6 +132,8 @@
                   </enumeration>
                   <enumeration value="Interval">
                   </enumeration>
+                  <enumeration value="HesitantTwoTuple">
+                  </enumeration>
                </restriction>
             </simpleType>
          </attribute>
