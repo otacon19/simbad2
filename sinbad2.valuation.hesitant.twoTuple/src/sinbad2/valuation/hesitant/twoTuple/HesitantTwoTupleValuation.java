@@ -201,6 +201,43 @@ public class HesitantTwoTupleValuation extends Valuation {
 		disableUnary();
 	}
 	
+	public void createRelation(TrapezoidalFunction fuzzyNumber) {
+		
+		setFuzzyNumber(fuzzyNumber);
+		
+		double a = _fuzzyNumber.getLimits()[0], b = _fuzzyNumber.getLimits()[1], c = _fuzzyNumber.getLimits()[2], d = _fuzzyNumber.getLimits()[3], centroid, 
+				minDistanceB = Double.POSITIVE_INFINITY, minDistanceC = Double.POSITIVE_INFINITY, distance;
+		
+		LabelLinguisticDomain labelCloserToB = null, labelCloserToC = null;
+		
+		for(LabelLinguisticDomain l: ((FuzzySet) _domain).getLabelSet().getLabels()) {
+			centroid = ((TrapezoidalFunction) l.getSemantic()).centroid();
+			distance = centroid - b;
+			if(Math.abs(distance) < Math.abs(minDistanceB)) {
+				minDistanceB = distance;
+				labelCloserToB = l;
+			}
+			distance = centroid - c;
+			if(Math.abs(distance) < Math.abs(minDistanceC)) {
+				minDistanceC = distance;
+				labelCloserToC = l;
+			}
+		}
+		
+		if(c == d && c == 1) {
+			setUnaryRelation(EUnaryRelationType.AtLeast, new TwoTuple((FuzzySet) _domain, labelCloserToB, Math.round(minDistanceB * 100d) / 100d)); 
+		} else if(a == b && a == 0) {
+			setUnaryRelation(EUnaryRelationType.AtMost, new TwoTuple((FuzzySet) _domain, labelCloserToC, Math.round(minDistanceC * 100d) / 100d));
+		} else if(b == c) {
+			disableUnary();
+			disableBinary();
+			_label = new TwoTuple((FuzzySet) _domain, labelCloserToB, Math.round(minDistanceB * 100d) / 100d);
+		} else {
+			setBinaryRelation(new TwoTuple((FuzzySet) _domain, labelCloserToB, Math.round(minDistanceB * 100d) / 100d), 
+				new TwoTuple((FuzzySet) _domain, labelCloserToC, Math.round(minDistanceC * 100d) / 100d));
+		}
+	}
+	
 	public boolean isPrimary() {
 		return (_label != null);
 	}
@@ -309,7 +346,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 	
 	public int[] getEnvelopeIndex() {
 		int[] result = null;
-		LabelLinguisticDomain[] envelope = getEnvelopeWithoutDisplacement();
+		LabelLinguisticDomain[] envelope = getEnvelope();
 
 		if (envelope != null) {
 			result = new int[2];
@@ -320,7 +357,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 		return result;
 	}
 	
-	public LabelLinguisticDomain[] getEnvelopeWithoutDisplacement() {
+	public LabelLinguisticDomain[] getEnvelope() {
 		LabelLinguisticDomain[] result = new LabelLinguisticDomain[2];
 		int pos, cardinality;
 
@@ -364,7 +401,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 
 		return result;
 	}
-
+	
 	@Override
 	public String toString() {
 		if (isPrimary()) {
@@ -474,7 +511,40 @@ public class HesitantTwoTupleValuation extends Valuation {
 	}
 
 	@Override
-	public int compareTo(Valuation o) {
-		return 0;
+	public int compareTo(Valuation other) {
+		Validator.notNull(other);
+		Validator.notIllegalElementType(other, new String[] { HesitantTwoTupleValuation.class.toString() });
+
+		if (_domain.equals(other.getDomain())) {
+			int[] tEnvelopeIndex = getEnvelopeIndex();
+			int[] oEnvelopeIndex = ((HesitantTwoTupleValuation) other).getEnvelopeIndex();
+			double tc = (double) (tEnvelopeIndex[1] + tEnvelopeIndex[0]) / 2d;
+			double tw = (double) (tEnvelopeIndex[1] - tEnvelopeIndex[0]) / 2d;
+			double oc = (double) (oEnvelopeIndex[1] + oEnvelopeIndex[0]) / 2d;
+			double ow = (double) (oEnvelopeIndex[1] - oEnvelopeIndex[0]) / 2d;
+
+			double acceptability;
+			if ((tw + ow) == 0) {
+				if (tc == oc) {
+					return 0;
+				} else if (tc > oc) {
+					return 1;
+				} else {
+					return -1;
+				}
+			}
+
+			acceptability = (tc - oc) / (tw + ow);
+			double limit = 0.25;
+			if ((acceptability <= limit) && (acceptability >= -limit)) {
+				return 0;
+			} else if (acceptability > limit) {
+				return 1;
+			} else {
+				return -1;
+			}
+		} else {
+			throw new IllegalArgumentException("Different domains");
+		}
 	}
 }

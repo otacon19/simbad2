@@ -610,7 +610,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 
 		_rankingViewerEvaluationColumn = new TableViewerColumn(_rankingViewer, SWT.NONE);
 		_rankingEvaluationColumn = _rankingViewerEvaluationColumn.getColumn();
-		_rankingEvaluationColumn.setWidth(130);
+		_rankingEvaluationColumn.setWidth(230);
 		_rankingEvaluationColumn.setText(Messages.AggregationProcess_Evaluation);
 		_rankingViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 		

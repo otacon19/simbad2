@@ -26,6 +26,8 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 		public int compare(Object[] o1, Object[] o2) {
 			if ((o1[0] instanceof HesitantValuation)) {
 				return ((HesitantValuation) o1[0]).compareTo((HesitantValuation)o2[0]);
+			} else if((o1[0] instanceof HesitantTwoTupleValuation)) {
+				return ((HesitantTwoTupleValuation) o1[0]).compareTo((HesitantTwoTupleValuation)o2[0]);
 		    } else {
 		    	return Double.compare((Double) o1[0], (Double) o2[0]);
 		    }
@@ -68,7 +70,7 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 						twoTuple = (TwoTuple) valuation;
 						listEntry = new Object[] {((TwoTuple) twoTuple).calculateInverseDelta(), alternativeName, twoTuple };
 					} else {
-						listEntry = new Object[] {valuation, alternativeName, valuation };
+						listEntry = new Object[] {valuation, alternativeName, valuation};
 					}	
 				} else {
 					listEntry = new Object[] { 0d, alternativeName, null };
@@ -76,8 +78,8 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 				result.add(listEntry);
 			}
 	
-			//Collections.sort(result, new MyComparator());
-			//Collections.reverse(result);
+			Collections.sort(result, new MyComparator());
+			Collections.reverse(result);
 			
 			int ranking = 0;
 			double previous = -1;
@@ -85,8 +87,7 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 				if ((element[0] instanceof HesitantValuation)) {
 					element[0] = Integer.valueOf(++ranking);
 				} else if(element[0] instanceof HesitantTwoTupleValuation) {
-					ranking++;
-					element[0] = ranking;
+					element[0] = Integer.valueOf(++ranking);
 			    } else if ((Double) element[0] == previous) {
 					element[0] = ranking;
 				} else {

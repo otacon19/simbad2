@@ -49,8 +49,9 @@ private HesitantTwoTupleOperator() {}
 		d /= size;
 		
 		result = (HesitantTwoTupleValuation) valuations.get(0).clone();
-		result.setFuzzyNumber(new TrapezoidalFunction(new double[]{a, b, c, d}));
+		result.createRelation(new TrapezoidalFunction(new double[]{a, b, c, d}));
 		
+
 		return result;
 	}
 }
