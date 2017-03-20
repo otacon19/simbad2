@@ -15,6 +15,12 @@
          <phasemethod
                phase="flintstones.phasemethod.aggregation">
          </phasemethod>
+         <phasemethod
+               phase="flintstones.phasemethod.retranslation">
+         </phasemethod>
+         <phasemethod
+               phase="flintstones.phasemethod.analysis">
+         </phasemethod>
          <aggregation_supported
                type="HesitantTwoTuple">
          </aggregation_supported>

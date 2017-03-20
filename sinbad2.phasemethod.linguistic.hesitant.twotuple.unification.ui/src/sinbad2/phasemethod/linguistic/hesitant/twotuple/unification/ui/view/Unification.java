@@ -34,6 +34,7 @@ import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.prov
 import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.provider.ExpertColumnLabelProvider;
 import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.provider.TreeViewerContentProvider;
 import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.provider.UnifiedEvaluationColumnLabelProvider;
+import sinbad2.phasemethod.retranslation.RetranslationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
@@ -273,12 +274,12 @@ public class Unification extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
-		/*PhasesMethodManager pmm = PhasesMethodManager.getInstance();	
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();	
 		RetranslationPhase retranslationPhase = (RetranslationPhase) pmm.getPhaseMethod(RetranslationPhase.ID).getImplementation();
 		retranslationPhase.clear();
 		List<Object[]> elhDomains = new LinkedList<Object[]>();
 		elhDomains.addAll(_unificationPhase.getELHDomains());
-		retranslationPhase.setLHDomains(elhDomains);*/
+		retranslationPhase.setLHDomains(elhDomains);
 		
 		if(_completed) {
 			_ratingView.loadNextStep();

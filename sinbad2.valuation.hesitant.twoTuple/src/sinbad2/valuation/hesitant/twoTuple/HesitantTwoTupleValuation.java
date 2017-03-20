@@ -105,6 +105,10 @@ public class HesitantTwoTupleValuation extends Valuation {
 		return _label;
 	}
 	
+	public void setTwoTupleTerm(TwoTuple term) {
+		 _term = term;
+	}
+	
 	public TwoTuple getTwoTupleTerm() {
 		return _term;
 	}
@@ -212,12 +216,12 @@ public class HesitantTwoTupleValuation extends Valuation {
 		
 		for(LabelLinguisticDomain l: ((FuzzySet) _domain).getLabelSet().getLabels()) {
 			centroid = ((TrapezoidalFunction) l.getSemantic()).centroid();
-			distance = centroid - b;
+			distance = b - centroid;
 			if(Math.abs(distance) < Math.abs(minDistanceB)) {
 				minDistanceB = distance;
 				labelCloserToB = l;
 			}
-			distance = centroid - c;
+			distance = c - centroid;
 			if(Math.abs(distance) < Math.abs(minDistanceC)) {
 				minDistanceC = distance;
 				labelCloserToC = l;
@@ -225,16 +229,16 @@ public class HesitantTwoTupleValuation extends Valuation {
 		}
 		
 		if(c == d && c == 1) {
-			setUnaryRelation(EUnaryRelationType.AtLeast, new TwoTuple((FuzzySet) _domain, labelCloserToB, Math.round(minDistanceB * 100d) / 100d)); 
+			setUnaryRelation(EUnaryRelationType.AtLeast, new TwoTuple((FuzzySet) _domain, labelCloserToB, minDistanceB)); 
 		} else if(a == b && a == 0) {
-			setUnaryRelation(EUnaryRelationType.AtMost, new TwoTuple((FuzzySet) _domain, labelCloserToC, Math.round(minDistanceC * 100d) / 100d));
+			setUnaryRelation(EUnaryRelationType.AtMost, new TwoTuple((FuzzySet) _domain, labelCloserToC, minDistanceC));
 		} else if(b == c) {
 			disableUnary();
 			disableBinary();
-			_label = new TwoTuple((FuzzySet) _domain, labelCloserToB, Math.round(minDistanceB * 100d) / 100d);
+			_label = new TwoTuple((FuzzySet) _domain, labelCloserToB, minDistanceB);
 		} else {
-			setBinaryRelation(new TwoTuple((FuzzySet) _domain, labelCloserToB, Math.round(minDistanceB * 100d) / 100d), 
-				new TwoTuple((FuzzySet) _domain, labelCloserToC, Math.round(minDistanceC * 100d) / 100d));
+			setBinaryRelation(new TwoTuple((FuzzySet) _domain, labelCloserToB, minDistanceB), 
+				new TwoTuple((FuzzySet) _domain, labelCloserToC, minDistanceC));
 		}
 	}
 	

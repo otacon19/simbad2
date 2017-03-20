@@ -23,6 +23,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.domain.numeric.integer.NumericIntegerDomain;
 import sinbad2.domain.numeric.integer.ui.jfreechart.NumericIntegerDomainChart;
@@ -47,6 +48,7 @@ import sinbad2.phasemethod.retranslation.RetranslationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
 import sinbad2.valuation.integer.IntegerValuation;
 import sinbad2.valuation.real.RealValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
@@ -253,7 +255,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 
 		_rankingViewerEvaluationColumn = new TableViewerColumn(_rankingViewer, SWT.NONE);
 		_rankingEvaluationColumn = _rankingViewerEvaluationColumn.getColumn();
-		_rankingEvaluationColumn.setWidth(130);
+		_rankingEvaluationColumn.setWidth(430);
 		_rankingEvaluationColumn.setText(Messages.Analysis_Evaluation);
 		_rankingViewerEvaluationColumn.setLabelProvider(new EvaluationColumnLabelProvider());
 	}
@@ -317,6 +319,8 @@ public class Analysis extends ViewPart implements IStepStateListener {
 					Valuation valuation = null, aux;
 					int i = 0;
 	
+					TrapezoidalFunction[] fuzzyNumbers = new TrapezoidalFunction[size];
+					
 					for (ProblemElement alternative : _aggregationResult.keySet()) {
 						alternatives[i] = alternative.getId();
 						aux = _aggregationResult.get(alternative);
@@ -329,6 +333,9 @@ public class Analysis extends ViewPart implements IStepStateListener {
 						if (valuation instanceof TwoTuple) {
 							pos[i] = ((FuzzySet) domain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
 							alpha[i] = ((TwoTuple) valuation).getAlpha();
+							i++;
+						} else if(valuation instanceof HesitantTwoTupleValuation) {
+							fuzzyNumbers[i] = ((HesitantTwoTupleValuation) valuation).getFuzzyNumber();
 							i++;
 						} else if(valuation instanceof IntegerValuation) {
 							measuresInteger[i] = (int) ((IntegerValuation) valuation).getValue();
@@ -343,7 +350,11 @@ public class Analysis extends ViewPart implements IStepStateListener {
 						}
 					}
 					if (_chart instanceof LinguisticDomainChart) {
-						((LinguisticDomainChart) _chart).displayAlternatives(alternatives, pos, alpha);
+						if(fuzzyNumbers[0] != null) {
+							((LinguisticDomainChart) _chart).displayAlternatives(alternatives, fuzzyNumbers);
+						} else {
+							((LinguisticDomainChart) _chart).displayAlternatives(alternatives, pos, alpha);
+						}
 					} else if(_chart instanceof NumericRealDomainChart) {
 						((NumericRealDomainChart) _chart).displayAlternatives(alternatives, measuresReal, colors);
 					} else if(_chart instanceof NumericIntegerDomainChart) {

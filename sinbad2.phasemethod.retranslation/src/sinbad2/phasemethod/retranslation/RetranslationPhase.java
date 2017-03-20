@@ -12,6 +12,7 @@ import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 import sinbad2.valuation.valuationset.ValuationKey;
@@ -72,17 +73,39 @@ public class RetranslationPhase implements IPhaseMethod {
 		if(resultsDomain != null) {
 			results = new HashMap<ProblemElement, Valuation>();
 
-			Valuation valuation;
+			Valuation valuation, auxValuation = null;
 			for(ProblemElement alternative : problemResult.keySet()) {
 				valuation = problemResult.get(alternative);
 				if(valuation instanceof UnifiedValuation) {
 					valuation = ((UnifiedValuation) valuation).disunification((FuzzySet) ((UnifiedValuation) valuation).getDomain());
+				} else if(valuation instanceof HesitantTwoTupleValuation) {
+					if(((HesitantTwoTupleValuation) valuation).isPrimary()) {
+						TwoTuple label = ((HesitantTwoTupleValuation) valuation).getTwoTupleLabel();
+						TwoTuple transformedLabel = label.transform(resultsDomain);
+						auxValuation = new HesitantTwoTupleValuation(resultsDomain);
+						((HesitantTwoTupleValuation) auxValuation).setTwoTupleLabel(transformedLabel);
+						((HesitantTwoTupleValuation) auxValuation).setFuzzyNumber(((HesitantTwoTupleValuation) valuation).getFuzzyNumber());
+					} else if(((HesitantTwoTupleValuation) valuation).isUnary()) {
+						TwoTuple label = ((HesitantTwoTupleValuation) valuation).getTwoTupleTerm();
+						TwoTuple transformedLabel = label.transform(resultsDomain);
+						auxValuation = new HesitantTwoTupleValuation(resultsDomain);
+						((HesitantTwoTupleValuation) auxValuation).setTwoTupleTerm(transformedLabel);
+						((HesitantTwoTupleValuation) auxValuation).setFuzzyNumber(((HesitantTwoTupleValuation) valuation).getFuzzyNumber());
+					} else {
+						TwoTuple labelLower = ((HesitantTwoTupleValuation) valuation).getTwoTupleLowerTerm();
+						TwoTuple labelUpper = ((HesitantTwoTupleValuation) valuation).getTwoTupleUpperTerm();
+						TwoTuple transformedLabelLower = labelLower.transform(resultsDomain);
+						TwoTuple transformedLabelUpper = labelUpper.transform(resultsDomain);
+						auxValuation = new HesitantTwoTupleValuation(resultsDomain);
+						((HesitantTwoTupleValuation) auxValuation).setBinaryRelation(transformedLabelLower, transformedLabelUpper);
+						((HesitantTwoTupleValuation) auxValuation).setFuzzyNumber(((HesitantTwoTupleValuation) valuation).getFuzzyNumber());
+					}
 				} else {
 					if(valuation != null) {
-						valuation = ((TwoTuple) valuation).transform(resultsDomain);
+						auxValuation = ((TwoTuple) valuation).transform(resultsDomain);
 					}
 				}
-				results.put(alternative, valuation);
+				results.put(alternative, auxValuation);
 			}
 		}
 
