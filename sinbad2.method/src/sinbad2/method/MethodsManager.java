@@ -180,7 +180,11 @@ public class MethodsManager {
 			if(_elementsSet.getAllExperts().size() == 1) {
 				return Messages.MethodsManager_Hesitant_Fuzzy_Linguistic_Term_Set;
 			} else {
-				return Messages.MethodsManager_Hesitant_Fuzzy_2_tuple_Linguistic_Information;
+				if(_domainsSet.getDomains().size() == 1) {
+					return Messages.MethodsManager_Hesitant_Fuzzy_2_tuple_Linguistic_Information;
+				} else {
+					return Messages.MethodsManager_Complex_2_tuple_hesitant_linguistic_information;
+				}
 			}
 		}
 		

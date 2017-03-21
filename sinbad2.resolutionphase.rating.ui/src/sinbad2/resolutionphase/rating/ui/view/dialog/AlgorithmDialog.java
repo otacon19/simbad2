@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import sinbad2.domain.DomainsManager;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.method.MethodsManager;
 import sinbad2.resolutionphase.rating.ui.nls.Messages;
@@ -25,7 +26,43 @@ import sinbad2.resolutionphase.rating.ui.nls.Messages;
 public class AlgorithmDialog extends Dialog {
 	
 	private final static String ALGORITHM = "# Require values #" //$NON-NLS-1$
-			+ "\nnumExperts = <numExp>\nedNum = <edNum>\nedInt = <edInt>\nedLinUnb = <edLinUnb>\ntamEdLinLis = <tamEdLinLis>\nedLinList = <edLinList>\nedLin = <edLin>\nedHesit = <edHesit>\n\n# Algorithm to select the suitable CWW methodology #\n 1: if (edLin[1].2T=true) and (tamEdLinLis=1) then\n 2:     return <1>\n 3: else if (edNum=true) or (edInt=true) then\n 4:     return <5>\n 5: else if (edLinUnb=true) then\n 6:     return <6>\n 7: else if (edHesit=true) and (numExperts>1) then\n 8:     return <8>\n 9: else if (edHesit=true) and (numExperts=1) then\n10:     return <7>\n11: else\n12:     edLinListShortCard <-- short(edLinList,edLinList.card)\n13:     i <-- 1\n14:     while i<tamEdLinLis do\n15:         if (edLinListShortCard.edLin[i].2T=false) then\n16:             return <2>\n17:         else if (edLinListShortCard[i+1].card != ((edLinListShortCard[i].card)-1)·2+1) then\n18:             return <4>\n19:         else\n20:             i <-- i+1\n21:         end if\n22:     end while\n23:     return <3>\n24: end if"; //$NON-NLS-1$
+			+ "\nnumExperts = <numExp>\n"
+			+ "\nnumDomains = <numDomains>\n"
+			+ "edNum = <edNum>\n"
+			+ "edInt = <edInt>\n"
+			+ "edLinUnb = <edLinUnb>\n"
+			+ "tamEdLinLis = <tamEdLinLis>\n"
+			+ "edLinList = <edLinList>\n"
+			+ "edLin = <edLin>\n"
+			+ "edHesit = <edHesit>\n"
+			+ "\n"
+			+ "# Algorithm to select the suitable CWW methodology #\n "
+			+ "1:  if (edLin[1].2T=true) and (tamEdLinLis=1) then\n "
+			+ "2:      return <1>\n "
+			+ "3:  else if (edNum=true) or (edInt=true) then\n"
+			+ "4:      return <5>\n"
+			+ "5:  else if (edLinUnb=true) then\n "
+			+ "6:      return <6>\n"
+			+ "7:  else if (edHesit=true) and (numExperts>1) and (numDomains = 1) then\n"
+			+ "8:      return <8>\n"
+			+ "9:  else if (edHesit=true) and (numExperts=1) and (numDomains = 1) then\n"
+			+ "10:     return <7>\n"
+			+ "11: else if (edHesit=true) and (numDomains > 1) then\n"
+			+ "12:     return <9>\n"     
+			+ "13: else\n"
+			+ "14:     edLinListShortCard <-- short(edLinList,edLinList.card)\n"
+			+ "15:     i <-- 1\n"
+			+ "16:     while i<tamEdLinLis do\n"
+			+ "17:         if (edLinListShortCard.edLin[i].2T=false) then\n"
+			+ "18:             return <2>\n"
+			+ "19:         else if (edLinListShortCard[i+1].card != ((edLinListShortCard[i].card)-1)·2+1) then\n"
+			+ "20:             return <4>\n"
+			+ "21:         else\n"
+			+ "22:             i <-- i+1\n"
+			+ "23:         end if\n"
+			+ "24:     end while\n"
+			+ "25:     return <3>\n"
+			+ "26: end if"; //$NON-NLS-1$
 
 	private String _recommendedMethod;
 	private Composite _container;
@@ -90,8 +127,9 @@ public class AlgorithmDialog extends Dialog {
 		algorithm = algorithm.replace("<6>", Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets); //$NON-NLS-1$
 		algorithm = algorithm.replace("<7>", Messages.AlgorithmDialog_Hesitant_Fuzzy_Linguistic_Term_Set); //$NON-NLS-1$
 		algorithm = algorithm.replace("<8>", Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information); //$NON-NLS-1$
-		algorithm = algorithm.replace("<9>", Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS); //$NON-NLS-1$
-		algorithm = algorithm.replace("<10>", Messages.AlgorithmDialog_Interactive_and_multicriteria_decision_making); //$NON-NLS-1$
+		algorithm = algorithm.replace("<9>", Messages.AlgorithmDialog_Complex_2_tuple_hesitant_linguistic_information); //$NON-NLS-1$
+		algorithm = algorithm.replace("<10>", Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS); //$NON-NLS-1$
+		algorithm = algorithm.replace("<11>", Messages.AlgorithmDialog_Interactive_and_multicriteria_decision_making); //$NON-NLS-1$
 		
 		Color BLACK = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
 
@@ -99,7 +137,7 @@ public class AlgorithmDialog extends Dialog {
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, 
-				BLACK};
+				BLACK, BLACK, BLACK, BLACK, BLACK};
 
 		StyleRange[] textRanges = new StyleRange[textColors.length];
 		int lineStart = 0;
@@ -236,6 +274,7 @@ public class AlgorithmDialog extends Dialog {
 		int[] cardinalitiesFuzzySet = _methodsManager.getCardinalitiesFuzzySet();
 		int tamEdLinList = cardinalitiesFuzzySet.length;
 		int numExp = ProblemElementsManager.getInstance().getActiveElementSet().getExperts().size();
+		int numDomains = DomainsManager.getInstance().getActiveDomainSet().getDomains().size(); 
 		Map<Integer, Boolean> edLin = _methodsManager.getBestConditionsLinguistic();
 
 		String edLinValue = "{"; //$NON-NLS-1$
@@ -266,6 +305,7 @@ public class AlgorithmDialog extends Dialog {
 		}
 		edLinListValue += "]"; //$NON-NLS-1$
 
+		algorithm = algorithm.replace("<numDomains>", Integer.toString(numDomains)); //$NON-NLS-1$
 		algorithm = algorithm.replace("<numExp>", Integer.toString(numExp)); //$NON-NLS-1$
 		algorithm = algorithm.replace("<edNum>", Boolean.toString(bestConditionsNumeric)); //$NON-NLS-1$
 		algorithm = algorithm.replace("<edHesit>", Boolean.toString(bestConditionsHesitant)); //$NON-NLS-1$
@@ -283,8 +323,9 @@ public class AlgorithmDialog extends Dialog {
 		algorithm = algorithm.replace("<6>", Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets); //$NON-NLS-1$
 		algorithm = algorithm.replace("<7>", Messages.AlgorithmDialog_Hesitant_Fuzzy_Linguistic_Term_Set); //$NON-NLS-1$
 		algorithm = algorithm.replace("<8>", Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information); //$NON-NLS-1$
-		algorithm = algorithm.replace("<9>", Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS); //$NON-NLS-1$
-		algorithm = algorithm.replace("<10>", Messages.AlgorithmDialog_Interactive_and_multicriteria_decision_making); //$NON-NLS-1$
+		algorithm = algorithm.replace("<9>", Messages.AlgorithmDialog_Complex_2_tuple_hesitant_linguistic_information); //$NON-NLS-1$
+		algorithm = algorithm.replace("<10>", Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS); //$NON-NLS-1$
+		algorithm = algorithm.replace("<11>", Messages.AlgorithmDialog_Interactive_and_multicriteria_decision_making); //$NON-NLS-1$
 
 		Color DARK_BLUE = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE);
 		Color GREEN = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GREEN);
@@ -293,10 +334,10 @@ public class AlgorithmDialog extends Dialog {
 		Color BLACK = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
 
 		Color[] textColors = new Color[] { BLACK, MAGENTA, MAGENTA, MAGENTA, MAGENTA,
-				MAGENTA, MAGENTA, MAGENTA, MAGENTA, BLACK, BLACK, BLACK, BLACK, BLACK,
+				MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, 
-				BLACK, BLACK, BLACK  };
+				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK };
 
 		_recommendedMethod = _methodsManager.getRecommendedMethod();
 
@@ -327,6 +368,9 @@ public class AlgorithmDialog extends Dialog {
 			textColors[start + 11] = GREEN;
 		}  else if(Messages.AlgorithmDialog_Interactive_and_multicriteria_decision_making.equals(_recommendedMethod)) {
 			
+		} else if(Messages.AlgorithmDialog_Complex_2_tuple_hesitant_linguistic_information.equals(_recommendedMethod)) {
+			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = textColors[start + 9] = RED;
+			textColors[start + 15] = GREEN;
 		}
 
 		StyleRange[] textRanges = new StyleRange[textColors.length];
@@ -362,6 +406,7 @@ public class AlgorithmDialog extends Dialog {
 			int newPos = 0;
 			while(algorithm.indexOf(" if", initPos) != -1) { //$NON-NLS-1$
 				newPos = algorithm.indexOf(" if", initPos); //$NON-NLS-1$
+				
 				_algorithmInstantationText.setStyleRange(new StyleRange(newPos, 3, _algorithmInstantationText.getStyleRangeAtOffset(newPos).foreground, null, SWT.BOLD));
 				initPos = newPos + 3;
 			}

@@ -8,7 +8,7 @@
             description="Method which uses hesitant complex terms which are represented by means of 2-tuple"
             id="flintstones.method.linguistic.hesitant.twotuple"
             implementation="sinbad2.method.linguistic.hesitant.twotuple.HesitantTwoTuple"
-            name="Complex 2-tuple Hesitant Linguistic Information ">
+            name="%method.name">
          <phasemethod
                phase="flintstones.phasemethod.linguistic.hesitant.twotuple.unification">
          </phasemethod>

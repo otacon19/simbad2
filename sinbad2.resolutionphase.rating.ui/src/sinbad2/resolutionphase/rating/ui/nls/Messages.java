@@ -16,6 +16,7 @@ public class Messages extends NLS {
 	public static String AlgorithmDialog_Linguistic_hierarchies;
 	public static String AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets;
 	public static String AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS;
+	public static String AlgorithmDialog_Complex_2_tuple_hesitant_linguistic_information;
 	public static String RatingView_All_information_will_be_lost;
 	public static String RatingView_Back;
 	public static String RatingView_Cancel_confirm;

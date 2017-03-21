@@ -5,7 +5,7 @@
          point="flintstones.phasemethod.ui">
       <ui
             id="flintstones.phasemethod.linguistic.hesitant.twotuple.unification.ui"
-            name="Unification"
+            name="%ui.name"
             phasemethod="flintstones.phasemethod.linguistic.hesitant.twotuple.unification">
          <view
                step="sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.GenerateUnificationDomain">
@@ -19,20 +19,20 @@
          point="org.eclipse.ui.views">
       <category
             id="flintstones.phasemethod.linguistic.hesitant.twotuple.unification.ui.category"
-            name="Unification">
+            name="%category.name">
       </category>
       <view
             category="flintstones.phasemethod.linguistic.hesitant.twotuple.unification.ui.category"
             class="sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.GenerateUnificationDomain"
             id="flintstones.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.generateunificationdomain"
-            name="Generate unification domain"
+            name="%view.name"
             restorable="true">
       </view>
       <view
             category="flintstones.phasemethod.linguistic.hesitant.twotuple.unification.ui.category"
             class="sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.Unification"
             id="flintstones.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.unification"
-            name="Unification"
+            name="%view.name.0"
             restorable="true">
       </view>
    </extension>
