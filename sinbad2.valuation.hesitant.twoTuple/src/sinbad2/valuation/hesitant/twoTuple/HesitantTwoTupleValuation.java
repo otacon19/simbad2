@@ -493,7 +493,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 				aux = aux.substring(0, 1).toUpperCase() + aux.substring(1);
 				return aux + " " + getTwoTupleTerm().prettyFormat(); //$NON-NLS-1$
 			} else {
-				return Messages.HesitantTwoTupleValuation_Between + " " + getTwoTupleLowerTerm().prettyFormat() + " " + Messages.HesitantTwoTupleValuation_and + " " + getTwoTupleUpperTerm().prettyFormat();//$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
+				return Messages.HesitantTwoTupleValuation_Between + " " + getTwoTupleLowerTerm().prettyFormat() + " " + Messages.HesitantTwoTupleValuation_and + " " + getTwoTupleUpperTerm().prettyFormat();//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ $NON-NLS-2$ $NON-NLS-3$
 			}
 		}
 	}
@@ -579,7 +579,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 				return 0;
 			}
 		} else {
-			throw new IllegalArgumentException("Different domains");
+			throw new IllegalArgumentException(Messages.HesitantTwoTupleValuation_Different_domains);
 		}
 	}
 }
