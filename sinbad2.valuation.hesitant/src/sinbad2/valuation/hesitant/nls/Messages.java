@@ -4,6 +4,10 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "sinbad2.valuation.hesitant.nls.messages"; //$NON-NLS-1$
+	public static String EUnaryRelationType_at_least;
+	public static String EUnaryRelationType_at_most;
+	public static String EUnaryRelationType_greater_than;
+	public static String EUnaryRelationType_lower_than;
 	public static String HesitantValuation_and;
 	public static String HesitantValuation_And;
 	public static String HesitantValuation_between;

@@ -1,7 +1,9 @@
 package sinbad2.valuation.hesitant;
 
+import sinbad2.valuation.hesitant.nls.Messages;
+
 public enum EUnaryRelationType {
-	LowerThan("lower than"), GreaterThan("greater than"), AtLeast("at least"), AtMost("at most"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	LowerThan(Messages.EUnaryRelationType_lower_than), GreaterThan(Messages.EUnaryRelationType_greater_than), AtLeast(Messages.EUnaryRelationType_at_least), AtMost(Messages.EUnaryRelationType_at_most); 
 	
 	private String _relationType;
 	

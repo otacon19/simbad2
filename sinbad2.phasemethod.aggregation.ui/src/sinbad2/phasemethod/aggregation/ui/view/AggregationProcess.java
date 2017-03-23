@@ -200,12 +200,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 		
 		if (multiExperts) {
 			_expertsComposite = new Composite(_operatorsPanel, SWT.NONE);
-			if (multiCriteria) {
-				gridData = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
-				gridData.heightHint = 170;
-			} else {
-				gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-			}
+			gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		
 			_expertsComposite.setLayoutData(gridData);
 			layout = new GridLayout(1, false);
 			layout.marginTop = 0;
@@ -327,12 +323,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 
 		if (multiCriteria) {
 			_criteriaComposite = new Composite(_operatorsPanel, SWT.NONE);
-			if (multiExperts) {
-				gridData = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
-				gridData.heightHint = 170;
-			} else {
-				gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-			}
+			gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 			_criteriaComposite.setLayoutData(gridData);
 			layout = new GridLayout(1, false);
 
@@ -458,7 +449,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 
 		if ((multiExperts) && (multiCriteria)) {
 			_orderCompositeContainer = new Composite(_operatorsPanel, SWT.NONE);
-			_orderCompositeContainer.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
+			_orderCompositeContainer.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 			layout = new GridLayout(1, false);
 			layout.marginTop = 5;
 			layout.marginHeight = 0;
@@ -466,7 +457,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 			_orderCompositeContainer.setLayout(layout);
 
 			Composite orderComposite = new Composite(_orderCompositeContainer, SWT.NONE);
-			orderComposite.setLayoutData(new GridData(SWT.FILL, SWT.END, true, false, 1, 1));
+			orderComposite.setLayoutData(new GridData(SWT.FILL, SWT.END, false, false, 1, 1));
 			layout = new GridLayout(1, false);
 			layout.marginHeight = 0;
 			layout.horizontalSpacing = 0;

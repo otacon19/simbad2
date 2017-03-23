@@ -273,7 +273,7 @@ public class HesitantTwoTupleValuation extends Valuation {
             c = semantic.getCenter().getMax();
             d = semantic.getCoverage().getMax();
         } else {
-            int envelope[] = getEnvelopeIndex();
+            int envelope[] = getEnvelopeLinguisticLabelsIndex();
             if(isUnary()) {
                 switch(getUnaryRelation()) {
                 case LowerThan:
@@ -348,9 +348,9 @@ public class HesitantTwoTupleValuation extends Valuation {
         return _fuzzyNumber;
 	}
 	
-	public int[] getEnvelopeIndex() {
+	public int[] getEnvelopeLinguisticLabelsIndex() {
 		int[] result = null;
-		LabelLinguisticDomain[] envelope = getEnvelope();
+		LabelLinguisticDomain[] envelope = getEnvelopeLinguisticLabels();
 
 		if (envelope != null) {
 			result = new int[2];
@@ -361,7 +361,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 		return result;
 	}
 	
-	public LabelLinguisticDomain[] getEnvelope() {
+	public LabelLinguisticDomain[] getEnvelopeLinguisticLabels() {
 		LabelLinguisticDomain[] result = new LabelLinguisticDomain[2];
 		int pos, cardinality;
 
@@ -399,6 +399,51 @@ public class HesitantTwoTupleValuation extends Valuation {
 		} else if (isBinary()) {
 			result[0] = _lowerTerm.getLabel();
 			result[1] = _upperTerm.getLabel();
+		} else {
+			result = null;
+		}
+
+		return result;
+	}
+	
+	public TwoTuple[] getEnvelopeTwoTuple() {
+		TwoTuple[] result = new TwoTuple[2];
+		int pos, cardinality;
+
+		if (isPrimary()) {
+			result[0] = _label;
+			result[1] = _label;
+		} else if (isUnary()) {
+			switch (_unaryRelation) {
+			case LowerThan:
+				pos = ((FuzzySet) _domain).getLabelSet().getPos(_term.getLabel()) - 1;
+				if(pos == -1) {
+					pos = 0;
+				}
+				result[0] = new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(0));
+				result[1] = new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(pos));
+				break;
+			case GreaterThan:
+				cardinality = ((FuzzySet) _domain).getLabelSet().getCardinality();
+				pos = ((FuzzySet) _domain).getLabelSet().getPos(_term.getLabel()) + 1;
+				result[0] = new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(pos));
+				result[1] = new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(cardinality - 1));
+				break;
+			case AtLeast:
+				cardinality = ((FuzzySet) _domain).getLabelSet().getCardinality();
+				result[0] = _term;
+				result[1] = new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(cardinality - 1));
+				break;
+			case AtMost:
+				result[0] = new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(0));
+				result[1] = _term;
+				break;
+			default:
+				result = null;
+			}
+		} else if (isBinary()) {
+			result[0] = _lowerTerm;
+			result[1] = _upperTerm;
 		} else {
 			result = null;
 		}
@@ -448,7 +493,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 				aux = aux.substring(0, 1).toUpperCase() + aux.substring(1);
 				return aux + " " + getTwoTupleTerm().prettyFormat(); //$NON-NLS-1$
 			} else {
-				return "Between" + " " + getTwoTupleLowerTerm().prettyFormat() + " " + Messages.HesitantTwoTupleValuation_and + " " + getTwoTupleUpperTerm().prettyFormat();  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-5$
+				return Messages.HesitantTwoTupleValuation_Between + " " + getTwoTupleLowerTerm().prettyFormat() + " " + Messages.HesitantTwoTupleValuation_and + " " + getTwoTupleUpperTerm().prettyFormat();//$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
 			}
 		}
 	}
@@ -480,7 +525,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 
 	@Override
 	public void read(XMLRead reader) throws XMLStreamException {}
-
+ 
 	@Override
 	public Object clone() {
 		Object result = null;
@@ -520,32 +565,18 @@ public class HesitantTwoTupleValuation extends Valuation {
 		Validator.notIllegalElementType(other, new String[] { HesitantTwoTupleValuation.class.toString() });
 
 		if (_domain.equals(other.getDomain())) {
-			int[] tEnvelopeIndex = getEnvelopeIndex();
-			int[] oEnvelopeIndex = ((HesitantTwoTupleValuation) other).getEnvelopeIndex();
-			double tc = (double) (tEnvelopeIndex[1] + tEnvelopeIndex[0]) / 2d;
-			double tw = (double) (tEnvelopeIndex[1] - tEnvelopeIndex[0]) / 2d;
-			double oc = (double) (oEnvelopeIndex[1] + oEnvelopeIndex[0]) / 2d;
-			double ow = (double) (oEnvelopeIndex[1] - oEnvelopeIndex[0]) / 2d;
-
-			double acceptability;
-			if ((tw + ow) == 0) {
-				if (tc == oc) {
-					return 0;
-				} else if (tc > oc) {
-					return 1;
-				} else {
-					return -1;
-				}
-			}
-
-			acceptability = (tc - oc) / (tw + ow);
-			double limit = 0.25;
-			if ((acceptability <= limit) && (acceptability >= -limit)) {
-				return 0;
-			} else if (acceptability > limit) {
+			TwoTuple[] interval1 = this.getEnvelopeTwoTuple(), interval2 = ((HesitantTwoTupleValuation) other).getEnvelopeTwoTuple();
+			int[] envelopeIndexInterval1 = this.getEnvelopeLinguisticLabelsIndex(), envelopeIndexInterval2 = ((HesitantTwoTupleValuation) other).getEnvelopeLinguisticLabelsIndex();
+			
+			double Sinterval1 = (envelopeIndexInterval1[0] + envelopeIndexInterval1[1]) / (2d * ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) + (interval1[0].getAlpha() + interval1[1].getAlpha()) / 2d;
+			double Sinterval2 = (envelopeIndexInterval2[0] + envelopeIndexInterval2[1]) / (2d * ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) + (interval2[0].getAlpha() + interval2[1].getAlpha()) / 2d;
+			
+			if(Sinterval1 > Sinterval2) {
 				return 1;
-			} else {
+			} else if(Sinterval1 < Sinterval2) {
 				return -1;
+			} else {
+				return 0;
 			}
 		} else {
 			throw new IllegalArgumentException("Different domains");

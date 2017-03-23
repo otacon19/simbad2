@@ -68,7 +68,7 @@ public class TwoTuple extends LinguisticValuation {
 		
 		double alpha = beta - labelIndex;
 		
-		if(Math.round(alpha * 100d) / 100d == 0.5) {
+		if(alpha == 0.5) {
 			labelIndex++;
 			setLabel(labelIndex);
 			alpha = -0.5;
