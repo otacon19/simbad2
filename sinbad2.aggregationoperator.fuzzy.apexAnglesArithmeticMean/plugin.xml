@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.aggregationoperator">
+      <aggregation_operator
+            id="flintstones.aggregationoperator.fuzzy.apexanglesarithmetic"
+            name="Apex angles arithmetic mean"
+            parameters="false">
+         <unweighted
+               implementation="sinbad2.aggregationoperator.fuzzy.apexAnglesArithmeticMean.ApexAnglesArithmeticMean">
+            <supported_types
+                  type="HesitantTwoTuple">
+            </supported_types>
+         </unweighted>
+      </aggregation_operator>
+   </extension>
+
+</plugin>

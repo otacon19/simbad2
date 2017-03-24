@@ -69,6 +69,7 @@
       <plugin id="sinbad2.aggregationoperator"/>
       <plugin id="sinbad2.aggregationoperator.arithmeticMean"/>
       <plugin id="sinbad2.aggregationoperator.choquetIntegral"/>
+      <plugin id="sinbad2.aggregationoperator.fuzzy.apexAnglesArithmeticMean"/>
       <plugin id="sinbad2.aggregationoperator.fuzzy.arithmeticMean"/>
       <plugin id="sinbad2.aggregationoperator.fuzzy.geometricMean"/>
       <plugin id="sinbad2.aggregationoperator.geometricMean"/>
