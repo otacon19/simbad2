@@ -1,17 +1,17 @@
-package sinbad2.aggregationoperator.fuzzy.geometricMean;
+package sinbad2.aggregationoperator.fuzzy.max;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import sinbad2.aggregationoperator.UnweightedAggregationOperator;
-import sinbad2.aggregationoperator.fuzzy.geometricMean.valuation.HesitantTwoTupleOperator;
+import sinbad2.aggregationoperator.fuzzy.max.valuation.HesitantTwoTupleOperator;
 import sinbad2.core.validator.Validator;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
 
-public class FuzzyGeometric extends UnweightedAggregationOperator {
-
-	public static final String ID = "flintstones.aggregationoperator.fuzzy.geometricmean"; //$NON-NLS-1$
+public class FuzzyMax extends UnweightedAggregationOperator {
+	
+public static final String ID = "flintstones.aggregationoperator.fuzzy.max"; //$NON-NLS-1$
 	
 	@Override
 	public Valuation aggregate(List<Valuation> valuations) {

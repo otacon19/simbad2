@@ -12,6 +12,7 @@ import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.EUnaryRelationType;
 import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
@@ -86,10 +87,11 @@ public class RetranslationPhase implements IPhaseMethod {
 						((HesitantTwoTupleValuation) auxValuation).setTwoTupleLabel(transformedLabel);
 						((HesitantTwoTupleValuation) auxValuation).setFuzzyNumber(((HesitantTwoTupleValuation) valuation).getFuzzyNumber());
 					} else if(((HesitantTwoTupleValuation) valuation).isUnary()) {
+						EUnaryRelationType relation = ((HesitantTwoTupleValuation) valuation).getUnaryRelation();
 						TwoTuple label = ((HesitantTwoTupleValuation) valuation).getTwoTupleTerm();
 						TwoTuple transformedLabel = label.transform(resultsDomain);
 						auxValuation = new HesitantTwoTupleValuation(resultsDomain);
-						((HesitantTwoTupleValuation) auxValuation).setTwoTupleTerm(transformedLabel);
+						((HesitantTwoTupleValuation) auxValuation).setUnaryRelation(relation, transformedLabel);
 						((HesitantTwoTupleValuation) auxValuation).setFuzzyNumber(((HesitantTwoTupleValuation) valuation).getFuzzyNumber());
 					} else {
 						TwoTuple labelLower = ((HesitantTwoTupleValuation) valuation).getTwoTupleLowerTerm();

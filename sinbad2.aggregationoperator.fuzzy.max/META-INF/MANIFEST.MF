@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Fuzzy max
+Bundle-SymbolicName: sinbad2.aggregationoperator.fuzzy.max;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.aggregationoperator;bundle-version="1.0.0",
+ sinbad2.valuation.hesitant.twoTuple;bundle-version="1.0.0"

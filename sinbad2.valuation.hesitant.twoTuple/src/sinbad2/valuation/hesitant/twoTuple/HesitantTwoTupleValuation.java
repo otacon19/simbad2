@@ -237,8 +237,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 			disableBinary();
 			_label = new TwoTuple((FuzzySet) _domain, labelCloserToB, minDistanceB);
 		} else {
-			setBinaryRelation(new TwoTuple((FuzzySet) _domain, labelCloserToB, minDistanceB), 
-				new TwoTuple((FuzzySet) _domain, labelCloserToC, minDistanceC));
+			setBinaryRelation(new TwoTuple((FuzzySet) _domain, labelCloserToB, minDistanceB), new TwoTuple((FuzzySet) _domain, labelCloserToC, minDistanceC));
 		}
 	}
 	
@@ -364,7 +363,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 	public LabelLinguisticDomain[] getEnvelopeLinguisticLabels() {
 		LabelLinguisticDomain[] result = new LabelLinguisticDomain[2];
 		int pos, cardinality;
-
+	
 		if (isPrimary()) {
 			result[0] = _label.getLabel();
 			result[1] = _label.getLabel();
@@ -567,7 +566,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 		if (_domain.equals(other.getDomain())) {
 			TwoTuple[] interval1 = this.getEnvelopeTwoTuple(), interval2 = ((HesitantTwoTupleValuation) other).getEnvelopeTwoTuple();
 			int[] envelopeIndexInterval1 = this.getEnvelopeLinguisticLabelsIndex(), envelopeIndexInterval2 = ((HesitantTwoTupleValuation) other).getEnvelopeLinguisticLabelsIndex();
-			
+	
 			double Sinterval1 = (envelopeIndexInterval1[0] + envelopeIndexInterval1[1]) / (2d * ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) + (interval1[0].getAlpha() + interval1[1].getAlpha()) / 2d;
 			double Sinterval2 = (envelopeIndexInterval2[0] + envelopeIndexInterval2[1]) / (2d * ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) + (interval2[0].getAlpha() + interval2[1].getAlpha()) / 2d;
 			
