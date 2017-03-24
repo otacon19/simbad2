@@ -27,7 +27,7 @@ public class AlgorithmDialog extends Dialog {
 	
 	private final static String ALGORITHM = "# Require values #" //$NON-NLS-1$
 			+ "\nnumExperts = <numExp>\n"
-			+ "\nnumDomains = <numDomains>\n"
+			+ "numDomains = <numDomains>\n"
 			+ "edNum = <edNum>\n"
 			+ "edInt = <edInt>\n"
 			+ "edLinUnb = <edLinUnb>\n"
@@ -36,12 +36,12 @@ public class AlgorithmDialog extends Dialog {
 			+ "edLin = <edLin>\n"
 			+ "edHesit = <edHesit>\n"
 			+ "\n"
-			+ "# Algorithm to select the suitable CWW methodology #\n "
-			+ "1:  if (edLin[1].2T=true) and (tamEdLinLis=1) then\n "
-			+ "2:      return <1>\n "
+			+ "# Algorithm to select the suitable CWW methodology #\n"
+			+ "1:  if (edLin[1].2T=true) and (tamEdLinLis=1) then\n"
+			+ "2:      return <1>\n"
 			+ "3:  else if (edNum=true) or (edInt=true) then\n"
 			+ "4:      return <5>\n"
-			+ "5:  else if (edLinUnb=true) then\n "
+			+ "5:  else if (edLinUnb=true) then\n"
 			+ "6:      return <6>\n"
 			+ "7:  else if (edHesit=true) and (numExperts>1) and (numDomains = 1) then\n"
 			+ "8:      return <8>\n"
@@ -137,7 +137,7 @@ public class AlgorithmDialog extends Dialog {
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, 
-				BLACK, BLACK, BLACK, BLACK, BLACK};
+				BLACK, BLACK, BLACK, BLACK};
 
 		StyleRange[] textRanges = new StyleRange[textColors.length];
 		int lineStart = 0;
@@ -337,42 +337,42 @@ public class AlgorithmDialog extends Dialog {
 				MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK,
 				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, 
-				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK };
+				BLACK, BLACK, BLACK, BLACK, BLACK, BLACK };
 
 		_recommendedMethod = _methodsManager.getRecommendedMethod();
 
-		int start = 8;
+		int start = 12;
 		if(Messages.AlgorithmDialog_2_tuple_linguistic_computational_model.equals(_recommendedMethod)) {
-			textColors[start + 3] = GREEN;
-		} else if(Messages.AlgorithmDialog_Fusion_approach_for_managing_multi_granular_linguistic_information.equals(_recommendedMethod)) {
-			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = textColors[start + 9] = textColors[start + 11];
-			textColors[start + 17] = GREEN;
-		} else if(Messages.AlgorithmDialog_Linguistic_hierarchies.equals(_recommendedMethod)) {
-			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = textColors[start + 9] = textColors[start + 11] = textColors[start + 17] = textColors[start + 19] = RED;
-		} else if(Messages.AlgorithmDialog_Extended_linguistic_hierarchies.equals(_recommendedMethod)) {
-			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = textColors[start + 9] = textColors[start + 11] = textColors[start + 17] = RED;
-			textColors[start + 19] = GREEN;
+			textColors[start] = GREEN;
 		} else if(Messages.AlgorithmDialog_Fusion_approach_for_managing_heterogeneous_information.equals(_recommendedMethod)) {
-			textColors[start + 3] = RED;
-			textColors[start + 5] = GREEN;
+			textColors[start] = RED;
+			textColors[start + 2] = GREEN;
 		} else if (Messages.AlgorithmDialog_Methodology_to_deal_with_unbalanced_linguistic_term_sets.equals(_recommendedMethod)) {
-			textColors[start + 3]= textColors[start + 5] = RED;
-			textColors[start + 7] = GREEN;
+			textColors[start]= textColors[start + 2] = RED;
+			textColors[start + 4] = GREEN;
 		} else if (Messages.AlgorithmDialog_Hesitant_fuzzy_2_tuple_linguistic_information.equals(_recommendedMethod)) {
-			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = RED;
-			textColors[start + 9] = GREEN;
+			textColors[start] = textColors[start + 2] = textColors[start + 4] = RED;
+			textColors[start + 6] = GREEN;
+		}  else if(Messages.AlgorithmDialog_Hesitant_Fuzzy_Linguistic_Term_Set.equals(_recommendedMethod)) {
+			textColors[start] = textColors[start + 2] = textColors[start + 4] = textColors[start + 6] = RED;
+			textColors[start + 8] = GREEN;
+		} else if(Messages.AlgorithmDialog_Complex_2_tuple_hesitant_linguistic_information.equals(_recommendedMethod)) {
+			textColors[start] = textColors[start + 2] = textColors[start + 4] = textColors[start + 6] = textColors[start + 8] = RED;
+			textColors[start + 10] = GREEN;
+		} else if(Messages.AlgorithmDialog_Fusion_approach_for_managing_multi_granular_linguistic_information.equals(_recommendedMethod)) {
+			textColors[start] = textColors[start + 2] = textColors[start + 4] = textColors[start + 6] = textColors[start + 8] = textColors[start + 10] = RED;
+			textColors[start + 16] = GREEN;
+		} else if(Messages.AlgorithmDialog_Extended_linguistic_hierarchies.equals(_recommendedMethod)) {
+			textColors[start] = textColors[start + 2] = textColors[start + 4] = textColors[start + 6] = textColors[start + 8] = textColors[start + 10] = textColors[start + 16] = RED;
+			textColors[start + 18] = GREEN;
+		} else if(Messages.AlgorithmDialog_Linguistic_hierarchies.equals(_recommendedMethod)) {
+			textColors[start] = textColors[start + 2] = textColors[start + 4] = textColors[start + 6] = textColors[start + 8] = textColors[start + 10] = textColors[start + 16] = textColors[start + 18] = RED;
 		}  else if (Messages.AlgorithmDialog_Tecnique_for_order_of_preference_by_similarity_to_ideal_solution_TOPSIS.equals(_recommendedMethod)) {
 			
-		}  else if(Messages.AlgorithmDialog_Hesitant_Fuzzy_Linguistic_Term_Set.equals(_recommendedMethod)) {
-			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = textColors[start + 9] = RED;
-			textColors[start + 11] = GREEN;
 		}  else if(Messages.AlgorithmDialog_Interactive_and_multicriteria_decision_making.equals(_recommendedMethod)) {
-			
-		} else if(Messages.AlgorithmDialog_Complex_2_tuple_hesitant_linguistic_information.equals(_recommendedMethod)) {
-			textColors[start + 3] = textColors[start + 5] = textColors[start + 7] = textColors[start + 9] = RED;
-			textColors[start + 15] = GREEN;
+		
 		}
-
+		
 		StyleRange[] textRanges = new StyleRange[textColors.length];
 		int lineStart = 0;
 		int lineLength = 0;
