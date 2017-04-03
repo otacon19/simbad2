@@ -243,9 +243,6 @@ public class ElementAssignmentsView extends ViewPart implements ISelectionListen
 	
 			default:
 		}
-
-
-		
 	}
 
 	@Override
@@ -340,6 +337,7 @@ public class ElementAssignmentsView extends ViewPart implements ISelectionListen
 				tabItem.setControl(elementAssignmentsTable);
 				elementAssignmentsTable.setModel(element);
 			}
+			
 			if (_selectedElement instanceof Alternative) {
 				_instance.setPartName(_partName + " | " + Messages.ElementAssignmentsView_Alternative); //$NON-NLS-1$
 			} else if (_selectedElement instanceof Criterion) {

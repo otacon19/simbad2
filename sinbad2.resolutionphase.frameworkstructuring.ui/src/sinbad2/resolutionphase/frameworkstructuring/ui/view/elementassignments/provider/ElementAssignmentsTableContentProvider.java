@@ -75,21 +75,21 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 	private final FixedCellRenderer _fixedRenderersInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 
 	
-	public ElementAssignmentsTableContentProvider(
-			ElementAssignmentsTable table, ProblemElement element) {
+	public ElementAssignmentsTableContentProvider(ElementAssignmentsTable table, ProblemElement element) {
 		super(table);
 
 		_table = table;
+		
 		_elementsManager = ProblemElementsManager.getInstance();
 		_elementSet = _elementsManager.getActiveElementSet();
 		_domainAssignmentsManager = DomainAssignmentsManager.getInstance();
-		_domainAssignments = _domainAssignmentsManager
-				.getActiveDomainAssignments();
-
-		_element = element;
+		_domainAssignments = _domainAssignmentsManager.getActiveDomainAssignments();
+		
 		_experts = _elementSet.getExperts();
 		_alternatives = _elementSet.getAlternatives();
 		_criteria = _elementSet.getCriteria();
+		
+		_element = element;
 
 		computeOrder();
 		hookPreferenceListener();
@@ -125,7 +125,7 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 				_row = EElement.EXPERT;
 				_col = EElement.ALTERNATIVE;
 			}
-			_elementSet.registerExpertsChangesListener(this);
+			_elementSet.registerCriteriaChangesListener(this);
 			_elementSet.registerAlternativesChangesListener(this);
 		} else {
 			boolean alternativesInRows = Activator.getDefault().getPreferenceStore().getBoolean(
@@ -137,7 +137,7 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 				_row = EElement.CRITERION;
 				_col = EElement.ALTERNATIVE;
 			}
-			_elementSet.registerCriteriaChangesListener(this);
+			_elementSet.registerExpertsChangesListener(this);
 			_elementSet.registerAlternativesChangesListener(this);
 		}
 	}
@@ -476,9 +476,9 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 					} else {
 						criterion = (Criterion) _element;
 					}
-
-					erg = _domainAssignments.getDomain(expert, alternative, criterion);
 					
+					erg = _domainAssignments.getDomain(expert, alternative, criterion);
+	
 					if (erg != null) {
 						erg = (getColumnWidth(col) > 80) ? ((Domain) erg).getId() : _domainIndex.getIndex((Domain) erg);
 					} else {
@@ -488,7 +488,6 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 			} catch (Exception e) {
 				erg = null;
 			}
-
 			return erg;
 		}
 	}
@@ -734,6 +733,7 @@ public class ElementAssignmentsTableContentProvider extends KTableNoScrollModel 
 
 	@Override
 	public void notifyDomainAssignmentsChange(DomainAssignmentsChangeEvent event) {
+		_domainAssignments = _domainAssignmentsManager.getActiveDomainAssignments();
 		initialize();
 		_table.redraw();
 	}

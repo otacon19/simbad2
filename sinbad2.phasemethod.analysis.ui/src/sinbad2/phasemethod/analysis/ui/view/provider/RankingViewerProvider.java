@@ -57,6 +57,7 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 			
 			List<Object[]> result = new LinkedList<Object[]>();
 			if(input[0][1] != null) {
+				boolean hesitant2Tuple = false;
 				String alternativeName;
 				Valuation valuation;
 				TwoTuple twoTuple = null;
@@ -70,6 +71,9 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 						} else if(valuation instanceof TwoTuple) {
 							twoTuple = (TwoTuple) valuation;
 							listEntry = new Object[] {((TwoTuple) twoTuple).calculateInverseDelta(), alternativeName, twoTuple };
+						} else if(valuation instanceof HesitantTwoTupleValuation) {
+							hesitant2Tuple = true;
+							listEntry = new Object[] {valuation, alternativeName, valuation };
 						} else {
 							listEntry = new Object[] {valuation, alternativeName, valuation };
 						}
@@ -79,8 +83,12 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 					result.add(listEntry);
 				}
 		
-				Collections.sort(result, new MyComparator());
-				Collections.reverse(result);
+				if(!hesitant2Tuple) {
+					Collections.sort(result, new MyComparator());
+					Collections.reverse(result);
+				} else {
+					result = HesitantTwoTupleValuation.rankingMatrix(result);
+				}
 				
 				int ranking = 0;
 				double previous = -1;

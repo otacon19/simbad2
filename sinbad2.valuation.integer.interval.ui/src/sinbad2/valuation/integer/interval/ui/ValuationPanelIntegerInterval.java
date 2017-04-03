@@ -163,11 +163,11 @@ public class ValuationPanelIntegerInterval extends ValuationPanel  {
 		if(_valuation != null) {
 			_valueMin = (int) ((IntegerIntervalValuation) _valuation).getMin();
 			_valueMax = (int) ((IntegerIntervalValuation) _valuation).getMax();
-			_valueSpinnerMin.setSelection(_valueMin);
 			_valueSpinnerMax.setSelection(_valueMax);
+			_valueSpinnerMin.setSelection(_valueMin);
 		} else {
-			_valueSpinnerMin.setSelection(_valueMax / 2);
 			_valueSpinnerMax.setSelection(_valueMax / 2);
+			_valueSpinnerMin.setSelection(_valueMax / 2);
 		}
 		
 		selectionChange();

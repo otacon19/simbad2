@@ -74,7 +74,6 @@ public class DomainsManager {
 	}
 	
 	public Domain getDomainImplementation(String id) {
-		
 		if(_domains.containsKey(id)) {
 			return _domains.get(id);
 		} else {

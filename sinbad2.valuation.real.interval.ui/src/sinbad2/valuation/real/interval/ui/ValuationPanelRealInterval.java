@@ -84,7 +84,6 @@ public class ValuationPanelRealInterval extends ValuationPanel {
 			_valueMax = ((NumericRealDomain) _domain).getMax();
 			
 			 value = ((int)_valueMax / 2);
-			
 			_valueSpinnerMin.setDigits(2);
 			_valueSpinnerMin.setMinimum((int) (_valueMin * 100d));
 			_valueSpinnerMin.setMaximum((int) (value * 100d));
@@ -171,11 +170,11 @@ public class ValuationPanelRealInterval extends ValuationPanel {
 		if(_valuation != null) {
 			_valueMin = ((RealIntervalValuation) _valuation).getMin();
 			_valueMax = ((RealIntervalValuation) _valuation).getMax();
-			_valueSpinnerMin.setSelection((int) (_valueMin * 100d));
 			_valueSpinnerMax.setSelection((int) (_valueMax * 100d));
+			_valueSpinnerMin.setSelection((int) (_valueMin * 100d));
 		} else {
-			_valueSpinnerMin.setSelection((int) ((_valueMax / 2) * 100d));
 			_valueSpinnerMax.setSelection((int) ((_valueMax / 2) * 100d));
+			_valueSpinnerMin.setSelection((int) ((_valueMax / 2) * 100d));
 		}
 		
 		selectionChange();

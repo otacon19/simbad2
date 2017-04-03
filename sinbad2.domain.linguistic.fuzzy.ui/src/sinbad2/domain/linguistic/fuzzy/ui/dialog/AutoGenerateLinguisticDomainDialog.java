@@ -137,7 +137,7 @@ public class AutoGenerateLinguisticDomainDialog extends NewDomainDialog {
 	
 	@Override
 	protected Point getInitialSize() {
-		return new Point(545, 420);
+		return new Point(545, 450);
 	}
 	
 	@Override

@@ -557,13 +557,14 @@ public class FuzzySet extends Linguistic {
 		Object result;
 		
 		result = super.clone();
-		
+	
 		List<Double> values = new LinkedList<Double>();
 		for(Double value: _values) {
 			values.add(new Double(value));
 		}
 		
 		((FuzzySet) result)._values = values;
+		((FuzzySet) result)._labelSet = (LabelSetLinguisticDomain) _labelSet.clone();
 		
 		return result;
 	}

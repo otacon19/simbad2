@@ -137,7 +137,7 @@ public class ElementValuationsTableContentProvider extends KTableNoScrollModel i
 				_row = EElement.EXPERT;
 				_col = EElement.ALTERNATIVE;
 			}
-			_elementSet.registerExpertsChangesListener(this);
+			_elementSet.registerCriteriaChangesListener(this);
 			_elementSet.registerAlternativesChangesListener(this);
 		} else {
 			boolean alternativesInRows = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.P_EXPERTS_TABLE_ALTERNATIVES_IN_ROWS);
@@ -148,7 +148,7 @@ public class ElementValuationsTableContentProvider extends KTableNoScrollModel i
 				_row = EElement.CRITERION;
 				_col = EElement.ALTERNATIVE;
 			}
-			_elementSet.registerCriteriaChangesListener(this);
+			_elementSet.registerExpertsChangesListener(this);
 			_elementSet.registerAlternativesChangesListener(this);
 		}
 	}

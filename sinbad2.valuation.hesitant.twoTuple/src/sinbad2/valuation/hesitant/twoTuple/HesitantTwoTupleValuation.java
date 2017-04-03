@@ -1,5 +1,7 @@
 package sinbad2.valuation.hesitant.twoTuple;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,6 +39,13 @@ public class HesitantTwoTupleValuation extends Valuation {
 	private TwoTuple _label;
 	
 	private TrapezoidalFunction _fuzzyNumber;
+	
+	private static class MyComparator implements Comparator<Object[]> {
+		@Override
+		public int compare(Object[] o1, Object[] o2) {
+			return Double.compare((Double) o1[1], (Double) o2[1]);
+		}
+	}
 	
 	public HesitantTwoTupleValuation() {
 		super();
@@ -580,5 +589,81 @@ public class HesitantTwoTupleValuation extends Valuation {
 		} else {
 			throw new IllegalArgumentException(Messages.HesitantTwoTupleValuation_Different_domains);
 		}
+	}
+	
+	public static List<Object[]> rankingMatrix(List<Object[]> valuations) {
+		double matrix[][] = new double[valuations.size()][valuations.size()];
+		double max, beta1, beta2, delta1, delta2, h1, h2, aux;
+		TwoTuple[] interval1, interval2; 
+		
+		Collections.swap(valuations, valuations.size() - 1, 0);
+		Collections.swap(valuations, valuations.size() - 1, 1);
+		Collections.swap(valuations, valuations.size() - 1, valuations.size()- 2);
+		
+		for(int i = 0; i < valuations.size(); ++i) {
+			interval1 = ((HesitantTwoTupleValuation) valuations.get(i)[0]).getEnvelopeTwoTuple();
+			
+			for(int j = 0; j < valuations.size(); ++j) {
+				interval2 = ((HesitantTwoTupleValuation) valuations.get(j)[0]).getEnvelopeTwoTuple();
+				
+				max = 0;
+				
+				beta1 = interval1[0].calculateInverseDelta();
+				beta2 = interval2[0].calculateInverseDelta();
+				delta1 = interval1[1].calculateInverseDelta();
+				delta2 = interval2[1].calculateInverseDelta();
+				
+				h1 = delta1 - beta1;
+				h2 = delta2 - beta2;
+				aux =  (delta2 - beta1) / (h1 + h2);
+				
+				if(Double.isNaN(aux)) {
+					aux = 0.5;
+				}
+				
+				if(aux > max) {
+					max = aux;
+				}
+				
+				if(1 - max > 0) {
+					max = 1 - max;
+				} else {
+					max = 0;
+				}
+				
+				matrix[i][j] = max;
+			}
+		}	
+		
+		List<Object[]> ranking = computeRanking(matrix);
+		List<Object[]> orderedValuations = new LinkedList<Object[]>();
+		
+		for(int r = 0; r < ranking.size(); ++r) {
+			orderedValuations.add(valuations.get((int) ranking.get(r)[0]));
+		}
+		
+		return orderedValuations;
+	}
+	
+	private static List<Object[]> computeRanking(double[][] matrix) {
+		List<Object[]> sums = new LinkedList<Object[]>();
+		double sum;
+		Object[] data;
+		
+		for(int i = 0; i < matrix.length; ++i) {
+			sum = 0;
+			data = new Object[2];
+			for(int j = 0; j < matrix.length; ++j) {
+				sum += matrix[i][j];
+			}
+			data[0] = i;
+			data[1] = sum;
+			sums.add(data);
+		}
+		
+		Collections.sort(sums, new MyComparator());
+		Collections.reverse(sums);
+		
+		return sums;
 	}
 }

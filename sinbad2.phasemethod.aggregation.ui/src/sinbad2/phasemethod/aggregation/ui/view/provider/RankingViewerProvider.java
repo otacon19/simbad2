@@ -27,7 +27,7 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 			if ((o1[0] instanceof HesitantValuation)) {
 				return ((HesitantValuation) o1[0]).compareTo((HesitantValuation)o2[0]);
 			} else if((o1[0] instanceof HesitantTwoTupleValuation)) {
-				return ((HesitantTwoTupleValuation) o1[0]).compareTo((HesitantTwoTupleValuation)o2[0]);
+				return ((HesitantTwoTupleValuation) o1[0]).compareTo((HesitantTwoTupleValuation) o2[0]);
 		    } else {
 		    	return Double.compare((Double) o1[0], (Double) o2[0]);
 		    }
@@ -56,6 +56,7 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 		
 		List<Object[]> result = new LinkedList<Object[]>();
 		if(input[0][1] != null) {
+			boolean hesitant2Tuple = false;
 			String alternativeName;
 			Valuation valuation;
 			TwoTuple twoTuple = null;
@@ -69,17 +70,24 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 					} else if(valuation instanceof TwoTuple){
 						twoTuple = (TwoTuple) valuation;
 						listEntry = new Object[] {((TwoTuple) twoTuple).calculateInverseDelta(), alternativeName, twoTuple };
+					} else if(valuation instanceof HesitantTwoTupleValuation) {
+						hesitant2Tuple = true;
+						listEntry = new Object[] {valuation, alternativeName, valuation};
 					} else {
 						listEntry = new Object[] {valuation, alternativeName, valuation};
-					}	
+					}
 				} else {
 					listEntry = new Object[] { 0d, alternativeName, null };
 				}
 				result.add(listEntry);
 			}
-	
-			Collections.sort(result, new MyComparator());
-			Collections.reverse(result);
+			
+			if(!hesitant2Tuple) {
+				Collections.sort(result, new MyComparator());
+				Collections.reverse(result);
+			} else {
+				result = HesitantTwoTupleValuation.rankingMatrix(result);
+			}
 			
 			int ranking = 0;
 			double previous = -1;

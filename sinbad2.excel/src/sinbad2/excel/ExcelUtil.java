@@ -66,7 +66,7 @@ public class ExcelUtil {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
 
-		_experts = _elementsSet.getExperts();
+		_experts = _elementsSet.getAllExperts();
 		_alternatives = _elementsSet.getAlternatives();
 		_criteria = _elementsSet.getAllCriteria();
 
@@ -118,8 +118,10 @@ public class ExcelUtil {
 	private void createProblemInformation() {
 		Map<ValuationKey, Valuation> valuations = ValuationSetManager.getInstance().getActiveValuationSet().getValuations();
 		for (Expert e : _experts) {
-			_sheet = _workbook.createSheet(e.getCanonicalId());
-			createExpertAssessments(e, valuations);
+			if(!e.hasChildren()) {
+				_sheet = _workbook.createSheet(e.getCanonicalId());
+				createExpertAssessments(e, valuations);
+			}
 		}
 
 		_sheet = _workbook.createSheet("Unification");
@@ -127,7 +129,7 @@ public class ExcelUtil {
 	}
 
 	private void createExpertAssessments(Expert e, Map<ValuationKey, Valuation> valuations) {
-		int rowCountExpertsCriteria = 2, rowCountAlternatives = 3, columnCountCriteria = 3, columnCountValuation = 3;
+		int rowCountExpertsCriteria = 2, rowCountAlternatives = 3, columnCountCriteria = 3;
 
 		Row rowExpertCriterion = _sheet.createRow(rowCountExpertsCriteria);
 		Cell cell = rowExpertCriterion.createCell(2);
@@ -139,7 +141,6 @@ public class ExcelUtil {
 		CreationHelper factory = _workbook.getCreationHelper();
 
 		for (Alternative a : _alternatives) {
-
 			Row rowAlternative = _sheet.createRow(rowCountAlternatives);
 			cell = rowAlternative.createCell(2);
 			cell.setCellValue(a.getId());
@@ -150,8 +151,7 @@ public class ExcelUtil {
 					if (vk.getExpert().equals(e) && vk.getAlternative().equals(a) && vk.getCriterion().equals(c)) {
 
 						Valuation v = valuations.get(vk);
-
-						cell = rowAlternative.createCell(columnCountValuation);
+						cell = rowAlternative.createCell(3 + _elementsSet.getAllCriteria().indexOf(c));
 						cell.setCellValue(v.changeFormatValuationToString());
 
 						Drawing drawing = _sheet.createDrawingPatriarch();
@@ -175,13 +175,9 @@ public class ExcelUtil {
 						RichTextString str = factory.createRichTextString("Domain: " + v.getDomain().getId() + "\n" + "Domain type: " + type);
 						comment.setString(str);
 						comment.setAuthor("Flintstones");
-
-						columnCountValuation++;
 					}
 				}
 			}
-
-			columnCountValuation = 3;
 
 			rowCountAlternatives++;
 		}
@@ -196,55 +192,52 @@ public class ExcelUtil {
 	}
 
 	private void createUnificationAssessments() {
-		int rowCountExpertsCriteria = 2, rowCountAlternatives = 3, columnCountCriteria = 3, columnCountValuation = 3;
+		int rowCountExpertsCriteria = 2, rowCountAlternatives = 3, columnCountCriteria = 3;
 
 		for (Expert e : _experts) {
+			if(!e.hasChildren()) {
+				Row rowExpertCriterion = _sheet.createRow(rowCountExpertsCriteria);
+				Cell cell = rowExpertCriterion.createCell(2);
+				cell.setCellValue(e.getId());
+				cell.setCellStyle(_styleExperts);
+	
+				rowCountAlternatives = rowCountExpertsCriteria + 1;
+	
+				for (Alternative a : _alternatives) {
+	
+					Row rowAlternative = _sheet.createRow(rowCountAlternatives);
+					cell = rowAlternative.createCell(2);
+					cell.setCellValue(a.getId());
+					cell.setCellStyle(_styleAlternatives);
+	
+					for (Criterion c : _criteria) {
+						for (ValuationKey vk : _unifiedValuations.keySet()) {
+							if (vk.getExpert().equals(e) && vk.getAlternative().equals(a) && vk.getCriterion().equals(c)) {
+	
+								TwoTuple v = (TwoTuple) _unifiedValuations.get(vk);
+	
+								cell = rowAlternative.createCell(3 + _elementsSet.getAllCriteria().indexOf(c));
+								cell.setCellValue(v.changeFormatValuationToString());
 
-			Row rowExpertCriterion = _sheet.createRow(rowCountExpertsCriteria);
-			Cell cell = rowExpertCriterion.createCell(2);
-			cell.setCellValue(e.getId());
-			cell.setCellStyle(_styleExperts);
-
-			rowCountAlternatives = rowCountExpertsCriteria + 1;
-
-			for (Alternative a : _alternatives) {
-
-				Row rowAlternative = _sheet.createRow(rowCountAlternatives);
-				cell = rowAlternative.createCell(2);
-				cell.setCellValue(a.getId());
-				cell.setCellStyle(_styleAlternatives);
-
-				for (Criterion c : _criteria) {
-					for (ValuationKey vk : _unifiedValuations.keySet()) {
-						if (vk.getExpert().equals(e) && vk.getAlternative().equals(a) && vk.getCriterion().equals(c)) {
-
-							TwoTuple v = (TwoTuple) _unifiedValuations.get(vk);
-
-							cell = rowAlternative.createCell(columnCountValuation);
-							cell.setCellValue(v.changeFormatValuationToString());
-
-							columnCountValuation++;
+							}
 						}
 					}
+	
+					rowCountAlternatives++;
 				}
-
-				columnCountValuation = 3;
-
-				rowCountAlternatives++;
+	
+				for (Criterion c : _criteria) {
+					cell = rowExpertCriterion.createCell(columnCountCriteria);
+					cell.setCellValue(c.getId());
+					cell.setCellStyle(_styleCriteria);
+	
+					columnCountCriteria++;
+				}
+	
+				rowCountExpertsCriteria += _alternatives.size() + 2;
+				columnCountCriteria = 3;
 			}
-
-			for (Criterion c : _criteria) {
-				cell = rowExpertCriterion.createCell(columnCountCriteria);
-				cell.setCellValue(c.getId());
-				cell.setCellStyle(_styleCriteria);
-
-				columnCountCriteria++;
-			}
-
-			rowCountExpertsCriteria += _alternatives.size() + 2;
-			columnCountCriteria = 3;
 		}
-
 	}
 
 	public void createExcelFileEmergencyProblemStructure(Map<ValuationKey, TrapezoidalFunction> fuzzyValuations, Map<Criterion, Double> crieriaWeights,

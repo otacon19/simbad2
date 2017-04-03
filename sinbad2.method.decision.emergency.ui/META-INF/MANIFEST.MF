@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Emergency decision making method ui
+Bundle-SymbolicName: sinbad2.method.decision.emergency.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: sinbad2.method.linguistic.ui;bundle-version="1.0.0"

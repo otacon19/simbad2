@@ -72,6 +72,7 @@
       <plugin id="sinbad2.aggregationoperator.fuzzy.apexAnglesArithmeticMean"/>
       <plugin id="sinbad2.aggregationoperator.fuzzy.arithmeticMean"/>
       <plugin id="sinbad2.aggregationoperator.fuzzy.geometricMean"/>
+      <plugin id="sinbad2.aggregationoperator.fuzzy.max"/>
       <plugin id="sinbad2.aggregationoperator.fuzzy.min"/>
       <plugin id="sinbad2.aggregationoperator.geometricMean"/>
       <plugin id="sinbad2.aggregationoperator.harmonicMean"/>
@@ -99,6 +100,8 @@
       <plugin id="sinbad2.element"/>
       <plugin id="sinbad2.element.ui"/>
       <plugin id="sinbad2.excel"/>
+      <plugin id="sinbad2.method.decision.emergency"/>
+      <plugin id="sinbad2.method.decision.emergency.ui"/>
       <plugin id="sinbad2.method.decision.todim"/>
       <plugin id="sinbad2.method.decision.todim.ui"/>
       <plugin id="sinbad2.method.decision.topsis"/>

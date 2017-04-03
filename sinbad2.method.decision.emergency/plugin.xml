@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method">
+      <method
+            category="%method.category"
+            description="%method-description"
+            id="flintstones.method.decision.emergency"
+            implementation="sinbad2.method.decision.emergency.Emergency"
+            name="%method-name">
+         <aggregation_supported
+               type="Interval">
+         </aggregation_supported>
+      </method>
+   </extension>
+
+</plugin>

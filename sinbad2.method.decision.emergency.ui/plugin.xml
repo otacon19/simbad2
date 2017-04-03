@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method.ui">
+      <method_ui
+            id="flintstones.method.decision.emergency.ui"
+            method="flintstones.method.decision.emergency"
+            name="Emergency decision making based on prospect theory">
+      </method_ui>
+   </extension>
+
+</plugin>
