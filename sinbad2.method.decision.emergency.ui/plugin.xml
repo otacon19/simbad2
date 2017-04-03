@@ -7,6 +7,9 @@
             id="flintstones.method.decision.emergency.ui"
             method="flintstones.method.decision.emergency"
             name="Emergency decision making based on prospect theory">
+         <ui
+               id="flintstones.phasemethod.emergency.aggregation.ui.view.aggregationprocess">
+         </ui>
       </method_ui>
    </extension>
 

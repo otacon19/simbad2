@@ -9,6 +9,9 @@
             id="flintstones.method.decision.emergency"
             implementation="sinbad2.method.decision.emergency.Emergency"
             name="%method-name">
+         <phasemethod
+               phase="flintstones.phasemethod.emergency.aggregation">
+         </phasemethod>
          <aggregation_supported
                type="Interval">
          </aggregation_supported>

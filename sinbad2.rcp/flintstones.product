@@ -131,6 +131,8 @@
       <plugin id="sinbad2.phasemethod.aggregation.ui"/>
       <plugin id="sinbad2.phasemethod.analysis"/>
       <plugin id="sinbad2.phasemethod.analysis.ui"/>
+      <plugin id="sinbad2.phasemethod.emergency.aggregation"/>
+      <plugin id="sinbad2.phasemethod.emergency.aggregation.ui"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.unification"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.unification.ui"/>
       <plugin id="sinbad2.phasemethod.linguistic.hesitant.twotuple.unification"/>

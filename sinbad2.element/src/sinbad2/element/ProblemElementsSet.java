@@ -115,7 +115,7 @@ public class ProblemElementsSet implements Cloneable {
 		return result;
 	}
 	
-	public List<Expert> getAllChildren(Expert parent) {
+	private List<Expert> getAllChildren(Expert parent) {
 		List<Expert> experts = new LinkedList<Expert>();
 		if(parent.hasChildren()) {
 			experts.add(parent);
@@ -124,6 +124,17 @@ public class ProblemElementsSet implements Cloneable {
 			}
 		} else {
 			experts.add(parent);
+		}
+		return experts;
+	}
+	
+	public List<Expert> getOnlyExpertChildren() {
+		List<Expert> experts = new LinkedList<Expert>();
+		
+		for(Expert e: _experts) {
+			if(!e.hasChildren()) {
+				experts.add(e);
+			}
 		}
 		return experts;
 	}
