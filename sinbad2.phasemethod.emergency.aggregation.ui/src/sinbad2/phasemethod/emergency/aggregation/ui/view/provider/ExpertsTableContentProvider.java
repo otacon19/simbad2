@@ -5,7 +5,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-public class CriteriaTableContentProvider implements IStructuredContentProvider {
+public class ExpertsTableContentProvider implements IStructuredContentProvider {
 	
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}

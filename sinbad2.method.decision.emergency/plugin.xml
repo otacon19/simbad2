@@ -4,7 +4,7 @@
    <extension
          point="flintstones.method">
       <method
-            category="%method.category"
+            category="%method-category"
             description="%method-description"
             id="flintstones.method.decision.emergency"
             implementation="sinbad2.method.decision.emergency.Emergency"

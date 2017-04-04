@@ -6,7 +6,8 @@ public class ExpertWeightColumnLabelProvider extends ColumnLabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		return ((String[]) element)[1];
+		double value = Math.round(Double.parseDouble((String) ((Object[]) element)[1]) * 100d) / 100d;
+		return Double.toString(value);
 	}
 	
 }

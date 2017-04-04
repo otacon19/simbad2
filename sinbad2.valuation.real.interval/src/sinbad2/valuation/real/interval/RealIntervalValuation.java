@@ -196,7 +196,7 @@ public class RealIntervalValuation extends Valuation {
 
 	@Override
 	public String changeFormatValuationToString() {
-		return "[" + Double.toString(_min) + ", " + Double.toString(_max) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return "[" + Double.toString(Math.round(_min * 100d) / 100d) + ", " + Double.toString(Math.round(_max * 100d) / 100d) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override

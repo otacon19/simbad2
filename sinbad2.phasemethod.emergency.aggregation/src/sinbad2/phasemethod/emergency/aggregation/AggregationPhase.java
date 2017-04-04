@@ -58,8 +58,8 @@ public class AggregationPhase implements IPhaseMethod {
 		double acumLower, acumUpper;
 		int numExpert;
 		
-		NumericRealDomain domain = (NumericRealDomain) _valuationsSet.getValuations().get(0).getDomain();
 		Alternative rp = _elementsSet.getAlternative("RP");
+		NumericRealDomain domain = null;
 		
 		for(Criterion c: _elementsSet.getAllCriteria()) {
 			acumLower = 0;
@@ -69,6 +69,7 @@ public class AggregationPhase implements IPhaseMethod {
 				for(Expert e: _elementsSet.getAllExperts()) {
 					if(!e.getId().equals("predefined_effective_control")) {
 						RealIntervalValuation v = (RealIntervalValuation) _valuationsSet.getValuation(e, rp, c);
+						domain = (NumericRealDomain) v.getDomain();
 						if(!e.hasChildren()) {
 							acumLower += _expertsWeights[numExpert] * v.getMin();
 							acumUpper += _expertsWeights[numExpert] * v.getMax();		
@@ -78,7 +79,7 @@ public class AggregationPhase implements IPhaseMethod {
 				}
 			}
 			
-			RealIntervalValuation aggregatedRealIntervalValuation = new RealIntervalValuation(domain, acumLower, acumUpper);
+			RealIntervalValuation aggregatedRealIntervalValuation = new RealIntervalValuation(domain, Math.round(acumLower), Math.round(acumUpper));
 			intervals.put(c, aggregatedRealIntervalValuation);
 		}
 		
