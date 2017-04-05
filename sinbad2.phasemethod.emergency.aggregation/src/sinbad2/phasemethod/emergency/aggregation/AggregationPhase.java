@@ -26,6 +26,7 @@ public class AggregationPhase implements IPhaseMethod {
 	private ValuationSet _valuationsSet;
 	private ProblemElementsSet _elementsSet;
 	private Double[] _expertsWeights;
+	private Map<Criterion, RealIntervalValuation> _grps;
 	
 	public AggregationPhase() {
 		_valuationsSet = ValuationSetManager.getInstance().getActiveValuationSet();
@@ -53,8 +54,16 @@ public class AggregationPhase implements IPhaseMethod {
 		return _expertsWeights;
 	}
 	
+	public void setGRPs(Map<Criterion, RealIntervalValuation> grps) {
+		_grps = grps;
+	}
+	
+	public Map<Criterion, RealIntervalValuation> getGRPs() {
+		return _grps;
+	}
+	
 	public Map<Criterion, RealIntervalValuation> aggregationProcess() {		
-		Map<Criterion, RealIntervalValuation> intervals = new HashMap<Criterion, RealIntervalValuation>();
+		_grps = new HashMap<Criterion, RealIntervalValuation>();
 		double acumLower, acumUpper;
 		int numExpert;
 		
@@ -80,10 +89,10 @@ public class AggregationPhase implements IPhaseMethod {
 			}
 			
 			RealIntervalValuation aggregatedRealIntervalValuation = new RealIntervalValuation(domain, Math.round(acumLower), Math.round(acumUpper));
-			intervals.put(c, aggregatedRealIntervalValuation);
+			_grps.put(c, aggregatedRealIntervalValuation);
 		}
 		
-		return intervals;
+		return _grps;
 	}
 
 	@Override

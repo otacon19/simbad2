@@ -65,6 +65,15 @@ public class ProblemElementsSet implements Cloneable {
 		return _experts;
 	}
 	
+	public Expert getExpert(String id) {
+		for(Expert e: _experts) {
+			if(e.getId().equals(id)) {
+				return e;
+			}
+		}
+		return null;
+	}
+	
 	public List<Expert> getAllExpertsAndChildren(ProblemElement parent) {
 		List<Expert> result = new LinkedList<Expert>();
 		

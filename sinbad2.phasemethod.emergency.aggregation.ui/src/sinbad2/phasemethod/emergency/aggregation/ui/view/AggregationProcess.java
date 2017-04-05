@@ -1,5 +1,7 @@
 package sinbad2.phasemethod.emergency.aggregation.ui.view;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +20,13 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.emergency.aggregation.AggregationPhase;
-import sinbad2.phasemethod.emergency.aggregation.ui.view.provider.ExpertsTableContentProvider;
-import sinbad2.phasemethod.emergency.aggregation.ui.view.provider.GRPColumnLabelProvider;
-import sinbad2.phasemethod.emergency.aggregation.ui.view.provider.GRPTableContentProvider;
 import sinbad2.phasemethod.emergency.aggregation.ui.nls.Messages;
 import sinbad2.phasemethod.emergency.aggregation.ui.view.provider.CriteriaIdColumnLabelProvider;
 import sinbad2.phasemethod.emergency.aggregation.ui.view.provider.ExpertIdColumnLabelProvider;
 import sinbad2.phasemethod.emergency.aggregation.ui.view.provider.ExpertWeightColumnLabelProvider;
+import sinbad2.phasemethod.emergency.aggregation.ui.view.provider.ExpertsTableContentProvider;
+import sinbad2.phasemethod.emergency.aggregation.ui.view.provider.GRPColumnLabelProvider;
+import sinbad2.phasemethod.emergency.aggregation.ui.view.provider.GRPTableContentProvider;
 import sinbad2.phasemethod.emergency.aggregation.ui.view.provider.WeightEditingSupport;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
@@ -41,6 +43,21 @@ public class AggregationProcess extends ViewPart implements IStepStateListener {
 	private ProblemElementsSet _elementsSet;
 	
 	private AggregationPhase _aggregationPhase;
+
+	private RatingView _ratingView;
+	
+	private static class ElementComparator implements Comparator<Object[]> {
+
+		@Override
+		 public int compare(Object[] pe1, Object[] pe2) {
+			return extractInt((String) pe1[0]) - extractInt((String) pe2[0]);
+	    }
+
+	    int extractInt(String s) {
+	        String num = s.replaceAll("\\D", "");
+	        return num.isEmpty() ? 0 : Integer.parseInt(num);
+	    }
+	}
 	
 	public AggregationProcess() {
 		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
@@ -65,7 +82,6 @@ public class AggregationProcess extends ViewPart implements IStepStateListener {
 
 		createTableWeights();
 		createTableRP();
-		
 	}
 	
 	private void createTableWeights() {
@@ -152,6 +168,8 @@ public class AggregationProcess extends ViewPart implements IStepStateListener {
 			result.add(data);
 		}
 		
+		Collections.sort(result, new ElementComparator());
+		
 		_grpTableViewer.setInput(result);
 		_grpTableViewer.getTable().getColumn(0).pack();
 		_grpTableViewer.getTable().getColumn(1).pack();
@@ -167,14 +185,13 @@ public class AggregationProcess extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
-		// TODO Auto-generated method stub
-		
+		_ratingView.loadNextStep();
 	}
 
 	@Override
 	public void setRatingView(RatingView rating) {
-		// TODO Auto-generated method stub
-		
+		_ratingView = rating;	
+		notifyStepStateChange();
 	}
 
 }

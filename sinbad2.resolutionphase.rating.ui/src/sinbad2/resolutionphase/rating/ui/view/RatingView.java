@@ -433,11 +433,11 @@ public class RatingView extends ViewPart {
 	public void loadNextStep() {
 		PhaseMethodUI currentPhaseMethod = _phasesMethodUIManager.getActiveResolutionPhasesUI();
 		List<PhaseMethodUI> phasesMethodUI = _methodsUIManager.getActivateMethodUI().getPhasesUI();
-
+		
 		if(_listeners.size() == 0) {
 			registerStepChangeListeners(_phasesMethodUIManager);
 		}
-
+		
 		ViewPart step = null;
 		if(currentPhaseMethod == null) {
 			currentPhaseMethod = phasesMethodUI.get(_numPhase);
@@ -457,7 +457,7 @@ public class RatingView extends ViewPart {
 				}
 			}
 		} else {
-			step = _phasesMethodUIManager.getNextStep();	
+			step = _phasesMethodUIManager.getNextStep();
 		}
 		
 		if(step != null) {
