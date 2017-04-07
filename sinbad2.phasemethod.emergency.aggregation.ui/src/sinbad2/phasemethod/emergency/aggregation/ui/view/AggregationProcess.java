@@ -40,6 +40,8 @@ public class AggregationProcess extends ViewPart implements IStepStateListener {
 	private TableViewer _weightsTableViewer;
 	private TableViewer _grpTableViewer;
 	
+	private boolean _completed = true;
+	
 	private ProblemElementsSet _elementsSet;
 	
 	private AggregationPhase _aggregationPhase;
@@ -185,7 +187,10 @@ public class AggregationProcess extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void notifyStepStateChange() {
-		_ratingView.loadNextStep();
+		if(_completed) {
+			_ratingView.loadNextStep();
+			_completed = false;
+		}
 	}
 
 	@Override

@@ -217,6 +217,7 @@ public static final String ID = "flintstones.phasemethod.emergency.computeweight
 	}
 	
 	private void hookDoubleClickListener() {
+		
 		_criteriaTypeTreeViewer.addDoubleClickListener(new IDoubleClickListener() {
 			
 			@Override
@@ -331,10 +332,15 @@ public static final String ID = "flintstones.phasemethod.emergency.computeweight
 	}
 
 	@Override
-	public void setFocus() {}
+	public void setFocus() {
+	}
 
 	@Override
-	public void notifyStepStateChange() {}
+	public void notifyStepStateChange() {
+		if(_resultsTableViewer != null) {
+			setRankingValues();
+		}
+	}
 
 	@Override
 	public void setRatingView(RatingView rating) {}

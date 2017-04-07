@@ -57,7 +57,7 @@ public static final String ID = "flintstones.phasemethod.emergency.computinggain
 	private GLMEditableTable _VNormalizedTable;
 	private CriteriaContentProvider _criteriaProvider;
 	
-	private boolean _completed = false;
+	private boolean _completed = true;
 	
 	private ComputingGainsAndLossesPhase _computingGainsAndLosses;
 	
@@ -194,8 +194,8 @@ public static final String ID = "flintstones.phasemethod.emergency.computinggain
 				} else {
 					criterion.setCost(true);
 				}
-				refreshTables();
 				
+				refreshTables();
 			}
 
 			@SuppressWarnings("unchecked")
@@ -350,9 +350,9 @@ public static final String ID = "flintstones.phasemethod.emergency.computinggain
 
 	@Override
 	public void notifyStepStateChange() {
-		if(!_completed) {
+		if(_completed) {
 			_ratingView.loadNextStep();
-			_completed = true;
+			_completed = false;
 		}
 	}
 

@@ -221,7 +221,7 @@ public class ComputingGainsAndLossesPhase implements IPhaseMethod {
 			max = Double.NEGATIVE_INFINITY;
 			for(int a = 0; a < _alternativesWithoutRP.size(); ++a) {
 				if(max < Math.abs(_V[a][c])) {
-					max = Math.abs( _V[a][c]);
+					max = Math.abs(_V[a][c]);
 				}
 			}
 			

@@ -132,7 +132,7 @@ public class GLMEditableContentProvider extends KTableNoScrollModel {
 
 	@Override
 	public KTableCellRenderer doGetCellRenderer(int col, int row) {
-		if((col < getFixedColumnCount()) || (row < getFixedRowCount() + 1)) {
+		if((col == 0) || (row == 0)) {
 			return _fixedRenderer;
 		} else {
 			return _fixedRenderersInTable;
