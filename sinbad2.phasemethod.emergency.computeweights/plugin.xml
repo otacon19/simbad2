@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.phasemethod">
+      <phase
+            id="flintstones.phasemethod.emergency.computeweights"
+            implementation="sinbad2.phasemethod.emergency.computeweights.ComputeWeightsPhase"
+            name="Compute weights">
+      </phase>
+   </extension>
+
+</plugin>

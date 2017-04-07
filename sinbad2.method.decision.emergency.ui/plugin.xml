@@ -13,6 +13,9 @@
          <ui
                id="flintstones.phasemethod.emergency.computinggainsandlosses.ui.view.computinggainsandlosses">
          </ui>
+         <ui
+               id="flintstones.phasemethod.emergency.computeweights.ui.view.computeweights">
+         </ui>
       </method_ui>
    </extension>
 

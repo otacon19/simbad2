@@ -15,6 +15,9 @@
          <phasemethod
                phase="flintstones.phasemethod.emergency.computinggainsandlosses">
          </phasemethod>
+         <phasemethod
+               phase="flintstones.phasemethod.emergency.computeweights">
+         </phasemethod>
          <aggregation_supported
                type="Interval">
          </aggregation_supported>

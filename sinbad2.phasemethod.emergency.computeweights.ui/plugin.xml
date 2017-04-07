@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.phasemethod.ui">
+      <ui
+            id="flintstones.phasemethod.emergency.computeweights.ui.view.computeweights"
+            name="%ui.name"
+            phasemethod="flintstones.phasemethod.emergency.computeweights">
+         <view
+               step="sinbad2.phasemethod.emergency.computeweights.ui.view.ComputeWeights">
+         </view>
+      </ui>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="flintstones.phasemethod.emergency.computeweights.ui.category"
+            name="%category.name">
+      </category>
+      <view
+            category="flintstones.phasemethod.emergency.computeweights.ui.category"
+            class="sinbad2.phasemethod.emergency.computeweights.ui.view.ComputeWeights"
+            id="flintstones.phasemethod.emergency.computeweights.ui.view.computeweights"
+            name="%view.name"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>

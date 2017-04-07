@@ -31,6 +31,8 @@ public class AggregationPhase implements IPhaseMethod {
 	public AggregationPhase() {
 		_valuationsSet = ValuationSetManager.getInstance().getActiveValuationSet();
 		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
+		
+		_grps = new HashMap<Criterion, RealIntervalValuation>();
 	}
 	
 	@Override
@@ -97,6 +99,7 @@ public class AggregationPhase implements IPhaseMethod {
 
 	@Override
 	public void clear() {
+		_grps.clear();
 		_expertsWeights = new Double[0];
 	}
 

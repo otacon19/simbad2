@@ -49,9 +49,6 @@ public class ComputingGainsAndLossesPhase implements IPhaseMethod {
 		_grps = new HashMap<Criterion, RealIntervalValuation>();
 		_GLM = new HashMap<Pair<Alternative, Criterion>, Double[]>();
 		
-		_alternativesWithoutRP = new LinkedList<Alternative>();
-		_alternativesWithoutRP.addAll(_elementsSet.getAlternatives());
-		_alternativesWithoutRP.remove(_elementsSet.getAlternative("RP"));
 
 		_aggregationPhase = (AggregationPhase) PhasesMethodManager.getInstance().getPhaseMethod(AggregationPhase.ID).getImplementation();
 	}
@@ -118,41 +115,45 @@ public class ComputingGainsAndLossesPhase implements IPhaseMethod {
 		return _alternativesWithoutRP;
 	}
 
-	public Double[][] computeVMatrix() {
+	public Double[][] computeVMatrix(List<Criterion> criteria) {
 
 		setGRPs(_aggregationPhase.getGRPs());
 
 		_V = new Double[_alternativesWithoutRP.size()][_elementsSet.getCriteria().size()];
 		double value = Double.NaN;
 
-		computeGLM();
-
-		for (Pair<Alternative, Criterion> pair : _GLM.keySet()) {
-			Double[] gainsLosses = _GLM.get(pair);
-			if (gainsLosses[0] >= 0) {
-				value = Math.pow(gainsLosses[0], alpha);
-			} else if (gainsLosses[1] < 0) {
-				value = -lambda * Math.pow(-gainsLosses[1], beta);
+		computeGLM(criteria);
+		
+		for(int a = 0; a < _alternativesWithoutRP.size(); ++a) {
+			for(int c = 0; c < criteria.size(); ++c) {
+				if(!criteria.get(c).hasSubcriteria()) {
+					if(_GLMMatrix[a][c] >= 0) {
+						value = Math.pow(_GLMMatrix[a][c], alpha);
+					} else if(_GLMMatrix[a][c] < 0) {
+						value = -lambda * Math.pow(-_GLMMatrix[a][c], beta);
+					}
+					_V[a][c] = value;
+				}
 			}
-			_V[_alternativesWithoutRP.indexOf(pair.getLeft())][_elementsSet.getCriteria().indexOf(pair.getRight())] = value;
 		}
 
 		return _V;
 	}
 
-	private void computeGLM() {
+	private void computeGLM(List<Criterion> criteria) {
 		_GLM = new HashMap<Pair<Alternative, Criterion>, Double[]>();
 		_GLMMatrix = new Double[_alternativesWithoutRP.size()][_elementsSet.getCriteria().size()];
 		
 		Expert predefined_effective_control = _elementsSet.getExpert("predefined_effective_control");
 
 		for (Alternative a : _alternativesWithoutRP) {
-			for (Criterion c : _elementsSet.getAllCriteria()) {
-				RealIntervalValuation p = (RealIntervalValuation) _valuationsSet.getValuation(predefined_effective_control, a, c);
-				RealIntervalValuation grp = _grps.get(c);
+			for (Criterion c : criteria) {
+				Criterion realCriterion = _elementsSet.getCriterion(c.getId());
+				RealIntervalValuation p = (RealIntervalValuation) _valuationsSet.getValuation(predefined_effective_control, a, realCriterion);
+				RealIntervalValuation grp = _grps.get(realCriterion);
 				if (!c.hasSubcriteria()) {
 					Double[] gainsLosses = new Double[2];
-					Pair<Alternative, Criterion> pair = new Pair<Alternative, Criterion>(a, c);
+					Pair<Alternative, Criterion> pair = new Pair<Alternative, Criterion>(a, realCriterion);
 					if (c.isCost()) {
 						if (p._max < grp._min) { // Case 1
 							gainsLosses[0] = grp._min - 0.5 * (p._min + p._max);
@@ -195,12 +196,14 @@ public class ComputingGainsAndLossesPhase implements IPhaseMethod {
 						}
 					}
 					
-					if(gainsLosses[0] > 0) {
-						_GLMMatrix[_alternativesWithoutRP.indexOf(a)][_elementsSet.getCriteria().indexOf(c)] = gainsLosses[0];
-					} else if(gainsLosses[1] < 0) {
-						_GLMMatrix[_alternativesWithoutRP.indexOf(a)][_elementsSet.getCriteria().indexOf(c)] = gainsLosses[1];
+					if(gainsLosses[0] > 0 && gainsLosses[1] == 0) {
+						_GLMMatrix[_alternativesWithoutRP.indexOf(a)][criteria.indexOf(c)] = gainsLosses[0];
+					} else if(gainsLosses[0] == 0 && gainsLosses[1] < 0) {
+						_GLMMatrix[_alternativesWithoutRP.indexOf(a)][criteria.indexOf(c)] = gainsLosses[1];
+					} else if(gainsLosses[0] > 0 && gainsLosses[1] < 0){
+						_GLMMatrix[_alternativesWithoutRP.indexOf(a)][criteria.indexOf(c)] = gainsLosses[0] + gainsLosses[1];
 					} else {
-						_GLMMatrix[_alternativesWithoutRP.indexOf(a)][_elementsSet.getCriteria().indexOf(c)] = 0d;
+						_GLMMatrix[_alternativesWithoutRP.indexOf(a)][criteria.indexOf(c)] = 0d;
 					}
 	
 					_GLM.put(pair, gainsLosses);
@@ -212,18 +215,24 @@ public class ComputingGainsAndLossesPhase implements IPhaseMethod {
 	public Double[][] normalizeVMatrix() {
 		_VN = new Double[_alternativesWithoutRP.size()][_elementsSet.getCriteria().size()];
 		
-		Double max = Double.NEGATIVE_INFINITY;
-		for (Double[] rows : _V) {
-			for (Double column : rows) {
-				if (Math.abs(column) > max) {
-					max = Math.abs(column);
+		Double max;;
+		Double[] maxValues = new Double[_elementsSet.getCriteria().size()];
+		for(int c = 0; c < _elementsSet.getCriteria().size(); ++c) {
+			max = Double.NEGATIVE_INFINITY;
+			for(int a = 0; a < _alternativesWithoutRP.size(); ++a) {
+				if(max < Math.abs(_V[a][c])) {
+					max = Math.abs( _V[a][c]);
 				}
 			}
+			
+			maxValues[c] = max;
 		}
-
+		
 		for (int r = 0; r < _alternativesWithoutRP.size(); ++r) {
 			for (int c = 0; c < _elementsSet.getCriteria().size(); ++c) {
-				_VN[r][c] = _V[r][c] / max;
+				if(!_elementsSet.getCriteria().get(c).hasSubcriteria()) {
+					_VN[r][c] = _V[r][c] / maxValues[c];
+				}
 			}
 		}
 		
@@ -237,6 +246,10 @@ public class ComputingGainsAndLossesPhase implements IPhaseMethod {
 		_GLMMatrix = new Double[0][0];
 		_V = new Double[0][0];
 		_VN = new Double[0][0];
+		
+		_alternativesWithoutRP = new LinkedList<Alternative>();
+		_alternativesWithoutRP.addAll(_elementsSet.getAlternatives());
+		_alternativesWithoutRP.remove(_elementsSet.getAlternative("RP"));
 	}
 
 	@Override
