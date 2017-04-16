@@ -113,8 +113,8 @@ public class LinguisticDomainChart extends DomainChart {
 		result.setBackgroundPaint(Color.WHITE);
 		XYPlot xyplot = (XYPlot) result.getPlot();
 		xyplot.setBackgroundPaint(Color.WHITE);
-		xyplot.setDomainGridlinePaint(Color.LIGHT_GRAY);
-		xyplot.setRangeGridlinePaint(Color.LIGHT_GRAY);
+		//xyplot.setDomainGridlinePaint(Color.LIGHT_GRAY);
+		//xyplot.setRangeGridlinePaint(Color.LIGHT_GRAY);
 		xyplot.getDomainAxis().setRange(0d, 1d);
 		xyplot.getRangeAxis().setRange(0d, 1.1d);
 		setBasicRenderer(xyplot);
@@ -166,6 +166,7 @@ public class LinguisticDomainChart extends DomainChart {
 		
 		for(int i = 0; i < xyplot.getSeriesCount(); ++i) {
 			renderer.setSeriesStroke(i, new BasicStroke());
+			//renderer.setSeriesStroke(i, new BasicStroke(3));
 			renderer.setSeriesPaint(i, colorForEachLabel(i));
 		}
 	}
@@ -347,8 +348,8 @@ public class LinguisticDomainChart extends DomainChart {
 			if (i >= ((FuzzySet) _domain).getLabelSet().getCardinality()) {
 				renderer.setSeriesStroke(i, new BasicStroke(3));
 			} else {
-				renderer.setSeriesStroke(i, new BasicStroke(1));
-				renderer.setSeriesPaint(i, colorForEachLabel(i));
+				renderer.setSeriesStroke(i, new BasicStroke());
+				renderer.setSeriesPaint(i, colorForEachLabel(3));
 			}
 		}
 	}

@@ -596,10 +596,6 @@ public class HesitantTwoTupleValuation extends Valuation {
 		double max, beta1, beta2, delta1, delta2, h1, h2, aux;
 		TwoTuple[] interval1, interval2; 
 		
-		Collections.swap(valuations, valuations.size() - 1, 0);
-		Collections.swap(valuations, valuations.size() - 1, 1);
-		Collections.swap(valuations, valuations.size() - 1, valuations.size()- 2);
-		
 		for(int i = 0; i < valuations.size(); ++i) {
 			interval1 = ((HesitantTwoTupleValuation) valuations.get(i)[0]).getEnvelopeTwoTuple();
 			

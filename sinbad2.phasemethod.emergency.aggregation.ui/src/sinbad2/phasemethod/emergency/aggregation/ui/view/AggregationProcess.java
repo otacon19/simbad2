@@ -40,7 +40,7 @@ public class AggregationProcess extends ViewPart implements IStepStateListener {
 	private TableViewer _weightsTableViewer;
 	private TableViewer _grpTableViewer;
 	
-	private boolean _completed = true;
+	private boolean _completed;
 	
 	private ProblemElementsSet _elementsSet;
 	
@@ -84,6 +84,8 @@ public class AggregationProcess extends ViewPart implements IStepStateListener {
 
 		createTableWeights();
 		createTableRP();
+		
+		_completed = true;
 	}
 	
 	private void createTableWeights() {

@@ -57,7 +57,7 @@ public static final String ID = "flintstones.phasemethod.emergency.computinggain
 	private GLMEditableTable _VNormalizedTable;
 	private CriteriaContentProvider _criteriaProvider;
 	
-	private boolean _completed = true;
+	private boolean _completed;
 	
 	private ComputingGainsAndLossesPhase _computingGainsAndLosses;
 	
@@ -135,6 +135,8 @@ public static final String ID = "flintstones.phasemethod.emergency.computinggain
 		createGLMMatrix();
 		createVTable();
 		createNormalizedVTable();
+		
+		_completed = true;
 	}
 
 	private void createTypeCriteriaTable() {		
