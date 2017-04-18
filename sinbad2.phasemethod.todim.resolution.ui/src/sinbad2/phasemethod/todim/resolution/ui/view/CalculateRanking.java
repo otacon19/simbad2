@@ -32,7 +32,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
-import sinbad2.excel.ExcelUtil;
+import sinbad2.excel.ExcelManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
 import sinbad2.phasemethod.todim.resolution.ui.Images;
@@ -242,7 +242,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		_excelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ExcelUtil excelUtil = new ExcelUtil();
+				ExcelManager excelUtil = new ExcelManager();
 				excelUtil.createExcelFileEmergencyProblemStructure(_resolutionPhase.getFuzzyValuations(), _resolutionPhase.getCriteriaWeights(), _resolutionPhase.calculateThresholdValues());
 			}
 		});

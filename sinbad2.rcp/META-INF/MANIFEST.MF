@@ -4,7 +4,8 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sinbad2.rcp;singleton:=true
 Bundle-Version: 1
 Bundle-Activator: sinbad2.rcp.Activator
-Require-Bundle: sinbad2.resolutionscheme.dm.ui;bundle-version="1.0.0"
+Require-Bundle: sinbad2.resolutionscheme.dm.ui;bundle-version="1.0.0",
+ sinbad2.excel
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Bundle-Vendor

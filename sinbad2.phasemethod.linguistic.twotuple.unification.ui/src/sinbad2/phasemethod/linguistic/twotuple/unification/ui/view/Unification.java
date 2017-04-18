@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.part.ViewPart;
 
-import sinbad2.excel.ExcelUtil;
+import sinbad2.excel.ExcelManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.linguistic.twotuple.unification.UnificationPhase;
 import sinbad2.phasemethod.linguistic.twotuple.unification.ui.Images;
@@ -232,7 +232,7 @@ public static final String ID = "flintstones.phasemethod.linguistic.twotuple.ui.
 		_saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ExcelUtil excelUtil = new ExcelUtil();
+				ExcelManager excelUtil = new ExcelManager();
 				excelUtil.createExcelFile(_unificationPhase.getTwoTupleValuations());
 			}
 		});

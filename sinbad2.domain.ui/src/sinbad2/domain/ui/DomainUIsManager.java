@@ -57,7 +57,6 @@ public class DomainUIsManager {
 	}
 	
 	public DomainUI getDomainUI(String domainUI) {
-		
 		if(_domainUIs.containsKey(domainUI)) {
 			return _domainUIs.get(domainUI);
 		} else {
@@ -81,7 +80,7 @@ public class DomainUIsManager {
 		DomainChart result = null;
 		
 		DomainUI domainUI = getDomainUI(domain.getType());
-
+	
 		try {
 			result = (DomainChart) domainUI.getRegistry().getConfiguration().createExecutableExtension(EDomainUIElements.chart.toString());
 		} catch (CoreException e) {
@@ -123,7 +122,6 @@ public class DomainUIsManager {
 	}
 	
 	private DomainUI initializeDomainUI(String domain) {
-		
 		try {
 			DomainUI domainUI = new DomainUI();
 			DomainUIRegistryExtension domainUIRegistry = getRegistry(domain);

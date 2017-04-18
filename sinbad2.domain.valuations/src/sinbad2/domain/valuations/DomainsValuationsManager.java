@@ -91,6 +91,8 @@ public class DomainsValuationsManager {
 	}
 	
 	public String getValuationSupportedForSpecificDomain(String domainID) {
+		System.out.println("D = " + domainID);
+		System.out.println(_supportedValuationsForSpecificDomains);
 		return _supportedValuationsForSpecificDomains.get(domainID);
 	}
 

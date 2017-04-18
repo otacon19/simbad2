@@ -62,7 +62,6 @@ public class AddDomainHandler extends AbstractHandler {
 					newDomainDialog = _domainUIsManager.newDomainDialog(domain, dialogIDSelected);
 					if(newDomainDialog.open() == Window.OK) {
 						domain = newDomainDialog.getDomain();
-						
 						_domainValuationsManager.addSupportedValuationForSpecificDomain(domain.getId(), ((String[]) selections[1])[0]);
 						
 						IUndoableOperation operation = new AddDomainOperation(Messages.AddDomainHandler_Add_domain, domain, _domainSet);

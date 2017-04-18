@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.part.ViewPart;
 
-import sinbad2.excel.ExcelUtil;
+import sinbad2.excel.ExcelManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.multigranular.unification.UnificationPhase;
 import sinbad2.phasemethod.multigranular.unification.ui.Images;
@@ -228,7 +228,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 		_saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ExcelUtil excelUtil = new ExcelUtil();
+				ExcelManager excelUtil = new ExcelManager();
 				excelUtil.createExcelFile(_unificationPhase.getTwoTupleValuations());
 			}
 		});

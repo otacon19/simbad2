@@ -40,6 +40,8 @@ public class FuzzySet extends Linguistic {
 	}
 	
 	public FuzzySet(List<LabelLinguisticDomain> labels) {
+		this();
+		
 		_labelSet.setLabels(labels);
 		addValues(labels);
 	}
@@ -472,6 +474,29 @@ public class FuzzySet extends Linguistic {
 		}
 		
 		return "{" + result + "}"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+	
+	public String toStringExport() {
+
+		StringBuilder result = new StringBuilder();
+
+		int cardinality = _labelSet.getCardinality();
+		if (cardinality > 0) {
+			for (int pos = 0; pos < cardinality; pos++) {
+				if (pos > 0) {
+					result.append(", ");
+				}
+				result.append("[");
+				result.append(_labelSet.getLabel(pos));
+				result.append("::");
+				result.append(_labelSet.getLabel(pos).getSemantic().toString());
+				result.append(";");
+				result.append(_values.get(pos));
+				result.append("]");
+			}
+		}
+
+		return "{" + result + "}";
 	}
 	
 	@Override

@@ -5,7 +5,15 @@ Bundle-SymbolicName: sinbad2.excel
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.apache.poi.POI;bundle-version="1.0.0",
+ jExcelApi;bundle-version="1.0.0",
  sinbad2.core.ui;bundle-version="1.0.0",
  sinbad2.valuation.valuationset;bundle-version="1.0.0",
- sinbad2.valuation.twoTuple
+ sinbad2.valuation.twoTuple;bundle-version="1.0.0",
+ sinbad2.domain.linguistic.unbalanced,
+ sinbad2.domain.numeric.integer,
+ sinbad2.valuation.integer,
+ sinbad2.valuation.real,
+ sinbad2.valuation.real.interval,
+ sinbad2.valuation.integer.interval,
+ sinbad2.valuation.unifiedValuation
 Export-Package: sinbad2.excel

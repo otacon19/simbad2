@@ -79,6 +79,14 @@
                   commandId="flintstones.core.ui.io.save.and.close"
                   style="push">
             </command>
+            <command
+                  commandId="flintstones.core.export"
+                  style="push">
+            </command>
+            <command
+                  commandId="flintstones.core.import"
+                  style="push">
+            </command>
          </toolbar>
          <toolbar
                id="sinbad2.toolbar.edit"
@@ -124,6 +132,16 @@
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.ui.io.save.and.close"
             name="%command.save.and.close">
+      </command>
+      <command
+            categoryId="sinbad2.workspace.commands.category"
+            id="flintstones.core.export"
+            name="Export">
+      </command>
+      <command
+            categoryId="sinbad2.workspace.commands.category"
+            id="flintstones.core.import"
+            name="Import">
       </command>
       <category
             id="sinbad2.ui.category_undo_redo"
@@ -194,6 +212,14 @@
             class="sinbad2.core.ui.io.handler.SaveAndCloseHandler"
             commandId="flintstones.core.ui.io.save.and.close">
       </handler>
+      <handler
+            class="sinbad2.core.io.handler.ExportHandler"
+            commandId="flintstones.core.export">
+      </handler>
+      <handler
+            class="sinbad2.core.io.handler.ImportHandler"
+            commandId="flintstones.core.import">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">
@@ -242,6 +268,14 @@
             commandId="flintstones.core.redo"
             disabledIcon="platform:/plugin/org.eclipse.ui/icons/full/dtool16/redo_edit.gif"
             icon="platform:/plugin/org.eclipse.ui/icons/full/etool16/redo_edit.gif">
+      </image>
+      <image
+            commandId="flintstones.core.export"
+            icon="icons/XLSExport_32.png">
+      </image>
+      <image
+            commandId="flintstones.core.import"
+            icon="icons/XLSImport_32.png">
       </image>
    </extension>
    <extension

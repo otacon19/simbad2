@@ -140,7 +140,7 @@ public class ProblemElementsSet implements Cloneable {
 	public List<Expert> getOnlyExpertChildren() {
 		List<Expert> experts = new LinkedList<Expert>();
 		
-		for(Expert e: _experts) {
+		for(Expert e: getAllExperts()) {
 			if(!e.hasChildren()) {
 				experts.add(e);
 			}
@@ -276,7 +276,6 @@ public class ProblemElementsSet implements Cloneable {
 		return absoluteParents;
 	}
 	
-	
 	public void setExperts(List<Expert> experts) {
 		Validator.notNull(experts);
 		
@@ -310,7 +309,6 @@ public class ProblemElementsSet implements Cloneable {
 		}
 		
 		notifyExpertsChanges(new ExpertsChangeEvent(EExpertsChange.ADD_EXPERT, null, expert, inUndoRedo));
-		
 	}
 	
 	public void addAlternative(Alternative alternative, boolean inUndoRedo) {

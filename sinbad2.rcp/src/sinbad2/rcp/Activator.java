@@ -5,6 +5,8 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import sinbad2.core.workspace.Workspace;
+import sinbad2.excel.ReadExcel;
+import sinbad2.excel.WriteExcel;
 import sinbad2.resolutionscheme.ui.ResolutionSchemeUI;
 import sinbad2.resolutionscheme.ui.ResolutionSchemesUIManager;
 
@@ -45,6 +47,10 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		
+		//Activate excel export/import
+		new WriteExcel();
+		new ReadExcel();
 	}
 
 	/*

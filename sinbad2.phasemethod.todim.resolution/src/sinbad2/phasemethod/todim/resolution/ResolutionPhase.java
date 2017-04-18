@@ -712,13 +712,4 @@ public class ResolutionPhase implements IPhaseMethod {
         
         engine.end();
 	}
-
-	private double[] computeExpertsWeights() {
-		double[] weights = new double[_elementsSet.getAllExperts().size()];
-		for(int i = 0; i < weights.length; ++i) {
-			weights[i] = Math.sqrt(1 / weights.length);
-		}
-		
-		return weights;
-	}
 }
