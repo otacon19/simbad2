@@ -99,7 +99,7 @@ public class WriteExcel extends ExcelWriter implements IExportListener {
 			}
 			
 			addHeaderLabel(sheet, 1, 1, row, "EXPERT"); //$NON-NLS-1$
-			addHeaderLabel(sheet, 3, 2, row, expertId);
+			addHeaderLabel(sheet, 3, 2, row, expert.getId());
 			row += 2;
 
 			int pos = 1;

@@ -212,8 +212,7 @@ public class Workspace implements IFileChangeListener {
 			_fileName = null;
 			_savedHashCode = -1l;
 			_currentHashCode = _content.hashCode();
-			WorkspaceChangeEvent event = new WorkspaceChangeEvent(
-					EWorkspaceChange.FILE_REMOVED, oldValue, _fileName);
+			WorkspaceChangeEvent event = new WorkspaceChangeEvent(EWorkspaceChange.FILE_REMOVED, oldValue, _fileName);
 			notifyWorkspaceChange(event);
 		}
 	}

@@ -489,7 +489,7 @@ public class FuzzySet extends Linguistic {
 				result.append("[");
 				result.append(_labelSet.getLabel(pos));
 				result.append("::");
-				result.append(_labelSet.getLabel(pos).getSemantic().toString());
+				result.append(((TrapezoidalFunction) _labelSet.getLabel(pos).getSemantic()).toStringExport());
 				result.append(";");
 				result.append(_values.get(pos));
 				result.append("]");

@@ -34,6 +34,9 @@ import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
+import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignmentKey;
+import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignments;
+import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignmentsManager;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.integer.IntegerValuation;
 import sinbad2.valuation.integer.interval.IntegerIntervalValuation;
@@ -42,9 +45,6 @@ import sinbad2.valuation.real.RealValuation;
 import sinbad2.valuation.real.interval.RealIntervalValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
-import sinbad2.valuation.valuationset.ValuationKey;
-import sinbad2.valuation.valuationset.ValuationSet;
-import sinbad2.valuation.valuationset.ValuationSetManager;
 
 public abstract class ExcelWriter {
 
@@ -75,14 +75,14 @@ public abstract class ExcelWriter {
 	
 	private ProblemElementsSet _elementsSet;
 	private DomainSet _domainsSet;
-	private ValuationSet _valuationSet;
+	private DomainAssignments _domainsAssignments;
 
 	public ExcelWriter() {
 		_numSheets = 0;
 		
 		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
 		_domainsSet = DomainsManager.getInstance().getActiveDomainSet();
-		_valuationSet = ValuationSetManager.getInstance().getActiveValuationSet();
+		_domainsAssignments = DomainAssignmentsManager.getInstance().getActiveDomainAssignments();
 	}
 
 	/**
@@ -141,8 +141,7 @@ public abstract class ExcelWriter {
 				row = createExpertCriteria(sheet, col + 1, row, son);
 			}
 		}
-		
-		
+
 		return row;
 	}
 
@@ -214,7 +213,7 @@ public abstract class ExcelWriter {
 		workbook.createSheet("Problem", _numSheets); //$NON-NLS-1$
 		WritableSheet sheet = workbook.getSheet("Problem"); //$NON-NLS-1$
 
-		List<Expert> experts = _elementsSet.getExperts();
+		List<Expert> experts = _elementsSet.getAllExperts(); //TODO cambiado a getAll
 		int row = 0;
 		for (int i = 0; i < experts.size(); i++) {
 			addWhiteLabel(sheet, i, row, experts.get(i).getCanonicalId());
@@ -227,7 +226,7 @@ public abstract class ExcelWriter {
 		}
 		
 		row++;
-		List<Criterion> criteria = _elementsSet.getCriteria();
+		List<Criterion> criteria = _elementsSet.getAllCriteria();
 		Boolean cost;
 		for (int i = 0; i < criteria.size(); i++) {
 			addWhiteLabel(sheet, i, row, criteria.get(i).getCanonicalId());
@@ -260,12 +259,12 @@ public abstract class ExcelWriter {
 			row++;
 		}
 		
-		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
-		for (ValuationKey vk: valuations.keySet()) {
-			addWhiteLabel(sheet, 0, row, vk.getExpert().getCanonicalId());
-			addWhiteLabel(sheet, 1, row, vk.getAlternative().getId());
-			addWhiteLabel(sheet, 2, row, vk.getCriterion().getCanonicalId());
-			addWhiteLabel(sheet, 3, row, valuations.get(vk).getId());
+		Map<DomainAssignmentKey, Domain> assignments = _domainsAssignments.getAssignments();
+		for (DomainAssignmentKey dk: assignments.keySet()) {
+			addWhiteLabel(sheet, 0, row, dk.getExpert().getCanonicalId());
+			addWhiteLabel(sheet, 1, row, dk.getAlternative().getId());
+			addWhiteLabel(sheet, 2, row, dk.getCriterion().getCanonicalId());
+			addWhiteLabel(sheet, 3, row, assignments.get(dk).getId());
 			addWhiteLabel(sheet, 4, row, "false");
 			row++;
 		}
@@ -507,6 +506,7 @@ public abstract class ExcelWriter {
 				text = ":NA:"; //$NON-NLS-1$
 			}
 		}
+
 		addEvaluationLabel(sheet, pos[1], pos[2], text, cellFeatures, TEXT);
 	}
 

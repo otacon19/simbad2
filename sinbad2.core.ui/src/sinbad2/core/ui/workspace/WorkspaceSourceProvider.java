@@ -30,11 +30,13 @@ public class WorkspaceSourceProvider extends AbstractSourceProvider implements
 	private Workspace _workspace;
 	private boolean _changesToSave;
 	private long _savedHashCode;
+	private long _initialSavedHashCode;
 
 	public WorkspaceSourceProvider() {
 		_changesToSave = false;
 		_workspace = Workspace.getWorkspace();
 		_savedHashCode = _workspace.getSavedHashCode();
+		_initialSavedHashCode = _workspace.getSavedHashCode();
 		_workspace.registerWorkspaceListener(this);
 		_shellTitleMessageManager = new TitleUpdater();
 
@@ -82,9 +84,8 @@ public class WorkspaceSourceProvider extends AbstractSourceProvider implements
 				_changesToSave = true;
 				break;
 			case PRE_WORKSPACE_CLOSE:
-				if (_changesToSave) {
-					MessageBox messageBox = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-							SWT.ICON_WARNING | SWT.CANCEL | SWT.NO | SWT.YES);
+				if (_changesToSave && (_savedHashCode != _initialSavedHashCode)) {
+					MessageBox messageBox = new MessageBox(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.ICON_WARNING | SWT.CANCEL | SWT.NO | SWT.YES);
 					messageBox.setMessage(Messages.WorkspaceSourceProvider_Save_current_changes);
 					int rc = messageBox.open();
 	

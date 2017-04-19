@@ -363,6 +363,14 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		}
 	}
 	
+	public String toStringExport() {
+		if(_b == _c) {
+			return ("Trapezoidal(" + _a + ", " + _b + ", " + _d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		} else {
+			return ("Trapezoidal(" + _a + ", " + _b + ", " + _c + ", " + _d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		}
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		

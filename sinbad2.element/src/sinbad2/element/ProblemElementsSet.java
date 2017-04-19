@@ -66,7 +66,7 @@ public class ProblemElementsSet implements Cloneable {
 	}
 	
 	public Expert getExpert(String id) {
-		for(Expert e: _experts) {
+		for(Expert e: getAllExperts()) {
 			if(e.getId().equals(id)) {
 				return e;
 			}

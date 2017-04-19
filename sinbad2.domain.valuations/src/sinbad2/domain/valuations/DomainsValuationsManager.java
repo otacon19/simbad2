@@ -12,6 +12,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.events.XMLEvent;
 
+import sinbad2.domain.valuations.listener.IDomainValuationSetListener;
 import sinbad2.resolutionphase.io.XMLRead;
 
 public class DomainsValuationsManager {
@@ -24,6 +25,8 @@ public class DomainsValuationsManager {
 	
 	private Map<String, Set<String>> _valuationsNewDomainDialogs;
 	private Map<String, Set<String>> _valuationsModifyDomainDialogs;
+
+	private List<IDomainValuationSetListener> _listeners;
 	
 	private DomainsValuationsManager() {
 		_valuations = new HashMap<String, String>();
@@ -32,6 +35,8 @@ public class DomainsValuationsManager {
 		_valuationsModifyDomainDialogs = new HashMap<String, Set<String>>();
 		
 		_supportedValuationsForSpecificDomains = new HashMap<String, String>();
+		
+		_listeners = new LinkedList<IDomainValuationSetListener>();
 	}
 	
 	public static DomainsValuationsManager getInstance() {
@@ -53,6 +58,7 @@ public class DomainsValuationsManager {
 	
 	public void addSupportedValuationForSpecificDomain(String domainID, String valuationId) {
 		_supportedValuationsForSpecificDomains.put(domainID, valuationId);
+		notifyDomainSetChangeListener();
 	}
 	
 	public void removeSupportedValuationForSpecificDomain(String domainID) {
@@ -91,8 +97,6 @@ public class DomainsValuationsManager {
 	}
 	
 	public String getValuationSupportedForSpecificDomain(String domainID) {
-		System.out.println("D = " + domainID);
-		System.out.println(_supportedValuationsForSpecificDomains);
 		return _supportedValuationsForSpecificDomains.get(domainID);
 	}
 
@@ -188,5 +192,19 @@ public class DomainsValuationsManager {
 		_valuations.clear();
 		_valuationsModifyDomainDialogs.clear();
 		_valuationsNewDomainDialogs.clear();
+	}
+	
+	public void registerDomainValuationSetChangeListener(IDomainValuationSetListener listener) {
+		_listeners.add(listener);
+	}
+	
+	public void unregisterDomainValuationSetChangeListener(IDomainValuationSetListener listener) {
+		_listeners.remove(listener);
+	}
+	
+	public void notifyDomainSetChangeListener() {
+		for(IDomainValuationSetListener listener: _listeners) {
+			listener.notifyDomainValuationSetListener();
+		}
 	}
 }

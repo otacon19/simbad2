@@ -13,22 +13,27 @@ import sinbad2.domain.DomainSet;
 import sinbad2.domain.listener.DomainSetChangeEvent;
 import sinbad2.domain.listener.IDomainSetChangeListener;
 import sinbad2.domain.listener.IDomainSetListener;
+import sinbad2.domain.valuations.DomainsValuationsManager;
+import sinbad2.domain.valuations.listener.IDomainValuationSetListener;
 
-public class DomainsContentProvider implements IStructuredContentProvider, IDomainSetListener, IDomainSetChangeListener {
+public class DomainsContentProvider implements IStructuredContentProvider, IDomainSetListener, IDomainSetChangeListener, IDomainValuationSetListener {
 	
 	private DomainsManager _domainManager;
 	private DomainSet _domainSet;
+	private DomainsValuationsManager _domainsValuations;
 	private List<Domain> _domains;
 	private TableViewer _tableViewer;
 	
 	private DomainsContentProvider() {
 		_domainManager = DomainsManager.getInstance();
 		_domainSet = _domainManager.getActiveDomainSet();
+		_domainsValuations = DomainsValuationsManager.getInstance();
 		
 		_domains = _domainSet.getDomains();
 		
 		_domainSet.registerDomainsListener(this);
 		_domainManager.registerDomainSetChangeListener(this);
+		_domainsValuations.registerDomainValuationSetChangeListener(this);
 	}
 	
 	public DomainsContentProvider(TableViewer tableViewer) {
@@ -101,6 +106,11 @@ public class DomainsContentProvider implements IStructuredContentProvider, IDoma
 		
 	}
 	
+	@Override
+	public void notifyDomainValuationSetListener() {
+		_tableViewer.refresh();
+	}
+	
 	private void addDomain(Domain domain) {
 		int pos = 0;
 		boolean find = false;
@@ -134,7 +144,5 @@ public class DomainsContentProvider implements IStructuredContentProvider, IDoma
 			_tableViewer.setInput(_domainSet);
 		}
 		
-	}
-
-	
+	}	
 }

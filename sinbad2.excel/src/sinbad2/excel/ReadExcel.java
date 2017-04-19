@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
@@ -58,7 +60,7 @@ public class ReadExcel implements IImportListener {
 
 	private int _posAlternative;
 	private ProblemElementsSet _elementsSet;
-	private DomainSet _domainsSet;
+	private DomainSet _domainsSet;;
 	private DomainAssignments _domainsAssignments;
 	private ValuationSet _valuationsSet;
 	private DomainsValuationsManager _domainsValuations;
@@ -157,20 +159,42 @@ public class ReadExcel implements IImportListener {
 		Criterion criterion;
 		Alternative alternative;
 		String[] tokens;
-		boolean children, subcriteria;
+		Map<String, Expert> expertsAlreadyCheck = new HashMap<String, Expert>();
+		Map<String, Criterion> criteriaAlreadyCheck = new HashMap<String, Criterion>();
+
 		do {
-			children = false;
 			try {
 				cell = sheet.getCell(col++, row);
 				value = cell.getContents();
 				if (!value.isEmpty()) {
-					expert = new Expert(value);
-					tokens = value.split(":"); //$NON-NLS-1$
+					String beforeLastExpert;
+					
+					tokens = value.split(">"); //$NON-NLS-1$
 					if (tokens.length > 1) {
-						expert.setParent(new Expert(value.substring(0, value.lastIndexOf(":")))); //$NON-NLS-1$
-						children = true;
+						Expert parent;
+						
+						String childId = value.substring(value.lastIndexOf(">") + 1, value.length());
+						expert = new Expert(childId);
+	
+						beforeLastExpert = tokens[tokens.length - 2];
+									
+						if(expertsAlreadyCheck.get(beforeLastExpert) != null) {
+							parent = expertsAlreadyCheck.get(beforeLastExpert);
+						} else {
+							if(_elementsSet.getExpert(beforeLastExpert) != null) {
+								parent = _elementsSet.getExpert(beforeLastExpert);
+							} else {
+								parent = new Expert(beforeLastExpert);
+							}
+							expertsAlreadyCheck.put(beforeLastExpert, parent);
+						}
+						
+						parent.addChildren(expert);
+						_elementsSet.addExpert(expert, true, false);
+					} else {
+						expert = new Expert(value);
+						_elementsSet.addExpert(expert, false, false);
 					}
-					_elementsSet.addExpert(expert, children, false);
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 				value = ""; //$NON-NLS-1$
@@ -197,18 +221,40 @@ public class ReadExcel implements IImportListener {
 		row = 2;
 		col = 0;
 		do {
-			subcriteria = false;
 			try {
 				cell = sheet.getCell(col, row);
 				value = cell.getContents();
+				
 				if (!value.isEmpty()) {
-					criterion = new Criterion(value);
-					tokens = value.split(":"); //$_-NLS-1$
+					String beforeLastCriterion;
+					
+					tokens = value.split(">"); //$NON-NLS-1$
 					if (tokens.length > 1) {
-						criterion.setParent(new Criterion(value.substring(0, value.lastIndexOf(":")))); //$NON-NLS-1$
-						subcriteria = true;
+						Criterion parent;
+						
+						String childId = value.substring(value.lastIndexOf(">") + 1, value.length());
+						criterion = new Criterion(childId);
+	
+						beforeLastCriterion = tokens[tokens.length - 2];
+									
+						if(criteriaAlreadyCheck.get(beforeLastCriterion) != null) {
+							parent = criteriaAlreadyCheck.get(beforeLastCriterion);
+						} else {
+							if(_elementsSet.getCriterion(beforeLastCriterion) != null) {
+								parent = _elementsSet.getCriterion(beforeLastCriterion);
+							} else {
+								parent = new Criterion(beforeLastCriterion);
+							}
+							criteriaAlreadyCheck.put(beforeLastCriterion, parent);
+						}
+						
+						parent.addSubcriterion(criterion);
+						_elementsSet.addCriterion(criterion, true, false);
+					} else {
+						criterion = new Criterion(value);
+						_elementsSet.addCriterion(criterion, false, false);
 					}
-					_elementsSet.addCriterion(criterion, subcriteria, false);
+					
 					cell = sheet.getCell(col, row + 1);
 					value = cell.getContents();
 					boolean cost;
@@ -271,8 +317,14 @@ public class ReadExcel implements IImportListener {
 		try {
 			while ((row < sheet.getRows()) && (!sheet.getCell(4, row).getContents().isEmpty())) {
 				expertId = sheet.getCell(0, row).getContents();
+				if(expertId.contains(">")) {
+					expertId = expertId.substring(expertId.lastIndexOf(">") + 1, expertId.length());
+				}
 				alternativeId = sheet.getCell(1, row).getContents();
 				criterionId = sheet.getCell(2, row).getContents();
+				if(criterionId.contains(">")) {
+					criterionId = criterionId.substring(criterionId.lastIndexOf(">") + 1, criterionId.length());
+				}
 				domainId = sheet.getCell(3, row).getContents();
 				_domainsAssignments.setDomain(_elementsSet.getExpert(expertId), _elementsSet.getAlternative(alternativeId), _elementsSet.getCriterion(criterionId), _domainsSet.getDomain(domainId));
 				row++;
@@ -309,7 +361,6 @@ public class ReadExcel implements IImportListener {
 		Criterion criterion;
 		Alternative alternative;
 		Sheet sheet;
-		
 		for (DomainAssignmentKey dk : _domainsAssignments.getAssignments().keySet()) {
 			expertId = dk.getExpert().getCanonicalId();
 			alternativeId = dk.getAlternative().getId();
@@ -321,9 +372,9 @@ public class ReadExcel implements IImportListener {
 				valuationText = sheet.getCell(pos[1], pos[2]).getContents();
 				comments =  sheet.getCell(pos[1], pos[2]).getCellFeatures().getComment();
 				
-				expert = _elementsSet.getExpert(expertId);
+				expert = _elementsSet.getExpert(dk.getExpert().getId());
 				alternative = _elementsSet.getAlternative(alternativeId);
-				criterion = _elementsSet.getCriterion(criterionId);
+				criterion = _elementsSet.getCriterion(dk.getCriterion().getId());
 				domain = _domainsAssignments.getDomain(expert, alternative, criterion);
 	
 				if (domain != null) {
@@ -400,6 +451,7 @@ public class ReadExcel implements IImportListener {
 					} else {
 						valuation = null;
 					}
+					
 					_valuationsSet.setValuation(expert, alternative, criterion, valuation);
 					_domainsValuations.addSupportedValuationForSpecificDomain(domain.getId(), valuation.getId());
 				}

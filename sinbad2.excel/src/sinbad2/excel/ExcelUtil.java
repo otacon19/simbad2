@@ -26,7 +26,7 @@ public class ExcelUtil {
 	 */
 	public static boolean existsSubElements(List<Criterion> criteria) {
 		for (Criterion c : criteria) {
-			if (c.getParent() != null) {
+			if (c.hasSubcriteria()) {
 				return true;
 			}
 		}
@@ -71,14 +71,13 @@ public class ExcelUtil {
 	 *         <p>
 	 *         Si algún valor no existe valdrá -1.
 	 */
-	public static int[] findPos(WritableWorkbook workbook, String expert,
-			String alternative, String criterion, int posAlternative) {
+	public static int[] findPos(WritableWorkbook workbook, String expert, String alternative, String criterion, int posAlternative) {
 		int[] result = new int[] { -1, -1, -1 };
-		result[0] = findSheet(workbook, expert.replace(">", "->"));
+		result[0] = findSheet(workbook, expert);
 		if (result[0] != -1) {
 			Sheet sheet = workbook.getSheet(result[0]);
 			result[1] = findCol(sheet, alternative, posAlternative);
-			result[2] = findRow(sheet, criterion.replace(">", "->"), posAlternative);
+			result[2] = findRow(sheet, criterion, posAlternative);
 		}
 		return result;
 	}
@@ -105,11 +104,11 @@ public class ExcelUtil {
 			String alternative, String criterion, int posAlternative) {
 		int[] result = new int[] { -1, -1, -1 };
 
-		result[0] = findSheet(workbook, expert.replace(">", "->"));
+		result[0] = findSheet(workbook, expert);
 		if (result[0] != -1) {
 			Sheet sheet = workbook.getSheet(result[0]);
 			result[1] = findCol(sheet, alternative, posAlternative);
-			result[2] = findRow(sheet, criterion.replace(">", "->"), posAlternative);
+			result[2] = findRow(sheet, criterion, posAlternative);
 		}
 		return result;
 	}
@@ -128,7 +127,7 @@ public class ExcelUtil {
 	public static int findSheet(WritableWorkbook workbook, String expert) {
 		String[] sheetNames = workbook.getSheetNames();
 		for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-			if (expert.replace(":", "->").equals(sheetNames[i])) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (expert.replace(">", "->").equals(sheetNames[i])) { //$NON-NLS-1$ //$NON-NLS-2$
 				return i;
 			}
 		}
@@ -149,7 +148,7 @@ public class ExcelUtil {
 	public static int findSheet(Workbook workbook, String expert) {
 		String[] sheetNames = workbook.getSheetNames();
 		for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-			if (expert.replace(":", "->").equals(sheetNames[i])) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (expert.replace(">", "->").equals(sheetNames[i])) { //$NON-NLS-1$ //$NON-NLS-2$
 				return i;
 			}
 		}
@@ -184,7 +183,7 @@ public class ExcelUtil {
 
 		for (int j = i + 1; j < sheet.getRows(); j++) {
 			for (int k = 1; k < posAlternative; k++) {
-				if (sheet.getCell(k, j).getContents().equals(criterion.replace(">", "->"))) {
+				if (sheet.getCell(k, j).getContents().equals(criterion)) {
 					return j;
 				}
 			}

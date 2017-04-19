@@ -69,6 +69,7 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 	public void setValuation(Expert expert, Alternative alternative, Criterion criterion, Valuation valuation) {
 		_valuations.put(new ValuationKey(expert, alternative, criterion), valuation);
 
+		notifyValuationSetChange(new ValuationSetChangeEvent(EValuationSetChange.NEW_VALUATION, null, getValuations(), false));
 	}
 
 	public Valuation getValuation(Expert expert, Alternative alternative, Criterion criterion) {
@@ -88,6 +89,8 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 
 	public void removeValuation(Expert expert, Alternative alternative, Criterion criterion) {
 		_valuations.remove(new ValuationKey(expert, alternative, criterion));
+		
+		notifyValuationSetChange(new ValuationSetChangeEvent(EValuationSetChange.REMOVE_VALUATION, null, getValuations(), false));
 	}
 
 	public void clear() {
