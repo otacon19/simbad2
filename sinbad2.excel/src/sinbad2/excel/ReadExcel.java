@@ -23,6 +23,7 @@ import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import sinbad2.core.io.IImportListener;
 import sinbad2.core.io.handler.ImportHandler;
+import sinbad2.core.workspace.Workspace;
 import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
 import sinbad2.domain.DomainsManager;
@@ -85,6 +86,9 @@ public class ReadExcel implements IImportListener {
 	}
 
 	private void initialize() {
+		
+		Workspace.getWorkspace().close();
+		
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
 		FileDialog dlg = new FileDialog(shell, SWT.OPEN);
