@@ -644,7 +644,7 @@ public class Unbalanced extends FuzzySet {
 	}
 
 	private String loadStringLh(String result) {
-		StringBuilder lh = new StringBuilder(""); //$NON-NLS-1$
+		StringBuilder lh = new StringBuilder("lh = "); //$NON-NLS-1$
 		
 		for(int l: _lh) {
 			lh.append(l + ","); //$NON-NLS-1$
@@ -656,7 +656,7 @@ public class Unbalanced extends FuzzySet {
 	}
 	
 	private String loadStringFormat(String result) {
-		String format = _sl + "," + _slDensity + "," + _sr + "," + _srDensity; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		String format = ";sl = " + _sl + ";" + "slDensity = " + _slDensity + ";" + "sr = " + _sr + ";" + "srDensity = " + _srDensity; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		
 		result += format;
 		
@@ -664,15 +664,23 @@ public class Unbalanced extends FuzzySet {
 	}
 	
 	private String loadStringLabels(String result) {
-		StringBuilder labels = new StringBuilder(";"); //$NON-NLS-1$
-		
+		int numLabels;
+		StringBuilder labels = new StringBuilder(";labels ="); //$NON-NLS-1$
 		for(int label: _labels.keySet()) {
+			labels.append(label + "={");
+			numLabels = 0;
 			for(int domain: _labels.get(label).keySet()) {
-				labels.append(domain + ":" + _labels.get(label).get(domain) + "="); //$NON-NLS-1$ //$NON-NLS-2$
+				if(numLabels != (_labels.get(label).size() - 1)) {
+					labels.append(domain + "=" + _labels.get(label).get(domain) + ","); //$NON-NLS-1$ //$NON-NLS-2$
+				} else {
+					labels.append(domain + "=" + _labels.get(label).get(domain)); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				numLabels++;
 			}
-			labels.replace(labels.length() - 1, labels.length(), ""); //$NON-NLS-1$
+			labels.append("}&"); //$NON-NLS-1$
 		}
-		labels.replace(labels.length() - 1, labels.length(), ""); //$NON-NLS-1$
+		labels.deleteCharAt(labels.lastIndexOf("&"));
+		
 		result += labels.toString();
 		
 		return result;

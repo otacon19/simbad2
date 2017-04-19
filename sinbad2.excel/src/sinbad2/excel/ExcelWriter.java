@@ -250,6 +250,7 @@ public abstract class ExcelWriter {
 					value += ":U"; // $NON-NLS-1$ //$NON-NLS-1$
 				}	
 			} else if (domain instanceof Unbalanced) {
+				value = ((Unbalanced) domain).toStringExport();
 				value += SEPARATOR + ((Unbalanced) domain).getInfo();
 			} else if (domain instanceof FuzzySet) {
 				value = ((FuzzySet) domain).toStringExport();
