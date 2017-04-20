@@ -44,6 +44,8 @@ import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssi
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignments;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignmentsManager;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.EUnaryRelationType;
+import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.integer.IntegerValuation;
 import sinbad2.valuation.integer.interval.IntegerIntervalValuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
@@ -367,7 +369,7 @@ public class ReadExcel implements IImportListener {
 		Expert expert;
 		Criterion criterion;
 		Alternative alternative;
-		Valuation valuation;
+		Valuation valuation = null;
 		Domain domain;
 
 		Sheet sheet;
@@ -457,10 +459,36 @@ public class ReadExcel implements IImportListener {
 							}
 						}
 					} else if (domain instanceof FuzzySet || domain instanceof Unbalanced) {
-						valuation = new LinguisticValuation();
-						valuation.setId(LinguisticValuation.ID);
-						valuation.setDomain(domain);
-						((LinguisticValuation) valuation).setLabel(((FuzzySet) domain).getLabelSet().getLabel(valuationText));
+						if(!comments.contains("Hesitant")) {
+							valuation = new LinguisticValuation();
+							valuation.setId(LinguisticValuation.ID);
+							valuation.setDomain(domain);
+							((LinguisticValuation) valuation).setLabel(((FuzzySet) domain).getLabelSet().getLabel(valuationText));
+						} else {
+							valuation = new HesitantValuation();
+							valuation.setId(HesitantValuation.ID);
+							valuation.setDomain(domain);
+							if(valuationText.contains("Lower than")) {
+								valuationText = valuationText.replace("Lower than ", "");
+								((HesitantValuation) valuation).setUnaryRelation(EUnaryRelationType.LowerThan, (((FuzzySet) domain).getLabelSet().getLabel(valuationText)));
+							} else if(valuationText.contains("Greater than")) {
+								valuationText = valuationText.replace("Greater than ", "");
+								((HesitantValuation) valuation).setUnaryRelation(EUnaryRelationType.GreaterThan, (((FuzzySet) domain).getLabelSet().getLabel(valuationText)));
+							} else if(valuationText.contains("At least")) {
+								valuationText = valuationText.replace("At least ", "");
+								((HesitantValuation) valuation).setUnaryRelation(EUnaryRelationType.AtLeast, (((FuzzySet) domain).getLabelSet().getLabel(valuationText)));
+							} else if(valuationText.contains("At most")) {
+								valuationText = valuationText.replace("At most ", "");
+								((HesitantValuation) valuation).setUnaryRelation(EUnaryRelationType.AtMost, (((FuzzySet) domain).getLabelSet().getLabel(valuationText)));
+							} else if(valuationText.contains("Between")) {
+								valuationText = valuationText.replace("Between ", "");
+								String lowerTerm = valuationText.substring(0, valuationText.indexOf(" "));
+								String upperTerm = valuationText.substring(valuationText.lastIndexOf(" ") + 1, valuationText.length());
+								((HesitantValuation) valuation).setBinaryRelation(lowerTerm, upperTerm);
+							} else {
+								((HesitantValuation) valuation).setLabel(((FuzzySet) domain).getLabelSet().getLabel(valuationText));
+							}
+						}
 					} else {
 						valuation = null;
 					}

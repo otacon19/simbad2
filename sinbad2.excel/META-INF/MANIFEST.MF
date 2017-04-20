@@ -15,5 +15,6 @@ Require-Bundle: org.apache.poi.POI;bundle-version="1.0.0",
  sinbad2.valuation.real,
  sinbad2.valuation.real.interval,
  sinbad2.valuation.integer.interval,
- sinbad2.valuation.unifiedValuation
+ sinbad2.valuation.unifiedValuation,
+ sinbad2.valuation.hesitant
 Export-Package: sinbad2.excel

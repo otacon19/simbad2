@@ -38,6 +38,7 @@ import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssi
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignments;
 import sinbad2.resolutionphase.frameworkstructuring.domainassignments.DomainAssignmentsManager;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.integer.IntegerValuation;
 import sinbad2.valuation.integer.interval.IntegerIntervalValuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
@@ -491,17 +492,20 @@ public abstract class ExcelWriter {
 		} else {
 			validValues.append(")"); //$NON-NLS-1$
 		}
-		
 		cellFeatures = new WritableCellFeatures();
-		cellFeatures.setDataValidationList(values);
-		cellFeatures.setComment("Domain " + domainName //$NON-NLS-1$
-				+ "\nDomain type is 'Fuzzy'\nOnly values in set " + validValues //$NON-NLS-1$
-				+ "\nEmpty for not applicable.", 12, 4); //$NON-NLS-1$
-
 		String text = null;
 		if (valuation != null) {
 			if (valuation instanceof LinguisticValuation) {
+				cellFeatures.setComment("Domain " + domainName //$NON-NLS-1$
+						+ "\nDomain type is 'Fuzzy'\nOnly values in set " + validValues //$NON-NLS-1$
+						+ "\nEmpty for not applicable.", 12, 4); //$NON-NLS-1$
+				cellFeatures.setDataValidationList(values);
 				text = ((LinguisticValuation) valuation).getLabel().getName();
+			} else if(valuation instanceof HesitantValuation) {
+				cellFeatures.setComment("Domain " + domainName //$NON-NLS-1$
+						+ "\nDomain type is 'Hesitant Fuzzy'\nOnly values in set " + validValues //$NON-NLS-1$
+						+ "\nEmpty for not applicable.", 12, 4); //$NON-NLS-1$
+				text = ((HesitantValuation) valuation).changeFormatValuationToString();
 			} else {
 				text = ":NA:"; //$NON-NLS-1$
 			}
