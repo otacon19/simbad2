@@ -85,10 +85,7 @@ public class ReadExcel implements IImportListener {
 		ImportHandler.registerImportListener(this);
 	}
 
-	private void initialize() {
-		
-		Workspace.getWorkspace().close();
-		
+	private void initialize() {	
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
 		FileDialog dlg = new FileDialog(shell, SWT.OPEN);
@@ -96,10 +93,13 @@ public class ReadExcel implements IImportListener {
 		dlg.setFilterExtensions(FILTER_EXTS);
 		String file = dlg.open();
 
-		try {
-			read(file);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(file != null) {
+			Workspace.getWorkspace().close();
+			try {
+				read(file);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -375,7 +375,7 @@ public class ReadExcel implements IImportListener {
 		for (DomainAssignmentKey dk : _domainsAssignments.getAssignments().keySet()) {
 			expertId = dk.getExpert().getCanonicalId();
 			alternativeId = dk.getAlternative().getId();
-			criterionId = dk.getCriterion().getCanonicalId();
+			criterionId = dk.getCriterion().getId();
 			pos = ExcelUtil.findPos(workbook, expertId, alternativeId, criterionId, _posAlternative);
 
 			if ((pos[1] != -1) && (pos[2] != -1)) {
@@ -464,9 +464,11 @@ public class ReadExcel implements IImportListener {
 					} else {
 						valuation = null;
 					}
-
-					valuations.put(new ValuationKey(expert, alternative, criterion), valuation);
-					_domainsValuations.addSupportedValuationForSpecificDomain(domain.getId(), valuation.getId());
+					
+					if(valuation != null) {
+						valuations.put(new ValuationKey(expert, alternative, criterion), valuation);
+						_domainsValuations.addSupportedValuationForSpecificDomain(domain.getId(), valuation.getId());
+					}
 				}
 			}
 		}

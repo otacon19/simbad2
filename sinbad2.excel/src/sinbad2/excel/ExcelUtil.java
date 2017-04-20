@@ -103,7 +103,7 @@ public class ExcelUtil {
 	public static int[] findPos(Workbook workbook, String expert,
 			String alternative, String criterion, int posAlternative) {
 		int[] result = new int[] { -1, -1, -1 };
-
+		
 		result[0] = findSheet(workbook, expert);
 		if (result[0] != -1) {
 			Sheet sheet = workbook.getSheet(result[0]);

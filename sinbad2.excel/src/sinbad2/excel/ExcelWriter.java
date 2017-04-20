@@ -8,7 +8,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import jxl.Workbook;
+import jxl.WorkbookSettings;
 import jxl.format.Colour;
+import jxl.format.UnderlineStyle;
 import jxl.write.Label;
 import jxl.write.NumberFormats;
 import jxl.write.WritableCellFeatures;
@@ -17,8 +19,6 @@ import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
-import jxl.format.UnderlineStyle;
-import jxl.WorkbookSettings;
 import jxl.write.biff.RowsExceededException;
 import sinbad2.domain.Domain;
 import sinbad2.domain.DomainSet;
@@ -129,15 +129,14 @@ public abstract class ExcelWriter {
 	 */
 	private int createExpertCriteria(WritableSheet sheet, int col, int row, Criterion criterion) throws WriteException {
 		if (criterion != null) {
-			addLabel(sheet, col, row++, criterion.getCanonicalId());
-			
+			addLabel(sheet, col, row++, criterion.getId());
 			if(criterion.hasSubcriteria()) {
 				for (Criterion son : criterion.getSubcriteria()) {
 					row = createExpertCriteria(sheet, col + 1, row, son);
 				}
 			}
 		} else {
-			for (Criterion son : _elementsSet.getAllSubcriteria()) {
+			for (Criterion son : _elementsSet.getCriteria()) {
 				row = createExpertCriteria(sheet, col + 1, row, son);
 			}
 		}

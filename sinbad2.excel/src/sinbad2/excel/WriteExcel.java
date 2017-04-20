@@ -128,6 +128,7 @@ public class WriteExcel extends ExcelWriter implements IExportListener {
 					addHeaderLabel(sheet, 1, pos++, row, "Sub-sub-criteria"); //$NON-NLS-1$
 				}
 			}
+			
 			for (int i = 0; i < alternatives.size(); i++) {
 				addHeaderLabel(sheet, 2, pos++, row, alternatives.get(i).getId());
 				addHeaderLabel(sheet, 2, pos++, row, ""); //$NON-NLS-1$
@@ -175,10 +176,9 @@ public class WriteExcel extends ExcelWriter implements IExportListener {
 			expert = dk.getExpert();
 			alternative = dk.getAlternative();
 			criterion = dk.getCriterion();
-			pos = ExcelUtil.findPos(workbook, expert.getCanonicalId(), alternative.getId(), criterion.getCanonicalId(), _posAlternative);
+			pos = ExcelUtil.findPos(workbook, expert.getCanonicalId(), alternative.getId(), criterion.getId(), _posAlternative);
 			sheet = workbook.getSheet(pos[0]);
 			valuation = evaluations.get(new ValuationKey(expert, alternative, criterion));
-
 			domain = domains.get(dk);
 			
 			if (domain != null) {
