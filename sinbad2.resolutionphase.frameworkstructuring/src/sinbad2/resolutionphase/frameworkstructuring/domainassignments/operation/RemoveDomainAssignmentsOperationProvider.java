@@ -118,15 +118,15 @@ public class RemoveDomainAssignmentsOperationProvider {
 		} else {
 			return null;
 		}
-
 	}
 
 	private void removeDomains(Set<Domain> domains) {
-		Domain domain;
+		Domain[] domainsArray = domains.toArray(new Domain[0]);
 		for (DomainAssignmentKey key : _oldDomainAssignments.keySet()) {
-			domain = _oldDomainAssignments.get(key);
-			if (!domains.contains(domain)) {
-				_newDomainAssignments.put(key, _oldDomainAssignments.get(key));
+			for(Domain d: domainsArray) {
+				if (!d.equals(_oldDomainAssignments.get(key))) {
+					_newDomainAssignments.put(key, _oldDomainAssignments.get(key));
+				}
 			}
 		}
 	}
@@ -174,7 +174,7 @@ public class RemoveDomainAssignmentsOperationProvider {
 			return false;
 		}
 	}
-
+	
 	private boolean differentDomains() {
 
 		if (_oldDomainAssignments.size() != _newDomainAssignments.size()) {

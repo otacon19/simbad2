@@ -66,7 +66,6 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 		_elementSet = _elementsManager.getActiveElementSet();
 		_domainsManager = DomainsManager.getInstance();
 		_domainSet = _domainsManager.getActiveDomainSet();
-
 	}
 
 	public void setAssignments(Map<DomainAssignmentKey, Domain> assignments) {
@@ -355,7 +354,6 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 
 	private void removeDomainAssignmentsOperation(ERemoveDomainAssignments type, Object value) {
 		Map<DomainAssignmentKey, Domain> newAssignments = new RemoveDomainAssignmentsOperationProvider(this, type, value).check();
-
 		if(newAssignments != null) {
 			RemoveDomainAssignmentsOperation operation = new RemoveDomainAssignmentsOperation(this, newAssignments);
 			IOperationHistory operationHistory = OperationHistoryFactory.getOperationHistory();
@@ -366,7 +364,6 @@ public class DomainAssignments implements Cloneable, IExpertsChangeListener, IAl
 				e.printStackTrace();
 			}
 		}
-		
 	}
 
 }

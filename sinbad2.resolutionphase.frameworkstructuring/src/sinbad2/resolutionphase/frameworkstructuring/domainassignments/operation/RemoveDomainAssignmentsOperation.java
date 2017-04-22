@@ -28,7 +28,7 @@ public class RemoveDomainAssignmentsOperation extends UndoableOperation {
 			DomainAssignments domainAssignments,
 			Map<DomainAssignmentKey, Domain> newDomainAssignments) {
 		this();
-
+		
 		_domainAssignments = domainAssignments;
 		_oldDomainAssignments = _domainAssignments.getAssignments();
 		_newDomainAssignments = newDomainAssignments;

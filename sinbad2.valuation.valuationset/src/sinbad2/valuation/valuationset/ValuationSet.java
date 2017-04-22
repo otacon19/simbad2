@@ -249,10 +249,9 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 	
 	@Override
 	public void notifyDomainSetListener(DomainSetChangeEvent event) {
-
 		if (!event.getInUndoRedo()) {
 			EDomainSetChange change = event.getChange();
-
+			
 			if (EDomainSetChange.MODIFY_DOMAIN.equals(change)) {
 				removeValuationsOperation(ERemoveValuation.DOMAIN, event.getOldValue());
 			}
@@ -273,14 +272,12 @@ public class ValuationSet implements IDomainSetListener, IDomainAssignmentsChang
 	@SuppressWarnings("unchecked")
 	@Override
 	public void notifyDomainAssignmentsChange(DomainAssignmentsChangeEvent event) {
-		
 		if (!event.getInUndoRedo()) {
 			List<ValuationKey> valuations = new LinkedList<ValuationKey>();
-			
-			Map<DomainAssignmentKey, Domain> v = (Map<DomainAssignmentKey, Domain>) event.getOldValue();
-			for(DomainAssignmentKey dk: v.keySet()) {
-				ValuationKey vk = new ValuationKey(dk.getExpert(), dk.getAlternative(), dk.getCriterion());
-				if(_valuations.get(vk) != null) {
+			Map<DomainAssignmentKey, Domain> v = (Map<DomainAssignmentKey, Domain>) event.getNewValue();
+			for(ValuationKey vk: _valuations.keySet()) {
+				DomainAssignmentKey dk = new DomainAssignmentKey(vk.getExpert(), vk.getAlternative(), vk.getCriterion());
+				if(v.get(dk) == null) {
 					valuations.add(vk);
 				}
 			}
