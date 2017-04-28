@@ -75,6 +75,7 @@
       <plugin id="sinbad2.aggregationoperator.fuzzy.geometricMean"/>
       <plugin id="sinbad2.aggregationoperator.fuzzy.max"/>
       <plugin id="sinbad2.aggregationoperator.fuzzy.min"/>
+      <plugin id="sinbad2.aggregationoperator.fuzzy.owa"/>
       <plugin id="sinbad2.aggregationoperator.fuzzy.weightedmean"/>
       <plugin id="sinbad2.aggregationoperator.geometricMean"/>
       <plugin id="sinbad2.aggregationoperator.harmonicMean"/>
