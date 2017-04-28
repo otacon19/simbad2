@@ -326,5 +326,4 @@ public class UnificationPhase implements IPhaseMethod {
 		}
 		return a;
 	}
-	
 }

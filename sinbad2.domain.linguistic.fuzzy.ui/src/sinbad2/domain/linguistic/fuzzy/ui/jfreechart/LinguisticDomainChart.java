@@ -348,7 +348,7 @@ public class LinguisticDomainChart extends DomainChart {
 				renderer.setSeriesStroke(i, new BasicStroke(3));
 			} else {
 				renderer.setSeriesStroke(i, new BasicStroke());
-				renderer.setSeriesPaint(i, colorForEachLabel(3));
+				renderer.setSeriesPaint(i, colorForEachLabel(i));
 			}
 		}
 	}

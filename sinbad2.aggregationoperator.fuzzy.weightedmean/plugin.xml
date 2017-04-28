@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.aggregationoperator">
+      <aggregation_operator
+            id="flintstones.aggregationoperator.fuzzy.weightedmean"
+            name="Fuzzy weighted mean"
+            parameters="false">
+         <weighted
+               implementation="sinbad2.aggregationoperator.fuzzy.weightedmean.FuzzyWeightedMean">
+            <supported_types
+                  type="HesitantTwoTuple">
+            </supported_types>
+         </weighted>
+      </aggregation_operator>
+   </extension>
+
+</plugin>
