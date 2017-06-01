@@ -584,7 +584,15 @@ public class HesitantTwoTupleValuation extends Valuation {
 			} else if(Sinterval1 < Sinterval2) {
 				return -1;
 			} else {
-				return 0;
+				double Hinterval1 = ((envelopeIndexInterval1[1] - envelopeIndexInterval1[0]) / ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) + (interval1[1].getAlpha() - interval1[0].getAlpha());
+				double Hinterval2 = ((envelopeIndexInterval2[1] - envelopeIndexInterval2[0]) / ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) + (interval2[1].getAlpha() - interval2[0].getAlpha());
+				if(Hinterval1 > Hinterval2) {
+					return -1;
+				} else if(Hinterval1 < Hinterval2) {
+					return 1;
+				} else {
+					return 0;
+				}
 			}
 		} else {
 			throw new IllegalArgumentException(Messages.HesitantTwoTupleValuation_Different_domains);

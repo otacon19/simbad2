@@ -21,7 +21,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-import sinbad2.excel.ExcelManager;
+import sinbad2.excel.WriteUnificationExcel;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.UnificationPhase;
 import sinbad2.phasemethod.heterogeneous.fusion.unification.ui.Images;
@@ -230,8 +230,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 		_saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ExcelManager excelUtil = new ExcelManager();
-				excelUtil.createExcelFile(_unificationPhase.getTwoTupleValuations());
+				new WriteUnificationExcel(_unificationPhase.getTwoTupleValuations());
 			}
 		});
 	}

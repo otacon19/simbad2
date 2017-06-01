@@ -36,7 +36,9 @@ public class ResolutionPhase implements IPhaseMethod {
 
 	public static final String ID = "flintstones.phasemethod.todim.resolution"; //$NON-NLS-1$
 
-	private static final int P = 2;
+	private static final double P = 2;
+	private static final double M = 2;
+	private static final double C = 1.5;
 
 	private int _numAlternatives;
 	private int _numCriteria;
@@ -76,6 +78,34 @@ public class ResolutionPhase implements IPhaseMethod {
 				Alternative key = keyIt.next();
 				Double comp1 = passedMap.get(key);
 				Double comp2 = val;
+
+				if (comp1.equals(comp2)) {
+					keyIt.remove();
+					sortedMap.put(key, val);
+					break;
+				}
+			}
+		}
+		return sortedMap;
+	}
+	
+	public LinkedHashMap<ValuationKey, TrapezoidalFunction> sortHashMapByValuesValuation(HashMap<ValuationKey, TrapezoidalFunction> passedMap) {
+		List<ValuationKey> mapKeys = new ArrayList<>(passedMap.keySet());
+		List<TrapezoidalFunction> mapValues = new ArrayList<>(passedMap.values());
+		Collections.sort(mapValues);
+		Collections.sort(mapKeys);
+
+		LinkedHashMap<ValuationKey, TrapezoidalFunction> sortedMap = new LinkedHashMap<>();
+
+		Iterator<TrapezoidalFunction> valueIt = mapValues.iterator();
+		while (valueIt.hasNext()) {
+			TrapezoidalFunction val = valueIt.next();
+			Iterator<ValuationKey> keyIt = mapKeys.iterator();
+
+			while (keyIt.hasNext()) {
+				ValuationKey key = keyIt.next();
+				TrapezoidalFunction comp1 = passedMap.get(key);
+				TrapezoidalFunction comp2 = val;
 
 				if (comp1.equals(comp2)) {
 					keyIt.remove();
@@ -692,24 +722,160 @@ public class ResolutionPhase implements IPhaseMethod {
 	}
 
 	public void computeLinearProgramming() {
-		// Create an R vector in the form of a string.
-        String javaVector = "c(1,2,3,4,5)";
-
-        // Start Rengine.
+		List<Alternative> alternatives = _elementsSet.getAlternatives();
+		List<Criterion> criteria = _elementsSet.getAllSubcriteria();
+		List<Expert> experts = _elementsSet.getOnlyExpertChildren();
+		
+		//Experts weights
+		double[] expertsWeights = computeExpertsWeights();
+		
+		//Initial fuzzy valuations
+		Map<ValuationKey, TrapezoidalFunction> fuzzyValuations = getFuzzyValuations();
+		
+		//Compute overall opinion
+		TrapezoidalFunction[][] O = new TrapezoidalFunction[alternatives.size()][criteria.size()];
+		for(int i = 0; i < alternatives.size(); ++i) {
+			for(int j = 0; j < criteria.size(); ++j) {
+				for(int k = 0; k < experts.size(); ++k) {
+					TrapezoidalFunction r = fuzzyValuations.get(new ValuationKey(experts.get(k), alternatives.get(i), criteria.get(j)));
+					if(O[i][j] == null) {
+						O[i][j] = r.multiplicationScalar(expertsWeights[k]);
+					} else {
+						O[i][j] = O[i][j].addition(r.multiplicationScalar(expertsWeights[k]));
+					}	
+				}
+			}
+		}
+		
+		//Compute distances and similarities
+		double u = computeUValue(fuzzyValuations);
+		u = Math.pow(u, P);
+		double[][][] distances = new double[experts.size()][alternatives.size()][criteria.size()];
+		double[][][] similarities = new double[experts.size()][alternatives.size()][criteria.size()];
+		for(int i = 0; i < alternatives.size(); ++i) {
+			for(int j = 0; j < criteria.size(); ++j) {
+				for(int k = 0; k < experts.size(); ++k) {
+					distances[k][i][j] = O[i][j].distance(fuzzyValuations.get(new ValuationKey(experts.get(k), alternatives.get(i), criteria.get(j))), P);
+					similarities[k][i][j] = 1d - ((1d / (4 * u)) * distances[k][i][j]);
+				}
+			}
+		}
+		
+        //Overall opinion R
+        String overall = "c(";
+        double[] limits;
+        for(int i = 0; i < alternatives.size(); ++i) {
+			for(int j = 0; j < criteria.size(); ++j) {
+				limits = O[i][j].getLimits();
+				for(int f = 0; f < 4; f++) {
+					overall += Double.toString(limits[f]) + ",";
+				}
+			}
+        }
+        
+        overall = overall.substring(0, overall.length() - 1) + ")";
+      
+        //Individual opinion R
+        String individual = "c(";
+        TrapezoidalFunction r;
+        for(int i = 0; i < alternatives.size(); ++i) {
+			for(int j = 0; j < criteria.size(); ++j) {
+				for(int k = 0; k < experts.size(); ++k) {
+					r = fuzzyValuations.get(new ValuationKey(experts.get(k), alternatives.get(i), criteria.get(j)));
+					limits = r.getLimits();
+					for(int f = 0; f < 4; f++) {
+						individual += Double.toString(limits[f]) + ",";
+					}
+				}
+			}
+        }
+        
+        individual = individual.substring(0, individual.length() - 1) + ")";
+        
+        String w = "c(";
+        for(double we: expertsWeights) {
+        	w += Double.toString(we) + ",";
+        }
+        
+        w = w.substring(0, w.length() - 1) + ")";
+			
+		String alternativesSize = Integer.toString(alternatives.size());
+		String criteriaSize = Integer.toString(criteria.size());
+		String expertsSize = Integer.toString(experts.size());
+		
+		// Start Rengine.
         Rengine engine = new Rengine(new String[] { "--no-save" }, false, null);
+		
+		engine.eval("overall=" + overall);
+	    engine.eval("individual=" + individual);
+	    engine.eval("w=" + w);
+	    
+	    engine.eval("alternativesSize=" + alternativesSize);
+	    engine.eval("criteriaSize=" + criteriaSize);
+	    engine.eval("expertsSize=" + expertsSize);
+	   
+	    engine.eval("C=" + C);
+	    engine.eval("u=" + u);
+	    engine.eval("P=" + P);
+	    
+	    //objective function
+		engine.eval("result <- function(overall, individual) {"
+				+ 	"acum <- 0.0;"
+				+       "for (i in 1: alternativesSize) {"
+				+			"for (j in 1: criteriaSize) {"
+				+				"for (k in 1: expertsSize) {"
+				+ 					"acum <- sum((w[k] * (C - (1 - (1 / (4 * u)))) * ("
+				+ 					"abs(overall[(i-1) * criteriaSize * 4 + (j-1) * 4] - individual[((k-1) * criteriaSize * 4 * alternativesSize + 1) + ((i-1) * criteriaSize * 4) + ((j-1) * 4)])^(P) +"
+				+ 					"abs(overall[(i-1) * criteriaSize * 4 + (j-1) * 4 + 1] - individual[((k-1) * criteriaSize * 4 * alternativesSize + 1) + ((i-1) * criteriaSize * 4) + ((j-1) * 4) + 1])^(P) +"
+				+ 					"abs(overall[(i-1) * criteriaSize * 4 + (j-1) * 4 + 2] - individual[((k-1) * criteriaSize * 4 * alternativesSize + 1) + ((i-1) * criteriaSize * 4) + ((j-1) * 4) + 2])^(P) +"
+				+ 					"abs(overall[(i-1) * criteriaSize * 4 + (j-1) * 4 + 3] - individual[((k-1) * criteriaSize * 4 * alternativesSize + 1) + ((i-1) * criteriaSize * 4) + ((j-1) * 4) + 3])^(P))"
+				+ 					"))"
+				+ 				"};"
+				+			"};"
+				+		"};"
+				+ 	"acum"
+				+	"}");
+		
+		//Constraint functions
+		engine.eval("eval_g0 <- function(overall, individual) { "
+				+		"h <- numeric(6)"
+				+       "for (i in 1: alternativesSize) {"
+				+			"for (j in 1: criteriaSize) {"
+				+				"for (k in 1: expertsSize) {"
+				+ 					"h[1] <- "
+                + 				"}"
+                +			"}"
+                +		"}");
+		
+		engine.eval("res1 <- nloptr(overall, eval_f=result, lb = c(0,0), ub = c(1,1), eval_g_ineq = eval_g0,"
+				+ "opts = list(algorithm=NLOPT_LN_COBYLA, xtol_rel=1.0e-8), a = a, b = b )");
 
-        // The vector that was created in JAVA context is stored in 'rVector' which is a variable in R context.
-        engine.eval("rVector=" + javaVector);
-        
-        //Calculate MEAN of vector using R syntax.
-        engine.eval("meanVal=mean(rVector)");
-        
-        //Retrieve MEAN value
-        double mean = engine.eval("meanVal").asDouble();
-        
-        //Print output values
-        System.out.println("Mean of given vector is=" + mean);
-        
+		
         engine.end();
+	}
+
+	private double[] computeExpertsWeights() {
+		double[] weights = new double[_elementsSet.getOnlyExpertChildren().size()];
+		for(int k = 0; k < _elementsSet.getOnlyExpertChildren().size(); ++k) {
+			weights[k] = 1d / weights.length;
+		}
+		return weights;
+	}
+	
+	private double computeUValue(Map<ValuationKey, TrapezoidalFunction> fuzzyValuations) {
+		double max = Double.NEGATIVE_INFINITY, min = Double.POSITIVE_INFINITY;
+		for(ValuationKey vk: fuzzyValuations.keySet()) {
+			TrapezoidalFunction fuzzy = fuzzyValuations.get(vk);
+			for(int i = 0; i < 4; ++i) {
+				if(max < fuzzy.getLimits()[i]) {
+					max = fuzzy.getLimits()[i];
+				}
+				
+				if(min > fuzzy.getLimits()[i]) {
+					min = fuzzy.getLimits()[i];
+				}
+			}
+		}
+		return max - min;
 	}
 }

@@ -136,12 +136,12 @@
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.export"
-            name="Export">
+            name="%command.name">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.import"
-            name="Import">
+            name="%command.name.0">
       </command>
       <category
             id="sinbad2.ui.category_undo_redo"

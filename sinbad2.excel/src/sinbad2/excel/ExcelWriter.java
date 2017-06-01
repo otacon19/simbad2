@@ -768,7 +768,7 @@ public abstract class ExcelWriter {
 
 						}
 						((Object[]) result)[i] = new Label(column + i, row, text, _unlockFormat);
-					}
+					}	
 				} else {
 					for (int i = 0; i < domainSize; i++) {
 						if (i == 0) {
@@ -783,22 +783,9 @@ public abstract class ExcelWriter {
 			break;
 		case TWOTUPLE:
 			if (content != null) {
-				String label;
-				String alphaValue;
-				if (content instanceof TwoTuple) {
-					TwoTuple valuation = (TwoTuple) content;
-					FuzzySet domain = (FuzzySet) valuation.getDomain();
-					int labelPos = domain.getLabelSet().getPos(valuation.getLabel());
-					double alpha = valuation.getAlpha();
-					label = Integer.toString(labelPos);
-					alphaValue = Double.toString(alpha);
-				} else {
-					label = "NA";
-					alphaValue = ""; //$NON-NLS-1$
-				}
 				result = new Object[2];
-				((Object[]) result)[0] = new Label(column, row, label, _unlockFormat);
-				((Object[]) result)[1] = new Label(column + 1, row, alphaValue, _unlockFormat);
+				((Object[]) result)[0] = new Label(column, row, ((TwoTuple) content).prettyFormat(), _unlockFormat);
+				((Object[]) result)[1] = new Label(column, row, ((TwoTuple) content).prettyFormat(), _unlockFormat);
 			}
 			break;
 

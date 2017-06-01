@@ -315,12 +315,13 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		return new TrapezoidalFunction(limits);
 	}
 	
-	public double getSimpleDefuzzifiedValue() {
-		return (_a + (2d * _b) + (2d * _c) + _d) / 6d;
+	public TrapezoidalFunction potence(double scalar) {
+		double[] limits = new double[]{Math.pow(_a, scalar), Math.pow(_b, scalar), Math.pow(_c, scalar), Math.pow(_d, scalar)};
+		return new TrapezoidalFunction(limits);
 	}
 	
-	public double similarity(TrapezoidalFunction tpf, double P, double u) {
-		return 1d - ((1d / (4d * Math.pow(u, P))) * Math.pow(distance(tpf, P), P)); 
+	public double getSimpleDefuzzifiedValue() {
+		return (_a + (2d * _b) + (2d * _c) + _d) / 6d;
 	}
 	
 	public double distance(TrapezoidalFunction tpf, double P) {

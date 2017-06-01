@@ -21,7 +21,6 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
-import sinbad2.method.Method;
 import sinbad2.method.MethodsManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
@@ -30,7 +29,6 @@ import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.resolutionphase.IResolutionPhase;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.resolutionphase.io.XMLWriter;
-import sinbad2.resolutionphase.sensitivityanalysis.nls.Messages;
 import sinbad2.resolutionphase.state.EResolutionPhaseStateChange;
 import sinbad2.resolutionphase.state.ResolutionPhaseStateChangeEvent;
 import sinbad2.valuation.Valuation;
@@ -252,6 +250,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		Map<Criterion, Double> criteriaWeights = new HashMap<Criterion, Double>();
 		criteriaWeights = transformWeightsMap(_w);
 		
+		_alternativesFinalPreferences = new Double[_elementsSet.getAlternatives().size()];
+		
 		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		todimPhase.setCriteriaWeights(criteriaWeights);
 		todimPhase.calculateRelativeWeights();
@@ -280,6 +280,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 	private void computeTOPSIS() {
 		SelectionPhase topsisPhase = (SelectionPhase) PhasesMethodManager.getInstance().getPhaseMethod(SelectionPhase.ID).getImplementation();
+		
+		_alternativesFinalPreferences = new Double[_elementsSet.getAlternatives().size()];
 		
 		List<Double> criteriaWeights;
 		criteriaWeights = transformWeightsList(_w);
@@ -1506,18 +1508,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 		if (_elementsSet.getExperts().isEmpty()) {
 			return false;
-		}
-		
-		Method activatedMethod = MethodsManager.getInstance().getActiveMethod();
-		if(activatedMethod != null) {
-			String categoryMethod = activatedMethod.getCategory();
-			if(categoryMethod.contains(Messages.SensitivityAnalysis_Multi_criteria_decision_analysis)) {
-				if (_alternativesFinalPreferences == null) {
-					return false;
-				} else {
-					return true;
-				}
-			}
 		}
 		
 		if (_aggregationPhase.getCriteriaOperators().isEmpty() && _aggregationPhase.getExpertsOperators().isEmpty()) {

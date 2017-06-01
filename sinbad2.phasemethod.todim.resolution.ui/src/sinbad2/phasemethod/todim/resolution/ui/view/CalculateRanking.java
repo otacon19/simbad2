@@ -242,6 +242,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		_excelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				_resolutionPhase.computeLinearProgramming();
 				ExcelManager excelUtil = new ExcelManager();
 				excelUtil.createExcelFileEmergencyProblemStructure(_resolutionPhase.getFuzzyValuations(), _resolutionPhase.getCriteriaWeights(), _resolutionPhase.calculateThresholdValues());
 			}
