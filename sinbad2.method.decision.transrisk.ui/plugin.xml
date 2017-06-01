@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="flintstones.method.ui">
+      <method_ui
+            id="flintstones.method.decision.transrisk.ui"
+            method="flintstones.method.decision.transrisk"
+            name="%method.name">
+      </method_ui>
+   </extension>
+
+</plugin>

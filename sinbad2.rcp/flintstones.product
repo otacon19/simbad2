@@ -109,6 +109,8 @@
       <plugin id="sinbad2.method.decision.todim.ui"/>
       <plugin id="sinbad2.method.decision.topsis"/>
       <plugin id="sinbad2.method.decision.topsis.ui"/>
+      <plugin id="sinbad2.method.decision.transrisk"/>
+      <plugin id="sinbad2.method.decision.transrisk.ui"/>
       <plugin id="sinbad2.method.linguistic"/>
       <plugin id="sinbad2.method.linguistic.hesitant"/>
       <plugin id="sinbad2.method.linguistic.hesitant.twotuple"/>
