@@ -9,6 +9,9 @@
             id="flintstones.method.decision.transrisk"
             implementation="sinbad2.method.decision.transrisk.TRANSrisk"
             name="%method.name">
+         <phasemethod
+               phase="flintstones.phasemethod.heterogeneous.fusion.unification">
+         </phasemethod>
          <aggregation_supported
                type="TwoTuple">
          </aggregation_supported>

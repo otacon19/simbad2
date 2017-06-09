@@ -335,7 +335,7 @@ public class ResolutionPhase implements IPhaseMethod {
 			Valuation v = null;
 			Map<ValuationKey, Valuation> valuations = vs.getValuations();
 			for (ValuationKey vk : valuations.keySet()) {
-				if (vk.getAlternative().getId().equals("null_importance")) {
+				if (vk.getAlternative().getId().equals("null_importance") || vk.getAlternative().getId().equals("criterion_importance")) {
 					if (expertsEnvelopeWeightsForEachCriterion.get(vk.getCriterion()) != null) {
 						envelopeWeights = expertsEnvelopeWeightsForEachCriterion.get(vk.getCriterion());
 					} else {
