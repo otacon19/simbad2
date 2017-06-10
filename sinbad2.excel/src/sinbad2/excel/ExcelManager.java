@@ -307,45 +307,48 @@ public class ExcelManager implements IExportListener, IImportListener {
 			rowCountAlternatives = rowCountExpertsCriteria + 1;
 
 			for (Alternative a : _alternatives) {
+				
+				if(!a.getId().equals("expert_knowledge") && !a.getId().equals("criterion_importance")) {
 
-				Row rowAlternative = _sheet.createRow(rowCountAlternatives);
-				cell = rowAlternative.createCell(2);
-				cell.setCellValue(a.getId());
-				cell.setCellStyle(_styleAlternatives);
-
-				rowCountAlternatives++;
-
-				for (Criterion c : _criteria) {
-					for (ValuationKey vk : _fuzzyValuations.keySet()) {
-						if (vk.getExpert().equals(e) && vk.getAlternative().equals(a) && vk.getCriterion().equals(c)) {
-
-							TrapezoidalFunction semantic = _fuzzyValuations.get(vk);
-							double limits[] = semantic.getLimits();
-
-							cell = rowAlternative.createCell(columnCountValuation);
-							cell.setCellValue(Double.toString(limits[0]));
-
-							columnCountValuation++;
-
-							cell = rowAlternative.createCell(columnCountValuation);
-							cell.setCellValue(Double.toString(limits[1]));
-
-							columnCountValuation++;
-
-							cell = rowAlternative.createCell(columnCountValuation);
-							cell.setCellValue(Double.toString(limits[2]));
-
-							columnCountValuation++;
-
-							cell = rowAlternative.createCell(columnCountValuation);
-							cell.setCellValue(Double.toString(limits[3]));
-
-							columnCountValuation++;
+					Row rowAlternative = _sheet.createRow(rowCountAlternatives);
+					cell = rowAlternative.createCell(2);
+					cell.setCellValue(a.getId());
+					cell.setCellStyle(_styleAlternatives);
+	
+					rowCountAlternatives++;
+	
+					for (Criterion c : _criteria) {
+						for (ValuationKey vk : _fuzzyValuations.keySet()) {
+							if (vk.getExpert().equals(e) && vk.getAlternative().equals(a) && vk.getCriterion().equals(c)) {
+	
+								TrapezoidalFunction semantic = _fuzzyValuations.get(vk);
+								double limits[] = semantic.getLimits();
+	
+								cell = rowAlternative.createCell(columnCountValuation);
+								cell.setCellValue(Double.toString(limits[0]));
+	
+								columnCountValuation++;
+	
+								cell = rowAlternative.createCell(columnCountValuation);
+								cell.setCellValue(Double.toString(limits[1]));
+	
+								columnCountValuation++;
+	
+								cell = rowAlternative.createCell(columnCountValuation);
+								cell.setCellValue(Double.toString(limits[2]));
+	
+								columnCountValuation++;
+	
+								cell = rowAlternative.createCell(columnCountValuation);
+								cell.setCellValue(Double.toString(limits[3]));
+	
+								columnCountValuation++;
+							}
 						}
 					}
+	
+					columnCountValuation = 3;
 				}
-
-				columnCountValuation = 3;
 			}
 
 			for (Criterion c : _criteria) {

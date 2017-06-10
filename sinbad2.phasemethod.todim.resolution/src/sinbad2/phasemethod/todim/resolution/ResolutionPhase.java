@@ -37,7 +37,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	public static final String ID = "flintstones.phasemethod.todim.resolution"; //$NON-NLS-1$
 
 	private static final double P = 2;
-	private static final double M = 2;
+	//private static final double M = 2;
 	private static final double C = 1.5;
 
 	private int _numAlternatives;
@@ -260,9 +260,13 @@ public class ResolutionPhase implements IPhaseMethod {
 
 		Map<ValuationKey, Valuation> valuations = _valuationSet.getValuations();
 		Map<ValuationKey, TrapezoidalFunction> fuzzyValuations = getFuzzyValuations();
+		Alternative aFGC = _elementsSet.getAlternative("expert_knowledge");
 		for (ValuationKey vk : fuzzyValuations.keySet()) {
-
-			Alternative aFGC = new Alternative("null_threshold");
+			
+			if(aFGC == null) {
+				aFGC = new Alternative("null_threshold");
+			}
+			
 			ValuationKey vkFGC = new ValuationKey(vk.getExpert(), aFGC, vk.getCriterion());
 			LinguisticValuation v = (LinguisticValuation) valuations.get(vkFGC);
 			FuzzySet knowledgeDomain = (FuzzySet) v.getDomain();
