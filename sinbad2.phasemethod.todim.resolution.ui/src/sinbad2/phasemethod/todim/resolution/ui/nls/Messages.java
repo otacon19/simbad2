@@ -8,12 +8,14 @@ public class Messages extends NLS {
 	public static String CalculateRanking_Center_of_Gravity;
 	public static String CalculateRanking_Criterion;
 	public static String CalculateRanking_Dominance_degree;
+	public static String CalculateRanking_Expert;
 	public static String CalculateRanking_Fuzzy_numbers;
 	public static String CalculateRanking_Fuzzy_TODIM;
 	public static String CalculateRanking_Global_dominance_degree;
 	public static String CalculateRanking_Ranking;
 	public static String CalculateRanking_Reference_criterion;
 	public static String CalculateRanking_Relative_weight;
+	public static String CalculateRanking_Threshold;
 	public static String CalculateRanking_Weight;
 	public static String DMTableContentProvider_Consensus_matrix;
 	public static String ProblemInformation_Aggregated_valuation;

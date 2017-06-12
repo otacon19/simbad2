@@ -65,7 +65,7 @@ public class SATableContentProvider extends KTableNoScrollModel {
 		_sensitivityAnalysisView = (SensitivityAnalysisView) getView(SensitivityAnalysisView.ID);
 		
 		_sensitivityAnalysis = (SensitivityAnalysis) Workspace.getWorkspace().getElement(SensitivityAnalysis.ID);
-
+	
 		_alternatives = alternatives;
 		_criteria = criteria;
 		_values = values;

@@ -37,7 +37,7 @@ public class DMEditableTableContentProvider extends KTableNoScrollModel {
 		_alternatives = alternatives;
 		_criteria = criteria;
 		_values = values;
-		
+				
 		_p = Pattern.compile(("[(]\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*\\,\\d{1}\\.?\\d*[)]")); //$NON-NLS-1$
 		
 		initialize();
@@ -56,9 +56,9 @@ public class DMEditableTableContentProvider extends KTableNoScrollModel {
 			if(col == 0 && row == 0) {
 				erg = Messages.DMTableContentProvider_Consensus_matrix;
 			} else if (col == 0) {
-				erg = "A" + row; //$NON-NLS-1$
+				erg = _alternatives[row - 1]; //$NON-NLS-1$
 			} else if (row == 0) {
-				erg = "C" + col; //$NON-NLS-1$
+				erg = _criteria[col - 1]; //$NON-NLS-1$
 			} else {
 				if(_values[row - 1][col - 1] == null) {
 					erg = ""; //$NON-NLS-1$

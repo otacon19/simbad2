@@ -32,6 +32,7 @@ import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.element.expert.Expert;
 import sinbad2.excel.ExcelManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
@@ -41,16 +42,21 @@ import sinbad2.phasemethod.todim.resolution.ui.view.provider.AnotherAlternativeC
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.CriteriaTableContentProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.CriterionColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.CriterionIdColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.CriterionThresholdIdColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.CriterionWeightColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.DominanceDegreeAlternativesColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.DominanceDegreeAlternativesContentProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.DominanceDegreeColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.DominanceDegreeTableContentProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.ExpertIdColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.ExpertThresholdColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.ExpertsThresholdContentProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.GlobalDominanceDegreeColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.MainAlternativeColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RankingColumnLabelProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RankingTableContentProvider;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.RelativeWeightCriterionColumnLabelProvider;
+import sinbad2.phasemethod.todim.resolution.ui.view.provider.ThresholdEditingSupport;
 import sinbad2.phasemethod.todim.resolution.ui.view.provider.WeightEditingSupport;
 import sinbad2.resolutionphase.ResolutionPhasesManager;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
@@ -70,6 +76,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	private Button _excelButton;
 	
 	private DecisionMatrixEditableTable _dmTable;
+	private TableViewer _thresholdsTableViewer;
 	private TableViewer _criteriaTableViewer;
 	private TableViewer _dominanceDegreeTableViewer;
 	private TableViewer _dominanceDegreeAlternativesTableViewer;
@@ -135,7 +142,9 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 
 					notifyStepStateChange();
 					
-					_sensitivityAnalysis.setDecisionMatrix(_resolutionPhase.calculateConsensusMatrixCenterOfGravity(new Double[_elementsSet.getAlternatives().size()][_elementsSet.getAllCriteria().size()]));
+					_sensitivityAnalysis.setDomain(_resolutionPhase.getUnifiedDomain());
+					_sensitivityAnalysis.setAlternatives(_resolutionPhase.getRealAlternatives());
+					_sensitivityAnalysis.setDecisionMatrix(_resolutionPhase.calculateConsensusMatrixCenterOfGravity(new Double[_resolutionPhase.getRealAlternatives().size()][_elementsSet.getAllCriteria().size()]));
 					
 					_matrixType.setEnabled(true);
 				}
@@ -187,7 +196,9 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 						cont++;
 					}
 					
-					_sensitivityAnalysis.setDecisionMatrix(_resolutionPhase.calculateConsensusMatrixCenterOfGravity(new Double[_elementsSet.getAlternatives().size()][_elementsSet.getAllCriteria().size()]));
+					_sensitivityAnalysis.setDomain(_resolutionPhase.getUnifiedDomain());
+					_sensitivityAnalysis.setAlternatives(_resolutionPhase.getRealAlternatives());
+					_sensitivityAnalysis.setDecisionMatrix(_resolutionPhase.calculateConsensusMatrixCenterOfGravity(new Double[_resolutionPhase.getRealAlternatives().size()][_elementsSet.getAllCriteria().size()]));
 					_sensitivityAnalysis.setWeights(w);
 					
 					_matrixType.setEnabled(true);
@@ -205,15 +216,15 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 						br = new BufferedReader(new FileReader(path));
 						String line = br.readLine();
 	
-						String[][] trapezoidalMatrix = new String[_elementsSet.getAlternatives().size()][_elementsSet.getAllCriteria().size()];
+						String[][] trapezoidalMatrix = new String[_resolutionPhase.getRealAlternatives().size()][_elementsSet.getAllCriteria().size()];
 						
 						int numAlternative = 0, numCriterion = 0;
 						while (line != null) {
-							line = line.replace(",", ".");
+							line = line.replace(",", "."); //$NON-NLS-1$ //$NON-NLS-2$
 		
-							String[] trapezoidalNumbers = line.split(" ");
+							String[] trapezoidalNumbers = line.split(" "); //$NON-NLS-1$
 							for(int i = 0; i < trapezoidalNumbers.length; i+=4) {
-								trapezoidalMatrix[numAlternative][numCriterion] = "(" + trapezoidalNumbers[i] + "," + trapezoidalNumbers[i + 1] + "," + trapezoidalNumbers[i + 2] + "," + trapezoidalNumbers[i + 3] + ")";
+								trapezoidalMatrix[numAlternative][numCriterion] = "(" + trapezoidalNumbers[i] + "," + trapezoidalNumbers[i + 1] + "," + trapezoidalNumbers[i + 2] + "," + trapezoidalNumbers[i + 3] + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 								
 								numCriterion++;
 							}
@@ -244,12 +255,12 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 			public void widgetSelected(SelectionEvent e) {
 				_resolutionPhase.computeLinearProgramming();
 				ExcelManager excelUtil = new ExcelManager();
-				excelUtil.createExcelFileEmergencyProblemStructure(_resolutionPhase.getFuzzyValuations(), _resolutionPhase.getCriteriaWeights(), _resolutionPhase.calculateThresholdValues());
+				excelUtil.createExcelFileEmergencyProblemStructure(_resolutionPhase.getFuzzyValuations(), _resolutionPhase.getCriteriaWeights(), _resolutionPhase.getThresholdValues());
 			}
 		});
 
 		Composite tablesComposite = new Composite(_parent, SWT.NONE);
-		tablesComposite.setLayout(new GridLayout(4, true));
+		tablesComposite.setLayout(new GridLayout(5, true));
 		tablesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		_criteriaTableViewer = new TableViewer(tablesComposite, SWT.BORDER | SWT.FULL_SELECTION);
@@ -272,6 +283,27 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		relativeWeight.getColumn().setText(Messages.CalculateRanking_Relative_weight);
 		relativeWeight.setLabelProvider(new RelativeWeightCriterionColumnLabelProvider());
 		relativeWeight.getColumn().pack();
+		
+		_thresholdsTableViewer = new TableViewer(tablesComposite, SWT.BORDER | SWT.FULL_SELECTION);
+		_thresholdsTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_thresholdsTableViewer.setContentProvider(new ExpertsThresholdContentProvider());
+		_thresholdsTableViewer.getTable().setHeaderVisible(true);
+
+		TableViewerColumn expertId = new TableViewerColumn(_thresholdsTableViewer, SWT.NONE);
+		expertId.getColumn().setText(Messages.CalculateRanking_Expert);
+		expertId.setLabelProvider(new ExpertIdColumnLabelProvider());
+		expertId.getColumn().pack();
+		
+		TableViewerColumn criterionThresholdId = new TableViewerColumn(_thresholdsTableViewer, SWT.NONE);
+		criterionThresholdId.getColumn().setText(Messages.CalculateRanking_Criterion);
+		criterionThresholdId.setLabelProvider(new CriterionThresholdIdColumnLabelProvider());
+		criterionThresholdId.getColumn().pack();
+
+		TableViewerColumn threshold = new TableViewerColumn(_thresholdsTableViewer, SWT.NONE);
+		threshold.getColumn().setText(Messages.CalculateRanking_Threshold);
+		threshold.setLabelProvider(new ExpertThresholdColumnLabelProvider());
+		threshold.getColumn().pack();
+		threshold.setEditingSupport(new ThresholdEditingSupport(_thresholdsTableViewer, 2, _resolutionPhase, _elementsSet, this));
 
 		_dominanceDegreeTableViewer = new TableViewer(tablesComposite);
 		_dominanceDegreeTableViewer.setContentProvider(new DominanceDegreeTableContentProvider());
@@ -341,12 +373,14 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		refreshConsensusMatrixTable();
 
 		setInputCriteriaTable();
+		setInputExpertsTable();
 	}
 
 	private void refreshConsensusMatrixTable() {
-		String[] alternatives = new String[_elementsSet.getAlternatives().size()];
+		String[] alternatives = new String[_resolutionPhase.getRealAlternatives().size()];
+		
 		for (int a = 0; a < alternatives.length; ++a) {
-			alternatives[a] = _elementsSet.getAlternatives().get(a).getId();
+			alternatives[a] = _resolutionPhase.getRealAlternatives().get(a).getId();
 		}
 
 		String[] criteria = new String[_elementsSet.getCriteria().size()];
@@ -364,8 +398,9 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 	public void refreshTODIMTables() {
 
 		setInputCriteriaTable();
+		setInputExpertsTable();
 		
-		if(!_resolutionPhase.getTrapezoidalConsensusMatrix()[0][0].contains("a")) {
+		if(!_resolutionPhase.getTrapezoidalConsensusMatrix()[0][0].contains("a")) { //$NON-NLS-1$
 			if (_matrixType.getSelectionIndex() == 1) {
 				setInputDominanceDegreeTable(1);
 			} else {
@@ -398,6 +433,28 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		}
 
 		_criteriaTableViewer.setInput(result);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void setInputExpertsTable() {
+		List<String[]> result = new LinkedList<String[]>();
+	
+		Map<Pair<Expert, Criterion>, Double> expertsThreshold = _resolutionPhase.getThresholdValues();
+		if(expertsThreshold.isEmpty()) {
+			expertsThreshold = _resolutionPhase.calculateThresholdValues();
+		}
+
+		for (Pair<Expert, Criterion> p : expertsThreshold.keySet()) {
+			String[] row = new String[3];
+			row[0] = p.getLeft().getId();
+			row[1] = p.getRight().getId();
+			row[2] = Double.toString(expertsThreshold.get(p));
+			result.add(row);
+		}
+
+		Collections.sort(result, new DataComparator());
+		
+		_thresholdsTableViewer.setInput(result);	
 	}
 
 	@SuppressWarnings("unchecked")
@@ -473,7 +530,7 @@ public class CalculateRanking extends ViewPart implements IStepStateListener {
 		
 		Double[] dominances = new Double[globalDominance.size()];
 		int alternative = 0;
-		for(Alternative a: _elementsSet.getAlternatives()) {
+		for(Alternative a: _resolutionPhase.getRealAlternatives()) {
 			dominances[alternative] = globalDominance.get(a);
 			alternative++;
 		}

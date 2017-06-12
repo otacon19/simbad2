@@ -37,7 +37,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	public static final String ID = "flintstones.phasemethod.todim.resolution"; //$NON-NLS-1$
 
 	private static final double P = 2;
-	//private static final double M = 2;
+	// private static final double M = 2;
 	private static final double C = 1.5;
 
 	private int _numAlternatives;
@@ -48,6 +48,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	private String[][] _trapezoidalConsensusMatrix;
 	private Map<ValuationKey, Double> _distances;
 	private Map<Pair<Expert, Criterion>, Double> _thresholdValues;
+	private List<Alternative> _realAlternatives;
 
 	private Map<Criterion, Double> _criteriaWeights;
 	private Map<String, Double> _relativeWeights;
@@ -88,8 +89,9 @@ public class ResolutionPhase implements IPhaseMethod {
 		}
 		return sortedMap;
 	}
-	
-	public LinkedHashMap<ValuationKey, TrapezoidalFunction> sortHashMapByValuesValuation(HashMap<ValuationKey, TrapezoidalFunction> passedMap) {
+
+	public LinkedHashMap<ValuationKey, TrapezoidalFunction> sortHashMapByValuesValuation(
+			HashMap<ValuationKey, TrapezoidalFunction> passedMap) {
 		List<ValuationKey> mapKeys = new ArrayList<>(passedMap.keySet());
 		List<TrapezoidalFunction> mapValues = new ArrayList<>(passedMap.values());
 		Collections.sort(mapValues);
@@ -140,7 +142,21 @@ public class ResolutionPhase implements IPhaseMethod {
 		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
 		_valuationSet = ValuationSetManager.getInstance().getActiveValuationSet();
 
-		_numAlternatives = _elementsSet.getAlternatives().size();
+		_realAlternatives = new LinkedList<Alternative>();
+		_realAlternatives.addAll(_elementsSet.getAlternatives());
+		
+		if (_elementsSet.getAlternative("criterion_importance") != null && _elementsSet.getAlternative("expert_knowledge") == null) {
+			_realAlternatives.remove(_elementsSet.getAlternative("criterion_importance"));
+		} else if (_elementsSet.getAlternative("criterion_importance") == null && _elementsSet.getAlternative("expert_knowledge") != null) {
+			_realAlternatives.remove(_elementsSet.getAlternative("expert_knowledge"));
+		} else if (_elementsSet.getAlternative("criterion_importance") != null && _elementsSet.getAlternative("expert_knowledge") != null) {
+			_realAlternatives.remove(_elementsSet.getAlternative("criterion_importance"));
+			_realAlternatives.remove(_elementsSet.getAlternative("expert_knowledge"));
+		} else {
+			_realAlternatives = _elementsSet.getAlternatives();
+		}
+
+		_numAlternatives = _realAlternatives.size();
 		_numCriteria = _elementsSet.getAllCriteria().size();
 
 		_centerOfGravityConsensusMatrix = new Double[_numAlternatives][_numCriteria];
@@ -244,14 +260,19 @@ public class ResolutionPhase implements IPhaseMethod {
 		return _globalDominance;
 	}
 
+	public List<Alternative> getRealAlternatives() {
+		return _realAlternatives;
+	}
+	
 	@Override
 	public Domain getUnifiedDomain() {
-		return null;
+		return _unificationPhase.getUnifiedDomain();
 	}
 
 	@Override
 	public void setUnifiedDomain(Domain domain) {
 	}
+	
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Map<Pair<Expert, Criterion>, Double> calculateThresholdValues() {
@@ -262,11 +283,11 @@ public class ResolutionPhase implements IPhaseMethod {
 		Map<ValuationKey, TrapezoidalFunction> fuzzyValuations = getFuzzyValuations();
 		Alternative aFGC = _elementsSet.getAlternative("expert_knowledge");
 		for (ValuationKey vk : fuzzyValuations.keySet()) {
-			
-			if(aFGC == null) {
+
+			if (aFGC == null) {
 				aFGC = new Alternative("null_threshold");
 			}
-			
+
 			ValuationKey vkFGC = new ValuationKey(vk.getExpert(), aFGC, vk.getCriterion());
 			LinguisticValuation v = (LinguisticValuation) valuations.get(vkFGC);
 			FuzzySet knowledgeDomain = (FuzzySet) v.getDomain();
@@ -339,7 +360,8 @@ public class ResolutionPhase implements IPhaseMethod {
 			Valuation v = null;
 			Map<ValuationKey, Valuation> valuations = vs.getValuations();
 			for (ValuationKey vk : valuations.keySet()) {
-				if (vk.getAlternative().getId().equals("null_importance") || vk.getAlternative().getId().equals("criterion_importance")) {
+				if (vk.getAlternative().getId().equals("null_importance")
+						|| vk.getAlternative().getId().equals("criterion_importance")) {
 					if (expertsEnvelopeWeightsForEachCriterion.get(vk.getCriterion()) != null) {
 						envelopeWeights = expertsEnvelopeWeightsForEachCriterion.get(vk.getCriterion());
 					} else {
@@ -425,9 +447,9 @@ public class ResolutionPhase implements IPhaseMethod {
 		double dominance = 0, condition = 0;
 		for (Criterion c : _elementsSet.getAllCriteria()) {
 			a1Index = 0;
-			for (Alternative a1 : _elementsSet.getAlternatives()) {
+			for (Alternative a1 : _realAlternatives) {
 				a2Index = 0;
-				for (Alternative a2 : _elementsSet.getAlternatives()) {
+				for (Alternative a2 : _realAlternatives) {
 					if (a1 != a2) {
 						condition = (Double) _centerOfGravityConsensusMatrix[a1Index][criterionIndex]
 								- (Double) _centerOfGravityConsensusMatrix[a2Index][criterionIndex];
@@ -505,11 +527,11 @@ public class ResolutionPhase implements IPhaseMethod {
 
 			a1Index = 0;
 
-			for (Alternative a1 : _elementsSet.getAlternatives()) {
+			for (Alternative a1 : _realAlternatives) {
 
 				a2Index = 0;
 
-				for (Alternative a2 : _elementsSet.getAlternatives()) {
+				for (Alternative a2 : _realAlternatives) {
 
 					if (a1 != a2) {
 
@@ -523,28 +545,34 @@ public class ResolutionPhase implements IPhaseMethod {
 						if (c.isCost()) {
 							if (condition > 0) {
 								dominance = (-1d / attenuationFactor);
-								dominance *= Math.sqrt((tpf1.distance(tpf2, P) * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
+								dominance *= Math.sqrt((tpf1.distance(tpf2, P) * acumSumRelativeWeights)
+										/ _relativeWeights.get(c.getCanonicalId()));
 							} else if (condition <= 0) {
-								dominance = Math.sqrt((tpf1.distance(tpf2, P) * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
+								dominance = Math
+										.sqrt((tpf1.distance(tpf2, P) * _relativeWeights.get(c.getCanonicalId()))
+												/ acumSumRelativeWeights);
 							}
 						} else {
 							if (condition >= 0) {
-								dominance = Math.sqrt((tpf1.distance(tpf2, P) * _relativeWeights.get(c.getCanonicalId())) / acumSumRelativeWeights);
+								dominance = Math
+										.sqrt((tpf1.distance(tpf2, P) * _relativeWeights.get(c.getCanonicalId()))
+												/ acumSumRelativeWeights);
 							} else if (condition < 0) {
 								dominance = (-1d / attenuationFactor);
-								dominance *= Math.sqrt((tpf1.distance(tpf2, P) * acumSumRelativeWeights) / _relativeWeights.get(c.getCanonicalId()));
+								dominance *= Math.sqrt((tpf1.distance(tpf2, P) * acumSumRelativeWeights)
+										/ _relativeWeights.get(c.getCanonicalId()));
 							}
 						}
 
 						Pair<Alternative, Alternative> pairAlternatives = new Pair<Alternative, Alternative>(a1, a2);
 						Map<Pair<Alternative, Alternative>, Double> pairAlternativesDominance;
-						
+
 						if (_dominanceDegreeByCriterion.get(c) != null) {
 							pairAlternativesDominance = _dominanceDegreeByCriterion.get(c);
 						} else {
 							pairAlternativesDominance = new HashMap<Pair<Alternative, Alternative>, Double>();
 						}
-						
+
 						pairAlternativesDominance.put(pairAlternatives, dominance);
 						_dominanceDegreeByCriterion.put(c, pairAlternativesDominance);
 					}
@@ -576,8 +604,8 @@ public class ResolutionPhase implements IPhaseMethod {
 		_dominanceDegreeAlternatives = new HashMap<Pair<Alternative, Alternative>, Double>();
 
 		double acum;
-		for (Alternative a1 : _elementsSet.getAlternatives()) {
-			for (Alternative a2 : _elementsSet.getAlternatives()) {
+		for (Alternative a1 : _realAlternatives) {
+			for (Alternative a2 : _realAlternatives) {
 				acum = 0;
 				if (a1 != a2) {
 					for (Criterion c : _dominanceDegreeByCriterion.keySet()) {
@@ -617,7 +645,7 @@ public class ResolutionPhase implements IPhaseMethod {
 		Map<Alternative, Double> acumDominanceDegreeAlternatives = new HashMap<Alternative, Double>();
 		double acum;
 
-		for (Alternative a : _elementsSet.getAlternatives()) {
+		for (Alternative a : _realAlternatives) {
 			acum = 0;
 			for (Pair<Alternative, Alternative> pairAlternatives : _dominanceDegreeAlternatives.keySet()) {
 				if (a.equals(pairAlternatives.getLeft())) {
@@ -631,7 +659,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	}
 
 	private double getMaxDominace(Map<Alternative, Double> acumDominanceDegreeAlternatives) {
-		double max = acumDominanceDegreeAlternatives.get(_elementsSet.getAlternatives().get(0));
+		double max = acumDominanceDegreeAlternatives.get(_realAlternatives.get(0));
 		for (Alternative a : acumDominanceDegreeAlternatives.keySet()) {
 			if (acumDominanceDegreeAlternatives.get(a) > max) {
 				max = acumDominanceDegreeAlternatives.get(a);
@@ -641,7 +669,7 @@ public class ResolutionPhase implements IPhaseMethod {
 	}
 
 	private double getMinDominance(Map<Alternative, Double> acumDominanceDegreeAlternatives) {
-		double min = acumDominanceDegreeAlternatives.get(_elementsSet.getAlternatives().get(0));
+		double min = acumDominanceDegreeAlternatives.get(_realAlternatives.get(0));
 		for (Alternative a : acumDominanceDegreeAlternatives.keySet()) {
 			if (acumDominanceDegreeAlternatives.get(a) < min) {
 				min = acumDominanceDegreeAlternatives.get(a);
@@ -710,7 +738,8 @@ public class ResolutionPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void activate() {}
+	public void activate() {
+	}
 
 	@Override
 	public IPhaseMethod clone() {
@@ -729,153 +758,141 @@ public class ResolutionPhase implements IPhaseMethod {
 		List<Alternative> alternatives = _elementsSet.getAlternatives();
 		List<Criterion> criteria = _elementsSet.getAllSubcriteria();
 		List<Expert> experts = _elementsSet.getOnlyExpertChildren();
-		
-		//Experts weights
+
+		// Experts weights
 		double[] expertsWeights = computeExpertsWeights();
-		
-		//Initial fuzzy valuations
+
+		// Initial fuzzy valuations
 		Map<ValuationKey, TrapezoidalFunction> fuzzyValuations = getFuzzyValuations();
-		
-		//Compute overall opinion
+
+		// Compute overall opinion
 		TrapezoidalFunction[][] O = new TrapezoidalFunction[alternatives.size()][criteria.size()];
-		for(int i = 0; i < alternatives.size(); ++i) {
-			for(int j = 0; j < criteria.size(); ++j) {
-				for(int k = 0; k < experts.size(); ++k) {
-					TrapezoidalFunction r = fuzzyValuations.get(new ValuationKey(experts.get(k), alternatives.get(i), criteria.get(j)));
-					if(O[i][j] == null) {
+		for (int i = 0; i < alternatives.size(); ++i) {
+			for (int j = 0; j < criteria.size(); ++j) {
+				for (int k = 0; k < experts.size(); ++k) {
+					TrapezoidalFunction r = fuzzyValuations
+							.get(new ValuationKey(experts.get(k), alternatives.get(i), criteria.get(j)));
+					if (O[i][j] == null) {
 						O[i][j] = r.multiplicationScalar(expertsWeights[k]);
 					} else {
 						O[i][j] = O[i][j].addition(r.multiplicationScalar(expertsWeights[k]));
-					}	
+					}
 				}
 			}
 		}
-		
-		//Compute distances and similarities
+
+		// Compute distances and similarities
 		double u = computeUValue(fuzzyValuations);
 		u = Math.pow(u, P);
 		double[][][] distances = new double[experts.size()][alternatives.size()][criteria.size()];
 		double[][][] similarities = new double[experts.size()][alternatives.size()][criteria.size()];
-		for(int i = 0; i < alternatives.size(); ++i) {
-			for(int j = 0; j < criteria.size(); ++j) {
-				for(int k = 0; k < experts.size(); ++k) {
-					distances[k][i][j] = O[i][j].distance(fuzzyValuations.get(new ValuationKey(experts.get(k), alternatives.get(i), criteria.get(j))), P);
+		for (int i = 0; i < alternatives.size(); ++i) {
+			for (int j = 0; j < criteria.size(); ++j) {
+				for (int k = 0; k < experts.size(); ++k) {
+					distances[k][i][j] = O[i][j].distance(
+							fuzzyValuations.get(new ValuationKey(experts.get(k), alternatives.get(i), criteria.get(j))),
+							P);
 					similarities[k][i][j] = 1d - ((1d / (4 * u)) * distances[k][i][j]);
 				}
 			}
 		}
-		
-        //Overall opinion R
-        String overall = "c(";
-        double[] limits;
-        for(int i = 0; i < alternatives.size(); ++i) {
-			for(int j = 0; j < criteria.size(); ++j) {
+
+		// Overall opinion R
+		String overall = "c(";
+		double[] limits;
+		for (int i = 0; i < alternatives.size(); ++i) {
+			for (int j = 0; j < criteria.size(); ++j) {
 				limits = O[i][j].getLimits();
-				for(int f = 0; f < 4; f++) {
+				for (int f = 0; f < 4; f++) {
 					overall += Double.toString(limits[f]) + ",";
 				}
 			}
-        }
-        
-        overall = overall.substring(0, overall.length() - 1) + ")";
-      
-        //Individual opinion R
-        String individual = "c(";
-        TrapezoidalFunction r;
-        for(int i = 0; i < alternatives.size(); ++i) {
-			for(int j = 0; j < criteria.size(); ++j) {
-				for(int k = 0; k < experts.size(); ++k) {
+		}
+
+		overall = overall.substring(0, overall.length() - 1) + ")";
+
+		// Individual opinion R
+		String individual = "c(";
+		TrapezoidalFunction r;
+		for (int i = 0; i < alternatives.size(); ++i) {
+			for (int j = 0; j < criteria.size(); ++j) {
+				for (int k = 0; k < experts.size(); ++k) {
 					r = fuzzyValuations.get(new ValuationKey(experts.get(k), alternatives.get(i), criteria.get(j)));
 					limits = r.getLimits();
-					for(int f = 0; f < 4; f++) {
+					for (int f = 0; f < 4; f++) {
 						individual += Double.toString(limits[f]) + ",";
 					}
 				}
 			}
-        }
-        
-        individual = individual.substring(0, individual.length() - 1) + ")";
-        
-        String w = "c(";
-        for(double we: expertsWeights) {
-        	w += Double.toString(we) + ",";
-        }
-        
-        w = w.substring(0, w.length() - 1) + ")";
-			
+		}
+
+		individual = individual.substring(0, individual.length() - 1) + ")";
+
+		String w = "c(";
+		for (double we : expertsWeights) {
+			w += Double.toString(we) + ",";
+		}
+
+		w = w.substring(0, w.length() - 1) + ")";
+
 		String alternativesSize = Integer.toString(alternatives.size());
 		String criteriaSize = Integer.toString(criteria.size());
 		String expertsSize = Integer.toString(experts.size());
-		
+
 		// Start Rengine.
-        Rengine engine = new Rengine(new String[] { "--no-save" }, false, null);
-		
+		Rengine engine = new Rengine(new String[] { "--no-save" }, false, null);
+
 		engine.eval("overall=" + overall);
-	    engine.eval("individual=" + individual);
-	    engine.eval("w=" + w);
-	    
-	    engine.eval("alternativesSize=" + alternativesSize);
-	    engine.eval("criteriaSize=" + criteriaSize);
-	    engine.eval("expertsSize=" + expertsSize);
-	   
-	    engine.eval("C=" + C);
-	    engine.eval("u=" + u);
-	    engine.eval("P=" + P);
-	    
-	    //objective function
-		engine.eval("result <- function(overall, individual) {"
-				+ 	"acum <- 0.0;"
-				+       "for (i in 1: alternativesSize) {"
-				+			"for (j in 1: criteriaSize) {"
-				+				"for (k in 1: expertsSize) {"
-				+ 					"acum <- sum((w[k] * (C - (1 - (1 / (4 * u)))) * ("
-				+ 					"abs(overall[(i-1) * criteriaSize * 4 + (j-1) * 4] - individual[((k-1) * criteriaSize * 4 * alternativesSize + 1) + ((i-1) * criteriaSize * 4) + ((j-1) * 4)])^(P) +"
-				+ 					"abs(overall[(i-1) * criteriaSize * 4 + (j-1) * 4 + 1] - individual[((k-1) * criteriaSize * 4 * alternativesSize + 1) + ((i-1) * criteriaSize * 4) + ((j-1) * 4) + 1])^(P) +"
-				+ 					"abs(overall[(i-1) * criteriaSize * 4 + (j-1) * 4 + 2] - individual[((k-1) * criteriaSize * 4 * alternativesSize + 1) + ((i-1) * criteriaSize * 4) + ((j-1) * 4) + 2])^(P) +"
-				+ 					"abs(overall[(i-1) * criteriaSize * 4 + (j-1) * 4 + 3] - individual[((k-1) * criteriaSize * 4 * alternativesSize + 1) + ((i-1) * criteriaSize * 4) + ((j-1) * 4) + 3])^(P))"
-				+ 					"))"
-				+ 				"};"
-				+			"};"
-				+		"};"
-				+ 	"acum"
-				+	"}");
-		
-		//Constraint functions
-		engine.eval("eval_g0 <- function(overall, individual) { "
-				+		"h <- numeric(6)"
-				+       "for (i in 1: alternativesSize) {"
-				+			"for (j in 1: criteriaSize) {"
-				+				"for (k in 1: expertsSize) {"
-				+ 					"h[1] <- "
-                + 				"}"
-                +			"}"
-                +		"}");
-		
+		engine.eval("individual=" + individual);
+		engine.eval("w=" + w);
+
+		engine.eval("alternativesSize=" + alternativesSize);
+		engine.eval("criteriaSize=" + criteriaSize);
+		engine.eval("expertsSize=" + expertsSize);
+
+		engine.eval("C=" + C);
+		engine.eval("u=" + u);
+		engine.eval("P=" + P);
+
+		// objective function
+		engine.eval("result <- function(overall, individual) {" + "acum <- 0.0;" + "for (i in 1: alternativesSize) {"
+				+ "for (j in 1: criteriaSize) {" + "for (k in 1: expertsSize) {"
+				+ "acum <- sum((w[k] * (C - (1 - (1 / (4 * u)))) * ("
+				+ "abs(overall[(i-1) * criteriaSize * 4 + (j-1) * 4] - individual[((k-1) * criteriaSize * 4 * alternativesSize + 1) + ((i-1) * criteriaSize * 4) + ((j-1) * 4)])^(P) +"
+				+ "abs(overall[(i-1) * criteriaSize * 4 + (j-1) * 4 + 1] - individual[((k-1) * criteriaSize * 4 * alternativesSize + 1) + ((i-1) * criteriaSize * 4) + ((j-1) * 4) + 1])^(P) +"
+				+ "abs(overall[(i-1) * criteriaSize * 4 + (j-1) * 4 + 2] - individual[((k-1) * criteriaSize * 4 * alternativesSize + 1) + ((i-1) * criteriaSize * 4) + ((j-1) * 4) + 2])^(P) +"
+				+ "abs(overall[(i-1) * criteriaSize * 4 + (j-1) * 4 + 3] - individual[((k-1) * criteriaSize * 4 * alternativesSize + 1) + ((i-1) * criteriaSize * 4) + ((j-1) * 4) + 3])^(P))"
+				+ "))" + "};" + "};" + "};" + "acum" + "}");
+
+		// Constraint functions
+		engine.eval("eval_g0 <- function(overall, individual) { " + "h <- numeric(6)"
+				+ "for (i in 1: alternativesSize) {" + "for (j in 1: criteriaSize) {" + "for (k in 1: expertsSize) {"
+				+ "h[1] <- " + "}" + "}" + "}");
+
 		engine.eval("res1 <- nloptr(overall, eval_f=result, lb = c(0,0), ub = c(1,1), eval_g_ineq = eval_g0,"
 				+ "opts = list(algorithm=NLOPT_LN_COBYLA, xtol_rel=1.0e-8), a = a, b = b )");
 
-		
-        engine.end();
+		engine.end();
 	}
 
 	private double[] computeExpertsWeights() {
 		double[] weights = new double[_elementsSet.getOnlyExpertChildren().size()];
-		for(int k = 0; k < _elementsSet.getOnlyExpertChildren().size(); ++k) {
+		for (int k = 0; k < _elementsSet.getOnlyExpertChildren().size(); ++k) {
 			weights[k] = 1d / weights.length;
 		}
 		return weights;
 	}
-	
+
 	private double computeUValue(Map<ValuationKey, TrapezoidalFunction> fuzzyValuations) {
 		double max = Double.NEGATIVE_INFINITY, min = Double.POSITIVE_INFINITY;
-		for(ValuationKey vk: fuzzyValuations.keySet()) {
+		for (ValuationKey vk : fuzzyValuations.keySet()) {
 			TrapezoidalFunction fuzzy = fuzzyValuations.get(vk);
-			for(int i = 0; i < 4; ++i) {
-				if(max < fuzzy.getLimits()[i]) {
+			for (int i = 0; i < 4; ++i) {
+				if (max < fuzzy.getLimits()[i]) {
 					max = fuzzy.getLimits()[i];
 				}
-				
-				if(min > fuzzy.getLimits()[i]) {
+
+				if (min > fuzzy.getLimits()[i]) {
 					min = fuzzy.getLimits()[i];
 				}
 			}

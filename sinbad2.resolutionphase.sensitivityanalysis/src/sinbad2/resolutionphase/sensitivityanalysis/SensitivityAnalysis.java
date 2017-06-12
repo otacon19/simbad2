@@ -38,6 +38,9 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 	public static final String ID = "flintstones.resolutionphase.sensitivityanalysis"; //$NON-NLS-1$
 
+	private List<Alternative> _alternatives;
+	private Domain _unifiedDomain;
+	
 	private int _numAlternatives;
 	private int _numCriteria;
 
@@ -92,6 +95,14 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_numCriteria = numberOfCriteria;
 	}
 
+	public List<Alternative> getAlternatives() {
+		return _alternatives;
+	}
+	
+	public void setAlternatives(List<Alternative> alternatives) {
+		_alternatives = alternatives;
+	}
+	
 	public Double[] getWeights() {
 		return _w;
 	}
@@ -197,10 +208,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	public String[] getAlternativesIds() {
-		String[] alternativesIds = new String[_elementsSet.getAlternatives().size()];
+		String[] alternativesIds = new String[_alternatives.size()];
 
 		int cont = 0;
-		for (Alternative a : _elementsSet.getAlternatives()) {
+		for (Alternative a : _alternatives) {
 			alternativesIds[cont] = a.getId();
 			cont++;
 		}
@@ -221,7 +232,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	public void calculateDecisionMatrix(List<Double> weights) {
-		_numAlternatives = _elementsSet.getAlternatives().size();
+		_numAlternatives = _alternatives.size();
 		_numCriteria = _elementsSet.getAllSubcriteria().size();
 		
 		String activatedMethodId = MethodsManager.getInstance().getActiveMethod().getId();
@@ -250,7 +261,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		Map<Criterion, Double> criteriaWeights = new HashMap<Criterion, Double>();
 		criteriaWeights = transformWeightsMap(_w);
 		
-		_alternativesFinalPreferences = new Double[_elementsSet.getAlternatives().size()];
+		_alternativesFinalPreferences = new Double[_alternatives.size()];
 		
 		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
 		todimPhase.setCriteriaWeights(criteriaWeights);
@@ -260,7 +271,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		
 		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
 		int alternative = 0;
-		for (Alternative a : _elementsSet.getAlternatives()) {
+		for (Alternative a : _alternatives) {
 			_alternativesFinalPreferences[alternative] = globalDominance.get(a);
 			alternative++;
 		}
@@ -281,7 +292,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private void computeTOPSIS() {
 		SelectionPhase topsisPhase = (SelectionPhase) PhasesMethodManager.getInstance().getPhaseMethod(SelectionPhase.ID).getImplementation();
 		
-		_alternativesFinalPreferences = new Double[_elementsSet.getAlternatives().size()];
+		_alternativesFinalPreferences = new Double[_alternatives.size()];
 		
 		List<Double> criteriaWeights;
 		criteriaWeights = transformWeightsList(_w);
@@ -293,7 +304,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		List<Object[]> coefficients = topsisPhase.calculateClosenessCoefficient();
 		
 		int alternative = 0;
-		for(Alternative a: _elementsSet.getAlternatives()) {
+		for(Alternative a: _alternatives) {
  			for(Object[] coefficent: coefficients) {
  				if(a.equals(coefficent[1])) {
  					_alternativesFinalPreferences[alternative] = (Double) coefficent[4];
@@ -455,7 +466,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		
 		int alternative = 0;
 		Double[] alternativesFinalPreferences = new Double[_numAlternatives];
-		for (Alternative a : _elementsSet.getAlternatives()) {
+		for (Alternative a : _alternatives) {
 			alternativesFinalPreferences[alternative] = globalDominance.get(a);
 			alternative++;
 		}
@@ -477,7 +488,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		
 		int alternative = 0;
 		Double[] alternativesFinalPreferences = new Double[_numAlternatives];
-		for(Alternative a: _elementsSet.getAlternatives()) {
+		for(Alternative a: _alternatives) {
  			for(Object[] coefficent: coefficients) {
  				if(a.equals(coefficent[1])) {
  					alternativesFinalPreferences[alternative] = (Double) coefficent[4];
@@ -502,7 +513,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		
 		int alternative = 0;
 		Double[] alternativesFinalPreferences = new Double[_numAlternatives];
-		for (Alternative a : _elementsSet.getAlternatives()) {
+		for (Alternative a : _alternatives) {
 			alternativesFinalPreferences[alternative] = globalDominance.get(a);
 			alternative++;
 		}
@@ -541,7 +552,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	public Map<Criterion, Map<Alternative, Double>> getMinimunPercentMCMByCriterion() {
 		Map<Criterion, Map<Alternative, Double>> result = new LinkedHashMap<Criterion, Map<Alternative, Double>>();
 
-		List<Alternative> alternatives = _elementsSet.getAlternatives();
+		List<Alternative> alternatives = _alternatives;
 		List<Criterion> criteria = _elementsSet.getAllSubcriteria();
 		double min, max = Math.round(getMaximunPercentMCM());
 
@@ -603,7 +614,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		Map<Criterion, Map<Alternative, Double>> result = new LinkedHashMap<Criterion, Map<Alternative, Double>>();
 		Map<Integer, Double> minimunValueAlternatives = new LinkedHashMap<Integer, Double>();
 
-		List<Alternative> alternatives = _elementsSet.getAlternatives();
+		List<Alternative> alternatives = _alternatives;
 		List<Criterion> criteria = _elementsSet.getAllSubcriteria();
 		double min, max = Math.round(getMaximunPercentMCC());
 
@@ -1311,12 +1322,11 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private void readDecisionMatrix() {
 
 		_decisionMatrix = new Double[_numCriteria][_numAlternatives];
-		
 		aggregateAlternativesNewWeights();
 		
 		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix = _aggregationPhase.getDecisionMatrix();
 		int i = 0, j = 0;
-		for (Alternative a : _elementsSet.getAlternatives()) {
+		for (Alternative a : _alternatives) {
 			j = 0;
 			for (Criterion c : _elementsSet.getAllSubcriteria()) {
 				_decisionMatrix[j][i] = ((TwoTuple) decisionMatrix.get(new Pair(a, c))).calculateInverseDelta();
@@ -1341,7 +1351,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		
 		Set<ProblemElement> experts = new HashSet<ProblemElement>(), alternatives = new HashSet<ProblemElement>(), criteria = new HashSet<ProblemElement>();
 		experts.addAll(_elementsSet.getAllExperts());
-		alternatives.addAll(_elementsSet.getAlternatives());
+		alternatives.addAll(_alternatives);
 		criteria.addAll(_elementsSet.getAllCriteria());
 		_aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 	}
@@ -1401,7 +1411,15 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	public Domain getDomain() {
-		return _aggregationPhase.getUnifiedDomain();
+		if(_unifiedDomain == null) {
+			return _aggregationPhase.getUnifiedDomain();
+		} else {
+			return _unifiedDomain;
+		}
+	}
+	
+	public void setDomain(Domain unifiedDomain) {
+		_unifiedDomain = unifiedDomain;
 	}
 
 	public void registerSensitivityAnalysisChangeListener(ISensitivityAnalysisChangeListener listener) {
@@ -1511,22 +1529,19 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		}
 		
 		if (_aggregationPhase.getCriteriaOperators().isEmpty() && _aggregationPhase.getExpertsOperators().isEmpty()) {
-			return false;
-		}
-
-		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrixAggregation = _aggregationPhase.getDecisionMatrix();
-		for (Pair<Alternative, Criterion> pair : decisionMatrixAggregation.keySet()) {
-			if (!(decisionMatrixAggregation.get(pair) instanceof TwoTuple)) {
+			if(_decisionMatrix == null) {
 				return false;
+			} else {
+				return true;
 			}
 		}
-
-
+		
 		return true;
 	}
 
 	@Override
 	public void activate() {
 		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
+		_alternatives = _elementsSet.getAlternatives();
 	}
 }

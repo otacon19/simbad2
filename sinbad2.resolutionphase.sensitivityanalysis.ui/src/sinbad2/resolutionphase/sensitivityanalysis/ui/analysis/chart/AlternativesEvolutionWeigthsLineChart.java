@@ -105,6 +105,8 @@ public class AlternativesEvolutionWeigthsLineChart {
 
 	public void initialize(Composite container, int width, int height, int style, SensitivityAnalysis sensitivityAnalysis) {
 		_sensitivityAnalysis = sensitivityAnalysis;
+		_alternatives = _sensitivityAnalysis.getAlternatives();
+		
 		_typeTODIMChart = null;
 
 		refreshChart();
@@ -115,6 +117,8 @@ public class AlternativesEvolutionWeigthsLineChart {
 	
 	public void initialize(Composite container, int width, int height, int style, SensitivityAnalysis sensitivityAnalysis, int typeTODIM) {
 		_sensitivityAnalysis = sensitivityAnalysis;
+		_alternatives = _sensitivityAnalysis.getAlternatives();
+		
 		_typeTODIMChart = typeTODIM;
 
 		refreshChart();

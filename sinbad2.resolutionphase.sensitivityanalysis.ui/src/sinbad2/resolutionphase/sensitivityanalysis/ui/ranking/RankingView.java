@@ -104,17 +104,21 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 			}
 		});
 		
+		updateCombo();
+		
+		RankingViewManager.getInstance().registerDisplayRankingChangeListener(this);
+		hookFocusListener();
+	}
+	
+	private void updateCombo() {
 		String categoryMethod = MethodsManager.getInstance().getActiveMethod().getCategory();
 		if(categoryMethod.contains(Messages.RankingView_Multi_criteria_decision_analysis)) {
 			_sensitivityModels.setEnabled(false);
 		} else {
 			_sensitivityModels.setEnabled(true);
 		}
-		
-		RankingViewManager.getInstance().registerDisplayRankingChangeListener(this);
-		hookFocusListener();
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
@@ -151,7 +155,7 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 			public void focusGained(FocusEvent e) {
 				activation = _contextService.activateContext(CONTEXT_ID);
 			}
-		});
+		});	
 	}
 
 	@Override
@@ -162,5 +166,6 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	@Override
 	public void displayRankingChange(Object ranking) {
 		_rankingViewer.setInput(ranking);
+		updateCombo();
 	}
 }
