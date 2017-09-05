@@ -37,4 +37,8 @@ public class XMLWriter {
 	public XMLStreamWriter getStreamWriter() {
 		return _writer;
 	}
+	
+	public XMLOutputFactory getFactory() {
+		return _factory;
+	}
 }

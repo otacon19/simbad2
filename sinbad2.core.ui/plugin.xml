@@ -87,6 +87,10 @@
                   commandId="flintstones.core.import"
                   style="push">
             </command>
+            <command
+                  commandId="flintstones.core.afryca.export"
+                  style="push">
+            </command>
          </toolbar>
          <toolbar
                id="sinbad2.toolbar.edit"
@@ -136,12 +140,17 @@
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.export"
-            name="%command.name">
+            name="%command.export">
       </command>
       <command
             categoryId="sinbad2.workspace.commands.category"
             id="flintstones.core.import"
-            name="%command.name.0">
+            name="%command.import">
+      </command>
+      <command
+            categoryId="sinbad2.workspace.commands.category"
+            id="flintstones.core.afryca.export"
+            name="%command.export.afryca">
       </command>
       <category
             id="sinbad2.ui.category_undo_redo"
@@ -220,6 +229,10 @@
             class="sinbad2.core.io.handler.ImportHandler"
             commandId="flintstones.core.import">
       </handler>
+      <handler
+            class="sinbad2.core.io.handler.ExportAFRYCAHandler"
+            commandId="flintstones.core.afryca.export">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">
@@ -276,6 +289,10 @@
       <image
             commandId="flintstones.core.import"
             icon="icons/XLSImport_32.png">
+      </image>
+      <image
+            commandId="flintstones.core.afryca.export"
+            icon="icons/afryca_export.png">
       </image>
    </extension>
    <extension

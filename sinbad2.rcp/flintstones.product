@@ -67,6 +67,7 @@
       <plugin id="org.engine.R"/>
       <plugin id="org.jExcelApi"/>
       <plugin id="org.jfree.chart.JFreeChart"/>
+      <plugin id="sinbad2.afryca"/>
       <plugin id="sinbad2.aggregationoperator"/>
       <plugin id="sinbad2.aggregationoperator.arithmeticMean"/>
       <plugin id="sinbad2.aggregationoperator.choquetIntegral"/>

@@ -4,6 +4,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import sinbad2.afryca.ExportAFRYCAProblem;
 import sinbad2.core.workspace.Workspace;
 import sinbad2.excel.ReadExcel;
 import sinbad2.excel.WriteExcel;
@@ -51,6 +52,7 @@ public class Activator extends AbstractUIPlugin {
 		//Activate excel export/import
 		new WriteExcel();
 		new ReadExcel();
+		new ExportAFRYCAProblem();
 	}
 
 	/*

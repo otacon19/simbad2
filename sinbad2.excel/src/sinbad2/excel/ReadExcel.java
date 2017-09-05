@@ -68,7 +68,7 @@ public class ReadExcel implements IImportListener {
 
 	private int _posAlternative;
 	private ProblemElementsSet _elementsSet;
-	private DomainSet _domainsSet;;
+	private DomainSet _domainsSet;
 	private DomainAssignments _domainsAssignments;
 	private ValuationSet _valuationsSet;
 	private DomainsValuationsManager _domainsValuations;

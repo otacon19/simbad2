@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: AFRYCA
+Bundle-SymbolicName: sinbad2.afryca
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: sinbad2.afryca
+Require-Bundle: sinbad2.core.ui;bundle-version="1.0.0",
+ sinbad2.valuation.valuationset,
+ sinbad2.valuation.integer,
+ sinbad2.valuation.real,
+ sinbad2.valuation.linguistic

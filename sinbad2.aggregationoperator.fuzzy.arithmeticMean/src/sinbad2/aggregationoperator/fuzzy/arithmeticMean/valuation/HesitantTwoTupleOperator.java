@@ -48,10 +48,13 @@ private HesitantTwoTupleOperator() {}
 		c /= size;
 		d /= size;
 		
+		
 		result = (HesitantTwoTupleValuation) valuations.get(0).clone();
 		result.createRelation(new TrapezoidalFunction(new double[]{a, b, c, d}));
-		
 
+		System.out.println(result.changeFormatValuationToString());
+		System.out.println(a + "," +  b + "," + c + "," + d);
+		System.out.println("----------------------------------");
 		return result;
 	}
 }
