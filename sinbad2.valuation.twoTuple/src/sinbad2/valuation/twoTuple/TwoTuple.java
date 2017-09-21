@@ -80,6 +80,10 @@ public class TwoTuple extends LinguisticValuation {
 		return _alpha + ((FuzzySet) _domain).getLabelSet().getPos(_label);
 	}
 	
+	public double calculateReverseDelta() {
+		return (((FuzzySet) _domain).getLabelSet().getPos(_label) / ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) + _alpha;
+	}
+	
 	@Override
 	public Valuation negateValuation() {
 		TwoTuple result = (TwoTuple) clone();

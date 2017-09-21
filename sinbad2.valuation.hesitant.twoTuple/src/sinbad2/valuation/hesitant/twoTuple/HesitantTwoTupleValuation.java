@@ -218,7 +218,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 		
 		setFuzzyNumber(fuzzyNumber);
 		
-		double a = _fuzzyNumber.getLimits()[0], b = _fuzzyNumber.getLimits()[1], c = _fuzzyNumber.getLimits()[2], d = _fuzzyNumber.getLimits()[3], centroid, 
+		double a = _fuzzyNumber.getLimits()[0], b = _fuzzyNumber.getLimits()[1], c = _fuzzyNumber.getLimits()[2], d = _fuzzyNumber.getLimits()[3], centroid = 0, 
 				minDistanceB = Double.POSITIVE_INFINITY, minDistanceC = Double.POSITIVE_INFINITY, distance;
 		
 		LabelLinguisticDomain labelCloserToB = null, labelCloserToC = null;
@@ -246,6 +246,11 @@ public class HesitantTwoTupleValuation extends Valuation {
 			disableBinary();
 			_label = new TwoTuple((FuzzySet) _domain, labelCloserToB, minDistanceB);
 		} else {
+			if(labelCloserToB.equals(((FuzzySet) _domain).getLabelSet().getLabel(0)) && minDistanceB < 0) {
+				minDistanceB = 0;
+			} else if(labelCloserToC.equals(((FuzzySet) _domain).getLabelSet().getLabel(((FuzzySet) _domain).getLabelSet().getCardinality() - 1)) && (minDistanceC > 0)) {
+				minDistanceC = 0;
+			}
 			setBinaryRelation(new TwoTuple((FuzzySet) _domain, labelCloserToB, minDistanceB), new TwoTuple((FuzzySet) _domain, labelCloserToC, minDistanceC));
 		}
 	}
@@ -567,25 +572,33 @@ public class HesitantTwoTupleValuation extends Valuation {
 		return null;
 	}
 
+	/**
+	 *  Huimin Zhang method
+	 *  The multiatribute group decision making method based on aggregation operators with interval-valued 2-tuple linguistic information.
+	 */
 	@Override
 	public int compareTo(Valuation other) {
 		Validator.notNull(other);
 		Validator.notIllegalElementType(other, new String[] { HesitantTwoTupleValuation.class.toString() });
 
 		if (_domain.equals(other.getDomain())) {
-			TwoTuple[] interval1 = this.getEnvelopeTwoTuple(), interval2 = ((HesitantTwoTupleValuation) other).getEnvelopeTwoTuple();
-			int[] envelopeIndexInterval1 = this.getEnvelopeLinguisticLabelsIndex(), envelopeIndexInterval2 = ((HesitantTwoTupleValuation) other).getEnvelopeLinguisticLabelsIndex();
+			TwoTuple[] interval1 = this.getEnvelopeTwoTuple();
+			TwoTuple[] interval2 = ((HesitantTwoTupleValuation) other).getEnvelopeTwoTuple();
+			
+			int[] labelIndexesInterval1 = this.getEnvelopeLinguisticLabelsIndex();
+			int[] labelIndexesInterval2 = ((HesitantTwoTupleValuation) other).getEnvelopeLinguisticLabelsIndex();
+			int g = ((FuzzySet) _domain).getLabelSet().getCardinality() - 1;
 	
-			double Sinterval1 = (envelopeIndexInterval1[0] + envelopeIndexInterval1[1]) / (2d * ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) + (interval1[0].getAlpha() + interval1[1].getAlpha()) / 2d;
-			double Sinterval2 = (envelopeIndexInterval2[0] + envelopeIndexInterval2[1]) / (2d * ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) + (interval2[0].getAlpha() + interval2[1].getAlpha()) / 2d;
+			double Sinterval1 = ((labelIndexesInterval1[0] + labelIndexesInterval1[1]) / (2d * g)) + ((interval1[0].getAlpha() + interval1[1].getAlpha()) / 2d);
+			double Sinterval2 = ((labelIndexesInterval2[0] + labelIndexesInterval2[1]) / (2d * g)) + ((interval2[0].getAlpha() + interval2[1].getAlpha()) / 2d);
 			
 			if(Sinterval1 > Sinterval2) {
 				return 1;
 			} else if(Sinterval1 < Sinterval2) {
 				return -1;
 			} else {
-				double Hinterval1 = ((envelopeIndexInterval1[1] - envelopeIndexInterval1[0]) / ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) + (interval1[1].getAlpha() - interval1[0].getAlpha());
-				double Hinterval2 = ((envelopeIndexInterval2[1] - envelopeIndexInterval2[0]) / ((FuzzySet) _domain).getLabelSet().getCardinality() - 1) + (interval2[1].getAlpha() - interval2[0].getAlpha());
+				double Hinterval1 = ((labelIndexesInterval1[1] - labelIndexesInterval1[0]) / g) + interval1[1].getAlpha() - interval1[0].getAlpha();
+				double Hinterval2 = ((labelIndexesInterval2[1] - labelIndexesInterval2[0]) / g) + interval2[1].getAlpha() - interval2[0].getAlpha();
 				if(Hinterval1 > Hinterval2) {
 					return -1;
 				} else if(Hinterval1 < Hinterval2) {
@@ -599,42 +612,43 @@ public class HesitantTwoTupleValuation extends Valuation {
 		}
 	}
 	
+	/**
+	 * H.Liu et al method
+	 * Application of interval 2-tuple linguistic MULTIMOORA method for health-care waste treatment technology evaluation and selection
+	 * @param valuations
+	 * @return
+	 */
 	public static List<Object[]> rankingMatrix(List<Object[]> valuations) {
 		double matrix[][] = new double[valuations.size()][valuations.size()];
-		double max, beta1, beta2, delta1, delta2, h1, h2, aux;
+		double max, beta1, beta2, delta1, delta2, h1, h2, degree;
 		TwoTuple[] interval1, interval2; 
 		
 		for(int i = 0; i < valuations.size(); ++i) {
 			interval1 = ((HesitantTwoTupleValuation) valuations.get(i)[0]).getEnvelopeTwoTuple();
-			
+			delta1 = interval1[1].calculateReverseDelta();
+			beta1 = interval1[0].calculateReverseDelta();
 			for(int j = 0; j < valuations.size(); ++j) {
-				interval2 = ((HesitantTwoTupleValuation) valuations.get(j)[0]).getEnvelopeTwoTuple();
-				
 				max = 0;
-				
-				beta1 = interval1[0].calculateInverseDelta();
-				beta2 = interval2[0].calculateInverseDelta();
-				delta1 = interval1[1].calculateInverseDelta();
-				delta2 = interval2[1].calculateInverseDelta();
-				
-				h1 = delta1 - beta1;
-				h2 = delta2 - beta2;
-				aux =  (delta2 - beta1) / (h1 + h2);
-				
-				if(Double.isNaN(aux)) {
-					aux = 0.5;
-				}
-				
-				if(aux > max) {
-					max = aux;
-				}
-				
-				if(1 - max > 0) {
-					max = 1 - max;
+				if(i == j) {
+					max = 0.5;
 				} else {
-					max = 0;
+					interval2 = ((HesitantTwoTupleValuation) valuations.get(j)[0]).getEnvelopeTwoTuple();
+					delta2 = interval2[1].calculateReverseDelta();
+					beta2 = interval2[0].calculateReverseDelta();
+					
+					h1 = delta1 - beta1;
+					h2 = delta2 - beta2;
+					degree =  (delta2 - beta1) / (h1 + h2);	
+					if(degree > 0) {
+						max = degree;
+					}
+					
+					if((1d - degree) > 0) {
+						max = 1d - degree;
+					} else {
+						max = 0;
+					}
 				}
-				
 				matrix[i][j] = max;
 			}
 		}	
@@ -657,7 +671,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 		for(int i = 0; i < matrix.length; ++i) {
 			sum = 0;
 			data = new Object[2];
-			for(int j = 0; j < matrix.length; ++j) {
+			for(int j = 0; j < matrix[i].length; ++j) {
 				sum += matrix[i][j];
 			}
 			data[0] = i;

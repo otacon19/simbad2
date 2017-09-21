@@ -109,7 +109,6 @@ public class LinguisticDomainChart extends DomainChart {
 	
 	private JFreeChart createChart(XYSeriesCollection dataset) {
 		JFreeChart result = ChartFactory.createXYLineChart("", "", "", dataset, PlotOrientation.VERTICAL, true, true, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		
 		result.setBackgroundPaint(Color.WHITE);
 		XYPlot xyplot = (XYPlot) result.getPlot();
 		xyplot.setBackgroundPaint(Color.WHITE);
