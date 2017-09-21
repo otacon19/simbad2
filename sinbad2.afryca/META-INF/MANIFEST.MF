@@ -9,4 +9,5 @@ Require-Bundle: sinbad2.core.ui;bundle-version="1.0.0",
  sinbad2.valuation.valuationset,
  sinbad2.valuation.integer,
  sinbad2.valuation.real,
- sinbad2.valuation.linguistic
+ sinbad2.valuation.linguistic,
+ sinbad2.valuation.hesitant

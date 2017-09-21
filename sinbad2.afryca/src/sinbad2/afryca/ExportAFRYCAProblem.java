@@ -32,6 +32,7 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.resolutionphase.io.XMLWriter;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.integer.IntegerValuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
 import sinbad2.valuation.real.RealValuation;
@@ -49,6 +50,7 @@ public class ExportAFRYCAProblem implements IExportAFRYCAListener {
 	private static final String[] FILTER_EXTS = { "*.afryca" }; //$NON-NLS-1$
 	
 	private static final String SEMICOLON = ";";
+	public static final String SEPARATOR = "_SEPARATOR_";
 	
 	private ProblemElementsSet _elementsSet;
 	private DomainSet _domainsSet;
@@ -214,6 +216,8 @@ public class ExportAFRYCAProblem implements IExportAFRYCAListener {
 					} else if(v instanceof LinguisticValuation) {
 						label = ((LinguisticValuation) v).getLabel();
 						streamWriter.writeCharacters(label.getName());
+					} else if(v instanceof HesitantValuation) {
+						streamWriter.writeCharacters(toStringAFRYCA((HesitantValuation) v));
 					}
 					if(col != _elementsSet.getAlternatives().size() - 1) {
 						streamWriter.writeCharacters(",");
@@ -223,6 +227,18 @@ public class ExportAFRYCAProblem implements IExportAFRYCAListener {
 			}
 		}
 		streamWriter.writeEndElement();
+	}
+	
+	public String toStringAFRYCA(HesitantValuation v) {
+		if (v.isPrimary()) {
+			return v.getLabel().toString();
+		} else if (v.isUnary()) {
+			return (v.getUnaryRelation().toString() + SEPARATOR + v.getTerm()); //$NON-NLS-1$
+		} else if (v.isBinary()) {
+			return ("Between" + SEPARATOR + v.getLowerTerm() + SEPARATOR + "and" + SEPARATOR + v.getUpperTerm());
+		} else {
+			return " "; //$NON-NLS-1$
+		}
 	}
 	
 	private void writeDomainsStructures(XMLStreamWriter streamWriter) throws XMLStreamException {
