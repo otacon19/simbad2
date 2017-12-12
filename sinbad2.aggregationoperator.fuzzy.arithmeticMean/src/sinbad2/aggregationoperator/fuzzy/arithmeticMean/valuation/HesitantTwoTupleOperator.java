@@ -50,7 +50,6 @@ private HesitantTwoTupleOperator() {}
 		
 		result = (HesitantTwoTupleValuation) valuations.get(0).clone();
 		result.createRelation(new TrapezoidalFunction(new double[]{a, b, c, d}));
-
 		return result;
 	}
 }

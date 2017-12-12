@@ -2,10 +2,6 @@ package sinbad2.afryca;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -183,13 +179,8 @@ public class ExportAFRYCAProblem implements IExportAFRYCAListener {
 		return label.getName() + ";" + toStringSemantic((TrapezoidalFunction) label.getSemantic());
 	}
 	
-	private String toStringSemantic(TrapezoidalFunction semantic) {
-		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.ENGLISH);
-		otherSymbols.setDecimalSeparator('.'); 
-		DecimalFormat df = new DecimalFormat("#.##", otherSymbols); //$NON-NLS-1$
-		df.setRoundingMode(RoundingMode.CEILING);
-		
-		return ("Trapezoidal(" + df.format(semantic.getLimits()[0]) + ", " + df.format(semantic.getLimits()[1]) + ", " + df.format(semantic.getLimits()[2]) + ", " + df.format(semantic.getLimits()[3]) + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+	private String toStringSemantic(TrapezoidalFunction semantic) {	
+		return ("Trapezoidal(" + semantic.getLimits()[0] + ", " + semantic.getLimits()[1] + ", " + semantic.getLimits()[2] + ", " + semantic.getLimits()[3] + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	}
 	
 	private void writeStructure(XMLStreamWriter streamWriter) throws XMLStreamException {
