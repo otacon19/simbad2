@@ -15,6 +15,7 @@ import sinbad2.aggregationoperator.max.Max;
 import sinbad2.aggregationoperator.min.Min;
 import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -44,9 +45,13 @@ public class SelectionPhase implements IPhaseMethod {
 
 	private List<TwoTuple> _closenessCoefficient;
 	
+	private Map<Expert, LabelLinguisticDomain[]> _weightsExperts;
+	private TwoTuple[] _collectiveWeights;
+	
 	private FuzzySet _unificationDomain;
 	private FuzzySet _distanceDomain;
 	private FuzzySet _similarityDomain;
+	private FuzzySet _weightsDomain;
 
 	private ProblemElementsSet _elementsSet;
 
@@ -73,6 +78,12 @@ public class SelectionPhase implements IPhaseMethod {
 		
 		_similarityDomain = new FuzzySet();
 		createSimilarityLabels();
+		
+		_weightsDomain = new FuzzySet();
+		createWeightsLabels();
+		
+		_weightsExperts = new HashMap<>();
+		initializeWeightsExperts();
 	}
 
 	private void createDistanceLabels() {
@@ -85,7 +96,23 @@ public class SelectionPhase implements IPhaseMethod {
 				"Neither dissimilar nor dissimilar", "A bit similar", "Almost similar", "Completely similar"};
 		_similarityDomain.createTrapezoidalFunction(labels);
 	}
+	
+	private void createWeightsLabels() {
+		String[] labels = new String[]{"Very low", "Low", "Medium low", 
+				"Medium", "Medium high", "High", "Very high"};
+		_weightsDomain.createTrapezoidalFunction(labels);
+	}
 
+	private void initializeWeightsExperts() {
+		for(Expert e: _elementsSet.getOnlyExpertChildren()) {
+			LabelLinguisticDomain[] weights = new LabelLinguisticDomain[_elementsSet.getAllSubcriteria().size()];
+			for(int i = 0; i < weights.length; ++i) {
+				weights[i] = _weightsDomain.getLabelSet().getLabel((_weightsDomain.getLabelSet().getCardinality() - 1) / 2);
+			}
+			_weightsExperts.put(e, weights);
+		}
+	}
+	
 	@Override
 	public Map<ValuationKey, Valuation> getTwoTupleValuations() {
 		return new HashMap<ValuationKey, Valuation>();
@@ -164,13 +191,40 @@ public class SelectionPhase implements IPhaseMethod {
 	public void setSimilarityDomain(FuzzySet domain) {
 		_similarityDomain = domain;
 	}
-		
+	
+	public FuzzySet getWeightsDomain() {
+		return _weightsDomain;
+	}
+	
+	public void setWeightsDomain(FuzzySet domain) {
+		_weightsDomain = domain;
+	}
+	
+	public Map<Expert, LabelLinguisticDomain[]> getExpertsWeights() {
+		return _weightsExperts;
+	}
+	
+	public void setExpertsWeights(Map<Expert, LabelLinguisticDomain[]> weightsExperts) {
+		_weightsExperts = weightsExperts;
+	}
+	
+	public LabelLinguisticDomain getExpertWeight(Expert e, int crit) {
+		return _weightsExperts.get(e)[crit];
+	}
+
+	public void setExpertWeight(Expert e, int crit, LabelLinguisticDomain weight) {
+		LabelLinguisticDomain[] weights = _weightsExperts.get(e);
+		weights[crit] = weight;
+		_weightsExperts.put(e, weights);
+	}
+	
 	private void calculateDecisionMatrix() {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		UnificationPhase unificationPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
 		
 		_unificationDomain = (FuzzySet) unificationPhase.getUnifiedDomain();
 
+		computeWeights();
 		computeDecisionMatricesExperts(unificationPhase);
 		
 		_decisionMatrix = new Valuation[_elementsSet.getAllSubcriteria().size()][_elementsSet.getAlternatives().size()];
@@ -188,8 +242,42 @@ public class SelectionPhase implements IPhaseMethod {
 				acum = 0;
 			}
 		}
+		
+		computeWeigthedDecisionMatrix();
+	}
+
+	private void computeWeights() {
+		Map<Expert, TwoTuple[]> weightsTwoTuple = transformWeightsToTwoTuple();
+		computeCollectiveWeights(weightsTwoTuple);	
+	}
+
+	private Map<Expert, TwoTuple[]> transformWeightsToTwoTuple() {
+		Map<Expert, TwoTuple[]> result = new HashMap<>();
+		for(Expert e: _weightsExperts.keySet()) {
+			LabelLinguisticDomain[] weights = _weightsExperts.get(e);
+			TwoTuple[] weights2T = new TwoTuple[weights.length];
+			for(int i = 0; i < weights.length; ++i) {
+				weights2T[i] = new TwoTuple(_weightsDomain, weights[i]);
+			}
+			result.put(e, weights2T);
+		}
+		return result;
 	}
 	
+	private void computeCollectiveWeights(Map<Expert, TwoTuple[]> weightsTwoTuple) {
+		_collectiveWeights = new TwoTuple[_elementsSet.getAllSubcriteria().size()];
+		double acum;
+		for(int i = 0; i < _elementsSet.getAllSubcriteria().size(); ++i) {
+			acum = 0;
+			for(Expert e: weightsTwoTuple.keySet()) {
+				acum += weightsTwoTuple.get(e)[i].calculateInverseDelta();
+			}
+			TwoTuple weight = new TwoTuple(_weightsDomain);
+			weight.calculateDelta(acum / weightsTwoTuple.size());
+			_collectiveWeights[i] = weight;
+		}
+	}
+
 	/**
 	 * Creation of experts' decision matrices
 	 * @param unificationPhase
@@ -207,6 +295,8 @@ public class SelectionPhase implements IPhaseMethod {
 				for(Alternative a: alternatives) {
 					for(ValuationKey vk: unificationPhase.getTwoTupleValuations().keySet()) {
 						if(vk.getExpert().equals(e) && vk.getCriterion().equals(c) && vk.getAlternative().equals(a)){
+							System.out.println(vk.getExpert().getId() + " - " + vk.getAlternative() + " - " + vk.getCriterion().getId() + 
+									" - " + ((TwoTuple) unificationPhase.getTwoTupleValuations().get(vk)).prettyFormat());
 							dm[criteria.indexOf(c)][alternatives.indexOf(a)] = unificationPhase.getTwoTupleValuations().get(vk);
 						}
 					}
@@ -214,6 +304,18 @@ public class SelectionPhase implements IPhaseMethod {
 			}
 			_decisionMatricesExperts.put(e, dm);
 		}
+	}
+	
+	private void computeWeigthedDecisionMatrix() {
+		/*for(int i = 0; i < _decisionMatrix.length; ++i) {
+			for(int j = 0; j < _decisionMatrix[i].length; ++j) {
+				TwoTuple v = (TwoTuple) _decisionMatrix[i][j];
+				TwoTuple weight = _collectiveWeights[i];
+				TwoTuple result = new TwoTuple(_unificationDomain);
+				result.calculateDelta(v.calculateInverseDelta() * weight.calculateInverseDelta());
+				_decisionMatrix[i][j] = result;
+			}
+		}*/
 	}
 
 	private void calculateIdealSolution() {

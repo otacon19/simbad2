@@ -18,15 +18,17 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.Images;
+import sinbad2.phasemethod.topsis.selection.ui.listener.IChangeWeightListener;
 import sinbad2.phasemethod.topsis.selection.ui.nls.Messages;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.CollectiveValuationsTableViewerContentProvider;
+import sinbad2.phasemethod.topsis.selection.ui.view.provider.ExpertsWeightContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.IdealSolutionTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.NoIdealSolutionTableViewerContentProvider;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
-public class CalculateSolutions extends ViewPart implements IStepStateListener {
+public class CalculateSolutions extends ViewPart implements IStepStateListener, IChangeWeightListener {
 	
 	public static final String ID = "flintstones.phasemethod.topsis.selection.ui.view.aggregationexperts"; //$NON-NLS-1$
 
@@ -56,6 +58,8 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 
 		_parent = parent;
 		
+		ExpertsWeightContentProvider.registerChangeWeightListener(this);
+		
 		createContent();
 	}
 
@@ -75,7 +79,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		collectiveValuationsPanel.setLayout(colectiveValuationsLayout);
 		
 		Label collectiveValuationsLabel = new Label(collectiveValuationsPanel, SWT.NONE);
-		collectiveValuationsLabel.setText(Messages.AggregationExperts_Colective_valuations);
+		collectiveValuationsLabel.setText(Messages.calculate_solutions_Collective_valuations);
 		FontData fontData = collectiveValuationsLabel.getFont().getFontData()[0];
 		collectiveValuationsLabel.setFont(new Font(collectiveValuationsLabel.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.BOLD)));
 		collectiveValuationsLabel.setLayoutData( new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
@@ -88,7 +92,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		_tableViewerCollectiveValuations.setContentProvider(_collectiveValuationsProvider);
 
 		TableViewerColumn alternativeColumn = new TableViewerColumn(_tableViewerCollectiveValuations, SWT.NONE);
-		alternativeColumn.getColumn().setText(Messages.AggregationExperts_Alternative);
+		alternativeColumn.getColumn().setText(Messages.calculate_solutions_Alternative);
 		alternativeColumn.getColumn().setResizable(false);
 		alternativeColumn.getColumn().setMoveable(false);
 		alternativeColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -100,7 +104,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		});
 		
 		TableViewerColumn criterionColumn = new TableViewerColumn(_tableViewerCollectiveValuations, SWT.NONE);
-		criterionColumn.getColumn().setText(Messages.AggregationExperts_Criterion);
+		criterionColumn.getColumn().setText(Messages.calculate_solutions_Criterion);
 		criterionColumn.getColumn().setResizable(false);
 		criterionColumn.getColumn().setMoveable(false);
 		criterionColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -112,7 +116,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		});
 		
 		TableViewerColumn typeColumn = new TableViewerColumn(_tableViewerCollectiveValuations, SWT.NONE);
-		typeColumn.getColumn().setText(Messages.AggregationExperts_Type);
+		typeColumn.getColumn().setText(Messages.calculate_solutions_Type);
 		typeColumn.getColumn().setResizable(false);
 		typeColumn.getColumn().setMoveable(false);
 		typeColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -133,7 +137,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		});
 		
 		TableViewerColumn valuationColumn = new TableViewerColumn(_tableViewerCollectiveValuations, SWT.NONE);
-		valuationColumn.getColumn().setText(Messages.AggregationExperts_Colective_valuation);
+		valuationColumn.getColumn().setText(Messages.calculate_solutions_Collective_valuation);
 		valuationColumn.getColumn().setResizable(false);
 		valuationColumn.getColumn().setMoveable(false);
 		valuationColumn.setLabelProvider(new ColumnLabelProvider() {
@@ -167,8 +171,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 			}
 		});
 		
-		_collectiveValuationsProvider.setInput(_selectionPhase.getDecisionMatrix());
-		_tableViewerCollectiveValuations.setInput(_collectiveValuationsProvider.getInput());
+		setInputTableCollective();
 		
 		criterionColumn.getColumn().pack();
 		alternativeColumn.getColumn().pack();
@@ -176,6 +179,11 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		valuationColumn.getColumn().pack();
 	}
 	
+	private void setInputTableCollective() {
+		_collectiveValuationsProvider.setInput(_selectionPhase.getDecisionMatrix());
+		_tableViewerCollectiveValuations.setInput(_collectiveValuationsProvider.getInput());
+	}
+
 	private void createIdealSolutionTable() {
 		GridLayout idealSolutionValuationsLayout = new GridLayout(1, true);
 		Composite idealSolutionComposite = new Composite(_parent, SWT.NONE);
@@ -183,7 +191,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		idealSolutionComposite.setLayout(idealSolutionValuationsLayout);
 		
 		Label idealSolutionLabel = new Label(idealSolutionComposite, SWT.NONE);
-		idealSolutionLabel.setText(Messages.AggregationExperts_Ideal_solution);
+		idealSolutionLabel.setText(Messages.calculate_solutions_Ideal_solution);
 		FontData fontData = idealSolutionLabel.getFont().getFontData()[0];
 		idealSolutionLabel.setFont(new Font(idealSolutionLabel.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.BOLD)));
 		idealSolutionLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
@@ -196,7 +204,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		_tableViewerIdealSolution.setContentProvider(_idealSolutionProvider);
 
 		TableViewerColumn criterionColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
-		criterionColumn.getColumn().setText(Messages.AggregationExperts_Criterion);
+		criterionColumn.getColumn().setText(Messages.calculate_solutions_Criterion);
 		criterionColumn.getColumn().pack();
 		criterionColumn.getColumn().setResizable(false);
 		criterionColumn.getColumn().setMoveable(false);
@@ -209,7 +217,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		});
 		
 		TableViewerColumn typeColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
-		typeColumn.getColumn().setText(Messages.AggregationExperts_Type);
+		typeColumn.getColumn().setText(Messages.calculate_solutions_Type);
 		typeColumn.getColumn().pack();
 		typeColumn.getColumn().setResizable(false);
 		typeColumn.getColumn().setMoveable(false);
@@ -231,7 +239,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		});
 		
 		TableViewerColumn valuationColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
-		valuationColumn.getColumn().setText(Messages.AggregationExperts_Valuation);
+		valuationColumn.getColumn().setText(Messages.calculate_solutions_Valuation);
 		valuationColumn.getColumn().pack();
 		valuationColumn.getColumn().setResizable(false);
 		valuationColumn.getColumn().setMoveable(false);
@@ -266,14 +274,18 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 			}
 		});
 		
-		_idealSolutionProvider.setInput(_selectionPhase.getIdealSolution());
-		_tableViewerIdealSolution.setInput(_idealSolutionProvider.getInput());
+		setInputIdealSolutionTable();
 		
 		criterionColumn.getColumn().pack();
 		typeColumn.getColumn().pack();
 		valuationColumn.getColumn().pack();
 	}
 	
+	private void setInputIdealSolutionTable() {
+		_idealSolutionProvider.setInput(_selectionPhase.getIdealSolution());
+		_tableViewerIdealSolution.setInput(_idealSolutionProvider.getInput());		
+	}
+
 	private void createNoIdealSolutionTable() {
 		GridLayout noIdealSolutionLayout = new GridLayout(1, true);
 		Composite noIdealSolutionComposite = new Composite(_parent, SWT.NONE);
@@ -283,7 +295,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		Label noIdealSolutionLabel = new Label(noIdealSolutionComposite, SWT.NONE);
 		FontData fontData = noIdealSolutionLabel.getFont().getFontData()[0];
 		noIdealSolutionLabel.setFont(new Font(noIdealSolutionLabel.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.BOLD)));
-		noIdealSolutionLabel.setText(Messages.AggregationExperts_No_ideal_solution);
+		noIdealSolutionLabel.setText(Messages.calculate_solutions_No_ideal_solution);
 		noIdealSolutionLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		
 		_tableViewerNoIdealSolution = new TableViewer(noIdealSolutionComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
@@ -294,7 +306,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		_tableViewerNoIdealSolution.setContentProvider(_noIdealSolutionProvider);
 
 		TableViewerColumn criterionColumn = new TableViewerColumn(_tableViewerNoIdealSolution, SWT.NONE);
-		criterionColumn.getColumn().setText(Messages.AggregationExperts_Criterion);
+		criterionColumn.getColumn().setText(Messages.calculate_solutions_Criterion);
 		criterionColumn.getColumn().pack();
 		criterionColumn.getColumn().setResizable(false);
 		criterionColumn.getColumn().setMoveable(false);
@@ -307,7 +319,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		});
 		
 		TableViewerColumn typeColumn = new TableViewerColumn(_tableViewerNoIdealSolution, SWT.NONE);
-		typeColumn.getColumn().setText(Messages.AggregationExperts_Type);
+		typeColumn.getColumn().setText(Messages.calculate_solutions_Type);
 		typeColumn.getColumn().pack();
 		typeColumn.getColumn().setResizable(false);
 		typeColumn.getColumn().setMoveable(false);
@@ -329,7 +341,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 		});
 		
 		TableViewerColumn valuationColumn = new TableViewerColumn(_tableViewerNoIdealSolution, SWT.NONE);
-		valuationColumn.getColumn().setText(Messages.AggregationExperts_Valuation);
+		valuationColumn.getColumn().setText(Messages.calculate_solutions_Valuation);
 		valuationColumn.getColumn().pack();
 		valuationColumn.getColumn().setResizable(false);
 		valuationColumn.getColumn().setMoveable(false);
@@ -364,17 +376,21 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 			}
 		});
 		
-		_noIdealSolutionProvider.setInput(_selectionPhase.getNoIdealSolution());
-		_tableViewerNoIdealSolution.setInput(_noIdealSolutionProvider.getInput());
+		setInputNoIdealSolution();
 		
 		criterionColumn.getColumn().pack();
 		typeColumn.getColumn().pack();
 		valuationColumn.getColumn().pack();
 	}
 
+	private void setInputNoIdealSolution() {
+		_noIdealSolutionProvider.setInput(_selectionPhase.getNoIdealSolution());
+		_tableViewerNoIdealSolution.setInput(_noIdealSolutionProvider.getInput());
+	}
+
 	@Override
 	public String getPartName() {
-		return Messages.AggregationExperts_Calculate_solutions;
+		return Messages.selection_Calculate_solutions;
 	}
 
 	@Override
@@ -393,4 +409,16 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void setFocus() {}
+
+	@Override
+	public void notifyWeigthChanged() {
+		_selectionPhase.execute();
+		refreshTables();
+	}
+
+	private void refreshTables() {
+		setInputTableCollective();
+		setInputIdealSolutionTable();
+		setInputNoIdealSolution();
+	}
 }

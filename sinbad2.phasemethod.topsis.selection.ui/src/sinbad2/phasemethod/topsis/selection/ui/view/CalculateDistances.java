@@ -20,15 +20,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.core.workspace.Workspace;
-import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
+import sinbad2.phasemethod.topsis.selection.ui.listener.IChangeWeightListener;
 import sinbad2.phasemethod.topsis.selection.ui.nls.Messages;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.ClosenessCoefficientsTableViewerContentProvider;
+import sinbad2.phasemethod.topsis.selection.ui.view.provider.ExpertsWeightContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.PositiveNegativeTableViewerContentProvider;
 import sinbad2.resolutionphase.ResolutionPhasesManager;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
@@ -36,7 +37,7 @@ import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
-public class CalculateDistances extends ViewPart implements IStepStateListener {
+public class CalculateDistances extends ViewPart implements IStepStateListener, IChangeWeightListener {
 	
 	public static final String ID = "flintstones.phasemethod.topsis.selection.ui.view.calculatedistances"; //$NON-NLS-1$
 	
@@ -81,6 +82,8 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 		layout.horizontalSpacing = 15;
 		layout.verticalSpacing = 15;
 		_parent.setLayout(layout);
+		
+		ExpertsWeightContentProvider.registerChangeWeightListener(this);
 
 		createContent();
 	}
@@ -219,6 +222,14 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 			}
 		});
 		
+		setInputDistancesTable();
+		
+		alternativeColumn.getColumn().pack();
+		positiveColumn.getColumn().pack();
+		negativeColumn.getColumn().pack();
+	}
+	
+	private void setInputDistancesTable() {
 		List<Object[]> distances = new LinkedList<Object[]>();
 		List<TwoTuple> idealDistances = _selectionPhase.getIdealDistances();
 		List<TwoTuple> noIdealDistances = _selectionPhase.getNoIdealDistances();
@@ -235,11 +246,8 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 		_positiveNegativeProvider.setInput(distances);
 		_tableViewerPositiveNegative.setInput(_positiveNegativeProvider.getInput());
 		
-		alternativeColumn.getColumn().pack();
-		positiveColumn.getColumn().pack();
-		negativeColumn.getColumn().pack();
 	}
-	
+
 	private void createClosenessCoefficientsTable() {
 		GridLayout distanceIdealSolutionLayout = new GridLayout(1, false);
 		distanceIdealSolutionLayout.marginWidth = 10;
@@ -324,12 +332,16 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 			}
 		});
 		
-		closenessCoefficientsProvider.setInput(_selectionPhase.getClosenessCoeficient());
-		_tableViewerIdealSolution.setInput(closenessCoefficientsProvider.getInput());
+		setInputCoefficientsTable();
 		
 		alternativeColumn.getColumn().pack();
 		closenessCoefficient.getColumn().pack();
 		ranking.getColumn().pack();
+	}
+
+	private void setInputCoefficientsTable() {
+		closenessCoefficientsProvider.setInput(_selectionPhase.getClosenessCoeficient());
+		_tableViewerIdealSolution.setInput(closenessCoefficientsProvider.getInput());
 	}
 
 	private void createChart() {
@@ -396,5 +408,16 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 
 	@Override
 	public void setRatingView(RatingView rating) {}
+
+	@Override
+	public void notifyWeigthChanged() {
+		refreshTables();
+	}
+
+	private void refreshTables() {
+		setInputDistancesTable();
+		setInputCoefficientsTable();
+		displayAlternatives();
+	}
 
 }

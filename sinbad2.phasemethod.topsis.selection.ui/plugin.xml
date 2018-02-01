@@ -8,6 +8,9 @@
             name="%ui.name"
             phasemethod="flintstones.phasemethod.topsis.selection">
          <view
+               step="sinbad2.phasemethod.topsis.selection.ui.view.CalculateWeights">
+         </view>
+         <view
                step="sinbad2.phasemethod.topsis.selection.ui.view.CalculateSolutions">
          </view>
          <view
@@ -33,6 +36,13 @@
             class="sinbad2.phasemethod.topsis.selection.ui.view.CalculateDistances"
             id="flintstones.phasemethod.topsis.selection.ui.view.calculatedistances"
             name="%view.name.0"
+            restorable="true">
+      </view>
+      <view
+            category="flintstones.phasemethod.topsis.selection.ui.category"
+            class="sinbad2.phasemethod.topsis.selection.ui.view.CalculateWeights"
+            id="flintstones.phasemethod.topsis.selection.ui.view.calculateweights"
+            name="%view.name.1"
             restorable="true">
       </view>
    </extension>

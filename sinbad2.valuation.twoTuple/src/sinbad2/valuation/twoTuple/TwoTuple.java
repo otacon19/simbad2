@@ -22,6 +22,7 @@ public class TwoTuple extends LinguisticValuation {
 	public TwoTuple(FuzzySet domain, LabelLinguisticDomain label) {
 		setDomain(domain);
 		setLabel(label);
+		_alpha = 0d;
 	}
 	
 	public TwoTuple(FuzzySet domain, LabelLinguisticDomain label, double alpha) {
