@@ -25,6 +25,8 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	private double _c;
 	private double _d;
 	
+	private static final float alpha = 1;
+	
 	public TrapezoidalFunction() {
 		_a = _b = _c = _d = 0d;
 	}
@@ -145,10 +147,10 @@ public class TrapezoidalFunction implements IMembershipFunction {
 			result = 1d;
 		} else if(x <= _a || x >= _d) {
 			result = 0d;
-		} else if(x < _b) {
+		} else if(x > _a && x < _b) {
 			result = (x - _a) / (_b - _a);
 		} else {
-			result = (x - _d) / (_c - _d);
+			result = (_d - x) / (_d - _c);
 		}
 		
 		return result;
@@ -315,6 +317,12 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		return new TrapezoidalFunction(limits);
 	}
 	
+	public TrapezoidalFunction divisionScalar(double scalar) {		
+		double[] limits = new double[]{_a / scalar, _b / scalar, _c / scalar, _d / scalar};
+		
+		return new TrapezoidalFunction(limits);
+	}
+	
 	public TrapezoidalFunction potence(double scalar) {
 		double[] limits = new double[]{Math.pow(_a, scalar), Math.pow(_b, scalar), Math.pow(_c, scalar), Math.pow(_d, scalar)};
 		return new TrapezoidalFunction(limits);
@@ -333,6 +341,29 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		}
 		
 		return Math.pow(acum, 1 / P);
+	}
+	
+	public Double[] computeAlphaCut() {
+		Double[] result = new Double[2];
+		result[0] = _a + alpha * (_b - _a); 
+		result[1] = _d - alpha * (_d - _c);
+		return result;
+	}
+	
+	public TrapezoidalFunction additionAlphaCuts(TrapezoidalFunction fuzzyNumber) {
+		return new TrapezoidalFunction(new double[]{this._a + fuzzyNumber._a, this._b + fuzzyNumber._b, this._c + fuzzyNumber._c, this._d + fuzzyNumber._d});
+	}
+	
+	public TrapezoidalFunction subtractionAlphaCuts(TrapezoidalFunction fuzzyNumber) {
+		return new TrapezoidalFunction(new double[]{this._a - fuzzyNumber._d, this._b - fuzzyNumber._c, this._c - fuzzyNumber._b, this._d - fuzzyNumber._a});
+	}
+	
+	public TrapezoidalFunction multiplicationAlphaCuts(TrapezoidalFunction fuzzyNumber) {
+		return new TrapezoidalFunction(new double[]{this._a * fuzzyNumber._a, this._b * fuzzyNumber._b, this._c * fuzzyNumber._c, this._d * fuzzyNumber._d});
+	}
+	
+	public TrapezoidalFunction divisionAlphaCuts(TrapezoidalFunction fuzzyNumber) {
+		return new TrapezoidalFunction(new double[]{this._a / fuzzyNumber._d, this._b / fuzzyNumber._c, this._c / fuzzyNumber._b, this._d / fuzzyNumber._a});
 	}
 	
 	@Override

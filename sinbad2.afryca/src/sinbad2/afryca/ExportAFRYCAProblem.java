@@ -103,7 +103,7 @@ public class ExportAFRYCAProblem implements IExportAFRYCAListener {
 
 	private void writeExperts(XMLStreamWriter streamWriter) throws XMLStreamException {
 		streamWriter.writeStartElement("experts"); //$NON-NLS-1$
-		for(Expert e: _elementsSet.getExperts()) {
+		for(Expert e: _elementsSet.getOnlyExpertChildren()) {
 			streamWriter.writeStartElement("expert");
 			streamWriter.writeCharacters(e.getId());
 			streamWriter.writeEndElement();
@@ -193,11 +193,11 @@ public class ExportAFRYCAProblem implements IExportAFRYCAListener {
 		streamWriter.writeStartElement("preferences");
 		double value;
 		LabelLinguisticDomain label;
-		for(int expert = 0; expert < _elementsSet.getExperts().size(); ++expert) {
+		for(int expert = 0; expert < _elementsSet.getOnlyExpertChildren().size(); ++expert) {
 			for(int row = 0; row < _elementsSet.getAllCriteria().size(); ++row) {
 				streamWriter.writeStartElement("preference");
 				for(int col = 0; col < _elementsSet.getAlternatives().size(); ++col) {
-					Valuation v = _valuationsSet.getValuation(_elementsSet.getExperts().get(expert), _elementsSet.getAlternatives().get(col), _elementsSet.getCriteria().get(row));
+					Valuation v = _valuationsSet.getValuation(_elementsSet.getOnlyExpertChildren().get(expert), _elementsSet.getAlternatives().get(col), _elementsSet.getCriteria().get(row));
 					if(v instanceof IntegerValuation) {
 						value = ((IntegerValuation) v).getValue();
 						streamWriter.writeCharacters(Integer.toString((int) value));
@@ -234,11 +234,11 @@ public class ExportAFRYCAProblem implements IExportAFRYCAListener {
 	
 	private void writeDomainsStructures(XMLStreamWriter streamWriter) throws XMLStreamException {
 		streamWriter.writeStartElement("domains_structures");
-		for(int expert = 0; expert < _elementsSet.getExperts().size(); ++expert) {
+		for(int expert = 0; expert < _elementsSet.getOnlyExpertChildren().size(); ++expert) {
 			for(int row = 0; row < _elementsSet.getAllCriteria().size(); ++row) {
 				streamWriter.writeStartElement("domain_structure");
 				for(int col = 0; col < _elementsSet.getAlternatives().size(); ++col) {
-					Valuation v = _valuationsSet.getValuation(_elementsSet.getExperts().get(expert), _elementsSet.getAlternatives().get(col), _elementsSet.getCriteria().get(row));
+					Valuation v = _valuationsSet.getValuation(_elementsSet.getOnlyExpertChildren().get(expert), _elementsSet.getAlternatives().get(col), _elementsSet.getCriteria().get(row));
 					streamWriter.writeCharacters(v.getDomain().getId());
 					if(col != _elementsSet.getAlternatives().size() - 1) {
 						streamWriter.writeCharacters("separator");

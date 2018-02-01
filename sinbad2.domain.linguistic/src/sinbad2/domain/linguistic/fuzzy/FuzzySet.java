@@ -258,8 +258,6 @@ public class FuzzySet extends Linguistic {
 				addLabel(currentLabel);
 			}
 		}
-		
-		//TODO setType(ID);
 	}
 	
 	

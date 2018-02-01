@@ -290,7 +290,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	private void computeTOPSIS() {
-		SelectionPhase topsisPhase = (SelectionPhase) PhasesMethodManager.getInstance().getPhaseMethod(SelectionPhase.ID).getImplementation();
+		/*SelectionPhase topsisPhase = (SelectionPhase) PhasesMethodManager.getInstance().getPhaseMethod(SelectionPhase.ID).getImplementation();
 		
 		_alternativesFinalPreferences = new Double[_alternatives.size()];
 		
@@ -311,7 +311,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
  				}
  			}
  			alternative++;
-		}
+		}*/
 	}
 	
 	private List<Double> transformWeightsList(Double[] weights) {
@@ -475,7 +475,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	private Double[] computeTOPSISInference(Double[] weights) {
-		SelectionPhase topsisPhase = (SelectionPhase) PhasesMethodManager.getInstance().getPhaseMethod(SelectionPhase.ID).getImplementation();
+		/*SelectionPhase topsisPhase = (SelectionPhase) PhasesMethodManager.getInstance().getPhaseMethod(SelectionPhase.ID).getImplementation();
 
 		List<Double> criteriaWeights;
 		criteriaWeights = transformWeightsList(weights);
@@ -497,7 +497,8 @@ public class SensitivityAnalysis implements IResolutionPhase {
  			alternative++;
 		}
 		
-		return alternativesFinalPreferences;
+		return alternativesFinalPreferences;*/
+		return null;
 	}
 
 	public Double[] computeAlternativesPreferenceInferAttenuationFactor(double attenuationFactor) {

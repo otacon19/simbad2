@@ -7,6 +7,7 @@ Bundle-Activator: sinbad2.phasemethod.topsis.unification.ui.Activator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: sinbad2.phasemethod.topsis.unification;bundle-version="1.0.0",
  sinbad2.resolutionphase.rating.ui;bundle-version="1.0.0",
- sinbad2.domain.linguistic.fuzzyset.ui
+ sinbad2.domain.linguistic.fuzzyset.ui,
+ sinbad2.phasemethod.topsis.selection
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

@@ -560,7 +560,4 @@ public class Validator {
 			throw new IllegalArgumentException(NOT_SAME_ELEMENT);
 		}
 	}
-
-
-
 }

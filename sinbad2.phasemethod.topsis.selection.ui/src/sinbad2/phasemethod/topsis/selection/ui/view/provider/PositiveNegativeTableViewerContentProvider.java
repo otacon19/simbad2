@@ -8,7 +8,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 public class PositiveNegativeTableViewerContentProvider implements IStructuredContentProvider {
 
-private List<Object[]> _positiveNegativeDistances;
+	private List<Object[]> _positiveNegativeDistances;
 	
 	public PositiveNegativeTableViewerContentProvider() {
 		_positiveNegativeDistances = new LinkedList<Object[]>();

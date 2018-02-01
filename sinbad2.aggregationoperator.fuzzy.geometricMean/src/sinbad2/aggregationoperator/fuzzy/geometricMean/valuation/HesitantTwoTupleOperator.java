@@ -15,43 +15,40 @@ public class HesitantTwoTupleOperator {
 	
 	public static Valuation aggregate(List<Valuation> valuations) {
 		HesitantTwoTupleValuation result = null;
-		double a = 1, b = 1, c = 1, d = 1;
-		double limits[] = new double[4];
 		FuzzySet domain = null;
+		
+		TrapezoidalFunction tpf, tpfResult;
+		HesitantTwoTupleValuation v =  (HesitantTwoTupleValuation) valuations.get(0);
+		if(v.getFuzzyNumber() == null) {
+			tpfResult = ((HesitantTwoTupleValuation) v).calculateFuzzyEnvelope(domain);
+		} else {
+			tpfResult = ((HesitantTwoTupleValuation) v).getFuzzyNumber();
+		}
+		
 		int size = valuations.size();
-		
-		TrapezoidalFunction tpf;
-		
-		for(Valuation valuation : valuations) {
-			Validator.notIllegalElementType(valuation, new String[] { HesitantTwoTupleValuation.class.toString() });
-
+		for(int i = 1; i < size; ++i) {
+			v = (HesitantTwoTupleValuation) valuations.get(i);
+			Validator.notIllegalElementType(v, new String[] { HesitantTwoTupleValuation.class.toString() });
+			
 			if(domain == null) {
-				domain = (FuzzySet) valuation.getDomain();
-			} else if(!domain.equals(valuation.getDomain())) {
+				domain = (FuzzySet) v.getDomain();
+			} else if(!domain.equals(v.getDomain())) {
 				throw new IllegalArgumentException(Messages.HesitantTwoTupleOperator_Invalid_domain);
 			}
 			
-			if(((HesitantTwoTupleValuation) valuation).getFuzzyNumber() == null) {
-				tpf = ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelope(domain);
+			if(((HesitantTwoTupleValuation) v).getFuzzyNumber() == null) {
+				tpf = ((HesitantTwoTupleValuation) v).calculateFuzzyEnvelope(domain);
 			} else {
-				tpf = ((HesitantTwoTupleValuation) valuation).getFuzzyNumber();
+				tpf = ((HesitantTwoTupleValuation) v).getFuzzyNumber();
 			}
-				 
-			limits = tpf.getLimits();
-			a *= limits[0];
-			b *= limits[1];
-			c *= limits[2];
-			d *= limits[3];
+			
+			tpfResult = tpfResult.multiplicationAlphaCuts(tpf);
 		}
 
-		a = Math.pow(a, 1d / size);
-		b = Math.pow(b, 1d / size);
-		c = Math.pow(c, 1d / size);
-		d = Math.pow(d, 1d / size);
+		tpfResult = tpfResult.potence(1d / size);
 		
 		result = (HesitantTwoTupleValuation) valuations.get(0).clone();
-		result.createRelation(new TrapezoidalFunction(new double[]{a, b, c, d}));
-		
+		result.createRelation(tpfResult);
 		return result;
 	}
 	

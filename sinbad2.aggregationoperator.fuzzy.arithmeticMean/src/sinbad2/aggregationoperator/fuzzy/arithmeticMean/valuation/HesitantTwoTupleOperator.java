@@ -2,6 +2,7 @@ package sinbad2.aggregationoperator.fuzzy.arithmeticMean.valuation;
 
 import java.util.List;
 
+import sinbad2.aggregationoperator.fuzzy.arithmeticMean.nls.Messages;
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
@@ -14,42 +15,40 @@ private HesitantTwoTupleOperator() {}
 	
 	public static Valuation aggregate(List<Valuation> valuations) {
 		HesitantTwoTupleValuation result = null;
-		double a = 0, b = 0, c = 0, d = 0;
-		double limits[] = new double[4];
 		FuzzySet domain = null;
-		int size = valuations.size();
 		
-		TrapezoidalFunction tpf;
-
-		for(Valuation valuation : valuations) {
-			Validator.notIllegalElementType(valuation, new String[] { HesitantTwoTupleValuation.class.toString() });
-
+		TrapezoidalFunction tpf, tpfResult;
+		HesitantTwoTupleValuation v =  (HesitantTwoTupleValuation) valuations.get(0);
+		if(v.getFuzzyNumber() == null) {
+			tpfResult = ((HesitantTwoTupleValuation) v).calculateFuzzyEnvelope(domain);
+		} else {
+			tpfResult = ((HesitantTwoTupleValuation) v).getFuzzyNumber();
+		}
+		
+		int size = valuations.size();
+		for(int i = 1; i < size; ++i) {
+			v = (HesitantTwoTupleValuation) valuations.get(i);
+			Validator.notIllegalElementType(v, new String[] { HesitantTwoTupleValuation.class.toString() });
+			
 			if(domain == null) {
-				domain = (FuzzySet) valuation.getDomain();
-			} else if(!domain.equals(valuation.getDomain())) {
-				throw new IllegalArgumentException("Invalid domain");
+				domain = (FuzzySet) v.getDomain();
+			} else if(!domain.equals(v.getDomain())) {
+				throw new IllegalArgumentException(Messages.HesitantTwoTupleOperator_Invalid_domain);
 			}
 			
-			if(((HesitantTwoTupleValuation) valuation).getFuzzyNumber() == null) {
-				tpf = ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelope(domain);
+			if(((HesitantTwoTupleValuation) v).getFuzzyNumber() == null) {
+				tpf = ((HesitantTwoTupleValuation) v).calculateFuzzyEnvelope(domain);
 			} else {
-				tpf = ((HesitantTwoTupleValuation) valuation).getFuzzyNumber();
+				tpf = ((HesitantTwoTupleValuation) v).getFuzzyNumber();
 			}
-				 
-			limits = tpf.getLimits();
-			a += limits[0];
-			b += limits[1];
-			c += limits[2];
-			d += limits[3];
+			
+			tpfResult = tpfResult.additionAlphaCuts(tpf);
 		}
 
-		a /= size;
-		b /= size;
-		c /= size;
-		d /= size;
+		tpfResult = tpfResult.divisionScalar(size);
 		
 		result = (HesitantTwoTupleValuation) valuations.get(0).clone();
-		result.createRelation(new TrapezoidalFunction(new double[]{a, b, c, d}));
+		result.createRelation(tpfResult);
 		return result;
 	}
 }

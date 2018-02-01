@@ -419,7 +419,6 @@ public class ElementValuationsTableContentProvider extends KTableNoScrollModel i
 
 	@Override
 	public Object doGetContentAt(int col, int row) {
-		
 		if((col < _fixedCols) && (row < _fixedRows)) {
 			return ""; //$NON-NLS-1$
 
