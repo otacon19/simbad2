@@ -51,6 +51,10 @@ public class LinguisticDomainChart extends DomainChart {
 		_chartComposite.setSize(width, height);
 	}
 	
+	public void updateSize(int width, int height) {
+		_chartComposite.setSize(width, height);
+	}
+	
 	@Override
 	public void setDomain(Domain domain) {
 		_domain = domain;
@@ -104,7 +108,6 @@ public class LinguisticDomainChart extends DomainChart {
 				}
 			}
 		}
-		
 	}
 	
 	private JFreeChart createChart(XYSeriesCollection dataset) {

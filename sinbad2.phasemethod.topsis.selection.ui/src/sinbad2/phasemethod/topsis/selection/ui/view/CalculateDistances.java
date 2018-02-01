@@ -9,6 +9,8 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
@@ -18,6 +20,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.core.workspace.Workspace;
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.alternative.Alternative;
@@ -45,6 +49,8 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 	
 	private PositiveNegativeTableViewerContentProvider _positiveNegativeProvider;
 	private ClosenessCoefficientsTableViewerContentProvider closenessCoefficientsProvider;
+	
+	private LinguisticDomainChart _chart;
 	
 	private ProblemElementsSet _elementsSet;
 	
@@ -101,6 +107,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 		
 		createDistancesTable();
 		createClosenessCoefficientsTable();
+		createChart();
 	}
 
 	private void createDistancesTable() {
@@ -323,6 +330,50 @@ public class CalculateDistances extends ViewPart implements IStepStateListener {
 		alternativeColumn.getColumn().pack();
 		closenessCoefficient.getColumn().pack();
 		ranking.getColumn().pack();
+	}
+
+	private void createChart() {
+		Composite chartViewParent = new Composite(_distanceEditorPanel, SWT.BORDER);
+		GridLayout layout = new GridLayout(1, false);
+		layout.marginTop = 0;
+		layout.marginLeft = 0;
+		layout.marginRight = 0;
+		layout.marginBottom = 0;
+		layout.verticalSpacing = 0;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		layout.horizontalSpacing = 0;
+		chartViewParent.setLayout(layout);
+		chartViewParent.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		final Composite chartView = new Composite(chartViewParent, SWT.BORDER);
+		chartView.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		_chart = new LinguisticDomainChart();
+		_chart.initialize(_selectionPhase.getDistanceDomain(), chartView, chartView.getSize().x, chartView.getSize().y, SWT.BORDER);
+		
+		chartView.addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(ControlEvent e) {
+				_chart.updateSize(chartView.getSize().x, chartView.getSize().y);
+			}
+		});
+		
+		displayAlternatives();
+	}
+	
+	private void displayAlternatives() {
+	List<TwoTuple> closenessCoefficients = _selectionPhase.getClosenessCoeficient();
+		
+		String[] alternatives = new String[closenessCoefficients.size()];
+		int[] pos = new int[alternatives.length];
+		double[] alpha = new double[alternatives.length];
+		for(int i = 0; i < alternatives.length; ++i) {
+			alternatives[i] = Integer.toString(i + 1);
+			pos[i] = _selectionPhase.getDistanceDomain().getLabelSet().getPos(closenessCoefficients.get(i).getLabel());
+			alpha[i] = closenessCoefficients.get(i).getAlpha();
+		}
+		_chart.displayAlternatives(alternatives, pos, alpha);
 	}
 
 	private void setDistance(String distance) {

@@ -141,11 +141,29 @@ public class SelectionPhase implements IPhaseMethod {
 
 	@Override
 	public Domain getUnifiedDomain() {
-		return null;
+		return _unificationDomain;
 	}
 	
 	@Override
-	public void setUnifiedDomain(Domain domain) {}
+	public void setUnifiedDomain(Domain domain) {
+		_unificationDomain = (FuzzySet) domain;
+	}
+	
+	public FuzzySet getDistanceDomain() {
+		return _distanceDomain;
+	}
+	
+	public void setDistanceDomain(FuzzySet domain) {
+		_distanceDomain = domain;
+	}
+	
+	public FuzzySet getSimilarityDomain() {
+		return _similarityDomain;
+	}
+	
+	public void setSimilarityDomain(FuzzySet domain) {
+		_similarityDomain = domain;
+	}
 		
 	private void calculateDecisionMatrix() {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
