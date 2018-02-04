@@ -166,6 +166,9 @@ public class RankingView extends ViewPart implements IDisplayRankingChangeListen
 	@Override
 	public void displayRankingChange(Object ranking) {
 		_rankingViewer.setInput(ranking);
+		_rankingViewer.getTable().getColumn(0).pack();
+		_rankingViewer.getTable().getColumn(1).pack();
+		_rankingViewer.getTable().getColumn(2).pack();
 		updateCombo();
 	}
 }

@@ -45,6 +45,9 @@ public class CollectiveValuationsTableViewerContentProvider implements IStructur
 	
 	@SuppressWarnings("unchecked")
 	public void setInput(Valuation[][] decisionMatrix) {
+		
+		_elementsDecisionMatrix.clear();
+		
 		Object[] data;
 		for(int i = 0; i < decisionMatrix.length; ++i) {
 			for(int j = 0; j < decisionMatrix[i].length; ++j) {

@@ -16,6 +16,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 
@@ -35,6 +36,7 @@ import sinbad2.resolutionphase.ResolutionPhasesManager;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.resolutionphase.sensitivityanalysis.SensitivityAnalysis;
+import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class CalculateDistances extends ViewPart implements IStepStateListener, IChangeWeightListener {
@@ -44,6 +46,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 	private Composite _parent;
 	private Composite _informationPanel;
 	private Composite _distanceEditorPanel;
+	private Composite _chartView;
 	
 	private TableViewer _tableViewerPositiveNegative;
 	private TableViewer _tableViewerIdealSolution;
@@ -111,6 +114,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 		createDistancesTable();
 		createClosenessCoefficientsTable();
 		createChart();
+		setSensitivityAnalysisData();
 	}
 
 	private void createDistancesTable() {
@@ -358,16 +362,16 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 		chartViewParent.setLayout(layout);
 		chartViewParent.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		final Composite chartView = new Composite(chartViewParent, SWT.BORDER);
-		chartView.setLayoutData(new GridData(GridData.FILL_BOTH));
+		_chartView = new Composite(chartViewParent, SWT.BORDER);
+		_chartView.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		_chart = new LinguisticDomainChart();
-		_chart.initialize(_selectionPhase.getDistanceDomain(), chartView, chartView.getSize().x, chartView.getSize().y, SWT.BORDER);
+		_chart.initialize(_selectionPhase.getDistanceDomain(), _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
 		
-		chartView.addControlListener(new ControlAdapter() {
+		_chartView.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
-				_chart.updateSize(chartView.getSize().x, chartView.getSize().y);
+				_chart.updateSize(_chartView.getSize().x, _chartView.getSize().y);
 			}
 		});
 		
@@ -375,7 +379,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 	}
 	
 	private void displayAlternatives() {
-	List<TwoTuple> closenessCoefficients = _selectionPhase.getClosenessCoeficient();
+		List<TwoTuple> closenessCoefficients = _selectionPhase.getClosenessCoeficient();
 		
 		String[] alternatives = new String[closenessCoefficients.size()];
 		int[] pos = new int[alternatives.length];
@@ -388,11 +392,59 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 		_chart.displayAlternatives(alternatives, pos, alpha);
 	}
 
-	private void setDistance(String distance) {
-		//TODO
-		//_sensitivityAnalysis.setAlternativesFinalPreferences(preferences);
+	private void setSensitivityAnalysisData() {
+		_sensitivityAnalysis.setDomain(_selectionPhase.getUnifiedDomain());
+		_sensitivityAnalysis.setAlternatives(_elementsSet.getAlternatives());
+		
+		setDecisionMatrix();
+		setWeights();
+		setFinalPreferences();
+		
+		
+		notifyStepStateChange();
 	}
 	
+	private void setDecisionMatrix() {
+		Valuation[][] dm = _selectionPhase.getDecisionMatrix();
+		Double[][] dmNumbers = new Double[dm.length][dm[0].length];
+		for(int i = 0; i < dm.length; ++i) {
+			for(int j = 0; j < dm[i].length; ++j) {
+				dmNumbers[i][j] = (double) (Math.round(((TwoTuple) dm[i][j]).calculateInverseDelta() * 100d) / 100d);
+			}
+		}
+		
+		_sensitivityAnalysis.setDecisionMatrix(dmNumbers);
+	}
+
+	private void setWeights() {
+		TwoTuple[] weights = _selectionPhase.getCriteriaWeights();
+		Double[] weightsNumber = new Double[weights.length];
+		int wcont = 0;
+		double acum = 0;
+		for(TwoTuple weight: weights) {
+			weightsNumber[wcont] = weight.calculateInverseDelta();
+			acum += weightsNumber[wcont];
+			wcont++;
+		}
+		
+		for(int i = 0; i < weightsNumber.length; ++i) {
+			weightsNumber[i] /= acum;
+		}
+		
+		_sensitivityAnalysis.setWeights(weightsNumber);
+	}
+
+	private void setFinalPreferences() {
+		List<TwoTuple> coefficients = _selectionPhase.getClosenessCoeficient();
+		Double[] preferences = new Double[coefficients.size()];
+		int cont = 0;
+		for(TwoTuple c: coefficients) {
+			preferences[cont] = c.calculateInverseDelta();
+			cont++;
+		}
+		_sensitivityAnalysis.setAlternativesFinalPreferences(preferences);
+	}
+
 	@Override
 	public String getPartName() {
 		return Messages.CalculateDistances_Calculate_distances;
@@ -411,13 +463,28 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 
 	@Override
 	public void notifyWeigthChanged() {
-		refreshTables();
+		refresh();
 	}
 
-	private void refreshTables() {
+	private void refresh() {
 		setInputDistancesTable();
 		setInputCoefficientsTable();
+		refreshChart();
+	}
+
+	private void refreshChart() {
+		disposeControlsChartComposite();
+
+		_chart = new LinguisticDomainChart();
+		_chart.initialize(_selectionPhase.getDistanceDomain(), _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
+		
 		displayAlternatives();
+	}
+
+	private void disposeControlsChartComposite() {
+		for(Control c: _chartView.getChildren()) {
+			c.dispose();
+		}
 	}
 
 }

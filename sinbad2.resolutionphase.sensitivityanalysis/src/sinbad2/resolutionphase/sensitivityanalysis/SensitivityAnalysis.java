@@ -246,8 +246,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			computeMulticriteriaProblem("todim"); //$NON-NLS-1$
 			
 		} else if(activatedMethodId.contains("topsis")) { //$NON-NLS-1$
-			
-			computeWeights(weights);
+
 			computeTOPSIS();
 			computeMulticriteriaProblem("topsis"); //$NON-NLS-1$
 				
@@ -290,40 +289,18 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	private void computeTOPSIS() {
-		/*SelectionPhase topsisPhase = (SelectionPhase) PhasesMethodManager.getInstance().getPhaseMethod(SelectionPhase.ID).getImplementation();
+		SelectionPhase topsisPhase = (SelectionPhase) PhasesMethodManager.getInstance().getPhaseMethod(SelectionPhase.ID).getImplementation();
 		
 		_alternativesFinalPreferences = new Double[_alternatives.size()];
 		
-		List<Double> criteriaWeights;
-		criteriaWeights = transformWeightsList(_w);
-
-		topsisPhase.calculateIdealSolution();
-		topsisPhase.calculateNoIdealSolution();
-		topsisPhase.calculateIdealEuclideanDistanceByCriterion(criteriaWeights);
-		topsisPhase.calculateNoIdealEuclideanDistanceByCriterion(criteriaWeights);
-		List<Object[]> coefficients = topsisPhase.calculateClosenessCoefficient();
+		topsisPhase.execute();
+		List<TwoTuple> coefficients = topsisPhase.getClosenessCoeficient();
 		
 		int alternative = 0;
-		for(Alternative a: _alternatives) {
- 			for(Object[] coefficent: coefficients) {
- 				if(a.equals(coefficent[1])) {
- 					_alternativesFinalPreferences[alternative] = (Double) coefficent[4];
- 				}
- 			}
+ 		for(TwoTuple coefficent: coefficients) {
+ 			_alternativesFinalPreferences[alternative] = coefficent.calculateInverseDelta();
  			alternative++;
-		}*/
-	}
-	
-	private List<Double> transformWeightsList(Double[] weights) {
-		int numWeight = 0;
-		
-		List<Double> ws = new LinkedList<Double>();
-		for(int c = 0 ; c < _numCriteria; ++c) {
-			ws.add(weights[numWeight]);
-			numWeight++;
 		}
-		
-		return ws;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -446,7 +423,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			for (int alternative = 0; alternative < _numAlternatives; ++alternative) {
 				alternativeFinalPreferences[alternative] = 0d;
 				for (int criterion = 0; criterion < _numCriteria; criterion++) {
-					alternativeFinalPreferences[alternative] += _decisionMatrix[criterion][alternative] * ws[criterion];
+					alternativeFinalPreferences[alternative] += (Double) _decisionMatrix[criterion][alternative] * ws[criterion];
 				}
 			}
 		}
@@ -475,30 +452,19 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 	
 	private Double[] computeTOPSISInference(Double[] weights) {
-		/*SelectionPhase topsisPhase = (SelectionPhase) PhasesMethodManager.getInstance().getPhaseMethod(SelectionPhase.ID).getImplementation();
+		SelectionPhase topsisPhase = (SelectionPhase) PhasesMethodManager.getInstance().getPhaseMethod(SelectionPhase.ID).getImplementation();
 
-		List<Double> criteriaWeights;
-		criteriaWeights = transformWeightsList(weights);
-
-		topsisPhase.calculateIdealSolution();
-		topsisPhase.calculateNoIdealSolution();
-		topsisPhase.calculateIdealEuclideanDistanceByCriterion(criteriaWeights);
-		topsisPhase.calculateNoIdealEuclideanDistanceByCriterion(criteriaWeights);
-		List<Object[]> coefficients = topsisPhase.calculateClosenessCoefficient();
+		topsisPhase.execute();
+		List<TwoTuple> coefficients = topsisPhase.getClosenessCoeficient();
 		
 		int alternative = 0;
 		Double[] alternativesFinalPreferences = new Double[_numAlternatives];
-		for(Alternative a: _alternatives) {
- 			for(Object[] coefficent: coefficients) {
- 				if(a.equals(coefficent[1])) {
- 					alternativesFinalPreferences[alternative] = (Double) coefficent[4];
- 				}
- 			}
+ 		for(TwoTuple coefficent: coefficients) {
+ 			alternativesFinalPreferences[alternative] = coefficent.calculateInverseDelta();
  			alternative++;
 		}
 		
-		return alternativesFinalPreferences;*/
-		return null;
+		return alternativesFinalPreferences;
 	}
 
 	public Double[] computeAlternativesPreferenceInferAttenuationFactor(double attenuationFactor) {
@@ -526,7 +492,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		double alternativeRatioFinalPreference = 1;
 
 		for (int criterion = 0; criterion < _numCriteria; criterion++) {
-			alternativeRatioFinalPreference *= Math.pow((_decisionMatrix[criterion][alternativeIndex1] / _decisionMatrix[criterion][alternativeIndex2]),
+			alternativeRatioFinalPreference *= Math.pow(((Double) _decisionMatrix[criterion][alternativeIndex1] / (Double) _decisionMatrix[criterion][alternativeIndex2]),
 					w[criterion]);
 		}
 
@@ -719,7 +685,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 
 	public void compute() {
 
-		readDecisionMatrix();
+		updateDecisionMatrix();
 
 		switch (_model) {
 		case WEIGHTED_SUM:
@@ -749,7 +715,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	public void computeMulticriteriaProblem(String multicriteriaProblem) {
 		
 		if(multicriteriaProblem.equals("topsis")) { //$NON-NLS-1$
-			readDecisionMatrix();
+			updateDecisionMatrix();
 		}
 
 		if (_problem == EProblem.MOST_CRITICAL_CRITERION) {
@@ -778,7 +744,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		for (int alternative = 0; alternative < _numAlternatives; alternative++) {
 			_alternativesFinalPreferences[alternative] = 0d;
 			for (int criterion = 0; criterion < _numCriteria; criterion++) {
-				_alternativesFinalPreferences[alternative] += _decisionMatrix[criterion][alternative] * _w[criterion];
+				_alternativesFinalPreferences[alternative] += (Double) _decisionMatrix[criterion][alternative] * _w[criterion];
 			}
 		}
 
@@ -826,11 +792,11 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		for (int i = 0; i < _numAlternatives - 1; i++) {
 			for (int j = i + 1; j < _numAlternatives; j++) {
 				for (int k = 0; k < _numCriteria; k++) {
-					if (_decisionMatrix[k][j] - _decisionMatrix[k][i] == 0) {
+					if ((Double) _decisionMatrix[k][j] - (Double) _decisionMatrix[k][i] == 0) {
 						_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;
 					} else {
 						_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = (_alternativesFinalPreferences[j] - _alternativesFinalPreferences[i]) 
-								/ (_decisionMatrix[k][j] - _decisionMatrix[k][i]);
+								/ ((Double) _decisionMatrix[k][j] - (Double) _decisionMatrix[k][i]);
 						if (_minimumAbsoluteChangeInCriteriaWeights[i][j][k] > _w[k]) {
 							_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;
 						}
@@ -1009,10 +975,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			for (int j = 0; j < _numAlternatives; j++) {
 				for (int k = 0; k < _numCriteria; k++) {
 					if (_absoluteThresholdValues[i][j][k] != null) {
-						if (_decisionMatrix[k][i] == 0) {
+						if ((Double )_decisionMatrix[k][i] == 0) {
 							_relativeThresholdValues[i][j][k] = null;
 						} else {
-							_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * (100d / _decisionMatrix[k][i]);
+							_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * (100d / (Double) _decisionMatrix[k][i]);
 						}
 					} else {
 						_relativeThresholdValues[i][j][k] = null;
@@ -1063,7 +1029,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				for (int k = 0; k < _numCriteria; k++) {
 					if (i != j) {
 						denominator = _alternativesFinalPreferences[i] - _alternativesFinalPreferences[j] + _w[k] * 
-								(_decisionMatrix[k][j] - _decisionMatrix[k][i] + 1);
+								((Double)_decisionMatrix[k][j] - (Double)_decisionMatrix[k][i] + 1);
 						if (denominator == 0) {
 							_absoluteThresholdValues[i][j][k] = null;
 						} else {
@@ -1085,10 +1051,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			for (int j = 0; j < _numAlternatives; j++) {
 				for (int k = 0; k < _numCriteria; k++) {
 					if (_absoluteThresholdValues[i][j][k] != null) {
-						if (_decisionMatrix[k][i] == 0) {
+						if ((Double) _decisionMatrix[k][i] == 0) {
 							_relativeThresholdValues[i][j][k] = null;
 						} else {
-							_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * (100d / _decisionMatrix[k][i]);
+							_relativeThresholdValues[i][j][k] = _absoluteThresholdValues[i][j][k] * (100d / (Double) _decisionMatrix[k][i]);
 						}
 					} else {
 						_relativeThresholdValues[i][j][k] = null;
@@ -1119,7 +1085,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 				_alternativesRatioFinalPreferences[alternative1][alternative2] = 1d;
 				for (int criterion = 0; criterion < _numCriteria; criterion++) {
 					_alternativesRatioFinalPreferences[alternative1][alternative2] *= Math.pow(
-							(_decisionMatrix[criterion][alternative1] / _decisionMatrix[criterion][alternative2]), _w[criterion]);
+							((Double) _decisionMatrix[criterion][alternative1] / (Double) _decisionMatrix[criterion][alternative2]), _w[criterion]);
 				}
 			}
 		}
@@ -1184,10 +1150,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			for (int j = i + 1; j < _numAlternatives; j++) {
 				for (int k = 0; k < _numCriteria; k++) {
 					numerator = Math.log(_alternativesRatioFinalPreferences[i][j]);
-					if (_decisionMatrix[k][j] == 0) {
+					if ((Double) _decisionMatrix[k][j] == 0) {
 						_minimumAbsoluteChangeInCriteriaWeights[i][j][k] = null;
 					} else {
-						denominator = Math.log(_decisionMatrix[k][i] / _decisionMatrix[k][j]);
+						denominator = Math.log((Double) _decisionMatrix[k][i] / (Double) _decisionMatrix[k][j]);
 						if (denominator != 0) {
 							total = numerator / denominator;
 							if (total > _w[k]) {
@@ -1271,7 +1237,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 					auxAlternativesRatioPreferences[alternative1][alternative2] = 1d;
 					for (int criterion = 0; criterion < _numCriteria; criterion++) {
 						auxAlternativesRatioPreferences[alternative1][alternative2] *= Math.pow(
-								(_decisionMatrix[criterion][alternative1] / _decisionMatrix[criterion][alternative2]), _w[criterion]);
+								((Double) _decisionMatrix[criterion][alternative1] / (Double) _decisionMatrix[criterion][alternative2]), _w[criterion]);
 					}
 				}
 			}
@@ -1320,20 +1286,22 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void readDecisionMatrix() {
-
-		_decisionMatrix = new Double[_numCriteria][_numAlternatives];
+	private void updateDecisionMatrix() {
+		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix = _aggregationPhase.getDecisionMatrix();
 		aggregateAlternativesNewWeights();
 		
-		Map<Pair<Alternative, Criterion>, Valuation> decisionMatrix = _aggregationPhase.getDecisionMatrix();
-		int i = 0, j = 0;
-		for (Alternative a : _alternatives) {
-			j = 0;
-			for (Criterion c : _elementsSet.getAllSubcriteria()) {
-				_decisionMatrix[j][i] = ((TwoTuple) decisionMatrix.get(new Pair(a, c))).calculateInverseDelta();
-				j++;
+		if(!decisionMatrix.isEmpty()) {
+			_decisionMatrix = new Double[_numCriteria][_numAlternatives];
+			
+			int i = 0, j = 0;
+			for (Alternative a : _alternatives) {
+				j = 0;
+				for (Criterion c : _elementsSet.getAllSubcriteria()) {
+					_decisionMatrix[j][i] = ((TwoTuple) decisionMatrix.get(new Pair(a, c))).calculateInverseDelta();
+					j++;
+				}
+				i++;
 			}
-			i++;
 		}
 	}
 
@@ -1350,10 +1318,13 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		criteriaOperatorWeights.put(null, weights);
 		_aggregationPhase.setCriteriaOperatorWeights(criteriaOperatorWeights);
 		
+		
 		Set<ProblemElement> experts = new HashSet<ProblemElement>(), alternatives = new HashSet<ProblemElement>(), criteria = new HashSet<ProblemElement>();
-		experts.addAll(_elementsSet.getAllExperts());
+		experts.addAll(_elementsSet.getOnlyExpertChildren());
 		alternatives.addAll(_alternatives);
-		criteria.addAll(_elementsSet.getAllCriteria());
+		criteria.addAll(_elementsSet.getAllSubcriteria());
+		
+		_aggregationPhase.setUnifiedDomain(_unifiedDomain);
 		_aggregationPhase.aggregateAlternatives(experts, alternatives, criteria);
 	}
 
@@ -1363,7 +1334,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			for (int i = 0; i < _numCriteria; ++i) {
 				acum = sumCriteria(i);
 				for (int j = 0; j < _numAlternatives; ++j) {
-					noStandarizedValue = _decisionMatrix[i][j];
+					noStandarizedValue = (Double) _decisionMatrix[i][j];
 					_decisionMatrix[i][j] = (double) Math.round((noStandarizedValue / acum) * 10000d) / 10000d;
 				}
 			}
@@ -1373,7 +1344,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private boolean checkNormalizedMatrix() {
 		for (int i = 0; i < _numCriteria; ++i) {
 			for (int j = 0; j < _numAlternatives; ++j) {
-				if (_decisionMatrix[i][j] > 1) {
+				if ((Double) _decisionMatrix[i][j] > 1) {
 					return false;
 				}
 			}
@@ -1384,7 +1355,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private double sumCriteria(int numCriterion) {
 		double value = 0;
 		for (int j = 0; j < _numAlternatives; ++j) {
-			value += Math.pow(_decisionMatrix[numCriterion][j], 2);
+			value += Math.pow((Double) _decisionMatrix[numCriterion][j], 2);
 		}
 		return Math.sqrt(value);
 	}
@@ -1395,7 +1366,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		for (int c = 0; c < _numCriteria; ++c) {
 			rowAcum = 0;
 			for (int a = 0; a < _numAlternatives; ++a) {
-				rowAcum += _decisionMatrix[c][a];
+				rowAcum += (Double) _decisionMatrix[c][a];
 			}
 			if (rowAcum != 1) {
 				normalizeRow(c, Math.round(rowAcum * 10000d) / 10000d);
@@ -1406,7 +1377,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 	private void normalizeRow(int criterion, double rowAcum) {
 		double value;
 		for (int a = 0; a < _numAlternatives; ++a) {
-			value = Math.round((_decisionMatrix[criterion][a] / rowAcum) * 10000d) / 10000d;
+			value = Math.round(((Double) _decisionMatrix[criterion][a] / rowAcum) * 10000d) / 10000d;
 			_decisionMatrix[criterion][a] = value;
 		}
 	}

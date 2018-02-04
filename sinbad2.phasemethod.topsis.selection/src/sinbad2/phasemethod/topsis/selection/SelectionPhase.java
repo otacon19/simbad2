@@ -45,8 +45,8 @@ public class SelectionPhase implements IPhaseMethod {
 
 	private List<TwoTuple> _closenessCoefficient;
 	
-	private Map<Expert, LabelLinguisticDomain[]> _weightsExperts;
-	private TwoTuple[] _collectiveWeights;
+	private Map<Expert, LabelLinguisticDomain[]> _criteriaWeightsByExperts;
+	private TwoTuple[] _criteriaWeights;
 	
 	private FuzzySet _unificationDomain;
 	private FuzzySet _distanceDomain;
@@ -82,7 +82,7 @@ public class SelectionPhase implements IPhaseMethod {
 		_weightsDomain = new FuzzySet();
 		createWeightsLabels();
 		
-		_weightsExperts = new HashMap<>();
+		_criteriaWeightsByExperts = new HashMap<>();
 		initializeWeightsExperts();
 	}
 
@@ -109,7 +109,7 @@ public class SelectionPhase implements IPhaseMethod {
 			for(int i = 0; i < weights.length; ++i) {
 				weights[i] = _weightsDomain.getLabelSet().getLabel((_weightsDomain.getLabelSet().getCardinality() - 1) / 2);
 			}
-			_weightsExperts.put(e, weights);
+			_criteriaWeightsByExperts.put(e, weights);
 		}
 	}
 	
@@ -200,22 +200,30 @@ public class SelectionPhase implements IPhaseMethod {
 		_weightsDomain = domain;
 	}
 	
-	public Map<Expert, LabelLinguisticDomain[]> getExpertsWeights() {
-		return _weightsExperts;
+	public Map<Expert, LabelLinguisticDomain[]> getCriteriaWeightsByExperts() {
+		return _criteriaWeightsByExperts;
 	}
 	
-	public void setExpertsWeights(Map<Expert, LabelLinguisticDomain[]> weightsExperts) {
-		_weightsExperts = weightsExperts;
+	public void setCriteriaWeightsByExperts(Map<Expert, LabelLinguisticDomain[]> weightsExperts) {
+		_criteriaWeightsByExperts = weightsExperts;
+	}
+	
+	public TwoTuple[] getCriteriaWeights() {
+		return _criteriaWeights;
+	}
+	
+	public void setCriteriaWeights(TwoTuple[] criteriaWeights) {
+		_criteriaWeights = criteriaWeights;
 	}
 	
 	public LabelLinguisticDomain getExpertWeight(Expert e, int crit) {
-		return _weightsExperts.get(e)[crit];
+		return _criteriaWeightsByExperts.get(e)[crit];
 	}
 
 	public void setExpertWeight(Expert e, int crit, LabelLinguisticDomain weight) {
-		LabelLinguisticDomain[] weights = _weightsExperts.get(e);
+		LabelLinguisticDomain[] weights = _criteriaWeightsByExperts.get(e);
 		weights[crit] = weight;
-		_weightsExperts.put(e, weights);
+		_criteriaWeightsByExperts.put(e, weights);
 	}
 	
 	private void calculateDecisionMatrix() {
@@ -253,8 +261,8 @@ public class SelectionPhase implements IPhaseMethod {
 
 	private Map<Expert, TwoTuple[]> transformWeightsToTwoTuple() {
 		Map<Expert, TwoTuple[]> result = new HashMap<>();
-		for(Expert e: _weightsExperts.keySet()) {
-			LabelLinguisticDomain[] weights = _weightsExperts.get(e);
+		for(Expert e: _criteriaWeightsByExperts.keySet()) {
+			LabelLinguisticDomain[] weights = _criteriaWeightsByExperts.get(e);
 			TwoTuple[] weights2T = new TwoTuple[weights.length];
 			for(int i = 0; i < weights.length; ++i) {
 				weights2T[i] = new TwoTuple(_weightsDomain, weights[i]);
@@ -265,7 +273,7 @@ public class SelectionPhase implements IPhaseMethod {
 	}
 	
 	private void computeCollectiveWeights(Map<Expert, TwoTuple[]> weightsTwoTuple) {
-		_collectiveWeights = new TwoTuple[_elementsSet.getAllSubcriteria().size()];
+		_criteriaWeights = new TwoTuple[_elementsSet.getAllSubcriteria().size()];
 		double acum;
 		for(int i = 0; i < _elementsSet.getAllSubcriteria().size(); ++i) {
 			acum = 0;
@@ -274,7 +282,7 @@ public class SelectionPhase implements IPhaseMethod {
 			}
 			TwoTuple weight = new TwoTuple(_weightsDomain);
 			weight.calculateDelta(acum / weightsTwoTuple.size());
-			_collectiveWeights[i] = weight;
+			_criteriaWeights[i] = weight;
 		}
 	}
 
@@ -295,8 +303,6 @@ public class SelectionPhase implements IPhaseMethod {
 				for(Alternative a: alternatives) {
 					for(ValuationKey vk: unificationPhase.getTwoTupleValuations().keySet()) {
 						if(vk.getExpert().equals(e) && vk.getCriterion().equals(c) && vk.getAlternative().equals(a)){
-							System.out.println(vk.getExpert().getId() + " - " + vk.getAlternative() + " - " + vk.getCriterion().getId() + 
-									" - " + ((TwoTuple) unificationPhase.getTwoTupleValuations().get(vk)).prettyFormat());
 							dm[criteria.indexOf(c)][alternatives.indexOf(a)] = unificationPhase.getTwoTupleValuations().get(vk);
 						}
 					}
@@ -307,15 +313,24 @@ public class SelectionPhase implements IPhaseMethod {
 	}
 	
 	private void computeWeigthedDecisionMatrix() {
-		/*for(int i = 0; i < _decisionMatrix.length; ++i) {
+		Double sumWeights = sumWeights();
+		for(int i = 0; i < _decisionMatrix.length; ++i) {
 			for(int j = 0; j < _decisionMatrix[i].length; ++j) {
 				TwoTuple v = (TwoTuple) _decisionMatrix[i][j];
-				TwoTuple weight = _collectiveWeights[i];
+				TwoTuple weight = _criteriaWeights[i];
 				TwoTuple result = new TwoTuple(_unificationDomain);
-				result.calculateDelta(v.calculateInverseDelta() * weight.calculateInverseDelta());
+				result.calculateDelta((v.calculateInverseDelta() * weight.calculateInverseDelta()) / sumWeights);
 				_decisionMatrix[i][j] = result;
 			}
-		}*/
+		}
+	}
+
+	private Double sumWeights() {
+		Double result = 0d;
+		for(TwoTuple w: _criteriaWeights) {
+			result += w.calculateInverseDelta();
+		}
+		return result;
 	}
 
 	private void calculateIdealSolution() {

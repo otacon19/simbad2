@@ -43,6 +43,9 @@ public class IdealSolutionTableViewerContentProvider implements IStructuredConte
 	
 	@SuppressWarnings("unchecked")
 	public void setInput(List<TwoTuple> noIdealSolution) {
+		
+		_idealSolutionData.clear();
+		
 		Object[] data;
 		for(int i = 0; i < noIdealSolution.size(); ++i) {
 			data = new Object[2];

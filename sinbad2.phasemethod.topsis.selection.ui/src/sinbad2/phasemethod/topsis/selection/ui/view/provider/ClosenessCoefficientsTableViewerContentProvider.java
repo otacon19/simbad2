@@ -21,6 +21,7 @@ public class ClosenessCoefficientsTableViewerContentProvider implements IStructu
 	}
 	
 	public void setInput(List<TwoTuple> closenessCoefficients) {
+		_closenessCoefficients.clear();
 		Object[] data;
 		for(int i = 0; i < closenessCoefficients.size(); ++i) {
 			data = new Object[3];
