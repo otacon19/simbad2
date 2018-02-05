@@ -72,45 +72,9 @@ public class SelectionPhase implements IPhaseMethod {
 		_noIdealDistance = new LinkedList<TwoTuple>();
 		
 		_closenessCoefficient = new LinkedList<TwoTuple>();
-		
-		_distanceDomain = new FuzzySet();
-		createDistanceLabels();
-		
-		_similarityDomain = new FuzzySet();
-		createSimilarityLabels();
-		
-		_weightsDomain = new FuzzySet();
-		createWeightsLabels();
+		_decisionMatricesExperts = new HashMap<>();
 		
 		_criteriaWeightsByExperts = new HashMap<>();
-		initializeWeightsExperts();
-	}
-
-	private void createDistanceLabels() {
-		String[] labels = new String[]{"Equal", "Almost equal", "A bit close", "Neither close nor far", "A bit far", "Far", "Far away"};
-		_distanceDomain.createTrapezoidalFunction(labels);
-	}
-	
-	private void createSimilarityLabels() {
-		String[] labels = new String[]{"Total dissimilar", "Almost total dissimilar", "A bit dissimilar", 
-				"Neither dissimilar nor dissimilar", "A bit similar", "Almost similar", "Completely similar"};
-		_similarityDomain.createTrapezoidalFunction(labels);
-	}
-	
-	private void createWeightsLabels() {
-		String[] labels = new String[]{"Very low", "Low", "Medium low", 
-				"Medium", "Medium high", "High", "Very high"};
-		_weightsDomain.createTrapezoidalFunction(labels);
-	}
-
-	private void initializeWeightsExperts() {
-		for(Expert e: _elementsSet.getOnlyExpertChildren()) {
-			LabelLinguisticDomain[] weights = new LabelLinguisticDomain[_elementsSet.getAllSubcriteria().size()];
-			for(int i = 0; i < weights.length; ++i) {
-				weights[i] = _weightsDomain.getLabelSet().getLabel((_weightsDomain.getLabelSet().getCardinality() - 1) / 2);
-			}
-			_criteriaWeightsByExperts.put(e, weights);
-		}
 	}
 	
 	@Override
@@ -536,9 +500,15 @@ public class SelectionPhase implements IPhaseMethod {
 		_idealDistance.clear();
 		_noIdealDistance.clear();
 		_closenessCoefficient.clear();
+		_criteriaWeightsByExperts.clear();
+		_decisionMatricesExperts.clear();
 	}
 
 	public void execute() {
+		createDistanceLabels();
+		createSimilarityLabels();
+		createWeightsLabels();
+		initializeWeightsExperts();
 		calculateDecisionMatrix();
 		calculateIdealSolution();
 		calculateNoIdealSolution();
@@ -547,6 +517,36 @@ public class SelectionPhase implements IPhaseMethod {
 		calculateClosenessCoefficient();
 	}
 	
+	private void initializeWeightsExperts() {
+		for(Expert e: _elementsSet.getOnlyExpertChildren()) {
+			LabelLinguisticDomain[] weights = new LabelLinguisticDomain[_elementsSet.getAllSubcriteria().size()];
+			for(int i = 0; i < weights.length; ++i) {
+				weights[i] = _weightsDomain.getLabelSet().getLabel((_weightsDomain.getLabelSet().getCardinality() - 1) / 2);
+			}
+			_criteriaWeightsByExperts.put(e, weights);
+		}
+	}
+	
+	private void createDistanceLabels() {
+		_distanceDomain = new FuzzySet();
+		String[] labels = new String[]{"Equal", "Almost equal", "A bit close", "Neither close nor far", "A bit far", "Far", "Far away"};
+		_distanceDomain.createTrapezoidalFunction(labels);
+	}
+	
+	private void createSimilarityLabels() {
+		_similarityDomain = new FuzzySet();
+		String[] labels = new String[]{"Total dissimilar", "Almost total dissimilar", "A bit dissimilar", 
+				"Neither dissimilar nor dissimilar", "A bit similar", "Almost similar", "Completely similar"};
+		_similarityDomain.createTrapezoidalFunction(labels);
+	}
+	
+	private void createWeightsLabels() {
+		_weightsDomain = new FuzzySet();
+		String[] labels = new String[]{"Very low", "Low", "Medium low", 
+				"Medium", "Medium high", "High", "Very high"};
+		_weightsDomain.createTrapezoidalFunction(labels);
+	}
+
 	@Override
 	public void notifyPhaseMethodStateChange(PhaseMethodStateChangeEvent event) {
 		if (event.getChange().equals(EPhaseMethodStateChange.ACTIVATED)) {

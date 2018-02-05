@@ -52,7 +52,6 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 	public void createPartControl(Composite parent) {	
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_selectionPhase = (SelectionPhase) pmm.getPhaseMethod(SelectionPhase.ID).getImplementation();
-		_selectionPhase.execute();
 		
 		_completed = true;
 
