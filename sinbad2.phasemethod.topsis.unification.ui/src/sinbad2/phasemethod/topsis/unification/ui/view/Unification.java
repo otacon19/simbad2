@@ -70,7 +70,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 	private UnificationPhase _unificationPhase;
 	
 	@Override
-	public void createPartControl(Composite parent) {	
+	public void createPartControl(Composite parent) {
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_unificationPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
 		
@@ -255,7 +255,7 @@ public class Unification extends ViewPart implements IStepStateListener {
 	@Override
 	public void dispose() {
 		super.dispose();
-
+		
 		_completed = false;
 	}
 	

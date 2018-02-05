@@ -111,6 +111,13 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 	}
 
 	@Override
+	public void dispose() {
+		super.dispose();
+		
+		_completed = true;
+	}
+	
+	@Override
 	public void setRatingView(RatingView rating) {
 		_ratingView = rating;
 		notifyStepStateChange();

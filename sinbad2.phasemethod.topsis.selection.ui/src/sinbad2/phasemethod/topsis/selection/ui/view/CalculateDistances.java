@@ -485,5 +485,12 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 			c.dispose();
 		}
 	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		ExpertsWeightContentProvider.removeChangeWeightListener(this);
+	}
 
 }

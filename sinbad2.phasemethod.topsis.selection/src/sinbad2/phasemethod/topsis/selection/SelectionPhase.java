@@ -461,7 +461,6 @@ public class SelectionPhase implements IPhaseMethod {
 			denominator = (idealDistance.calculateInverseDelta() - 1) + (noIdealDistance.calculateInverseDelta() - 1);  
 			result = numerator / denominator;
 			result *= t_prima_prima;
-			result += 1;
 			
 			coefficient = new TwoTuple(_distanceDomain);
 			coefficient.calculateDelta(result);

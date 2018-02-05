@@ -406,6 +406,14 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 		_ratingView = rating;
 		notifyStepStateChange();
 	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
+		ExpertsWeightContentProvider.removeChangeWeightListener(this);
+		_completed = true;
+	}
 
 	@Override
 	public void setFocus() {}
