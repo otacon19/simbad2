@@ -393,18 +393,12 @@ public class SelectionPhase implements IPhaseMethod {
 		TwoTuple collective, idealSolution;
 		TwoTuple distance = null;
 		
-		int t = _unificationDomain.getLabelSet().getCardinality();
-		int t_prima = _similarityDomain.getLabelSet().getCardinality();
-		int t_prima_prima = _distanceDomain.getLabelSet().getCardinality();
-		
 		double acum = 0;
 		for(int i = 0; i < _decisionMatrix[0].length; ++i) {
 			for(int j = 0; j < _decisionMatrix.length; ++j) {
 				collective = (TwoTuple) _decisionMatrix[j][i];
 				idealSolution =  _idealSolution.get(j);
-				distance = new TwoTuple(_distanceDomain);
-				distance.calculateDelta((t_prima + 1) - (t_prima - ((Math.abs(collective.calculateInverseDelta() - idealSolution.calculateInverseDelta()) * (t_prima_prima - 1)) / (t - 1))));
-				
+				distance = calculateDistanceBetweenTwoTuple(idealSolution, collective);
 				acum += distance.calculateInverseDelta();
 			}
 			
@@ -414,26 +408,35 @@ public class SelectionPhase implements IPhaseMethod {
 			_idealDistance.add(distance);
 		}
 	}
+	
+	private TwoTuple calculateDistanceBetweenTwoTuple(TwoTuple t1, TwoTuple t2) {
+		int t = _unificationDomain.getLabelSet().getCardinality();
+		int t_prima = _similarityDomain.getLabelSet().getCardinality();
+		int t_prima_prima = _distanceDomain.getLabelSet().getCardinality();
+		
+		int t_decrement = t - 1;
+		int t_prima_increment = t_prima + 1;
+		int t_prima_prima_decrement = t_prima_prima - 1;
+		
+		double factor = t_prima - ((Math.abs(t1.calculateInverseDelta() - t2.calculateInverseDelta()) * t_prima_prima_decrement) / t_decrement);
+		
+		TwoTuple result = new TwoTuple(_distanceDomain);
+		result.calculateDelta(t_prima_increment - factor);
+		return result;
+	}
 
 	private void calculateNoIdealEuclideanDistance() {
 		_noIdealDistance.clear();
 
 		TwoTuple collective, noIdealSolution;
 		TwoTuple distance = null;
-		
-		int t = _unificationDomain.getLabelSet().getCardinality();
-		int t_prima = _similarityDomain.getLabelSet().getCardinality();
-		int t_prima_prima = _distanceDomain.getLabelSet().getCardinality();
-		
+
 		double acum = 0;
 		for(int i = 0; i < _decisionMatrix[0].length; ++i) {
 			for(int j = 0; j < _decisionMatrix.length; ++j) {
 				collective = (TwoTuple) _decisionMatrix[j][i];
 				noIdealSolution = (TwoTuple) _noIdealSolution.get(j);
-				
-				distance = new TwoTuple(_distanceDomain);
-				distance.calculateDelta((t_prima + 1) - (t_prima - ((Math.abs(collective.calculateInverseDelta() - noIdealSolution.calculateInverseDelta()) * (t_prima_prima - 1)) / (t - 1))));
-				
+				distance = calculateDistanceBetweenTwoTuple(noIdealSolution, collective);
 				acum += distance.calculateInverseDelta();
 			}
 			
@@ -450,13 +453,18 @@ public class SelectionPhase implements IPhaseMethod {
 		int t_prima_prima = _distanceDomain.getLabelSet().getCardinality();
 		
 		TwoTuple idealDistance, noIdealDistance, coefficient; 
+		double numerator, denominator, result;
 		for(int i = 0; i < _decisionMatrix[0].length; ++i) {
 			idealDistance = (TwoTuple) _idealDistance.get(i);
 			noIdealDistance = (TwoTuple) _noIdealDistance.get(i);
+			numerator = noIdealDistance.calculateInverseDelta() - 1;
+			denominator = (idealDistance.calculateInverseDelta() - 1) + (noIdealDistance.calculateInverseDelta() - 1);  
+			result = numerator / denominator;
+			result *= t_prima_prima;
+			result += 1;
 			
 			coefficient = new TwoTuple(_distanceDomain);
-			coefficient.calculateDelta(((((noIdealDistance.calculateInverseDelta() - 1) / 
-					((idealDistance.calculateInverseDelta() - 1) + (noIdealDistance.calculateInverseDelta() - 1))) * t_prima_prima) + 1));
+			coefficient.calculateDelta(result);
 			
 			_closenessCoefficient.add(coefficient);
 		}

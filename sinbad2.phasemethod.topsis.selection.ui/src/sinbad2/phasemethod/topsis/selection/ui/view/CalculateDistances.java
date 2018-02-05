@@ -400,8 +400,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 		setWeights();
 		setFinalPreferences();
 		
-		
-		notifyStepStateChange();
+		//notifyStepStateChange();
 	}
 	
 	private void setDecisionMatrix() {

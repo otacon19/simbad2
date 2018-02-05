@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,10 +41,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 	private ValueMarker _horizontalMarker;
 
 	private List<Alternative> _alternatives;
-	private List<Criterion> _criteria;
 	private Criterion _criterionSelected;
-
-	private Integer _typeTODIMChart;
 	
 	private EModel _model;
 
@@ -53,7 +49,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 
 	public AlternativesEvolutionWeigthsLineChart() {
 		_alternatives = ProblemElementsManager.getInstance().getActiveElementSet().getAlternatives();
-		_criteria = ProblemElementsManager.getInstance().getActiveElementSet().getAllCriteria();
+		ProblemElementsManager.getInstance().getActiveElementSet().getAllCriteria();
 
 		_model = EModel.WEIGHTED_SUM;
 		
@@ -107,8 +103,6 @@ public class AlternativesEvolutionWeigthsLineChart {
 		_sensitivityAnalysis = sensitivityAnalysis;
 		_alternatives = _sensitivityAnalysis.getAlternatives();
 		
-		_typeTODIMChart = null;
-
 		refreshChart();
 
 		_chartComposite = new ChartComposite(container, style, _chart, true);
@@ -118,8 +112,6 @@ public class AlternativesEvolutionWeigthsLineChart {
 	public void initialize(Composite container, int width, int height, int style, SensitivityAnalysis sensitivityAnalysis, int typeTODIM) {
 		_sensitivityAnalysis = sensitivityAnalysis;
 		_alternatives = _sensitivityAnalysis.getAlternatives();
-		
-		_typeTODIMChart = typeTODIM;
 
 		refreshChart();
 
@@ -244,18 +236,9 @@ public class AlternativesEvolutionWeigthsLineChart {
 
 	private List<XYSeries> computeLineChart() {
 		List<XYSeries> alternativesSeries;
-		if (_typeTODIMChart == null) {	
-			setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution + _criterionSelected.getId().toUpperCase());
-			alternativesSeries = computeEvolutionWeights();
-		} else if(_typeTODIMChart == 0) {
-			setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution);
-			alternativesSeries = computeTODIMEvolutionWeights();	
-		} else {
-			alternativesSeries = computeAttenuationFactorEvolution();
-			setRangeAxis(_chart.getXYPlot().getDomainAxis(), 1, 15);
-			setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Attenuation_factor_evolution);
-		}
-		
+		setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution + _criterionSelected.getId().toUpperCase());
+		alternativesSeries = computeEvolutionWeights();
+
 		return alternativesSeries;
 	}
 	
@@ -311,66 +294,6 @@ public class AlternativesEvolutionWeigthsLineChart {
 			for (int s = 0; s < alternativesSeries.size(); ++s) {
 				XYSeries serie = alternativesSeries.get(s);
 				serie.add(Math.round(j * 100d) / 100d, alternativePreferences[s]);
-			}
-		}
-		
-		return alternativesSeries;
-	}
-	
-	private List<XYSeries> computeTODIMEvolutionWeights() {
-		
-		List<XYSeries> alternativesSeries = new LinkedList<XYSeries>();
-		for (int i = 0; i < _alternatives.size(); ++i) {
-			alternativesSeries.add(new XYSeries(_alternatives.get(i).getId()));
-		}
-		
-		double max = Double.NEGATIVE_INFINITY;
-		int mostImportantCriterionPos = 0;
-		List<Double> weights = new LinkedList<Double>();
-		Double[] ws = _sensitivityAnalysis.getWeights();
-		for(int w = 0; w < ws.length; ++w) {
-			weights.add(ws[w]);
-			
-			if(ws[w] > max) {
-				max = ws[w];
-				mostImportantCriterionPos = w;
-			}
-		}
-
-		Collections.sort(weights);
-		Collections.reverse(weights);
-		Double secondMaxWeight = Math.round(weights.get(1) * 1000d) / 1000d + 0.01;
-		
-		Double[] alternativePreferences;
-		for (double j = secondMaxWeight; j <= 1; j += 0.01) {
-			alternativePreferences = _sensitivityAnalysis.computeAlternativesFinalPreferenceInferWeights(_sensitivityAnalysis.calculateInferWeights(_criteria.get(mostImportantCriterionPos), j));
-			for (int s = 0; s < alternativesSeries.size(); ++s) {
-				XYSeries serie = alternativesSeries.get(s);
-				serie.add(Math.round(j * 1000d) / 1000d, alternativePreferences[s]);
-			}
-		}
-		
-		_currentMarker.setValue(weights.get(0));
-		_variableMarker.setLabel("minimum value");
-		_variableMarker.setValue(secondMaxWeight);
-		_variableMarker.setLabelOffset(new RectangleInsets(10, 50, 100, 0));
-		
-		return alternativesSeries;
-	}
-	
-	private List<XYSeries> computeAttenuationFactorEvolution() {
-		
-		List<XYSeries> alternativesSeries = new LinkedList<XYSeries>();
-		for (int i = 0; i < _alternatives.size(); ++i) {
-			alternativesSeries.add(new XYSeries(_alternatives.get(i).getId()));
-		}
-		
-		Double[] alternativePreferences;
-		for (int j = 1; j <= 15; j++) {
-			alternativePreferences = _sensitivityAnalysis.computeAlternativesPreferenceInferAttenuationFactor(j);
-			for (int s = 0; s < alternativesSeries.size(); ++s) {
-				XYSeries serie = alternativesSeries.get(s);
-				serie.add(j, alternativePreferences[s]);
 			}
 		}
 		

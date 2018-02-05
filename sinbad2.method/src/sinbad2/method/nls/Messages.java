@@ -13,6 +13,7 @@ public class Messages extends NLS {
 	public static String MethodsManager_Linguistic_Hierarchies;
 	public static String MethodsManager_Methodology_to_deal_with_unbalanced_linguistic_term_sets;
 	public static String MethodsManager_Complex_2_tuple_hesitant_linguistic_information;
+	public static String MethodsManager_TOPSIS;
 	
 	static {
 		// initialize resource bundle

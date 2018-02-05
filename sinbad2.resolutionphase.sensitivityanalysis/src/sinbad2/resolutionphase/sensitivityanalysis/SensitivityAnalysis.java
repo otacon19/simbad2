@@ -24,7 +24,6 @@ import sinbad2.element.criterion.Criterion;
 import sinbad2.method.MethodsManager;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.aggregation.AggregationPhase;
-import sinbad2.phasemethod.todim.resolution.ResolutionPhase;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.resolutionphase.IResolutionPhase;
 import sinbad2.resolutionphase.io.XMLRead;
@@ -236,16 +235,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_numCriteria = _elementsSet.getAllSubcriteria().size();
 		
 		String activatedMethodId = MethodsManager.getInstance().getActiveMethod().getId();
-		if(activatedMethodId.contains("todim")) { //$NON-NLS-1$
-			
-			if(weights != null) {
-				assignWeights(weights);
-			}
-			
-			computeTODIM();
-			computeMulticriteriaProblem("todim"); //$NON-NLS-1$
-			
-		} else if(activatedMethodId.contains("topsis")) { //$NON-NLS-1$
+		if(activatedMethodId.contains("topsis")) { //$NON-NLS-1$
 
 			computeTOPSIS();
 			computeMulticriteriaProblem("topsis"); //$NON-NLS-1$
@@ -254,38 +244,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			computeWeights(weights);
 			compute();
 		}
-	}
-
-	private void computeTODIM() {
-		Map<Criterion, Double> criteriaWeights = new HashMap<Criterion, Double>();
-		criteriaWeights = transformWeightsMap(_w);
-		
-		_alternativesFinalPreferences = new Double[_alternatives.size()];
-		
-		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
-		todimPhase.setCriteriaWeights(criteriaWeights);
-		todimPhase.calculateRelativeWeights();
-		todimPhase.calculateDominanceDegreeByCriterionFuzzyNumber(1.0);
-		todimPhase.calculateDominaceDegreeOverAlternatives();
-		
-		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
-		int alternative = 0;
-		for (Alternative a : _alternatives) {
-			_alternativesFinalPreferences[alternative] = globalDominance.get(a);
-			alternative++;
-		}
-	}
-	
-	private Map<Criterion, Double> transformWeightsMap(Double[] weights) {
-		int numWeight = 0;
-		
-		Map<Criterion, Double> criteriaWeights = new HashMap<Criterion, Double>();
-		for (Criterion c : _elementsSet.getAllSubcriteria()) {
-			criteriaWeights.put(c, weights[numWeight]);
-			numWeight++;
-		}
-		
-		return criteriaWeights;
 	}
 
 	private void computeTOPSIS() {
@@ -415,9 +373,7 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		Double[] alternativeFinalPreferences = new Double[_numAlternatives];
 
 		String activatedMethodId = MethodsManager.getInstance().getActiveMethod().getId();
-		if (activatedMethodId.contains("todim")) { //$NON-NLS-1$
-			alternativeFinalPreferences = computeTODIMWeightsInference(ws);
-		} else if(activatedMethodId.contains("topsis")) { //$NON-NLS-1$
+		if(activatedMethodId.contains("topsis")) { //$NON-NLS-1$
 			alternativeFinalPreferences = computeTOPSISInference(ws);
 		} else {
 			for (int alternative = 0; alternative < _numAlternatives; ++alternative) {
@@ -429,26 +385,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		}
 		
 		return alternativeFinalPreferences;
-	}
-	
-	private Double[] computeTODIMWeightsInference(Double[] weights) {
-		Map<Criterion, Double> criteriaWeights = transformWeightsMap(weights);
-
-		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
-		todimPhase.setCriteriaWeights(criteriaWeights);
-		todimPhase.calculateRelativeWeights();
-		todimPhase.calculateDominanceDegreeByCriterionFuzzyNumber(1.0);
-		todimPhase.calculateDominaceDegreeOverAlternatives();
-		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
-		
-		int alternative = 0;
-		Double[] alternativesFinalPreferences = new Double[_numAlternatives];
-		for (Alternative a : _alternatives) {
-			alternativesFinalPreferences[alternative] = globalDominance.get(a);
-			alternative++;
-		}
-
-		return alternativesFinalPreferences;
 	}
 	
 	private Double[] computeTOPSISInference(Double[] weights) {
@@ -464,27 +400,6 @@ public class SensitivityAnalysis implements IResolutionPhase {
  			alternative++;
 		}
 		
-		return alternativesFinalPreferences;
-	}
-
-	public Double[] computeAlternativesPreferenceInferAttenuationFactor(double attenuationFactor) {
-		Map<Criterion, Double> criteriaWeights = new HashMap<Criterion, Double>();
-		criteriaWeights = transformWeightsMap(_w);
-
-		ResolutionPhase todimPhase = (ResolutionPhase) PhasesMethodManager.getInstance().getPhaseMethod(ResolutionPhase.ID).getImplementation();
-		todimPhase.setCriteriaWeights(criteriaWeights);
-		todimPhase.calculateRelativeWeights();
-		todimPhase.calculateDominanceDegreeByCriterionFuzzyNumber(attenuationFactor);
-		todimPhase.calculateDominaceDegreeOverAlternatives();
-		Map<Alternative, Double> globalDominance = todimPhase.calculateGlobalDominance();
-		
-		int alternative = 0;
-		Double[] alternativesFinalPreferences = new Double[_numAlternatives];
-		for (Alternative a : _alternatives) {
-			alternativesFinalPreferences[alternative] = globalDominance.get(a);
-			alternative++;
-		}
-
 		return alternativesFinalPreferences;
 	}
 	
