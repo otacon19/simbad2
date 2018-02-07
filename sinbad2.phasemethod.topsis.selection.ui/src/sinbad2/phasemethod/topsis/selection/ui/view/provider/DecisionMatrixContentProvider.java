@@ -1,8 +1,5 @@
 package sinbad2.phasemethod.topsis.selection.ui.view.provider;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
@@ -11,17 +8,14 @@ import de.kupzog.ktable.KTableCellEditor;
 import de.kupzog.ktable.KTableCellRenderer;
 import de.kupzog.ktable.KTableNoScrollModel;
 import de.kupzog.ktable.SWTX;
-import de.kupzog.ktable.editors.KTableCellEditorCombo;
 import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
-import sinbad2.domain.linguistic.fuzzy.FuzzySet;
-import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
-import sinbad2.phasemethod.topsis.selection.ui.listener.IChangeWeightListener;
+import sinbad2.valuation.twoTuple.TwoTuple;
 
-public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
+public class DecisionMatrixContentProvider extends KTableNoScrollModel  {
 	
 	private KTable _table;
 	
@@ -29,28 +23,16 @@ public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
 	
 	private SelectionPhase _selectionPhase;
 	
-	private static List<IChangeWeightListener> _listeners;
-	
 	private final FixedCellRenderer _fixedRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | SWT.BOLD);
 	private final FixedCellRenderer _fixedRendererInTable = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	private final FixedCellRenderer _editableRenderer = new FixedCellRenderer(FixedCellRenderer.STYLE_FLAT | TextCellRenderer.INDICATION_FOCUS);
 	
-	class MyOwnKTableCellEditorCombo extends KTableCellEditorCombo {
-		@Override
-		public int getActivationSignals() {
-			return SINGLECLICK;
-		}
-	}
-	
-	private MyOwnKTableCellEditorCombo kTableCombo = new MyOwnKTableCellEditorCombo();
 
-	public ExpertsWeightContentProvider(KTable table, SelectionPhase selectionPhase) {
+	public DecisionMatrixContentProvider(KTable table, SelectionPhase selectionPhase) {
 		super(table);
 		
 		_table = table;
 		_selectionPhase = selectionPhase;
-		
-		_listeners = new LinkedList<IChangeWeightListener>();
 		
 		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
 		
@@ -100,22 +82,9 @@ public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
 	public boolean isRowResizable(int arg0) {
 		return false;
 	}
-
-	@Override
-	public KTableCellEditor doGetCellEditor(int col, int row) {
-		if (col != 0 && row != 0) {
-			kTableCombo = new MyOwnKTableCellEditorCombo();
-			FuzzySet weightsDomain = _selectionPhase.getWeightsDomain();
-			
-			String[] valuesString = new String[weightsDomain.getLabelSet().getCardinality()];
-			for(int i = 0; i < valuesString.length; ++i) {
-				valuesString[i] = weightsDomain.getLabelSet().getLabel(i).getName();
-			}
 	
-			kTableCombo.setItems(valuesString);
-			
-			return kTableCombo;
-		}
+	@Override
+	public KTableCellEditor doGetCellEditor(int arg0, int arg1) {
 		return null;
 	}
 
@@ -130,24 +99,24 @@ public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
 
 	@Override
 	public int doGetColumnCount() {
-		return _elementsSet.getAllSubcriteria().size() + getFixedColumnCount();
+		return _elementsSet.getAlternatives().size() + getFixedColumnCount();
 	}
 
 	@Override
 	public Object doGetContentAt(int col, int row) {
 		if ((col == 0) && (row == 0)) {
-			return ""; //$NON-NLS-1$
+			return "Decision matrix"; //$NON-NLS-1$
 		}
 		
 		Object content;
 
 		try {
 			if (col == 0) {
-				content = expertAbbreviation(row);
+				content = criterionAbbreviation(row);
 			} else if (row == 0) {
-				content = criterionAbbreviation(col);
+				content = alternativeAbbreviation(col);
 			} else {
-				content = _selectionPhase.getExpertWeight(_elementsSet.getOnlyExpertChildren().get(row - 1), col - 1);
+				content = ((TwoTuple) _selectionPhase.getUnweightedDecisionMatrix()[row - 1][ col - 1]).prettyFormat();
 			}
 		} catch (Exception e) {
 			content = ""; //$NON-NLS-1$
@@ -160,25 +129,17 @@ public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
 		return _elementsSet.getAllSubcriteria().get(pos - 1).getId();
 	}
 	
-	private Object expertAbbreviation(int pos) {
-		return _elementsSet.getOnlyExpertChildren().get(pos - 1).getId();
+	private Object alternativeAbbreviation(int pos) {
+		return _elementsSet.getAlternatives().get(pos - 1).getId();
 	}
 
 	@Override
 	public int doGetRowCount() {
-		return _elementsSet.getOnlyExpertChildren().size() + getFixedRowCount();
+		return _elementsSet.getAllSubcriteria().size() + getFixedRowCount();
 	}
 
 	@Override
 	public void doSetContentAt(int col, int row, Object value) {
-		LabelLinguisticDomain oldWeight = _selectionPhase.getExpertWeight(_elementsSet.getOnlyExpertChildren().get(row - 1), col - 1);
-		LabelLinguisticDomain newWeight = _selectionPhase.getWeightsDomain().getLabelSet().getLabel((String) value);
-		
-		if(oldWeight != newWeight) {
-			notifyChangeWeightListeners();
-		}
-		
-		_selectionPhase.setExpertWeight(_elementsSet.getOnlyExpertChildren().get(row - 1), col - 1, newWeight);
 		_table.redraw();
 	}
 
@@ -207,34 +168,16 @@ public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
 		return isFixedCell(col, row);
 	}
 
-	public static void registerChangeWeightListener(IChangeWeightListener listener) {
-		_listeners.add(listener);
-	}
-
-	public static void removeChangeWeightListener(IChangeWeightListener listener) {
-		_listeners.remove(listener);
-	}
-	
-	public void notifyChangeWeightListeners() {
-		for(IChangeWeightListener listener: _listeners) {
-			listener.notifyWeigthChanged();
-		}
-	}
-	
-	public void clearListeners() {
-		_listeners.clear();
-	}
-	
 	@Override
 	public String doGetTooltipAt(int col, int row) {
 		if ((col == 0) && (row == 0)) {
 			return ""; //$NON-NLS-1$
 		} else if (col < getFixedColumnCount()) {
-			return _elementsSet.getOnlyExpertChildren().get(row - 1).getId();
+			return _elementsSet.getAllSubcriteria().get(row - 1).getId();
 		} else if (row < getFixedRowCount()) {
-			return _elementsSet.getAllSubcriteria().get(col - 1).getId();
+			return _elementsSet.getAlternatives().get(col - 1).getId();
 		} else {
-			return _elementsSet.getOnlyExpertChildren().get(row - 1).getId() + '/' + _elementsSet.getAllSubcriteria().get(col - 1).getId();
+			return _elementsSet.getAllSubcriteria().get(row - 1).getId() + '/' + _elementsSet.getAlternatives().get(col - 1).getId();
 		}
 	}
 }

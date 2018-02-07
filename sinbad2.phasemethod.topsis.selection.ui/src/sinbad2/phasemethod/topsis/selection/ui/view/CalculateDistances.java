@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 
-import sinbad2.core.workspace.Workspace;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
@@ -453,9 +452,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 	public void setFocus() {}
 
 	@Override
-	public void notifyStepStateChange() {
-		Workspace.getWorkspace().updatePhases();	
-	}
+	public void notifyStepStateChange() {}
 
 	@Override
 	public void setRatingView(RatingView rating) {}

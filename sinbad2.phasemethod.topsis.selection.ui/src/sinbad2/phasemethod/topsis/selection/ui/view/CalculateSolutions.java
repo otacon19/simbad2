@@ -13,17 +13,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 
-import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.Images;
 import sinbad2.phasemethod.topsis.selection.ui.listener.IChangeWeightListener;
 import sinbad2.phasemethod.topsis.selection.ui.nls.Messages;
-import sinbad2.phasemethod.topsis.selection.ui.view.provider.CollectiveValuationsTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.ExpertsWeightContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.IdealSolutionTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.NoIdealSolutionTableViewerContentProvider;
+import sinbad2.phasemethod.topsis.selection.ui.view.table.DecisionMatrixTable;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.twoTuple.TwoTuple;
@@ -33,12 +32,12 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 	public static final String ID = "flintstones.phasemethod.topsis.selection.ui.view.aggregationexperts"; //$NON-NLS-1$
 
 	private Composite _parent;
+	private Composite _solutionsComposite;
 	
 	private TableViewer _tableViewerIdealSolution;
 	private TableViewer _tableViewerNoIdealSolution;
-	private TableViewer _tableViewerCollectiveValuations;
+	private DecisionMatrixTable _decisionMatrixTable;
 	
-	private CollectiveValuationsTableViewerContentProvider _collectiveValuationsProvider;
 	private IdealSolutionTableViewerContentProvider _idealSolutionProvider;
 	private NoIdealSolutionTableViewerContentProvider _noIdealSolutionProvider;
 	
@@ -63,129 +62,40 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 	}
 
 	private void createContent() {
-		_parent.setLayout(new GridLayout(3, false));
+		_parent.setLayout(new GridLayout(1, false));
 		_parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		createCollectiveValuationsTable();
+		createCollectiveValuationsTable();	
+
+		_solutionsComposite = new Composite(_parent , SWT.NONE);
+		_solutionsComposite.setLayout(new GridLayout(2, true));
+		_solutionsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
 		createIdealSolutionTable();
 		createNoIdealSolutionTable();
 	}
 	
 	private void createCollectiveValuationsTable() {
-		GridLayout colectiveValuationsLayout = new GridLayout(1, true);
-		Composite collectiveValuationsPanel = new Composite(_parent, SWT.NONE);
-		collectiveValuationsPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		collectiveValuationsPanel.setLayout(colectiveValuationsLayout);
+		Composite decisionMatrixComposite = new Composite(_parent, SWT.NONE);
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		decisionMatrixComposite.setLayoutData(gridData);
+		GridLayout layout = new GridLayout(1, true);
+		layout.horizontalSpacing = 15;
+		layout.verticalSpacing = 15;
+		decisionMatrixComposite.setLayout(layout);
 		
-		Label collectiveValuationsLabel = new Label(collectiveValuationsPanel, SWT.NONE);
-		collectiveValuationsLabel.setText(Messages.calculate_solutions_Collective_valuations);
-		FontData fontData = collectiveValuationsLabel.getFont().getFontData()[0];
-		collectiveValuationsLabel.setFont(new Font(collectiveValuationsLabel.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.BOLD)));
-		collectiveValuationsLabel.setLayoutData( new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
-		
-		_tableViewerCollectiveValuations = new TableViewer(collectiveValuationsPanel, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		_tableViewerCollectiveValuations.getTable().setLayoutData( new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		_tableViewerCollectiveValuations.getTable().setHeaderVisible(true);
-		
-		_collectiveValuationsProvider = new CollectiveValuationsTableViewerContentProvider();
-		_tableViewerCollectiveValuations.setContentProvider(_collectiveValuationsProvider);
-
-		TableViewerColumn alternativeColumn = new TableViewerColumn(_tableViewerCollectiveValuations, SWT.NONE);
-		alternativeColumn.getColumn().setText(Messages.calculate_solutions_Alternative);
-		alternativeColumn.getColumn().setResizable(false);
-		alternativeColumn.getColumn().setMoveable(false);
-		alternativeColumn.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				Object[] data = (Object[]) element;
-				return ((Alternative) data[0]).getId();
-			}
-		});
-		
-		TableViewerColumn criterionColumn = new TableViewerColumn(_tableViewerCollectiveValuations, SWT.NONE);
-		criterionColumn.getColumn().setText(Messages.calculate_solutions_Criterion);
-		criterionColumn.getColumn().setResizable(false);
-		criterionColumn.getColumn().setMoveable(false);
-		criterionColumn.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				Object[] data = (Object[]) element;
-				return ((Criterion) data[1]).getCanonicalId();
-			}
-		});
-		
-		TableViewerColumn typeColumn = new TableViewerColumn(_tableViewerCollectiveValuations, SWT.NONE);
-		typeColumn.getColumn().setText(Messages.calculate_solutions_Type);
-		typeColumn.getColumn().setResizable(false);
-		typeColumn.getColumn().setMoveable(false);
-		typeColumn.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				return ""; //$NON-NLS-1$
-			}
-			
-			@Override
-			public Image getImage(Object element) {
-				Object[] data = (Object[]) element;
-				if(((Criterion) data[1]).isCost()) {
-					return Images.Cost;
-				} else {
-					return Images.Benefit;
-				}
-			}
-		});
-		
-		TableViewerColumn valuationColumn = new TableViewerColumn(_tableViewerCollectiveValuations, SWT.NONE);
-		valuationColumn.getColumn().setText(Messages.calculate_solutions_Collective_valuation);
-		valuationColumn.getColumn().setResizable(false);
-		valuationColumn.getColumn().setMoveable(false);
-		valuationColumn.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				Object[] data = (Object[]) element;
-				TwoTuple valuation = (TwoTuple) data[2];
-
-				String labelName = valuation.getLabel().getName();
-				String alpha = Double.toString(valuation.getAlpha());
-				
-				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$ //$NON-NLS-2$
-					alpha = "0"; //$NON-NLS-1$
-				}
-
-				int size = 4;
-				if(alpha.startsWith("-")) { //$NON-NLS-1$
-					size = 5;
-				}
-				
-				if(alpha.length() > size) {
-					alpha = alpha.substring(0, size);
-				}
-				
-				if(alpha.length() > 1) {
-					if(alpha.endsWith("0")) { //$NON-NLS-1$
-						alpha = alpha.substring(0, size - 1);
-					}
-				}
-				return "(" + labelName + ", " + alpha + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			}
-		});
-		
-		setInputTableCollective();
-		
-		criterionColumn.getColumn().pack();
-		alternativeColumn.getColumn().pack();
-		typeColumn.getColumn().pack();
-		valuationColumn.getColumn().pack();
+		_decisionMatrixTable = new DecisionMatrixTable(decisionMatrixComposite);
+		_decisionMatrixTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_decisionMatrixTable.setModel(_selectionPhase);	
 	}
 	
 	private void setInputTableCollective() {
-		_collectiveValuationsProvider.setInput(_selectionPhase.getDecisionMatrix());
-		_tableViewerCollectiveValuations.setInput(_collectiveValuationsProvider.getInput());
+		_decisionMatrixTable.redraw();
 	}
 
 	private void createIdealSolutionTable() {
 		GridLayout idealSolutionValuationsLayout = new GridLayout(1, true);
-		Composite idealSolutionComposite = new Composite(_parent, SWT.NONE);
+		Composite idealSolutionComposite = new Composite(_solutionsComposite, SWT.NONE);
 		idealSolutionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		idealSolutionComposite.setLayout(idealSolutionValuationsLayout);
 		
@@ -287,7 +197,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 
 	private void createNoIdealSolutionTable() {
 		GridLayout noIdealSolutionLayout = new GridLayout(1, true);
-		Composite noIdealSolutionComposite = new Composite(_parent, SWT.NONE);
+		Composite noIdealSolutionComposite = new Composite(_solutionsComposite, SWT.NONE);
 		noIdealSolutionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		noIdealSolutionComposite.setLayout(noIdealSolutionLayout);
 		
