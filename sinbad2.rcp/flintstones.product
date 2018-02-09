@@ -7,6 +7,10 @@
    </configIni>
 
    <launcherArgs>
+      <programArgs>-nl en
+      </programArgs>
+      <vmArgs>-nl en
+      </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
    </launcherArgs>
