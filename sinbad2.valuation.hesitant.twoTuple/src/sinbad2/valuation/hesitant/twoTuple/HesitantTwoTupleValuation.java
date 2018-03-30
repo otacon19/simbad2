@@ -25,6 +25,7 @@ import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.EUnaryRelationType;
+import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.hesitant.twoTuple.nls.Messages;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
@@ -215,8 +216,8 @@ public class HesitantTwoTupleValuation extends Valuation {
 	}
 	
 	public void createRelation(TrapezoidalFunction fuzzyNumber) {
-		
-		setFuzzyNumber(fuzzyNumber);
+		TrapezoidalFunction tmf = new TrapezoidalFunction(new double[]{0, 0, 0.25, 0.57});
+		setFuzzyNumber(tmf);
 		
 		double a = _fuzzyNumber.getLimits()[0], b = _fuzzyNumber.getLimits()[1], c = _fuzzyNumber.getLimits()[2], d = _fuzzyNumber.getLimits()[3], centroid = 0, 
 				minDistanceB = Double.POSITIVE_INFINITY, minDistanceC = Double.POSITIVE_INFINITY, distance;
@@ -225,26 +226,36 @@ public class HesitantTwoTupleValuation extends Valuation {
 		
 		for(LabelLinguisticDomain l: ((FuzzySet) _domain).getLabelSet().getLabels()) {
 			centroid = ((TrapezoidalFunction) l.getSemantic()).centroid();
-			distance = b - centroid;
+			distance = ((b + a) / 2d) - centroid;
 			if(Math.abs(distance) < Math.abs(minDistanceB)) {
 				minDistanceB = distance;
 				labelCloserToB = l;
 			}
-			distance = c - centroid;
+			distance = ((d + c) / 2d) - centroid;
 			if(Math.abs(distance) < Math.abs(minDistanceC)) {
 				minDistanceC = distance;
 				labelCloserToC = l;
 			}
 		}
 		
+		HesitantValuation h1 = new HesitantValuation((FuzzySet) _domain);
 		if(c == d && c == 1) {
-			setUnaryRelation(EUnaryRelationType.AtLeast, new TwoTuple((FuzzySet) _domain, labelCloserToB, minDistanceB)); 
+			setUnaryRelation(EUnaryRelationType.AtLeast, new TwoTuple((FuzzySet) _domain, labelCloserToB, minDistanceB));
+			
+			h1.setUnaryRelation(EUnaryRelationType.AtLeast, labelCloserToB);
+			
 		} else if(a == b && a == 0) {
 			setUnaryRelation(EUnaryRelationType.AtMost, new TwoTuple((FuzzySet) _domain, labelCloserToC, minDistanceC));
+
+			h1.setUnaryRelation(EUnaryRelationType.AtMost, labelCloserToC);
+			
 		} else if(b == c) {
 			disableUnary();
 			disableBinary();
 			_label = new TwoTuple((FuzzySet) _domain, labelCloserToB, minDistanceB);
+			
+			h1.setLabel(labelCloserToB);
+			
 		} else {
 			if(labelCloserToB.equals(((FuzzySet) _domain).getLabelSet().getLabel(0)) && minDistanceB < 0) {
 				minDistanceB = 0;
@@ -252,7 +263,14 @@ public class HesitantTwoTupleValuation extends Valuation {
 				minDistanceC = 0;
 			}
 			setBinaryRelation(new TwoTuple((FuzzySet) _domain, labelCloserToB, minDistanceB), new TwoTuple((FuzzySet) _domain, labelCloserToC, minDistanceC));
+			
+		h1.setBinaryRelation(labelCloserToB, labelCloserToC);
+			
 		}
+		
+		System.out.println("ELICIT EXPRESSION = " + this.changeFormatValuationToString());
+		System.out.println("COMPARATIVE LINGUISTIC EXPRESSION = " + h1.changeFormatValuationToString());
+		System.out.println("FUZZY ENVELOPE = " + h1.calculateFuzzyEnvelope((FuzzySet) _domain));
 	}
 	
 	public boolean isPrimary() {
@@ -683,5 +701,55 @@ public class HesitantTwoTupleValuation extends Valuation {
 		Collections.reverse(sums);
 		
 		return sums;
+	}
+	
+	/**
+	 * S. Abbasbandy and T. Hajjari method
+	 * A new approach for ranking of trapezoidal fuzzy numbers
+	 * @param valuations
+	 * @return
+	 */
+	public static List<Object[]> rankingTrapezoidalFuzzyNumbers(List<Object[]> valuations) {		
+		List<Double> magnitudes = new LinkedList<Double>();
+		for(Object[] valuation: valuations) {
+			HesitantTwoTupleValuation v = ((HesitantTwoTupleValuation) valuation[0]);
+			TrapezoidalFunction vtr = v.getFuzzyNumber();
+			magnitudes.add(computeMagnitude(vtr));
+		}
+		
+		List<Double> magnitudesAux = new LinkedList<Double>();
+		magnitudesAux.addAll(magnitudes);
+		
+		Collections.sort(magnitudesAux);
+		Collections.reverse(magnitudesAux);
+		
+		return orderRanking(magnitudes, magnitudesAux, valuations);
+	}
+
+	private static Double computeMagnitude(TrapezoidalFunction vtr) {
+		double alpha = distance(vtr.getA(), vtr.getB());
+		double beta = distance(vtr.getC(), vtr.getD());
+		return (1d / 2d) * (vtr.getB() + vtr.getC() - (alpha / 6) + (beta / 6)); 
+	}
+
+	private static double distance(double pointA, double pointB) {
+		return Math.abs(pointA - pointB);
+	}
+	
+	private static List<Object[]> orderRanking(List<Double> magnitudes, List<Double> magnitudesAux, List<Object[]> valuations) {
+		List<Integer> rankingPos = computeRankingPos(magnitudes, magnitudesAux);
+		List<Object[]> ranking = new LinkedList<>();
+		for(int r = 0; r < rankingPos.size(); ++r) {
+			ranking.add(valuations.get(rankingPos.get(r)));
+		}
+		return ranking;
+	}
+
+	private static List<Integer> computeRankingPos(List<Double> magnitudes, List<Double> magnitudesAux) {
+		List<Integer> ranking = new LinkedList<>();
+		for(int i = 0; i < magnitudes.size(); ++i) {
+			ranking.add(magnitudes.indexOf(magnitudesAux.get(i)));
+		}
+		return ranking;
 	}
 }

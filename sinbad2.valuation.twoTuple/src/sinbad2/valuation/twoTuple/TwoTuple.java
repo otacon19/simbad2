@@ -127,7 +127,7 @@ public class TwoTuple extends LinguisticValuation {
 	}
 	
 	public String prettyFormat() {
-		return ("(" + _label + ", " + Math.round(_alpha * 1000d) / 1000d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return ("(" + _label + ", " + Math.round(_alpha * 10000d) / 10000d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
 	@Override

@@ -148,7 +148,9 @@ public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
 				content = criterionAbbreviation(col);
 			} else {
 				content = _selectionPhase.getExpertWeight(_elementsSet.getOnlyExpertChildren().get(row - 1), col - 1);
+				notifyChangeWeightListeners();
 			}
+			
 		} catch (Exception e) {
 			content = ""; //$NON-NLS-1$
 		}
@@ -174,11 +176,12 @@ public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
 		LabelLinguisticDomain oldWeight = _selectionPhase.getExpertWeight(_elementsSet.getOnlyExpertChildren().get(row - 1), col - 1);
 		LabelLinguisticDomain newWeight = _selectionPhase.getWeightsDomain().getLabelSet().getLabel((String) value);
 		
+		_selectionPhase.setExpertWeight(_elementsSet.getOnlyExpertChildren().get(row - 1), col - 1, newWeight);
+		
 		if(oldWeight != newWeight) {
 			notifyChangeWeightListeners();
-		}
+		}	
 		
-		_selectionPhase.setExpertWeight(_elementsSet.getOnlyExpertChildren().get(row - 1), col - 1, newWeight);
 		_table.redraw();
 	}
 

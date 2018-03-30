@@ -150,36 +150,20 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 		TableViewerColumn valuationColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
 		valuationColumn.getColumn().setText(Messages.calculate_solutions_Valuation);
 		valuationColumn.getColumn().pack();
-		valuationColumn.getColumn().setResizable(false);
-		valuationColumn.getColumn().setMoveable(false);
+		valuationColumn.getColumn().setResizable(true);
+		valuationColumn.getColumn().setMoveable(true);
 		valuationColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
 				TwoTuple valuation = (TwoTuple) data[1];
 
-				String labelName = valuation.getLabel().getName();
-				String alpha = Double.toString(valuation.getAlpha());
-				
-				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$ //$NON-NLS-2$
-					alpha = "0"; //$NON-NLS-1$
-				}
+				String valuationString = valuation.prettyFormat();
+				valuationString = valuationString.replace("(", "");
+				valuationString = valuationString.replace(")", "");
+				String[] elements = valuationString.split(",");
 
-				int size = 4;
-				if(alpha.startsWith("-")) { //$NON-NLS-1$
-					size = 5;
-				}
-				
-				if(alpha.length() > size) {
-					alpha = alpha.substring(0, size);
-				}
-				
-				if(alpha.length() > 1) {
-					if(alpha.endsWith("0")) { //$NON-NLS-1$
-						alpha = alpha.substring(0, size - 1);
-					}
-				}
-				return "(" + labelName + ", " + alpha + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				return "(" + elements[0] + ", " + elements[1] + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		});
 		
@@ -252,36 +236,20 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 		TableViewerColumn valuationColumn = new TableViewerColumn(_tableViewerNoIdealSolution, SWT.NONE);
 		valuationColumn.getColumn().setText(Messages.calculate_solutions_Valuation);
 		valuationColumn.getColumn().pack();
-		valuationColumn.getColumn().setResizable(false);
-		valuationColumn.getColumn().setMoveable(false);
+		valuationColumn.getColumn().setResizable(true);
+		valuationColumn.getColumn().setMoveable(true);
 		valuationColumn.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				Object[] data = (Object[]) element;
 				TwoTuple valuation = (TwoTuple) data[1];
+				
+				String valuationString = valuation.prettyFormat();
+				valuationString = valuationString.replace("(", "");
+				valuationString = valuationString.replace(")", "");
+				String[] elements = valuationString.split(",");
 
-				String labelName = valuation.getLabel().getName();
-				String alpha = Double.toString(valuation.getAlpha());
-				
-				if(alpha.equals("-0.0") || alpha.equals("0.0")) { //$NON-NLS-1$ //$NON-NLS-2$
-					alpha = "0"; //$NON-NLS-1$
-				}
-
-				int size = 4;
-				if(alpha.startsWith("-")) { //$NON-NLS-1$
-					size = 5;
-				}
-				
-				if(alpha.length() > size) {
-					alpha = alpha.substring(0, size);
-				}
-				
-				if(alpha.length() > 1) {
-					if(alpha.endsWith("0")) { //$NON-NLS-1$
-						alpha = alpha.substring(0, size - 1);
-					}
-				}
-				return "(" + labelName + ", " + alpha + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				return "(" + elements[0] + ", " + elements[1] + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		});
 		

@@ -278,6 +278,7 @@ public class SelectionPhase implements IPhaseMethod {
 			weight.calculateDelta(acum / weightsTwoTuple.size());
 			_criteriaWeights[i] = weight;
 		}
+		
 	}
 
 	/**
@@ -340,6 +341,7 @@ public class SelectionPhase implements IPhaseMethod {
 		
 		List<Valuation> valuationsByCriterion = new ArrayList<>();
 		for(int i = 0; i < _decisionMatrix.length; ++i) {
+			valuationsByCriterion.clear();
 			cri = _elementsSet.getAllSubcriteria().get(i);
 			for(int j = 0; j < _decisionMatrix[i].length; ++j) {
 				valuationsByCriterion.add(_decisionMatrix[i][j]);
@@ -367,6 +369,7 @@ public class SelectionPhase implements IPhaseMethod {
 		
 		List<Valuation> valuationsByCriterion = new ArrayList<>();
 		for(int i = 0; i < _decisionMatrix.length; ++i) {
+			valuationsByCriterion.clear();
 			cri = _elementsSet.getAllSubcriteria().get(i);
 			for(int j = 0; j < _decisionMatrix[i].length; ++j) {
 				valuationsByCriterion.add(_decisionMatrix[i][j]);
@@ -389,6 +392,7 @@ public class SelectionPhase implements IPhaseMethod {
 		
 		double acum = 0;
 		for(int i = 0; i < _decisionMatrix[0].length; ++i) {
+			acum = 0;
 			for(int j = 0; j < _decisionMatrix.length; ++j) {
 				collective = (TwoTuple) _decisionMatrix[j][i];
 				idealSolution =  _idealSolution.get(j);
@@ -409,13 +413,12 @@ public class SelectionPhase implements IPhaseMethod {
 		int t_prima_prima = _distanceDomain.getLabelSet().getCardinality();
 		
 		int t_decrement = t - 1;
-		int t_prima_increment = t_prima + 1;
 		int t_prima_prima_decrement = t_prima_prima - 1;
 		
 		double factor = t_prima - ((Math.abs(t1.calculateInverseDelta() - t2.calculateInverseDelta()) * t_prima_prima_decrement) / t_decrement);
 		
 		TwoTuple result = new TwoTuple(_distanceDomain);
-		result.calculateDelta(t_prima_increment - factor);
+		result.calculateDelta(t_prima - factor);
 		return result;
 	}
 
@@ -427,6 +430,7 @@ public class SelectionPhase implements IPhaseMethod {
 
 		double acum = 0;
 		for(int i = 0; i < _decisionMatrix[0].length; ++i) {
+			acum = 0;
 			for(int j = 0; j < _decisionMatrix.length; ++j) {
 				collective = (TwoTuple) _decisionMatrix[j][i];
 				noIdealSolution = (TwoTuple) _noIdealSolution.get(j);

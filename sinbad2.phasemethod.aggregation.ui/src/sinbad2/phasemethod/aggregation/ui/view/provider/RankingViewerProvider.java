@@ -86,7 +86,7 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 				Collections.sort(result, new MyComparator());
 				Collections.reverse(result);
 			} else {
-				result = HesitantTwoTupleValuation.rankingMatrix(result);
+				result = HesitantTwoTupleValuation.rankingTrapezoidalFuzzyNumbers(result);
 			}
 			
 			int ranking = 0;

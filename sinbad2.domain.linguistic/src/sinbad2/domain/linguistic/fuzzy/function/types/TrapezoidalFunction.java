@@ -41,6 +41,22 @@ public class TrapezoidalFunction implements IMembershipFunction {
 		return limits;
 	}
 	
+	public double getA() {
+		return _a;
+	}
+	
+	public double getB() {
+		return _b;
+	}
+	
+	public double getC() {
+		return _c;
+	}
+	
+	public double getD() {
+		return _d;
+	}
+	
 	public TrapezoidalFunction(double[] limits) {
 		this();
 		
@@ -164,19 +180,25 @@ public class TrapezoidalFunction implements IMembershipFunction {
 	public double centroid() {
 		double centroidLeft, centroidCenter, centroidRight, areaLeft, areaCenter, areaRight,
 		areaSum, result;
+		
+		if(_a == _b && _a == 0) {
+			return 0d;
+		} else if(_c == _d && _c == 1) {
+			return 1d;
+		} else {	
+			centroidLeft = (_a + ( 2 * _b)) / 3.;
+			centroidCenter = (_b + _c) / 2.;
+			centroidRight = ((2 * _c) + _d) / 3.;
+			
+			areaLeft = (_b - _a) / 2.;
+			areaCenter = (_c - _b);
+			areaRight = (_d - _c) / 2.;
+			areaSum = areaLeft + areaCenter + areaRight;
+			
+			result = ((centroidLeft * areaLeft) + (centroidCenter * areaCenter) + (centroidRight * areaRight)) / areaSum;
 	
-		centroidLeft = (_a + ( 2 * _b)) / 3.;
-		centroidCenter = (_b + _c) / 2.;
-		centroidRight = ((2 * _c) + _d) / 3.;
-		
-		areaLeft = (_b - _a) / 2.;
-		areaCenter = (_c - _b);
-		areaRight = (_d - _c) / 2.;
-		areaSum = areaLeft + areaCenter + areaRight;
-		
-		result = ((centroidLeft * areaLeft) + (centroidCenter * areaCenter) + (centroidRight * areaRight)) / areaSum;
-		
-		return result;
+			return result;
+		}
 	}
 	
 	@Override

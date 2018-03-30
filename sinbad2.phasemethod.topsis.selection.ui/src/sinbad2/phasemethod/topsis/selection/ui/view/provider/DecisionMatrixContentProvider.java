@@ -105,7 +105,7 @@ public class DecisionMatrixContentProvider extends KTableNoScrollModel  {
 	@Override
 	public Object doGetContentAt(int col, int row) {
 		if ((col == 0) && (row == 0)) {
-			return "Decision matrix"; //$NON-NLS-1$
+			return "Weighted Decision Matrix"; //$NON-NLS-1$
 		}
 		
 		Object content;
@@ -116,7 +116,7 @@ public class DecisionMatrixContentProvider extends KTableNoScrollModel  {
 			} else if (row == 0) {
 				content = alternativeAbbreviation(col);
 			} else {
-				content = ((TwoTuple) _selectionPhase.getUnweightedDecisionMatrix()[row - 1][ col - 1]).prettyFormat();
+				content = ((TwoTuple) _selectionPhase.getDecisionMatrix()[row - 1][ col - 1]).prettyFormat();
 			}
 		} catch (Exception e) {
 			content = ""; //$NON-NLS-1$
