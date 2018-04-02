@@ -175,44 +175,13 @@ public class MethodsManager {
 	public String getRecommendedMethod() {
 		Map<Integer, Boolean> bcl = getBestConditionsLinguistic();
 		int[] cardinalities = getCardinalitiesFuzzySet();
-		if(getBestConditionsHesitant()) {
-			if(_elementsSet.getAllExperts().size() == 1) {
-				return Messages.MethodsManager_Hesitant_Fuzzy_Linguistic_Term_Set;
-			} else {
-				if(_domainsSet.getDomains().size() == 1) {
-					return Messages.MethodsManager_Hesitant_Fuzzy_2_tuple_Linguistic_Information;
-				} else {
-					return Messages.MethodsManager_Complex_2_tuple_hesitant_linguistic_information;
-				}
-			}
-		}
-		
 		if(cardinalities.length > 0 && bcl.size() > 0) {
-			if(_domainsSet.getDomains().size() == 1) {
-				if((bcl.get(cardinalities[0]))) {
-					return Messages.MethodsManager_2_Tuple_linguistic_computational_model;
-				} else if(getBestConditionsUnbalanced()) {
-					return Messages.MethodsManager_Methodology_to_deal_with_unbalanced_linguistic_term_sets;
+			if(_domainsSet.getDomains().size() >= 1) {
+				for(int i = 0; i < cardinalities.length; i++) {
+					if(bcl.get(cardinalities[i])) {
+						return Messages.MethodsManager_TOPSIS;
+					} 
 				}
-			} else {
-				if(getBestConditionsNumeric()) {
-					return Messages.MethodsManager_Fusion_approach_for_managing_heterogeneous_information;
-				} else {
-					for(int i = 0; i < cardinalities.length; i++) {
-						if(!bcl.get(cardinalities[i])) {
-							return Messages.MethodsManager_Fusion_approach_for_managing_multi_granular_linguistic_information;
-						} else if((i + 1) < cardinalities.length) {
-							if((((cardinalities[i] -1) * 2) +1) != cardinalities[i + 1]) {
-								return Messages.MethodsManager_Extended_Linguistic_Hierarchies;
-							}
-						}
-					}
-					return Messages.MethodsManager_Linguistic_Hierarchies;
-				}
-			}
-		} else {
-			if(getBestConditionsNumeric()) {
-				return Messages.MethodsManager_Fusion_approach_for_managing_heterogeneous_information;
 			}
 		}
 

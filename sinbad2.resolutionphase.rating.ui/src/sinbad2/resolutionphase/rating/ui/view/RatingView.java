@@ -340,6 +340,7 @@ public class RatingView extends ViewPart {
 		checkRecommendedMethod();
 		
 		Button showAlgorithmButton = new Button(compositeLeft, SWT.NONE);
+		showAlgorithmButton.setVisible(false);
 		showAlgorithmButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		showAlgorithmButton.setText(Messages.RatingView_Show_algorithm);
 		showAlgorithmButton.addSelectionListener(new SelectionAdapter() {
