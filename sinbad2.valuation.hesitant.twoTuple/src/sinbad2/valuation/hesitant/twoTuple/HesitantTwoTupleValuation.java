@@ -216,7 +216,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 	}
 	
 	public void createRelation(TrapezoidalFunction fuzzyNumber) {
-		TrapezoidalFunction tmf = new TrapezoidalFunction(new double[]{0, 0, 0.25, 0.57});
+		TrapezoidalFunction tmf = new TrapezoidalFunction(new double[]{0, 0, 0.49, 0.57});
 		setFuzzyNumber(tmf);
 		
 		double a = _fuzzyNumber.getLimits()[0], b = _fuzzyNumber.getLimits()[1], c = _fuzzyNumber.getLimits()[2], d = _fuzzyNumber.getLimits()[3], centroid = 0, 
@@ -226,12 +226,12 @@ public class HesitantTwoTupleValuation extends Valuation {
 		
 		for(LabelLinguisticDomain l: ((FuzzySet) _domain).getLabelSet().getLabels()) {
 			centroid = ((TrapezoidalFunction) l.getSemantic()).centroid();
-			distance = ((b + a) / 2d) - centroid;
+			distance = a - centroid;
 			if(Math.abs(distance) < Math.abs(minDistanceB)) {
 				minDistanceB = distance;
 				labelCloserToB = l;
 			}
-			distance = ((d + c) / 2d) - centroid;
+			distance = d - centroid;
 			if(Math.abs(distance) < Math.abs(minDistanceC)) {
 				minDistanceC = distance;
 				labelCloserToC = l;

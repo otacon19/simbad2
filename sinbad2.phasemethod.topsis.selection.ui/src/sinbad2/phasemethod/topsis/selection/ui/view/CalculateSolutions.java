@@ -1,19 +1,37 @@
 package sinbad2.phasemethod.topsis.selection.ui.view;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
+import sinbad2.element.ProblemElementsManager;
+import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.Images;
@@ -23,13 +41,19 @@ import sinbad2.phasemethod.topsis.selection.ui.view.provider.ExpertsWeightConten
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.IdealSolutionTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.provider.NoIdealSolutionTableViewerContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.table.DecisionMatrixTable;
+import sinbad2.phasemethod.topsis.unification.UnificationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
+import sinbad2.valuation.Valuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
+import sinbad2.valuation.valuationset.ValuationKey;
 
 public class CalculateSolutions extends ViewPart implements IStepStateListener, IChangeWeightListener {
 	
 	public static final String ID = "flintstones.phasemethod.topsis.selection.ui.view.aggregationexperts"; //$NON-NLS-1$
+	
+	private static final String[] FILTER_NAMES = { "Text files (*.txt)" }; //$NON-NLS-1$
+	private static final String[] FILTER_EXTS = { "*.txt" }; //$NON-NLS-1$
 
 	private Composite _parent;
 	private Composite _solutionsComposite;
@@ -45,12 +69,20 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 	
 	private RatingView _ratingView;
 	
+	private ProblemElementsSet _elementsSet;
+	
 	private SelectionPhase _selectionPhase;
+	
+	private UnificationPhase _unificationPhase;
 
 	@Override
 	public void createPartControl(Composite parent) {	
 		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
 		_selectionPhase = (SelectionPhase) pmm.getPhaseMethod(SelectionPhase.ID).getImplementation();
+		
+		 _unificationPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
+		
+		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
 		
 		_completed = true;
 
@@ -87,8 +119,96 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 		_decisionMatrixTable = new DecisionMatrixTable(decisionMatrixComposite);
 		_decisionMatrixTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		_decisionMatrixTable.setModel(_selectionPhase);	
+		
+		createImportPreferencesButton();
 	}
 	
+	private void createImportPreferencesButton() {
+		Composite importPreferencesButtonComposite = new Composite(_parent, SWT.NONE);
+		GridData gridData = new GridData(SWT.RIGHT, SWT.RIGHT, true, false, 1, 1);
+		importPreferencesButtonComposite.setLayoutData(gridData);
+		GridLayout layout = new GridLayout(1, false);
+		layout.horizontalSpacing = 15;
+		layout.verticalSpacing = 15;
+		importPreferencesButtonComposite.setLayout(layout);
+		
+		Button importPreferenceButton = new Button(importPreferencesButtonComposite, SWT.NONE);
+		importPreferenceButton.setText("Import new preferences");
+		importPreferenceButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
+		
+		importPreferenceButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+				
+				FileDialog dlg = new FileDialog(shell, SWT.OPEN);
+				dlg.setFilterNames(FILTER_NAMES);
+				dlg.setFilterExtensions(FILTER_EXTS);
+				String fileName = dlg.open();
+				
+				if(fileName != null) {
+					readFileContent(fileName);
+				}
+			}
+
+			private void readFileContent(String fileName) {
+				FileReader fr = null;
+				BufferedReader br = null;
+				try {
+					fr = new FileReader(fileName);
+					br = new BufferedReader(fr);
+					
+					String sCurrentLine;
+					Map<ValuationKey, Valuation> newValuations = new HashMap<>();
+					while ((sCurrentLine = br.readLine()) != null) {
+						if(!sCurrentLine.isEmpty()) {
+							String[] info = sCurrentLine.split(":");
+							Expert expert = _elementsSet.getExpert(info[0]);
+							Criterion criterion = _elementsSet.getCriterion(info[1]);
+							Alternative alternative = _elementsSet.getAlternative(info[2]);
+							String twoTuple = info[3];
+							ValuationKey vk = new ValuationKey(expert, alternative, criterion);
+							newValuations.put(vk, createNewValuations(vk, twoTuple));
+						}
+					}
+					_unificationPhase.setTwoTupleValuations(newValuations);
+					notifyWeigthChanged();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						if (br != null)
+							br.close();
+
+						if (fr != null)
+							fr.close();
+
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+
+			private Valuation createNewValuations(ValuationKey vk, String twoTuple) {
+				Map<ValuationKey, Valuation> oldValuations = _unificationPhase.getTwoTupleValuations();
+				TwoTuple oldValuation = (TwoTuple) oldValuations.get(vk);
+				FuzzySet valuationDomain = (FuzzySet) oldValuation.getDomain();
+				
+				twoTuple = twoTuple.trim();
+				twoTuple = twoTuple.replace("(", "");
+				twoTuple = twoTuple.replace(")", "");
+				String[] twoTupleElements = twoTuple.split(",");
+				
+				LabelLinguisticDomain newLabel = valuationDomain.getLabelSet().getLabel(twoTupleElements[0]);
+				double newAlpha = Double.parseDouble(twoTupleElements[1]);
+				
+				oldValuation.setLabel(newLabel);
+				oldValuation.setAlpha(newAlpha);
+				return oldValuation;
+			}
+		});
+	}
+
 	private void setInputTableCollective() {
 		_decisionMatrixTable.redraw();
 	}
