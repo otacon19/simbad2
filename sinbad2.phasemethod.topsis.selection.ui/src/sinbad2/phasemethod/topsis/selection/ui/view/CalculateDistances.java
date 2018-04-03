@@ -18,6 +18,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
@@ -48,7 +49,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 	private Composite _chartView;
 	
 	private TableViewer _tableViewerPositiveNegative;
-	private TableViewer _tableViewerIdealSolution;
+	private TableViewer _tableViewerClosenessCoefficients;
 	
 	private PositiveNegativeTableViewerContentProvider _positiveNegativeProvider;
 	private ClosenessCoefficientsTableViewerContentProvider closenessCoefficientsProvider;
@@ -268,15 +269,15 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 		gridData = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
 		colLectiveValuationsLabel.setLayoutData(gridData);
 		
-		_tableViewerIdealSolution = new TableViewer(distanceIdealSolutionPanel, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		_tableViewerClosenessCoefficients = new TableViewer(distanceIdealSolutionPanel, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		gridData = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		_tableViewerIdealSolution.getTable().setLayoutData(gridData);
-		_tableViewerIdealSolution.getTable().setHeaderVisible(true);
+		_tableViewerClosenessCoefficients.getTable().setLayoutData(gridData);
+		_tableViewerClosenessCoefficients.getTable().setHeaderVisible(true);
 		
 		closenessCoefficientsProvider = new ClosenessCoefficientsTableViewerContentProvider();
-		_tableViewerIdealSolution.setContentProvider(closenessCoefficientsProvider);
+		_tableViewerClosenessCoefficients.setContentProvider(closenessCoefficientsProvider);
 
-		TableViewerColumn alternativeColumn = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
+		TableViewerColumn alternativeColumn = new TableViewerColumn(_tableViewerClosenessCoefficients, SWT.NONE);
 		alternativeColumn.getColumn().setText(Messages.CalculateDistances_Alternative);
 		alternativeColumn.getColumn().setResizable(false);
 		alternativeColumn.getColumn().setMoveable(false);
@@ -288,7 +289,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 			}
 		});
 		
-		TableViewerColumn closenessCoefficient = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
+		TableViewerColumn closenessCoefficient = new TableViewerColumn(_tableViewerClosenessCoefficients, SWT.NONE);
 		closenessCoefficient.getColumn().setText(Messages.CalculateDistances_Closeness_coefficient);
 		closenessCoefficient.getColumn().setResizable(false);
 		closenessCoefficient.getColumn().setMoveable(false);
@@ -323,7 +324,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 			}
 		});
 		
-		TableViewerColumn ranking = new TableViewerColumn(_tableViewerIdealSolution, SWT.NONE);
+		TableViewerColumn ranking = new TableViewerColumn(_tableViewerClosenessCoefficients, SWT.NONE);
 		ranking.getColumn().setText(Messages.CalculateDistances_Ranking);
 		ranking.getColumn().setResizable(false);
 		ranking.getColumn().setMoveable(false);
@@ -336,15 +337,15 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 		});
 		
 		setInputCoefficientsTable();
-		
-		alternativeColumn.getColumn().pack();
-		closenessCoefficient.getColumn().pack();
-		ranking.getColumn().pack();
 	}
 
 	private void setInputCoefficientsTable() {
 		closenessCoefficientsProvider.setInput(_selectionPhase.getClosenessCoeficient());
-		_tableViewerIdealSolution.setInput(closenessCoefficientsProvider.getInput());
+		_tableViewerClosenessCoefficients.setInput(closenessCoefficientsProvider.getInput());
+		
+		for(TableColumn tc: _tableViewerClosenessCoefficients.getTable().getColumns()) {
+			tc.pack();
+		}
 	}
 
 	private void createChart() {

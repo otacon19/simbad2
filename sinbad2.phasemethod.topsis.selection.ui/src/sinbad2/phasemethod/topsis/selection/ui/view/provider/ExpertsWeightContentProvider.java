@@ -148,7 +148,6 @@ public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
 				content = criterionAbbreviation(col);
 			} else {
 				content = _selectionPhase.getExpertWeight(_elementsSet.getOnlyExpertChildren().get(row - 1), col - 1);
-				notifyChangeWeightListeners();
 			}
 			
 		} catch (Exception e) {

@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
@@ -288,15 +289,15 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 		});
 		
 		setInputIdealSolutionTable();
-		
-		criterionColumn.getColumn().pack();
-		typeColumn.getColumn().pack();
-		valuationColumn.getColumn().pack();
 	}
 	
 	private void setInputIdealSolutionTable() {
 		_idealSolutionProvider.setInput(_selectionPhase.getIdealSolution());
-		_tableViewerIdealSolution.setInput(_idealSolutionProvider.getInput());		
+		_tableViewerIdealSolution.setInput(_idealSolutionProvider.getInput());	
+		
+		for(TableColumn tc: _tableViewerIdealSolution.getTable().getColumns()) {
+			tc.pack();
+		}
 	}
 
 	private void createNoIdealSolutionTable() {
@@ -374,15 +375,15 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 		});
 		
 		setInputNoIdealSolution();
-		
-		criterionColumn.getColumn().pack();
-		typeColumn.getColumn().pack();
-		valuationColumn.getColumn().pack();
 	}
 
 	private void setInputNoIdealSolution() {
 		_noIdealSolutionProvider.setInput(_selectionPhase.getNoIdealSolution());
 		_tableViewerNoIdealSolution.setInput(_noIdealSolutionProvider.getInput());
+		
+		for(TableColumn tc: _tableViewerNoIdealSolution.getTable().getColumns()) {
+			tc.pack();
+		}
 	}
 
 	@Override
