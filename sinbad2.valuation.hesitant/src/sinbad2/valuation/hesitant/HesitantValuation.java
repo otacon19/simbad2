@@ -258,7 +258,7 @@ public class HesitantValuation extends Valuation {
                     b = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
                     c = 2D * domain.getLabelSet().getLabel(top).getSemantic().getCenter().getMin() - b;
                 }
-            } else {
+            } else { //Relación unaria
                 List<Valuation> valuations = new LinkedList<Valuation>();
                 for(int i = envelope[0]; i <= envelope[1]; i++) {
                     valuations.add(new TwoTuple(domain, domain.getLabelSet().getLabel(i)));

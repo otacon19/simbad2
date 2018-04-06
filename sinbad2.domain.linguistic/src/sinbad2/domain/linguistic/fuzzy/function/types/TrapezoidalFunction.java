@@ -78,6 +78,13 @@ public class TrapezoidalFunction implements IMembershipFunction {
 			_d = limits[3];
 		}
 	}
+	
+	public TrapezoidalFunction(double a, double b, double c, double d) {
+		this._a = a;
+		this._b = b;
+		this._c = c;
+		this._d = d;
+	}
 
 	@Override
 	public FragmentFunction toFragmentFunction() {
