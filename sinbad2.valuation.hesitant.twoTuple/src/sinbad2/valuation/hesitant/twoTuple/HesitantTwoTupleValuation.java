@@ -26,6 +26,7 @@ import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.EUnaryRelationType;
+import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.hesitant.twoTuple.nls.Messages;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
@@ -291,9 +292,13 @@ public class HesitantTwoTupleValuation extends Valuation {
 
 		double alpha = (minDistanceA * 0.5d) / consecutiveLabelsDistance;
 		
-		setGamma1(((_fuzzyNumber.getB() - _fuzzyNumber.getA()) * 0.5d) / consecutiveLabelsDistance);
-
 		setUnaryRelation(EUnaryRelationType.AtLeast, new TwoTuple((FuzzySet) _domain, labelCloserToA, alpha));
+		
+		HesitantValuation hv = new HesitantValuation((FuzzySet) _domain);
+		hv.setUnaryRelation(EUnaryRelationType.AtLeast, labelCloserToA);
+		TrapezoidalFunction fuzzyEnvelope = hv.calculateFuzzyEnvelope((FuzzySet) _domain);
+		
+		setGamma1(((fuzzyEnvelope.getB() - _fuzzyNumber.getB()) * 0.5d) / consecutiveLabelsDistance);
 	}
 
 	private void computeTwoTupleTranslationAtMostCase(LabelLinguisticDomain labelCloserToD, double minDistanceD) {
@@ -310,9 +315,13 @@ public class HesitantTwoTupleValuation extends Valuation {
 
 		double alpha = (minDistanceD * 0.5d) / consecutiveLabelsDistance;
 		
-		setGamma1(((_fuzzyNumber.getD() - _fuzzyNumber.getC()) * 0.5d) / consecutiveLabelsDistance);
-
 		setUnaryRelation(EUnaryRelationType.AtMost, new TwoTuple((FuzzySet) _domain, labelCloserToD, alpha));
+		
+		HesitantValuation hv = new HesitantValuation((FuzzySet) _domain);
+		hv.setUnaryRelation(EUnaryRelationType.AtMost, labelCloserToD);
+		TrapezoidalFunction fuzzyEnvelope = hv.calculateFuzzyEnvelope((FuzzySet) _domain);
+		
+		setGamma1(((fuzzyEnvelope.getC() - _fuzzyNumber.getC()) * 0.5d) / consecutiveLabelsDistance);
 	}
 
 	private void computeTwoTupleTranslationBetweenCase(LabelLinguisticDomain labelCloserToA, LabelLinguisticDomain labelCloserToD, double minDistanceA, double minDistanceD) {
@@ -336,10 +345,14 @@ public class HesitantTwoTupleValuation extends Valuation {
 		double alpha1 = (minDistanceA * 0.5d) / consecutiveLabelsDistance;
 		double alpha2 = (minDistanceD * 0.5d) / consecutiveLabelsDistance;
 		
-		setGamma1(((_fuzzyNumber.getB() - _fuzzyNumber.getA()) * 0.5d) / consecutiveLabelsDistance);
-		setGamma2(((_fuzzyNumber.getD() - _fuzzyNumber.getC()) * 0.5d) / consecutiveLabelsDistance);
-
 		setBinaryRelation(new TwoTuple((FuzzySet) _domain, labelCloserToA, alpha1), new TwoTuple((FuzzySet) _domain, labelCloserToD, alpha2));
+		
+		HesitantValuation hv = new HesitantValuation((FuzzySet) _domain);
+		hv.setBinaryRelation(labelCloserToA, labelCloserToD);
+		TrapezoidalFunction fuzzyEnvelope = hv.calculateFuzzyEnvelope((FuzzySet) _domain);
+	
+		setGamma1(((fuzzyEnvelope.getB() - _fuzzyNumber.getB()) * 0.5d) / consecutiveLabelsDistance);
+		setGamma2(((fuzzyEnvelope.getC() - _fuzzyNumber.getC()) * 0.5d) / consecutiveLabelsDistance);
 	}
 
 	public TrapezoidalFunction computeInverse() {
@@ -352,11 +365,11 @@ public class HesitantTwoTupleValuation extends Valuation {
 			if(_unaryRelation.equals(EUnaryRelationType.AtLeast)) {
 				c = d = 1.0d;
 				a = computeTrapezoidalValue(unary);
-				b = computeUnknownTrapezoidalValueAtLeastCase(a, _gamma1);
+				b = computeUnknownTrapezoidalValueAtLeastCase(a);
 			} else if(_unaryRelation.equals(EUnaryRelationType.AtMost)) {
 				a = b = 0d;
 				d = computeTrapezoidalValue(unary);
-				c = computeUnknownTrapezoidalValueAtMostCase(d, _gamma1);
+				c = computeUnknownTrapezoidalValueAtMostCase(d);
 			}
 		} else {
 			TwoTuple lower = getTwoTupleLowerTerm();
@@ -387,7 +400,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 		return minDistanceToLabel + twoTuple.getLabel().getSemantic().centroid();
 	}
 	
-	private Double computeUnknownTrapezoidalValueAtLeastCase(Double a, Double gamma) {
+	private Double computeUnknownTrapezoidalValueAtLeastCase(Double a) {
 		LabelSetLinguisticDomain labelSet = ((FuzzySet) _domain).getLabelSet();
 		
 		LabelLinguisticDomain labelCenter = labelSet.getLabel((labelSet.getCardinality() / 2));
@@ -399,12 +412,16 @@ public class HesitantTwoTupleValuation extends Valuation {
 		double middlePoint = (labelCenterCentroid + nextLabelCenterCentroid) / 2d;
 		double consecutiveLabelsDistance = Math.abs(middlePoint - labelCenterCentroid);
 		
-		double distance = (gamma * consecutiveLabelsDistance) / 0.5d;
+		double distance = (_gamma1 * consecutiveLabelsDistance) / 0.5d;
 		
-		return a + distance;
+		HesitantValuation hv = new HesitantValuation((FuzzySet) _domain);
+		hv.setUnaryRelation(EUnaryRelationType.AtLeast, _term.getLabel());
+		TrapezoidalFunction fuzzyEnvelope = hv.calculateFuzzyEnvelope((FuzzySet) _domain);
+		
+		return fuzzyEnvelope.getB() - distance;
 	}
 	
-	private Double computeUnknownTrapezoidalValueAtMostCase(Double d, Double gamma) {
+	private Double computeUnknownTrapezoidalValueAtMostCase(Double d) {
 		LabelSetLinguisticDomain labelSet = ((FuzzySet) _domain).getLabelSet();
 		
 		LabelLinguisticDomain labelCenter = labelSet.getLabel((labelSet.getCardinality() / 2));
@@ -416,15 +433,38 @@ public class HesitantTwoTupleValuation extends Valuation {
 		double middlePoint = (labelCenterCentroid + nextLabelCenterCentroid) / 2d;
 		double consecutiveLabelsDistance = Math.abs(middlePoint - labelCenterCentroid);
 		
-		double distance = (gamma * consecutiveLabelsDistance) / 0.5d;
+		double distance = (_gamma1 * consecutiveLabelsDistance) / 0.5d;
 		
-		return d - distance;
+		HesitantValuation hv = new HesitantValuation((FuzzySet) _domain);
+		hv.setUnaryRelation(EUnaryRelationType.AtMost, _term.getLabel());
+		TrapezoidalFunction fuzzyEnvelope = hv.calculateFuzzyEnvelope((FuzzySet) _domain);
+		
+		return fuzzyEnvelope.getC() - distance;
 	}
 	
 	private Double[] computeUnknownTrapezoidalValuesBinaryRelation(Double a, Double d) {
 		Double[] result = new Double[2];
-		result[0] = computeUnknownTrapezoidalValueAtLeastCase(a, _gamma1);
-		result[1] = computeUnknownTrapezoidalValueAtMostCase(d, _gamma2);
+		
+		LabelSetLinguisticDomain labelSet = ((FuzzySet) _domain).getLabelSet();
+		
+		LabelLinguisticDomain labelCenter = labelSet.getLabel((labelSet.getCardinality() / 2));
+		double labelCenterCentroid = labelCenter.getSemantic().centroid();
+
+		LabelLinguisticDomain nextLabelCenter = labelSet.getLabel(labelSet.getPos(labelCenter) + 1);
+		double nextLabelCenterCentroid = nextLabelCenter.getSemantic().centroid();
+
+		double middlePoint = (labelCenterCentroid + nextLabelCenterCentroid) / 2d;
+		double consecutiveLabelsDistance = Math.abs(middlePoint - labelCenterCentroid);
+		
+		double distance1 = (_gamma1 * consecutiveLabelsDistance) / 0.5d;
+		double distance2 = (_gamma2 * consecutiveLabelsDistance) / 0.5d;
+		
+		HesitantValuation hv = new HesitantValuation((FuzzySet) _domain);
+		hv.setBinaryRelation(_lowerTerm.getLabel(), _upperTerm.getLabel());
+		TrapezoidalFunction fuzzyEnvelope = hv.calculateFuzzyEnvelope((FuzzySet) _domain);
+		
+		result[0] = fuzzyEnvelope.getB() - distance1;
+		result[1] = fuzzyEnvelope.getC() - distance2;
 		return result;
 	}
 	
