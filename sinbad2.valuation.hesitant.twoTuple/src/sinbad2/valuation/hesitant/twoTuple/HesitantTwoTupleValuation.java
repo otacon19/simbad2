@@ -285,7 +285,9 @@ public class HesitantTwoTupleValuation extends Valuation {
 		return null;
 	}
 
-	public void createRelation(TrapezoidalFunction beta) {		
+	public void createRelation(TrapezoidalFunction beta) {
+		beta = new TrapezoidalFunction(0.3, 0.5, 1, 1);
+		
 		setBeta(beta);
 
 		double a = _beta.getLimits()[0], b = _beta.getLimits()[1], c = _beta.getLimits()[2], d = _beta.getLimits()[3];
@@ -445,12 +447,8 @@ public class HesitantTwoTupleValuation extends Valuation {
 	private TrapezoidalFunction computeFuzzyEnvelopeBinaryRelation(int cardinality, int[] envelope, List<Double> weights) {
 		double a, b, c, d;
 
-		double distanceSymbolicTranslationA = (_lowerTerm.getAlpha() * (1d / (2 * (cardinality - 1)))) / 0.5d;
-		a = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin()
-				+ distanceSymbolicTranslationA;
-		double distanceSymbolicTranslationD = (_upperTerm.getAlpha() * (1d / (2 * (cardinality - 1)))) / 0.5d;
-		d = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax()
-				+ distanceSymbolicTranslationD;
+		a = _beta.getA();
+		d = _beta.getD();
 
 		if (envelope[0] + 1 == envelope[1]) {
 			b = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCenter().getMin();
@@ -464,8 +462,14 @@ public class HesitantTwoTupleValuation extends Valuation {
 			}
 
 			List<Valuation> valuations = new LinkedList<Valuation>();
-			for (int i = envelope[0] + 1; i <= top; i++) {
-				valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
+			for (int i = envelope[0]; i <= top; i++) {
+				if(i == envelope[0]) {
+					valuations.add(_lowerTerm);
+				} else if(i == top) {
+					valuations.add(_upperTerm);
+				} else {
+					valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
+				}
 			}
 
 			AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
@@ -478,30 +482,37 @@ public class HesitantTwoTupleValuation extends Valuation {
 		return new TrapezoidalFunction(a, b, c, d);
 	}
 
-	private TrapezoidalFunction computeFuzzyEnvelopeUnaryRelation(int cardinality, int[] envelope, List<Double> weights,
-			Boolean atMostCase) {
+	private TrapezoidalFunction computeFuzzyEnvelopeUnaryRelation(int cardinality, int[] envelope, List<Double> weights, Boolean atMostCase) {
 		double a, b, c, d;
 
 		List<Valuation> valuations = new LinkedList<Valuation>();
 		for (int i = envelope[0]; i <= envelope[1]; i++) {
-			valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
+			if(atMostCase) {
+				if(i == envelope[1]) {
+					valuations.add(_term);
+				} else {
+					valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
+				}
+			} else {
+				if(i == envelope[0]) {
+					valuations.add(_term);
+				} else {
+					valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
+				}
+			}
 		}
 
 		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
 		Valuation aux = ((OWA) owa).aggregate(valuations, weights);
-
+		
 		if (atMostCase.booleanValue()) {
 			a = 0.0D;
 			b = 0.0D;
 			c = ((TwoTuple) aux).calculateInverseDelta() / ((double) cardinality - 1);
-			double distanceSymbolicTranslationD = (_term.getAlpha() * (1d / (2 * (cardinality - 1)))) / 0.5d;
-			d = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax()
-					+ distanceSymbolicTranslationD;
+			d = _beta.getD();
 		} else {
-			double distanceSymbolicTranslationA = (_term.getAlpha() * (1d / (2 * (cardinality - 1)))) / 0.5d;
-			a = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin()
-					+ distanceSymbolicTranslationA;
+			a = _beta.getA();
 			b = ((TwoTuple) aux).calculateInverseDelta() / ((double) cardinality - 1);
 			c = 1.0D;
 			d = 1.0D;
