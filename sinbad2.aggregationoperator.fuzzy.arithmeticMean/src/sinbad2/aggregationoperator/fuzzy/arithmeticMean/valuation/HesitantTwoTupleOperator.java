@@ -19,10 +19,10 @@ private HesitantTwoTupleOperator() {}
 		
 		TrapezoidalFunction tpf, tpfResult;
 		HesitantTwoTupleValuation v =  (HesitantTwoTupleValuation) valuations.get(0);
-		if(v.getFuzzyNumber() == null) {
-			tpfResult = ((HesitantTwoTupleValuation) v).calculateFuzzyEnvelope(domain);
+		if(v.getBeta() == null) {
+			tpfResult = ((HesitantTwoTupleValuation) v).calculateFuzzyEnvelopeEquivalentCLE(domain);
 		} else {
-			tpfResult = ((HesitantTwoTupleValuation) v).getFuzzyNumber();
+			tpfResult = ((HesitantTwoTupleValuation) v).getBeta();
 		}
 		
 		int size = valuations.size();
@@ -36,10 +36,10 @@ private HesitantTwoTupleOperator() {}
 				throw new IllegalArgumentException(Messages.HesitantTwoTupleOperator_Invalid_domain);
 			}
 			
-			if(((HesitantTwoTupleValuation) v).getFuzzyNumber() == null) {
-				tpf = ((HesitantTwoTupleValuation) v).calculateFuzzyEnvelope(domain);
+			if(((HesitantTwoTupleValuation) v).getBeta() == null) {
+				tpf = ((HesitantTwoTupleValuation) v).calculateFuzzyEnvelopeEquivalentCLE(domain);
 			} else {
-				tpf = ((HesitantTwoTupleValuation) v).getFuzzyNumber();
+				tpf = ((HesitantTwoTupleValuation) v).getBeta();
 			}
 			
 			tpfResult = tpfResult.additionAlphaCuts(tpf);

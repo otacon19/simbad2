@@ -28,10 +28,10 @@ public class HesitantTwoTupleOperator {
 				throw new IllegalArgumentException("Invalid domain");
 			}
 			
-			if(((HesitantTwoTupleValuation) valuation).getFuzzyNumber() == null) {
-				tpf = ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelope(domain);
+			if(((HesitantTwoTupleValuation) valuation).getBeta() == null) {
+				tpf = ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
 			} else {
-				tpf = ((HesitantTwoTupleValuation) valuation).getFuzzyNumber();
+				tpf = ((HesitantTwoTupleValuation) valuation).getBeta();
 			}
 				 
 			weight = weights.get(numWeight);

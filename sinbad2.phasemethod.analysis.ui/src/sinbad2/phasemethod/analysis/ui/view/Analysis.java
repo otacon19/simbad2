@@ -335,7 +335,7 @@ public class Analysis extends ViewPart implements IStepStateListener {
 							alpha[i] = ((TwoTuple) valuation).getAlpha();
 							i++;
 						} else if(valuation instanceof HesitantTwoTupleValuation) {
-							fuzzyNumbers[i] = ((HesitantTwoTupleValuation) valuation).getFuzzyNumber();
+							fuzzyNumbers[i] = ((HesitantTwoTupleValuation) valuation).getBeta();
 							i++;
 						} else if(valuation instanceof IntegerValuation) {
 							measuresInteger[i] = (int) ((IntegerValuation) valuation).getValue();

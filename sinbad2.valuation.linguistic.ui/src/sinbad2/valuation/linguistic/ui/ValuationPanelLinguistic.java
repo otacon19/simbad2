@@ -93,7 +93,7 @@ public class ValuationPanelLinguistic extends ValuationPanel {
 		if(_valuation == null) {
 			return true;
 		} else {
-			return ((LinguisticValuation) _valuation).getLabel().getName().equals(_label);
+			return ((LinguisticValuation) _valuation).getLabel().getName().equals(_label.getName());
 		}
 	}
 

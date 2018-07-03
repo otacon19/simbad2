@@ -677,7 +677,7 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 							alpha[i] = ((TwoTuple) valuation).getAlpha();
 							i++;
 						} else if(valuation instanceof HesitantTwoTupleValuation) {
-							fuzzyNumbers[i] = ((HesitantTwoTupleValuation) valuation).getFuzzyNumber();
+							fuzzyNumbers[i] = ((HesitantTwoTupleValuation) valuation).getBeta();
 							i++;
 						} else {
 							alternatives[i] = null;

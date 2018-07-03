@@ -85,14 +85,14 @@ public class RetranslationPhase implements IPhaseMethod {
 						TwoTuple transformedLabel = label.transform(resultsDomain);
 						auxValuation = new HesitantTwoTupleValuation(resultsDomain);
 						((HesitantTwoTupleValuation) auxValuation).setTwoTupleLabel(transformedLabel);
-						((HesitantTwoTupleValuation) auxValuation).setFuzzyNumber(((HesitantTwoTupleValuation) valuation).getFuzzyNumber());
+						((HesitantTwoTupleValuation) auxValuation).setBeta(((HesitantTwoTupleValuation) valuation).getBeta());
 					} else if(((HesitantTwoTupleValuation) valuation).isUnary()) {
 						EUnaryRelationType relation = ((HesitantTwoTupleValuation) valuation).getUnaryRelation();
 						TwoTuple label = ((HesitantTwoTupleValuation) valuation).getTwoTupleTerm();
 						TwoTuple transformedLabel = label.transform(resultsDomain);
 						auxValuation = new HesitantTwoTupleValuation(resultsDomain);
 						((HesitantTwoTupleValuation) auxValuation).setUnaryRelation(relation, transformedLabel);
-						((HesitantTwoTupleValuation) auxValuation).setFuzzyNumber(((HesitantTwoTupleValuation) valuation).getFuzzyNumber());
+						((HesitantTwoTupleValuation) auxValuation).setBeta(((HesitantTwoTupleValuation) valuation).getBeta());
 					} else {
 						TwoTuple labelLower = ((HesitantTwoTupleValuation) valuation).getTwoTupleLowerTerm();
 						TwoTuple labelUpper = ((HesitantTwoTupleValuation) valuation).getTwoTupleUpperTerm();
@@ -100,7 +100,7 @@ public class RetranslationPhase implements IPhaseMethod {
 						TwoTuple transformedLabelUpper = labelUpper.transform(resultsDomain);
 						auxValuation = new HesitantTwoTupleValuation(resultsDomain);
 						((HesitantTwoTupleValuation) auxValuation).setBinaryRelation(transformedLabelLower, transformedLabelUpper);
-						((HesitantTwoTupleValuation) auxValuation).setFuzzyNumber(((HesitantTwoTupleValuation) valuation).getFuzzyNumber());
+						((HesitantTwoTupleValuation) auxValuation).setBeta(((HesitantTwoTupleValuation) valuation).getBeta());
 					}
 				} else {
 					if(valuation != null) {

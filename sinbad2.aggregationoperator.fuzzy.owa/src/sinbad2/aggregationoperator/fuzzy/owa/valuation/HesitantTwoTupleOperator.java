@@ -42,10 +42,10 @@ public class HesitantTwoTupleOperator {
 			TrapezoidalFunction tpf;
 			for(int i = 0; i < size; i++) {
 				valuation = measures.get(i);
-				if(((HesitantTwoTupleValuation) valuation).getFuzzyNumber() == null) {
-					tpf = ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelope(domain);
+				if(((HesitantTwoTupleValuation) valuation).getBeta() == null) {
+					tpf = ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
 				} else {
-					tpf = ((HesitantTwoTupleValuation) valuation).getFuzzyNumber();
+					tpf = ((HesitantTwoTupleValuation) valuation).getBeta();
 				}
 		
 				limits = tpf.getLimits();
@@ -92,10 +92,10 @@ public class HesitantTwoTupleOperator {
 			TrapezoidalFunction tpf;
 			for(int i = 0; i < size; i++) {
 				valuation = measures.get(i);
-				if(((HesitantTwoTupleValuation) valuation).getFuzzyNumber() == null) {
-					tpf = ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelope(domain);
+				if(((HesitantTwoTupleValuation) valuation).getBeta() == null) {
+					tpf = ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
 				} else {
-					tpf = ((HesitantTwoTupleValuation) valuation).getFuzzyNumber();
+					tpf = ((HesitantTwoTupleValuation) valuation).getBeta();
 				}
 		
 				limits = tpf.getLimits();
