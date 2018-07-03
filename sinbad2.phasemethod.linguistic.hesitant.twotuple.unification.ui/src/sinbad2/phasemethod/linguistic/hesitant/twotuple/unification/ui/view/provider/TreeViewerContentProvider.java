@@ -9,7 +9,7 @@ import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
+import sinbad2.valuation.elicit.ELICIT;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
 import sinbad2.valuation.valuationset.ValuationSetManager;
@@ -71,7 +71,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 			_information[i][1] = domain.getId();
 			_information[i][2] = v;
 			_information[i][3] = unifiedValuation;
-			_information[i][4] = ((HesitantTwoTupleValuation) unifiedValuation).calculateFuzzyEnvelopeEquivalentCLE((FuzzySet) unifiedValuation.getDomain());
+			_information[i][4] = ((ELICIT) unifiedValuation).calculateFuzzyEnvelopeEquivalentCLE((FuzzySet) unifiedValuation.getDomain());
 			
 			i++;
 		}

@@ -12,8 +12,8 @@ import sinbad2.phasemethod.IPhaseMethod;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.elicit.ELICIT;
 import sinbad2.valuation.hesitant.EUnaryRelationType;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 import sinbad2.valuation.valuationset.ValuationKey;
@@ -79,28 +79,28 @@ public class RetranslationPhase implements IPhaseMethod {
 				valuation = problemResult.get(alternative);
 				if(valuation instanceof UnifiedValuation) {
 					valuation = ((UnifiedValuation) valuation).disunification((FuzzySet) ((UnifiedValuation) valuation).getDomain());
-				} else if(valuation instanceof HesitantTwoTupleValuation) {
-					if(((HesitantTwoTupleValuation) valuation).isPrimary()) {
-						TwoTuple label = ((HesitantTwoTupleValuation) valuation).getTwoTupleLabel();
+				} else if(valuation instanceof ELICIT) {
+					if(((ELICIT) valuation).isPrimary()) {
+						TwoTuple label = ((ELICIT) valuation).getTwoTupleLabel();
 						TwoTuple transformedLabel = label.transform(resultsDomain);
-						auxValuation = new HesitantTwoTupleValuation(resultsDomain);
-						((HesitantTwoTupleValuation) auxValuation).setTwoTupleLabel(transformedLabel);
-						((HesitantTwoTupleValuation) auxValuation).setBeta(((HesitantTwoTupleValuation) valuation).getBeta());
-					} else if(((HesitantTwoTupleValuation) valuation).isUnary()) {
-						EUnaryRelationType relation = ((HesitantTwoTupleValuation) valuation).getUnaryRelation();
-						TwoTuple label = ((HesitantTwoTupleValuation) valuation).getTwoTupleTerm();
+						auxValuation = new ELICIT(resultsDomain);
+						((ELICIT) auxValuation).setTwoTupleLabel(transformedLabel);
+						((ELICIT) auxValuation).setBeta(((ELICIT) valuation).getBeta());
+					} else if(((ELICIT) valuation).isUnary()) {
+						EUnaryRelationType relation = ((ELICIT) valuation).getUnaryRelation();
+						TwoTuple label = ((ELICIT) valuation).getTwoTupleTerm();
 						TwoTuple transformedLabel = label.transform(resultsDomain);
-						auxValuation = new HesitantTwoTupleValuation(resultsDomain);
-						((HesitantTwoTupleValuation) auxValuation).setUnaryRelation(relation, transformedLabel);
-						((HesitantTwoTupleValuation) auxValuation).setBeta(((HesitantTwoTupleValuation) valuation).getBeta());
+						auxValuation = new ELICIT(resultsDomain);
+						((ELICIT) auxValuation).setUnaryRelation(relation, transformedLabel);
+						((ELICIT) auxValuation).setBeta(((ELICIT) valuation).getBeta());
 					} else {
-						TwoTuple labelLower = ((HesitantTwoTupleValuation) valuation).getTwoTupleLowerTerm();
-						TwoTuple labelUpper = ((HesitantTwoTupleValuation) valuation).getTwoTupleUpperTerm();
+						TwoTuple labelLower = ((ELICIT) valuation).getTwoTupleLowerTerm();
+						TwoTuple labelUpper = ((ELICIT) valuation).getTwoTupleUpperTerm();
 						TwoTuple transformedLabelLower = labelLower.transform(resultsDomain);
 						TwoTuple transformedLabelUpper = labelUpper.transform(resultsDomain);
-						auxValuation = new HesitantTwoTupleValuation(resultsDomain);
-						((HesitantTwoTupleValuation) auxValuation).setBinaryRelation(transformedLabelLower, transformedLabelUpper);
-						((HesitantTwoTupleValuation) auxValuation).setBeta(((HesitantTwoTupleValuation) valuation).getBeta());
+						auxValuation = new ELICIT(resultsDomain);
+						((ELICIT) auxValuation).setBinaryRelation(transformedLabelLower, transformedLabelUpper);
+						((ELICIT) auxValuation).setBeta(((ELICIT) valuation).getBeta());
 					}
 				} else {
 					if(valuation != null) {

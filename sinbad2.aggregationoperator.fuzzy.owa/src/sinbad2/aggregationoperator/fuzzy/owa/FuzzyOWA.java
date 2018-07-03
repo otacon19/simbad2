@@ -7,7 +7,7 @@ import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.aggregationoperator.fuzzy.owa.valuation.HesitantTwoTupleOperator;
 import sinbad2.core.validator.Validator;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
+import sinbad2.valuation.elicit.ELICIT;
 
 public class FuzzyOWA extends WeightedAggregationOperator {
 
@@ -30,7 +30,7 @@ public class FuzzyOWA extends WeightedAggregationOperator {
 
 		if(valuations.size() > 0) {
 			for(Valuation valuation : valuations) {
-				if(valuation instanceof HesitantTwoTupleValuation) {
+				if(valuation instanceof ELICIT) {
 					if(weights.get(0) == -1) {
 						weights.remove(0);
 						return HesitantTwoTupleOperator.aggregate(auxValuations, weights);

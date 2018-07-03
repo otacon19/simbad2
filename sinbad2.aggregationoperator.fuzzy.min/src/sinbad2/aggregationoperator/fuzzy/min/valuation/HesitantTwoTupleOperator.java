@@ -8,14 +8,14 @@ import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
+import sinbad2.valuation.elicit.ELICIT;
 
 public class HesitantTwoTupleOperator {
 
 private HesitantTwoTupleOperator() {}
 	
 	public static Valuation aggregate(List<Valuation> valuations) {
-		HesitantTwoTupleValuation result = null;
+		ELICIT result = null;
 		List<Double> a = new LinkedList<Double>(), b = new LinkedList<Double>(), c = new LinkedList<Double>(), d = new LinkedList<Double>();
 		double limits[] = new double[4];
 		FuzzySet domain = null;
@@ -23,7 +23,7 @@ private HesitantTwoTupleOperator() {}
 		TrapezoidalFunction tpf;
 
 		for(Valuation valuation : valuations) {
-			Validator.notIllegalElementType(valuation, new String[] { HesitantTwoTupleValuation.class.toString() });
+			Validator.notIllegalElementType(valuation, new String[] { ELICIT.class.toString() });
 
 			if(domain == null) {
 				domain = (FuzzySet) valuation.getDomain();
@@ -31,10 +31,10 @@ private HesitantTwoTupleOperator() {}
 				throw new IllegalArgumentException("Invalid domain");
 			}
 			
-			if(((HesitantTwoTupleValuation) valuation).getBeta() == null) {
-				tpf = ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
+			if(((ELICIT) valuation).getBeta() == null) {
+				tpf = ((ELICIT) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
 			} else {
-				tpf = ((HesitantTwoTupleValuation) valuation).getBeta();
+				tpf = ((ELICIT) valuation).getBeta();
 			}
 				 
 			limits = tpf.getLimits();
@@ -54,7 +54,7 @@ private HesitantTwoTupleOperator() {}
 		double minc = c.get(0);
 		double mind = d.get(0);
 		
-		result = (HesitantTwoTupleValuation) valuations.get(0).clone();
+		result = (ELICIT) valuations.get(0).clone();
 		result.createRelation(new TrapezoidalFunction(new double[]{mina, minb, minc, mind}));
 		
 

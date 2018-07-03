@@ -1,4 +1,4 @@
-package sinbad2.valuation.hesitant.twoTuple.nls;
+package sinbad2.valuation.elicit.nls;
 
 import org.eclipse.osgi.util.NLS;
 

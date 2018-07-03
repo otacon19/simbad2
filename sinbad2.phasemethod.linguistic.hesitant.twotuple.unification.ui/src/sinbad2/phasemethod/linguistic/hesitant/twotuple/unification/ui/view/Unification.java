@@ -23,7 +23,7 @@ import org.eclipse.ui.part.ViewPart;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.excel.WriteUnificationExcel;
 import sinbad2.phasemethod.PhasesMethodManager;
-import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.UnificationPhase;
+import sinbad2.phasemethod.linguistic.elicit.unification.UnificationPhase;
 import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.Images;
 import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.nls.Messages;
 import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.comparator.UnificationTreeViewerComparator;

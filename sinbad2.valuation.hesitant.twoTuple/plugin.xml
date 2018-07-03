@@ -8,7 +8,7 @@
             id="flintstones.valuation.hesitant.twoTuple"
             name="%valuation.name">
          <type
-               implementation="sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation">
+               implementation="sinbad2.valuation.elicit.ELICIT">
          </type>
       </valuation>
    </extension>

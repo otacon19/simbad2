@@ -1,4 +1,4 @@
-package sinbad2.phasemethod.linguistic.hesitant.twotuple.unification;
+package sinbad2.phasemethod.linguistic.elicit.unification;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,13 +19,13 @@ import sinbad2.element.alternative.Alternative;
 import sinbad2.element.criterion.Criterion;
 import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.IPhaseMethod;
-import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.nls.Messages;
+import sinbad2.phasemethod.linguistic.elicit.unification.nls.Messages;
 import sinbad2.phasemethod.listener.EPhaseMethodStateChange;
 import sinbad2.phasemethod.listener.PhaseMethodStateChangeEvent;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.elicit.ELICIT;
 import sinbad2.valuation.hesitant.EUnaryRelationType;
 import sinbad2.valuation.hesitant.HesitantValuation;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.valuationset.ValuationKey;
 import sinbad2.valuation.valuationset.ValuationSet;
@@ -169,28 +169,28 @@ public class UnificationPhase implements IPhaseMethod {
 				if(valuation instanceof HesitantValuation) {
 					if(((HesitantValuation) valuation).isPrimary()) {
 						valuationTwoTuple = new TwoTuple((FuzzySet) valuation.getDomain(), ((HesitantValuation) valuation).getLabel()).transform(unifiedDomain);
-						valuation = new HesitantTwoTupleValuation((FuzzySet) valuationTwoTuple.getDomain());
-						((HesitantTwoTupleValuation) valuation).setTwoTupleLabel(valuationTwoTuple);
+						valuation = new ELICIT((FuzzySet) valuationTwoTuple.getDomain());
+						((ELICIT) valuation).setTwoTupleLabel(valuationTwoTuple);
 					} else if(((HesitantValuation) valuation).isUnary()){
 						LabelLinguisticDomain term = ((HesitantValuation) valuation).getTerm();
 						EUnaryRelationType unary = ((HesitantValuation) valuation).getUnaryRelation();
 						valuationTwoTuple = new TwoTuple((FuzzySet) valuation.getDomain(), term).transform(unifiedDomain);
-						valuation = new HesitantTwoTupleValuation((FuzzySet) valuationTwoTuple.getDomain());
-						((HesitantTwoTupleValuation) valuation).setUnaryRelation(unary, valuationTwoTuple);
+						valuation = new ELICIT((FuzzySet) valuationTwoTuple.getDomain());
+						((ELICIT) valuation).setUnaryRelation(unary, valuationTwoTuple);
 					} else {
 						LabelLinguisticDomain lowerTerm = ((HesitantValuation) valuation).getLowerTerm();
 						LabelLinguisticDomain upperTerm = ((HesitantValuation) valuation).getUpperTerm();
 						valuationTwoTupleLower = new TwoTuple((FuzzySet) valuation.getDomain(), lowerTerm).transform(unifiedDomain);
 						valuationTwoTupleUpper = new TwoTuple((FuzzySet) valuation.getDomain(), upperTerm).transform(unifiedDomain);
-						valuation = new HesitantTwoTupleValuation((FuzzySet) valuationTwoTupleLower.getDomain());
-						((HesitantTwoTupleValuation) valuation).setBinaryRelation(valuationTwoTupleLower, valuationTwoTupleUpper);
+						valuation = new ELICIT((FuzzySet) valuationTwoTupleLower.getDomain());
+						((ELICIT) valuation).setBinaryRelation(valuationTwoTupleLower, valuationTwoTupleUpper);
 					}
 				} else {
 					throw new IllegalArgumentException();
 				}
 				
 				_twoTupleValuations.put(vk, valuation);
-				_fuzzyNumbers.put(vk, ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelopeEquivalentCLE(unifiedDomain));
+				_fuzzyNumbers.put(vk, ((ELICIT) valuation).calculateFuzzyEnvelopeEquivalentCLE(unifiedDomain));
 			}
 		}
 		return _twoTupleValuations;

@@ -1,4 +1,4 @@
-package sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.nls;
+package sinbad2.phasemethod.linguistic.elicit.unification.nls;
 
 import org.eclipse.osgi.util.NLS;
 

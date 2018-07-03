@@ -17,7 +17,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.phasemethod.PhasesMethodManager;
-import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.UnificationPhase;
+import sinbad2.phasemethod.linguistic.elicit.unification.UnificationPhase;
 import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.nls.Messages;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;

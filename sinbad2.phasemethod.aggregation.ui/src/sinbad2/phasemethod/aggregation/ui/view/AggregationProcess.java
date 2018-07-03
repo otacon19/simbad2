@@ -63,7 +63,7 @@ import sinbad2.phasemethod.aggregation.ui.view.provider.RankingViewerProvider;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
+import sinbad2.valuation.elicit.ELICIT;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
@@ -676,8 +676,8 @@ public class AggregationProcess extends ViewPart implements AggregationProcessLi
 							pos[i] = ((FuzzySet) domain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
 							alpha[i] = ((TwoTuple) valuation).getAlpha();
 							i++;
-						} else if(valuation instanceof HesitantTwoTupleValuation) {
-							fuzzyNumbers[i] = ((HesitantTwoTupleValuation) valuation).getBeta();
+						} else if(valuation instanceof ELICIT) {
+							fuzzyNumbers[i] = ((ELICIT) valuation).getBeta();
 							i++;
 						} else {
 							alternatives[i] = null;

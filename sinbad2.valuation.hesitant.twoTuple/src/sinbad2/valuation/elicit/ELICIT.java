@@ -1,4 +1,4 @@
-package sinbad2.valuation.hesitant.twoTuple;
+package sinbad2.valuation.elicit;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,12 +25,12 @@ import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.elicit.nls.Messages;
 import sinbad2.valuation.hesitant.EUnaryRelationType;
 import sinbad2.valuation.hesitant.HesitantValuation;
-import sinbad2.valuation.hesitant.twoTuple.nls.Messages;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
-public class HesitantTwoTupleValuation extends Valuation {
+public class ELICIT extends Valuation {
 
 	public static final String ID = "flintstones.valuation.hesitant.twoTuple"; //$NON-NLS-1$
 
@@ -53,7 +53,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 		}
 	}
 
-	public HesitantTwoTupleValuation() {
+	public ELICIT() {
 		super();
 
 		_unaryRelation = null;
@@ -64,7 +64,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 		_beta = null;
 	}
 
-	public HesitantTwoTupleValuation(FuzzySet domain) {
+	public ELICIT(FuzzySet domain) {
 		this();
 		setDomain(domain);
 	}
@@ -286,8 +286,6 @@ public class HesitantTwoTupleValuation extends Valuation {
 	}
 
 	public void createRelation(TrapezoidalFunction beta) {
-		beta = new TrapezoidalFunction(0.3, 0.5, 1, 1);
-		
 		setBeta(beta);
 
 		double a = _beta.getLimits()[0], b = _beta.getLimits()[1], c = _beta.getLimits()[2], d = _beta.getLimits()[3];
@@ -649,14 +647,14 @@ public class HesitantTwoTupleValuation extends Valuation {
 	@Override
 	public int compareTo(Valuation other) {
 		Validator.notNull(other);
-		Validator.notIllegalElementType(other, new String[] { HesitantTwoTupleValuation.class.toString() });
+		Validator.notIllegalElementType(other, new String[] { ELICIT.class.toString() });
 
 		if (_domain.equals(other.getDomain())) {
 			TwoTuple[] interval1 = this.getEnvelopeELICITExpression();
-			TwoTuple[] interval2 = ((HesitantTwoTupleValuation) other).getEnvelopeELICITExpression();
+			TwoTuple[] interval2 = ((ELICIT) other).getEnvelopeELICITExpression();
 
 			int[] labelIndexesInterval1 = this.getEnvelopeLinguisticLabelsIndex();
-			int[] labelIndexesInterval2 = ((HesitantTwoTupleValuation) other).getEnvelopeLinguisticLabelsIndex();
+			int[] labelIndexesInterval2 = ((ELICIT) other).getEnvelopeLinguisticLabelsIndex();
 			int g = ((FuzzySet) _domain).getLabelSet().getCardinality() - 1;
 
 			double Sinterval1 = ((labelIndexesInterval1[0] + labelIndexesInterval1[1]) / (2d * g))
@@ -743,7 +741,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 		TwoTuple[] interval1, interval2;
 
 		for (int i = 0; i < valuations.size(); ++i) {
-			interval1 = ((HesitantTwoTupleValuation) valuations.get(i)[0]).getEnvelopeELICITExpression();
+			interval1 = ((ELICIT) valuations.get(i)[0]).getEnvelopeELICITExpression();
 			delta1 = interval1[1].calculateReverseDelta();
 			beta1 = interval1[0].calculateReverseDelta();
 			for (int j = 0; j < valuations.size(); ++j) {
@@ -751,7 +749,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 				if (i == j) {
 					max = 0.5;
 				} else {
-					interval2 = ((HesitantTwoTupleValuation) valuations.get(j)[0]).getEnvelopeELICITExpression();
+					interval2 = ((ELICIT) valuations.get(j)[0]).getEnvelopeELICITExpression();
 					delta2 = interval2[1].calculateReverseDelta();
 					beta2 = interval2[0].calculateReverseDelta();
 
@@ -814,7 +812,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 	public static List<Object[]> rankingTrapezoidalFuzzyNumbers(List<Object[]> valuations) {
 		List<Double> magnitudes = new LinkedList<Double>();
 		for (Object[] valuation : valuations) {
-			HesitantTwoTupleValuation v = ((HesitantTwoTupleValuation) valuation[0]);
+			ELICIT v = ((ELICIT) valuation[0]);
 			TrapezoidalFunction vtr = v.getBeta();
 			magnitudes.add(computeMagnitude(vtr));
 		}
@@ -876,7 +874,7 @@ public class HesitantTwoTupleValuation extends Valuation {
 			return false;
 		}
 
-		final HesitantTwoTupleValuation other = (HesitantTwoTupleValuation) obj;
+		final ELICIT other = (ELICIT) obj;
 
 		return new EqualsBuilder().append(_label, other._label).append(_domain, other._domain)
 				.append(_unaryRelation, other._unaryRelation).append(_term, other._term)

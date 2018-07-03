@@ -7,7 +7,7 @@ import sinbad2.aggregationoperator.UnweightedAggregationOperator;
 import sinbad2.aggregationoperator.fuzzy.geometricMean.valuation.HesitantTwoTupleOperator;
 import sinbad2.core.validator.Validator;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
+import sinbad2.valuation.elicit.ELICIT;
 
 public class FuzzyGeometric extends UnweightedAggregationOperator {
 
@@ -30,7 +30,7 @@ public class FuzzyGeometric extends UnweightedAggregationOperator {
 		
 		if(valuations.size() > 0) {
 			for(Valuation valuation: valuations) {
-				if(valuation instanceof HesitantTwoTupleValuation) {
+				if(valuation instanceof ELICIT) {
 					return HesitantTwoTupleOperator.aggregate(valuations);
 				} else {
 					throw new IllegalArgumentException("Not supported type");

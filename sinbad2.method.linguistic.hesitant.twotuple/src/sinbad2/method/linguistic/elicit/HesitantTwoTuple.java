@@ -1,4 +1,4 @@
-package sinbad2.method.linguistic.hesitant.twotuple;
+package sinbad2.method.linguistic.elicit;
 
 import java.util.List;
 

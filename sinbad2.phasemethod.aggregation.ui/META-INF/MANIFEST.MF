@@ -12,4 +12,4 @@ Require-Bundle: sinbad2.phasemethod.aggregation;bundle-version="1.0.0";visibilit
  sinbad2.domain.linguistic.fuzzyset.ui;visibility:=reexport,
  sinbad2.aggregationoperator.owa,
  sinbad2.resolutionphase.sensitivityanalysis,
- sinbad2.valuation.hesitant.twoTuple
+ sinbad2.valuation.elicit

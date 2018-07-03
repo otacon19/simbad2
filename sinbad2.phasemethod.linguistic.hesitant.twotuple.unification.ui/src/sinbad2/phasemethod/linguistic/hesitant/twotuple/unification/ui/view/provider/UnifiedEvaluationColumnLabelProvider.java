@@ -3,7 +3,7 @@ package sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.pro
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
+import sinbad2.valuation.elicit.ELICIT;
 
 public class UnifiedEvaluationColumnLabelProvider extends ColumnLabelProvider {
 	
@@ -13,8 +13,8 @@ public class UnifiedEvaluationColumnLabelProvider extends ColumnLabelProvider {
 		if (element instanceof Object[]) {
 			Valuation result = (Valuation) ((Object[]) element)[3];
 			if (result != null) {
-					if(result instanceof HesitantTwoTupleValuation) {
-						return ((HesitantTwoTupleValuation) result).changeFormatValuationToString();
+					if(result instanceof ELICIT) {
+						return ((ELICIT) result).changeFormatValuationToString();
 					} else {
 						return "NA";//$NON-NLS-1$
 					}

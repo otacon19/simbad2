@@ -12,8 +12,8 @@ import org.eclipse.jface.viewers.Viewer;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.element.ProblemElement;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.elicit.ELICIT;
 import sinbad2.valuation.hesitant.HesitantValuation;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 import sinbad2.valuation.unifiedValuation.UnifiedValuation;
 
@@ -26,8 +26,8 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 		public int compare(Object[] o1, Object[] o2) {
 			if ((o1[0] instanceof HesitantValuation)) {
 				return ((HesitantValuation) o1[0]).compareTo((HesitantValuation) o2[0]);
-			} else if(o1[0] instanceof HesitantTwoTupleValuation) {
-				return ((HesitantTwoTupleValuation) o1[0]).compareTo((HesitantTwoTupleValuation) o2[0]);
+			} else if(o1[0] instanceof ELICIT) {
+				return ((ELICIT) o1[0]).compareTo((ELICIT) o2[0]);
 		    } else {
 		    	return Double.compare((Double) o1[0], (Double) o2[0]);
 		    }
@@ -71,7 +71,7 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 						} else if(valuation instanceof TwoTuple) {
 							twoTuple = (TwoTuple) valuation;
 							listEntry = new Object[] {((TwoTuple) twoTuple).calculateInverseDelta(), alternativeName, twoTuple };
-						} else if(valuation instanceof HesitantTwoTupleValuation) {
+						} else if(valuation instanceof ELICIT) {
 							hesitant2Tuple = true;
 							listEntry = new Object[] {valuation, alternativeName, valuation };
 						} else {
@@ -87,13 +87,13 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 					Collections.sort(result, new MyComparator());
 					Collections.reverse(result);
 				} else {
-					result = HesitantTwoTupleValuation.rankingTrapezoidalFuzzyNumbers(result);
+					result = ELICIT.rankingTrapezoidalFuzzyNumbers(result);
 				}
 				
 				int ranking = 0;
 				double previous = -1;
 				for (Object[] element : result) {
-					if ((element[0] instanceof HesitantValuation || element[0] instanceof HesitantTwoTupleValuation)) {
+					if ((element[0] instanceof HesitantValuation || element[0] instanceof ELICIT)) {
 						element[0] = Integer.valueOf(++ranking);
 				    } else if ((Double) element[0] == previous) {
 						element[0] = ranking;

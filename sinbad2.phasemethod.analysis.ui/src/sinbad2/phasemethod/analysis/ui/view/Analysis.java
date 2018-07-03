@@ -48,7 +48,7 @@ import sinbad2.phasemethod.retranslation.RetranslationPhase;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
+import sinbad2.valuation.elicit.ELICIT;
 import sinbad2.valuation.integer.IntegerValuation;
 import sinbad2.valuation.real.RealValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
@@ -334,8 +334,8 @@ public class Analysis extends ViewPart implements IStepStateListener {
 							pos[i] = ((FuzzySet) domain).getLabelSet().getPos(((TwoTuple) valuation).getLabel());
 							alpha[i] = ((TwoTuple) valuation).getAlpha();
 							i++;
-						} else if(valuation instanceof HesitantTwoTupleValuation) {
-							fuzzyNumbers[i] = ((HesitantTwoTupleValuation) valuation).getBeta();
+						} else if(valuation instanceof ELICIT) {
+							fuzzyNumbers[i] = ((ELICIT) valuation).getBeta();
 							i++;
 						} else if(valuation instanceof IntegerValuation) {
 							measuresInteger[i] = (int) ((IntegerValuation) valuation).getValue();

@@ -6,12 +6,12 @@ import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
+import sinbad2.valuation.elicit.ELICIT;
 
 public class HesitantTwoTupleOperator {
 
 	public static Valuation aggregate(List<Valuation> valuations, List<Double> weights) {
-		HesitantTwoTupleValuation result = null;
+		ELICIT result = null;
 		double a = 0, b = 0, c = 0, d = 0, weight;
 		double limits[] = new double[4];
 		FuzzySet domain = null;
@@ -20,7 +20,7 @@ public class HesitantTwoTupleOperator {
 
 		int numWeight = 0;
 		for(Valuation valuation : valuations) {
-			Validator.notIllegalElementType(valuation, new String[] { HesitantTwoTupleValuation.class.toString() });
+			Validator.notIllegalElementType(valuation, new String[] { ELICIT.class.toString() });
 
 			if(domain == null) {
 				domain = (FuzzySet) valuation.getDomain();
@@ -28,10 +28,10 @@ public class HesitantTwoTupleOperator {
 				throw new IllegalArgumentException("Invalid domain");
 			}
 			
-			if(((HesitantTwoTupleValuation) valuation).getBeta() == null) {
-				tpf = ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
+			if(((ELICIT) valuation).getBeta() == null) {
+				tpf = ((ELICIT) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
 			} else {
-				tpf = ((HesitantTwoTupleValuation) valuation).getBeta();
+				tpf = ((ELICIT) valuation).getBeta();
 			}
 				 
 			weight = weights.get(numWeight);
@@ -45,7 +45,7 @@ public class HesitantTwoTupleOperator {
 			numWeight++;
 		}
 		
-		result = (HesitantTwoTupleValuation) valuations.get(0).clone();
+		result = (ELICIT) valuations.get(0).clone();
 		result.createRelation(new TrapezoidalFunction(new double[]{a, b, c, d}));
 		
 

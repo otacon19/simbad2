@@ -9,18 +9,18 @@ import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
+import sinbad2.valuation.elicit.ELICIT;
 
 public class HesitantTwoTupleOperator {
 	
 	public static Valuation aggregate(List<Valuation> valuations, double alphaQ, double betaQ) {
-		HesitantTwoTupleValuation result = null;
+		ELICIT result = null;
 		double a = 0, b = 0, c = 0, d = 0;
-		List<HesitantTwoTupleValuation> measures = new LinkedList<HesitantTwoTupleValuation>();
+		List<ELICIT> measures = new LinkedList<ELICIT>();
 		FuzzySet domain = null;
 
 		for(Valuation valuation : valuations) {
-			Validator.notIllegalElementType(valuation, new String[] { HesitantTwoTupleValuation.class.toString() });
+			Validator.notIllegalElementType(valuation, new String[] { ELICIT.class.toString() });
 
 			if(domain == null) {
 				domain = (FuzzySet) valuation.getDomain();
@@ -28,7 +28,7 @@ public class HesitantTwoTupleOperator {
 				throw new IllegalArgumentException("Invalid domain");
 			}
 			
-			measures.add((HesitantTwoTupleValuation) valuation);
+			measures.add((ELICIT) valuation);
 		}
 
 		if(domain != null) {
@@ -42,10 +42,10 @@ public class HesitantTwoTupleOperator {
 			TrapezoidalFunction tpf;
 			for(int i = 0; i < size; i++) {
 				valuation = measures.get(i);
-				if(((HesitantTwoTupleValuation) valuation).getBeta() == null) {
-					tpf = ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
+				if(((ELICIT) valuation).getBeta() == null) {
+					tpf = ((ELICIT) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
 				} else {
-					tpf = ((HesitantTwoTupleValuation) valuation).getBeta();
+					tpf = ((ELICIT) valuation).getBeta();
 				}
 		
 				limits = tpf.getLimits();
@@ -56,7 +56,7 @@ public class HesitantTwoTupleOperator {
 				d += weights[i] * limits[3];
 			}
 
-			result = (HesitantTwoTupleValuation) valuations.get(0).clone();
+			result = (ELICIT) valuations.get(0).clone();
 			result.createRelation(new TrapezoidalFunction(new double[]{a, b, c, d}));
 		}
 		
@@ -64,13 +64,13 @@ public class HesitantTwoTupleOperator {
 	}
 
 	public static Valuation aggregate(List<Valuation> valuations, List<Double> weights) {
-		HesitantTwoTupleValuation result = null;
+		ELICIT result = null;
 		double a = 0, b = 0, c = 0, d = 0;
-		List<HesitantTwoTupleValuation> measures = new LinkedList<HesitantTwoTupleValuation>();
+		List<ELICIT> measures = new LinkedList<ELICIT>();
 		FuzzySet domain = null;
 
 		for(Valuation valuation : valuations) {
-			Validator.notIllegalElementType(valuation, new String[] { HesitantTwoTupleValuation.class.toString() });
+			Validator.notIllegalElementType(valuation, new String[] { ELICIT.class.toString() });
 
 			if(domain == null) {
 				domain = (FuzzySet) valuation.getDomain();
@@ -78,7 +78,7 @@ public class HesitantTwoTupleOperator {
 				throw new IllegalArgumentException("Invalid domain");
 			}
 			
-			measures.add((HesitantTwoTupleValuation) valuation);
+			measures.add((ELICIT) valuation);
 		}
 
 		if(domain != null) {
@@ -92,10 +92,10 @@ public class HesitantTwoTupleOperator {
 			TrapezoidalFunction tpf;
 			for(int i = 0; i < size; i++) {
 				valuation = measures.get(i);
-				if(((HesitantTwoTupleValuation) valuation).getBeta() == null) {
-					tpf = ((HesitantTwoTupleValuation) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
+				if(((ELICIT) valuation).getBeta() == null) {
+					tpf = ((ELICIT) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
 				} else {
-					tpf = ((HesitantTwoTupleValuation) valuation).getBeta();
+					tpf = ((ELICIT) valuation).getBeta();
 				}
 		
 				limits = tpf.getLimits();
@@ -106,7 +106,7 @@ public class HesitantTwoTupleOperator {
 				d += weights.get(i) * limits[3];
 			}
 
-			result = (HesitantTwoTupleValuation) valuations.get(0).clone();
+			result = (ELICIT) valuations.get(0).clone();
 			result.createRelation(new TrapezoidalFunction(new double[]{a, b, c, d}));
 		}
 		

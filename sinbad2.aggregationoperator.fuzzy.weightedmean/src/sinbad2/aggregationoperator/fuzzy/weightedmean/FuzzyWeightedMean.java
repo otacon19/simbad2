@@ -7,7 +7,7 @@ import sinbad2.aggregationoperator.WeightedAggregationOperator;
 import sinbad2.aggregationoperator.fuzzy.weightedmean.valuation.HesitantTwoTupleOperator;
 import sinbad2.core.validator.Validator;
 import sinbad2.valuation.Valuation;
-import sinbad2.valuation.hesitant.twoTuple.HesitantTwoTupleValuation;
+import sinbad2.valuation.elicit.ELICIT;
 
 public class FuzzyWeightedMean extends WeightedAggregationOperator {
 	
@@ -72,7 +72,7 @@ public class FuzzyWeightedMean extends WeightedAggregationOperator {
 				}
 
 				for(Valuation valuation : valuations) {
-					if(valuation instanceof HesitantTwoTupleValuation) {
+					if(valuation instanceof ELICIT) {
 						return HesitantTwoTupleOperator.aggregate(valuations, weights);
 					} else {
 						throw new IllegalArgumentException("Not supported type");

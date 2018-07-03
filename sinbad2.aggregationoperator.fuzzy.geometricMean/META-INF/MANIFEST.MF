@@ -6,4 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.aggregationoperator,
- sinbad2.valuation.hesitant.twoTuple
+ sinbad2.valuation.elicit

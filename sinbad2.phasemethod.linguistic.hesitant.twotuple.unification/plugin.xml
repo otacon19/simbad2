@@ -5,7 +5,7 @@
          point="flintstones.phasemethod">
       <phase
             id="flintstones.phasemethod.linguistic.hesitant.twotuple.unification"
-            implementation="sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.UnificationPhase"
+            implementation="sinbad2.phasemethod.linguistic.elicit.unification.UnificationPhase"
             name="Unification">
       </phase>
    </extension>
