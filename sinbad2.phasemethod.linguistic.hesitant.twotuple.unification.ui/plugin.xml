@@ -8,10 +8,10 @@
             name="%ui.name"
             phasemethod="flintstones.phasemethod.linguistic.hesitant.twotuple.unification">
          <view
-               step="sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.GenerateUnificationDomain">
+               step="sinbad2.phasemethod.linguistic.elicit.unification.ui.view.GenerateUnificationDomain">
          </view>
          <view
-               step="sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.Unification">
+               step="sinbad2.phasemethod.linguistic.elicit.unification.ui.view.Unification">
          </view>
       </ui>
    </extension>
@@ -23,14 +23,14 @@
       </category>
       <view
             category="flintstones.phasemethod.linguistic.hesitant.twotuple.unification.ui.category"
-            class="sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.GenerateUnificationDomain"
+            class="sinbad2.phasemethod.linguistic.elicit.unification.ui.view.GenerateUnificationDomain"
             id="flintstones.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.generateunificationdomain"
             name="%view.name"
             restorable="true">
       </view>
       <view
             category="flintstones.phasemethod.linguistic.hesitant.twotuple.unification.ui.category"
-            class="sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.Unification"
+            class="sinbad2.phasemethod.linguistic.elicit.unification.ui.view.Unification"
             id="flintstones.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.unification"
             name="%view.name.0"
             restorable="true">

@@ -3,7 +3,9 @@ package sinbad2.phasemethod.linguistic.elicit.unification.nls;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.nls.messages"; //$NON-NLS-1$
+	
+	private static final String BUNDLE_NAME = "sinbad2.phasemethod.linguistic.elicit.unification.nls.messages"; //$NON-NLS-1$
+	
 	public static String UnificationPhase_Generate;
 	static {
 		// initialize resource bundle

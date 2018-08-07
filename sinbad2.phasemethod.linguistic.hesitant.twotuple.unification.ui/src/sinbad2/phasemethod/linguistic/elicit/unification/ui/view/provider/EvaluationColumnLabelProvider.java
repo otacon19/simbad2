@@ -1,8 +1,8 @@
-package sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.provider;
+package sinbad2.phasemethod.linguistic.elicit.unification.ui.view.provider;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
-import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.nls.Messages;
+import sinbad2.phasemethod.linguistic.elicit.unification.ui.nls.Messages;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.hesitant.HesitantValuation;
 

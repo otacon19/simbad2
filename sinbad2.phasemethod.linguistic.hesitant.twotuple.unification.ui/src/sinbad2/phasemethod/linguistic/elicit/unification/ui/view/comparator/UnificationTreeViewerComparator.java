@@ -1,10 +1,10 @@
-package sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.comparator;
+package sinbad2.phasemethod.linguistic.elicit.unification.ui.view.comparator;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 
-import sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.provider.EvaluationColumnLabelProvider;
+import sinbad2.phasemethod.linguistic.elicit.unification.ui.view.provider.EvaluationColumnLabelProvider;
 import sinbad2.valuation.valuationset.ValuationKey;
 
 

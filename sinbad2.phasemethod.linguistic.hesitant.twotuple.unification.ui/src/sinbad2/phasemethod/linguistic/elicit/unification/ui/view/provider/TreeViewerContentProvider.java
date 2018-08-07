@@ -1,4 +1,4 @@
-package sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.view.provider;
+package sinbad2.phasemethod.linguistic.elicit.unification.ui.view.provider;
 
 import java.util.Map;
 

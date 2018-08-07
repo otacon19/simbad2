@@ -1,9 +1,11 @@
-package sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.nls;
+package sinbad2.phasemethod.linguistic.elicit.unification.ui.nls;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui.nls.messages"; //$NON-NLS-1$
+	
+	private static final String BUNDLE_NAME = "sinbad2.phasemethod.linguistic.elicit.unification.ui.nls.messages"; //$NON-NLS-1$
+	
 	public static String EvaluationColumnLabelProvider_Not_evaluated;
 	public static String GenerateUnificationDomain_Description;
 	public static String GenerateUnificationDomain_Generate_unification_domain;

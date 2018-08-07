@@ -20,7 +20,6 @@ import sinbad2.domain.Domain;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
-import sinbad2.domain.linguistic.fuzzy.label.LabelSetLinguisticDomain;
 import sinbad2.domain.linguistic.fuzzy.semantic.IMembershipFunction;
 import sinbad2.domain.linguistic.unbalanced.Unbalanced;
 import sinbad2.resolutionphase.io.XMLRead;
@@ -244,7 +243,7 @@ public class ELICIT extends Valuation {
 		disablePrimary();
 		disableUnary();
 	}
-	
+
 	public boolean isPrimary() {
 		return (_label != null);
 	}
@@ -260,7 +259,7 @@ public class ELICIT extends Valuation {
 	public boolean isBinary() {
 		return ((_lowerTerm != null) && (_upperTerm != null));
 	}
-	
+
 	private void disablePrimary() {
 		_label = null;
 	}
@@ -301,60 +300,282 @@ public class ELICIT extends Valuation {
 	}
 
 	private void computeELICITExpressionAtLeastCase() {
-		// Step 2: compute centroids
-		List<Double> centroids = computeCentroids();
+		// Step 2: Identify the closest term regarding to b
+		LabelLinguisticDomain term = selectPrimaryTerm(_beta.getB());
 
-		// Step 3: compute distance between the centroids and beta
-		Double a = _beta.getLimits()[0];
-		List<Double> distances = computeMinimumDistanceToX(centroids, a);
+		// Step 3: Create temporal ELICIT expression
+		setUnaryRelation(EUnaryRelationType.AtLeast, new TwoTuple((FuzzySet) _domain, term, 0));
 
-		// Step 4: select the linguistic term
-		LabelLinguisticDomain s_i = selectLinguisticTerm(distances);
+		// Step 4: Compute envelope index
+		int[] envelopeIndex = getEnvelopeIndex();
 
-		// Step 5: obtain the symbolic translation alpha
-		LabelSetLinguisticDomain labelSet = ((FuzzySet) _domain).getLabelSet();
-		int g = labelSet.getCardinality() - 1;
-		double distanceBetweenTerms = 1d / (2 * g);
-		double alpha = (0.5 * (a - centroids.get(labelSet.getPos(s_i)))) / distanceBetweenTerms;
+		// Step 5: Compute weights
+		YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
+		double[] qweights = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, envelopeIndex, false);
+		List<Double> weights = transformWeights(qweights);
 
-		// Build partially ELICIT expression
-		setUnaryRelation(EUnaryRelationType.AtLeast, new TwoTuple((FuzzySet) _domain, s_i, alpha));
+		// Step 6: Include labels except first one
+		List<Double> valuations = getAtLeastIncludedLabels(envelopeIndex);
 
-		// Step 6: gamma computation
-		TrapezoidalFunction fuzzyEnvelopeELICIT = calculateFuzzyEnvelope();
-		setGamma1(fuzzyEnvelopeELICIT.getB() - _beta.getB());
+		// Step 7: Compute unknown b
+		Double unknownB = computeUnknownB(valuations, weights, _beta.getB());
+
+		// Step 8: Compute 2-tuple term
+		setUnaryRelation(EUnaryRelationType.AtLeast, compute2TupleTerm(unknownB));
+
+		// Step 9: Compute gamma
+		setGamma1(_beta.getA() - _term.getFuzzyNumber().getA());
 	}
 
-	private List<Double> computeMinimumDistanceToX(List<Double> centroids, Double point) {
-		List<Double> distances = new LinkedList<Double>();
+	private LabelLinguisticDomain selectPrimaryTerm(double point) {
+		LabelLinguisticDomain selectedTerm = null;
 
-		for (Double centroid : centroids) {
-			distances.add(Math.abs(point - centroid));
-		}
-		return distances;
-	}
-
-	private List<Double> computeCentroids() {
-		List<Double> centroids = new LinkedList<Double>();
-
-		for (LabelLinguisticDomain l : ((FuzzySet) _domain).getLabelSet().getLabels()) {
-			centroids.add(((TrapezoidalFunction) l.getSemantic()).centroid());
-		}
-		return centroids;
-	}
-
-	private LabelLinguisticDomain selectLinguisticTerm(List<Double> distances) {
-		Double min = Double.POSITIVE_INFINITY;
-
-		int index = 0, selectedIndex = 0;
-		for (Double distance : distances) {
-			if (distance < min) {
-				min = distance;
-				selectedIndex = index;
+		Double minimalDistance = Double.MAX_VALUE, distance;
+		for (LabelLinguisticDomain label : ((FuzzySet) _domain).getLabelSet().getLabels()) {
+			distance = Math.abs(point - label.getSemantic().centroid());
+			if (distance < minimalDistance) {
+				minimalDistance = distance;
+				selectedTerm = label;
 			}
-			index++;
 		}
-		return ((FuzzySet) _domain).getLabelSet().getLabel(selectedIndex);
+
+		return selectedTerm;
+	}
+
+	private List<Double> getAtLeastIncludedLabels(int[] envelopeIndex) {
+		List<Double> valuations = new LinkedList<Double>();
+
+		for (int i = envelopeIndex[0] + 1; i <= envelopeIndex[1]; i++) {
+			valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)).getFuzzyNumber().getB());
+		}
+
+		Collections.sort(valuations);
+		Collections.reverse(valuations);
+
+		return valuations;
+	}
+
+	private List<Double> transformWeights(double[] qweights) {
+		List<Double> weights = new LinkedList<>();
+		for (Double qWeight : qweights) {
+			weights.add(qWeight);
+		}
+
+		return weights;
+	}
+
+	private Double computeUnknownB(List<Double> valuations, List<Double> weights, Double point) {
+		Double equation = point;
+
+		int weight_index = 0;
+		for (Double measure : valuations) {
+			equation -= measure * weights.get(weight_index);
+			weight_index++;
+		}
+
+		return equation / weights.get(weights.size() - 1);
+	}
+
+	private TwoTuple compute2TupleTerm(Double unknownPoint) {
+		Double distance, closestDistance = Double.MAX_VALUE;
+		LabelLinguisticDomain selectedTerm = null;
+
+		for (LabelLinguisticDomain label : ((FuzzySet) _domain).getLabelSet().getLabels()) {
+			distance = unknownPoint - ((TrapezoidalFunction) label.getSemantic()).getB();
+			if (Math.abs(distance) < Math.abs(closestDistance)) {
+				closestDistance = distance;
+				selectedTerm = label;
+			}
+		}
+
+		Double alpha = Math.round(closestDistance * (((FuzzySet) _domain).getLabelSet().getCardinality() - 1) * 100d) / 100d;
+
+		return new TwoTuple((FuzzySet) _domain, selectedTerm, alpha);
+	}
+
+	private void computeELICITExpressionAtMostCase() {
+		// Step 2: Identify the closest term regarding to c
+		LabelLinguisticDomain term = selectPrimaryTerm(_beta.getC());
+
+		// Step 3: Create temporal ELICIT expression
+		setUnaryRelation(EUnaryRelationType.AtMost, new TwoTuple((FuzzySet) _domain, term, 0));
+
+		// Step 4: Compute envelope index
+		int[] envelopeIndex = getEnvelopeIndex();
+
+		// Step 5: Compute weights
+		YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
+		double[] qweights = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, envelopeIndex, true);
+		List<Double> weights = transformWeights(qweights);
+
+		// Step 6: Include labels except last one
+		List<Double> valuations = getAtMostIncludedLabels(envelopeIndex);
+
+		// Step 7: Compute unknown c
+		Double unknownC = computeUnknownC(valuations, weights, _beta.getC());
+
+		// Step 8: Compute 2-tuple term
+		setUnaryRelation(EUnaryRelationType.AtMost, compute2TupleTerm(unknownC));
+
+		// Step 9: Compute gamma
+		setGamma1(_beta.getD() - _term.getFuzzyNumber().getD());
+	}
+	
+	private List<Double> getAtMostIncludedLabels(int[] envelopeIndex) {
+		List<Double> valuations = new LinkedList<Double>();
+
+		for (int i = envelopeIndex[0]; i <= envelopeIndex[1] - 1; i++) {
+			valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)).getFuzzyNumber().getB());
+		}
+
+		Collections.sort(valuations);
+		Collections.reverse(valuations);
+
+		return valuations;
+	}
+
+	private Double computeUnknownC(List<Double> valuations, List<Double> weights, Double point) {
+		Double equation = point;
+
+		int weight_index = 1;
+		for (Double measure : valuations) {
+			equation -= measure * weights.get(weight_index);
+			weight_index++;
+		}
+
+		return equation / weights.get(0);
+	}
+	
+	private void computeELICITExpressionBetweenCase() {
+		// Step 2: Identify the closest terms regarding to b and c
+		LabelLinguisticDomain lowerLabel = selectPrimaryTerm(_beta.getB());
+		LabelLinguisticDomain upperLabel = selectPrimaryTerm(_beta.getC());
+		
+		TwoTuple lowerTerm, upperTerm;
+		if(lowerLabel == upperLabel) {
+			lowerTerm = compute2TupleTerm(_beta.getB());
+			upperTerm = compute2TupleTerm(_beta.getC());
+		} else {
+			// Step 3: Create temporal ELICIT expression
+			setBinaryRelation(new TwoTuple((FuzzySet) _domain, lowerLabel, 0), new TwoTuple((FuzzySet) _domain, upperLabel, 0));
+
+			// Step 4: Compute envelope index
+			int[] envelopeIndex = getEnvelopeIndex();
+
+			// Step 5: Compute weights
+			YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
+			double[] qweights = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, envelopeIndex, false);
+			List<Double> weights = transformWeights(qweights);
+
+			// Step 6: Include labels except first and last one 
+			List<Double> valuationsBetweenB = getBetweenBIncludedLabels(envelopeIndex);
+			List<Double> valuationsBetweenC = getBetweenCIncludedLabels(envelopeIndex);
+
+			// Step 7: Compute unknown b and c
+			Double unknownB = computeUnknownB(valuationsBetweenB, weights, _beta.getB());
+			Double unknownC = computeUnknownC(valuationsBetweenC, weights, _beta.getC());
+			
+			//Step 8: Compute 2-tuple terms
+			lowerTerm = compute2TupleTerm(unknownB);
+			upperTerm = compute2TupleTerm(unknownC);
+		}
+
+		setBinaryRelation(lowerTerm, upperTerm);
+
+		// Step 9: Compute gamma
+		setGamma1(_beta.getA() - _lowerTerm.getFuzzyNumber().getA());
+		setGamma2(_beta.getD() - _upperTerm.getFuzzyNumber().getD());
+	}
+	
+	private List<Double> getBetweenBIncludedLabels(int[] envelopeIndex) {
+		List<Double> valuations = new LinkedList<Double>();
+
+		int sum = envelopeIndex[1] + envelopeIndex[0], top;
+		if (sum % 2 == 0) {
+			top = sum / 2;
+		} else {
+			top = (sum - 1) / 2;
+		}
+		
+		for (int i = envelopeIndex[0] + 1; i <= top; i++) {
+			valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)).getFuzzyNumber().getB());
+		}
+
+		Collections.sort(valuations);
+		Collections.reverse(valuations);
+
+		return valuations;
+	}
+	
+	private List<Double> getBetweenCIncludedLabels(int[] envelopeIndex) {
+		List<Double> valuations = new LinkedList<Double>();
+
+		int sum = envelopeIndex[1] + envelopeIndex[0], top;
+		if (sum % 2 == 0) {
+			top = sum / 2;
+		} else {
+			top = (sum - 1) / 2;
+		}
+
+		for (int i = envelopeIndex[1] - 1; i <= top; i--) {
+			valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)).getFuzzyNumber().getB());
+		}
+
+		Collections.sort(valuations);
+		Collections.reverse(valuations);
+
+		return valuations;
+	}
+
+	public TrapezoidalFunction computeInverse() {
+		Double a = null, b = null, c = null, d = null;
+
+		if (this.isPrimary()) {
+			TwoTuple primary = getTwoTupleLabel();
+			return (TrapezoidalFunction) primary.getLabel().getSemantic();
+		} else if (this.isUnary()) {
+			if (_unaryRelation.equals(EUnaryRelationType.AtLeast)) {
+				c = d = 1.0d;
+				a = computeAPointAtLeastCase();
+				b = computeBPoint(_term);
+			} else if (_unaryRelation.equals(EUnaryRelationType.AtMost)) {
+				a = b = 0d;
+				d = computeDPointAtMostCase();
+				c = computeCPoint(_term);
+			}
+		} else {
+			Double[] trapezoidalValues = computeSupportBetweenCase();
+			a = trapezoidalValues[0];
+			b = trapezoidalValues[1];
+			c = computeBPoint(_lowerTerm);
+			d = computeCPoint(_upperTerm);
+
+		}
+		_beta = new TrapezoidalFunction(a, b, c, d);
+		return _beta;
+	}
+
+	private Double computeAPointAtLeastCase() {
+		return _term.getFuzzyNumber().getA() - _gamma1;
+	}
+
+	private double computeBPoint(TwoTuple term) {
+		return term.getFuzzyNumber().getB();
+	}
+
+	private Double computeDPointAtMostCase() {
+		return _term.getFuzzyNumber().getD() - _gamma1;
+	}
+
+	private double computeCPoint(TwoTuple term) {
+		return term.getFuzzyNumber().getC();
+	}
+
+	private Double[] computeSupportBetweenCase() {
+		Double[] result = new Double[2];
+		result[0] = _lowerTerm.getFuzzyNumber().getA() - _gamma1;
+		result[1] = _upperTerm.getFuzzyNumber().getA() - _gamma2;
+		return result;
 	}
 
 	public TrapezoidalFunction calculateFuzzyEnvelope() {
@@ -442,7 +663,8 @@ public class ELICIT extends Valuation {
 		return weights;
 	}
 
-	private TrapezoidalFunction computeFuzzyEnvelopeBinaryRelation(int cardinality, int[] envelope, List<Double> weights) {
+	private TrapezoidalFunction computeFuzzyEnvelopeBinaryRelation(int cardinality, int[] envelope,
+			List<Double> weights) {
 		double a, b, c, d;
 
 		a = _beta.getA();
@@ -461,9 +683,9 @@ public class ELICIT extends Valuation {
 
 			List<Valuation> valuations = new LinkedList<Valuation>();
 			for (int i = envelope[0]; i <= top; i++) {
-				if(i == envelope[0]) {
+				if (i == envelope[0]) {
 					valuations.add(_lowerTerm);
-				} else if(i == top) {
+				} else if (i == top) {
 					valuations.add(_upperTerm);
 				} else {
 					valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
@@ -480,19 +702,20 @@ public class ELICIT extends Valuation {
 		return new TrapezoidalFunction(a, b, c, d);
 	}
 
-	private TrapezoidalFunction computeFuzzyEnvelopeUnaryRelation(int cardinality, int[] envelope, List<Double> weights, Boolean atMostCase) {
+	private TrapezoidalFunction computeFuzzyEnvelopeUnaryRelation(int cardinality, int[] envelope, List<Double> weights,
+			Boolean atMostCase) {
 		double a, b, c, d;
 
 		List<Valuation> valuations = new LinkedList<Valuation>();
 		for (int i = envelope[0]; i <= envelope[1]; i++) {
-			if(atMostCase) {
-				if(i == envelope[1]) {
+			if (atMostCase) {
+				if (i == envelope[1]) {
 					valuations.add(_term);
 				} else {
 					valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
 				}
 			} else {
-				if(i == envelope[0]) {
+				if (i == envelope[0]) {
 					valuations.add(_term);
 				} else {
 					valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
@@ -503,7 +726,7 @@ public class ELICIT extends Valuation {
 		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
 		Valuation aux = ((OWA) owa).aggregate(valuations, weights);
-		
+
 		if (atMostCase.booleanValue()) {
 			a = 0.0D;
 			b = 0.0D;
@@ -516,112 +739,6 @@ public class ELICIT extends Valuation {
 			d = 1.0D;
 		}
 		return new TrapezoidalFunction(a, b, c, d);
-	}
-
-	private void computeELICITExpressionAtMostCase() {
-		// Step 2: compute centroids
-		List<Double> centroids = computeCentroids();
-
-		// Step 3: compute distance between the centroids and beta
-		Double d = _beta.getLimits()[3];
-		List<Double> distances = computeMinimumDistanceToX(centroids, d);
-
-		// Step 4: select the linguistic term
-		LabelLinguisticDomain s_i = selectLinguisticTerm(distances);
-
-		// Step 5: obtain the symbolic translation alpha
-		LabelSetLinguisticDomain labelSet = ((FuzzySet) _domain).getLabelSet();
-		int g = labelSet.getCardinality() - 1;
-		double distanceBetweenTerms = 1d / (2 * g);
-		double alpha = (0.5 * (d - centroids.get(labelSet.getPos(s_i)))) / distanceBetweenTerms;
-
-		// Build partially ELICIT expression
-		setUnaryRelation(EUnaryRelationType.AtMost, new TwoTuple((FuzzySet) _domain, s_i, alpha));
-
-		// Step 6: gamma computation
-		TrapezoidalFunction fuzzyEnvelopeELICIT = calculateFuzzyEnvelope();
-		setGamma1(fuzzyEnvelopeELICIT.getC() - _beta.getC());
-	}
-
-	private void computeELICITExpressionBetweenCase() {
-		// Step 2: compute centroids
-		List<Double> centroids = computeCentroids();
-
-		// Step 3: compute distance between the centroids and beta
-		Double a = _beta.getLimits()[0];
-		Double d = _beta.getLimits()[3];
-		List<Double> distancesA = computeMinimumDistanceToX(centroids, a);
-		List<Double> distancesD = computeMinimumDistanceToX(centroids, d);
-
-		// Step 4: select the linguistic term
-		LabelLinguisticDomain s_i = selectLinguisticTerm(distancesA);
-		LabelLinguisticDomain s_j = selectLinguisticTerm(distancesD);
-
-		// Step 5: obtain the symbolic translation alpha
-		LabelSetLinguisticDomain labelSet = ((FuzzySet) _domain).getLabelSet();
-		int g = labelSet.getCardinality() - 1;
-		double distanceBetweenTerms = 1d / (2 * g);
-		double alpha_1 = (0.5 * (a - centroids.get(labelSet.getPos(s_i)))) / distanceBetweenTerms;
-		double alpha_2 = (0.5 * (d - centroids.get(labelSet.getPos(s_j)))) / distanceBetweenTerms;
-
-		// Build partially ELICIT expression
-		setBinaryRelation(new TwoTuple((FuzzySet) _domain, s_i, alpha_1), new TwoTuple((FuzzySet) _domain, s_j, alpha_2));
-
-		// Step 6: gamma computation
-		TrapezoidalFunction fuzzyEnvelopeELICIT = calculateFuzzyEnvelope();
-
-		setGamma1(fuzzyEnvelopeELICIT.getB() - _beta.getB());
-		setGamma2(fuzzyEnvelopeELICIT.getC() - _beta.getC());
-	}
-
-	public TrapezoidalFunction computeInverse() {
-		Double a = null, b = null, c = null, d = null;
-		
-		if (this.isPrimary()) {
-			TwoTuple primary = getTwoTupleLabel();
-			return (TrapezoidalFunction) primary.getLabel().getSemantic();
-		} else if (this.isUnary()) {
-			if (_unaryRelation.equals(EUnaryRelationType.AtLeast)) {
-				c = d = 1.0d;
-				a = computeTrapezoidalValue(_term);
-				b = computeUnknownTrapezoidalValueAtLeastCase();
-			} else if (_unaryRelation.equals(EUnaryRelationType.AtMost)) {
-				a = b = 0d;
-				d = computeTrapezoidalValue(_term);
-				c = computeUnknownTrapezoidalValueAtMostCase();
-			}
-		} else {
-			a = computeTrapezoidalValue(_lowerTerm);
-			d = computeTrapezoidalValue(_upperTerm);
-			Double[] trapezoidalValues = computeUnknownTrapezoidalValuesBinaryRelation();
-			b = trapezoidalValues[0];
-			c = trapezoidalValues[1];
-		}
-		_beta = new TrapezoidalFunction(a, b, c, d);
-		return _beta;
-	}
-
-	private double computeTrapezoidalValue(TwoTuple twoTuple) {
-		int g =  ((FuzzySet) _domain).getLabelSet().getCardinality() - 1;
-		double distanceBetweenTerms = 1d / (2d * g); 
-		double distanceTranslation = (twoTuple.getAlpha() * distanceBetweenTerms) / 0.5d;
-		return distanceTranslation + twoTuple.getLabel().getSemantic().centroid();
-	}
-
-	private Double computeUnknownTrapezoidalValueAtLeastCase() {
-		return calculateFuzzyEnvelope().getB() - _gamma1;
-	}
-
-	private Double computeUnknownTrapezoidalValueAtMostCase() {
-		return calculateFuzzyEnvelope().getC() - _gamma1;
-	}
-
-	private Double[] computeUnknownTrapezoidalValuesBinaryRelation() {
-		TrapezoidalFunction fuzzyEnvelopeELICT = calculateFuzzyEnvelope();
-		Double[] result = new Double[2];
-		result[0] = fuzzyEnvelopeELICT.getB() - _gamma1;
-		result[1] = fuzzyEnvelopeELICT.getC() - _gamma2;
-		return result;
 	}
 
 	public TrapezoidalFunction calculateFuzzyEnvelopeEquivalentCLE(FuzzySet domain) {
@@ -696,7 +813,8 @@ public class ELICIT extends Valuation {
 			case AtLeast:
 				cardinality = ((FuzzySet) _domain).getLabelSet().getCardinality();
 				result[0] = _term;
-				result[1] = new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(cardinality - 1));
+				result[1] = new TwoTuple((FuzzySet) _domain,
+						((FuzzySet) _domain).getLabelSet().getLabel(cardinality - 1));
 				break;
 			case AtMost:
 				result[0] = new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(0));
@@ -853,12 +971,12 @@ public class ELICIT extends Valuation {
 		}
 		return ranking;
 	}
-	
+
 	@Override
 	public Valuation negateValuation() {
 		return null;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 
@@ -907,31 +1025,42 @@ public class ELICIT extends Valuation {
 		}
 	}
 
-
 	@Override
 	public String changeFormatValuationToString() {
+		StringBuilder sb = new StringBuilder();
 
 		if (isPrimary()) {
-			return _label.changeFormatValuationToString();
+			return sb.append(_label.changeFormatValuationToString()).toString();
 		} else {
 			if (isUnary()) {
 				String aux = getUnaryRelation().getRelationType();
 				aux = aux.toLowerCase();
 				aux = aux.substring(0, 1).toUpperCase() + aux.substring(1);
-				return aux + " " + getTwoTupleTerm().prettyFormat(); //$NON-NLS-1$
+				return sb.append(aux).append(' ') // $NON-NLS-1$
+						.append(getTwoTupleTerm().prettyFormat()).append('^') // $NON-NLS-1$
+						.append('(') // $NON-NLS-1$
+						.append(Math.round(_gamma1 * 1000d) / 1000d).append(')').toString(); // $NON-NLS-1$
+
 			} else {
-				return Messages.HesitantTwoTupleValuation_Between + " " + getTwoTupleLowerTerm().prettyFormat() + " " //$NON-NLS-1$ //$NON-NLS-2$
-						+ Messages.HesitantTwoTupleValuation_and + " " + getTwoTupleUpperTerm().prettyFormat();//$NON-NLS-1$ $NON-NLS-2$
-																												// $NON-NLS-3$
+				return sb.append(Messages.HesitantTwoTupleValuation_Between).append(' ') // $NON-NLS-1$
+						.append(getTwoTupleLowerTerm().prettyFormat()).append('^') // $NON-NLS-1$
+						.append('(') // $NON-NLS-1$
+						.append(Math.round(_gamma1 * 1000d) / 1000d).append(')') // $NON-NLS-1$
+						.append(' ').append(Messages.HesitantTwoTupleValuation_and).append(' ')
+						.append(getTwoTupleUpperTerm().prettyFormat()).append('^') // $NON-NLS-1$
+						.append('(') // $NON-NLS-1$
+						.append(Math.round(_gamma2 * 1000d) / 1000d).append(')').toString(); // $NON-NLS-1$
 			}
 		}
 	}
-	
-	@Override
-	public void save(XMLStreamWriter writer) throws XMLStreamException {}
 
 	@Override
-	public void read(XMLRead reader) throws XMLStreamException {}
+	public void save(XMLStreamWriter writer) throws XMLStreamException {
+	}
+
+	@Override
+	public void read(XMLRead reader) throws XMLStreamException {
+	}
 
 	@Override
 	public Object clone() {

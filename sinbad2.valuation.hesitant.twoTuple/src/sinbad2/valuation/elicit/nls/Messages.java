@@ -3,7 +3,9 @@ package sinbad2.valuation.elicit.nls;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "sinbad2.valuation.hesitant.twoTuple.nls.messages"; //$NON-NLS-1$
+	
+	private static final String BUNDLE_NAME = "sinbad2.valuation.elicit.nls.messages"; //$NON-NLS-1$
+	
 	public static String HesitantTwoTupleValuation_and;
 	public static String HesitantTwoTupleValuation_Between;
 	public static String HesitantTwoTupleValuation_Different_domains;

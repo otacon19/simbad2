@@ -1,11 +1,11 @@
-package sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui;
+package sinbad2.phasemethod.linguistic.elicit.unification.ui;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 public class Images {
 
-	private static final String PLUGIN_ID = "sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "sinbad2.phasemethod.linguistic.elicit.unification.ui"; //$NON-NLS-1$
 
 	public static final Image Alternative = AbstractUIPlugin
 			.imageDescriptorFromPlugin(PLUGIN_ID, "icons/alternative.png").createImage(); //$NON-NLS-1$

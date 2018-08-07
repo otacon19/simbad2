@@ -5,6 +5,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import sinbad2.core.validator.Validator;
 import sinbad2.domain.linguistic.fuzzy.FuzzySet;
+import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.linguistic.LinguisticValuation;
@@ -119,6 +120,12 @@ public class TwoTuple extends LinguisticValuation {
 		result.calculateDelta(beta);
 		
 		return result;
+	}
+	
+	public TrapezoidalFunction getFuzzyNumber() {
+		double distance = _alpha / (((FuzzySet) _domain).getLabelSet().getCardinality() - 1);
+		return new TrapezoidalFunction(((TrapezoidalFunction) _label.getSemantic()).getA() + distance, ((TrapezoidalFunction) _label.getSemantic()).getB() + distance, 
+				((TrapezoidalFunction) _label.getSemantic()).getC() + distance, ((TrapezoidalFunction) _label.getSemantic()).getD() + distance);
 	}
 	
 	@Override
