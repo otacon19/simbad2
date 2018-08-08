@@ -228,7 +228,7 @@ public class HesitantValuation extends Valuation {
 
             YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
             List<Double> weights = new LinkedList<Double>();
-			double[] auxWeights = YagerQuantifiers.QWeighted(nqt, g - 1, envelope, lower);
+			double[] auxWeights = YagerQuantifiers.QWeighted(nqt, g - 1, envelope, lower, true);
 			
 			weights.add(new Double(-1));
 			for(Double weight : auxWeights) {

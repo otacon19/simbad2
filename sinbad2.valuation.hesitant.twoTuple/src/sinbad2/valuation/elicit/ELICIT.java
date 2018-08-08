@@ -301,8 +301,8 @@ public class ELICIT extends Valuation {
 
 	private void computeELICITExpressionAtLeastCase() {
 		// Step 2: Identify the closest term regarding to b
-		LabelLinguisticDomain term = selectPrimaryTerm(_beta.getB());
-
+		LabelLinguisticDomain term = selectPrimaryTerm((_beta.getA() + _beta.getB()) / 2);
+		
 		// Step 3: Create temporal ELICIT expression
 		setUnaryRelation(EUnaryRelationType.AtLeast, new TwoTuple((FuzzySet) _domain, term, 0));
 
@@ -311,9 +311,9 @@ public class ELICIT extends Valuation {
 
 		// Step 5: Compute weights
 		YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
-		double[] qweights = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, envelopeIndex, false);
+		double[] qweights = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, envelopeIndex, false, true);
 		List<Double> weights = transformWeights(qweights);
-
+		
 		// Step 6: Include labels except first one
 		List<Double> valuations = getAtLeastIncludedLabels(envelopeIndex);
 
@@ -372,7 +372,7 @@ public class ELICIT extends Valuation {
 			equation -= measure * weights.get(weight_index);
 			weight_index++;
 		}
-
+		
 		return equation / weights.get(weights.size() - 1);
 	}
 
@@ -395,7 +395,7 @@ public class ELICIT extends Valuation {
 
 	private void computeELICITExpressionAtMostCase() {
 		// Step 2: Identify the closest term regarding to c
-		LabelLinguisticDomain term = selectPrimaryTerm(_beta.getC());
+		LabelLinguisticDomain term = selectPrimaryTerm((_beta.getC() + _beta.getD()) / 2);
 
 		// Step 3: Create temporal ELICIT expression
 		setUnaryRelation(EUnaryRelationType.AtMost, new TwoTuple((FuzzySet) _domain, term, 0));
@@ -405,14 +405,14 @@ public class ELICIT extends Valuation {
 
 		// Step 5: Compute weights
 		YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
-		double[] qweights = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, envelopeIndex, true);
-		List<Double> weights = transformWeights(qweights);
+		double[] qweightsB = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, envelopeIndex, true, true);
+		List<Double> weightsB = transformWeights(qweightsB);
 
 		// Step 6: Include labels except last one
 		List<Double> valuations = getAtMostIncludedLabels(envelopeIndex);
 
 		// Step 7: Compute unknown c
-		Double unknownC = computeUnknownC(valuations, weights, _beta.getC());
+		Double unknownC = computeUnknownC(valuations, weightsB, _beta.getC());
 
 		// Step 8: Compute 2-tuple term
 		setUnaryRelation(EUnaryRelationType.AtMost, compute2TupleTerm(unknownC));
@@ -436,7 +436,7 @@ public class ELICIT extends Valuation {
 
 	private Double computeUnknownC(List<Double> valuations, List<Double> weights, Double point) {
 		Double equation = point;
-
+		
 		int weight_index = 1;
 		for (Double measure : valuations) {
 			equation -= measure * weights.get(weight_index);
@@ -448,8 +448,8 @@ public class ELICIT extends Valuation {
 	
 	private void computeELICITExpressionBetweenCase() {
 		// Step 2: Identify the closest terms regarding to b and c
-		LabelLinguisticDomain lowerLabel = selectPrimaryTerm(_beta.getB());
-		LabelLinguisticDomain upperLabel = selectPrimaryTerm(_beta.getC());
+		LabelLinguisticDomain lowerLabel = selectPrimaryTerm((_beta.getA() + _beta.getB()) / 2);
+		LabelLinguisticDomain upperLabel = selectPrimaryTerm((_beta.getC() + _beta.getD()) / 2);
 		
 		TwoTuple lowerTerm, upperTerm;
 		if(lowerLabel == upperLabel) {
@@ -464,16 +464,20 @@ public class ELICIT extends Valuation {
 
 			// Step 5: Compute weights
 			YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
-			double[] qweights = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, envelopeIndex, false);
-			List<Double> weights = transformWeights(qweights);
-
+			
+			double[] qweightsB = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, envelopeIndex, null, true);
+			List<Double> weightsB = transformWeights(qweightsB);
+			
+			double[] qweightsC = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, envelopeIndex, null, false);
+			List<Double> weightsC = transformWeights(qweightsC);
+			
 			// Step 6: Include labels except first and last one 
 			List<Double> valuationsBetweenB = getBetweenBIncludedLabels(envelopeIndex);
 			List<Double> valuationsBetweenC = getBetweenCIncludedLabels(envelopeIndex);
 
 			// Step 7: Compute unknown b and c
-			Double unknownB = computeUnknownB(valuationsBetweenB, weights, _beta.getB());
-			Double unknownC = computeUnknownC(valuationsBetweenC, weights, _beta.getC());
+			Double unknownB = computeUnknownB(valuationsBetweenB, weightsB, _beta.getB());
+			Double unknownC = computeUnknownC(valuationsBetweenC, weightsC, _beta.getC());
 			
 			//Step 8: Compute 2-tuple terms
 			lowerTerm = compute2TupleTerm(unknownB);
@@ -514,13 +518,13 @@ public class ELICIT extends Valuation {
 		if (sum % 2 == 0) {
 			top = sum / 2;
 		} else {
-			top = (sum - 1) / 2;
+			top = (sum + 1) / 2;
 		}
-
-		for (int i = envelopeIndex[1] - 1; i <= top; i--) {
+		
+		for (int i = top; i <= envelopeIndex[1] - 1; i++) {
 			valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)).getFuzzyNumber().getB());
 		}
-
+		
 		Collections.sort(valuations);
 		Collections.reverse(valuations);
 
@@ -652,7 +656,7 @@ public class ELICIT extends Valuation {
 
 	private List<Double> computeWeightsYager(int cardinality, int[] envelope, Boolean atMostCase) {
 		YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
-		double[] auxWeights = YagerQuantifiers.QWeighted(nqt, cardinality - 1, envelope, atMostCase);
+		double[] auxWeights = YagerQuantifiers.QWeighted(nqt, cardinality - 1, envelope, atMostCase, true);
 
 		List<Double> weights = new LinkedList<Double>();
 		weights.add(new Double(-1));

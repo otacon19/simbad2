@@ -58,7 +58,7 @@ public class YagerQuantifiers {
 		return result;
 	}
 
-	public static double[] QWeighted(NumeredQuantificationType type, int g, int[] envelope, Boolean lower) {
+	public static double[] QWeighted(NumeredQuantificationType type, int g, int[] envelope, Boolean lower, Boolean b) {
 
 		double[] result = null;
 		
@@ -70,32 +70,10 @@ public class YagerQuantifiers {
 					result = new double[1];
 					result[0] = 1;
 				} else {
-					if((envelope[0] + envelope[1]) % 2 == 0) {
-						values = (envelope[1] - envelope[0] + 2) / 2;
-						result = new double[values];
-						alpha = envelope[0] / g;
-						for(int i = 0; i < values; ++i) {
-							if(i == 0) {
-								result[i] = Math.pow(alpha, (envelope[1] - envelope[0] / 2d));
-							} else if(i == values - 1) {
-								result[i] = 1 - alpha;
-							} else {
-								result[i] = (1 - alpha) * Math.pow(alpha, (envelope[1] - envelope[0] - (i + 1)) / 2d);
-							}
-						}	
+					if(b) {
+						return QWeightedBetweenPointB(g, envelope);
 					} else {
-						values = (envelope[1] - envelope[0] + 1) / 2;
-						result = new double[values];
-						alpha = envelope[0] / g;
-						for(int i = 0; i < values; ++i) {
-							if(i == 0) {
-								result[i] = Math.pow(alpha, (envelope[1] - envelope[0] - 1 / 2d));
-							} else if(i == values - 1) {
-								result[i] = 1 - alpha;
-							} else {
-								result[i] = (1 - alpha) * Math.pow(alpha, (envelope[1] - envelope[0] - (i + 2)) / 2d);
-							}
-						}	
+						return QWeightedBetweenPointC(g, envelope);
 					}
 				}
 			} else {
@@ -134,7 +112,91 @@ public class YagerQuantifiers {
 		}
 		return result;
 	}
+	
+	public static double[] QWeightedBetweenPointB(int g, int[] envelope) {
+		double[] result = null;
+		int values;
+		double alpha;
+		
+		if (envelope[0] == envelope[1]) {
+			result = new double[1];
+			result[0] = 1;
+		} else {
+			if((envelope[0] + envelope[1]) % 2 == 0) {
+				values = (envelope[1] - envelope[0] + 2) / 2;
+				result = new double[values];
+				alpha = envelope[0] / g;
+				for(int i = 0; i < values; ++i) {
+					if(i == 0) {
+						result[i] = Math.pow(alpha, (envelope[1] - envelope[0] / 2d));
+					} else if(i == values - 1) {
+						result[i] = 1 - alpha;
+					} else {
+						result[i] = (1 - alpha) * Math.pow(alpha, (envelope[1] - envelope[0] - (i + 1)) / 2d);
+					}
+				}	
+			} else {
+				values = (envelope[1] - envelope[0] + 1) / 2;
+				result = new double[values];
+				alpha = envelope[0] / g;
+				for(int i = 0; i < values; ++i) {
+					if(i == 0) {
+						result[i] = Math.pow(alpha, (envelope[1] - envelope[0] - 1 / 2d));
+					} else if(i == values - 1) {
+						result[i] = 1 - alpha;
+					} else {
+						result[i] = (1 - alpha) * Math.pow(alpha, (envelope[1] - envelope[0] - (i + 2)) / 2d);
+					}
+				}	
+			}
+		}
+			
+		return result;
+	}
 
+	public static double[] QWeightedBetweenPointC(int g, int[] envelope) {
+		double[] result = null;
+		int values;
+		double alpha2;
+		
+		if (envelope[0] == envelope[1]) {
+			result = new double[1];
+			result[0] = 1;
+		} else {
+			if((envelope[0] + envelope[1]) % 2 == 0) {
+				values = (envelope[1] - envelope[0] + 2) / 2;
+				result = new double[values];
+				alpha2 = (g - envelope[0]) / g;
+				
+				for(int i = 0; i < values; ++i) {
+					if(i == 0) {
+						result[i] = alpha2;
+					} else if(i == values - 1) {
+						result[i] = Math.pow(1 - alpha2, (envelope[1] - envelope[0]) / 2d);
+					} else {
+						result[i] = alpha2 * Math.pow(1d - alpha2, (envelope[1] - envelope[0] - (i + 1)) / 2d);
+					}
+				}	
+			} else {
+				values = (envelope[1] - envelope[0] + 1) / 2;
+				result = new double[values];
+				alpha2 = (g - envelope[0]) / g;
+				
+				for(int i = 0; i < values; ++i) {
+					if(i == 0) {
+						result[i] = alpha2;
+					} else if(i == values - 1) {
+						result[i] = Math.pow(1d - alpha2, (envelope[1] - envelope[0] - 1d) / 2d);
+					} else {
+						result[i] = (alpha2) * Math.pow(1d - alpha2, (envelope[1] - envelope[0] - (i + 2)) / 2d);
+					}
+				}	
+			}
+		}
+			
+		return result;
+	}
+	
 	public static double[] Quantification(QuantificationType type, int numberOfValuations) {
 
 		switch (type) {
