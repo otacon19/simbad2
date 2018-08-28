@@ -234,7 +234,7 @@ public class HesitantValuation extends Valuation {
 			for(Double weight : auxWeights) {
 				weights.add(weight);
 			}
-            
+			
             if(lower == null) { //Relación binaria
                 a = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
                 d = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
