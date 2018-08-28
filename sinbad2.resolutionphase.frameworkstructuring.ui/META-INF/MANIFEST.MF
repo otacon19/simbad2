@@ -12,3 +12,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: sinbad2.resolutionphase.frameworkstructuring.ui.preferences
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.resolutionphase.frameworkstructuring.ui

@@ -12,3 +12,4 @@ Require-Bundle: sinbad2.resolutionphase.ui;bundle-version="1.0.0";visibility:=re
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.resolutionphase.gathering.ui

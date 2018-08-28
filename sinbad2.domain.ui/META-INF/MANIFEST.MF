@@ -15,3 +15,4 @@ Export-Package: sinbad2.domain.ui,
  sinbad2.domain.ui.view.domain,
  sinbad2.domain.ui.view.domains
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.domain.ui

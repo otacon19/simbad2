@@ -9,3 +9,4 @@ Require-Bundle: sinbad2.phasemethod.aggregation,
  sinbad2.method.linguistic;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.resolutionphase.sensitivityanalysis
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.resolutionphase.sensitivityanalysis

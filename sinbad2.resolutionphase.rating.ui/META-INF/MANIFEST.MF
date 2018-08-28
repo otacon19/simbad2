@@ -10,3 +10,4 @@ Require-Bundle: sinbad2.resolutionphase.ui;bundle-version="1.0.0";visibility:=re
 Export-Package: sinbad2.resolutionphase.rating.ui.listener,
  sinbad2.resolutionphase.rating.ui.view
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.resolutionphase.rating.ui

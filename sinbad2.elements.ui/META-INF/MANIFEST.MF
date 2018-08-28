@@ -13,3 +13,4 @@ Export-Package: sinbad2.element.ui.sourceprovider,
  sinbad2.element.ui.view.experts,
  sinbad2.element.ui.view.experts.provider
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.element.ui

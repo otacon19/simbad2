@@ -8,3 +8,4 @@ Require-Bundle: sinbad2.valuation;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.domain.linguistic.fuzzyset
 Export-Package: sinbad2.valuation.real.interval
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.valuation.real.interval

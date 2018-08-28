@@ -8,3 +8,4 @@ Require-Bundle: sinbad2.resolutionphase;bundle-version="1.0.0";visibility:=reexp
 Export-Package: sinbad2.resolutionscheme,
  sinbad2.resolutionscheme.state
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.resolutionscheme

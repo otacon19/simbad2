@@ -10,3 +10,4 @@ Export-Package: sinbad2.resolutionphase.frameworkstructuring,
  sinbad2.resolutionphase.frameworkstructuring.domainassignments.listener,
  sinbad2.resolutionphase.frameworkstructuring.domainassignments.operation
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.resolutionphase.frameworkstructuring

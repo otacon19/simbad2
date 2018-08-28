@@ -7,3 +7,4 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0"
 Export-Package: sinbad2.phasemethod.analysis
+Automatic-Module-Name: sinbad2.phasemethod.analysis

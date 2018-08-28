@@ -11,3 +11,4 @@ Export-Package: sinbad2.domain.linguistic.fuzzy,
  sinbad2.domain.linguistic.fuzzy.semantic
 Require-Bundle: sinbad2.domain.numeric.real;bundle-version="1.0.0";visibility:=reexport
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.domain.linguistic.fuzzyset

@@ -9,3 +9,4 @@ Export-Package: sinbad2.resolutionphase,
  sinbad2.resolutionphase.io,
  sinbad2.resolutionphase.state
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.resolutionphase

@@ -5,3 +5,4 @@ Bundle-SymbolicName: sinbad2.method.decision.topsis.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Automatic-Module-Name: sinbad2.method.decision.topsis.ui

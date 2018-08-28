@@ -10,3 +10,4 @@ Export-Package: sinbad2.resolutionscheme.ui,
  sinbad2.resolutionscheme.ui.perspectives
 Bundle-ClassPath: .
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.resolutionscheme.ui

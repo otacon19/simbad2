@@ -13,3 +13,4 @@ Require-Bundle: sinbad2.phasemethod.analysis;bundle-version="1.0.0";visibility:=
  sinbad2.valuation.elicit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: sinbad2.phasemethod.analysis.ui

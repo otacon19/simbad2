@@ -18,3 +18,4 @@ Export-Package: sinbad2.element,
  sinbad2.element.expert.operation
 Require-Bundle: sinbad2.resolutionphase;visibility:=reexport
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.element

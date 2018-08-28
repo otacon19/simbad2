@@ -10,3 +10,4 @@ Require-Bundle: sinbad2.aggregationoperator;bundle-version="1.0.0",
  sinbad2.valuation.unifiedValuation;bundle-version="1.0.0",
  sinbad2.valuation.real;bundle-version="1.0.0",
  sinbad2.valuation.integer.interval;bundle-version="1.0.0"
+Automatic-Module-Name: sinbad2.aggregationoperator.weightedgeometric

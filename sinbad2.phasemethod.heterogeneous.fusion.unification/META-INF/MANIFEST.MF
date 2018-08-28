@@ -11,3 +11,4 @@ Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0",
  sinbad2.valuation.integer.interval;visibility:=reexport,
  sinbad2.valuation.real.interval;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.phasemethod.heterogeneous.fusion.unification
+Automatic-Module-Name: sinbad2.phasemethod.heterogeneous.fusion.unification

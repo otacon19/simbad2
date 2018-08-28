@@ -8,3 +8,4 @@ Require-Bundle: sinbad2.domain;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.element;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.valuation
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.valuation

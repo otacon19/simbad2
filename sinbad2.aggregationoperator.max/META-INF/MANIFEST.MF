@@ -13,3 +13,4 @@ Require-Bundle: sinbad2.aggregationoperator;bundle-version="1.0.0";visibility:=r
  sinbad2.valuation.unifiedValuation
 Export-Package: sinbad2.aggregationoperator.max
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.aggregationoperator.max

@@ -11,3 +11,4 @@ Export-Package: sinbad2.valuation.ui,
  sinbad2.valuation.ui.valuationpanel.listener,
  sinbad2.valuation.ui.view
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.valuation.ui

@@ -7,3 +7,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.core.ui;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.phasemethod;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.phasemethod.ui
+Automatic-Module-Name: sinbad2.phasemethod.ui

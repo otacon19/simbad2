@@ -67,3 +67,4 @@ Export-Package: com.keypoint,
  org.jfree.util
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.swt;bundle-version="3.8.1"
+Automatic-Module-Name: org.jfree.chart.JFreeChart

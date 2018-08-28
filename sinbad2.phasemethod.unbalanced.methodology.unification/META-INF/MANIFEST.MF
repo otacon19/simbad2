@@ -8,3 +8,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.domain.linguistic.unbalanced;visibility:=reexport
 Export-Package: sinbad2.phasemethod.unbalanced.methodology.unification
+Automatic-Module-Name: sinbad2.phasemethod.unbalanced.methodology.unification

@@ -7,3 +7,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.valuation;bundle-version="1.0.0";visibility:=reexport
 Export-Package: sinbad2.aggregationoperator
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.aggregationoperator

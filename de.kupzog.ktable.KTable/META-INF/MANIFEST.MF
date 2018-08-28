@@ -10,3 +10,4 @@ Export-Package: de.kupzog.ktable,
  de.kupzog.ktable.editors,
  de.kupzog.ktable.renderers
 Bundle-ClassPath: KTable.jar
+Automatic-Module-Name: de.kupzog.ktable.KTable

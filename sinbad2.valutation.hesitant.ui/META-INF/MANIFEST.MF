@@ -7,3 +7,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.valuation.ui;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.valuation.hesitant;bundle-version="1.0.0";visibility:=reexport
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.valuation.hesitant.ui

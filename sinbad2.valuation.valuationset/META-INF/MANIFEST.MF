@@ -9,3 +9,4 @@ Export-Package: sinbad2.valuation.valuationset,
  sinbad2.valuation.valuationset.listener,
  sinbad2.valuation.valuationset.operation
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.valuation.valuationset

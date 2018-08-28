@@ -10,3 +10,4 @@ Require-Bundle: sinbad2.valuation.twoTuple;bundle-version="1.0.0";visibility:=re
  sinbad2.aggregationoperator,
  sinbad2.aggregationoperator.owa
 Export-Package: sinbad2.valuation.elicit
+Automatic-Module-Name: sinbad2.valuation.elicit

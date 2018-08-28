@@ -7,3 +7,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: sinbad2.domain;bundle-version="1.0.0"
 Export-Package: sinbad2.domain.numeric.integer
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.domain.numeric.integer

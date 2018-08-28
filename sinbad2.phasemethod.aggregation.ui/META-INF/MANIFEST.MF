@@ -13,3 +13,4 @@ Require-Bundle: sinbad2.phasemethod.aggregation;bundle-version="1.0.0";visibilit
  sinbad2.aggregationoperator.owa,
  sinbad2.resolutionphase.sensitivityanalysis,
  sinbad2.valuation.elicit
+Automatic-Module-Name: sinbad2.phasemethod.aggregation.ui

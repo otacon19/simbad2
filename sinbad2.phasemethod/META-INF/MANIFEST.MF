@@ -11,3 +11,4 @@ Require-Bundle: sinbad2.valuation.valuationset;bundle-version="1.0.0";visibility
 Export-Package: sinbad2.phasemethod,
  sinbad2.phasemethod.listener
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.phasemethod

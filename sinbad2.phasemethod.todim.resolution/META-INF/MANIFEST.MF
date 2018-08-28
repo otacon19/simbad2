@@ -9,3 +9,4 @@ Require-Bundle: sinbad2.phasemethod,
  sinbad2.phasemethod.todim.unification,
  org.engine.R;bundle-version="1.0.0"
 Export-Package: sinbad2.phasemethod.todim.resolution;uses:="sinbad2.domain,sinbad2.phasemethod,sinbad2.phasemethod.listener"
+Automatic-Module-Name: sinbad2.phasemethod.todim.resolution

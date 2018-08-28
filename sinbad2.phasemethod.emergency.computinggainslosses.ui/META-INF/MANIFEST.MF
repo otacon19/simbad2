@@ -7,3 +7,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.phasemethod.emergency.computinggainslosses;bundle-version="1.0.0";visibility:=reexport,
  sinbad2.resolutionphase.rating.ui,
  de.kupzog.ktable.KTable
+Automatic-Module-Name: sinbad2.phasemethod.emergency.computinggainslosses.ui

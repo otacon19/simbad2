@@ -9,3 +9,4 @@ Require-Bundle: sinbad2.phasemethod.todim.unification;bundle-version="1.0.0",
  sinbad2.domain.linguistic.fuzzyset.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: sinbad2.phasemethod.todim.unification.ui

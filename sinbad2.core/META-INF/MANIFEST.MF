@@ -21,3 +21,4 @@ Export-Package:
  sinbad2.core.workspace.listener
 Bundle-ClassPath: .
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.core

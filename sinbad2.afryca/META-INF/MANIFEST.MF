@@ -11,3 +11,4 @@ Require-Bundle: sinbad2.core.ui;bundle-version="1.0.0",
  sinbad2.valuation.real,
  sinbad2.valuation.linguistic,
  sinbad2.valuation.hesitant
+Automatic-Module-Name: sinbad2.afryca

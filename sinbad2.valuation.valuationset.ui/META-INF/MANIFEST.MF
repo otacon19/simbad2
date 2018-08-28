@@ -13,3 +13,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: sinbad2.valuation.valuationset.ui.view
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.valuation.valuationset.ui

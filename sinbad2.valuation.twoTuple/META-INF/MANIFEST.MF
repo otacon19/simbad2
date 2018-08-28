@@ -7,3 +7,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.valuation.linguistic;visibility:=reexport
 Export-Package: sinbad2.valuation.twoTuple
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: sinbad2.valuation.twoTuple

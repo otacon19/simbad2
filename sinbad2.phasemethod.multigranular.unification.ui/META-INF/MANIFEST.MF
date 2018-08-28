@@ -10,3 +10,4 @@ Require-Bundle: sinbad2.phasemethod.multigranular.fusion.unification;bundle-vers
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: sinbad2.phasemethod.multigranular.unification.ui.view
+Automatic-Module-Name: sinbad2.phasemethod.multigranular.fusion.unification.ui

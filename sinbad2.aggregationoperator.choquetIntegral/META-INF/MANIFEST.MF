@@ -10,3 +10,4 @@ Require-Bundle: sinbad2.aggregationoperator,
  sinbad2.valuation.unifiedValuation,
  sinbad2.valuation.real,
  sinbad2.valuation.integer
+Automatic-Module-Name: sinbad2.aggregationoperator.choquetIntegral

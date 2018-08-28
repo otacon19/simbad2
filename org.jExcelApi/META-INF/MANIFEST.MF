@@ -16,3 +16,4 @@ Export-Package: jxl,
  jxl.write,
  jxl.write.biff
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Automatic-Module-Name: org.jExcelApi

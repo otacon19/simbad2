@@ -8,3 +8,4 @@ Require-Bundle: sinbad2.phasemethod.emergency.computeweights;bundle-version="1.0
  sinbad2.phasemethod.emergency.computinggainslosses.ui;bundle-version="1.0.0",
  sinbad2.resolutionphase.rating.ui;bundle-version="1.0.0",
  de.kupzog.ktable.KTable
+Automatic-Module-Name: sinbad2.phasemethod.emergency.computeweights.ui

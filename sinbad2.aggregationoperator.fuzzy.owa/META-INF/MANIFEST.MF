@@ -7,3 +7,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.aggregationoperator,
  sinbad2.valuation.elicit,
  sinbad2.aggregationoperator.owa
+Automatic-Module-Name: sinbad2.aggregationoperator.fuzzy.owa

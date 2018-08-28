@@ -13,3 +13,4 @@ Require-Bundle: sinbad2.phasemethod.topsis.selection;bundle-version="1.0.0";visi
  sinbad2.phasemethod.topsis.unification
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: sinbad2.phasemethod.topsis.selection.ui

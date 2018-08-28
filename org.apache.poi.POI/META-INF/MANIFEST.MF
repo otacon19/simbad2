@@ -228,3 +228,4 @@ Export-Package: com.microsoft.schemas.office.excel,
  schemaorg_apache_xmlbeans.system.sXMLSCHEMA,
  schemaorg_apache_xmlbeans.system.sXMLTOOLS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Automatic-Module-Name: org.apache.poi.POI

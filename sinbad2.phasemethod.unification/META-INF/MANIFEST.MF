@@ -7,3 +7,4 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.phasemethod
 Export-Package: sinbad2.phasemethod.multigranular.unification
+Automatic-Module-Name: sinbad2.phasemethod.multigranular.fusion.unification

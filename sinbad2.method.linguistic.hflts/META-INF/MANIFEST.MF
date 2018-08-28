@@ -7,3 +7,4 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.method.linguistic,
  sinbad2.method.linguistic
+Automatic-Module-Name: sinbad2.method.linguistic.hflts

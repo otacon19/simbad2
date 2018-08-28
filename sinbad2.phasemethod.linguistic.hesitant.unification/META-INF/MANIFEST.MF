@@ -8,3 +8,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: sinbad2.phasemethod,
  sinbad2.valuation.hesitant
 Export-Package: sinbad2.phasemethod.linguistic.hesitant.unification
+Automatic-Module-Name: sinbad2.phasemethod.linguistic.hesitant.unification

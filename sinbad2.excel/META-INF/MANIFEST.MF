@@ -18,3 +18,4 @@ Require-Bundle: org.apache.poi.POI;bundle-version="1.0.0",
  sinbad2.valuation.unifiedValuation,
  sinbad2.valuation.hesitant
 Export-Package: sinbad2.excel
+Automatic-Module-Name: sinbad2.excel

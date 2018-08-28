@@ -7,3 +7,4 @@ Bundle-ClassPath: JRI.jar
 Bundle-Vendor: %Bundle-Vendor
 Export-Package: org.rosuda.JRI
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Automatic-Module-Name: org.engine.R
