@@ -32,7 +32,7 @@ public class HesitantTwoTupleOperator {
 			}
 			
 			if(((ELICIT) valuation).getBeta() == null) {
-				tpf = ((ELICIT) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
+				tpf = ((ELICIT) valuation).calculateFuzzyEnvelope();
 			} else {
 				tpf = ((ELICIT) valuation).getBeta();
 			}

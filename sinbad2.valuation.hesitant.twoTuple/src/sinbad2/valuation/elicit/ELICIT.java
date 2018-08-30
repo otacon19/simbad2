@@ -1,5 +1,6 @@
 package sinbad2.valuation.elicit;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -285,8 +286,6 @@ public class ELICIT extends Valuation {
 	}
 
 	public void createRelation(TrapezoidalFunction beta) {
-		//beta = new TrapezoidalFunction(0.615, 0.71, 1, 1);
-		beta = new TrapezoidalFunction(0.615, 0.725, 1, 1);
 		
 		setBeta(beta);
 		
@@ -303,22 +302,60 @@ public class ELICIT extends Valuation {
 	}
 
 	private void computeELICITExpressionAtLeastCase() {
-		// Step 1: Create partially ELICIT expression
-		setUnaryRelation(EUnaryRelationType.AtLeast, compute2TupleTermAtLeast());	
+		// Step 1: Compute 2-tuple term from point b of beta to obtain the fuzzy envelope
+		setUnaryRelation(EUnaryRelationType.AtLeast, compute2TupleTermAtLeast(_beta.getB()));
+				
+		// Step 2: Compute unknown b with alpha equal to 0
+		Double b = computeUnknownB();
 		
-		// Step 2: Compute fuzzy envelope ELICIT
+		// Step 3: Compute 2-tuple term
+		setUnaryRelation(EUnaryRelationType.AtLeast, compute2TupleTermAtLeast(b));
+		
+		// Step 4: Compute fuzzy envelope ELICIT
 		TrapezoidalFunction fuzzyEnvelope = calculateFuzzyEnvelope();
 
-		// Step 3: Compute gamma
-		setGamma1(_beta.getB() - fuzzyEnvelope.getB());
+		// Step 5: Compute gamma
+		setGamma1(_beta.getB() - b);
 	}
 
-	private TwoTuple compute2TupleTermAtLeast() {
+	private Double computeUnknownB() {
+		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
+		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
+		TwoTuple aux = (TwoTuple) ((OWA) owa).aggregate(computeValuationsAtLeastCase(getEnvelopeIndex()), computeOWAWeights());
+		
+		return aux.getFuzzyNumber().getB();
+	}
+
+	private List<Double> computeOWAWeights() {
+		 YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
+		 double[] auxWeights = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, getEnvelopeIndex(), false, false, 0d, null);
+		 
+		 List<Double> weights = new LinkedList<Double>();
+		 weights.add(new Double(-1));
+		 for(Double w: auxWeights) {
+			 weights.add(w);
+		 }
+		 
+		 return weights;
+	}
+	
+	private List<Valuation> computeValuationsAtLeastCase(int[] envelope) {
+		List<Valuation> valuations = new LinkedList<Valuation>();
+		
+		valuations.add(_term);
+        for(int i = envelope[0] + 1; i <= envelope[1]; i++) {
+            valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
+        }
+        
+        return valuations;
+	}
+
+	private TwoTuple compute2TupleTermAtLeast(Double b) {
 		Double distance, closestDistance = Double.MAX_VALUE;
 		LabelLinguisticDomain selectedTerm = null;
 
 		for (LabelLinguisticDomain label : ((FuzzySet) _domain).getLabelSet().getLabels()) {
-			distance = _beta.getA() - ((TrapezoidalFunction) label.getSemantic()).getA();
+			distance = b - ((TrapezoidalFunction) label.getSemantic()).getB();
 			if (Math.abs(distance) <= Math.abs(closestDistance)) {
 				closestDistance = distance;
 				selectedTerm = label;
@@ -329,7 +366,8 @@ public class ELICIT extends Valuation {
 
 		return new TwoTuple((FuzzySet) _domain, selectedTerm, alpha);
 	}
-
+	
+	
 	private void computeELICITExpressionAtMostCase() {
 		// Step 1: Create partially ELICIT expression
 		setUnaryRelation(EUnaryRelationType.AtMost, compute2TupleTermAtMost());
@@ -359,6 +397,7 @@ public class ELICIT extends Valuation {
 	}
 	
 	private void computeELICITExpressionBetweenCase() {
+		/*
 		// Step 1: Create partially ELICIT expression
 		TwoTuple lowerTerm = compute2TupleTermAtLeast();
 		TwoTuple upperTerm = compute2TupleTermAtMost();
@@ -375,7 +414,7 @@ public class ELICIT extends Valuation {
 
 		// Step 3: Compute gamma
 		setGamma1(_beta.getB() - fuzzyEnvelope.getB());
-		setGamma2(_beta.getC() - fuzzyEnvelope.getC());
+		setGamma2(_beta.getC() - fuzzyEnvelope.getC());*/
 	}
 	
 	private TwoTuple compute2TupleTermBetween(Double betaPoint) {
@@ -520,8 +559,18 @@ public class ELICIT extends Valuation {
 
 	private List<Double> computeWeightsYager(int cardinality, int[] envelope, Boolean atMostCase) {
 		YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
-		double[] auxWeights = YagerQuantifiers.QWeighted(nqt, cardinality - 1, envelope, atMostCase, true);
-
+		
+		double[] auxWeights = null;
+		if(atMostCase) {
+			auxWeights = YagerQuantifiers.QWeighted(nqt, cardinality - 1, envelope, true, true, null, 1d);
+		} else if(!atMostCase) {
+			auxWeights = YagerQuantifiers.QWeighted(nqt, cardinality - 1, envelope, false, true, 0d, null);
+		} else {
+			auxWeights = YagerQuantifiers.QWeighted(nqt, cardinality - 1, envelope, false, false, 0d, 1d);
+		}
+		
+		//TODO dos pesos para el between
+	
 		List<Double> weights = new LinkedList<Double>();
 		weights.add(new Double(-1));
 		for (Double weight : auxWeights) {
@@ -590,7 +639,7 @@ public class ELICIT extends Valuation {
 				}
 			}
 		}
-
+		
 		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
 		Valuation aux = ((OWA) owa).aggregate(valuations, weights);
@@ -599,30 +648,15 @@ public class ELICIT extends Valuation {
 			a = 0.0D;
 			b = 0.0D;
 			c = ((TwoTuple) aux).calculateInverseDelta() / ((double) cardinality - 1);
-			d = _beta.getD();
+			d = (_beta != null) ?_beta.getD() : ((FuzzySet) _domain).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
 		} else {
-			a = _beta.getA();
+			a = (_beta != null) ? _beta.getA() : ((FuzzySet) _domain).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin(); 
 			b = ((TwoTuple) aux).calculateInverseDelta() / ((double) cardinality - 1);
 			c = 1.0D;
 			d = 1.0D;
 		}
+		
 		return new TrapezoidalFunction(a, b, c, d);
-	}
-
-	public TrapezoidalFunction calculateFuzzyEnvelopeEquivalentCLE(FuzzySet domain) {
-		HesitantValuation hv = new HesitantValuation(domain);
-
-		if (isPrimary()) {
-			hv.setLabel(_label.getLabel());
-		} else if (isUnary()) {
-			hv.setUnaryRelation(_unaryRelation, _term.getLabel());
-		} else {
-			hv.setBinaryRelation(_lowerTerm.getLabel(), _upperTerm.getLabel());
-		}
-
-		_beta = hv.calculateFuzzyEnvelope(domain);
-
-		return _beta;
 	}
 
 	/**

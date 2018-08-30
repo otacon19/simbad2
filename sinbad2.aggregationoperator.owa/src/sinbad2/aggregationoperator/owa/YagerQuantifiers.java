@@ -58,22 +58,21 @@ public class YagerQuantifiers {
 		return result;
 	}
 
-	public static double[] QWeighted(NumeredQuantificationType type, int g, int[] envelope, Boolean lower, Boolean b) {
+	public static double[] QWeighted(NumeredQuantificationType type, int g, int[] envelope, Boolean lower, Boolean b, Double alphaAtLeast, Double alphaAtMost) {
 
 		double[] result = null;
 		
 		if (type == NumeredQuantificationType.FilevYager) {
 			int values;
-			double alpha;
 			if (lower == null) { //Between
 				if (envelope[0] == envelope[1]) {
 					result = new double[1];
 					result[0] = 1;
 				} else {
 					if(b) {
-						return QWeightedBetweenPointB(g, envelope);
+						return QWeightedBetweenPointB(g, envelope, alphaAtLeast);
 					} else {
-						return QWeightedBetweenPointC(g, envelope);
+						return QWeightedBetweenPointC(g, envelope, alphaAtMost);
 					}
 				}
 			} else {
@@ -84,7 +83,7 @@ public class YagerQuantifiers {
 					aux = values - 1;
 
 					result = new double[values];
-					alpha = (((double) values) - 1) / g;
+					double alpha = (alphaAtMost == null) ? (((double) values) - 1) / g : alphaAtMost;
 
 					for (int i = 0; i <= aux; i++) {
 						if (i == aux) {
@@ -98,7 +97,7 @@ public class YagerQuantifiers {
 					aux = values - 1;
 
 					result = new double[values];
-					alpha = ((double) envelope[0]) / g;
+					double alpha = (alphaAtLeast == null) ? ((double) envelope[0]) / g : alphaAtLeast;
 
 					for (int i = 0; i <= aux; i++) {
 						if (i == 0) {
@@ -113,7 +112,7 @@ public class YagerQuantifiers {
 		return result;
 	}
 	
-	public static double[] QWeightedBetweenPointB(int g, int[] envelope) {
+	public static double[] QWeightedBetweenPointB(int g, int[] envelope, Double alphaAtLeast) {
 		double[] result = null;
 		int values;
 		double alpha;
@@ -125,7 +124,7 @@ public class YagerQuantifiers {
 			if((envelope[0] + envelope[1]) % 2 == 0) {
 				values = (envelope[1] - envelope[0] + 2) / 2;
 				result = new double[values];
-				alpha = envelope[0] / g;
+				alpha = (alphaAtLeast == null) ? envelope[0] / g : alphaAtLeast;
 				for(int i = 0; i < values; ++i) {
 					if(i == 0) {
 						result[i] = Math.pow(alpha, (envelope[1] - envelope[0] / 2d));
@@ -138,7 +137,7 @@ public class YagerQuantifiers {
 			} else {
 				values = (envelope[1] - envelope[0] + 1) / 2;
 				result = new double[values];
-				alpha = envelope[0] / g;
+				alpha = (alphaAtLeast == null) ? envelope[0] / g : alphaAtLeast;
 				for(int i = 0; i < values; ++i) {
 					if(i == 0) {
 						result[i] = Math.pow(alpha, (envelope[1] - envelope[0] - 1 / 2d));
@@ -154,7 +153,7 @@ public class YagerQuantifiers {
 		return result;
 	}
 
-	public static double[] QWeightedBetweenPointC(int g, int[] envelope) {
+	public static double[] QWeightedBetweenPointC(int g, int[] envelope, Double alphaAtMost) {
 		double[] result = null;
 		int values;
 		double alpha2;
@@ -166,7 +165,7 @@ public class YagerQuantifiers {
 			if((envelope[0] + envelope[1]) % 2 == 0) {
 				values = (envelope[1] - envelope[0] + 2) / 2;
 				result = new double[values];
-				alpha2 = (g - envelope[0]) / g;
+				alpha2 = (alphaAtMost == null) ? (g - envelope[0]) / g : alphaAtMost;
 				
 				for(int i = 0; i < values; ++i) {
 					if(i == 0) {
@@ -180,7 +179,7 @@ public class YagerQuantifiers {
 			} else {
 				values = (envelope[1] - envelope[0] + 1) / 2;
 				result = new double[values];
-				alpha2 = (g - envelope[0]) / g;
+				alpha2 = (alphaAtMost == null) ? (g - envelope[0]) / g : alphaAtMost;
 				
 				for(int i = 0; i < values; ++i) {
 					if(i == 0) {

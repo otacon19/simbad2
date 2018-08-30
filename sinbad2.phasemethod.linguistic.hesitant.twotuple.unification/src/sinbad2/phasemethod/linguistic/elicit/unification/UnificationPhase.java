@@ -190,7 +190,7 @@ public class UnificationPhase implements IPhaseMethod {
 				}
 				
 				_twoTupleValuations.put(vk, valuation);
-				_fuzzyNumbers.put(vk, ((ELICIT) valuation).calculateFuzzyEnvelopeEquivalentCLE(unifiedDomain));
+				_fuzzyNumbers.put(vk, ((ELICIT) valuation).calculateFuzzyEnvelope());
 			}
 		}
 		return _twoTupleValuations;

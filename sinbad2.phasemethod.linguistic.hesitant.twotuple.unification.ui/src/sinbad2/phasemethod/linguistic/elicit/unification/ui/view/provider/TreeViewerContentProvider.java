@@ -6,7 +6,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import sinbad2.domain.Domain;
-import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.function.types.TrapezoidalFunction;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.elicit.ELICIT;
@@ -71,7 +70,7 @@ public class TreeViewerContentProvider implements ITreeContentProvider {
 			_information[i][1] = domain.getId();
 			_information[i][2] = v;
 			_information[i][3] = unifiedValuation;
-			_information[i][4] = ((ELICIT) unifiedValuation).calculateFuzzyEnvelopeEquivalentCLE((FuzzySet) unifiedValuation.getDomain());
+			_information[i][4] = ((ELICIT) unifiedValuation).calculateFuzzyEnvelope();
 			
 			i++;
 		}

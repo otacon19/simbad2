@@ -20,7 +20,7 @@ public class HesitantTwoTupleOperator {
 		TrapezoidalFunction tpf, tpfResult;
 		ELICIT v =  (ELICIT) valuations.get(0);
 		if(v.getBeta() == null) {
-			tpfResult = ((ELICIT) v).calculateFuzzyEnvelopeEquivalentCLE(domain);
+			tpfResult = ((ELICIT) v).calculateFuzzyEnvelope();
 		} else {
 			tpfResult = ((ELICIT) v).getBeta();
 		}
@@ -37,7 +37,7 @@ public class HesitantTwoTupleOperator {
 			}
 			
 			if(((ELICIT) v).getBeta() == null) {
-				tpf = ((ELICIT) v).calculateFuzzyEnvelopeEquivalentCLE(domain);
+				tpf = ((ELICIT) v).calculateFuzzyEnvelope();
 			} else {
 				tpf = ((ELICIT) v).getBeta();
 			}

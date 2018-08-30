@@ -43,7 +43,7 @@ public class HesitantTwoTupleOperator {
 			for(int i = 0; i < size; i++) {
 				valuation = measures.get(i);
 				if(((ELICIT) valuation).getBeta() == null) {
-					tpf = ((ELICIT) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
+					tpf = ((ELICIT) valuation).calculateFuzzyEnvelope();
 				} else {
 					tpf = ((ELICIT) valuation).getBeta();
 				}
@@ -93,7 +93,7 @@ public class HesitantTwoTupleOperator {
 			for(int i = 0; i < size; i++) {
 				valuation = measures.get(i);
 				if(((ELICIT) valuation).getBeta() == null) {
-					tpf = ((ELICIT) valuation).calculateFuzzyEnvelopeEquivalentCLE(domain);
+					tpf = ((ELICIT) valuation).calculateFuzzyEnvelope();
 				} else {
 					tpf = ((ELICIT) valuation).getBeta();
 				}
