@@ -1,6 +1,5 @@
 package sinbad2.valuation.elicit;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -27,7 +26,6 @@ import sinbad2.resolutionphase.io.XMLRead;
 import sinbad2.valuation.Valuation;
 import sinbad2.valuation.elicit.nls.Messages;
 import sinbad2.valuation.hesitant.EUnaryRelationType;
-import sinbad2.valuation.hesitant.HesitantValuation;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class ELICIT extends Valuation {
@@ -287,6 +285,8 @@ public class ELICIT extends Valuation {
 
 	public void createRelation(TrapezoidalFunction beta) {
 		
+		beta = new TrapezoidalFunction(0, 0, 0.235, 0.475);
+		
 		setBeta(beta);
 		
 		double a = _beta.getLimits()[0], b = _beta.getLimits()[1], c = _beta.getLimits()[2], d = _beta.getLimits()[3];
@@ -303,32 +303,50 @@ public class ELICIT extends Valuation {
 
 	private void computeELICITExpressionAtLeastCase() {
 		// Step 1: Compute 2-tuple term from point b of beta to obtain the fuzzy envelope
-		setUnaryRelation(EUnaryRelationType.AtLeast, compute2TupleTermAtLeast(_beta.getB()));
+		setUnaryRelation(EUnaryRelationType.AtLeast, compute2TupleTerm(_beta.getB()));
 				
 		// Step 2: Compute unknown b with alpha equal to 0
-		Double b = computeUnknownB();
+		Double b = computeUnknownB(0d);
 		
 		// Step 3: Compute 2-tuple term
-		setUnaryRelation(EUnaryRelationType.AtLeast, compute2TupleTermAtLeast(b));
+		setUnaryRelation(EUnaryRelationType.AtLeast, compute2TupleTerm(b));
 		
 		// Step 4: Compute fuzzy envelope ELICIT
 		TrapezoidalFunction fuzzyEnvelope = calculateFuzzyEnvelope();
 
 		// Step 5: Compute gamma
-		setGamma1(_beta.getB() - b);
+		setGamma1(_beta.getA() - fuzzyEnvelope.getA());
+	}
+	
+	private TwoTuple compute2TupleTerm(Double point) {
+		Double distance, closestDistance = Double.MAX_VALUE;
+		LabelLinguisticDomain selectedTerm = null;
+
+		for (LabelLinguisticDomain label : ((FuzzySet) _domain).getLabelSet().getLabels()) {
+			distance = point - ((TrapezoidalFunction) label.getSemantic()).getB();
+			if (Math.abs(distance) <= Math.abs(closestDistance)) {
+				closestDistance = distance;
+				selectedTerm = label;
+			}
+		}
+
+		Double alpha = Math.round(closestDistance * (((FuzzySet) _domain).getLabelSet().getCardinality() - 1) * 100d) / 100d;
+
+		return new TwoTuple((FuzzySet) _domain, selectedTerm, alpha);
 	}
 
-	private Double computeUnknownB() {
+	private Double computeUnknownB(Double alpha) {
 		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
-		TwoTuple aux = (TwoTuple) ((OWA) owa).aggregate(computeValuationsAtLeastCase(getEnvelopeIndex()), computeOWAWeights());
+		TwoTuple aux = (TwoTuple) ((OWA) owa).aggregate(computeValuationsAtLeastCase(getEnvelopeIndex()), computeOWAWeights(alpha));
 		
 		return aux.getFuzzyNumber().getB();
 	}
 
-	private List<Double> computeOWAWeights() {
+	private List<Double> computeOWAWeights(Double alpha) {
 		 YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
-		 double[] auxWeights = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, getEnvelopeIndex(), false, false, 0d, null);
+		 double[] auxWeights = YagerQuantifiers.QWeighted(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, getEnvelopeIndex(), 
+				 false, false, alpha, null);
 		 
 		 List<Double> weights = new LinkedList<Double>();
 		 weights.add(new Double(-1));
@@ -349,51 +367,22 @@ public class ELICIT extends Valuation {
         
         return valuations;
 	}
-
-	private TwoTuple compute2TupleTermAtLeast(Double b) {
-		Double distance, closestDistance = Double.MAX_VALUE;
-		LabelLinguisticDomain selectedTerm = null;
-
-		for (LabelLinguisticDomain label : ((FuzzySet) _domain).getLabelSet().getLabels()) {
-			distance = b - ((TrapezoidalFunction) label.getSemantic()).getB();
-			if (Math.abs(distance) <= Math.abs(closestDistance)) {
-				closestDistance = distance;
-				selectedTerm = label;
-			}
-		}
-
-		Double alpha = Math.round(closestDistance * (((FuzzySet) _domain).getLabelSet().getCardinality() - 1) * 100d) / 100d;
-
-		return new TwoTuple((FuzzySet) _domain, selectedTerm, alpha);
-	}
-	
 	
 	private void computeELICITExpressionAtMostCase() {
-		// Step 1: Create partially ELICIT expression
-		setUnaryRelation(EUnaryRelationType.AtMost, compute2TupleTermAtMost());
-		
-		// Step 2: Compute fuzzy envelope ELICIT
+		// Step 1: Compute 2-tuple term from point b of beta to obtain the fuzzy envelope
+		setUnaryRelation(EUnaryRelationType.AtMost, compute2TupleTerm(_beta.getC()));
+						
+		// Step 2: Compute unknown b with alpha equal to 1
+		Double b = computeUnknownB(1d);
+				
+		// Step 3: Compute 2-tuple term
+		setUnaryRelation(EUnaryRelationType.AtMost, compute2TupleTerm(b));
+				
+		// Step 4: Compute fuzzy envelope ELICIT
 		TrapezoidalFunction fuzzyEnvelope = calculateFuzzyEnvelope();
-			
-		// Step 3: Compute gamma
-		setGamma1(_beta.getC() - fuzzyEnvelope.getC());
-	}
-	
-	private TwoTuple compute2TupleTermAtMost() {
-		Double distance, closestDistance = Double.MAX_VALUE;
-		LabelLinguisticDomain selectedTerm = null;
 
-		for (LabelLinguisticDomain label : ((FuzzySet) _domain).getLabelSet().getLabels()) {
-			distance = _beta.getD() - ((TrapezoidalFunction) label.getSemantic()).getD();
-			if (Math.abs(distance) <= Math.abs(closestDistance)) {
-				closestDistance = distance;
-				selectedTerm = label;
-			}
-		}
-
-		Double alpha = Math.round(closestDistance * (((FuzzySet) _domain).getLabelSet().getCardinality() - 1) * 100d) / 100d;
-
-		return new TwoTuple((FuzzySet) _domain, selectedTerm, alpha);
+		// Step 5: Compute gamma
+		setGamma1(_beta.getD() - fuzzyEnvelope.getD());
 	}
 	
 	private void computeELICITExpressionBetweenCase() {
@@ -648,9 +637,9 @@ public class ELICIT extends Valuation {
 			a = 0.0D;
 			b = 0.0D;
 			c = ((TwoTuple) aux).calculateInverseDelta() / ((double) cardinality - 1);
-			d = (_beta != null) ?_beta.getD() : ((FuzzySet) _domain).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
+			d = ((FuzzySet) _domain).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
 		} else {
-			a = (_beta != null) ? _beta.getA() : ((FuzzySet) _domain).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin(); 
+			a = ((FuzzySet) _domain).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin(); 
 			b = ((TwoTuple) aux).calculateInverseDelta() / ((double) cardinality - 1);
 			c = 1.0D;
 			d = 1.0D;
