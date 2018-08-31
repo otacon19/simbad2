@@ -436,14 +436,14 @@ public class ELICIT extends Valuation {
 	private List<Valuation> computeValuationsBetweenCasePointB(int[] envelope) {
 		List<Valuation> valuations = new LinkedList<Valuation>();
 		
-		valuations.add(_lowerTerm);
-		
 		int max;
 		if((envelope[0] + envelope[1]) % 2 != 0) {
 			max = (envelope[0] + envelope[1] - 1) / 2;
 		} else {
 			max = (envelope[0] + envelope[1]) / 2;
 		}
+		
+		valuations.add(_lowerTerm);
 		
 		for(int i = envelope[0] + 1; i <= max ; i++) {
             valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
