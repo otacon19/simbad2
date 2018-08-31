@@ -57,6 +57,146 @@ public class YagerQuantifiers {
 
 		return result;
 	}
+	
+	public static double[] QWeigthedBinaryRelation(NumeredQuantificationType type, int g, int[] envelope, Boolean pointB, Double alpha) {
+		double[] result = null;
+		
+		if (type == NumeredQuantificationType.FilevYager) {
+			if (envelope[0] == envelope[1]) {
+				result = new double[1];
+				result[0] = 1;
+			} else {
+				if(pointB) {
+					return QWeightedBetweenPointB(g, envelope, alpha);
+				} else {
+					return QWeightedBetweenPointC(g, envelope, alpha);
+				}
+			}
+		}
+		return result;
+	}
+	
+	public static double[] QWeightedBetweenPointB(int g, int[] envelope, Double alpha) {
+		double[] result = null;
+		int values;
+		
+		if (envelope[0] == envelope[1]) {
+			result = new double[1];
+			result[0] = 1;
+		} else {
+			if((envelope[0] + envelope[1]) % 2 == 0) {
+				values = (envelope[1] - envelope[0] + 2) / 2;
+				result = new double[values];
+				alpha = (alpha == null) ? envelope[0] / g : alpha;
+				for(int i = 0; i < values; ++i) {
+					if(i == 0) {
+						result[i] = Math.pow(alpha, (envelope[1] - envelope[0] / 2d));
+					} else if(i == values - 1) {
+						result[i] = 1 - alpha;
+					} else {
+						result[i] = (1 - alpha) * Math.pow(alpha, (envelope[1] - envelope[0] - (i + 1)) / 2d);
+					}
+				}	
+			} else {
+				values = (envelope[1] - envelope[0] + 1) / 2;
+				result = new double[values];
+				alpha = (alpha == null) ? envelope[0] / g : alpha;
+				for(int i = 0; i < values; ++i) {
+					if(i == 0) {
+						result[i] = Math.pow(alpha, (envelope[1] - envelope[0] - 1 / 2d));
+					} else if(i == values - 1) {
+						result[i] = 1 - alpha;
+					} else {
+						result[i] = (1 - alpha) * Math.pow(alpha, (envelope[1] - envelope[0] - (i + 2)) / 2d);
+					}
+				}	
+			}
+		}
+			
+		return result;
+	}
+
+	public static double[] QWeightedBetweenPointC(int g, int[] envelope, Double alpha) {
+		double[] result = null;
+		int values;
+		double alpha2;
+		
+		if (envelope[0] == envelope[1]) {
+			result = new double[1];
+			result[0] = 1;
+		} else {
+			if((envelope[0] + envelope[1]) % 2 == 0) {
+				values = (envelope[1] - envelope[0] + 2) / 2;
+				result = new double[values];
+				alpha2 = (alpha == null) ? (g - envelope[0]) / g : alpha;
+				
+				for(int i = 0; i < values; ++i) {
+					if(i == 0) {
+						result[i] = alpha2;
+					} else if(i == values - 1) {
+						result[i] = Math.pow(1 - alpha2, (envelope[1] - envelope[0]) / 2d);
+					} else {
+						result[i] = alpha2 * Math.pow(1d - alpha2, (envelope[1] - envelope[0] - (i + 1)) / 2d);
+					}
+				}	
+			} else {
+				values = (envelope[1] - envelope[0] + 1) / 2;
+				result = new double[values];
+				alpha2 = (alpha == null) ? (g - envelope[0]) / g : alpha;
+				
+				for(int i = 0; i < values; ++i) {
+					if(i == 0) {
+						result[i] = alpha2;
+					} else if(i == values - 1) {
+						result[i] = Math.pow(1d - alpha2, (envelope[1] - envelope[0] - 1d) / 2d);
+					} else {
+						result[i] = (alpha2) * Math.pow(1d - alpha2, (envelope[1] - envelope[0] - (i + 2)) / 2d);
+					}
+				}	
+			}
+		}
+			
+		return result;
+	}
+	
+	public static double[] QWeigthedUnaryRelation(NumeredQuantificationType type, int g, int[] envelope, Boolean atMost, Double alpha) {
+	
+		double[] result = null;
+	
+		int aux, values;
+
+		if(atMost) {//At most and Lower than
+			values = envelope[1] + 1;
+			aux = values - 1;
+
+			result = new double[values];
+			alpha = (alpha == null) ? (((double) values) - 1) / g : alpha;
+
+			for (int i = 0; i <= aux; i++) {
+				if (i == aux) {
+					result[i] = Math.pow(1d - alpha, i);
+				} else {
+					result[i] = alpha * Math.pow(1d - alpha, i);
+				}
+			}
+		} else { //At least and Greater than
+			values = (envelope[1] - envelope[0]) + 1;
+			aux = values - 1;
+
+			result = new double[values];
+			alpha = (alpha == null) ? ((double) envelope[0]) / g : alpha;
+
+			for (int i = 0; i <= aux; i++) {
+				if (i == 0) {
+					result[i] = Math.pow(alpha, g - envelope[0]);
+				} else {
+					result[i] = (1d - alpha) * Math.pow(alpha, g - envelope[0] - i);
+				}
+			}
+		}
+		
+		return result;
+	}
 
 	public static double[] QWeighted(NumeredQuantificationType type, int g, int[] envelope, Boolean lower, Boolean b, Double alphaAtLeast, Double alphaAtMost) {
 
@@ -109,90 +249,6 @@ public class YagerQuantifiers {
 				}
 			}
 		}
-		return result;
-	}
-	
-	public static double[] QWeightedBetweenPointB(int g, int[] envelope, Double alphaAtLeast) {
-		double[] result = null;
-		int values;
-		double alpha;
-		
-		if (envelope[0] == envelope[1]) {
-			result = new double[1];
-			result[0] = 1;
-		} else {
-			if((envelope[0] + envelope[1]) % 2 == 0) {
-				values = (envelope[1] - envelope[0] + 2) / 2;
-				result = new double[values];
-				alpha = (alphaAtLeast == null) ? envelope[0] / g : alphaAtLeast;
-				for(int i = 0; i < values; ++i) {
-					if(i == 0) {
-						result[i] = Math.pow(alpha, (envelope[1] - envelope[0] / 2d));
-					} else if(i == values - 1) {
-						result[i] = 1 - alpha;
-					} else {
-						result[i] = (1 - alpha) * Math.pow(alpha, (envelope[1] - envelope[0] - (i + 1)) / 2d);
-					}
-				}	
-			} else {
-				values = (envelope[1] - envelope[0] + 1) / 2;
-				result = new double[values];
-				alpha = (alphaAtLeast == null) ? envelope[0] / g : alphaAtLeast;
-				for(int i = 0; i < values; ++i) {
-					if(i == 0) {
-						result[i] = Math.pow(alpha, (envelope[1] - envelope[0] - 1 / 2d));
-					} else if(i == values - 1) {
-						result[i] = 1 - alpha;
-					} else {
-						result[i] = (1 - alpha) * Math.pow(alpha, (envelope[1] - envelope[0] - (i + 2)) / 2d);
-					}
-				}	
-			}
-		}
-			
-		return result;
-	}
-
-	public static double[] QWeightedBetweenPointC(int g, int[] envelope, Double alphaAtMost) {
-		double[] result = null;
-		int values;
-		double alpha2;
-		
-		if (envelope[0] == envelope[1]) {
-			result = new double[1];
-			result[0] = 1;
-		} else {
-			if((envelope[0] + envelope[1]) % 2 == 0) {
-				values = (envelope[1] - envelope[0] + 2) / 2;
-				result = new double[values];
-				alpha2 = (alphaAtMost == null) ? (g - envelope[0]) / g : alphaAtMost;
-				
-				for(int i = 0; i < values; ++i) {
-					if(i == 0) {
-						result[i] = alpha2;
-					} else if(i == values - 1) {
-						result[i] = Math.pow(1 - alpha2, (envelope[1] - envelope[0]) / 2d);
-					} else {
-						result[i] = alpha2 * Math.pow(1d - alpha2, (envelope[1] - envelope[0] - (i + 1)) / 2d);
-					}
-				}	
-			} else {
-				values = (envelope[1] - envelope[0] + 1) / 2;
-				result = new double[values];
-				alpha2 = (alphaAtMost == null) ? (g - envelope[0]) / g : alphaAtMost;
-				
-				for(int i = 0; i < values; ++i) {
-					if(i == 0) {
-						result[i] = alpha2;
-					} else if(i == values - 1) {
-						result[i] = Math.pow(1d - alpha2, (envelope[1] - envelope[0] - 1d) / 2d);
-					} else {
-						result[i] = (alpha2) * Math.pow(1d - alpha2, (envelope[1] - envelope[0] - (i + 2)) / 2d);
-					}
-				}	
-			}
-		}
-			
 		return result;
 	}
 	
