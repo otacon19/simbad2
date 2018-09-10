@@ -14,19 +14,13 @@ public class HesitantTwoTupleOperator {
 private HesitantTwoTupleOperator() {}
 	
 	public static Valuation aggregate(List<Valuation> valuations) {
-		ELICIT result = null;
+		ELICIT v = null;
 		FuzzySet domain = null;
 		
-		TrapezoidalFunction tpf, tpfResult;
-		ELICIT v =  (ELICIT) valuations.get(0);
-		if(v.getBeta() == null) {
-			tpfResult = ((ELICIT) v).calculateFuzzyEnvelope();
-		} else {
-			tpfResult = ((ELICIT) v).getBeta();
-		}
+		TrapezoidalFunction tpf, tpfResult = new TrapezoidalFunction(0, 0, 0, 0);
 		
 		int size = valuations.size();
-		for(int i = 1; i < size; ++i) {
+		for(int i = 0; i < size; ++i) {
 			v = (ELICIT) valuations.get(i);
 			Validator.notIllegalElementType(v, new String[] { ELICIT.class.toString() });
 			
@@ -47,8 +41,10 @@ private HesitantTwoTupleOperator() {}
 
 		tpfResult = tpfResult.divisionScalar(size);
 		
-		result = (ELICIT) valuations.get(0).clone();
-		result.createRelation(tpfResult);
-		return result;
+		ELICIT aggregatedElicit = new ELICIT();
+		aggregatedElicit.setDomain(valuations.get(0).getDomain());
+		aggregatedElicit.createRelation(tpfResult);
+		
+		return aggregatedElicit;
 	}
 }

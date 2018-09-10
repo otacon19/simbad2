@@ -302,16 +302,13 @@ public class ELICIT extends Valuation {
 	}
 
 	private void computeELICITExpressionAtLeastCase() {
-		// Step 1: Compute 2-tuple term from point b of beta to obtain the fuzzy envelope
+		// Step 1: Compute 2-tuple term from point b of beta to compute the HFLTS
 		setUnaryRelation(EUnaryRelationType.AtLeast, compute2TupleTerm(_beta.getB()));
 				
-		// Step 2: Compute unknown b with alpha equal to 0
+		// Step 2: Compute fuzzy envelope
 		TrapezoidalFunction fuzzyEnvelope = calculateFuzzyEnvelope();
 		
-		// Step 3: Compute 2-tuple term
-		setUnaryRelation(EUnaryRelationType.AtLeast, compute2TupleTerm(fuzzyEnvelope.getB()));
-		
-		// Step 4: Compute gamma
+		// Step 3: Compute gamma
 		setGamma1(_beta.getA() - fuzzyEnvelope.getA());
 	}
 	
@@ -336,31 +333,30 @@ public class ELICIT extends Valuation {
 		// Step 1: Compute 2-tuple term from point b of beta to obtain the fuzzy envelope
 		setUnaryRelation(EUnaryRelationType.AtMost, compute2TupleTerm(_beta.getC()));
 						
-		// Step 2: Compute unknown b with alpha equal to 1
+		// Step 2: Compute fuzzy envelope
 		TrapezoidalFunction fuzzyEnvelope = calculateFuzzyEnvelope();
 				
-		// Step 3: Compute 2-tuple term
-		setUnaryRelation(EUnaryRelationType.AtMost, compute2TupleTerm(fuzzyEnvelope.getC()));
-
-		// Step 4: Compute gamma
+		// Step 3: Compute gamma
 		setGamma1(_beta.getD() - fuzzyEnvelope.getD());
+		
+		System.out.println(_beta);
+		System.out.println(computeInverse());
+		System.out.println("------------------------");
 	}
 
 	private void computeELICITExpressionBetweenCase() {
 		// Step 1: Compute 2-tuple term from point b and c of beta to obtain the fuzzy envelope
-		System.out.println(_beta.getB());
-		System.out.println(_beta.getC());
 		setBinaryRelation(compute2TupleTerm(_beta.getB()), compute2TupleTerm(_beta.getC()));
 		
-		// Step 2: Compute unknown b and c with alpha equal to 0 and 1 respectively
+		// Step 2: Compute fuzzy envelope
 		TrapezoidalFunction fuzzyEnvelope = calculateFuzzyEnvelope();
-		
-		// Step 3: Compute 2-tuple terms
-		setBinaryRelation(compute2TupleTerm(fuzzyEnvelope.getB()), compute2TupleTerm(fuzzyEnvelope.getC()));
 
-		// Step 4: Compute gammas
+		// Step 3: Compute gammas
 		setGamma1(_beta.getA() - fuzzyEnvelope.getA());
 		setGamma2(_beta.getD() - fuzzyEnvelope.getD());
+		
+		System.out.println(_beta);
+		System.out.println(computeInverse());
 	}
 	
 	private Double computeUnknownBBetweenCase() {
@@ -431,53 +427,30 @@ public class ELICIT extends Valuation {
 	
 	public TrapezoidalFunction computeInverse() {
 		Double a = null, b = null, c = null, d = null;
-
+		
+		TrapezoidalFunction fuzzyEnvelope = this.calculateFuzzyEnvelope();
 		if (this.isPrimary()) {
 			TwoTuple primary = getTwoTupleLabel();
 			return (TrapezoidalFunction) primary.getLabel().getSemantic();
 		} else if (this.isUnary()) {
 			if (_unaryRelation.equals(EUnaryRelationType.AtLeast)) {
-				c = d = 1.0d;
-				a = computeAPointAtLeastCase();
-				b = computeBPoint(_term);
+				a = fuzzyEnvelope.getA() + _gamma1;
+				b = fuzzyEnvelope.getB();
+				c = d = fuzzyEnvelope.getC();	
 			} else if (_unaryRelation.equals(EUnaryRelationType.AtMost)) {
-				a = b = 0d;
-				d = computeDPointAtMostCase();
-				c = computeCPoint(_term);
+				a = b = fuzzyEnvelope.getA();
+				c = fuzzyEnvelope.getC();
+				d = fuzzyEnvelope.getD() + _gamma1;
 			}
 		} else {
-			Double[] trapezoidalValues = computeSupportBetweenCase();
-			a = trapezoidalValues[0];
-			b = trapezoidalValues[1];
-			c = computeBPoint(_lowerTerm);
-			d = computeCPoint(_upperTerm);
+			a = fuzzyEnvelope.getA() + _gamma1;
+			b = fuzzyEnvelope.getB();
+			c = fuzzyEnvelope.getC();
+			d = fuzzyEnvelope.getD() + _gamma2;
 
 		}
 		_beta = new TrapezoidalFunction(a, b, c, d);
 		return _beta;
-	}
-
-	private Double computeAPointAtLeastCase() {
-		return _term.getFuzzyNumber().getA() - _gamma1;
-	}
-
-	private double computeBPoint(TwoTuple term) {
-		return term.getFuzzyNumber().getB();
-	}
-
-	private Double computeDPointAtMostCase() {
-		return _term.getFuzzyNumber().getD() - _gamma1;
-	}
-
-	private double computeCPoint(TwoTuple term) {
-		return term.getFuzzyNumber().getC();
-	}
-
-	private Double[] computeSupportBetweenCase() {
-		Double[] result = new Double[2];
-		result[0] = _lowerTerm.getFuzzyNumber().getA() - _gamma1;
-		result[1] = _upperTerm.getFuzzyNumber().getA() - _gamma2;
-		return result;
 	}
 
 	public TrapezoidalFunction calculateFuzzyEnvelope() {
