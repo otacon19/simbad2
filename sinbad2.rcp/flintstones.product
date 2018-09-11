@@ -9,13 +9,13 @@
    <launcherArgs>
       <programArgs>-nl en
       </programArgs>
+      <vmArgs>-clearPersistedState
+      </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
    </launcherArgs>
 
-
    <launcher name="flintstones">
-      <solaris/>
       <win useIco="false">
          <bmp/>
       </win>
@@ -28,6 +28,8 @@
       <plugin id="com.ibm.icu"/>
       <plugin id="de.kupzog.ktable.KTable"/>
       <plugin id="org.apache.commons.lang"/>
+      <plugin id="org.apache.felix.gogo.command"/>
+      <plugin id="org.apache.felix.gogo.runtime"/>
       <plugin id="org.apache.poi.POI"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
@@ -113,12 +115,10 @@
       <plugin id="sinbad2.method.decision.todim.ui"/>
       <plugin id="sinbad2.method.decision.topsis"/>
       <plugin id="sinbad2.method.decision.topsis.ui"/>
-      <plugin id="sinbad2.method.decision.transrisk"/>
-      <plugin id="sinbad2.method.decision.transrisk.ui"/>
       <plugin id="sinbad2.method.linguistic"/>
+      <plugin id="sinbad2.method.linguistic.elicit"/>
+      <plugin id="sinbad2.method.linguistic.elicit.ui"/>
       <plugin id="sinbad2.method.linguistic.hesitant"/>
-      <plugin id="sinbad2.method.linguistic.hesitant.twotuple"/>
-      <plugin id="sinbad2.method.linguistic.hesitant.twotuple.ui"/>
       <plugin id="sinbad2.method.linguistic.hesitant.ui"/>
       <plugin id="sinbad2.method.linguistic.heterogeneous.fusion"/>
       <plugin id="sinbad2.method.linguistic.heterogeneous.fusion.ui"/>
@@ -148,8 +148,8 @@
       <plugin id="sinbad2.phasemethod.emergency.computinggainslosses.ui"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.unification"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.unification.ui"/>
-      <plugin id="sinbad2.phasemethod.linguistic.hesitant.twotuple.unification"/>
-      <plugin id="sinbad2.phasemethod.linguistic.hesitant.twotuple.unification.ui"/>
+      <plugin id="sinbad2.phasemethod.linguistic.elicit.unification"/>
+      <plugin id="sinbad2.phasemethod.linguistic.elicit.unification.ui"/>
       <plugin id="sinbad2.phasemethod.linguistic.hesitant.unification"/>
       <plugin id="sinbad2.phasemethod.linguistic.hesitant.unification.ui"/>
       <plugin id="sinbad2.phasemethod.linguistic.twotuple.unification"/>
@@ -191,8 +191,8 @@
       <plugin id="sinbad2.resolutionscheme.dm.ui"/>
       <plugin id="sinbad2.resolutionscheme.ui"/>
       <plugin id="sinbad2.valuation"/>
+      <plugin id="sinbad2.valuation.elicit"/>
       <plugin id="sinbad2.valuation.hesitant"/>
-      <plugin id="sinbad2.valuation.hesitant.twoTuple"/>
       <plugin id="sinbad2.valuation.hesitant.ui"/>
       <plugin id="sinbad2.valuation.integer"/>
       <plugin id="sinbad2.valuation.integer.interval"/>
