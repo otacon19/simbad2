@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="flintstones.rcp.target" sequenceNumber="91">
 	<locations>
-		<location path="C:\Users\UJA\Workspaces\flintstones\flintstones\git\sinbad2.target.rcp\detla.pack" type="Directory"/>
-		<location path="C:\Users\UJA\Workspaces\flintstones\flintstones\git\sinbad2.target.rcp\sdk" type="Directory"/>
+		<location path="C:\Users\Ã�lvaro\Workspaces\flintstones_e3\flintstones\git\sinbad2.target.rcp\detla.pack" type="Directory"/>
+		<location path="C:\Users\Ã�lvaro\Workspaces\flintstones_e3\flintstones\git\sinbad2.target.rcp\sdk" type="Directory"/>
 	</locations>
 </target>

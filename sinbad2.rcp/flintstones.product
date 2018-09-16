@@ -3,23 +3,25 @@
 
 <product name="flintstones" uid="flintstones" id="sinbad2.rcp.product" application="sinbad2.rcp.application" version="1" useFeatures="false" includeLaunchers="true">
 
+
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
       <programArgs>-nl en
       </programArgs>
-      <vmArgs>-clearPersistedState
-      </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
    </launcherArgs>
+
+   <windowImages/>
 
    <launcher name="flintstones">
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
    </vm>
