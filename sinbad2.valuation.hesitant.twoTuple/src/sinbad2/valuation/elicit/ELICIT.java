@@ -1,9 +1,14 @@
 package sinbad2.valuation.elicit;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -284,11 +289,9 @@ public class ELICIT extends Valuation {
 	}
 
 	public void createRelation(TrapezoidalFunction beta) {
-		
-		//beta = new TrapezoidalFunction(0, 0, 0.235, 0.475);
-		
+
 		setBeta(beta);
-		
+
 		double a = _beta.getLimits()[0], b = _beta.getLimits()[1], c = _beta.getLimits()[2], d = _beta.getLimits()[3];
 
 		// Step 1: Identify relation
@@ -304,14 +307,14 @@ public class ELICIT extends Valuation {
 	private void computeELICITExpressionAtLeastCase() {
 		// Step 1: Compute 2-tuple term from point b of beta to compute the HFLTS
 		setUnaryRelation(EUnaryRelationType.AtLeast, compute2TupleTerm(_beta.getB()));
-				
+
 		// Step 2: Compute fuzzy envelope
 		TrapezoidalFunction fuzzyEnvelope = calculateFuzzyEnvelope();
-		
+
 		// Step 3: Compute gamma
 		setGamma1(_beta.getA() - fuzzyEnvelope.getA());
 	}
-	
+
 	private TwoTuple compute2TupleTerm(Double point) {
 		Double distance, closestDistance = Double.MAX_VALUE;
 		LabelLinguisticDomain selectedTerm = null;
@@ -324,110 +327,109 @@ public class ELICIT extends Valuation {
 			}
 		}
 
-		Double alpha = Math.round(closestDistance * (((FuzzySet) _domain).getLabelSet().getCardinality() - 1) * 100d) / 100d;
+		Double alpha = Math.round(closestDistance * (((FuzzySet) _domain).getLabelSet().getCardinality() - 1) * 100d)
+				/ 100d;
 
 		return new TwoTuple((FuzzySet) _domain, selectedTerm, alpha);
 	}
-	
+
 	private void computeELICITExpressionAtMostCase() {
-		// Step 1: Compute 2-tuple term from point b of beta to obtain the fuzzy envelope
+		// Step 1: Compute 2-tuple term from point b of beta to obtain the fuzzy
+		// envelope
 		setUnaryRelation(EUnaryRelationType.AtMost, compute2TupleTerm(_beta.getC()));
-						
+
 		// Step 2: Compute fuzzy envelope
 		TrapezoidalFunction fuzzyEnvelope = calculateFuzzyEnvelope();
-				
+
 		// Step 3: Compute gamma
 		setGamma1(_beta.getD() - fuzzyEnvelope.getD());
-		
-		System.out.println(_beta);
-		System.out.println(computeInverse());
-		System.out.println("------------------------");
 	}
 
 	private void computeELICITExpressionBetweenCase() {
-		// Step 1: Compute 2-tuple term from point b and c of beta to obtain the fuzzy envelope
+		// Step 1: Compute 2-tuple term from point b and c of beta to obtain the fuzzy
+		// envelope
 		setBinaryRelation(compute2TupleTerm(_beta.getB()), compute2TupleTerm(_beta.getC()));
-		
+
 		// Step 2: Compute fuzzy envelope
 		TrapezoidalFunction fuzzyEnvelope = calculateFuzzyEnvelope();
 
 		// Step 3: Compute gammas
 		setGamma1(_beta.getA() - fuzzyEnvelope.getA());
 		setGamma2(_beta.getD() - fuzzyEnvelope.getD());
-		
-		System.out.println(_beta);
-		System.out.println(computeInverse());
 	}
-	
+
 	private Double computeUnknownBBetweenCase() {
 		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
-		TwoTuple aux = (TwoTuple) ((OWA) owa).aggregate(computeValuationsBetweenCasePointB(getEnvelopeIndex()), computeOWAWeightsBetweenCase(true, 0d));
-		
+		TwoTuple aux = (TwoTuple) ((OWA) owa).aggregate(computeValuationsBetweenCasePointB(getEnvelopeIndex()),
+				computeOWAWeightsBetweenCase(true, 0d));
+
 		return aux.getFuzzyNumber().getB();
 	}
-	
+
 	private List<Valuation> computeValuationsBetweenCasePointB(int[] envelope) {
 		List<Valuation> valuations = new LinkedList<Valuation>();
-		
+
 		int max;
-		if((envelope[0] + envelope[1]) % 2 != 0) {
+		if ((envelope[0] + envelope[1]) % 2 != 0) {
 			max = (envelope[0] + envelope[1] - 1) / 2;
 		} else {
 			max = (envelope[0] + envelope[1]) / 2;
 		}
-		
+
 		valuations.add(_lowerTerm);
-		
-		for(int i = envelope[0] + 1; i <= max ; i++) {
-            valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
-        }
-        return valuations;
+
+		for (int i = envelope[0] + 1; i <= max; i++) {
+			valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
+		}
+		return valuations;
 	}
-		
+
 	private List<Double> computeOWAWeightsBetweenCase(Boolean pointB, Double alpha) {
-		 YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
-		 double[] auxWeights = YagerQuantifiers.QWeigthedBinaryRelation(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, getEnvelopeIndex(), pointB, alpha);
-		 
-		 List<Double> weights = new LinkedList<Double>();
-		 weights.add(new Double(-1));
-		 for(Double w: auxWeights) {
-			 weights.add(w);
-		 }
-		 
-		 return weights;
+		YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
+		double[] auxWeights = YagerQuantifiers.QWeigthedBinaryRelation(nqt,
+				((FuzzySet) _domain).getLabelSet().getCardinality() - 1, getEnvelopeIndex(), pointB, alpha);
+
+		List<Double> weights = new LinkedList<Double>();
+		weights.add(new Double(-1));
+		for (Double w : auxWeights) {
+			weights.add(w);
+		}
+
+		return weights;
 	}
-	
+
 	private Double computeUnknownCBetweenCase() {
 		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
-		TwoTuple aux = (TwoTuple) ((OWA) owa).aggregate(computeValuationsBetweenCasePointC(getEnvelopeIndex()), computeOWAWeightsBetweenCase(false, 1d));
-		
+		TwoTuple aux = (TwoTuple) ((OWA) owa).aggregate(computeValuationsBetweenCasePointC(getEnvelopeIndex()),
+				computeOWAWeightsBetweenCase(false, 1d));
+
 		return aux.getFuzzyNumber().getB();
 	}
-	
+
 	private List<Valuation> computeValuationsBetweenCasePointC(int[] envelope) {
 		List<Valuation> valuations = new LinkedList<Valuation>();
-		
+
 		int max;
-		if((envelope[0] + envelope[1]) % 2 != 0) {
+		if ((envelope[0] + envelope[1]) % 2 != 0) {
 			max = (envelope[0] + envelope[1] + 1) / 2;
 		} else {
 			max = (envelope[0] + envelope[1]) / 2;
 		}
-		
+
 		valuations.add(_upperTerm);
-		
-		for(int i = envelope[1] - 1; i >= max ; i--) {
-            valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
-        }
-		
-        return valuations;
+
+		for (int i = envelope[1] - 1; i >= max; i--) {
+			valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
+		}
+
+		return valuations;
 	}
-	
+
 	public TrapezoidalFunction computeInverse() {
 		Double a = null, b = null, c = null, d = null;
-		
+
 		TrapezoidalFunction fuzzyEnvelope = this.calculateFuzzyEnvelope();
 		if (this.isPrimary()) {
 			TwoTuple primary = getTwoTupleLabel();
@@ -436,7 +438,7 @@ public class ELICIT extends Valuation {
 			if (_unaryRelation.equals(EUnaryRelationType.AtLeast)) {
 				a = fuzzyEnvelope.getA() + _gamma1;
 				b = fuzzyEnvelope.getB();
-				c = d = fuzzyEnvelope.getC();	
+				c = d = fuzzyEnvelope.getC();
 			} else if (_unaryRelation.equals(EUnaryRelationType.AtMost)) {
 				a = b = fuzzyEnvelope.getA();
 				c = fuzzyEnvelope.getC();
@@ -467,9 +469,9 @@ public class ELICIT extends Valuation {
 
 			int envelope[] = getEnvelopeIndex();
 
-			if (atMostCase == null) { //Binary relation
+			if (atMostCase == null) { // Binary relation
 				return computeFuzzyEnvelopeBinaryRelation(cardinality, envelope);
-			} else { //Unary relation
+			} else { // Unary relation
 				return computeFuzzyEnvelopeUnaryRelation(cardinality, envelope, atMostCase);
 			}
 		}
@@ -523,13 +525,13 @@ public class ELICIT extends Valuation {
 
 		return result;
 	}
-	
+
 	private TrapezoidalFunction computeFuzzyEnvelopeBinaryRelation(int cardinality, int[] envelope) {
 		double a, b, c, d;
 
 		a = _lowerTerm.getLabel().getSemantic().getCoverage().getMin();
 		d = _upperTerm.getLabel().getSemantic().getCoverage().getMax();
-		
+
 		if (envelope[0] + 1 == envelope[1]) {
 			b = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCenter().getMin();
 			c = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCenter().getMax();
@@ -537,7 +539,7 @@ public class ELICIT extends Valuation {
 			b = computeUnknownBBetweenCase();
 			c = computeUnknownCBetweenCase();
 		}
-		
+
 		return new TrapezoidalFunction(a, b, c, d);
 	}
 
@@ -550,69 +552,72 @@ public class ELICIT extends Valuation {
 			c = computeUnknownC();
 			d = ((FuzzySet) _domain).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
 		} else {
-			a = ((FuzzySet) _domain).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin(); 
+			a = ((FuzzySet) _domain).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
 			b = computeUnknownB();
 			c = 1.0D;
 			d = 1.0D;
 		}
-		
+
 		return new TrapezoidalFunction(a, b, c, d);
 	}
-	
+
 	private Double computeUnknownC() {
 		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
-		
-		TwoTuple aux = (TwoTuple) ((OWA) owa).aggregate(computeValuationsAtMostCase(getEnvelopeIndex()), computeOWAWeights(1d, true));
-		
+
+		TwoTuple aux = (TwoTuple) ((OWA) owa).aggregate(computeValuationsAtMostCase(getEnvelopeIndex()),
+				computeOWAWeights(1d, true));
+
 		return aux.getFuzzyNumber().getB();
 	}
-		
+
 	private List<Valuation> computeValuationsAtMostCase(int[] envelope) {
 		List<Valuation> valuations = new LinkedList<Valuation>();
-		
-        for(int i = envelope[0]; i <= envelope[1] - 1; i++) {
-            valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
-        }
-        
-        valuations.add(_term);
-        
-        return valuations;
+
+		for (int i = envelope[0]; i <= envelope[1] - 1; i++) {
+			valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
+		}
+
+		valuations.add(_term);
+
+		return valuations;
 	}
-	
+
 	private List<Double> computeOWAWeights(Double alpha, Boolean lower) {
-		 YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
-		 double[] auxWeights = YagerQuantifiers.QWeigthedUnaryRelation(nqt, ((FuzzySet) _domain).getLabelSet().getCardinality() - 1, getEnvelopeIndex(), lower, alpha);
-		 
-		 List<Double> weights = new LinkedList<Double>();
-		 weights.add(new Double(-1));
-		 for(Double w: auxWeights) {
-			 weights.add(w);
-		 }
-		 
-		 return weights;
+		YagerQuantifiers.NumeredQuantificationType nqt = YagerQuantifiers.NumeredQuantificationType.FilevYager;
+		double[] auxWeights = YagerQuantifiers.QWeigthedUnaryRelation(nqt,
+				((FuzzySet) _domain).getLabelSet().getCardinality() - 1, getEnvelopeIndex(), lower, alpha);
+
+		List<Double> weights = new LinkedList<Double>();
+		weights.add(new Double(-1));
+		for (Double w : auxWeights) {
+			weights.add(w);
+		}
+
+		return weights;
 	}
-	
+
 	private Double computeUnknownB() {
 		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
 		AggregationOperator owa = aggregationOperatorManager.getAggregationOperator(OWA.ID);
-		
-		TwoTuple aux = (TwoTuple) ((OWA) owa).aggregate(computeValuationsAtLeastCase(getEnvelopeIndex()), computeOWAWeights(0d, false));
-		
+
+		TwoTuple aux = (TwoTuple) ((OWA) owa).aggregate(computeValuationsAtLeastCase(getEnvelopeIndex()),
+				computeOWAWeights(0d, false));
+
 		return aux.getFuzzyNumber().getB();
 	}
-	
+
 	private List<Valuation> computeValuationsAtLeastCase(int[] envelope) {
 		List<Valuation> valuations = new LinkedList<Valuation>();
-		
+
 		valuations.add(_term);
-        for(int i = envelope[0] + 1; i <= envelope[1]; i++) {
-            valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
-        }
-        
-        return valuations;
+		for (int i = envelope[0] + 1; i <= envelope[1]; i++) {
+			valuations.add(new TwoTuple((FuzzySet) _domain, ((FuzzySet) _domain).getLabelSet().getLabel(i)));
+		}
+
+		return valuations;
 	}
-	
+
 	/**
 	 * Huimin Zhang method The multiatribute group decision making method based on
 	 * aggregation operators with interval-valued 2-tuple linguistic information.
@@ -784,22 +789,19 @@ public class ELICIT extends Valuation {
 	 * @return
 	 */
 	public static List<Object[]> rankingTrapezoidalFuzzyNumbers(List<Object[]> valuations) {
-		List<Double> magnitudes = new LinkedList<Double>();
+
+		Map<String, Double> magnitudes = new HashMap<>();
 		for (Object[] valuation : valuations) {
 			ELICIT v = ((ELICIT) valuation[0]);
 			TrapezoidalFunction vtr = v.getBeta();
-			magnitudes.add(computeMagnitude(vtr));
+			magnitudes.put((String) valuation[1], computeMagnitude(vtr));
 		}
 
-		List<Double> magnitudesAux = new LinkedList<Double>();
-		magnitudesAux.addAll(magnitudes);
-
-		Collections.sort(magnitudesAux);
-		Collections.reverse(magnitudesAux);
-
-		return orderRanking(magnitudes, magnitudesAux, valuations);
+		Map<String, Double> sortedMagnitudes = orderMagnitudes(magnitudes);
+		
+		return computeRankingMagnitudes(valuations, sortedMagnitudes);
 	}
-
+	
 	private static Double computeMagnitude(TrapezoidalFunction vtr) {
 		double alpha = distance(vtr.getA(), vtr.getB());
 		double beta = distance(vtr.getC(), vtr.getD());
@@ -810,24 +812,40 @@ public class ELICIT extends Valuation {
 		return Math.abs(pointA - pointB);
 	}
 
-	private static List<Object[]> orderRanking(List<Double> magnitudes, List<Double> magnitudesAux,
-			List<Object[]> valuations) {
-		List<Integer> rankingPos = computeRankingPos(magnitudes, magnitudesAux);
+	private static Map<String, Double> orderMagnitudes(Map<String, Double> magnitudes) {
+		List<Map.Entry<String, Double>> entries = new ArrayList<Map.Entry<String, Double>>(magnitudes.entrySet());
+		Collections.sort(entries, new CustomizedHashMap());
+
+		Map<String, Double> sortedMagnitudes = new LinkedHashMap<String, Double>();
+		for (Map.Entry<String, Double> entry : entries) {
+			sortedMagnitudes.put(entry.getKey(), entry.getValue());
+		}
+		
+		return sortedMagnitudes;
+	}
+
+	public static class CustomizedHashMap implements Comparator<Map.Entry<String, Double>> {
+
+		@Override
+		public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
+			return o2.getValue().compareTo(o1.getValue());
+		}
+	}
+
+	private static List<Object[]> computeRankingMagnitudes(List<Object[]> valuations, Map<String, Double> sortedMagnitudes) {
 		List<Object[]> ranking = new LinkedList<>();
-		for (int r = 0; r < rankingPos.size(); ++r) {
-			ranking.add(valuations.get(rankingPos.get(r)));
+		
+		for(String alternative: sortedMagnitudes.keySet()) {
+			for(Object[] valuation: valuations) {
+				if(valuation[1].equals(alternative)) {
+					ranking.add(valuation);
+				}
+			}
 		}
+		
 		return ranking;
 	}
-
-	private static List<Integer> computeRankingPos(List<Double> magnitudes, List<Double> magnitudesAux) {
-		List<Integer> ranking = new LinkedList<>();
-		for (int i = 0; i < magnitudes.size(); ++i) {
-			ranking.add(magnitudes.indexOf(magnitudesAux.get(i)));
-		}
-		return ranking;
-	}
-
+	
 	@Override
 	public Valuation negateValuation() {
 		return null;

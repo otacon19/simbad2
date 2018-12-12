@@ -58,6 +58,8 @@ public class RealValuation extends Valuation {
 		((NumericRealDomain) result._domain).setMinMax(0d, 1d);
 		result._value = (_value - min) / intervalSize;
 		
+		System.out.println(result._value);
+		
 		return result;
 		
 	}

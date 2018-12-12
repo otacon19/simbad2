@@ -242,7 +242,7 @@ public class TrapezoidalFunction implements IMembershipFunction {
 			return 1d;
 		}
 
-		if (_b == _a) {
+		if (_b == _a) { //Primera etiqueta
 			values[1] = values[2] = tmf.getMembershipValue(_a);
 		} else {
 			slopeThisAB = 1d / (_b - _a);

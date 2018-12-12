@@ -62,6 +62,7 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 			TwoTuple twoTuple = null;
 			Object[] listEntry = null;
 			for (int i = 0; i < size; i++) {
+				hesitant2Tuple = false;
 				alternativeName = (String) input[i][0];
 				valuation = (Valuation) input[i][1];
 				if (valuation != null) {
@@ -97,7 +98,7 @@ public class RankingViewerProvider implements IStructuredContentProvider {
 				} else if(element[0] instanceof ELICIT) {
 					element[0] = Integer.valueOf(++ranking);
 			    } else if ((Double) element[0] == previous) {
-					element[0] = ranking;
+			    	element[0] = ranking;
 				} else {
 					ranking++;
 					previous = (Double) element[0];

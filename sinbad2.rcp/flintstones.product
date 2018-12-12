@@ -3,13 +3,15 @@
 
 <product name="flintstones" uid="flintstones" id="sinbad2.rcp.product" application="sinbad2.rcp.application" version="1" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
       <programArgs>-nl en
       </programArgs>
+      <programArgsMac>-data
+@user.home/Library/flintstones
+      </programArgsMac>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
    </launcherArgs>
@@ -21,7 +23,6 @@
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
@@ -78,13 +79,6 @@
       <plugin id="sinbad2.aggregationoperator"/>
       <plugin id="sinbad2.aggregationoperator.arithmeticMean"/>
       <plugin id="sinbad2.aggregationoperator.choquetIntegral"/>
-      <plugin id="sinbad2.aggregationoperator.fuzzy.apexAnglesArithmeticMean"/>
-      <plugin id="sinbad2.aggregationoperator.fuzzy.arithmeticMean"/>
-      <plugin id="sinbad2.aggregationoperator.fuzzy.geometricMean"/>
-      <plugin id="sinbad2.aggregationoperator.fuzzy.max"/>
-      <plugin id="sinbad2.aggregationoperator.fuzzy.min"/>
-      <plugin id="sinbad2.aggregationoperator.fuzzy.owa"/>
-      <plugin id="sinbad2.aggregationoperator.fuzzy.weightedmean"/>
       <plugin id="sinbad2.aggregationoperator.geometricMean"/>
       <plugin id="sinbad2.aggregationoperator.harmonicMean"/>
       <plugin id="sinbad2.aggregationoperator.max"/>
@@ -111,15 +105,7 @@
       <plugin id="sinbad2.element"/>
       <plugin id="sinbad2.element.ui"/>
       <plugin id="sinbad2.excel"/>
-      <plugin id="sinbad2.method.decision.emergency"/>
-      <plugin id="sinbad2.method.decision.emergency.ui"/>
-      <plugin id="sinbad2.method.decision.todim"/>
-      <plugin id="sinbad2.method.decision.todim.ui"/>
-      <plugin id="sinbad2.method.decision.topsis"/>
-      <plugin id="sinbad2.method.decision.topsis.ui"/>
       <plugin id="sinbad2.method.linguistic"/>
-      <plugin id="sinbad2.method.linguistic.elicit"/>
-      <plugin id="sinbad2.method.linguistic.elicit.ui"/>
       <plugin id="sinbad2.method.linguistic.hesitant"/>
       <plugin id="sinbad2.method.linguistic.hesitant.ui"/>
       <plugin id="sinbad2.method.linguistic.heterogeneous.fusion"/>
@@ -142,16 +128,8 @@
       <plugin id="sinbad2.phasemethod.aggregation.ui"/>
       <plugin id="sinbad2.phasemethod.analysis"/>
       <plugin id="sinbad2.phasemethod.analysis.ui"/>
-      <plugin id="sinbad2.phasemethod.emergency.aggregation"/>
-      <plugin id="sinbad2.phasemethod.emergency.aggregation.ui"/>
-      <plugin id="sinbad2.phasemethod.emergency.computeweights"/>
-      <plugin id="sinbad2.phasemethod.emergency.computeweights.ui"/>
-      <plugin id="sinbad2.phasemethod.emergency.computinggainslosses"/>
-      <plugin id="sinbad2.phasemethod.emergency.computinggainslosses.ui"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.unification"/>
       <plugin id="sinbad2.phasemethod.heterogeneous.fusion.unification.ui"/>
-      <plugin id="sinbad2.phasemethod.linguistic.elicit.unification"/>
-      <plugin id="sinbad2.phasemethod.linguistic.elicit.unification.ui"/>
       <plugin id="sinbad2.phasemethod.linguistic.hesitant.unification"/>
       <plugin id="sinbad2.phasemethod.linguistic.hesitant.unification.ui"/>
       <plugin id="sinbad2.phasemethod.linguistic.twotuple.unification"/>
@@ -164,14 +142,8 @@
       <plugin id="sinbad2.phasemethod.multigranular.lh.unification.ui"/>
       <plugin id="sinbad2.phasemethod.retranslation"/>
       <plugin id="sinbad2.phasemethod.retranslation.ui"/>
-      <plugin id="sinbad2.phasemethod.todim.resolution"/>
-      <plugin id="sinbad2.phasemethod.todim.resolution.ui"/>
-      <plugin id="sinbad2.phasemethod.todim.unification"/>
-      <plugin id="sinbad2.phasemethod.todim.unification.ui"/>
       <plugin id="sinbad2.phasemethod.topsis.selection"/>
-      <plugin id="sinbad2.phasemethod.topsis.selection.ui"/>
       <plugin id="sinbad2.phasemethod.topsis.unification"/>
-      <plugin id="sinbad2.phasemethod.topsis.unification.ui"/>
       <plugin id="sinbad2.phasemethod.ui"/>
       <plugin id="sinbad2.phasemethod.unbalanced.methodology.unification"/>
       <plugin id="sinbad2.phasemethod.unbalanced.methodology.unification.ui"/>

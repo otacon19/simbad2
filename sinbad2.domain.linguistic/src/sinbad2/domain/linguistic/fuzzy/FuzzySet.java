@@ -305,7 +305,8 @@ public class FuzzySet extends Linguistic {
 			Object[] values = pieces.values().toArray();
 			LinearPieceFunction piece = (LinearPieceFunction) values[0];
 			if(piece != null) {
-				if((piece.getSlope() == 0) && (piece.getCutOffY() == 1)) {
+				if((Math.round(piece.getSlope() * 100d) / 100d == 0) && 
+						(Math.round(piece.getCutOffY() * 100d) / 100d == 1)) {
 					return true;
 				}
 			}
