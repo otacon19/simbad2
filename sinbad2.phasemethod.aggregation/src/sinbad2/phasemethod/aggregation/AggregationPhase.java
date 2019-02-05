@@ -278,7 +278,7 @@ public class AggregationPhase implements IPhaseMethod {
 		return aggregateElementByExperts(null, alternative, null, experts, criteria);
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes", "unlikely-arg-type" })
 	private Valuation aggregateElementByCriteria(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent, Set<ProblemElement> experts, Set<ProblemElement> criteria) {
 		AggregationOperator operator;
 		List<Valuation> alternativeValuations, criterionValuations = null;
@@ -400,7 +400,7 @@ public class AggregationPhase implements IPhaseMethod {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "unlikely-arg-type" })
 	private Valuation aggregateElementByExperts(ProblemElement expertParent, ProblemElement alternative, ProblemElement criterionParent, Set<ProblemElement> experts, Set<ProblemElement> criteria) {
 		AggregationOperator operator;
 		List<Valuation> alternativeValuations, expertValuations;

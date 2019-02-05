@@ -289,9 +289,8 @@ public class ELICIT extends Valuation {
 	}
 
 	public void createRelation(TrapezoidalFunction beta) {
-
 		setBeta(beta);
-
+		
 		double a = _beta.getLimits()[0], b = _beta.getLimits()[1], c = _beta.getLimits()[2], d = _beta.getLimits()[3];
 
 		// Step 1: Identify relation
@@ -528,9 +527,9 @@ public class ELICIT extends Valuation {
 
 	private TrapezoidalFunction computeFuzzyEnvelopeBinaryRelation(int cardinality, int[] envelope) {
 		double a, b, c, d;
-
-		a = _lowerTerm.getLabel().getSemantic().getCoverage().getMin();
-		d = _upperTerm.getLabel().getSemantic().getCoverage().getMax();
+		
+		a = _lowerTerm.getFuzzyNumber().getA();
+		d = _upperTerm.getFuzzyNumber().getD();
 
 		if (envelope[0] + 1 == envelope[1]) {
 			b = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCenter().getMin();

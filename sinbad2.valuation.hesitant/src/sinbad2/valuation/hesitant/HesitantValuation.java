@@ -235,7 +235,7 @@ public class HesitantValuation extends Valuation {
 				weights.add(weight);
 			}
 			
-            if(lower == null) { //Relación binaria
+            if(lower == null) { //Relaciï¿½n binaria
                 a = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[0]).getSemantic().getCoverage().getMin();
                 d = ((FuzzySet) getDomain()).getLabelSet().getLabel(envelope[1]).getSemantic().getCoverage().getMax();
                 if(envelope[0] + 1 == envelope[1]) {
@@ -258,7 +258,7 @@ public class HesitantValuation extends Valuation {
                     b = ((TwoTuple) aux).calculateInverseDelta() / ((double) g - 1);
                     c = 2D * domain.getLabelSet().getLabel(top).getSemantic().getCenter().getMin() - b;
                 }
-            } else { //Relación unaria
+            } else { //Relaciï¿½n unaria
                 List<Valuation> valuations = new LinkedList<Valuation>();
                 for(int i = envelope[0]; i <= envelope[1]; i++) {
                     valuations.add(new TwoTuple(domain, domain.getLabelSet().getLabel(i)));
