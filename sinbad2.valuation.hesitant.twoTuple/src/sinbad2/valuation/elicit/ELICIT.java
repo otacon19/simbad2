@@ -779,7 +779,7 @@ public class ELICIT extends Valuation {
 
 		return sums;
 	}
-
+	
 	/**
 	 * S. Abbasbandy and T. Hajjari method A new approach for ranking of trapezoidal
 	 * fuzzy numbers

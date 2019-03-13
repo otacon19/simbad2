@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -15,12 +18,16 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import sinbad2.domain.DomainSet;
+import sinbad2.domain.DomainsManager;
+import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.domain.linguistic.fuzzy.ui.jfreechart.LinguisticDomainChart;
 import sinbad2.element.ProblemElementsManager;
@@ -45,12 +52,16 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 	private Composite _tableComposite;
 	
 	private ExpertsWeightTable _expertsWeightTable;
+	private Combo _selectorDomain;
+	
+	private List<String> availableDomains;
 	
 	private LinguisticDomainChart _chart;
 	
 	private boolean _completed = true;
 	
 	private ProblemElementsSet _elementsSet;
+	private DomainSet _domainSet;
 	
 	private SelectionPhase _selectionPhase;
 	
@@ -63,6 +74,7 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 		_selectionPhase.execute();
 		
 		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
+		_domainSet = DomainsManager.getInstance().getActiveDomainSet();
 
 		_parent = parent;
 
@@ -78,7 +90,7 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 
 	private void createContent() {
 		createTable();
-		createButtonsFile();
+		createButtons();
 		createChart();
 	}
 
@@ -96,11 +108,11 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 		_expertsWeightTable.setModel(_selectionPhase);	
 	}
 	
-	private void createButtonsFile() {
+	private void createButtons() {
 		Composite buttonsComposite = new Composite(_tableComposite, SWT.NONE);
 		GridData gridData = new GridData(SWT.RIGHT, SWT.RIGHT, true, false, 1, 1);
 		buttonsComposite.setLayoutData(gridData);
-		GridLayout layout = new GridLayout(2, true);
+		GridLayout layout = new GridLayout(3, false);
 		layout.horizontalSpacing = 15;
 		layout.verticalSpacing = 15;
 		buttonsComposite.setLayout(layout);
@@ -108,9 +120,14 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 		Button exportWeights = new Button(buttonsComposite, SWT.NONE);
 		exportWeights.setText("Export weights");
 		exportWeights.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
+		
 		Button importWeights = new Button(buttonsComposite, SWT.NONE);
 		importWeights.setText("Import weights");
 		importWeights.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
+
+		_selectorDomain = new Combo(buttonsComposite, SWT.NONE);
+		_selectorDomain.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, true, 1, 1));
+		createAvailableListDomains();
 		
 		exportWeights.addSelectionListener(new SelectionAdapter() {
 			
@@ -182,6 +199,7 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 						_selectionPhase.setExpertWeight(e, _elementsSet.getAllSubcriteria().indexOf(criterion), weight);
 					}
 					_expertsWeightTable.redraw();
+					_expertsWeightTable.notifyChanges();
 				} catch (IOException e) {
 					e.printStackTrace();
 				} finally {
@@ -198,8 +216,32 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 				}
 			}
 		});
+		
+		_selectorDomain.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				_selectionPhase.clear();
+				String idSelectedDomain = _selectorDomain.getItem(_selectorDomain.getSelectionIndex());
+				if(_domainSet.getDomain(idSelectedDomain) != null) {
+					_selectionPhase.setWeightsDomain(((FuzzySet) _domainSet.getDomain(idSelectedDomain)));
+				} else {
+					_selectionPhase.setWeightsDomain(_selectionPhase.createDefaultWeightsDomain());
+				}
+				_expertsWeightTable.redraw();
+				_selectionPhase.execute();
+				_expertsWeightTable.notifyChanges();
+			}
+		});
 	}
 	
+	private void createAvailableListDomains() {
+		availableDomains = new LinkedList<>();
+		availableDomains.add(_selectionPhase.createDefaultWeightsDomain().getId());
+		availableDomains.addAll(Arrays.asList(_domainSet.getAllDomainsIds()));
+		_selectorDomain.setItems(availableDomains.toArray(new String[0]));
+		_selectorDomain.select(0);
+	}
+
 	private void createChart() {
 		Composite chartViewParent = new Composite(_parent, SWT.BORDER);
 		GridLayout layout = new GridLayout(1, true);
@@ -227,7 +269,7 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 			}
 		});
 	}
-	
+
 	@Override
 	public String getPartName() {
 		return Messages.selection_Calculate_weights;

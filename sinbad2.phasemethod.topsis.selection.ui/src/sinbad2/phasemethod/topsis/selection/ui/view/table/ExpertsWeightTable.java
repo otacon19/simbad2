@@ -24,6 +24,10 @@ public class ExpertsWeightTable extends KTable {
 		setModel(_model);
 		getParent().getParent().layout();
 	}
+	
+	public void notifyChanges() {
+		_model.notifyChangeWeightListeners();
+	}
 
 	@Override
 	public void dispose() {

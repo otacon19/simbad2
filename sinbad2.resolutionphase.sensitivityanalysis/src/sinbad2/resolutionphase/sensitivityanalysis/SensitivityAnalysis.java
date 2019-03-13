@@ -31,6 +31,7 @@ import sinbad2.resolutionphase.io.XMLWriter;
 import sinbad2.resolutionphase.state.EResolutionPhaseStateChange;
 import sinbad2.resolutionphase.state.ResolutionPhaseStateChangeEvent;
 import sinbad2.valuation.Valuation;
+import sinbad2.valuation.elicit.ELICIT;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class SensitivityAnalysis implements IResolutionPhase {
@@ -1212,7 +1213,11 @@ public class SensitivityAnalysis implements IResolutionPhase {
 			for (Alternative a : _alternatives) {
 				j = 0;
 				for (Criterion c : _elementsSet.getAllSubcriteria()) {
-					_decisionMatrix[j][i] = ((TwoTuple) decisionMatrix.get(new Pair(a, c))).calculateInverseDelta();
+					if(decisionMatrix.get(new Pair(a, c)) instanceof ELICIT) {
+						_decisionMatrix[j][i] = ((ELICIT) decisionMatrix.get(new Pair(a, c))).computeInverse().centroid();
+					} else {
+						_decisionMatrix[j][i] = ((TwoTuple) decisionMatrix.get(new Pair(a, c))).calculateInverseDelta();
+					}
 					j++;
 				}
 				i++;

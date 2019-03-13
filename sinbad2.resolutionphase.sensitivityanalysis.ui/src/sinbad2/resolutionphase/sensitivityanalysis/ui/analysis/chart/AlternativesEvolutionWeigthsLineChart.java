@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.chart.plot.PlotOrientation;
@@ -42,7 +43,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 
 	private List<Alternative> _alternatives;
 	private Criterion _criterionSelected;
-	
+
 	private EModel _model;
 
 	private SensitivityAnalysis _sensitivityAnalysis;
@@ -52,7 +53,7 @@ public class AlternativesEvolutionWeigthsLineChart {
 		ProblemElementsManager.getInstance().getActiveElementSet().getAllCriteria();
 
 		_model = EModel.WEIGHTED_SUM;
-		
+
 		_chart = null;
 		_chartComposite = null;
 	}
@@ -99,17 +100,19 @@ public class AlternativesEvolutionWeigthsLineChart {
 		return _chartComposite;
 	}
 
-	public void initialize(Composite container, int width, int height, int style, SensitivityAnalysis sensitivityAnalysis) {
+	public void initialize(Composite container, int width, int height, int style,
+			SensitivityAnalysis sensitivityAnalysis) {
 		_sensitivityAnalysis = sensitivityAnalysis;
 		_alternatives = _sensitivityAnalysis.getAlternatives();
-		
+
 		refreshChart();
 
 		_chartComposite = new ChartComposite(container, style, _chart, true);
 		_chartComposite.setSize(width, height);
 	}
-	
-	public void initialize(Composite container, int width, int height, int style, SensitivityAnalysis sensitivityAnalysis, int typeTODIM) {
+
+	public void initialize(Composite container, int width, int height, int style,
+			SensitivityAnalysis sensitivityAnalysis, int typeTODIM) {
 		_sensitivityAnalysis = sensitivityAnalysis;
 		_alternatives = _sensitivityAnalysis.getAlternatives();
 
@@ -127,21 +130,39 @@ public class AlternativesEvolutionWeigthsLineChart {
 		}
 	}
 
-	private JFreeChart createChart(XYDataset dataset) {
-		JFreeChart result = ChartFactory.createXYLineChart(null, null, null, dataset, PlotOrientation.VERTICAL, true, true, false);
+	private JFreeChart createChart(final XYDataset dataset) {
+		JFreeChart result = ChartFactory.createXYLineChart(null, null, null, dataset, PlotOrientation.VERTICAL, true,
+				true, false);
 
 		result.setBackgroundPaint(Color.white);
 
 		final XYPlot plot = result.getXYPlot();
-		plot.setBackgroundPaint(Color.lightGray);
-		plot.setDomainGridlinesVisible(false);
+		plot.setBackgroundPaint(Color.white);
+		plot.setDomainGridlinesVisible(true);
 		plot.setRangeGridlinesVisible(true);
 
 		setDefaultRanges(plot);
 
-		XYLineAndShapeRenderer render = (XYLineAndShapeRenderer) plot.getRenderer();
-		render.setBaseToolTipGenerator(createToolTipGenerator());
-		
+		@SuppressWarnings("serial")
+		XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer() {
+			Stroke dashed = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
+					new float[] { 10.0f }, 0.0f);
+
+			@Override
+			public Stroke getItemStroke(int row, int column) {
+				return dashed;
+			}
+		};
+
+		renderer.setBaseShapesVisible(true);
+		renderer.setBaseShapesFilled(true);
+		renderer.setBaseStroke(new BasicStroke(3));
+		renderer.setBaseLegendTextFont(new Font("sans-serif", Font.BOLD, 20));
+		plot.setRenderer(renderer);
+
+		// XYLineAndShapeRenderer render = (XYLineAndShapeRenderer) plot.getRenderer();
+		renderer.setBaseToolTipGenerator(createToolTipGenerator());
+
 		createCurrentMarker(plot);
 		createVariableMarker(plot);
 
@@ -150,12 +171,14 @@ public class AlternativesEvolutionWeigthsLineChart {
 
 	private void setDefaultRanges(XYPlot plot) {
 		NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-		setRangeAxis(rangeAxis, -1, 2);
+		setRangeAxis(rangeAxis, 0, 1);
+		rangeAxis.setTickUnit(new NumberTickUnit(0.1));
 
 		NumberAxis domainAxis = (NumberAxis) plot.getDomainAxis();
-		setRangeAxis(domainAxis, 0, 1);
+		setRangeAxis(domainAxis, 0.01, 1);
+		domainAxis.setTickUnit(new NumberTickUnit(0.1));
 	}
-	
+
 	private void setRangeAxis(ValueAxis rangeAxis, double lower, double upper) {
 		rangeAxis.setRange(lower, upper);
 	}
@@ -184,9 +207,9 @@ public class AlternativesEvolutionWeigthsLineChart {
 		_currentMarker.setStroke(new BasicStroke(2));
 		_currentMarker.setLabelOffset(new RectangleInsets(10, 10, 10, 50));
 		_currentMarker.setLabelAnchor(RectangleAnchor.TOP_RIGHT);
-		plot.addDomainMarker(_currentMarker);
+		// plot.addDomainMarker(_currentMarker);
 	}
-	
+
 	private void createVariableMarker(XYPlot plot) {
 		_variableMarker = new ValueMarker(0);
 		_variableMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
@@ -194,70 +217,75 @@ public class AlternativesEvolutionWeigthsLineChart {
 		_variableMarker.setPaint(Color.blue);
 		_variableMarker.setStroke(new BasicStroke(2));
 		_variableMarker.setLabelOffset(new RectangleInsets(10, 10, 10, 54));
-		_variableMarker.setLabelAnchor(RectangleAnchor.TOP_LEFT);	
-		plot.addDomainMarker(_variableMarker);
+		_variableMarker.setLabelAnchor(RectangleAnchor.TOP_LEFT);
+		// plot.addDomainMarker(_variableMarker);
 	}
-	
+
 	private XYDataset createDataset() {
 		_dataset = new XYSeriesCollection();
 
 		if (_criterionSelected != null) {
-			
+
 			switch (_model) {
-				case WEIGHTED_SUM:
-				case ANALYTIC_HIERARCHY_PROCESS:
+			case WEIGHTED_SUM:
+			case ANALYTIC_HIERARCHY_PROCESS:
 
-					removeMarker(_horizontalMarker);
+				removeMarker(_horizontalMarker);
 
-					List<XYSeries> alternativesSeries = computeLineChart();
-					for (XYSeries se : alternativesSeries) {
-						_dataset.addSeries(se);
-					}
-					
-					break;
-				case WEIGHTED_PRODUCT:
-					
-					setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Ratios_evolution + _criterionSelected.getId().toUpperCase());
-	
-					createHorizontalMarker();
-					
-					computeWeightedProductLineChart();
-					
-					setRangeAxis(_chart.getXYPlot().getRangeAxis(), -10, _dataset.getRangeUpperBound(false) + 2);
-					
-					break;
+				List<XYSeries> alternativesSeries = computeLineChart();
+				for (XYSeries se : alternativesSeries) {
+					_dataset.addSeries(se);
+				}
+
+				break;
+			case WEIGHTED_PRODUCT:
+
+				setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Ratios_evolution
+						+ _criterionSelected.getId().toUpperCase());
+
+				createHorizontalMarker();
+
+				computeWeightedProductLineChart();
+
+				setRangeAxis(_chart.getXYPlot().getRangeAxis(), -10, _dataset.getRangeUpperBound(false) + 2);
+
+				break;
 			}
-		} else {			
+		} else {
 			createDefaultDataset();
 		}
-		
+
 		return _dataset;
 	}
 
 	private List<XYSeries> computeLineChart() {
 		List<XYSeries> alternativesSeries;
-		setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution + _criterionSelected.getId().toUpperCase());
+		setChartTitle(Messages.AlternativesEvolutionWeigthsLineChart_Preferences_evolution
+				+ _criterionSelected.getId().toUpperCase());
 		alternativesSeries = computeEvolutionWeights();
 
 		return alternativesSeries;
 	}
-	
+
 	private void computeWeightedProductLineChart() {
 		int numSeries = 0;
 		for (int i = 0; i < _alternatives.size() - 1; ++i) {
 			for (int j = (i + 1); j < _alternatives.size(); ++j) {
-				XYSeries alternativeSerie = new XYSeries(_alternatives.get(i).getId() + " - " + _alternatives.get(j).getId()); //$NON-NLS-1$
-				for (double k = 0; k <= 1.01; k += 0.01) {
-					alternativeSerie.add(Math.round(k * 100d) / 100d, _sensitivityAnalysis.computeAlternativeRatioFinalPreferenceInferWeights(i, j, _sensitivityAnalysis.calculateInferWeights(_criterionSelected, k)));
+				XYSeries alternativeSerie = new XYSeries(
+						_alternatives.get(i).getId() + " - " + _alternatives.get(j).getId()); //$NON-NLS-1$
+				for (double k = 0.01; k <= 1.01; k += 0.01) {
+					alternativeSerie.add(Math.round(k * 100d) / 100d,
+							_sensitivityAnalysis.computeAlternativeRatioFinalPreferenceInferWeights(i, j,
+									_sensitivityAnalysis.calculateInferWeights(_criterionSelected, k)));
 				}
-				
+
 				_dataset.addSeries(alternativeSerie);
-				_chart.getXYPlot().getRenderer().setSeriesStroke(numSeries, new BasicStroke(2.0f));
+				_chart.getXYPlot().getRenderer().setSeriesStroke(numSeries, new BasicStroke(4.0f));
 				numSeries++;
 			}
 		}
 	}
-	
+
 	private void setChartTitle(String title) {
 		_chart.setTitle(title);
 	}
@@ -270,7 +298,8 @@ public class AlternativesEvolutionWeigthsLineChart {
 	}
 
 	private void createHorizontalMarker() {
-		Stroke dashed = new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 10.0f }, 0.0f);
+		Stroke dashed = new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
+				new float[] { 10.0f }, 0.0f);
 		_horizontalMarker = new ValueMarker(1);
 		_horizontalMarker.setLabelFont(new java.awt.Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
 		_horizontalMarker.setPaint(Color.red);
@@ -279,30 +308,42 @@ public class AlternativesEvolutionWeigthsLineChart {
 		_horizontalMarker.setLabelAnchor(RectangleAnchor.CENTER);
 		_chart.getXYPlot().addRangeMarker(_horizontalMarker);
 	}
-	
+
 	private List<XYSeries> computeEvolutionWeights() {
 		List<XYSeries> alternativesSeries = new LinkedList<XYSeries>();
 		for (int i = 0; i < _alternatives.size(); ++i) {
-			XYSeries serie = new XYSeries(_alternatives.get(i).getId());
+			//XYSeries serie = new XYSeries(_alternatives.get(i).getId());
+			XYSeries serie = new XYSeries("a"+ (i + 1));
 			serie.add(0, 0);
 			alternativesSeries.add(serie);
 		}
+
+		double increment = 0, increment1 = 0;
 		
 		Double[] alternativePreferences;
 		for (double j = 0.01; j <= 1.0; j += 0.01) {
-			alternativePreferences = _sensitivityAnalysis.computeAlternativesFinalPreferenceInferWeights(_sensitivityAnalysis.calculateInferWeights(_criterionSelected, j));
+			alternativePreferences = _sensitivityAnalysis.computeAlternativesFinalPreferenceInferWeights(
+					_sensitivityAnalysis.calculateInferWeights(_criterionSelected, j));
 			for (int s = 0; s < alternativesSeries.size(); ++s) {
 				XYSeries serie = alternativesSeries.get(s);
-				serie.add(Math.round(j * 100d) / 100d, alternativePreferences[s]);
+				if(s == 0) {
+					serie.add(Math.round(j * 100d) / 100d, alternativePreferences[s] + increment);
+					increment -= 0.0025;	
+				} else if(s == 1) {
+					serie.add(Math.round(j * 100d) / 100d, alternativePreferences[s] + increment1);
+					increment += 0.001;
+				} else {
+					serie.add(Math.round(j * 100d) / 100d, alternativePreferences[s]);
+				}
 			}
 		}
-		
+
 		return alternativesSeries;
 	}
-	
+
 	private void createDefaultDataset() {
-		for(Alternative a: _alternatives) {
-			XYSeries alternativeSerie = new XYSeries(a.getId()); //$NON-NLS-1$
+		for (Alternative a : _alternatives) {
+			XYSeries alternativeSerie = new XYSeries(a.getId()); // $NON-NLS-1$
 			alternativeSerie.add(0, 0);
 			_dataset.addSeries(alternativeSerie);
 		}

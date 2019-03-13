@@ -172,6 +172,7 @@ public class SelectionPhase implements IPhaseMethod {
 	
 	public void setWeightsDomain(FuzzySet domain) {
 		_weightsDomain = domain;
+		initializeWeightsExperts();
 	}
 	
 	public Map<Expert, LabelLinguisticDomain[]> getCriteriaWeightsByExperts() {
@@ -256,6 +257,9 @@ public class SelectionPhase implements IPhaseMethod {
 	}
 	
 	private void initializeWeightsExperts() {
+		
+		if(_weightsDomain == null) _weightsDomain = createDefaultWeightsDomain();
+		
 		for(Expert e: _elementsSet.getOnlyExpertChildren()) {
 			LabelLinguisticDomain[] weights = new LabelLinguisticDomain[_elementsSet.getAllSubcriteria().size()];
 			for(int i = 0; i < weights.length; ++i) {
@@ -542,7 +546,6 @@ public class SelectionPhase implements IPhaseMethod {
 	public void execute() {
 		createDistanceLabels();
 		createSimilarityLabels();
-		createWeightsLabels();
 		calculateDecisionMatrix();
 		calculateIdealSolution();
 		calculateNoIdealSolution();
@@ -564,11 +567,13 @@ public class SelectionPhase implements IPhaseMethod {
 		_similarityDomain.createTrapezoidalFunction(labels);
 	}
 	
-	private void createWeightsLabels() {
-		_weightsDomain = new FuzzySet();
+	public FuzzySet createDefaultWeightsDomain() {
+		FuzzySet weightsDomain = new FuzzySet();
 		String[] labels = new String[]{"Very low", "Low", "Medium low", 
 				"Medium", "Medium high", "High", "Very high"};
-		_weightsDomain.createTrapezoidalFunction(labels);
+		weightsDomain.createTrapezoidalFunction(labels);
+		weightsDomain.setId("default");
+		return weightsDomain;
 	}
 
 	@Override
