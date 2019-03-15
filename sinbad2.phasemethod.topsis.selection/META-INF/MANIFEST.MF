@@ -9,6 +9,7 @@ Require-Bundle: sinbad2.phasemethod;bundle-version="1.0.0",
  sinbad2.phasemethod.topsis.unification;bundle-version="1.0.0",
  sinbad2.valuation.hesitant,
  sinbad2.aggregationoperator.max,
- sinbad2.aggregationoperator.min
+ sinbad2.aggregationoperator.min,
+ org.engine.R
 Export-Package: sinbad2.phasemethod.topsis.selection
 Automatic-Module-Name: sinbad2.phasemethod.topsis.selection

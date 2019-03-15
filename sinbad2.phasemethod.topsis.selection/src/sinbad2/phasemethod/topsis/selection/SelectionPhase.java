@@ -37,7 +37,7 @@ public class SelectionPhase implements IPhaseMethod {
 	private Map<Expert, Valuation[][]> _decisionMatricesExperts;
 	
 	private Valuation[][] _unweightedDecisionMatrix;
-	private Valuation[][] _decisionMatrix;
+	private Valuation[][] _weightedDecisionMatrix;
 
 	private List<TwoTuple> _idealSolution;
 	private List<TwoTuple> _noIdealSolution;
@@ -85,11 +85,11 @@ public class SelectionPhase implements IPhaseMethod {
 	}
 	
 	public Valuation[][] getDecisionMatrix() {
-		return _decisionMatrix;
+		return _weightedDecisionMatrix;
 	}
 
 	public void setDecisionMatrix(TwoTuple[][] decisionMatrix) {
-		_decisionMatrix = decisionMatrix;
+		_weightedDecisionMatrix = decisionMatrix;
 	}
 	
 	public Valuation[][] getUnweightedDecisionMatrix() {
@@ -172,7 +172,7 @@ public class SelectionPhase implements IPhaseMethod {
 	
 	public void setWeightsDomain(FuzzySet domain) {
 		_weightsDomain = domain;
-		initializeWeightsExperts();
+		initializeExpertsWeights();
 	}
 	
 	public Map<Expert, LabelLinguisticDomain[]> getCriteriaWeightsByExperts() {
@@ -181,6 +181,8 @@ public class SelectionPhase implements IPhaseMethod {
 	
 	public void setCriteriaWeightsByExperts(Map<Expert, LabelLinguisticDomain[]> weightsExperts) {
 		_criteriaWeightsByExperts = weightsExperts;
+		computeWeights();
+		step5ComputeWeigthedOverallDecisionMatrix();
 	}
 	
 	public TwoTuple[] getCriteriaWeights() {
@@ -201,280 +203,7 @@ public class SelectionPhase implements IPhaseMethod {
 		_criteriaWeightsByExperts.put(e, weights);
 		
 		computeWeights();
-		computeWeigthedDecisionMatrix();
-	}
-	
-	private void calculateDecisionMatrix() {
-		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
-		UnificationPhase unificationPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
-		
-		_unificationDomain = (FuzzySet) unificationPhase.getUnifiedDomain();
-
-		computeWeights();
-		computeDecisionMatricesExperts(unificationPhase);
-		
-		_unweightedDecisionMatrix = new Valuation[_elementsSet.getAllSubcriteria().size()][_elementsSet.getAlternatives().size()];
-		_decisionMatrix = new Valuation[_elementsSet.getAllSubcriteria().size()][_elementsSet.getAlternatives().size()];
-		
-		double acum = 0;
-		for(int i = 0; i < _elementsSet.getAllSubcriteria().size(); ++i) {
-			for(int j = 0; j < _elementsSet.getAlternatives().size(); ++j) {
-				for(Expert e: _decisionMatricesExperts.keySet()) {
-					Valuation[][] dm = _decisionMatricesExperts.get(e);
-					acum += ((TwoTuple) dm[i][j]).calculateInverseDelta();
-				}
-				TwoTuple collective = new TwoTuple(_unificationDomain);
-				 collective.calculateDelta(acum / _decisionMatricesExperts.size());
-				 _unweightedDecisionMatrix[i][j] = collective;
-				acum = 0;
-			}
-		}
-		
-		computeWeigthedDecisionMatrix();
-	}
-
-	private void computeWeights() {
-		Map<Expert, TwoTuple[]> weightsTwoTuple = transformWeightsToTwoTuple();
-		computeCollectiveWeights(weightsTwoTuple);	
-	}
-
-	private Map<Expert, TwoTuple[]> transformWeightsToTwoTuple() {
-		
-		if(_criteriaWeightsByExperts.isEmpty()) {
-			initializeWeightsExperts();
-		}
-		
-		Map<Expert, TwoTuple[]> result = new HashMap<>();
-		for(Expert e: _criteriaWeightsByExperts.keySet()) {
-			LabelLinguisticDomain[] weights = _criteriaWeightsByExperts.get(e);
-			TwoTuple[] weights2T = new TwoTuple[weights.length];
-			for(int i = 0; i < weights.length; ++i) {
-				weights2T[i] = new TwoTuple(_weightsDomain, weights[i]);
-			}
-			result.put(e, weights2T);
-		}
-		return result;
-	}
-	
-	private void initializeWeightsExperts() {
-		
-		if(_weightsDomain == null) _weightsDomain = createDefaultWeightsDomain();
-		
-		for(Expert e: _elementsSet.getOnlyExpertChildren()) {
-			LabelLinguisticDomain[] weights = new LabelLinguisticDomain[_elementsSet.getAllSubcriteria().size()];
-			for(int i = 0; i < weights.length; ++i) {
-				weights[i] = _weightsDomain.getLabelSet().getLabel((_weightsDomain.getLabelSet().getCardinality() - 1) / 2);
-			}
-			_criteriaWeightsByExperts.put(e, weights);
-		}
-	}
-	
-	
-	private void computeCollectiveWeights(Map<Expert, TwoTuple[]> weightsTwoTuple) {
-		_criteriaWeights = new TwoTuple[_elementsSet.getAllSubcriteria().size()];
-		double acum;
-		for(int i = 0; i < _elementsSet.getAllSubcriteria().size(); ++i) {
-			acum = 0;
-			for(Expert e: weightsTwoTuple.keySet()) {
-				acum += weightsTwoTuple.get(e)[i].calculateInverseDelta();
-			}
-			TwoTuple weight = new TwoTuple(_weightsDomain);
-			weight.calculateDelta(acum / weightsTwoTuple.size());
-			_criteriaWeights[i] = weight;
-		}
-		
-	}
-
-	/**
-	 * Creation of experts' decision matrices
-	 * @param unificationPhase
-	 * 			TOPSIS unification phase
-	 */
-	private void computeDecisionMatricesExperts(UnificationPhase unificationPhase) {
-		_decisionMatricesExperts = new HashMap<Expert, Valuation[][]>();
-		
-		List<Expert> experts = _elementsSet.getOnlyExpertChildren();
-		List<Criterion> criteria = _elementsSet.getAllSubcriteria();
-		List<Alternative> alternatives = _elementsSet.getAlternatives();
-		for(Expert e: experts) {
-			Valuation[][] dm = new Valuation[criteria.size()][alternatives.size()]; 
-			for(Criterion c: criteria) {
-				for(Alternative a: alternatives) {
-					for(ValuationKey vk: unificationPhase.getTwoTupleValuations().keySet()) {
-						if(vk.getExpert().equals(e) && vk.getCriterion().equals(c) && vk.getAlternative().equals(a)){
-							dm[criteria.indexOf(c)][alternatives.indexOf(a)] = unificationPhase.getTwoTupleValuations().get(vk);
-						}
-					}
-				}
-			}
-			_decisionMatricesExperts.put(e, dm);
-		}
-	}
-	
-	private void computeWeigthedDecisionMatrix() {
-		Double sum = sumWeights();
-		for(int i = 0; i < _unweightedDecisionMatrix.length; ++i) {
-			TwoTuple weight = _criteriaWeights[i];
-			for(int j = 0; j < _unweightedDecisionMatrix[i].length; ++j) {
-				TwoTuple v = (TwoTuple) _unweightedDecisionMatrix[i][j];
-				TwoTuple result = new TwoTuple(_unificationDomain);
-				result.calculateDelta((v.calculateInverseDelta() * weight.calculateInverseDelta()) / sum);
-				_decisionMatrix[i][j] = result;
-			}
-		}
-	}
-	
-	private Double sumWeights() {
-		Double result = 0d;
-		for(TwoTuple w: _criteriaWeights) {		
-			result += w.calculateInverseDelta();
-		}
-		return result;
-	}
-
-	private void calculateIdealSolution() {
-		
-		_idealSolution.clear();
-		
-		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
-		AggregationOperator max = aggregationOperatorManager.getAggregationOperator(Max.ID);
-		AggregationOperator min = aggregationOperatorManager.getAggregationOperator(Min.ID);
-		
-		Valuation idealSolutionValuation = null;
-		Criterion cri;
-		
-		List<Valuation> valuationsByCriterion = new ArrayList<>();
-		for(int i = 0; i < _decisionMatrix.length; ++i) {
-			valuationsByCriterion.clear();
-			cri = _elementsSet.getAllSubcriteria().get(i);
-			for(int j = 0; j < _decisionMatrix[i].length; ++j) {
-				valuationsByCriterion.add(_decisionMatrix[i][j]);
-			}
-			
-			if(cri.isCost()) {
-				idealSolutionValuation = ((UnweightedAggregationOperator) min).aggregate(valuationsByCriterion);
-			} else {
-				idealSolutionValuation = ((UnweightedAggregationOperator) max).aggregate(valuationsByCriterion);
-			}
-			_idealSolution.add((TwoTuple) idealSolutionValuation);
-		}
-	}
-
-	private void calculateNoIdealSolution() {
-
-		_noIdealSolution.clear();
-		
-		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
-		AggregationOperator max = aggregationOperatorManager.getAggregationOperator(Max.ID);
-		AggregationOperator min = aggregationOperatorManager.getAggregationOperator(Min.ID);
-		
-		Valuation noIdealSolutionValuation = null;
-		Criterion cri;
-		
-		List<Valuation> valuationsByCriterion = new ArrayList<>();
-		for(int i = 0; i < _decisionMatrix.length; ++i) {
-			valuationsByCriterion.clear();
-			cri = _elementsSet.getAllSubcriteria().get(i);
-			for(int j = 0; j < _decisionMatrix[i].length; ++j) {
-				valuationsByCriterion.add(_decisionMatrix[i][j]);
-			}
-			
-			if(cri.isCost()) {
-				noIdealSolutionValuation = ((UnweightedAggregationOperator) max).aggregate(valuationsByCriterion);
-			} else {
-				noIdealSolutionValuation = ((UnweightedAggregationOperator) min).aggregate(valuationsByCriterion);
-			}
-			_noIdealSolution.add((TwoTuple) noIdealSolutionValuation);
-		}
-	}
-
-	private void calculateIdealEuclideanDistance() {
-		_idealDistance.clear();
-
-		TwoTuple collective, idealSolution;
-		TwoTuple distance = null;
-		
-		double acum = 0;
-		for(int i = 0; i < _decisionMatrix[0].length; ++i) {
-			acum = 0;
-			for(int j = 0; j < _decisionMatrix.length; ++j) {
-				collective = (TwoTuple) _decisionMatrix[j][i];
-				idealSolution =  _idealSolution.get(j);
-				distance = calculateDistanceBetweenTwoTuple(idealSolution, collective);
-				acum += distance.calculateInverseDelta();
-			}
-			
-			acum /= _decisionMatrix.length;
-			
-			distance.calculateDelta(acum);
-			_idealDistance.add(distance);
-		}
-	}
-	
-	private TwoTuple calculateDistanceBetweenTwoTuple(TwoTuple t1, TwoTuple t2) {
-		int t = _unificationDomain.getLabelSet().getCardinality();
-		int t_prima = _similarityDomain.getLabelSet().getCardinality();
-		int t_prima_prima = _distanceDomain.getLabelSet().getCardinality();
-		
-		int t_decrement = t - 1;
-		int t_prima_prima_decrement = t_prima_prima - 1;
-		
-		double factor = t_prima - ((Math.abs(t1.calculateInverseDelta() - t2.calculateInverseDelta()) * t_prima_prima_decrement) / t_decrement);
-		
-		TwoTuple result = new TwoTuple(_distanceDomain);
-		result.calculateDelta(t_prima - factor);
-		return result;
-	}
-
-	private void calculateNoIdealEuclideanDistance() {
-		_noIdealDistance.clear();
-
-		TwoTuple collective, noIdealSolution;
-		TwoTuple distance = null;
-
-		double acum = 0;
-		for(int i = 0; i < _decisionMatrix[0].length; ++i) {
-			acum = 0;
-			for(int j = 0; j < _decisionMatrix.length; ++j) {
-				collective = (TwoTuple) _decisionMatrix[j][i];
-				noIdealSolution = (TwoTuple) _noIdealSolution.get(j);
-				distance = calculateDistanceBetweenTwoTuple(noIdealSolution, collective);
-				acum += distance.calculateInverseDelta();
-			}
-			
-			acum /= _decisionMatrix.length;
-			
-			distance.calculateDelta(acum);
-			_noIdealDistance.add(distance);
-		}
-	}
-
-	private void calculateClosenessCoefficient() {
-		_closenessCoefficient.clear();
-
-		int t_prima_prima = _distanceDomain.getLabelSet().getCardinality();
-		
-		TwoTuple idealDistance, noIdealDistance, coefficient; 
-		double numerator, denominator, result;
-		for(int i = 0; i < _decisionMatrix[0].length; ++i) {
-			idealDistance = (TwoTuple) _idealDistance.get(i);
-			noIdealDistance = (TwoTuple) _noIdealDistance.get(i);
-			numerator = noIdealDistance.calculateInverseDelta() - 1;
-			denominator = (idealDistance.calculateInverseDelta() - 1) + (noIdealDistance.calculateInverseDelta() - 1);  
-			result = numerator / denominator;
-			result *= t_prima_prima;
-			
-			coefficient = new TwoTuple(_distanceDomain);
-			coefficient.calculateDelta(result);
-			
-			_closenessCoefficient.add(coefficient);
-		}
-		
-		computeRanking();
-	}
-
-	private void computeRanking() {
-		Collections.sort(_closenessCoefficient, new RankingComparator());
+		step5ComputeWeigthedOverallDecisionMatrix();
 	}
 	
 	@Override
@@ -488,7 +217,7 @@ public class SelectionPhase implements IPhaseMethod {
 
 		clear();
 
-		_decisionMatrix = selectionPhase.getDecisionMatrix();
+		_weightedDecisionMatrix = selectionPhase.getDecisionMatrix();
 		_unweightedDecisionMatrix = selectionPhase.getUnweightedDecisionMatrix();
 		_idealSolution = selectionPhase.getIdealSolution();
 		_noIdealSolution = selectionPhase.getNoIdealSolution();
@@ -498,8 +227,7 @@ public class SelectionPhase implements IPhaseMethod {
 	}
 
 	@Override
-	public void activate() {
-	}
+	public void activate() {}
 
 	@Override
 	public boolean validate() {
@@ -543,15 +271,15 @@ public class SelectionPhase implements IPhaseMethod {
 		_decisionMatricesExperts.clear();
 	}
 
-	public void execute() {
+	public void execute() {		
 		createDistanceLabels();
 		createSimilarityLabels();
 		calculateDecisionMatrix();
-		calculateIdealSolution();
-		calculateNoIdealSolution();
-		calculateIdealEuclideanDistance();
-		calculateNoIdealEuclideanDistance();
-		calculateClosenessCoefficient();
+		step6CalculateIdealSolution();
+		step6CalculateNoIdealSolution();
+		step7CalculateIdealEuclideanDistance();
+		step7CalculateNoIdealEuclideanDistance();
+		step8CalculateClosenessCoefficient();
 	}
 	
 	private void createDistanceLabels() {
@@ -569,11 +297,278 @@ public class SelectionPhase implements IPhaseMethod {
 	
 	public FuzzySet createDefaultWeightsDomain() {
 		FuzzySet weightsDomain = new FuzzySet();
-		String[] labels = new String[]{"Very low", "Low", "Medium low", 
-				"Medium", "Medium high", "High", "Very high"};
+		String[] labels = new String[]{"Very low", "Low", "Medium low", "Medium", "Medium high", "High", "Very high"};
 		weightsDomain.createTrapezoidalFunction(labels);
 		weightsDomain.setId("default");
 		return weightsDomain;
+	}
+	
+	private void calculateDecisionMatrix() {
+		PhasesMethodManager pmm = PhasesMethodManager.getInstance();
+		UnificationPhase unificationPhase = (UnificationPhase) pmm.getPhaseMethod(UnificationPhase.ID).getImplementation();
+		
+		_unificationDomain = (FuzzySet) unificationPhase.getUnifiedDomain();
+
+		computeWeights();
+		step3TransformExpertsMatricesInto2Tuple(unificationPhase);
+		step4ComputeUnweightedOverallDecisionMatrix();
+		step5ComputeWeigthedOverallDecisionMatrix();
+	}
+
+	private void computeWeights() {
+		Map<Expert, TwoTuple[]> weightsTwoTuple = step1TransformWeightsIntoTwoTuple();
+		step2ComputeCollectiveWeights(weightsTwoTuple);	
+	}
+	
+	private Map<Expert, TwoTuple[]> step1TransformWeightsIntoTwoTuple() {
+		
+		if(_criteriaWeightsByExperts.isEmpty()) {
+			initializeExpertsWeights();
+		}
+		
+		Map<Expert, TwoTuple[]> result = new HashMap<>();
+		for(Expert e: _criteriaWeightsByExperts.keySet()) {
+			LabelLinguisticDomain[] weights = _criteriaWeightsByExperts.get(e);
+			TwoTuple[] weights2T = new TwoTuple[weights.length];
+			for(int i = 0; i < weights.length; ++i) {
+				weights2T[i] = new TwoTuple(_weightsDomain, weights[i]);
+			}
+			result.put(e, weights2T);
+		}
+		return result;
+	}
+	
+	private void initializeExpertsWeights() {
+		
+		if(_weightsDomain == null) _weightsDomain = createDefaultWeightsDomain();
+		
+		for(Expert e: _elementsSet.getOnlyExpertChildren()) {
+			LabelLinguisticDomain[] weights = new LabelLinguisticDomain[_elementsSet.getAllSubcriteria().size()];
+			for(int i = 0; i < weights.length; ++i) {
+				weights[i] = _weightsDomain.getLabelSet().getLabel((_weightsDomain.getLabelSet().getCardinality() - 1) / 2);
+			}
+			_criteriaWeightsByExperts.put(e, weights);
+		}
+	}
+	
+	private void step2ComputeCollectiveWeights(Map<Expert, TwoTuple[]> weightsTwoTuple) {
+		_criteriaWeights = new TwoTuple[_elementsSet.getAllSubcriteria().size()];
+		double acum;
+		for(int i = 0; i < _elementsSet.getAllSubcriteria().size(); ++i) {
+			acum = 0;
+			for(Expert e: weightsTwoTuple.keySet()) {
+				acum += weightsTwoTuple.get(e)[i].calculateInverseDelta();
+			}
+			TwoTuple weight = new TwoTuple(_weightsDomain);
+			weight.calculateDelta(acum / weightsTwoTuple.size());
+			_criteriaWeights[i] = weight;
+		}
+	}
+	
+	/**
+	 * Creation of experts' decision matrices
+	 * @param unificationPhase
+	 * 			TOPSIS unification phase
+	 */
+	private void step3TransformExpertsMatricesInto2Tuple(UnificationPhase unificationPhase) {
+		_decisionMatricesExperts = new HashMap<Expert, Valuation[][]>();
+		
+		List<Expert> experts = _elementsSet.getOnlyExpertChildren();
+		List<Criterion> criteria = _elementsSet.getAllSubcriteria();
+		List<Alternative> alternatives = _elementsSet.getAlternatives();
+		for(Expert e: experts) {
+			Valuation[][] dm = new Valuation[criteria.size()][alternatives.size()]; 
+			for(int c = 0; c < criteria.size(); ++c) {
+				for(int a = 0; a < alternatives.size(); ++a) {
+					TwoTuple twoTuple = (TwoTuple) unificationPhase.getTwoTupleValuations().get(new ValuationKey(e, alternatives.get(a), criteria.get(c)));
+					dm[c][a] = twoTuple;
+				}
+			}
+			_decisionMatricesExperts.put(e, dm);
+		}
+	}
+	
+	private void step4ComputeUnweightedOverallDecisionMatrix() {
+		_unweightedDecisionMatrix = new Valuation[_elementsSet.getAllSubcriteria().size()][_elementsSet.getAlternatives().size()];
+	
+		double acum = 0;
+		for(int i = 0; i < _elementsSet.getAllSubcriteria().size(); ++i) {
+			for(int j = 0; j < _elementsSet.getAlternatives().size(); ++j) {
+				for(Expert e: _decisionMatricesExperts.keySet()) {
+					Valuation[][] dm = _decisionMatricesExperts.get(e);
+					acum += ((TwoTuple) dm[i][j]).calculateInverseDelta();
+				}
+				
+				TwoTuple collective = new TwoTuple(_unificationDomain);
+				 collective.calculateDelta(acum / _decisionMatricesExperts.size());
+				 _unweightedDecisionMatrix[i][j] = collective;
+				acum = 0;
+			}
+		}
+	}
+	
+	private void step5ComputeWeigthedOverallDecisionMatrix() {
+		_weightedDecisionMatrix = new Valuation[_elementsSet.getAllSubcriteria().size()][_elementsSet.getAlternatives().size()];
+
+		Double sum = sumWeights();
+		for(int i = 0; i < _unweightedDecisionMatrix.length; ++i) {
+			TwoTuple weight = _criteriaWeights[i];
+			for(int j = 0; j < _unweightedDecisionMatrix[i].length; ++j) {
+				TwoTuple v = (TwoTuple) _unweightedDecisionMatrix[i][j];
+				TwoTuple result = new TwoTuple(_unificationDomain);
+				result.calculateDelta((v.calculateInverseDelta() * weight.calculateInverseDelta()) / sum);
+				_weightedDecisionMatrix[i][j] = result;
+			}
+		}
+		_weightedDecisionMatrix = _unweightedDecisionMatrix;
+	}
+	
+	private Double sumWeights() {
+		Double result = 0d;
+		for(TwoTuple w: _criteriaWeights) {		
+			result += w.calculateInverseDelta();
+		}
+		return result;
+	}
+
+	
+	private void step6CalculateIdealSolution() {
+		
+		_idealSolution.clear();
+		
+		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
+		AggregationOperator max = aggregationOperatorManager.getAggregationOperator(Max.ID);
+		AggregationOperator min = aggregationOperatorManager.getAggregationOperator(Min.ID);
+		
+		Valuation idealSolutionValuation = null;
+		Criterion cri;
+		
+		List<Valuation> valuationsByCriterion = new ArrayList<>();
+		for(int i = 0; i < _weightedDecisionMatrix.length; ++i) {
+			valuationsByCriterion.clear();
+			cri = _elementsSet.getAllSubcriteria().get(i);
+			for(int j = 0; j < _weightedDecisionMatrix[i].length; ++j) {
+				valuationsByCriterion.add(_weightedDecisionMatrix[i][j]);
+			}
+			
+			if(cri.isCost()) {
+				idealSolutionValuation = ((UnweightedAggregationOperator) min).aggregate(valuationsByCriterion);
+			} else {
+				idealSolutionValuation = ((UnweightedAggregationOperator) max).aggregate(valuationsByCriterion);
+			}
+			_idealSolution.add((TwoTuple) idealSolutionValuation);
+		}
+	}
+	
+	private void step6CalculateNoIdealSolution() {
+
+		_noIdealSolution.clear();
+		
+		AggregationOperatorsManager aggregationOperatorManager = AggregationOperatorsManager.getInstance();
+		AggregationOperator max = aggregationOperatorManager.getAggregationOperator(Max.ID);
+		AggregationOperator min = aggregationOperatorManager.getAggregationOperator(Min.ID);
+		
+		Valuation noIdealSolutionValuation = null;
+		Criterion cri;
+		
+		List<Valuation> valuationsByCriterion = new ArrayList<>();
+		for(int i = 0; i < _weightedDecisionMatrix.length; ++i) {
+			valuationsByCriterion.clear();
+			cri = _elementsSet.getAllSubcriteria().get(i);
+			for(int j = 0; j < _weightedDecisionMatrix[i].length; ++j) {
+				valuationsByCriterion.add(_weightedDecisionMatrix[i][j]);
+			}
+			
+			if(cri.isCost()) {
+				noIdealSolutionValuation = ((UnweightedAggregationOperator) max).aggregate(valuationsByCriterion);
+			} else {
+				noIdealSolutionValuation = ((UnweightedAggregationOperator) min).aggregate(valuationsByCriterion);
+			}
+			_noIdealSolution.add((TwoTuple) noIdealSolutionValuation);
+		}
+	}
+
+	private void step7CalculateIdealEuclideanDistance() {
+		_idealDistance.clear();
+
+		TwoTuple collective, idealSolution;
+		TwoTuple distance = null;
+		
+		double acum = 0;
+		for(int i = 0; i < _weightedDecisionMatrix[0].length; ++i) { //alternatives
+			acum = 0;
+			for(int j = 0; j < _weightedDecisionMatrix.length; ++j) { //criteria
+				collective = (TwoTuple) _weightedDecisionMatrix[j][i];
+				idealSolution =  _idealSolution.get(j);
+				distance = calculateDistanceBetweenTwoTuple(idealSolution, collective);
+				acum += distance.calculateInverseDelta();
+			}
+			
+			acum /= _weightedDecisionMatrix.length;
+			
+			distance.calculateDelta(acum);
+			_idealDistance.add(distance);
+		}
+	}
+	
+	private TwoTuple calculateDistanceBetweenTwoTuple(TwoTuple t1, TwoTuple t2) {
+		int t = _unificationDomain.getLabelSet().getCardinality() - 1;
+		int t_prima = _similarityDomain.getLabelSet().getCardinality() - 1;
+		int t_prima_prima = _distanceDomain.getLabelSet().getCardinality() - 1;
+		
+		double factor = t_prima - (t_prima - ((Math.abs(t1.calculateInverseDelta() - t2.calculateInverseDelta()) * (t_prima_prima - 1)) / (t - 1)));
+		
+		TwoTuple result = new TwoTuple(_distanceDomain);
+		result.calculateDelta(factor);
+		
+		return result;
+	}
+
+	private void step7CalculateNoIdealEuclideanDistance() {
+		_noIdealDistance.clear();
+
+		TwoTuple collective, noIdealSolution;
+		TwoTuple distance = null;
+
+		double acum = 0;
+		for(int i = 0; i < _weightedDecisionMatrix[0].length; ++i) {//alternatives
+			acum = 0;
+			for(int j = 0; j < _weightedDecisionMatrix.length; ++j) {//criteria
+				collective = (TwoTuple) _weightedDecisionMatrix[j][i];
+				noIdealSolution = (TwoTuple) _noIdealSolution.get(j);
+				distance = calculateDistanceBetweenTwoTuple(noIdealSolution, collective);
+				acum += distance.calculateInverseDelta();
+			}
+			
+			acum /= _weightedDecisionMatrix.length;
+			
+			distance.calculateDelta(acum);
+			_noIdealDistance.add(distance);
+		}
+	}
+
+	private void step8CalculateClosenessCoefficient() {
+		_closenessCoefficient.clear();
+
+		int t_prima_prima = _distanceDomain.getLabelSet().getCardinality() - 1;
+		
+		TwoTuple idealDistance, noIdealDistance, coefficient; 
+		double closeness;
+		for(int i = 0; i < _weightedDecisionMatrix[0].length; ++i) {
+			idealDistance = (TwoTuple) _idealDistance.get(i);
+			noIdealDistance = (TwoTuple) _noIdealDistance.get(i);
+			closeness = (noIdealDistance.calculateInverseDelta()) / ((idealDistance.calculateInverseDelta()) + (noIdealDistance.calculateInverseDelta())) * t_prima_prima;
+			coefficient = new TwoTuple(_distanceDomain);
+			coefficient.calculateDelta(closeness);
+			
+			_closenessCoefficient.add(coefficient);
+		}
+		
+		computeRanking();
+	}
+
+	private void computeRanking() {
+		Collections.sort(_closenessCoefficient, new RankingComparator());
 	}
 
 	@Override

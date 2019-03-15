@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -20,6 +22,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -50,6 +53,7 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 	
 	private Composite _parent;
 	private Composite _tableComposite;
+	private Composite _chartView;
 	
 	private ExpertsWeightTable _expertsWeightTable;
 	private Combo _selectorDomain;
@@ -184,6 +188,8 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 			}
 
 			private void readFileContent(String fileName) {
+				Map<Expert, LabelLinguisticDomain[]> expertsWeights = new HashMap<>();
+				
 				FileReader fr = null;
 				BufferedReader br = null;
 				try {
@@ -191,15 +197,28 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 					br = new BufferedReader(fr);
 					
 					String sCurrentLine;
+					
 					while ((sCurrentLine = br.readLine()) != null) {
 						String[] info = sCurrentLine.split(":");
 						Expert e = _elementsSet.getExpert(info[0]);
 						Criterion criterion = _elementsSet.getCriterion(info[1]);
 						LabelLinguisticDomain weight = _selectionPhase.getWeightsDomain().getLabelSet().getLabel(info[2]);
-						_selectionPhase.setExpertWeight(e, _elementsSet.getAllSubcriteria().indexOf(criterion), weight);
+						
+						LabelLinguisticDomain[] weights;
+						if(expertsWeights.get(e) == null) {
+							weights = new LabelLinguisticDomain[ _elementsSet.getAllSubcriteria().size()];
+							expertsWeights.put(e, weights);
+						} else {
+							weights = expertsWeights.get(e);
+						}
+						
+						weights[_elementsSet.getAllSubcriteria().indexOf(criterion)] = weight;
 					}
+					
+					_selectionPhase.setCriteriaWeightsByExperts(expertsWeights);
 					_expertsWeightTable.redraw();
 					_expertsWeightTable.notifyChanges();
+					
 				} catch (IOException e) {
 					e.printStackTrace();
 				} finally {
@@ -230,6 +249,13 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 				_expertsWeightTable.redraw();
 				_selectionPhase.execute();
 				_expertsWeightTable.notifyChanges();
+				
+				if(_chart != null) {
+					for(Control control:_chartView.getChildren()) {
+						control.dispose();
+					}
+					_chart.initialize(_selectionPhase.getWeightsDomain(), _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
+				}			
 			}
 		});
 	}
@@ -256,16 +282,16 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 		chartViewParent.setLayout(layout);
 		chartViewParent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		final Composite chartView = new Composite(chartViewParent, SWT.BORDER);
-		chartView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		_chartView = new Composite(chartViewParent, SWT.BORDER);
+		_chartView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		_chart = new LinguisticDomainChart();
-		_chart.initialize(_selectionPhase.getWeightsDomain(), chartView, chartView.getSize().x, chartView.getSize().y, SWT.BORDER);
+		_chart.initialize(_selectionPhase.getWeightsDomain(), _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
 		
-		chartView.addControlListener(new ControlAdapter() {
+		_chartView.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
-				_chart.updateSize(chartView.getSize().x, _parent.getSize().y - _tableComposite.getSize().y - 35);
+				_chart.updateSize(_chartView.getSize().x, _parent.getSize().y - _tableComposite.getSize().y - 35);
 			}
 		});
 	}

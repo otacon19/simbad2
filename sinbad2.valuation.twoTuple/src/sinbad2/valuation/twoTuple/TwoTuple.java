@@ -188,4 +188,8 @@ public class TwoTuple extends LinguisticValuation {
 		
 		return result;
 	}
+
+	public Object prettyDecisionMatrixFormat() {
+		return "(s" + (((FuzzySet) _domain).getLabelSet().getPos(_label) + 1) + ", " +  Math.round(_alpha * 10000d) / 10000d + ")";
+	}
 }
