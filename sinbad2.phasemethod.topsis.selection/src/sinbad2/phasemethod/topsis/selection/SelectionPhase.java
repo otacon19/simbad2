@@ -420,7 +420,6 @@ public class SelectionPhase implements IPhaseMethod {
 				_weightedDecisionMatrix[i][j] = result;
 			}
 		}
-		_weightedDecisionMatrix = _unweightedDecisionMatrix;
 	}
 	
 	private Double sumWeights() {

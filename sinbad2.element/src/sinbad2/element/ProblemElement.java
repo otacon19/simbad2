@@ -33,7 +33,7 @@ public abstract class ProblemElement implements Cloneable, Comparable<ProblemEle
 	public int compareTo(ProblemElement other) {
 		Validator.notNull(other);
 		
-		return getCanonicalId().compareTo(other.getCanonicalId());
+		return getId().compareTo(other.getId());
 	}
 
 	@Override

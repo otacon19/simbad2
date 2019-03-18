@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -202,22 +204,30 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 						String[] info = sCurrentLine.split(":");
 						Expert e = _elementsSet.getExpert(info[0]);
 						Criterion criterion = _elementsSet.getCriterion(info[1]);
+						
 						LabelLinguisticDomain weight = _selectionPhase.getWeightsDomain().getLabelSet().getLabel(info[2]);
-						
-						LabelLinguisticDomain[] weights;
-						if(expertsWeights.get(e) == null) {
-							weights = new LabelLinguisticDomain[ _elementsSet.getAllSubcriteria().size()];
-							expertsWeights.put(e, weights);
+						if(weight == null) {
+							MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Import", "The imported weights must match with the selected domain");
+							break;
 						} else {
-							weights = expertsWeights.get(e);
+							LabelLinguisticDomain[] weights;
+							if(expertsWeights.get(e) == null) {
+								weights = new LabelLinguisticDomain[_elementsSet.getAllSubcriteria().size()];
+								expertsWeights.put(e, weights);
+							} else {
+								weights = expertsWeights.get(e);
+							}
+							
+							weights[_elementsSet.getAllSubcriteria().indexOf(criterion)] = weight;
 						}
-						
-						weights[_elementsSet.getAllSubcriteria().indexOf(criterion)] = weight;
 					}
 					
-					_selectionPhase.setCriteriaWeightsByExperts(expertsWeights);
-					_expertsWeightTable.redraw();
-					_expertsWeightTable.notifyChanges();
+					if(expertsWeights.size() == _elementsSet.getOnlyExpertChildren().size()) {
+						_selectionPhase.setCriteriaWeightsByExperts(expertsWeights);
+						_expertsWeightTable.redraw();
+						_selectionPhase.execute();
+						_expertsWeightTable.notifyChanges();
+					}
 					
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -246,16 +256,17 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 				} else {
 					_selectionPhase.setWeightsDomain(_selectionPhase.createDefaultWeightsDomain());
 				}
-				_expertsWeightTable.redraw();
-				_selectionPhase.execute();
-				_expertsWeightTable.notifyChanges();
 				
 				if(_chart != null) {
 					for(Control control:_chartView.getChildren()) {
 						control.dispose();
 					}
 					_chart.initialize(_selectionPhase.getWeightsDomain(), _chartView, _chartView.getSize().x, _chartView.getSize().y, SWT.BORDER);
-				}			
+				}	
+				
+				_expertsWeightTable.redraw();
+				_selectionPhase.execute();
+				_expertsWeightTable.notifyChanges();
 			}
 		});
 	}

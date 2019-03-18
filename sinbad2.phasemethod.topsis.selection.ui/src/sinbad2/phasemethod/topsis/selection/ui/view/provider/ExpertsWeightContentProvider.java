@@ -1,5 +1,6 @@
 package sinbad2.phasemethod.topsis.selection.ui.view.provider;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import sinbad2.domain.linguistic.fuzzy.FuzzySet;
 import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.listener.IChangeWeightListener;
 
@@ -158,7 +160,9 @@ public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
 	}
 
 	private Object criterionAbbreviation(int pos) {
-		return _elementsSet.getAllSubcriteria().get(pos - 1).getId();
+		List<Criterion> orderedCriteria = new LinkedList<>(_elementsSet.getAllSubcriteria());
+		Collections.sort(orderedCriteria);
+		return orderedCriteria.get(pos - 1).getId();
 	}
 	
 	private Object expertAbbreviation(int pos) {

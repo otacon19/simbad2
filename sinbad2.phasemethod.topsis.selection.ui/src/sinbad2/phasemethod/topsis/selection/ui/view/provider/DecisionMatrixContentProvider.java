@@ -1,5 +1,9 @@
 package sinbad2.phasemethod.topsis.selection.ui.view.provider;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
@@ -12,6 +16,7 @@ import de.kupzog.ktable.renderers.FixedCellRenderer;
 import de.kupzog.ktable.renderers.TextCellRenderer;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.criterion.Criterion;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
@@ -126,7 +131,9 @@ public class DecisionMatrixContentProvider extends KTableNoScrollModel  {
 	}
 
 	private Object criterionAbbreviation(int pos) {
-		return _elementsSet.getAllSubcriteria().get(pos - 1).getId();
+		List<Criterion> orderedCriteria = new LinkedList<>(_elementsSet.getAllSubcriteria());
+		Collections.sort(orderedCriteria);
+		return orderedCriteria.get(pos - 1).getId();
 	}
 	
 	private Object alternativeAbbreviation(int pos) {

@@ -173,7 +173,8 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 						}
 					}
 					_unificationPhase.setTwoTupleValuations(newValuations);
-					notifyWeigthChanged();
+					_selectionPhase.execute();
+					refreshTables();
 				} catch (IOException e) {
 					e.printStackTrace();
 				} finally {
@@ -418,7 +419,6 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 
 	@Override
 	public void notifyWeigthChanged() {
-		_selectionPhase.execute();
 		refreshTables();
 	}
 

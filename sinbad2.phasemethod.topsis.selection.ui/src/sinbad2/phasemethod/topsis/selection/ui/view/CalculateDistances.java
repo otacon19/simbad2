@@ -487,7 +487,6 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 	@Override
 	public void dispose() {
 		super.dispose();
-		
 		ExpertsWeightContentProvider.removeChangeWeightListener(this);
 	}
 
