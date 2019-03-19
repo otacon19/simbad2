@@ -547,7 +547,7 @@ public class SelectionPhase implements IPhaseMethod {
 		for(int i = 0; i < _weightedDecisionMatrix[0].length; ++i) {
 			idealDistance = (TwoTuple) _idealDistance.get(i);
 			noIdealDistance = (TwoTuple) _noIdealDistance.get(i);
-			closeness = t_prima_prima - ((noIdealDistance.calculateInverseDelta()) / ((idealDistance.calculateInverseDelta()) + (noIdealDistance.calculateInverseDelta()))) * t_prima_prima;
+			closeness = ((noIdealDistance.calculateInverseDelta()) / ((idealDistance.calculateInverseDelta()) + (noIdealDistance.calculateInverseDelta()))) * t_prima_prima;
 			coefficient = new TwoTuple(_distanceDomain);
 			coefficient.calculateDelta(closeness);
 			disorderedCoefficients.put(_elementsSet.getAlternatives().get(i), coefficient);
@@ -562,7 +562,7 @@ public class SelectionPhase implements IPhaseMethod {
         List<Entry<Alternative, TwoTuple>> list = new ArrayList<Entry<Alternative, TwoTuple>>(set);
         Collections.sort(list, new Comparator<Map.Entry<Alternative, TwoTuple>>() {
             public int compare( Map.Entry<Alternative, TwoTuple> o1, Map.Entry<Alternative, TwoTuple> o2) {
-                return (o1.getValue()).compareTo(o2.getValue());
+                return (o2.getValue()).compareTo(o1.getValue());
             }
         });
 
