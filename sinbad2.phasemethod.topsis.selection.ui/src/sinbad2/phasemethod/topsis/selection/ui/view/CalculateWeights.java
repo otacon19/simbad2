@@ -42,6 +42,7 @@ import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.PhasesMethodManager;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.nls.Messages;
+import sinbad2.phasemethod.topsis.selection.ui.view.provider.ExpertsWeightContentProvider;
 import sinbad2.phasemethod.topsis.selection.ui.view.table.ExpertsWeightTable;
 import sinbad2.resolutionphase.rating.ui.listener.IStepStateListener;
 import sinbad2.resolutionphase.rating.ui.view.RatingView;
@@ -226,7 +227,7 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 						_selectionPhase.setCriteriaWeightsByExperts(expertsWeights);
 						_expertsWeightTable.redraw();
 						_selectionPhase.execute();
-						_expertsWeightTable.notifyChanges();
+						ExpertsWeightContentProvider.notifyChangeWeightListeners();
 					}
 					
 				} catch (IOException e) {
@@ -266,7 +267,7 @@ public class CalculateWeights extends ViewPart implements IStepStateListener {
 				
 				_expertsWeightTable.redraw();
 				_selectionPhase.execute();
-				_expertsWeightTable.notifyChanges();
+				ExpertsWeightContentProvider.notifyChangeWeightListeners();
 			}
 		});
 	}

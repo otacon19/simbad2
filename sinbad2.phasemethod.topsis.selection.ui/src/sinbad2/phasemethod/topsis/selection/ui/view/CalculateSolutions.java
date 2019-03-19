@@ -174,7 +174,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 					}
 					_unificationPhase.setTwoTupleValuations(newValuations);
 					_selectionPhase.execute();
-					refreshTables();
+					ExpertsWeightContentProvider.notifyChangeWeightListeners();
 				} catch (IOException e) {
 					e.printStackTrace();
 				} finally {

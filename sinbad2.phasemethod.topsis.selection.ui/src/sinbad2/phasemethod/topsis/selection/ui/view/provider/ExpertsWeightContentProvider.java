@@ -222,7 +222,7 @@ public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
 		_listeners.remove(listener);
 	}
 	
-	public void notifyChangeWeightListeners() {
+	public static void notifyChangeWeightListeners() {
 		for(IChangeWeightListener listener: _listeners) {
 			listener.notifyWeigthChanged();
 		}
