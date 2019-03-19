@@ -1,12 +1,16 @@
 package sinbad2.phasemethod.topsis.selection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import sinbad2.aggregationoperator.AggregationOperator;
 import sinbad2.aggregationoperator.AggregationOperatorsManager;
@@ -45,7 +49,7 @@ public class SelectionPhase implements IPhaseMethod {
 	private List<TwoTuple> _idealDistance;
 	private List<TwoTuple> _noIdealDistance;
 
-	private List<TwoTuple> _closenessCoefficient;
+	private Map<Alternative, TwoTuple> _closenessCoefficient;
 	
 	private Map<Expert, LabelLinguisticDomain[]> _criteriaWeightsByExperts;
 	private TwoTuple[] _criteriaWeights;
@@ -57,12 +61,6 @@ public class SelectionPhase implements IPhaseMethod {
 
 	private ProblemElementsSet _elementsSet;
 
-	private static class RankingComparator implements Comparator<TwoTuple> {
-		public int compare(TwoTuple cd1, TwoTuple cd2) {
-			return cd1.compareTo(cd2);
-		}
-	}
-
 	public SelectionPhase() {
 		ProblemElementsManager elementsManager = ProblemElementsManager.getInstance();
 		_elementsSet = elementsManager.getActiveElementSet();
@@ -73,7 +71,7 @@ public class SelectionPhase implements IPhaseMethod {
 		_idealDistance = new LinkedList<TwoTuple>();
 		_noIdealDistance = new LinkedList<TwoTuple>();
 		
-		_closenessCoefficient = new LinkedList<TwoTuple>();
+		_closenessCoefficient = new LinkedHashMap<>();
 		_decisionMatricesExperts = new HashMap<>();
 		
 		_criteriaWeightsByExperts = new HashMap<>();
@@ -132,11 +130,11 @@ public class SelectionPhase implements IPhaseMethod {
 		_noIdealDistance = noIdealDistance;
 	}
 
-	public List<TwoTuple> getClosenessCoeficient() {
+	public Map<Alternative, TwoTuple> getClosenessCoeficient() {
 		return _closenessCoefficient;
 	}
 
-	public void setClosenessCoefficient(List<TwoTuple> closenessCoeficient) {
+	public void setClosenessCoefficient(Map<Alternative, TwoTuple> closenessCoeficient) {
 		_closenessCoefficient = closenessCoeficient;
 	}
 
@@ -181,8 +179,6 @@ public class SelectionPhase implements IPhaseMethod {
 	
 	public void setCriteriaWeightsByExperts(Map<Expert, LabelLinguisticDomain[]> weightsExperts) {
 		_criteriaWeightsByExperts = weightsExperts;
-		computeWeights();
-		step5ComputeWeigthedOverallDecisionMatrix();
 	}
 	
 	public TwoTuple[] getCriteriaWeights() {
@@ -201,9 +197,6 @@ public class SelectionPhase implements IPhaseMethod {
 		LabelLinguisticDomain[] weights = _criteriaWeightsByExperts.get(e);
 		weights[crit] = weight;
 		_criteriaWeightsByExperts.put(e, weights);
-		
-		computeWeights();
-		step5ComputeWeigthedOverallDecisionMatrix();
 	}
 	
 	@Override
@@ -410,24 +403,22 @@ public class SelectionPhase implements IPhaseMethod {
 	private void step5ComputeWeigthedOverallDecisionMatrix() {
 		_weightedDecisionMatrix = new Valuation[_elementsSet.getAllSubcriteria().size()][_elementsSet.getAlternatives().size()];
 
-		Double sum = sumWeights();
+		TwoTuple maxWeight = getMaxWeight();
 		for(int i = 0; i < _unweightedDecisionMatrix.length; ++i) {
 			TwoTuple weight = _criteriaWeights[i];
 			for(int j = 0; j < _unweightedDecisionMatrix[i].length; ++j) {
 				TwoTuple v = (TwoTuple) _unweightedDecisionMatrix[i][j];
 				TwoTuple result = new TwoTuple(_unificationDomain);
-				result.calculateDelta((v.calculateInverseDelta() * weight.calculateInverseDelta()) / sum);
+				result.calculateDelta((v.calculateInverseDelta() * (weight.calculateInverseDelta() / maxWeight.calculateInverseDelta())));
 				_weightedDecisionMatrix[i][j] = result;
 			}
 		}
 	}
 	
-	private Double sumWeights() {
-		Double result = 0d;
-		for(TwoTuple w: _criteriaWeights) {		
-			result += w.calculateInverseDelta();
-		}
-		return result;
+	private TwoTuple getMaxWeight() {
+		List<TwoTuple> auxWeights = new LinkedList<TwoTuple>(Arrays.asList(_criteriaWeights));
+		Collections.sort(auxWeights);
+		return auxWeights.get(auxWeights.size() - 1);
 	}
 
 	
@@ -547,8 +538,8 @@ public class SelectionPhase implements IPhaseMethod {
 	}
 
 	private void step8CalculateClosenessCoefficient() {
-		_closenessCoefficient.clear();
-
+		Map<Alternative, TwoTuple> disorderedCoefficients = new HashMap<>();
+		
 		int t_prima_prima = _distanceDomain.getLabelSet().getCardinality() - 1;
 		
 		TwoTuple idealDistance, noIdealDistance, coefficient; 
@@ -556,18 +547,28 @@ public class SelectionPhase implements IPhaseMethod {
 		for(int i = 0; i < _weightedDecisionMatrix[0].length; ++i) {
 			idealDistance = (TwoTuple) _idealDistance.get(i);
 			noIdealDistance = (TwoTuple) _noIdealDistance.get(i);
-			closeness = (noIdealDistance.calculateInverseDelta()) / ((idealDistance.calculateInverseDelta()) + (noIdealDistance.calculateInverseDelta())) * t_prima_prima;
+			closeness = t_prima_prima - ((noIdealDistance.calculateInverseDelta()) / ((idealDistance.calculateInverseDelta()) + (noIdealDistance.calculateInverseDelta()))) * t_prima_prima;
 			coefficient = new TwoTuple(_distanceDomain);
 			coefficient.calculateDelta(closeness);
-			
-			_closenessCoefficient.add(coefficient);
+			disorderedCoefficients.put(_elementsSet.getAlternatives().get(i), coefficient);
 		}
-		
-		computeRanking();
+		orderCoefficients(disorderedCoefficients);
 	}
 
-	private void computeRanking() {
-		Collections.sort(_closenessCoefficient, new RankingComparator());
+	private void orderCoefficients(Map<Alternative, TwoTuple> disorderedCoefficients) {
+		_closenessCoefficient.clear();
+		
+		Set<Entry<Alternative, TwoTuple>> set = disorderedCoefficients.entrySet();
+        List<Entry<Alternative, TwoTuple>> list = new ArrayList<Entry<Alternative, TwoTuple>>(set);
+        Collections.sort(list, new Comparator<Map.Entry<Alternative, TwoTuple>>() {
+            public int compare( Map.Entry<Alternative, TwoTuple> o1, Map.Entry<Alternative, TwoTuple> o2) {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        for(Entry<Alternative, TwoTuple> entry: list) {
+        	_closenessCoefficient.put(entry.getKey(), entry.getValue());
+        }
 	}
 
 	@Override

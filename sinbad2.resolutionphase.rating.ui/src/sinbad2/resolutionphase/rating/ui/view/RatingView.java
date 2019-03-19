@@ -263,6 +263,14 @@ public class RatingView extends ViewPart {
 		    	@Override
 		    	public void widgetSelected(SelectionEvent e) {
 		    		_numStep = _tabFolder.getSelectionIndex();
+		    		
+		    		int numSteps = 0;
+		    		for(PhaseMethodUI phase: _methodUISelected.getPhasesUI()) {
+		    			numSteps += _phasesMethodUIManager.getStepsPhaseMethod(phase.getId()).size();
+		    		}
+		    		
+		    		_stepValue.setText("(" + _numStep + "/" + numSteps + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		    		
 		    		if(_numStep == 0) {
 		    			_backButton.setEnabled(false);
 		    		} else if(_numStep == _tabFolder.getItemCount() - 1) {

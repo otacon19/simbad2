@@ -182,6 +182,7 @@ public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
 		_selectionPhase.setExpertWeight(_elementsSet.getOnlyExpertChildren().get(row - 1), col - 1, newWeight);
 		
 		if(oldWeight != newWeight) {
+			_selectionPhase.execute();
 			notifyChangeWeightListeners();
 		}	
 		

@@ -2,32 +2,36 @@ package sinbad2.phasemethod.topsis.selection.ui.view.provider;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import sinbad2.element.ProblemElementsManager;
-import sinbad2.element.ProblemElementsSet;
+import sinbad2.element.alternative.Alternative;
 import sinbad2.valuation.twoTuple.TwoTuple;
 
 public class ClosenessCoefficientsTableViewerContentProvider implements IStructuredContentProvider {
 
 	private List<Object[]> _closenessCoefficients;
-	private ProblemElementsSet _elementsSet;
 	
 	public ClosenessCoefficientsTableViewerContentProvider() {
 		_closenessCoefficients = new LinkedList<Object[]>();
-		_elementsSet = ProblemElementsManager.getInstance().getActiveElementSet();
+		ProblemElementsManager.getInstance().getActiveElementSet();
 	}
 	
-	public void setInput(List<TwoTuple> closenessCoefficients) {
+	public void setInput(Map<Alternative, TwoTuple> closenessCoefficients) {
 		_closenessCoefficients.clear();
 		Object[] data;
-		for(int i = 0; i < closenessCoefficients.size(); ++i) {
+		
+		int ranking = 1;
+		for(Alternative a: closenessCoefficients.keySet()) {
 			data = new Object[3];
-			data[0] = _elementsSet.getAlternatives().get(i);
-			data[1] = closenessCoefficients.get(i);
-			data[2] = i + 1;
+			data[0] = a;
+			data[1] = closenessCoefficients.get(a);
+			data[2] = ranking;
+			
+			ranking++;
 			
 			_closenessCoefficients.add(data);
 		}

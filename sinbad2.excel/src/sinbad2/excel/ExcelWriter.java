@@ -92,9 +92,9 @@ public abstract class ExcelWriter {
 	 * @param fileName
 	 *            Nombre del archivo de salida.
 	 * @throws IOException
-	 *             Si existe algún error accediendo al archivo.
+	 *             Si existe algï¿½n error accediendo al archivo.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura.
+	 *             Si existe algï¿½n error de escritura.
 	 */
 	protected void write(String fileName) throws IOException, WriteException {
 		File file = new File(fileName);
@@ -126,7 +126,7 @@ public abstract class ExcelWriter {
 	 *            Criterio a insertar.
 	 * @return Fila siguiente a la empleada.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura.
+	 *             Si existe algï¿½n error de escritura.
 	 */
 	private int createExpertCriteria(WritableSheet sheet, int col, int row, Criterion criterion) throws WriteException {
 		if (criterion != null) {
@@ -153,7 +153,7 @@ public abstract class ExcelWriter {
 	 * @param row
 	 *            Fila en la que insertar los criterios.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura.
+	 *             Si existe algï¿½n error de escritura.
 	 */
 	protected void createExpertCriteria(WritableSheet sheet, int row) throws WriteException {
 		createExpertCriteria(sheet, 0, row, null);
@@ -166,7 +166,7 @@ public abstract class ExcelWriter {
 	 *            Libro en el que insertar las hojas.
 	 * 
 	 * @throws WriteException
-	 *             Si existe algún error de escritura.
+	 *             Si existe algï¿½n error de escritura.
 	 */
 	private void createExpertsSheets(WritableWorkbook workbook) throws WriteException {
 		List<Expert> orphanExperts = _elementsSet.getOnlyExpertChildren();
@@ -183,7 +183,7 @@ public abstract class ExcelWriter {
 	 * @param expert
 	 *            Experto para el que crear la hoja.
 	 * @throws WriteException
-	 *             Si existe algún error escribiendo la hoja.
+	 *             Si existe algï¿½n error escribiendo la hoja.
 	 */
 	protected abstract void createExpertSheet(WritableWorkbook workbook, Expert expert) throws WriteException;
 
@@ -193,19 +193,19 @@ public abstract class ExcelWriter {
 	 * @param workbook
 	 *            Libro en el que crear el contenido.
 	 * @throws WriteException
-	 *             Si existe algún problema asociado a la escritura del archivo.
+	 *             Si existe algï¿½n problema asociado a la escritura del archivo.
 	 * @throws RowsExceededException
-	 *             Si alguna fila sobrepasa los límites.
+	 *             Si alguna fila sobrepasa los lï¿½mites.
 	 */
 	protected abstract void createContent(WritableWorkbook workbook) throws WriteException, RowsExceededException ;
 
 	/**
-	 * Crea la información del problema.
+	 * Crea la informaciï¿½n del problema.
 	 * 
 	 * @param workbook
-	 *            Libro en que crear la información del problema.
+	 *            Libro en que crear la informaciï¿½n del problema.
 	 * @throws WriteException
-	 *             Si existe algún problema escribiendo la información del
+	 *             Si existe algï¿½n problema escribiendo la informaciï¿½n del
 	 *             problema.
 	 */
 	private void createProblemInformation(WritableWorkbook workbook) throws WriteException {
@@ -282,7 +282,7 @@ public abstract class ExcelWriter {
 	 * Crea los formatos a emplear para las celdas.
 	 * 
 	 * @throws WriteException
-	 *             Si existe algún problema creado los formatos.
+	 *             Si existe algï¿½n problema creado los formatos.
 	 */
 	private void createFormats() throws WriteException {
 
@@ -338,76 +338,76 @@ public abstract class ExcelWriter {
 	}
 
 	/**
-	 * Añade una evaluación unificada.
+	 * Aï¿½ade una evaluaciï¿½n unificada.
 	 * 
 	 * @param sheet
-	 *            Hoja en la que insertar la evaluación.
+	 *            Hoja en la que insertar la evaluaciï¿½n.
 	 * @param pos
-	 *            Posición de inserción
+	 *            Posiciï¿½n de inserciï¿½n
 	 * @param valuation
-	 *            Evaluación a insertar.
+	 *            Evaluaciï¿½n a insertar.
 	 * @throws RowsExceededException
-	 *             Si la fila de insercción excede el número de filas.
+	 *             Si la fila de insercciï¿½n excede el nï¿½mero de filas.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura.
+	 *             Si existe algï¿½n error de escritura.
 	 */
 	protected void addUnifiedEvaluation(WritableSheet sheet, int[] pos, Valuation valuation) throws WriteException, RowsExceededException {
 		addEvaluationLabel(sheet, pos[1], pos[2], valuation, null, UNIFIED);
 	}
 
 	/**
-	 * Añade una evaluación dos tuplas.
+	 * Aï¿½ade una evaluaciï¿½n dos tuplas.
 	 * 
 	 * @param sheet
-	 *            Hoja en la que insertar la evaluación.
+	 *            Hoja en la que insertar la evaluaciï¿½n.
 	 * @param pos
-	 *            Posición de inserción
+	 *            Posiciï¿½n de inserciï¿½n
 	 * @param valuation
-	 *            Evaluación a insertar.
+	 *            Evaluaciï¿½n a insertar.
 	 * @throws RowsExceededException
-	 *             Si la fila de insercción excede el número de filas.
+	 *             Si la fila de insercciï¿½n excede el nï¿½mero de filas.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura.
+	 *             Si existe algï¿½n error de escritura.
 	 */
 	protected void addTwoTupleEvaluation(WritableSheet sheet, int[] pos, Valuation valuation) throws WriteException, RowsExceededException {
 		addEvaluationLabel(sheet, pos[1], pos[2], valuation, null, TWOTUPLE);
 	}
 
 	/**
-	 * Añade el valor delta de una evaluación dos tuplas
+	 * Aï¿½ade el valor delta de una evaluaciï¿½n dos tuplas
 	 * 
 	 * @param sheet
-	 *            Hoja en la que insertar la evaluación.
+	 *            Hoja en la que insertar la evaluaciï¿½n.
 	 * @param pos
-	 *            Posición de inserción
+	 *            Posiciï¿½n de inserciï¿½n
 	 * @param valuation
-	 *            Evaluación a insertar.
+	 *            Evaluaciï¿½n a insertar.
 	 * @throws RowsExceededException
-	 *             Si la fila de insercción excede el número de filas.
+	 *             Si la fila de insercciï¿½n excede el nï¿½mero de filas.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura.
+	 *             Si existe algï¿½n error de escritura.
 	 */
 	protected void addDeltaEvaluation(WritableSheet sheet, int[] pos, Valuation valuation) throws WriteException, RowsExceededException {
 		addEvaluationLabel(sheet, pos[1], pos[2], valuation, null, DELTA);
 	}
 
 	/**
-	 * Añade una evaluación numérica.
+	 * Aï¿½ade una evaluaciï¿½n numï¿½rica.
 	 * 
 	 * @param sheet
 	 *            Hoja en la que insertar la celda.
 	 * @param pos
-	 *            Posición en la que insertar la celda.
+	 *            Posiciï¿½n en la que insertar la celda.
 	 * @param domain
-	 *            Dominio de la evaluación.
+	 *            Dominio de la evaluaciï¿½n.
 	 * @param domainName
-	 *            Nombre del dominio de la evaluación.
+	 *            Nombre del dominio de la evaluaciï¿½n.
 	 * @param valuation
-	 *            Valor de la evaluación.
+	 *            Valor de la evaluaciï¿½n.
 	 * @throws RowsExceededException
-	 *             Si la linea de inserción excede el número de filas.
+	 *             Si la linea de inserciï¿½n excede el nï¿½mero de filas.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura en el archivo.
+	 *             Si existe algï¿½n error de escritura en el archivo.
 	 */
 	protected void addNumberEvaluation(WritableSheet sheet, int[] pos, Domain domain, String domainName, Valuation valuation) throws WriteException, RowsExceededException {
 
@@ -455,22 +455,22 @@ public abstract class ExcelWriter {
 	}
 
 	/**
-	 * Añade una evaluación lingüística.
+	 * Aï¿½ade una evaluaciï¿½n lingï¿½ï¿½stica.
 	 * 
 	 * @param sheet
-	 *            Hoja en la que insertar la evaluación.
+	 *            Hoja en la que insertar la evaluaciï¿½n.
 	 * @param pos
-	 *            Posición en la que insertar la evaluación.
+	 *            Posiciï¿½n en la que insertar la evaluaciï¿½n.
 	 * @param domain
-	 *            Dominio de la evaluación.
+	 *            Dominio de la evaluaciï¿½n.
 	 * @param domainName
-	 *            Nombre del dominio de la evaluación.
+	 *            Nombre del dominio de la evaluaciï¿½n.
 	 * @param valuation
-	 *            Valor de la evaluación.
+	 *            Valor de la evaluaciï¿½n.
 	 * @throws RowsExceededException
-	 *             Si la linea de inserción excede el número de filas.
+	 *             Si la linea de inserciï¿½n excede el nï¿½mero de filas.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura en el archivo.
+	 *             Si existe algï¿½n error de escritura en el archivo.
 	 */
 	protected void addLinguisticEvaluation(WritableSheet sheet, int[] pos, FuzzySet domain, String domainName, Valuation valuation) throws WriteException, RowsExceededException {
 
@@ -515,22 +515,22 @@ public abstract class ExcelWriter {
 	}
 
 	/**
-	 * Añade una evaluación intervalar.
+	 * Aï¿½ade una evaluaciï¿½n intervalar.
 	 * 
 	 * @param sheet
-	 *            Hoja en la que insertar la evaluación.
+	 *            Hoja en la que insertar la evaluaciï¿½n.
 	 * @param pos
-	 *            Posición en la que insertar la evaluación.
+	 *            Posiciï¿½n en la que insertar la evaluaciï¿½n.
 	 * @param domain
-	 *            Dominio de la evaluación.
+	 *            Dominio de la evaluaciï¿½n.
 	 * @param domainName
-	 *            Nombre del dominio de la evaluación.
+	 *            Nombre del dominio de la evaluaciï¿½n.
 	 * @param valuation
-	 *            Valor de la evaluación.
+	 *            Valor de la evaluaciï¿½n.
 	 * @throws RowsExceededException
-	 *             Si la linea de inserción excede el número de filas.
+	 *             Si la linea de inserciï¿½n excede el nï¿½mero de filas.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura en el archivo.
+	 *             Si existe algï¿½n error de escritura en el archivo.
 	 */
 	protected void addIntervalEvaluation(WritableSheet sheet, int[] pos, Domain domain, String domainName, Valuation valuation) throws WriteException, RowsExceededException {
 
@@ -593,7 +593,7 @@ public abstract class ExcelWriter {
 	}
 
 	/**
-	 * Añade un encabezado.
+	 * Aï¿½ade un encabezado.
 	 * 
 	 * @param sheet
 	 *            Hoja en la que insertar el encabezado.
@@ -606,9 +606,9 @@ public abstract class ExcelWriter {
 	 * @param s
 	 *            Texto a mostrar en el encabezado.
 	 * @throws RowsExceededException
-	 *             Si la fila de insercción excede el número de filas.
+	 *             Si la fila de insercciï¿½n excede el nï¿½mero de filas.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura.
+	 *             Si existe algï¿½n error de escritura.
 	 */
 	protected void addHeaderLabel(WritableSheet sheet, int level, int column, int row, String s)
 			throws WriteException, RowsExceededException {
@@ -628,21 +628,21 @@ public abstract class ExcelWriter {
 	}
 
 	/**
-	 * Añade una celda de título.
+	 * Aï¿½ade una celda de tï¿½tulo.
 	 * 
 	 * @param sheet
-	 *            Hoja en la que insertar el título.
+	 *            Hoja en la que insertar el tï¿½tulo.
 	 * @param column
-	 *            Columna en la que insertar el título.
+	 *            Columna en la que insertar el tï¿½tulo.
 	 * @param row
-	 *            Fila en la que insertar el título.
+	 *            Fila en la que insertar el tï¿½tulo.
 	 * @param s
 	 *            Texto a insertar.
 	 * @return Etiqueta creada.
 	 * @throws RowsExceededException
-	 *             Si la fila de insercción excede el número de filas.
+	 *             Si la fila de insercciï¿½n excede el nï¿½mero de filas.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura.
+	 *             Si existe algï¿½n error de escritura.
 	 */
 	private Label addCaption(WritableSheet sheet, int column, int row, String s)
 			throws WriteException, RowsExceededException {
@@ -653,7 +653,7 @@ public abstract class ExcelWriter {
 	}
 
 	/**
-	 * Añade una celda con texto en blanco.
+	 * Aï¿½ade una celda con texto en blanco.
 	 * 
 	 * @param sheet
 	 *            Hoja en la que insertar el texto en blanco.
@@ -665,9 +665,9 @@ public abstract class ExcelWriter {
 	 *            Texto a insertar.
 	 * @return Etiqueta creada.
 	 * @throws RowsExceededException
-	 *             Si la fila de insercción excede el número de filas.
+	 *             Si la fila de insercciï¿½n excede el nï¿½mero de filas.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura.
+	 *             Si existe algï¿½n error de escritura.
 	 */
 	private Label addWhiteLabel(WritableSheet sheet, int column, int row, String s)
 			throws WriteException, RowsExceededException {
@@ -678,10 +678,10 @@ public abstract class ExcelWriter {
 	}
 
 	/**
-	 * Añade una etiqueta de evaluación.
+	 * Aï¿½ade una etiqueta de evaluaciï¿½n.
 	 * 
 	 * @param sheet
-	 *            Hoja en la que insertar la evaluación.
+	 *            Hoja en la que insertar la evaluaciï¿½n.
 	 * @param column
 	 *            Columna en la que insertar la etiqueta.
 	 * @param row
@@ -689,14 +689,14 @@ public abstract class ExcelWriter {
 	 * @param content
 	 *            Contenido a insertar.
 	 * @param cellFeatures
-	 *            Características de la etiqueta.
+	 *            Caracterï¿½sticas de la etiqueta.
 	 * @param type
-	 *            Tipo de evaluación.
+	 *            Tipo de evaluaciï¿½n.
 	 * @return Etiqueta creada.
 	 * @throws RowsExceededException
-	 *             Si la fila de insercción excede el número de filas.
+	 *             Si la fila de insercciï¿½n excede el nï¿½mero de filas.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura.
+	 *             Si existe algï¿½n error de escritura.
 	 */
 	private Object addEvaluationLabel(WritableSheet sheet, int column, int row, Object content, Object cellFeatures,
 			int type) throws WriteException, RowsExceededException {
@@ -784,8 +784,8 @@ public abstract class ExcelWriter {
 		case TWOTUPLE:
 			if (content != null) {
 				result = new Object[2];
-				((Object[]) result)[0] = new Label(column, row, ((TwoTuple) content).prettyFormat(), _unlockFormat);
-				((Object[]) result)[1] = new Label(column, row, ((TwoTuple) content).prettyFormat(), _unlockFormat);
+				((Object[]) result)[0] = new Label(column, row, ((TwoTuple) content).toString(), _unlockFormat);
+				((Object[]) result)[1] = new Label(column, row, ((TwoTuple) content).toString(), _unlockFormat);
 			}
 			break;
 
@@ -843,7 +843,7 @@ public abstract class ExcelWriter {
 	}
 
 	/**
-	 * Añade una celda con texto.
+	 * Aï¿½ade una celda con texto.
 	 * 
 	 * @param sheet
 	 *            Hoja en la que insertar el texto.
@@ -855,9 +855,9 @@ public abstract class ExcelWriter {
 	 *            Texto a insertar.
 	 * @return Etiqueta creada.
 	 * @throws RowsExceededException
-	 *             Si la fila de insercción excede el número de filas.
+	 *             Si la fila de insercciï¿½n excede el nï¿½mero de filas.
 	 * @throws WriteException
-	 *             Si existe algún error de escritura.
+	 *             Si existe algï¿½n error de escritura.
 	 */
 	private Label addLabel(WritableSheet sheet, int column, int row, String s)
 			throws WriteException, RowsExceededException {

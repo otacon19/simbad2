@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -249,7 +250,9 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 		
 		_positiveNegativeProvider.setInput(distances);
 		_tableViewerPositiveNegative.setInput(_positiveNegativeProvider.getInput());
-		
+		for(TableColumn tc: _tableViewerPositiveNegative.getTable().getColumns()) {
+			tc.pack();
+		}
 	}
 
 	private void createClosenessCoefficientsTable() {
@@ -379,15 +382,15 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 	}
 	
 	private void displayAlternatives() {
-		List<TwoTuple> closenessCoefficients = _selectionPhase.getClosenessCoeficient();
+		Map<Alternative, TwoTuple> closenessCoefficients = _selectionPhase.getClosenessCoeficient();
 		
 		String[] alternatives = new String[closenessCoefficients.size()];
 		int[] pos = new int[alternatives.length];
 		double[] alpha = new double[alternatives.length];
 		for(int i = 0; i < alternatives.length; ++i) {
-			alternatives[i] = Integer.toString(i + 1);
-			pos[i] = _selectionPhase.getDistanceDomain().getLabelSet().getPos(closenessCoefficients.get(i).getLabel());
-			alpha[i] = closenessCoefficients.get(i).getAlpha();
+			alternatives[i] = _elementsSet.getAlternatives().get(i).getId();
+			pos[i] = _selectionPhase.getDistanceDomain().getLabelSet().getPos(closenessCoefficients.get(_elementsSet.getAlternatives().get(i)).getLabel());
+			alpha[i] = closenessCoefficients.get(_elementsSet.getAlternatives().get(i)).getAlpha();
 		}
 		_chart.displayAlternatives(alternatives, pos, alpha);
 	}
@@ -399,8 +402,6 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 		setDecisionMatrix();
 		setWeights();
 		setFinalPreferences();
-		
-		//notifyStepStateChange();
 	}
 	
 	private void setDecisionMatrix() {
@@ -434,11 +435,11 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 	}
 
 	private void setFinalPreferences() {
-		List<TwoTuple> coefficients = _selectionPhase.getClosenessCoeficient();
+		Map<Alternative, TwoTuple> coefficients = _selectionPhase.getClosenessCoeficient();
 		Double[] preferences = new Double[coefficients.size()];
 		int cont = 0;
-		for(TwoTuple c: coefficients) {
-			preferences[cont] = c.calculateInverseDelta();
+		for(Alternative a: coefficients.keySet()) {
+			preferences[cont] = coefficients.get(a).calculateInverseDelta();
 			cont++;
 		}
 		_sensitivityAnalysis.setAlternativesFinalPreferences(preferences);

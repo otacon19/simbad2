@@ -910,17 +910,17 @@ public class ELICIT extends Valuation {
 				aux = aux.toLowerCase();
 				aux = aux.substring(0, 1).toUpperCase() + aux.substring(1);
 				return sb.append(aux).append(' ') // $NON-NLS-1$
-						.append(getTwoTupleTerm().prettyFormat()).append('^') // $NON-NLS-1$
+						.append(getTwoTupleTerm().toString()).append('^') // $NON-NLS-1$
 						.append('(') // $NON-NLS-1$
 						.append(Math.round(_gamma1 * 1000d) / 1000d).append(')').toString(); // $NON-NLS-1$
 
 			} else {
 				return sb.append(Messages.HesitantTwoTupleValuation_Between).append(' ') // $NON-NLS-1$
-						.append(getTwoTupleLowerTerm().prettyFormat()).append('^') // $NON-NLS-1$
+						.append(getTwoTupleLowerTerm().toString()).append('^') // $NON-NLS-1$
 						.append('(') // $NON-NLS-1$
 						.append(Math.round(_gamma1 * 1000d) / 1000d).append(')') // $NON-NLS-1$
 						.append(' ').append(Messages.HesitantTwoTupleValuation_and).append(' ')
-						.append(getTwoTupleUpperTerm().prettyFormat()).append('^') // $NON-NLS-1$
+						.append(getTwoTupleUpperTerm().toString()).append('^') // $NON-NLS-1$
 						.append('(') // $NON-NLS-1$
 						.append(Math.round(_gamma2 * 1000d) / 1000d).append(')').toString(); // $NON-NLS-1$
 			}

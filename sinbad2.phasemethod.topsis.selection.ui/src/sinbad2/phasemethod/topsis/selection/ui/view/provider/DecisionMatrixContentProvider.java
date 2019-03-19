@@ -121,7 +121,7 @@ public class DecisionMatrixContentProvider extends KTableNoScrollModel  {
 			} else if (row == 0) {
 				content = alternativeAbbreviation(col);
 			} else {
-				content = ((TwoTuple) _selectionPhase.getDecisionMatrix()[row - 1][ col - 1]).prettyFormat();
+				content = ((TwoTuple) _selectionPhase.getDecisionMatrix()[row - 1][ col - 1]).toString();
 			}
 		} catch (Exception e) {
 			content = ""; //$NON-NLS-1$

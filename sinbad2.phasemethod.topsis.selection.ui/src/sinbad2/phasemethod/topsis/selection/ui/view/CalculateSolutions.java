@@ -280,7 +280,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 				Object[] data = (Object[]) element;
 				TwoTuple valuation = (TwoTuple) data[1];
 
-				String valuationString = valuation.prettyFormat();
+				String valuationString = valuation.toString();
 				valuationString = valuationString.replace("(", "");
 				valuationString = valuationString.replace(")", "");
 				String[] elements = valuationString.split(",");
@@ -366,7 +366,7 @@ public class CalculateSolutions extends ViewPart implements IStepStateListener, 
 				Object[] data = (Object[]) element;
 				TwoTuple valuation = (TwoTuple) data[1];
 				
-				String valuationString = valuation.prettyFormat();
+				String valuationString = valuation.toString();
 				valuationString = valuationString.replace("(", "");
 				valuationString = valuationString.replace(")", "");
 				String[] elements = valuationString.split(",");

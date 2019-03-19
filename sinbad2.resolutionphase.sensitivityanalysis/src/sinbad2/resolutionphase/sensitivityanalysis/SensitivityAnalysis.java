@@ -253,12 +253,10 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		_alternativesFinalPreferences = new Double[_alternatives.size()];
 		
 		topsisPhase.execute();
-		List<TwoTuple> coefficients = topsisPhase.getClosenessCoeficient();
+		Map<Alternative, TwoTuple> coefficients = topsisPhase.getClosenessCoeficient();
 		
-		int alternative = 0;
- 		for(TwoTuple coefficent: coefficients) {
- 			_alternativesFinalPreferences[alternative] = coefficent.calculateInverseDelta();
- 			alternative++;
+ 		for(Alternative a: coefficients.keySet()) {
+ 			_alternativesFinalPreferences[_elementsSet.getAlternatives().indexOf(a)] = coefficients.get(a).calculateInverseDelta();
 		}
 	}
 	
@@ -392,13 +390,11 @@ public class SensitivityAnalysis implements IResolutionPhase {
 		SelectionPhase topsisPhase = (SelectionPhase) PhasesMethodManager.getInstance().getPhaseMethod(SelectionPhase.ID).getImplementation();
 
 		topsisPhase.execute();
-		List<TwoTuple> coefficients = topsisPhase.getClosenessCoeficient();
-		
-		int alternative = 0;
+		Map<Alternative, TwoTuple> coefficients = topsisPhase.getClosenessCoeficient();
+
 		Double[] alternativesFinalPreferences = new Double[_numAlternatives];
- 		for(TwoTuple coefficent: coefficients) {
- 			alternativesFinalPreferences[alternative] = coefficent.calculateInverseDelta();
- 			alternative++;
+ 		for(Alternative a: coefficients.keySet()) {
+ 			alternativesFinalPreferences[_elementsSet.getAlternatives().indexOf(a)] = coefficients.get(a).calculateInverseDelta();
 		}
 		
 		return alternativesFinalPreferences;

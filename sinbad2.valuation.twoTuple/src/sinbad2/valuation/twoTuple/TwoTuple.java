@@ -130,10 +130,6 @@ public class TwoTuple extends LinguisticValuation {
 	
 	@Override
 	public String toString() {
-		return ("[" + _label + ", " + Math.round(_alpha * 10000d) / 10000d + "]" + Messages.TwoTuple_In + _domain); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	}
-	
-	public String prettyFormat() {
 		return ("(" + _label + ", " + Math.round(_alpha * 10000d) / 10000d + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
@@ -187,9 +183,5 @@ public class TwoTuple extends LinguisticValuation {
 		result = super.clone();
 		
 		return result;
-	}
-
-	public Object prettyDecisionMatrixFormat() {
-		return "(s" + (((FuzzySet) _domain).getLabelSet().getPos(_label) + 1) + ", " +  Math.round(_alpha * 10000d) / 10000d + ")";
 	}
 }
