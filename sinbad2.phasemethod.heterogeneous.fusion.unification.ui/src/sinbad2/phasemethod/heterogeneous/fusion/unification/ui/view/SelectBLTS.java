@@ -266,7 +266,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	}
 
 	private void disposeFollowingPhase() {
-		_ratingView.disposeFollowingPhases(3);
+		_ratingView.disposeFollowingPhasesFromSelectBLTS(3);
 	}
 	
 	@Override

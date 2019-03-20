@@ -655,20 +655,35 @@ public class RatingView extends ViewPart {
 		_tabFolder.setSelection(0);
 	}
 	
-	public void disposeFollowingPhases(int numPhase) {
+	public void disposeFollowingPhasesFromSelectBLTS(int numPhase) {
+		int currentStep = _tabFolder.getSelectionIndex(), numSteps = 0;
+		
 		if(_tabFolder.getItemCount() > numPhase) {
-			int size = _tabFolder.getItemCount();
-			for(int i = numPhase; i < size; ++i) {
-				_tabFolder.getItem(_tabFolder.getItemCount() - 1).dispose();
-				_numPhase--;
+			List<PhaseMethodUI> phasesMethodUI = _methodUISelected.getPhasesUI();
+			for(PhaseMethodUI phase: phasesMethodUI) {
+				numSteps += _phasesMethodUIManager.getStepsPhaseMethod(phase.getId()).size();
 			}
 			
-			List<PhaseMethodUI> phasesMethodUI = _methodsUIManager.getActivateMethodUI().getPhasesUI();
+			Map<String, List<ViewPart>> allSteps = _phasesMethodUIManager.getPhasesSteps();
+			for(int i = numSteps; i >= currentStep + 1 ; --i) {
+				CTabItem tabItem = _tabFolder.getItem(_tabFolder.getItemCount() - 1);
+				for(String idPhase: allSteps.keySet()) {
+					for(ViewPart step: allSteps.get(idPhase)) {
+						if(tabItem.getText().equals(step.getPartName())) {
+							step.dispose();
+						}
+					}
+				}
+				tabItem.dispose();
+			}
+			
+			_numPhase = 0;
+			_numStep = currentStep;
+	
 			PhaseMethodUI currentPhaseMethod = phasesMethodUI.get(_numPhase);
-			
 			activateCurrentPhaseMethod(currentPhaseMethod);
-			
-			ViewPart step = _phasesMethodUIManager.getStepPhaseMethod(currentPhaseMethod.getId(), 1);
+				
+			ViewPart step = _phasesMethodUIManager.getStepPhaseMethod(currentPhaseMethod.getId(), 0);
 			_phasesMethodUIManager.activateStep(step);
 		}
 	}

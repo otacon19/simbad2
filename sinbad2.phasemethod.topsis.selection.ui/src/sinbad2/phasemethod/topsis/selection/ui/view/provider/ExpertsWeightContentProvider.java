@@ -20,6 +20,7 @@ import sinbad2.domain.linguistic.fuzzy.label.LabelLinguisticDomain;
 import sinbad2.element.ProblemElementsManager;
 import sinbad2.element.ProblemElementsSet;
 import sinbad2.element.criterion.Criterion;
+import sinbad2.element.expert.Expert;
 import sinbad2.phasemethod.topsis.selection.SelectionPhase;
 import sinbad2.phasemethod.topsis.selection.ui.listener.IChangeWeightListener;
 
@@ -166,7 +167,9 @@ public class ExpertsWeightContentProvider extends KTableNoScrollModel  {
 	}
 	
 	private Object expertAbbreviation(int pos) {
-		return _elementsSet.getOnlyExpertChildren().get(pos - 1).getId();
+		List<Expert> orderedExperts = new LinkedList<>(_elementsSet.getOnlyExpertChildren());
+		Collections.sort(orderedExperts);
+		return orderedExperts.get(pos - 1).getId();
 	}
 
 	@Override

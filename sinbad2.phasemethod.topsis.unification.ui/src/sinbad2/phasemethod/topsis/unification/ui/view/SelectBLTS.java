@@ -124,14 +124,27 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = _validDomainsViewer.getSelection();
-				_selectedBLTSDomain = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
-				_unificationPhase.setUnifiedDomain(_selectedBLTSDomain);
 				
-				disposeFollowingPhase();
-				
-				_completed = true;
-				notifyStepStateChange();
-				refreshChart();
+				FuzzySet selectedBLTSDomain = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
+				if(_selectedBLTSDomain != null) {
+					if(!selectedBLTSDomain.getId().equals(_selectedBLTSDomain.getId())) {
+						_selectedBLTSDomain = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
+						_unificationPhase.setUnifiedDomain(_selectedBLTSDomain);
+						disposeFollowingPhase();
+						_completed = true;
+						_loaded = false;
+						notifyStepStateChange();
+						refreshChart();
+					}
+				} else {
+					_selectedBLTSDomain = (FuzzySet) ((IStructuredSelection) selection).getFirstElement();
+					_unificationPhase.setUnifiedDomain(_selectedBLTSDomain);
+					disposeFollowingPhase();
+					_completed = true;
+					_loaded = false;
+					notifyStepStateChange();
+					refreshChart();
+				}
 			}
 		});
 		
@@ -235,7 +248,7 @@ public class SelectBLTS extends ViewPart implements IStepStateListener {
 	}
 
 	private void disposeFollowingPhase() {
-		_ratingView.disposeFollowingPhases(3);
+		_ratingView.disposeFollowingPhasesFromSelectBLTS(3);
 	}
 	
 	@Override

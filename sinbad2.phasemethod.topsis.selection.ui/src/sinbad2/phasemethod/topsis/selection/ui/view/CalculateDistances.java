@@ -388,7 +388,7 @@ public class CalculateDistances extends ViewPart implements IStepStateListener, 
 		int[] pos = new int[alternatives.length];
 		double[] alpha = new double[alternatives.length];
 		for(int i = 0; i < alternatives.length; ++i) {
-			alternatives[i] = _elementsSet.getAlternatives().get(i).getId();
+			alternatives[i] = "a" + (i + 1);
 			pos[i] = _selectionPhase.getDistanceDomain().getLabelSet().getPos(closenessCoefficients.get(_elementsSet.getAlternatives().get(i)).getLabel());
 			alpha[i] = closenessCoefficients.get(_elementsSet.getAlternatives().get(i)).getAlpha();
 		}

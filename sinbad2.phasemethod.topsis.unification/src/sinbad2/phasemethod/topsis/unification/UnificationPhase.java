@@ -265,7 +265,7 @@ public class UnificationPhase implements IPhaseMethod {
 					
 					_unifiedValuations.put(vk, valuation);
 				} else if(valuation instanceof LinguisticValuation){
-					if(valuation.getDomain().equals(_unifiedDomain)) {
+					if(valuation.getDomain().getId().equals(_unifiedDomain.getId())) {
 						valuation = new TwoTuple((FuzzySet) _unifiedDomain, ((LinguisticValuation) valuation).getLabel());
 					} else {
 						if(isCost) {
